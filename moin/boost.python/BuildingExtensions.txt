@@ -3,6 +3,7 @@
 = Building Extensions with boost.python =
 
 == Using bjam ==
+
 bjam is a standard tool for building boost library itself. Thus it is preferable way to build Python extensions based on ["boost.python"] with bjam. 
 Basic example listed in [http://www.boost.org/libs/python/doc/tutorial/doc/building_hello_world.html tutorial].
 
@@ -65,6 +66,21 @@ boost-build $(BOOST_ROOT)/tools/build ;
 == Using make ==
 
  * Make sure to link with ''boost_python'' or ''boost_python_debug'' library.
+
+== Using SCons ==
+
+You might want to try [http://www.scons.org scons].
+
+It's really easy to build python extensions with scons.  Here is an example
+that would build uvector.so:
+{{{
+BOOST_VERSION = 'boost.cvs'
+BOOST = '/usr/local/src/' + BOOST_VERSION
+BOOSTLIBPATH = BOOST+'/stage/lib'
+env = Environment (LIBPATH=['./',BOOSTLIBPATH], CPPPATH=[BOOST, '/usr/include/python2.3'],  
+                   RPATH=['./',BOOSTLIBPATH])
+env.SharedLibrary (target='uvector', source='uvector.cc', SHLIBPREFIX='', LIBS=[BOOST_PYTHON_LIB])
+}}}
 
 == Using Windows IDE ==
 
