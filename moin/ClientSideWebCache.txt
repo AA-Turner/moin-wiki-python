@@ -1,0 +1,30 @@
+Is there an existing Python module that takes care of retrieving and caching web page contents?
+
+Something like:
+
+{{{
+#!python
+import cachedweb
+
+cache = cachedweb("/home/user/.web_cache")  # Maintain cache data in .web_cache
+print cache.get("http://example.net")
+}}}
+
+Perhaps there are different options for where and how to store cache data.
+
+I have written at least three programs that do this, ([http://onebigsoup.wiki.taoriver.net/moin.cgi/nLSDgraphs nLSD interpreter,] and two [http://ln.taoriver.net/ Local Names servers,]) and am about to embark on a fourth program.
+
+Has anyone created a standard module or interface for this sort of thing?
+
+Some things that would be nice:
+ * Optional attention to HTTP cache directives.
+ * Specify directory to store cache entries in.
+ * Optional compression, decompression, of cached data.
+ * Optional connection with a client-side Squid cache. (Pooling a web cache with other programs.)
+ * Conceivably, a caching module could be a drop-in replacement for urllib.
+
+Some info for would-be cachers:
+ * [http://www.mnot.net/cache_docs/ Caching Tutorial for Web Authors and Webmasters] - talks about HTTP headers having to do with caching
+ * [http://www.python.org/doc/current/lib/module-urllib.html urllib.urlretrieve] - performs some of what we want, though you have to do a lot of maintenance yourself
+
+-- LionKimbro [[DateTime(2005-03-29T06:45:28Z)]]
