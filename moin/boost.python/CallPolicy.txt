@@ -7,14 +7,16 @@ Different policies specifies different strategies of managing object ownership.
 Keeps N-th argument as long as M-th is alive.
 
 Use of template parameters M,N:
- * 0 - result
  * 1 - 1st argument (self for method calls)
  * 2 - 2nd argument (1st for method calls)
+ * ...
 
 For example, container operation ''append'' usualy uses {{{with_custodian_and_ward<1,2>}}} which means keep argument alive while container itself is alive.
 
-== with_custodian_and_ward_postcall ==
+== with_custodian_and_ward_postcall<M,N> ==
 ties lifetimes of the arguments and results
+
+M,N same as before but also you can use 0 - result
 
 == return_internal_reference ==
 Builds a Python object around a pointer to
