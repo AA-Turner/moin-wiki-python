@@ -67,24 +67,46 @@ This command will print out to stdout the generated python file that comes from 
 $ pyuic at.ui > at_auto.py
 }}}
 
-''Petr Vanek (subzero AT py DOT cz)'' '''BEWARE:''' using pyuic this way ''may'' be wrong. Pyuic writes some important informations on standard output but they aren't '''python code!'''
-Use it this way:
+----
+  'Petr Vanek (subzero AT py DOT cz)':
+    '''BEWARE:''' using pyuic this way ''may'' be wrong. Pyuic writes some important informations on standard output but they aren't '''python code!'''
 
-  {{{
+    Use it this way:
+    {{{
 $pyuic at.ui -o at_auto.py
 }}}
 
+----
+
+  This problem doesn't affect the pyuic that comes with PyQt 3.5 (which is what RedHat 8 and 9 use).
+
+  I posted a patch to the PyKDE list to fix this. Phil accepted it. It may show up in the next version (3.7?)
+
+  -- Jonathan Gardner
+
+----
 
 We dump it into at_auto.py. Everytime we change the ui file, we need to regenerate the at_auto.py file. Let's add this command to a makefile.
 
-/!\Tabs are important!
+/!\ Tabs are important!
 
-    {{{
+  {{{
+$ cat > Makefile
+at_auto.py : at.ui
+	pyuic at.ui > at_auto.py
+^D
+}}}
+
+----
+  ''''Note:'''' If you are using PyQt 3.6, you'll have to use the '-o' method described by Petr above.
+
+  {{{
 $ cat > Makefile
 at_auto.py : at.ui
 	pyuic at.ui -o at_auto.py
 ^D
 }}}
+----
 
 Now run the makefile.
 
