@@ -65,6 +65,7 @@ def bar(low,high):
  * - That's the first case in Python where a line following another one with the same identation has a meaning
  * - Breaks in interactive shell
  * - Comes before the def keyword.  Supercedes the function declaration itself.
+ * - @staticmethod may look like staticmethod is not a defined variable, but a compile time option
  * 0 The @ character is often used (in other languages) to mean "attribute".  For annotations, this is good.  For more active decorators, it may not be so good.
 
 FWIW, here is Guido's jumble example in this syntax.
@@ -124,11 +125,13 @@ def bar(low,high) [accepts(int,int), returns(float)]:
  * + Looks ok for simple decorators such as classmethod
  * + Won't break simplistic code analyzers or grep for function def
  * + Use visually existing syntax
+ * + Allows one-liner definitions
  * - Long lists of decorators/arguments cause ugly line wraps
  * - Little to distinguish it visually from argument list
  * - or 0 For long argument list, decorators are very far from def. ''I see being too close to def as a minus.''
- * - Guido hates it (maybe because of line wrap issue?)
+ * - Guido hates it because it hides crucial information after the signature, it's easy to miss the transition between a long argument list and a long decorator list, and it's cumbersom to cut and paste a decorator list for reuse.
  * - Creates another meaning for [].  Since it does so inside the function definition, it will be a distraction for beginners. 
+ * 0 Brackets are used in other fields to indicate an annotation of some sort (but in Python, it doesn't)
 
 I don't see why longs lists of decorators are an issue with this syntax.  Consider the following example:
 {{{
@@ -341,6 +344,8 @@ decorate accepts(int,int), returns(float):
  * + Doesn't need extra characters with special meaning
  * + Allows many decorated functions to be declared with a single statement
  * - New keyword
+ * - Increases minimum ident level on decorated functions
+ * - Inconsistent identation level between methods with/without decorators
 
 '''K. partitioned syntax syntax'''
 
