@@ -2,34 +2,33 @@
 
 Here is a list of known Python-based Wiki:WikiEngines.
 
-	* MoinMoin -- A PythonLanguage SourceForge project, based on Wiki:PikiPiki
-        * [http://jot.andstuff.org/ Jot]
-	* Wiki:PikiePikie -- Python-based, lets you put a Wiki:WebLog on any page (based on Wiki:PikiPiki)
-	* Wiki:ZwiKi -- Wiki:ZoPe-based, powerful, GPL.
-	* Wiki:CMFWiki -- a ZwiKi variant; old but compatible with Zope's CMF (Content Management Framework).
-	* Wiki:CyberPublishing -- a wiki-based web publishing framework written in Python; GPL
-	* Wiki:PyWiki -- Python-based, uses RCS, GPL license
-	* Wiki:PikiPiki -- Python-based, will run completely standalone
-	* Wiki:PyleWiki -- Python-based, optional CVS backend, Unix-like rwxrwxrwx permissions on pages
-	* Wiki:WikiForNow -- a Wiki:ZwiKi variant; used at zope.org
-	* Wiki:WikiNehesa -- Many features, including images, headerbars, TEXT centering, image inventory/previewer, image uploader. Modular. $FREE$. GNU GPL.
-	* Wiki:WyPy -- a Wiki:ShortestWikiContest contender, 23 lines
+ * MoinMoin -- A PythonLanguage SourceForge project, based on Wiki:PikiPiki
+ * [http://jot.andstuff.org/ Jot]
+ * Wiki:PikiePikie -- Python-based, lets you put a Wiki:WebLog on any page (based on Wiki:PikiPiki)
+ * Wiki:ZwiKi -- Wiki:ZoPe-based, powerful, GPL.
+ * Wiki:CMFWiki -- a ZwiKi variant; old but compatible with Zope's CMF (Content Management Framework).
+ * Wiki:CyberPublishing -- a wiki-based web publishing framework written in Python; GPL
+ * Wiki:PyWiki -- Python-based, uses RCS, GPL license
+ * Wiki:PikiPiki -- Python-based, will run completely standalone
+ * Wiki:PyleWiki -- Python-based, optional CVS backend, Unix-like rwxrwxrwx permissions on pages
+ * Wiki:WikiForNow -- a Wiki:ZwiKi variant; used at zope.org
+ * Wiki:WikiNehesa -- Many features, including images, headerbars, TEXT centering, image inventory/previewer, image uploader. Modular. $FREE$. GNU GPL.
+ * Wiki:WyPy -- a Wiki:ShortestWikiContest contender, 23 lines
 
 
 = Comparison of Features =
 
-||Existing or Desired Features||MoinMoin||Wiki:PikiePikie||Wiki:Zwiki||''add others here''||
-||Cache Pages for Faster Loading?||yes||no|| || ||
-||Page storage||flat files||plaintext files||ZoDb|| ||
-||Support for Blogs ([http://ourpla.net/cgi/pikie?WikiWeblogs WikiLogs])||[http://www.seapig.org/BlogEditCode partially]||yes||[http://webseitz.fluxent.com/wiki/ZwikiCustomizations possible]|| ||
-||Page Permissions||yes||no||yes||
-||Templating/Page Skins/CSS support||yes||yes||yes|| ||
-||Link icons, colorblind-friendly||yes||no, ?|| || ||
-||Supports HTML tags||no||no||yes || ||
-||export RSS||recentchanges only||recentchanges & weblogs|| || ||
-||import/display RSS||no||no|| || ||
-||miscellaneous|| ||InternalTransclusion (as of 0.5x)|| || ||
-||''add feature here''|| || || || ||
+||Existing or Desired Features   ||MoinMoin||Wiki:PikiePikie||Wiki:Zwiki||
+||Cache Pages for Faster Loading?||yes     ||no             ||{{{    }}}||
+||Page storage                   ||flat files||plaintext files||ZoDb    ||
+||Support for AbbeNormal:WikiWeblogs||[http://www.seapig.org/BlogEditCode partially]||yes||[http://webseitz.fluxent.com/wiki/ZwikiCustomizations possible]||
+||Page Permissions               ||yes     ||no             ||yes       ||
+||Templating/Page Skins/CSS support||yes   ||yes            ||yes       ||
+||Link icons, colorblind-friendly||yes     ||no, ?          ||{{{    }}}||
+||Supports HTML tags             ||no      ||no             ||yes       ||
+||Export RSS                     ||recentchanges only||recentchanges & weblogs||{{{ }}}||
+||Import/display RSS             ||no      ||no             ||{{{    }}}||
+||Miscellaneous                  ||{{{  }}}||Internal transclusion (as of 0.5x)||{{{ }}}||
 
 
 = Comments, Ratings, Reviews, Wishlists =
@@ -37,21 +36,27 @@ Here is a list of known Python-based Wiki:WikiEngines.
 See the [http://colorstudy.com/docs/shootout.html Web Framework shootout] where different Python WebProgramming frameworks are used to implement a bare bones wiki.
 
 == Elements for building a full-featured wiki engine: ==
- * ''Page templating system like [http://smarty.php.net/ Smarty].''  Possible options include [http://www.alcyone.com/pyos/empy/ EmPy], Cheetah, ModPython's PSP, or others listed in the [http://www.python.org/cgi-bin/moinmoin/WebProgramming#head-9d0636d6da8e88f8f09de1454c5961b44183b04d templating section] of the WebProgramming page.  Which one would you recommend?
- * ''Cache HTML versions of pages for faster loading.''  Ideally the page templating tool would handle caching.  PSP for ModPython can handle this, as well as Cheetah.
- * ''User Authentication.''  A user authentication system perhaps integrated with MySQL or possibly even LDAP.  Allow for different user groups and permission levels.  Any recommendations?
- * ''Database Integration.''  Can store data in mysql, postgresql, etc. or work without a database.  There is now an [http://php.weblogs.com/adodb_python ADODB module for Python] that might be helpful in this respect.  See also SqlObject.
- * ''Easy Install.''  Works completely in Python, and installs in one folder location.  Doesn't necessarily require a database or mod_python.  Doesn't require root privileges for install.  ["KarriGell"] is a web-application server that can run in standalone or with Apache and ModPython.
- * ''Small but Scalable.'' Doesn't require a huge server to run.
+
+ * '''Page templating system like [http://smarty.php.net/ Smarty].'''  Possible options include EmPy, ["Cheetah"], ModPython's PSP, or others listed in the [http://www.python.org/cgi-bin/moinmoin/WebProgramming#head-9d0636d6da8e88f8f09de1454c5961b44183b04d templating section] of the WebProgramming page.  Which one would you recommend?
+
+ * '''Cache HTML versions of pages for faster loading.'''  Ideally the page templating tool would handle caching.  PSP for ModPython can handle this, as well as ["Cheetah"].
+
+ * '''User Authentication.'''  A user authentication system perhaps integrated with MySQL or possibly even LDAP.  Allow for different user groups and permission levels.  Any recommendations?
+
+ * '''Database Integration.'''  Can store data in mysql, postgresql, etc. or work without a database.  There is now an [http://php.weblogs.com/adodb_python ADODB module for Python] that might be helpful in this respect.  See also SqlObject.
+
+ * '''Easy Install.'''  Works completely in Python, and installs in one folder location.  Doesn't necessarily require a database or ModPython.  Doesn't require root privileges for install.  ["Karrigell"] is a web-application server that can run standalone or with Apache and ModPython.
+
+ * '''Small but Scalable.''' Doesn't require a huge server to run.
 
 === Arguments that MoinMoin is a candidate ===
 
-  * in a really dynamic context like wiki, you can't simply cache the HTML. 
-   * There are parts of the page that definitely can be cached.  And most wiki pages do not use any dynamic macros.
-  * Moin has user / password auth in CVS. Groups and page ACLs also.
-  * Database integration is more of an anti-feature, see the next 2 points.
-   * The best tool would have ''flexibility.''  Be able to run standalone with an easy install, or integrated with Apache and a fast database server.  In PHP, this is incredibily simple if you use ADODB or PEAR.
+ * Moin has user/password auth in CVS. Groups and page ACLs also.
 
 == Other Comments ==
 
-Comment: "Support HTML tags" is more of an anti-feature in wiki. (so is table markup :)
+"Support HTML tags" is more of an anti-feature in wiki; so is table markup :)
+
+Database integration is more of an anti-feature.
+The best tool would have ''flexibility.''  Be able to run standalone with an easy install, or integrated with Apache and a fast database server.  In PHP, this is incredibily simple if you use ADODB or PEAR.
+
