@@ -135,7 +135,7 @@ Welkom, Ruud
 Bienvenue, Yves
 }}}
 
-
+One problem I have with this implementation is the configuration file syntax.  I respect the need for a syntax to handle dictionaries and lists but why invent yet another language?  If one wants a Python like syntax make it the Python syntax.  I don't think everyone is on board with a Python syntax for configuration files though.  My biggest concern is to have a syntax that supports heirarchies and being able to construct Python objects for configuration settings.  I lean toward using Python as the syntax (and even the parser) because of the flexibility offered but if there was another way that makes sense I'm ok with that. -- dan.gass@gmail.com
 
 == cfgparse ==
 
@@ -252,33 +252,41 @@ A marriage of the two would make a lot of sense to me.  My thought is for the us
 
   An easy way, maybe, but it doesn't seem very useful to me. What's the advantage of fetching a command-line option from cfg.cmdline_values.verbose instead of options.verbose? Also, we need to specify every option twice, once for optparse and once in the configuration file itself. For docutils, this would mean every config file would have 40(!) lines which are, essentially, implementation details.
 
-  -- JohannesGijsbers
-
-  It was only an example, and I accept it may not be the best example to showcase the functionality. Consider this, though: you can use a ConfigList to cascade configurations. If one of these is a set of options picked up from the command line, and another is from configuration files, then you can easily in your application just get e.g. 'cfglist.verbosity' which is picked from a command line option (if defined) or from the configuration file (otherwise). There's no need to define things twice, other than to define what happens when command line options are not provided. I'll work with you, if you like, to see how docutils configuration can be achieved using the module.  -- VinaySajip
+    It was only an example, and I accept it may not be the best example to showcase the functionality. Consider this, though: you can use a ConfigList to cascade configurations. If one of these is a set of options picked up from the command line, and another is from configuration files, then you can easily in your application just get e.g. 'cfglist.verbosity' which is picked from a command line option (if defined) or from the configuration file (otherwise). There's no need to define things twice, other than to define what happens when command line options are not provided. I'll work with you, if you like, to see how docutils configuration can be achieved using the module.  -- VinaySajip
 
   These are probably fixable, but I think they exist because you're not solving the interesting part of optparse integration: every application still has to merge the command-line options with the options from the configuration file manually. I just grepped through my 'src' directory and found shtoom, docutils, roundup, logilab-common and spambayes all have modules which allow them to specify options only once. IPython, offlineimap, and trac are still merging without the aid of such a module.
+
+    The work required to merge can be as simple as setting up a ConfigList with a command-line-based configuration object first in the list, followed by one or more configurations read from files. Thereafter, the application resolves configuration data by asking the ConfigList. If a configuration item has been referenced in the command line, that value is returned; otherwise, a value defined in a configuration file is returned. You could even have e.g. project, user and application level configuration files, though there is no need for such complexity in most cases, and the API remains IMO fairly lean. -- VinaySajip
 
   Given that this is a problem which is being solved again and again, maybe the Python library should be providing mechanism *and* policy here. I don't think it would be too hard to draw up a reasonable default.
 
   -- JohannesGijsbers
 
-  The work required to merge can be as simple as setting up a ConfigList with a command-line-based configuration object first in the list, followed by one or more configurations read from files. Thereafter, the application resolves configuration data by asking the ConfigList. If a configuration item has been referenced in the command line, that value is returned; otherwise, a value defined in a configuration file is returned. You could even have e.g. project, user and application level configuration files, though there is no need for such complexity in most cases, and the API remains IMO fairly lean. -- VinaySajip
+  I whole heartedly agree with Johannes' comments.  In my scripts I have no interest in knowing whether the setting came from the command line or from a configuration file.  It just adds complexity to the script and the explanation how to use it to even allow the use of such knowledge.  I don't know if I understood the ConfigList approach completely but it seems to me it adds an unnecessary layer and complexity.  If we were to go down the road of a marriage I believe it would be one of three possibilities 1) add functionality to optparse 2) subclass optparse or 3) make a new module independent of optparse that duplicates alot of its functionality.  I think we would need the input from the optparse implementors to help with the decision as the first option would require a great deal of work for them and the second option would require a commitment by them to an interface between us.  The third wouldn't require any work but they may want to be involved. -- dan.gass@gmail.com
 
 A hierarchical key or namespace scheme should exist so that multiple settings may be stored in the user configuration file.  I would propose a standard -k, key option always present in the parser so the user can pass a list of keys to control the group of settings to use (Id also like some of the other ways to control keys that I use in my config.py module).  In addition Id propose a -c, config option that specifies a configuration file to use instead of the users default configuration file.
 
   I (VinaySajip) agree that a hierarchical namespace is essential. I'm not sure I agree with removing "-k" and "-c" from the command line namespace for all applications by reserving these for use by particular library modules.
 
+  Along the lines of Johannes' comment regarding "providing a mechanism *and* policy" (which I agree with), I think having a consistent command line option such as -k and -c is important.  I don't really care what specifically they are, even if we required the use of long form --keys and --config (change the names if you like).  So long as policy is set I'm happy. -- dan.gass@gmail.com
+
 My last proposal for today is to change the options interface a bit from optparse.  Instead of returning a static object of options it should be an object with a get() method so that additional keys can be used to get at settings in the configuration on the fly.  One application where this is important is in test frameworks.  Test specification input files may have additional keys to be used and arent known when the parser is instantiated.
 
   Please take a look at [http://www.red-dove.com/python_config.html this config module] and let me know how you think it fails to meet the particular use case you have in mind. I don't see any need to change optparse to work well with a configuration module  -- VinaySajip
+
+  I looked and here is where it falls short from my perspecitve.  To get a setting using your module you would use "cfg.setting".  Instead a method should be offered so that keys may be passed "cfg.setting.get('key1')".  Sometimes a script needs more than one instance of the setting.  Other times the script processes an input file (after the configuration has already been read) which specifies the key.  I'm sure there are other cases as well.  -- dan.gass@gmail.com
 
 One benefit of this marriage is that the help messages available from the command line would also apply to what can be set in the configuration file.  Also there is a lot of flexibility for the user with this scheme.  For options they always use they can hard code them in their default configuration as settings.  If they want to temporarily override them they can use command line options.  For groups of settings that are always used together, they can be used by simply passing in a key with the -k option to select the group.
 
   There are other ways in which help messages for configuration can be implemented. For example, with full hierarchical name support for configuration items, you could locate help for a configuration item in the configuration item itself - e.g. help on "a.config.item" might be found at "help.a.config.item". This approach can be used to store other meta-information, not just help text. -- VinaySajip
 
+  It's my preference to have the application control the help like optparse does.  IMO its better to have that information close to where the parser is being set up and not have to have or go to another file for that information. -- dan.gass@gmail.com
+
 The part that isnt addressed here that bothers me yet is how to weave in the ability to pass in real python objects as settings.  It would be good to have both a secure (restricted to strings and simple settings) and a second less than secure parser for those applications that need the flexibility of python.  Id like to see the APIs of the same for both the parser and the configuration file.  -- dan.gass@gmail.com
 
   I (VinaySajip) believe that I have covered this in [http://www.red-dove.com/python_config.html this config module] - if you feel something fundamental is missing, please let me know.
+
+  When I use python to set up objects to pass in as settings I often use multiple lines of code to do it.  Sometimes I need to import modules so that I can instantiate a class.  Other times I'm using the os module to figure out where the configuration file is located because I need the path information to figure out the absolute paths of other things that are located relative to it.  Don't change yours on my account I'm holding tight with mine until a new and improved standard is available (so long as it works for me).   Who is concerned about the security hole of executing Python and what restrictions do they want? -- dan.gass@gmail.com
 
 == Complexity killed the cat! ==
 
