@@ -2,12 +2,13 @@ This page lists features that GvR has mentioned as goals for Python 3.0.
 This page has been consolidated into PEP 3000; the PEP is more up-to-date
 and is actively maintained. [[#e 5]]
 
-(Another list is at PythonThreeDotOh, but it incorporates items that GvR has never talked about.)
+(At the time of writing there was already such a document [[#l 12], but it
+incorporates items that GvR has never talked about.)
 
 == Core Language Changes ==
 
  * Remove distinction between `int` and `long` types. [[#d 4]]
- * Make all strings unicode [[#d 4]], and have a separate `bytes` [[#b 2]] type.
+ * Make all strings unicode [[#d 4]], and have a separate `bytes` [[#b 2]] type. [[#m 13]]
  * Replace all old-style classes. [[#d 4]]
  * Make the `exec` statement a function (again.) [[#a 1]]
  * Make the `print` statement a function. (`write(x,y,z), writeline(x,y,z)`) [[#a 1]]
@@ -43,14 +44,10 @@ def foo (a as int, b as float) as float:
     ...
 }}}
 
- * Make list comprehensions equivalent to passing a generator expression to `list()`.
-   * Reason: they are essentially the same and it would remove edge-case differences between them.
  * Make `as` a true keyword. [[#g 7]]
  * Make `True` and `False` keywords. [[#f 6]]
    * Reason: make assignment to them impossible.
  * Make true division default.
- * Remove `__cmp__` (and possibly `cmp()`). [[#h 8]]
-   * Reason: ["TOOWTDI"] and rich comparisons are another way.
  * Raise an exception when making comparisons between two incongruent types (other than equality and inequality.)
    * Reason: such comparisons do not make sense and are especially confusing to new users of Python.
  * Require that all exceptions inherit a common base classs. [[#i 9]]
@@ -106,7 +103,7 @@ if expression:
    * Reason: there are too many modules to keep a flat hierarchy.
 
 
-== Unresolved Issues ==
+== Open Issues ==
 
  * `L += x` and `L.extend(x)` are equivalent.
  * Can the parameter order of the `insert` method be changed so the the index parameter is optional and `list.append` may be removed?
@@ -116,6 +113,11 @@ if expression:
  * Should there be a keyword for allowing the shadowing of built-ins?
  * Should injecting into another module's global namespace be prevented?
  * If line continuations (`\`) are removed from the language [[#a 1]], what should be done about the instances where statements do not allow parentheses?  Furthermore, the Python style guide [[#k 11]] recommends their usage in some cases.
+ * Should `__cmp__` (and possibly `cmp()`) be removed? [[#h 8]]
+   * Reason: ["TOOWTDI"] and rich comparisons are another way.
+ * Should list comprehensions be equivalent to passing a generator expression to `list()`?
+   * Reason: they are essentially the same and it would remove edge-case differences between them.
+ * With a new string substitution scheme [[#n 14]], will old-style (`%(var)s`) substitutions be removed?
 
 
 == References ==
@@ -133,3 +135,6 @@ if expression:
  * [[Anchor(i)]] [9] Python-Dev -- Exceptional inheritance patterns: http://mail.python.org/pipermail/python-dev/2004-August/047114.html
  * [[Anchor(j)]] [10] Python-Dev -- With statement: http://mail.python.org/pipermail/python-dev/2004-March/043545.html
  * [[Anchor(k)]] [11] PEP 8 -- Style Guide for Python Code: http://python.org/peps/pep-0008.html
+ * [[Anchor(l)]] [12] PythonThreeDotOh
+ * [[Anchor(m)]] [13] PEP 332 -- Byte vectors and String/Unicode Unification: http://python.org/peps/pep-0332.html
+ * [[Anchor(n)]] [14] PEP 292 -- Simpler String Substitutions: http://python.org/peps/pep-0292.html
