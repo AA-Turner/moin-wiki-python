@@ -13,6 +13,32 @@ x_class.attr("bar") = X::bar;
 ... 
 }}}
 
+=== static class functions ===
+You should do something which mirrors pure Python:
+{{{
+class foo(object):
+    def f(x,y):
+        return x*y
+    f = staticmethod(f)
+}}}
+So in C++, it would be something like:
+{{{
+   class_<foo>("foo")
+        .def("f", &foo::f)
+        .staticmethod("f")  // **
+        ;
+}}}
+Where the marked line would be implemented something like this:
+{{{
+   self& staticmethod(char const* name)
+   {
+        this->attr(name) = object(handle<>(
+             PyStaticMethod_New(this->attr(name).ptr())
+            ));
+   }
+}}}
+To create overloaded staticmethods in python, you overload first, then you make it static.
+
 === module level objects ===
 ==== at module creation time ====
 First, create those objects like
