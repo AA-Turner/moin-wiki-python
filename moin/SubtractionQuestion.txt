@@ -10,20 +10,6 @@ Terry S - tscott@fisher.unco.edu
 
 ----
 
-Yeah this is one of the big stumbling blocks for novices.  What you're seeing is a side-effect of C's int division.  7/4 is 1.75, but 1.75 is a float, not an int.  ints can only be whole numbers.
-
-Fortunately, the developers of python recognized this problem, but they couldn't simply change it right away because it might break existing python programs.  So, to enable "real-world" division where 7/4 = 1.75, add this line to the top of your python script and everything will magically work:
-{{{
-from __future__ import division
-}}}
-
-See also this for more info about this and other stumbling blocks:
-http://developers.coedit.net/BeginnerErrorsWithPythonProgramming
-
-----
-
-I am not troubled by the integer division which it seems is what you thought I was asking about. Let me put this in context: The students had an improper fraction, say 25/12. To obtain the whole number part for this fraction you should just be able to do integer division and obtain 2 (12 divides into 25 2 times). This is okay as long as the 25 is positive. However if it is -25/12 Python returns -3 which is not the correct answer for the whole number part of the fraction. It is possible to work around this but I was curious why the Python developers chose to handle negatives in this way. Thanks for any insight anyone might have. Terry S
-
 That is what floor division does, it reduces the value to the next lowest whole number.  If you want to separate the whole number and fractional part, use math.modf:
 {{{
 from __future__ import division
@@ -66,5 +52,6 @@ Your suggested answer -25/12 = -2 implies that -25%12 = -1
 But the result of A%B must be positive so -25%12 = 11  instead of -1
 thus -25/12 must be -3 instead of -2
 
+  ----
 
-
+Please see the Python Programming FAQ, [http://www.python.org/doc/faq/programming.html#why-does-22-10-return-3 question 1.3.2], for an explanation.
