@@ -1,5 +1,62 @@
-EmPy - a Python macroprocessor.
+=== Synposis ===
 
-Author: ErikMaxFrancis
+    A powerful and robust templating system for Python.
 
-Homepage: http://www.alcyone.com/software/empy/
+=== Overview ===
+
+    EmPy is a system for embedding Python expressions and statements
+    in template text; it takes an EmPy source file, processes it, and
+    produces output.  This is accomplished via expansions, which are
+    special signals to the EmPy system and are set off by a special
+    prefix (by default the at sign, {{{@}}}).  EmPy can expand arbitrary
+    Python expressions and statements in this way, as well as a
+    variety of special forms.  Textual data not explicitly delimited
+    in this way is sent unaffected to the output, allowing Python to
+    be used in effect as a markup language.  Also supported are
+    callbacks via hooks, recording and playback via diversions, and
+    dynamic, chainable filters.  The system is highly configurable via
+    command line options and embedded commands.
+
+    Expressions are embedded in text with the {{{@(...)}}} notation;
+    variations include conditional expressions with {{{@(...?...!...)}}}
+    and the ability to handle thrown exceptions with {{{@(...$...)}}}.  As
+    a shortcut, simple variables and expressions can be abbreviated as
+    {{{@variable}}}, {{{@object.attribute}}}, {{{@function(arguments)}}},
+    {{{@sequence[index]}}}, and combinations.  Full-fledged statements
+    are embedded with {{{@{...}}}}.  Control flow in terms of conditional
+    or repeated expansion is available with {{{@[...]}}}.  A {{{@}}} followed
+    by a whitespace character (including a newline) expands to
+    nothing, allowing string concatenations and line continuations.
+    Comments are indicated with {{{@#}}} and consume the rest of the line,
+    up to and including the trailing newline.  {{{@%}}} indicate
+    "significators," which are special forms of variable assignment
+    intended to specify per-file identification information in a
+    format which is easy to parse externally.  Context name and line
+    number changes can be done with {{{@?}}} and {{{@!}}} respectively.
+    {{{@<...>}}} markups are customizeable by the user and can be used for
+    any desired purpose.  Escape sequences analogous to those in C can
+    be specified with {{{@\...}}}, and finally a {{{@@}}} sequence expands to
+    a single literal at sign.
+
+
+=== Getting the software ===
+
+    The latest version of the software is available in a tarball here:
+    http://www.alcyone.com/software/empy/empy-latest.tar.gz.
+
+    The official URL for this Web site is
+    http://www.alcyone.com/software/empy/.
+
+
+=== Requirements ===
+
+    EmPy should work with any version of Python from 1.5.2 onward.  It
+    has been tested with all major versions of CPython from 1.5 up,
+    and Jython from 2.0 up (using Java runtimes 1.3 and 1.4).  The
+    included test script is intended to run on Unix-like systems with
+    a Bourne shell.
+
+
+=== Author ===
+
+    EmPy was written by ErikMaxFrancis.
