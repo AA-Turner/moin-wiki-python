@@ -433,9 +433,11 @@ def longMethodNameForEffect(longArgumentOne=None,
  * + Won't break simplistic code analyzers or grep for function def
  * + Vertical bars visually "attach" the decorators to the name.
  * + Decorators are indented, so it's clear that they modify the function.
+ * - Indented decorators look like they should be evaluated when the function is called, not when the function is parsed.  I have the same objection to docstrings, though.
  * + Reads naturally as "pipe" operator to unix hackers (which is semantically correct, since the defined function gets passed through the decorators, one at a time, and the result is used.
+ * - Misleading to Unix hackers, since the order of evaluation is "backwards".
  * + Doesn't use up one of the currently unused characters (such as "@") -- it's always possible that we'll find another good use for those later.
- * - For some fonts, "|" looks similar to "I" or "l"; but code highlighting would remove this problem.
+ * - For some fonts, "|" looks similar to "I" or "l" or "1".  Some think that code highlighting would remove this problem, but with normal-sized fonts, there are not many pixels in it to show a color clearly.  "@" has a big blob of pixels, and is very distinct.
  * - The key with "|" on it is often in an awkward location on laptop keyboards
  * 0 Perhaps decorators should be allowed before or after the docstring.  If you have to choose, I'd choose making it before the docstring.
  * - No implementation currently exists.
@@ -529,7 +531,8 @@ Same pros and cons as @decorator, but additionally:
  * + It doesn't break Leo, IPython, or any other tool that uses @ as a special character.
  * + The association with pipes makes some sense: "take this thing and pass it through that thing to get a modified thing".
  * - Most characters (including pipe) already have a meaning.  Ending an expression at the linebreak will probably keep these from becoming ambiguous, but ... that gets fragile.
- * - For some fonts, "|" looks similar to "I" or "l"; but code highlighting would remove this problem.
+ * - Misleading to Unix hackers, since the order of evaluation is "backwards".
+ * - For some fonts, "|" looks similar to "I" or "l" or "1"  Some think that code highlighting would remove this problem, but with normal-sized fonts, there are not many pixels in it to show a color clearly.  "@" has a big blob of pixels, and is very distinct.
  * - The key with "|" on it is often in an awkward location on laptop keyboards
  * - When using just one bar, it isn't noticable enough.  It seems more a part of the actual decorator function name than something demarking the function. 
  * - When using multiple decorators, the pattern formed by the vertical bars draws the eyes too much and makes it hard to focus on the signature.
