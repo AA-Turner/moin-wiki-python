@@ -1,6 +1,143 @@
 ##language:en
 == Christian Wyglendowski ==
+I am a Network Administrator at a small college in Illinois.  I began learning Python in 2002 while working as a PC Technician.  It has been invaluable for systems administration and was just plain enjoyable to learn (or keep learning, I should say!).
 
+== Code Clinic ==
+BrianvandenBroek came up with a great idea to do periodic programming problems with a group of others and then do a shared analysis afterwards to see the different approaches we all took on the problem.  At this time, it is called the Python Code Clinic.  Another participant who has a wiki page is ChadCrabtree.
+
+=== Random Writer ===
+Our first project was the [http://nifty.stanford.edu/2003/randomwriter/ Random Writer] from the [http://nifty.stanford.edu/ Standford Nifty projects site].  You can read more about the project at the Nifty site.  
+
+I chose to tackle the project from an object oriented perspective.  I have slowy been "getting it" as far as OOP goes and this proved to be some more good practice.  Here is my base class, RandomWriter <--how do I make that not link?:
+
+{{{
+import random
+
+class RandomWriter:
+    def __init__(self, seedLen, outLen, inName, outName):
+        #initialize instance variables from parameters
+        self.seedLen = seedLen              #seed length in characters
+        self.outLen = outLen                #output file length in characters
+        self.outTotal = 0                   #initialize total chars written to zero
+        
+        self.seed = None                    #initialize seed to None
+
+        #open files        
+        inFile = file(inName)               #open the input file
+        self.outFile = file(outName, 'w')   #open the output file
+        
+        self.text = inFile.read()           #create string variable with contents of inFile
+        inFile.close()                      #bye, inFile
+        self.textLen = len(self.text)       #get the length in chars of the text to analyze
+        self._selectSeed()                  #generate a seed from the text
+        self.matches = []                   #iv for matches
+        self.newChar = ''                   #iv for the next char from the text
+
+        #write the initial seed to the output file
+        for ch in self.seed:                
+            self._writeChar(ch)
+        
+
+    def _selectSeed(self):
+        """get a random seed that is self.seedLen long"""
+        pos = random.randint(0, self.textLen-1)
+        self.seed = self.text[pos:pos+self.seedLen]
+
+    def _getMatches(self):
+        """build a list of indexes of the current seed in the text"""
+        matches = []
+        match = self.text.find(self.seed)
+        matches.append(match)
+        while match != -1:
+            match = self.text.find(self.seed, match+1)
+            matches.append(match)
+        return matches
+
+    def _getSubChars(self):
+        """build a list of the chars that come after our current seed in the text"""
+        subChars = []
+        for index in self.matches:
+            if index >= 0:
+                try:
+                    ch = self.text[index+self.seedLen]
+                except IndexError: #oops! end of the text
+                    ch = self.text[-1] #get last char
+                subChars.append(ch)
+        return subChars
+
+    def _writeChar(self, ch):
+        """write char to output file and increment outTotal counter"""
+        self.outFile.write(ch)
+        self.outTotal += 1
+
+    def _updateSeed(self, ch):
+        """add the latest char to the end of the seed and drop the first char"""
+        self.seed = self.seed[1:] + ch
+
+    def Step(self):
+        """process current seed, write probable subsequent char, build new seed"""
+        self.matches = self._getMatches()
+        subChars = self._getSubChars()
+        nextChar = random.choice(subChars) #grab a "random" subsequent character
+        self._writeChar(nextChar)
+        #print "Wrote", nextChar
+        self._updateSeed(nextChar)
+        #print "New seed is", self.seed
+
+    def Run(self):
+        """do a Step for every char to be written"""
+        for i in range(self.outLen - self.outTotal):
+            self.Step()
+}}}
+
+Here is my implementation file:
+{{{
+import sys
+import randomwriter
+
+def usage():
+    print "python randomwrite.py SEEDLENGTH OUTLENGTH INFILE OUTFILE"
+    
+    
+def main():
+#check for proper number of args
+    if len(sys.argv) != 5:
+        usage()
+        sys.exit(1)        
+    
+    seedLength = int(sys.argv[1])
+    outLength  = int(sys.argv[2])
+    inFile     = sys.argv[3]
+    outFile    = sys.argv[4]
+
+#begin error checking --------------------
+    if seedLength < 1 or outLength < 1:
+        print "SEEDLENGTH and OUTLENGTH need to be greater than zero."
+        sys.exit(1)
+
+    try:
+        rw = randomwriter.RandomWriter(seedLength, outLength, inFile, outFile)
+    except IOError:
+        print "Error reading or writing files.  Please double check file names and locations."
+        sys.exit(1)
+
+    if rw.seedLen > rw.textLen:
+        print "The input file has to contain at least as many characters as SEEDLENGTH."
+        sys.exit(1)
+#end error checking ----------------------
+
+##    print "Initial seed is", rw.seed
+##    print "Processing..."
+    rw.Run()
+
+if __name__ == '__main__':
+    import profile
+    profile.run("main()")
+}}}
+
+==== Analysis ====
+Forthcoming...
+----
 Email: [[MailTo(christian AT SPAMFREE dowski DOT com)]]
 
 ...
