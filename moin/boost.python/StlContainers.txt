@@ -81,7 +81,8 @@ struct std_item
 void IndexError() { PyErr_; }
 }}}
 which allows us to have nice pythonic negative indexes and easy to read ''def''initions.
-+ Or, rather, void IndexError() {Pyerr_SetString(PyExc_IndexError, "Index out of range"); } ?
+
++ Or, rather, ``void IndexError() {Pyerr_SetString(PyExc_IndexError, "Index out of range"); }`` ?
 
 
 Then in BOOST_PYTHON_MODULE we use it:
@@ -99,7 +100,8 @@ class_<Geometry>("Geometry");
   ;
 }}}
 
-+ Note that  ``push_back`` seems better to be wrapped as in ``http://mail.python.org/pipermail/c++-sig/2002-December/002831.html``.
++ Note that  ``push_back`` seems better to be wrapped as in 
+`` http://mail.python.org/pipermail/c++-sig/2002-December/002831.html ``.
 (at least for boost.python 1.31.0).
 
 === map ===
