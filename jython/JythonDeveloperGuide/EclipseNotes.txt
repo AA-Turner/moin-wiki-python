@@ -1,31 +1,88 @@
 ClarkUpdike, incept: 2005-02-10
-= Jython via CVS in Eclipse =
+= Setting up the jython development environment in Eclipse =
 Eclipse is a CVS client and can be used to get the project from the repository.  It takes a few steps to set it up, but seems to work nice once you do.  Please correct any mistakes.  (Works for Eclipse 3.0.1)
 
- *`File -> New -> New Project -> CVS folder (expand) -> Checkout Projects from CVS -> Next`
- *Set up the repository properties
-  *Host: `cvs.sourceforge.net`
-  *Repository Path: `/cvsroot/jython`
-  *User: `anonymous`
-  *Password: <leave blank>
-  *Connection type: `pserver`
-  *Use Default Port <the default>
-  *Click `Next`
- *Create the project
-  *Select `Use an existing module (..)`
-  *Select `jython`
-  *Click `Next`
-  *Select `Check out as a project in the workspace` [[FootNote(I tried using `Check out as a project configured using the New Project Wizard` but it put me in an endless loop.)]]
-  *Click `Next`
-  *Click `Next`
- *Now, scan files from the repository to find tags from the repository by scanning them from files>
-  *Select `HEAD` 
-  *Click `Configure Tags`
-  *Drill down into `org.python.core` and select `__builtin__.java`
+== Creating the project using CVS ==
+[[Anchor(CVS)]]
+At a high level, you need to:
+ *Create a new java project (`<yourProjectName>`)
+ *Create another project using the `Checkout Projects from CVS` option
+  You won't end up with 2 projects, you'll use `Check out into an existing project` to check out the jython module and put it in the first project.
+ *Set up the source folder to only include ./org and ./com
+
+== Detailed Steps ==
+ *Create the new java project, (`<yourProjectName>`)
+ *Check out the jython module into `<yourProjectName>`
+  *`File -> New -> New Project -> CVS folder (expand) -> Checkout Projects from CVS -> Next`
+  *Set up the repository properties
+   *Host: `cvs.sourceforge.net`
+   *Repository Path: `/cvsroot/jython`
+   *User: `anonymous`
+   *Password: <leave blank>
+   *Connection type: `pserver`
+   *Use Default Port <the default>
+   *Click `Next`
+  *Create the project
+   *Select `Use an existing module (..)`
+   *Select `jython`
+   *Click `Next`
+   *Select `Check out into an existing project` [[FootNote(I tried using `Check out as a project configured using the New Project Wizard` but it put me in an endless loop.)]]
+   *Click `Next`
+   *Use the browser to pick `<yourProjectName>`
+   *Click `Next`
+  *Now, scan files from the repository to find tags from the repository by scanning them from files>
+   *Select `HEAD` 
+   *Click `Configure Tags`
+   *Drill down into `org.python.core` and select `__builtin__.java`
    You should see a list of tags (`Versions`, `Branches`)checked in the upper right hand pane.
-  *Click `Add Checked Tags` to make the CVS plugin aware of them
-  *Click `OK`
-  Eclipse scans the selected file and pulls out all of the available tags.
- *Checkout the tag you want into the project
-  *Select the branch or version you want (drill down)
-  *Click `Finish`
+   *Click `Add Checked Tags` to make the CVS plugin aware of them
+   *Click `OK`
+   Eclipse scans the selected file and pulls out all of the available tags.
+  *Checkout the tag you want into the project
+   *Select the branch or version you want (drill down)
+   *Click `Finish`
+ *Set up source folders for the project
+  You only want the `com` and `org` folders under `<yourProjectName>/jython/` to be set as source folder, otherwise things will be messy.  To do this, set up `Include` filters:
+  *Access the properties of `<yourProjectName>` (Right-click on the project and select `Properties`)
+  *Click on `Java Build Path` and select the `Source` tab
+  *If you have anything configured besides `<yourProjectName>/jython`, remove it.
+  *If you don't have `<yourProjectName>/jython`, click `Add Folder` and browse to it to add it.
+  *KEY: Don't click `OK` yet, you need to first add filters
+   *Click on the `+` sign next to `<yourProjectName>/jython`
+   *Select the `Included:` entry
+   *Click `Edit` then `Add Multiple` and browse to add the `com` and `org` directories.
+== Building the project using ANT ==
+[[Anchor(ANT)]]
+At this point, you should be able to build the project using Eclipse's `Java Builder`.  This will only compile the classes though --you'll want to use `<yourProjectName>/jython/build.xml` to get the full ant build.  To do this:
+ *First, set up an `ant.properties` file to supply "parameters" to `build.xml`
+  *Create the file directly under `<yourProjectName>`
+  *Put in info such as
+{{{
+    build.compiler=modern
+    debug=on
+    optimize=off
+
+    #javaccHome=/Users/bzimmer/Library/Java/Extras/javacc-3.2
+
+    ht2html.dir=
+    #python.home=
+    python.lib=<pythonHome>\\Lib
+    python.exe=<pythonHome>\\
+
+    ### zxJDBC ###
+    #oracle.jar=
+    #mysql.jar=/Users/bzimmer/Library/Java/Extras/mysql-connector-java-3.1.6-bin.jar
+    #informix.jar=
+    #postgresql.jar=/Users/bzimmer/Library/Java/Extras/pg74.215.jdbc2.jar
+    #jdbc.jar=
+    #servlet.jar=
+}}}
+  I left stuff commented out, but you can see how you can add jars, etc. using this file.
+ *Navigate to `build.xml` and Right-Click and select `Run` | `External Tools`.
+ *Select `New` and on the `Main` tab
+  *For `Buildfile:`, the default of `${workspace_loc:/<yourProjectName>/jython/build.xml}` should be fine
+  *For `Base Directory:`, click `Browse Workspace` and navigate to the `<yourProjectName>/jython` directory and select it
+  *Click on the `Properties` tab 
+  *Unselect the `Use global properties as specified...` check box
+  *Click the `Add External` button and navigate to and select `<yourProjectName>/ant.properties`
+  *Select `Apply` and `Run`
