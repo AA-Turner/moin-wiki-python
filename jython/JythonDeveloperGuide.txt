@@ -10,53 +10,56 @@
 
 BrianZimmer, incept: 2005-01-31
 
-This is an introduction to Jython development just to get someone started. It does cover in any depth the source code or the design behind Jython. It's purely aimed at getting a development environment setup. It's definitely not complete so feel free to email me when you find something that's wrong or missing.
+This is an introduction to developing Jython, just to get someone started. It doesn't cover in any depth the source code or the design behind Jython. It's purely aimed at getting a development environment setup. It's definitely not complete so feel free to email me when you find something that's wrong or missing.
 
 
 ===== CVS =====
 
-    * ConcurrentVersionControl
-    * available on most *nix systems or with cygwin on Windows
-    * GUI clients are available on most platforms
-    *  Login
-      cvs -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/jython login
-      Checkout source code
-    * Main/Tip/Trunk
-{{{   
- cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/jython co -P jython Newstyle Branch
-      cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/jython co -P -d jython.newstyle -r newstyle-branch jython
-}}}
+  * ConcurrentVersionControl
+  * available on most *nix systems or with cygwin on Windows
+  * GUI clients are available on most platforms
+
+  '''Login'''
+  {{{
+    cvs -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/jython login
+  }}}
+    Checkout source code
+  * Main/Tip/Trunk
+  {{{   
+       cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/jython co -P jython Newstyle Branch
+       cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/jython co -P -d jython.newstyle -r newstyle-branch jython
+  }}}
 
 
-==  Python == = 
+=====  Python =====
 
-    * http://www.python.org/2.2.3/
-    * Jython uses Python's standard library where possible. This means you will need a working copy of Python source files for the stdlib. We currently use Python 2.2 so you can grab the files from here if you don't already have 2.2 installed.
-
-
-== JavaCC == 
-
-    * https://javacc.dev.java.net/
-    * Parser generator for Java. Generally needed only for working on parser.
-    * It's not really required that you install this so I'd skip it.
-    * The latest version is JDK 1.5 compatible (uses 'e' rather than 'enum' as variable name).
+  * http://www.python.org/2.2.3/
+  * Jython uses Python's standard library where possible. This means you will need a working copy of Python source files for the stdlib. We currently use Python 2.2 so you can grab the files from here if you don't already have 2.2 installed.
 
 
-== JavaCC == 
+===== JavaCC =====
 
-    * https://javacc.dev.java.net/
-    * Parser generator for Java. Generally needed only for working on parser.
-    * It's not really required that you install this so I'd skip it.
-    * The latest version is JDK 1.5 compatible (uses 'e' rather than 'enum' as variable name).
+  * https://javacc.dev.java.net/
+  * Parser generator for Java. Generally needed only for working on parser.
+  * It's not really required that you install this so I'd skip it.
+  * The latest version is JDK 1.5 compatible (uses 'e' rather than 'enum' as variable name).
 
 
-== Ant == 
+===== JavaCC =====
 
-    * http://ant.apache.org/ A Java-based build tool.
-    * The Makefiles in the repository are old and will be removed.
-    * Download the latest version and install so the bin/ is somewhere in your path.
-    * The build.xml is the file containing the compiler directives
-    * It uses a file called ant.properties to override default paths; here's mine:
+  * https://javacc.dev.java.net/
+  * Parser generator for Java. Generally needed only for working on parser.
+  * It's not really required that you install this so I'd skip it.
+  * The latest version is JDK 1.5 compatible (uses 'e' rather than 'enum' as variable name).
+
+
+===== Ant =====
+
+  * http://ant.apache.org/ A Java-based build tool.
+  * The Makefiles in the repository are old and will be removed.
+  * Download the latest version and install so the bin/ is somewhere in your path.
+  * The build.xml is the file containing the compiler directives
+  * It uses a file called ant.properties to override default paths; here's mine:
 {{{
 build.compiler=modern
 debug=on
@@ -79,31 +82,31 @@ servlet.jar=
 }}}
 
 
-== Jars == 
+===== Jars =====
 
-    * Jython uses many optional jars
-    * These are not required for building locally but are for deployment with the installer
-    * The ant script takes care of conditional compilation
+  * Jython uses many optional jars
+  * These are not required for building locally but are for deployment with the installer
+  * The ant script takes care of conditional compilation
 
-== IDEs == 
+===== IDEs =====
 
-    * This is religious
-    * I generally use IntelliJ and vim
-    * Others don't
-    * You'll have to set this up yourself
-    * http://www.eclipse.org
-    * http://www.jetbrains.com/idea
+  * This is religious
+  * I generally use IntelliJ and vim
+  * Others don't
+  * You'll have to set this up yourself
+  * http://www.eclipse.org
+  * http://www.jetbrains.com/idea
 
 
-== Tests == 
+===== Tests =====
 
-    * There are a couple different places to find test cases
-            Jython's Lib/test
-            Jython's bugtests repository
-            Python2.2's Lib/test
-    * Run the particular test or you can run the whole suite by running 'regrtest.py'
+  * There are a couple different places to find test cases
+          Jython's Lib/test
+          Jython's bugtests repository
+          Python2.2's Lib/test
+  * Run the particular test or you can run the whole suite by running 'regrtest.py'
 
-== Directories == 
+===== Directory layout =====
 
 com       : zxJDBC related sources"
 Demo      : demo sources for the website and such"
@@ -118,11 +121,11 @@ Tools     : JythonC and Freeze
 
 ----
 
-Notes
+'''Notes'''
 
-    * This should be done in ReST and checked into Jython.
-    * The directory structures need work.
-    * The test suites need to be better consolidated.
+ * This should be done in ReST and checked into Jython.
+ * The directory structures need work.
+ * The test suites need to be better consolidated.
 
 
 
