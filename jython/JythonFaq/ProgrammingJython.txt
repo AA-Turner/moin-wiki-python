@@ -1,10 +1,14 @@
-[:../:FAQ Home]
-
+#acl MoinPagesEditorGroup:read,write,delete,revert All:read
 = Programming Jython =
+
+
+JythonFaq
+
+[[TableOfContents]]
 
 ----
 
-'''Why can't I multiply inherit from two Java classes?'''
+ == Why can't I multiply inherit from two Java classes? == 
 
 In earlier versions of JPython, you actually could. This was deliberately disabled in 1.1 for a variety of good reasons. For a detailed discussion on this issue see the following archive messages:
 
@@ -16,13 +20,13 @@ Note that you can still multiply inherit from any number of Python classes.
 
 ----
 
-'''Why does dir(someJavaObject) return the empty list?'''
+== Why does dir(someJavaObject) return the empty list? == 
 
 Because the built-in dir() function returns a list of names called from the object's __dict__, __methods__, and __members__ attributes. In Python, an instance's methods live in the instance's class's dictionary, so dir(someJavaObject.__class__) would return a list of the method names (although only for the direct class, not for any base classes).
 
 ----
 
-'''I'm trying to execute a 'protected' or 'private' Java Instance Method or attribute in a Java package. How can I get access?'''
+ == I'm trying to execute a 'protected' or 'private' Java Instance Method or attribute in a Java package. How can I get access? == 
 
 By default, as in Java, these methods are protected from external access, but there may be reasons, such as test scaffolding scripts, that this feature is not wanted. In the [jython home]/registry file:
 
@@ -34,7 +38,7 @@ By default, as in Java, these methods are protected from external access, but th
 
 ----
 
-'''Can I reload a java class as is possible for python modules?'''
+== Can I reload a java class as is possible for python modules? == 
 
 The support for reloading java classes through reload(java-class), is disabled. The reload(java-class) only worked when the java class was a standalone class without any dependencies on other java classes (except the system class). When there was more than one class involved, the simple reload(java-class) no longer worked.
 
@@ -46,7 +50,7 @@ Further Jython 2.0 internal changes enable the expert user to play with reloadin
 
 ----
 
-'''How can I access Java protected (static) members from a Jython subclass?'''
+== How can I access Java protected (static) members from a Jython subclass? == 
 
 The short answer: you can't. At least not without setting the registry option python.security.respectJavaAccessibility to false.
 
@@ -67,7 +71,7 @@ Such a call does not originate from the subclass, but from internal reflection c
 
 ----
  
-'''How can I use a Java null value in Jython?'''
+== How can I use a Java null value in Jython? == 
  
 A java null is turned into a Python None value.
 
@@ -85,7 +89,7 @@ A java null is turned into a Python None value.
 
 ----
 
-'''Where's the -O switch?'''
+== Where's the -O switch? == 
 
 Jython 2.0 does not have a -O command-line switch.
 
@@ -93,7 +97,7 @@ Assigning __debug__=0 has been used to get -O behavior from things like "assert"
 
 ----
 
-''When I write to a file, it's empty. Why?'''
+''When I write to a file, it's empty. Why? == 
 
 The addition of buffering to the org.python.core.PyFile class in the 2.1 development cycle changed the autoflushing of Jython file objects. In Jython 2.1x, you must explicitly flush() and/or close() a file object opened for writing or appending before any data will actually be saved.
 
@@ -114,7 +118,7 @@ This will create an empty file, but note that the standard lib does not use writ
 
 ----
 
-'''The Jython's os module is missing some functions, why?'''
+== The Jython's os module is missing some functions, why? == 
 
 Python's and Jython's os modules differ necessarily because of differences Java imposes on natvie system access. For example, Java does not have a chdir equivalent, so it does not exist in Jython's os.
 
@@ -128,7 +132,7 @@ Jython CVS also has more functions in the os module (like system and the popen* 
 
 ----
 
-'''The Jython's os module is missing some functions, why?'''
+== The Jython's os module is missing some functions, why? == 
 
 Use the os.system or os.popen* functions from Jython CVS.
 
