@@ -96,7 +96,7 @@ def bar(low,high) [accepts(int,int), returns(float)]:
  * - Guido didn't like (maybe because of line wrap issue?) 
 
 
-'''list at beginning of function body syntax'''
+'''list at top of function body syntax'''
 {{{
 def foo(arg1,arg2):
     [classmethod]
@@ -113,6 +113,19 @@ def bar(low,high):
  * + Solves line wrap problem with above proposal
  * 0 There is a hack that implements this now [http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/286147 here].
  * - Guido's europython presentation said this didn't win out, but not why
+
+'''pie decorator at top of function body syntax'''
+{{{
+def foo(arg1,arg2):
+    @classmethod
+    ...
+
+def bar(low,high):
+    @accepts(int,int)
+    @returns(float)
+    ...
+}}}
+ * Same as above but with pie syntax.
 
 
 '''inline syntax'''
