@@ -7,11 +7,10 @@ Note: This is a work in progress.
 A small library was written to allow IOSlaves, the protocol handlers for the
 [http://www.kde.org/ K Desktop Environment], to be written in Python using the
 PyQt and PyKDE modules. An example IOSlave was created for the purpose of
-examining multiple images contained in single files (Acorn Spritefiles) using
-this library and a simple Python class. Since Python works well as a "glue"
-language, it is hoped that the creation of IOSlaves will be made more
-accessible to a wider range of users, leading to a richer, more transparent
-user experience on the desktop.
+examining the user's Konqueror bookmarks using this library and a simple Python
+class. Since Python works well as a "glue" language, it is hoped that the creation
+of IOSlaves will be made more accessible to a wider range of users, leading to a
+richer, more transparent user experience on the desktop.
 
 Note: the installation procedure for IOSlaves in forthcoming versions of PyKDE will probably be different to that described below.
 
@@ -170,7 +169,7 @@ application. This may be passed on to the user.
             return
 }}}
 The XML contained in the file is converted to a DOM representation of the document which
-is stored in an instance variable.
+is stored in an instance attribute.
 {{{
         self.document = qtxml.QDomDocument()
         
@@ -217,7 +216,6 @@ then the path to the object, the name of the object and a DOM node are
 returned to this method; otherwise, the name and object return values are
 set to `None`.
 {{{
-        # Parse the URL using the URL's methods.
         path, name, obj = self.find_object_from_url(url)
         
         if obj is None:
@@ -229,8 +227,6 @@ If, on the other hand, an object was found then we can check whether it is a
 bookmark or some other object. Objects such as folders cannot be fetched using
 the get method.
 {{{
-        # The obj variable is a document node. Check whether it is a
-        # folder node and return an error if so.
         if unicode(obj.nodeName()) != u"bookmark":
         
             self.error(KIO.ERR_IS_DIRECTORY, path)
@@ -243,18 +239,16 @@ earlier. We declare the MIME type before we send the file data.
 {{{
         self.mimeType(self.bookmark_mimetype)
 }}}
-
+The bookmark's details such as its title, target URL and the icon used to represent it in a menu, are
+read and converted into a form suitable for presentation.
+{{{
+        details = self.read_bookmark_details(obj)
+        
+        details[u"title"] = self.decode_name(details[u"title"])
+}}}
 The contents of the file to be returned are created using a template combined
 with information from the DOM node found earlier.
 {{{
-        # Decode the title string so that it is presented in a more
-        # conventional manner.
-        details = self.read_bookmark_details(obj)
-        
-        # Decode the title string so that it is presented in a more
-        # conventional manner.
-        details[u"title"] = self.decode_name(details[u"title"])
-        
         text = self.desktop_template % details
         output = text.encode(details[u"encoding"])
 }}}
@@ -272,11 +266,16 @@ We must also report that we have finished the operation by calling the base clas
         self.finished()
 }}}
 
+
+
+==== Synchronisation ====
+
+This IOSlave defines a `_flush` method to allow changes to the user's bookmarks to
+be written to their bookmarks file. This is typically only performed in methods where
+a request was made to change some aspect of the presented file system.
 {{{
     def _flush(self):
     
-        # Internal function for synchronising the filesystem with the
-        # bookmarks file.
         if self.document is None:
         
             return
@@ -290,13 +289,12 @@ We must also report that we have finished the operation by calling the base clas
             self.error(KIO.ERR_CANNOT_OPEN_FOR_WRITING, self.file)
             return
         
-        # Write the XML to the bookmarks file.
         b.write(str(self.document.toString()))
-        
         b.close()
-        
-        # Unset the document attribute to force the bookmarks file to be
-        # re-read.
+}}}
+Resetting the document attribute for this instance will cause the bookmarks file to be read
+from the user's home directory before further operations can be performed on the presented file
+system:
+{{{
         self.document = None
-    
 }}}
