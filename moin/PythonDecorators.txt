@@ -1,4 +1,3 @@
-
 [[TableOfContents()]]
 
 == What is a Decorator ==
@@ -21,10 +20,7 @@ Note that the current proposal actually only decorates functions (including meth
 
 The winning syntax as of now uses the '@' symbol, as described in [http://mail.python.org/pipermail/python-dev/2004-June/045516.html this message].  Mark Russell implemented this version.  [http://mail.python.org/pipermail/patches/2004-July/015452.html Here] is the message describing the patch he checked in.
 
-There has been a long discussion about the syntax to use for decorators in Python.  See for example these threads:
-
- * http://article.gmane.org/gmane.comp.python.devel/61569
- * http://www.livejournal.com/users/jcalderone/3913.html
+There has been a long discussion about the syntax to use for decorators in Python.
 
 == Examples ==
 
@@ -41,23 +37,21 @@ See PythonDecoratorLibrary for more complex and real-world examples.  See also M
 
 == Current Python Decorator Proposals ==
 
-See section 7 for a categorization of different proposals; this section just provides concrete examples.
+See [#head-f22ccf491766760d15b371b8ed27c8a81b7cde2f section 6] for a categorization of different proposals; this section just provides concrete examples.
 
 ----
+
+'''Decorator Poll''' (consider the poll now closed)
 
 Here is an online poll where you can vote between a few different alternative syntaxes for python decorators: http://wiki.wxpython.org/index.cgi/PythonDecoratorsPoll
 
-Please vote for which one you prefer the most.
-
-Based on mailing list traffic, I tried to narrow it down to just the 3 most popular options, but of course there are many good options out there.
-
 ----
 
-After the @decorator syntax was "accepted", lots of people threw up alarms and a huge series of threads started exploding on Python-dev. Here are the current alternatives that I could find that are being argued, with pros and cons:
+After the @decorator syntax was "accepted", lots of people threw up alarms and a huge series of threads started exploding on Python-dev. Here are the current alternatives that I could find that are being argued, with pros and cons.
 
 I give two examples that might be common uses in the future.  Classmethod declarations, and something like static typing (adapters), declaring what type parameters a function expects and returns.
 
-'''A1. pie decorator syntax'''
+=== A1. pie decorator syntax ===
 {{{
 @classmethod
 def foo(arg1,arg2):
@@ -132,7 +126,7 @@ class TestDecorators(unittest.TestCase):
         self.assertEqual(foo.author, 'Cleese')
 }}}
 
-'''A2. pie decorator and space syntax'''
+=== A2. pie decorator and space syntax ===
 {{{
 @ classmethod
 def foo(arg1,arg2):
@@ -146,7 +140,7 @@ def bar(low,high):
 * 0 This is more readable for some people, less readable for others.
 
 
-'''B. list-before-def syntax'''
+=== B. list-before-def syntax ===
 {{{
 [classmethod]
 def foo(arg1,arg2):
@@ -169,7 +163,7 @@ def bar(low,high):
  * - Breaks in interactive shell
  * - Harder to highlight (looks like a normal list)
 
-'''C1. list-after-def syntax'''
+=== C1. list-after-def syntax ===
 {{{
 def foo(arg1,arg2) [classmethod]:
     ...
@@ -251,7 +245,7 @@ body) to the front, where it is more in-your-face, it should IMO be
 moved all the way to the front.
 }}}
 
-'''C2. list-after-def syntax with a (pseudo-)keyword'''
+=== C2. list-after-def syntax with a (pseudo-)keyword ===
 {{{
 def foo(arg1,arg2) using [classmethod]:
     ...
@@ -318,7 +312,7 @@ which feel is more consistent with the rest of python parsing-wise, without decr
 the decorators stand out more.)
 
 
-'''C3. tuple-after-def syntax with a (pseudo-)keyword'''
+=== C3. tuple-after-def syntax with a (pseudo-)keyword ===
 {{{
 def foo(arg1,arg2) using classmethod,:
     ...
@@ -353,7 +347,7 @@ Very similar to C2, but with those slight differences
 The 1st drawback could be removed if one allows both tuple and single-element after the pseudo-keyword,
 trading consistency for readability and convenience. 
 
-'''C4. tuple-after-def syntax with a % operator'''
+=== C4. tuple-after-def syntax with a % operator ===
 
 {{{
 def foo(arg1,arg2) % classmethod:
@@ -402,7 +396,7 @@ bar = bar % accepts(int,int) % returns(float)
 
 
 
-'''D. list at top of function body syntax'''
+=== D. list at top of function body syntax ===
 {{{
 def foo(arg1,arg2):
     [classmethod]
@@ -425,7 +419,7 @@ def bar(low,high):
  * - No implementation currently exists.
  * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [http://mail.python.org/pipermail/python-dev/2004-August/047279.html]
 
-'''E1. pie decorator at top of function body syntax'''
+=== E1. pie decorator at top of function body syntax ===
 {{{
 def foo(arg1,arg2):
     @classmethod
@@ -441,7 +435,7 @@ def bar(low,high):
  * - No implementation currently exists.
  * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [http://mail.python.org/pipermail/python-dev/2004-August/047279.html]
 
-'''E2. vbar decorator at top of function body syntax'''
+=== E2. vbar decorator at top of function body syntax ===
 {{{
 def foo(arg1,arg2):
     |classmethod
@@ -516,7 +510,7 @@ def longMethodNameForEffect(longArgumentOne=None,
 }}}
 
 
-'''E3. vbar decorator after arg'''
+=== E3. vbar decorator after arg ===
 {{{
 
 def longMethodNameForEffect(longArgumentOne=None,
@@ -551,7 +545,7 @@ Basically it has the same characteristic than E2, with the following slight diff
  * - New syntax having no equivalent in other part of python (but all @ / | propositions suffer from that )
  * - No implementation currently exists.
 
-'''F. inline syntax'''
+=== F. inline syntax ===
 {{{
 def classmethod foo(arg1,arg2):
     ...
@@ -568,7 +562,7 @@ def classmethod foo(arg1,arg2):
  * - Breaks etags (couldn't it be fixed?)
  * - No implementation currently exists.
  
-'''G. as decorator'''
+=== G. as decorator ===
 {{{
 as classmethod
 def foo(arg1,arg2):
@@ -581,7 +575,7 @@ def foo(arg1,arg2):
  * - Guido specifically vetos: "as" means "rename" in too many logical, common places that are
  * - No implementation currently exists.
 
-'''H. pie decorator using a different character'''
+=== H. pie decorator using a different character ===
 
 For example, using the '|' character:
 
@@ -622,7 +616,7 @@ def bar(low,high):
     ...
 }}}
 
-'''I. angle brackets decorator syntax'''
+=== I. angle brackets decorator syntax ===
 {{{
 <classmethod>
 def foo(arg1,arg2):
@@ -638,7 +632,7 @@ def bar(low,high):
  * - Parsing of greater-than and less-than becomes more fragile.
  * - No implementation currently exists.
 
-'''J1. new keyword decorator syntax'''
+=== J1. new keyword decorator syntax ===
 {{{
 decorate classmethod:
     def foo(arg1,arg2):
@@ -684,7 +678,7 @@ Here's an example of run-away nesting (imagine trying to figure out which decora
        return 0
 }}}
 
-'''J2. expand the def suite'''
+=== J2. expand the def suite ===
 {{{
 decorate:
     classmethod
@@ -712,8 +706,7 @@ Older downsides included this comment:
  * - Technical problems with the current grammar parser if a suite *starts* with an optional part.  (Ending with an optional part, such as "else:" is OK, but starting with one is not.)  (''Michael Sparks has experimented with the grammar and based on his results it appears *not* an issue.'')
 The implementation referenced above does NOT allow a generic suite - but only allows decorators to be listed. The semantics wrt to ordering remains the same as in 2.4a2
 
-
-'''J3. two part def suite'''
+=== J3. two part def suite ===
 {{{
 
 def qux:
@@ -742,7 +735,7 @@ Same as J2 but has advantages:
  * - loses the "definition reflects use"; you can no longer cut and paste from a call to the definition, or vice versa, because the name is not near the arguments.
 
 
-'''J4. two part def suite with "@" decorators'''
+=== J4. two part def suite with "@" decorators ===
 {{{
    def p_statement_expr(self, p)
        @staticmethod
@@ -758,7 +751,7 @@ Same as J2 but has advantages:
  * + Leverages the visibility of "@" to overcome visibility problems 
      of list-after-def syntaxes
 
-'''K. partitioned syntax syntax'''
+=== K. partitioned syntax syntax ===
 
  * Use pie-decorator syntax (or some other complex syntax) when arguments 
     are to be passed
@@ -785,7 +778,7 @@ def classmethod foo(arg1,arg2):
  * - Since both methods are legal, it has all the downsides of either syntax, in terms of what it does to the rest of the language or newbie confusion.
  * - No implementation currently exists.
 
-'''L. Keyword other than as and with before def'''
+=== L. Keyword other than as and with before def ===
 {{{
 using classmethod def foo(arg1,arg2):
     ...
@@ -814,7 +807,7 @@ def bar(low,high):
  * - New keyword
  * - No implementation currently exists (''very similar to A1 implementation, no?'').
 
-'''M. Making def an expression / letting it return a value'''
+=== M. Making def an expression / letting it return a value ===
 {{{
 deco1(deco2(deco3(
     def func(arg1, arg2):
@@ -836,43 +829,6 @@ deco1(deco2(deco3(
  * 0 The name would be temporarily bound to the unwrapped function, which changes semantics for some types of wrappers, such as generics and properties.
 
 
-== Thinking ahead to Python 3 ? ==
-
-[http://groups.google.com/groups?hl=en&lr=&ie=UTF-8&safe=off&selm=Pine.LNX.4.44.0408050856390.31290-100000%40ccc9.wpi.edu&rnum=1 Christopher King] makes the point that we are trying to do too much with decorators: declare class/static methods, describe function metadata, and mangle functions.  It might be best to think about what is best for each separately.
-
-How might fully loaded functions look in the future?
-
-Christopher King's example:
-{{{
-def classmethod foo(self,a,b,c):
-    """Returns a+b*c."""
-    {accepts: (int,int,int), author: 'Chris King'}
-
-    return a+b*c
-}}}
-
-Another possible example (keyword support for staticmethod & classmethod, visual basic-like typing using the "as" keyword for adapters, "with" code blocks):
-{{{
-def classmethod foo(a as int, b as int, c as list) as list:
-    """Returns a+b*c."""
-
-    listcopy = []
-    with synchronized(lock):
-        listcopy[] = c[]
-
-    return a+b*listcopy
-}}}
-
-Here it is with the @ symbol:
-{{{
- @author('Chris King')
- @accepts(int,int,list)
- @classmethod
- def foo(self,a,b,c):
-     """Returns a+b*c."""
-
-      return a+b*c
-}}}
 
 == Decorator Syntax Breakdown ==
 Here's a breakdown of some of the different decisions that have to be made in deciding on a decorator syntax.  This is an attempt to consolidate some of the common points from the various examples above.
@@ -1070,3 +1026,46 @@ with the following exceptions:
 
  * The temporary variarables aren't really created.  Those are just placeholders to indicate that the expression is evaluated (hopefully to produce a callable) before the function definition.
  * The function can be any function, not just a lambda expression (which is more restricted).
+
+
+
+
+
+== Thinking ahead to Python 3 ? ==
+
+[http://groups.google.com/groups?hl=en&lr=&ie=UTF-8&safe=off&selm=Pine.LNX.4.44.0408050856390.31290-100000%40ccc9.wpi.edu&rnum=1 Christopher King] makes the point that we are trying to do too much with decorators: declare class/static methods, describe function metadata, and mangle functions.  It might be best to think about what is best for each separately.
+
+How might fully loaded functions look in the future?
+
+Christopher King's example:
+{{{
+def classmethod foo(self,a,b,c):
+    """Returns a+b*c."""
+    {accepts: (int,int,int), author: 'Chris King'}
+
+    return a+b*c
+}}}
+
+Another possible example (keyword support for staticmethod & classmethod, visual basic-like typing using the "as" keyword for adapters, "with" code blocks):
+{{{
+def classmethod foo(a as int, b as int, c as list) as list:
+    """Returns a+b*c."""
+
+    listcopy = []
+    with synchronized(lock):
+        listcopy[] = c[]
+
+    return a+b*listcopy
+}}}
+
+Here it is with the @ symbol:
+{{{
+ @author('Chris King')
+ @accepts(int,int,list)
+ @classmethod
+ def foo(self,a,b,c):
+     """Returns a+b*c."""
+
+      return a+b*c
+}}}
+
