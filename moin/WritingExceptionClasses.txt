@@ -16,9 +16,11 @@ You may later write:
 #!python
 try:
     raise HostNotFound( "taoriver.net" )
-except HostNotFound, X:
+except HostNotFound, exc:
     # Handle exception.
-    # "X" is the HostNotFound instance.
+    print exc # -> 'Host Not Found exception: missing taoriver.net'
+    print exc.host # -> 'taoriver.net
+    
 }}}
 
 == See Also ==
@@ -28,5 +30,5 @@ HandlingExceptions, TracebackModule
 == Questions ==
 
   * How do you relay the traceback information? ''Relay the traceback information? Moving it higher up the call-stack? Could you try to explain your question?''
-     * When you're logging exceptions, you want access to the traceback information to. After some research, I believe what you use is extract_tb or extract_stack from the traceback module. -- 216.254.10.130 [[DateTime(2003-09-07T15:23:43Z)]]
+     * When you're logging exceptions, you want access to the traceback information to. After some research, I believe what you use is extract_tb or extract_stack from the traceback module. -- LionKimbro [[DateTime(2003-09-07T15:23:43Z)]]
   * What better exception-foo is out there?
