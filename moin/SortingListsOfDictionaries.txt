@@ -21,7 +21,14 @@ There are many ways to do this. Here's the fastest way to do it, as it avoids us
 sort_on = "key2"
 decorated = [(dict_[sort_on], dict_) for dict_ in undecorated]
 decorated.sort()
-sorted = [dict_ for (key, dict_) in decorated]
+result = [dict_ for (key, dict_) in decorated]
 }}}
 
 (The variable was named {{{dict_}}} because {{{dict}}} is already a builtin.)
+
+Starting with Py2.4 the {{{list.sort()}}} method provides a {{{key=}}} argument for doing the transform in a single step.  The new {{{sorted()}}} built-in function goes a step further and encapsulates making a new sorted list while leaving the original intact.  Also, the new {{{operator.itemgetter()}}} function helps by constructing functions for key access:
+
+{{{
+>>> from operator import itemgetter
+>>> result = sorted(undecorated, key=itemgetter('key2'))
+}}}
