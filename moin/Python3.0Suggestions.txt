@@ -27,7 +27,7 @@ Suggested syntaxes:
 
  * The setdefault() method is badly named and poorly designed.  In a typical call, d.setdefault.(k, []).append(v), the list may be unnecessarily instantiated and discarded on every call.  At a minimum, default value should be a new empty list instead of None:  {{{ d.setdefault(k).append(v) }}}.
 
- * A more versatile idea is to realize that defaults generalize to the whole dictionary instead of an individual lookup.  A call to setdefault would then change the whole dictionary's behavior when a key is not found::
+ * A more versatile idea is to realize that defaults generalize to the whole dictionary instead of an individual lookup.  A call to setdefault would then change the whole dictionary's behavior when a key is not found:
 
 {{{
     counts = {}
@@ -53,7 +53,7 @@ faster.
 
 == Disallow calling class methods from instances ==
 
-Calling with a instance is almost never what you want.  When it is done, the results are not especially readable the code
+Calling with a instance is almost never what you want.  When it is done, the results are not especially readable, and the code
 suggests that it is doing something that it isn't:   
 {{{ 
 {'a'=1}.fromkeys('poof') # what happened to 'a'? 
@@ -73,5 +73,13 @@ The current implementation will call {{{__iadd__()}}}, allowing it to do the in-
 
 == Remove the distinction between data and non-data decriptors ==
 
-Having the distinction provides a tiny benefit but incurs a large cost in terms of implementation complexity and increasing the learning curve for descriptors.  Using the presence or absence of a setter to distinquish the two is somewhat hackish and confuses the heck out of anyone first trying to master descriptors.   Even after using descriptor for a while, that nuance remains an annoying distraction.
+Having the distinction provides a tiny benefit but incurs a large cost in terms of implementation complexity and increasing the learning curve for descriptors.  Using the presence or absence of a setter to distinquish the two is somewhat hackish and confuses the heck out of anyone first trying to master descriptors.   Even after using descriptors for a while, that nuance remains an annoying distraction.
 
+== Reconsider the inclusion of __slots__ or re-evaluate its implementation ==
+
+Guido has expressed that this is a highly popular, but badly misunderstood tool that is often used incorrectly.
+
+ * If {{{__slots__ }}}is misspelled, there is no visible indication of failure.
+ * The purpose of the tool is '''not''' to make it more difficult to assign attributes.
+ * {{{__slots__}}} do not inherit.
+ * {{{__slots__}}} complicates and slows the implementation of new-style classes.
