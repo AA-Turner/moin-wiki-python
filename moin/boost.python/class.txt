@@ -19,6 +19,21 @@ BOOST_PYTHON_MODULE(example1)
 }}}
 If you want to forbid creating class instancies from python, you now must pass `no_init` to class_<> definition. Default, as in python, will be init with no arguments. There is no limit to number of init<>'s in the boost.python.
 
+'''Abstract class'''
+
+Pure virtual (abstract) class shall be wrapped with
+{{{
+class_<Abstract, boost::noncopyable>("Abstract, no_init);
+}}}
+Because if you don't tell it that class is noncopyable,
+Boost.Python tries to register a converter for handling wrapped
+functions which handle function returning values of class type.
+Naturally, this has to be able to copy construct the
+returned C++ class object into storage that can be managed by a
+Python object. Since this is an abstract class, that
+fails.
+
+
 '''C++ object storage'''
 
 Boost.Python allows you to specify how Python objects will hold the
