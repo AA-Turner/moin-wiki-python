@@ -9,7 +9,7 @@ String concatenation is building up a relatively lengthy string from a collectio
 === Dubious Way ===
 Newcomers to Python often try to build strings up like this:
 
->>> string_list = ['one', 'big', 'string', 'in', 'pieces']
+{{{>>> string_list = ['one', 'big', 'string', 'in', 'pieces']
 
 >>> new_string = "" 
 
@@ -21,27 +21,27 @@ Newcomers to Python often try to build strings up like this:
 
 onebigstringinpieces 
 
->>> 
+>>>}}} 
 
 === The Problem ===
-This is slow and resource heavy. Each time through the for loop, a new string is built and the old on is discarded. That might not matter so much for such a small case, but as the number of elements to be joined creeps up, so too does the inefficiency.
+This is slow and resource heavy. Each time through the {{{for}}} loop, a new string is built and the old one is discarded. That might not matter so much for such a small case, but as the number of elements to be joined creeps up, so too does the inefficiency.
 
 === Preferred Alternatives ===
 ==== String Formatting ====
-For short cases where the number of strings to be joined is know, you can use string formatting as follows:
+For short cases where the number of strings to be joined is known, you can use string formatting as follows:
 
->>> print '%s%s%s%s%s' %tuple(string_list)
+{{{>>> print '%s%s%s%s%s' %tuple(string_list)
 
-onebigstringinpieces
+onebigstringinpieces}}}
 
-This is much more efficient, but is also rather more limited in the range of circumstances to which it applies. It could be made more general by constructing the formatting string as a function of len(string_list), but this would be a bit dubious, too, when we have
+This is much more efficient, but is also rather more limited in the range of circumstances to which it applies. It could be made more general by constructing the formatting string as a function of {{{len(string_list)}}}, but this would be a bit dubious, too, when we have
 
 ==== The join method of strings ====
 The join method of the string type lets you perform the concatenation as follows:
 
->>> print "".join(string_list)
+{{{>>> print "".join(string_list)
 
-onebigstringinpieces
+onebigstringinpieces}}}
 
 This is quite efficient and perfectly general as it applies to any arbitrary list of strings. (You don't need to know the list length in advance.)
 
