@@ -1,14 +1,14 @@
 #pragma section-numbers off
-Real-world comparisons of Python web solutions.
+== Real-world comparisons of Python web solutions ==
 === Introduction ===
-
-'''This page is not yet finished.'''
 
 I've been a Python programmer for quite some time -- since the 1.5.2 days.  I learned early on how easy it is to create web sites in Python, and I've done several.
 
 In fact, I realized this week that I have built non-trivial web sites using at least 4 of the popular web architecture solutions.  Arrogantly, I thought that my experiences and personal evaluations of these architectures might be useful to other programmers faced with the daunting list of possibilities.
 
 I will address the architectures in the order in which I used them.  I've been programming for a long time, and in that time I've learned a few things about what kinds of techniques make for workable and maintable programs.  In web programming, in particular, I've learned that it is important to separate processing from presentation: the bulk of the HTML text should not be deeply embedded in the programming code that creates the page.  You'll see that theme repeated in my comments.
+
+By the way, I have a terrible tendency towards verbosity.  I do not hesitate to use 25 words to express concepts that could be expressed in 10.  Be warned.
 
 One other background note is that I prefer PostgreSQL as a database back-end.  The last time I tried MySQL (which was quite a while ago), it just didn't scale as well as Postgres.
 
@@ -51,13 +51,43 @@ Webware, by default, doesn't care about the extension on your files.  So, if you
 
 === WebWare with Cheetah Templates ===
 
-While I was writing my Webware/PSP site, I started doing some reading about other Python templating systems.
+While I was writing my Webware/PSP site, I started doing some reading about other Python templating systems.  I was intrigued by the shortcut approach to templating taken by Cheetah.  An expression that would be written like this in PSP:
+
+    <%= mySymbols['extraDict'].method('lookup') %>
+
+can be written in Cheetah as:
+
+    $mySymbols.extraDict.method.lookup
+
+There is something about the dotted notation that I find very consistent.  In my view, it makes the page read very cleanly.
+
+Cheetah is not tied to HTML by any means.  It is a general-purpose templating/substition tool.  The Cheetah package can be used in a standalone method, but I find it to be very useful as an add-on to Webware.  Ddo the processing in the neat inheritance structure of Webware, prepare the symbols and substitution calues in a dictionary, compile the Cheetah template, and print the results.  There is even code on the Webware mailing list that shows how to implement a Cheetah caching scheme with a long-running server process, so that pages are only recompiled when the changed.
+
+For the time being, this is still my favorite Python web solution.
 
 === CherryPy ===
 
+Over the years, I came back to the CherryPy web site several times.  The concept is just fascinating.  I finally did get the time to create a small web site, and I still think it is fascinating.
+
+With CherryPy, all of the templeted HTML pages in your web site are compiled into a single Python file, ''including'' the web server.  It is powerful, neat, and standalone.  You can compile your site to a file, and deploy that file to a Windows or Linux without modification, regardless of which web server is installed, and even if the host has no web server at all.
+
+The language strongly enforces the processing/presentation split.  The model/view/controller thing is built-in to the lanuage.  CherryPy templates can do simple substitution and limited symbol manipulation, but no heavy processing.
+
+It is probably unsuitable for very large sites, because of the single file thing, but for small sites which need to be deployed in varying environments, CherryPy is well worth a look.
+
 === PHP ===
 
+Before you jump in to correct me, I '''know''' that PHP is not Python.  However, because PHP is so popular, I decided that no self-respecting web site developer should ignore it.  So, I dug in.
+
+I have to say the experience was not a happy one.  The fundamentals of the language seem reasonable enough, at least in the recent versions (I looked at 4.1), although the Perl-derived syntax is a bit hard for me to read.  The standard library is quite extensive, although the fact that all of it exists in the global namespace is a bit confusing.
+
+PHP has full support of classes, attributes and methods, and supports object-orientation, but the key problem is that no one seems to use it!  There is a ''vast'' body of sample PHP code on the web, but nearly all of it is just dreadful.  HUGE long procedures, little code refactoring, and intermixed code and HTML that is impossible to read and must be impossible to maintain.
+
+It is a fascinating situation, and I wish I had a government grant to study the cause/effect.  Is it that the ''ad hoc'' nature of the language encourages sites that grow from nothing without structure?  Is it that the language is simple enough the people without good programming backgrounds are enable to create complete web sites without having the fundamentals of code structure?  Is it that PHP started with sucky code, and everyone since then has just used those samples and extended them even more?
+
 === Conclusion ===
+
+I'm not sure there are any conclusions yet.  I'm the kind of guy that likes trying new things, so I will probably run thorugh a few more architectures before I'm done, and I hope I remember to add my thoughts to this page.  For now, I use Webware as the appserver, with Cheetah for the templating.  I'm a happy camper, and a Python believer.
 
 === Comments/Discussion ===
 
