@@ -11,19 +11,19 @@ the list already exist?''
 Usually, we write it out like so:
 {{{
 #!python
-def add_value_to_keys_list( dict_, key, value ):
-    if dict_.has_key( key ):
-        dict_[ key ] = [ value ] # construct list
+def add_value_to_keys_list(dict_, key, value):
+    if dict_.has_key(key):
+        dict_[key] = [value]  # Construct list
     else:
-        dict_[ key ].append( value ) # append to list
+        dict_[key].append(value)  # Append to list
 }}}
 
 This is okay, but we can do even better!
 
 {{{
 #!python
-def add_value_to_keys_list( dict_, key, value ):
-    dict_.setdefault( key, [] ).append( value )
+def add_value_to_keys_list(dict_, key, value):
+    dict_.setdefault(key, []).append(value)
 }}}
 
 How does it work?
