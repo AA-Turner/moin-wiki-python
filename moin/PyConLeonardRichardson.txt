@@ -78,21 +78,18 @@ that is. I assume there will be signs.
   * An implementation which reads its configuration from a file
   * An implementation which reads its configuration from a file, and provides a web interface to that same file through I Want Options.
 
-* An implementation of a slightly less silly program (yet to be written) which uses I Want Options for user preferences.
+* An implementation of a simple portal program, which uses I Want Options both to provide an interface to user preference and an 
+  interface to site options.
 
 = To do =
 
 * Write the slides!
 
-* Clean up example app #3
-
-* Write example app that sets per-user options (context == username)
-
-= Questions For You =
-
-What kind of app should I write for the user preferences demonstration? I'd like at least a boolean, a selection box, and something with extra semantics (such as a date).
+* Clean up example apps #2 and #3
 
 = Work Log =
+
+03/06: Wrote the user preferences app; it's a tiny portal application. Still needs some work.
 
 02/27: Just wrote the same app three times. The last time was the most interesting, as I'd never before implemented a context or a configuration CGI within the framework of I Want Options. When I originally wrote what is now IWO, it was a big blob of NewsBruiser-specific code; the framework per se is less than a week old. I've now got ideas about more things I can move into IWO (an example context implementation, and some more configuration CGI logic). The other two implementations also gave me some ideas; if I changed it so that the user pass the context into the OptionConfig constructor, instead of passing it in to all the methods (which seems reasonable), I could turn getOptionValue into a __getitem__ implementation, which would be cool.
 
