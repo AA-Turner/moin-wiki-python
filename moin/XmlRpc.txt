@@ -1,0 +1,26 @@
+''The page contents below were copied with permission of author (BrianDorsey) from [http://www.seapig.org/DocXMLRPCServer SeaPig:DocXMLRPCServer]. I'd like to rework the page to fit the form of WorkingWithTime, RssLibraries, etc.,. See also: DocXmlRpcServer'' -- LionKimbro [[DateTime(2004-04-28T05:58:21Z)]]
+
+XML-RPC makes calling remote functions incredibly easy. 
+
+From http://www.xml-rpc.com:
+''It's a spec and a set of implementations that allow software running on disparate operating systems, running in different environments to make procedure calls over the Internet.
+
+It's remote procedure calling using HTTP as the transport and XML as the encoding. XML-RPC is designed to be as simple as possible, while allowing complex data structures to be transmitted, processed and returned.''
+
+
+Here is a bit of sample code to call a procedure ''message'' (passing in the first argument) on a server listening on localhost, port 8000:
+{{{
+#!python
+# messageclient.py 
+
+import xmlrpclib
+import sys
+
+if len(sys.argv) > 1:
+    s = xmlrpclib.ServerProxy('http://localhost:8000')
+    s.message(sys.argv[1])
+
+}}}
+
+(also, see [http://www.python.org/doc/current/lib/xmlrpc-client-example.html this example] and the [http://www.python.org/doc/current/lib/module-xmlrpclib.html xmlrpclib documentation])
+
