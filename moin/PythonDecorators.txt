@@ -271,7 +271,7 @@ def bar(low,high):
  * - Compatibility issue: program that is working under 2.4 will not work properly under earlier versions without any explanation (old syntax compatible decorators will not blow in your face)
  * 0 Perhaps decorators should be allowed before or after the docstring.  If you have to choose, I'd choose making it before the docstring.
 
-'''E. pie decorator at top of function body syntax'''
+'''E1. pie decorator at top of function body syntax'''
 {{{
 def foo(arg1,arg2):
     @classmethod
@@ -284,6 +284,45 @@ def bar(low,high):
 }}}
  * Same as above but with pie syntax.
  * Could use @doc too as a docstring alternative
+
+'''E2. vbar decorator at top of funciton body syntax'''
+{{{
+def foo(arg1,arg2):
+    |classmethod
+    ...
+
+def bar(low,high):
+    |accepts(int,int)
+    |returns(float)
+    ...
+
+def longMethodNameForEffect(longArgumentOne=None,
+                            longArgumentTwo=42):
+    |staticmethod
+    |funcattrs(grammar="'@' dotted_name [ '(' [arglist] ')' ]",
+               status="experimental", author="BDFL")]:
+    """This method blah, blah.
+
+    It supports the following arguments:
+    - longArgumentOne -- a string giving ...
+    - longArgumentTwo -- a number giving ...
+
+    blah, blah.
+
+    """
+
+}}}
+
+ * + Consistent with how docstrings are used.
+ * + Looks ok for simple or complex decorators
+ * + Won't break simplistic code analyzers or grep for function def
+ * + Vertical bars visually "attach" the decorators to the name.
+ * + Decorators are indented, so it's clear that they modify the function.
+ * + Reads naturally as "pipe" operator to unix hackers (which is semantically correct, since the defined function gets passed through the decorators, one at a time, and the result is used.
+ * + Doesn't use up one of the currently unused characters (such as "@") -- it's always possible that we'll find another good use for those later.
+ * - For some fonts, "|" looks similar to "I" or "l"; but code highlighting would remove this problem.
+ * 0 Perhaps decorators should be allowed before or after the docstring.  If you have to choose, I'd choose making it before the docstring.
+
 
 '''F. inline syntax'''
 {{{
