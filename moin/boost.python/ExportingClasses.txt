@@ -26,7 +26,7 @@ To expose the class, we use a ''class_'' builder. Class member functions are exp
 #include <boost/python.hpp>
 using namespace boost::python;
 
-PYTHON_MODULE(getting_started2)
+BOOST_PYTHON_MODULE(getting_started2)
 {
     // Create the Python type object for our extension class and define __init__ function.
     class_<hello>("hello", init<std::string>())
@@ -53,7 +53,7 @@ Notes:
  * Regular member functions are defined by calling ''def()'' with a member function pointer and its Python name;
  * Any function added to a class whose initial argument matches the class (or any base) will act like a member function in Python.
  * To define a nested class, just place class_<> builder inside another class `scope`: {{{
-BOOST_PYTHON_MODULE_INIT(nested_ext)
+BOOST_PYTHON_MODULE(nested_ext)
 {
     using namespace boost::python;
 
