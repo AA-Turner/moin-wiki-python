@@ -108,9 +108,9 @@ One potentially tricky issue is combining the dependency support with other dist
 
 It may be that what we end up with, or want to end up with, is a ``setuptools`` mini-package for bundling with distributions that want these features.  We could then bundle in some of the more useful commands such as ``test`` and perhaps an ``install_package_data``.  And, the package could hack ``distutils.command.__path__`` to also check the ``setuptools`` package.  Thus, any new commands supplied by ``setuptools`` would be available without explicitly adding them.  Existing commands would have to be explicitly overridden in the ``cmdclass`` argument to setup, or initialized via ``self.cmdclass.setdefault()`` in our custom ``Distribution`` class's ``__init__``.
 
-(Update: I've begun a `draft version of the setuptools package`_ -- it does the command path extension, and implements installation of package data in a way similar to that used by Zope X3 and ZConfig, but with full distutils integration so that the "installed files" list will be accurate.  It also adds a ``test`` command for running unit tests.  By the time of the sprint, I will probably also add a draft version of a ``get_dependencies`` command with some stub classes for dependencies that print "This is where I would download" or "This is where I would install".  -- PJE)
+(Update: I've begun a draft version of the setuptools package at `<http://cvs.eby-sarna.com/PEAK/setuptools/>`_ -- it does the command path extension, and implements installation of package data in a way similar to that used by Zope X3 and ZConfig, but with full distutils integration so that the "installed files" list will be accurate.  It also adds a ``test`` command for running unit tests.  By the time of the sprint, I will probably also add a draft version of a ``get_dependencies`` command with some stub classes for dependencies that print "This is where I would download" or "This is where I would install".  -- PJE)
 
-.. _draft version of the setuptools package: http://cvs.eby-sarna.com/PEAK/setuptools/
+
 
 Sprinting Strategies/Notes
 --------------------------
