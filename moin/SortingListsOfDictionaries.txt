@@ -8,20 +8,20 @@ For example:
 
 {{{
 #!python
-a = { "key1":5, "key2":8, "key3":2 }
-b = { "key1":7, "key2":4, "key3":9 }
-c = { "key1":6, "key2":1, "key3":1 }
-l = [ a,b,c ] # how do you sort this list?
+a = {"key1": 5 , "key2": 8, "key3": 2}
+b = {"key1": 7 , "key2": 4, "key3": 9}
+c = {"key1": 6 , "key2": 1, "key3": 1}
+undecorated = [a, b, c] # how do you sort this list?
 }}}
 
-There are many ways to do this; Here's one way I've been doing it:
+There are many ways to do this. Here's the fastest way to do it, as it avoids using a custom comparison function, instead using builtin comparisons. This is the ''decorate-sort-undecorate'' (DSU) pattern, or the ''Schwartzian transform'' if you're coming from Perl.
 
 {{{
 #!python
-sort_key = "key2"
-l = [(d[sort_key],d) for d in l]
-l.sort()
-l = [d for (k,d) in l]
+sort_on = "key2"
+decorated = [(dict_[sort_on], dict_) for dict_ in undecorated]
+decorated.sort()
+sorted = [dict_ for (key, dict_) in l]
 }}}
 
 == Questions ==
