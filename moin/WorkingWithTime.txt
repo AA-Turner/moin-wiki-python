@@ -1,0 +1,50 @@
+#pragma section-numbers off
+
+= Working with Time =
+
+This page gives the basics of working with time in Python. More detail can be found in [http://www.python.org/doc/current/lib/module-time.html the time Module Documentation.]
+
+== Formats ==
+
+There are several ways to work with time:
+
+|| '''format''' || '''Python''' ||
+|| seconds since the "Epoch" || {{{time.time()}}} ||
+|| tuple || {{{time.gmtime()}}} ||
+|| string || {{{time.ctime()}}} ||
+
+'''The Epoch''' is January 1st, 1970, midnight, on UNIX systems. On other systems, look at the results of {{{time.gmtime(0)}}} to discover the date of the Epoch.
+
+Measuring time in seconds since the Epoch is convenient for storage and comparing dates, because you only have a single number to consider.
+
+The '''tuple''' contains several values, arranged the following way: year, month 1-12, day 1-31, hour 0-23, minutes 0-59, seconds 0-61, day 0-6 (Mon-Sun), day 1-366, and DST -1,0,+1. "DST" means "daylight savings time." For more information, see [http://www.python.org/doc/current/lib/module-time.html time Module Documentation.]
+
+Using a tuple is convenient, because you can access particular numbers by index, and because you can easily compare dates. Remember that Python compares tuple data from front to back. The data is indexed so that comparing tuple times is intuitive.
+
+The '''string''' format reads something like "Mon Feb 16 16:04:25 2004". You can't really compare these usefully, but they're what you need to display things to the user.
+
+== Converting Between Formats ==
+
+attachment:timemodule.png
+
+attachment:timemodule.svg
+
+There are is also {{{localtime}}}, instead of {{{gmtime}}}, for when you want a tuple by local time.
+
+== Time Zones ==
+
+(nothing yet)
+
+== More Details ==
+
+This page is meant just to give you the basics.
+
+For more detail, read [http://www.python.org/doc/current/lib/module-time.html the time Module Documentation.]
+
+== Contributors ==
+
+LionKimbro
+
+== Discussion ==
+
+(none)
