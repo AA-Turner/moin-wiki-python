@@ -31,6 +31,20 @@ Prepared statements in addition to Connection and Cursor. Related is the idea of
 
 Should the argument passing be driver dependent, should there be additional methods, should only one be allowed?
 
+= Refined transaction model =
+
+  Currently, DB-API 2.0 loosely defines transactions at the level of a connection.  However, many drivers 
+  provide extensions that allow multiple (distinct, nested, or both) transactions to exist on a given 
+  connection.  Maybe it is time for a next generation DB-API to better formalize the transactional scope of 
+  a connection.  Backends and drivers that wish to allow multiple concurrent transactions will have to
+  implement a simple connection pool so that the same physical connection can be shared by multiple logical
+  DB-API connection objects.  Of course, this alters the concept of a connection and may require even more
+  infrastructure to support.  i.e., a developer could request an unshared connection so that global (physical)
+  connection variables can be changed in isolation.
+
+  Also, some thought should be directed towards properly handling the semantics of nested transactions, as
+  more and more backends are now supporting them.
+  
 = Schema Information =
 
 = Role of the DB API spec =
