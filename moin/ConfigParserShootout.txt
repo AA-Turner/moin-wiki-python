@@ -428,6 +428,65 @@ The part that isnt addressed here that bothers me yet is how to weave in the a
 
   I don't see where my discussion is at odds with this stated aim, which I presume was entered by the page creator (not by me). And I only made the comment about "impetuous" because you "apologized" for your "strong words". I'd rather not pursue further discussion in the same vein, but you have my thanks for your contribution, all the same. -- VinaySajip
 
+== Syntax Proposal, Tweak ConfigParser .ini Syntax To Allow Arbitrary Nesting Levels ==
+
+Please take a look at this sample configuration file and comment.  It is extremely similar to the .ini syntax of ConfigParser but allows arbitrarily deep nesting.  I also figured out a way to have my cake and eat it too as far as being able to use execfile to bring in settings (strictly an option for us insane types).
+{{{
+# just like ConfigParser 
+#   : and = are interchangeable and are used for assigning values to options
+#   # and ; are interchangeable and are used for comments
+#   %(option)s still works the same
+#
+# [ ] means more.  When used alone it still defines a section.  It also
+# defines a list of keys to use to place option into a dictionary.
+#
+# options surrounded by < > are special
+#   <keys> defines a comma separated list of default keys to use when 
+#          traversing an option dicationary when retrieving an option.
+#          Note, these keys will optionally be supplemented with keys 
+#          from the command line.
+#
+#   <read> defines a comma separated list of additional configuration files 
+#          to read.  By default, it expects the configuration file to have 
+#          this syntax style.  If application optionally selects allowing 
+#          python files to execute (done during parser instantiation?) and the 
+#          file has a .py extension then execfile is used to read the options 
+#          from the file and merge them into the options dictionaries.
+#
+# For example:
+
+                                 # start of section [] is assumed
+<keys> : grpA,dev0,sb1           # by default use these keys to get options
+<read> : more.cfg,evenmore.cfg   # opt=val for opt,val in cfg.py
+comm_driver = standard           # same as comm_driver = 'standard'
+comm_path[grpA,dev0] = path_A0   # same as comm_path['grpA']['dev0'] = 'path_A0'
+comm_path[grpA,dev1] = path_A1   # same as comm_path['grpA']['dev1'] = 'path_A1'
+
+[sb1]                            # starts a new section
+sandbox = /home/dmgass/build_v1  # inserts this value under sandbox['sb1']
+<read> = %(sandbox)s/cfg.py      # [ opt['sb1']=val for opt,val in cfg.py ] :-)
+
+[sb2]                            # starts a new section
+sandbox = /home/dmgass/build_v2  # inserts this value under sandbox['sb2']
+<read> = %(sandbox)s/cfg.py       # [ opt['sb1']=val for opt,val in cfg.py ] :-)
+
+[grpB]                           # starts a new section
+comm_path[dev0] = path_B0        # same as comm_path['grpB']['dev0'] = 'path_B0'
+comm_path[dev1] = path_B1        # same as comm_path['grpB']['dev1'] = 'path_B1'
+
+[grpC,dev0]                      # starts a new section
+comm_path = path_C0              # same as comm_path['grpC']['dev0'] = 'path_C0'
+
+[grpC,dev1]                      # starts a new section
+comm_path = path_C1              # same as comm_path['grpC']['dev1'] = 'path_C1'
+
+# In theory user could override default keys specified in this file from 
+# the command line to communicate with device 1 of group C:
+#   application.py --keys=dev1,grpC
+}}}
+
+I've been tinkering with a "cooperation" between optparse and a new configuration parser to get the benefits described earlier without the design, implementation, and documentation headaches.  More on this later after I get more sleep and do more research. -- dan.gass@gmail.com
+
 == Complexity killed the cat! ==
 
 Look at what happened to urllib2 - the entry level for new users was greatly enhanced, but the added functionality was really little more than what you could already do more simply with urllib. With that in mind, I think the new ConfigParser should in it's simplest form act very closely like the original ConfigParser.
