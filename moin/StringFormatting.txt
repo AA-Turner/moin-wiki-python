@@ -1,0 +1,36 @@
+#pragma section-numbers off 
+
+= String Formatting =
+
+The [http://docs.python.org/lib/typesseq-strings.html section of the manual on String Formatting Operations] is hidden in the section on [http://docs.python.org/lib/typesseq.html Sequence types.]
+
+== Direct Variable Reference ==
+
+A common trick you can use when writing strings is to refer directly to variables.
+
+{{{
+#!python
+a = "hello, world!"
+x = 34
+y = 96
+
+print """
+a = %(a)s
+x,y = (%(x)s,%(y)s)
+""" % vars() # local variables
+}}}
+
+If you want to refer to global variables, you can replace {{{vars()}}} with {{{globals()}}}.
+
+== Printing Percentages ==
+
+{{{
+#!python
+percent = lambda x:"%2.2f%%" % x
+
+print percent(35.3567) # prints "35.35%"
+}}}
+
+= Discussion =
+
+  (none yet!)
