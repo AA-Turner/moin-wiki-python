@@ -21,16 +21,41 @@ Any other ideas where to find this code completion shell?
 = Configuring Eclipse for running Jython =
 
 1. Install your choice of plug in.
- * This means unzipping the download and dragging it into the eclipse/plugins directory, then restarting eclipse.
- * Both plug-ins (pyeclipse and pe4eclipse) give you color highlighting for .py python/jython files.  Although the color highlighting of pe4eclipse is nicer, I prefer pyeclipse since it supports the SHIFT-TAB de-indent keystroke.  
+ * Unzip the plugin download and drag it into the eclipse/plugins directory, then restart eclipse.
+    pyeclipse is identified by the directory org.python.pyeclipse_0.0.1
+    pe4eclipse is identified by the directory  net.sourceforge.pe4eclipse
+ * Both plug-ins (pyeclipse and pe4eclipse) only really give you color highlighting for editing .py python/jython files.  That's all. Even the ability to run jython or python needs to be configured manually (see step 2, below) and doesn't require either of these plugins to do.  
+ * Although the color highlighting of pe4eclipse is slightly nicer (or closer to what I am used to in pythonwin), I prefer the pyeclipse plug-in since it supports the SHIFT-TAB de-indent keystroke.  Vital! :-)
+ * You can use Eclipse bookmarking and creating Tasks inside the python editors.  This is way cool.  Not even IDLE has bookmarking (though pythonwin does).
  * The latter plug-in (pyeclipse) also provides a 'python' perspective (although you can create these yourself) which shows the console window and hides the 'launch' button (which is only for running java apps).  To launch python or jython you must configure an external tool.
 
 2. Configuring to run python from within Eclipse.
  * Instructions for this can be found in the pyeclipse forum
      http://sourceforge.net/forum/forum.php?thread_id=717580&forum_id=194323
- * NOTE that I prefer to set my 
-${container_loc}
+ * NOTE that I prefer to set my Working Directory to ${container_loc} since this lets you launch python on files that are inside folders within your project.  More resilient.
 
+ go to Run -> External Tools -> Configure -> New 
+ - fill in the following values: 
+Name: python 
+Tool Location: E.g. /usr/bin/python or C:\Python22\python.exe 
+Tool Arguments: -> Browse Variables -> ${resource_name} 
+Working Directory: -> Browse Variables -> ${container_loc}
+ 
+2. Configuring to run jython from within Eclipse.
+ go to Run -> External Tools -> Configure -> New 
+ - fill in the following values: 
+Name: jython 
+Tool Location: E.g. C:\jython-2.1\jython.bat
+Tool Arguments: -> Browse Variables -> ${resource_name} 
+Working Directory: -> Browse Variables -> ${container_loc}
+
+Note: If you need to run an app which requires arguments, you will need to make another tool configuration (just copy the jython one) and simply add the arguments to the 
+  e.g. Tool Arguments: -> Browse Variables -> ${resource_name} c:\\
+Notice I have supplied the argument c:\\ 
+
+Hope this helps
+-Andy Bulka
+http://www.atug.com/andypatterns
 
 = Other Links =
 
