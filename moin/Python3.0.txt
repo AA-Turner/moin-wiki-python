@@ -2,18 +2,16 @@ This page lists features that GvR has mentioned as goals for Python 3.0.
 
 (Another list is at PythonThreeDotOh, but it incorporates items that GvR has never talked about.)
 
-See the "Python Regrets" talk and other recent presentations by Guido.
-
 == Core Language Changes ==
 
- * Remove distinction between `int` and `long` types.
- * Make all strings unicode, and have a separate bytes type.
+ * Remove distinction between `int` and `long` types. [[#a 4]]
+ * Make all strings unicode, and have a separate bytes type. [[#a 2]] [[#a 4]]
  * Make the `exec` statement a function (again.) [[#a 1]]
  * Make the `print` statement a function. (`write(x,y,z), writeln(x,y,z)`) [[#a 1]]
- * Remove support for old-style classes--all classes will be new-style.
+ * Remove support for old-style classes--all classes will be new-style. [[#a 4]]
  * Remove {{{`x`}}} in favor of `repr(x)`. [[#a 1]]
- * Remove the `lambda` statement. [[#a 1]]
- * Remove support for string exceptions.
+ * Remove the `lambda` statement. [[#a 1]] [[#a 4]]
+ * Remove support for string exceptions. [[#a 1]]
  * Perhaps have optional declarations for static typing.
  * Do something so you can catch multiple exceptions using 'except E1, E2, E3:'. Maybe use 'except E1, E2, E3 as err:' if you want the error variable?  (added by GvR, suggested by Bram Cohen).
  * Add a `with` statement: {{{
@@ -28,12 +26,12 @@ with self:
  * Remove `dict.iteritems()`, `dict.iterkeys()`, `dict.itervalues()`.
  * Change `max()` and `min()` to consume iterators.
  * Remove `apply()`.  Use `f(*args, **kw)` instead. [[#a 1]]
- * Remove `xrange()`.  Use `range()` instead. [[#a 1]]
- * Remove `map()` and `filter()`.  Use list comprehensions instead. [[#a 1]]
+ * Remove `xrange()`.  Use `range()` instead. [[#a 1]] [[#a 4]]
+ * Remove `map()` and `filter()`.  Use list comprehensions instead. [[#a 1]] [[#a 4]]
  * Remove `coerce()` as it is obsolete. [[#a 1]]
  * Remove `reduce()`.  Use a loop instead. [[#a 1]]
  * Remove `callable()`.  Catch the exception instead. [[#a 1]]
- * Remove `buffer()` in favor of a new `bytes` type. [[#a 1]]
+ * Remove `buffer()` in favor of a new `bytes` type. [[#a 1]] [[#a 2]]
  * Remove `raw_input()`.  Use `sys.stdin.readline()` instead. [[#a 1]]
  * Remove `input()`.  Use 'eval(sys.stdin.readline())` instead. [[#a 1]]
  * Remove `execfile()` and `reload()`.  Use `exec()` instead. [[#a 1]]
@@ -41,7 +39,7 @@ with self:
 
 == Standard Library Changes ==
 
- * Remove `string` and other deprecated modules.
+ * Remove `string` and other deprecated modules. [[#c 3]] [[#a 4]]
  * Remove `sys.exc_type` as it is not type safe.  Use `sys.exc_info` instead. [[#a 1]]
 
 == Unresolved Issues ==
@@ -53,3 +51,6 @@ with self:
 == References ==
 
  * [[Anchor(a)]] [1] Python Regrets: http://www.python.org/doc/essays/ppt/regrets/PythonRegrets.pdf
+ * [[Anchor(b)]] [2] PEP 296 -- Adding a bytes Object Type: http://python.org/peps/pep-0296.html
+ * [[Anchor(c)]] [3] PEP 4 -- Deprecation of Standard Modules: http://python.org/peps/pep-0004.html
+ * [[Anchor(d)]] [4] PyCon 2003 State of the Union Address: http://www.python.org/doc/essays/ppt/pycon2003/pycon2003.ppt
