@@ -1,88 +1,37 @@
-Describe PyConFrancescAlted here.
-
-
 = Processing And Analyzing Extremely Large Amounts Of Data In Python =
 
-== Abstract ==
-
-Many scientific applications frequently need to save and read
-extremely large amounts of data (frequently, this data is derived from
-experimental devices).  Analyzing the data requires re-reading it many
-times in order to select the most appropriate data that reflects the
-scenario under study. In general, it is not necessary to modify the
-gathered data (except perhaps to enlarge the dataset), but simply
-access it multiple times from multiple points of entry.
-
-The goal of [http://pytables.sourceforge.net PyTables] is to address this
-requirements by enabling the end user to manipulate easily scientific data
-tables, numarray objects and Numerical Python objects in a persistent,
-hierarchical structure.
-
-== Capabilities ==
-
-During my talk, I'll be describing the capabilities of the forthcoming
-PyTables 0.3 version, which include:
-
- * Appendable tables: It supports adding records to already created tables.
- This can be done without copying the dataset or redefining its structure,
- even between different Python sessions.
-
- * Unlimited data size: Allows working with tables with a large number of
- records, i.e. that don't fit in memory.
-
- * Support of Numeric and numarray Python arrays: Numeric arrays are a very
- useful complement of tables to keep homogeneous table slices (like
- selections of table columns). Also, you can define a column in a table to
- be a one-dimensional (n-dimensional generalization will come in the future)
- array.
-
- * Hierarchical data model: Pytables builds up an object tree in memory that
- replicates the hierarchical structure existing on disk. That way, the
- access to the objects on disk is made by walking throughout the PyTables
- object tree, and manipulating them. This approach is proven to be very
- effective when working with complex data trees.
-
- * Data compression: It supports data compression (through the use of the
- zlib library) out of the box. This become important when you have
- repetitive data patterns and don't have time for searching an optimized way
- to save them.
-
- * Support of files bigger than 2 GB: This is because HDF5 already can do
- that (if your platform supports the C long long integer, or, on Windows,
- __int64).
-
- * Ability to read generic HDF5 files and work natively with them. So, you
- can create your HDF5 files in C or Fortran, and open them with PyTables.
- Then, you can do any kind of operation with these HDF5 objects that
- PyTables allows you.
-
- * Architecture-independent: PyTables has been carefully coded (as HDF5
- itself) with little-endian/big-endian byte orderings issues in mind. So, in
- principle, you can write a file in a big-endian machine (like a Sparc or
- MIPS) and read it in other little-endian (like Intel or Alpha) without
- problems.
-
- * Optimized I/O: PyTables has been designed from the ground with
- performance in mind. In its newest encarnation, it can read and write
- tables and arrays from/to disk at an speed generaly only bounded by the
- disk I/O speed. This levels of performance can be achieved because a smart
- combination of buffered I/O, use of Pyrex extensions, HDF5 and
- numarray libraries, and last, but not least, Psyco.
-
+Processing large amounts of data is a must for people working in such
+fields of scientific applications as CFD (Computational Fluid
+Dynamics), Meteorology, Astronomy, Human Genomic Sequence or High
+Energy Physics, to name only a few. Existing relational or
+object-oriented databases usually are good solutions for applications
+in which multiple distributed clients need to access and update a
+large centrally managed database (e.g., a financial trading
+system). However, they are not optimally designed for efficient
+read-only database queries to pieces, or even single attributes, of
+objects, a requirement for processing data in many scientific fields
+such as the ones mentioned above.
 
 == Presentation Notes ==
 
+My talk will describe PyTables, a Python library that addresses
+this need, enabling the end user to manipulate easily scientific data
+tables and [Numeric and numarray http://www.pfdubois.com/numpy] Python
+objects in a persistent, hierarchical structure. The foundation of the
+underlying hierarchical data in permament storage is the excellent
+[http://hdf.ncsa.uiuc.edu/HDF5 HDF5] library.
+
 I will be walking through the basic features of the PyTables, and
-demonstrating the speed of the library real-life. In addition, I hope to
-present a benchmark where PyTables will show to be competitive when compared
-with other persistent databases in Python.
+demonstrating the use of the package in real-life scenarios. In addition,
+I will present some benchmark where PyTables will show to be competitive
+when compared with other persistent databases in Python.
 
 This presentation is currently
 [http://www.python.org/pycon/pycon-schedule.html scheduled] for 10am on
 friday March 28th.
 
 ----
-I would also like to target my presentation as best I can to those people
+I would like to target my presentation as best I can to those people
 attending.
 
 So please add questions/suggestions below;  for example:
@@ -90,4 +39,3 @@ So please add questions/suggestions below;  for example:
  * Will PyTables run on ...
  * etc.
 ----
-
