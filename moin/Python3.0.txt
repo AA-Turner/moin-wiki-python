@@ -6,9 +6,9 @@ and is actively maintained. [[#e 5]]
 
 == Core Language Changes ==
 
- * Remove distinction between `int` and `long` types. [[#a 4]]
- * Make all strings unicode, and have a separate bytes type. [[#a 2]] [[#a 4]]
- * Replace all old-style classes. [[#a 4]]
+ * Remove distinction between `int` and `long` types. [[#d 4]]
+ * Make all strings unicode [[#d 4]], and have a separate `bytes` [[#b 2]] type.
+ * Replace all old-style classes. [[#d 4]]
  * Make the `exec` statement a function (again.) [[#a 1]]
  * Make the `print` statement a function. (`write(x,y,z), writeln(x,y,z)`) [[#a 1]]
  * Add a mechanism so that multiple exceptions can be caught using `except E1, E2, E3:`.  For instance: {{{
@@ -26,7 +26,7 @@ with self:
    * Reason: backticks are hard to read in many fonts and can be mangled by typesetting software.
  * Remove the `<>` operator.
    * Instead: use `!=`.
- * Remove the `lambda` statement. [[#a 1]] [[#a 4]]
+ * Remove the `lambda` statement. [[#a 1]] [[#d 4]]
    * Instead: use a local function.
    * Reason: `lambda` supports only one statement.
  * Remove support for string exceptions. [[#a 1]]
@@ -51,15 +51,15 @@ def foo (a as int, b as float) as float:
    * Instead: use `dict.items()`, `dict.keys()`, and `dict.values()` respectively.
  * Remove `apply()`. [[#a 1]]
    * Instead: use `f(*args, **kw)`.
- * Remove `xrange()`. [[#a 1]] [[#a 4]]
+ * Remove `xrange()`. [[#a 1]] [[#d 4]]
    * Instead: use `range()`.
- * Remove `map()` and `filter()`.  [[#a 1]] [[#a 4]]
+ * Remove `map()` and `filter()`.  [[#a 1]] [[#d 4]]
    * Instead: use list comprehensions.
  * Remove `reduce()`. [[#a 1]]
    * Instead: use a loop.
  * Remove `callable()`. [[#a 1]]
    * Instead: catch the exception.
- * Remove `buffer()`. [[#a 1]] [[#a 2]]
+ * Remove `buffer()`. [[#a 1]] [[#b 2]]
    * Instead: use new `bytes` type. 
  * Remove `raw_input()`. [[#a 1]]
    * Instead: use `sys.stdin.readline()`.
@@ -83,7 +83,9 @@ def foo (a as int, b as float) as float:
 
  * `L += x` and `L.extend(x)` are equivalent.
  * Can the parameter order of the `insert` method be changed so the the index parameter is optional and `list.append` may be removed?
-
+ * Should the `raise x, y` syntax be removed as to favor `raise x(y)`?
+ * Are `repr()` and `str()` both needed? [[#a 1]]
+ * Should `globals()`, `locals()` and `vars()` be removed? [[#a 1]]
 
 == References ==
 
