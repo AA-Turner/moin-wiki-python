@@ -4,27 +4,29 @@
 == Masthead ==
 
   URL:: http://www.postgresql.org/
-  licence::
-  platforms::
+  licence:: BSD-like
+  platforms:: Unix, win32 (Cygwin); a native win32 port is in the works
 
 == DB API 2.0 Drivers ==
 
 === PyGresQL ===
 
   URL:: http://www.druid.net/pygresql/
-  licence::
-  platforms::
-  Python versions::
+  licence:: BSD-like
+  platforms:: Unix, win32
+  Python versions:: 1.5.2 thru 2.2
 
 ==== Extensions to DB API ====
+
+  * Alternative old nonstandard PostgreSQL interface
 
 ==== Comments ====
 
 === PoPy ===
 
   URL:: http://popy.sourceforge.net
-  licence::
-  platforms::
+  licence:: GPL
+  platforms:: Unix
   Python versions::
 
 ==== Extensions to DB API ====
@@ -34,22 +36,29 @@
 === psycopg ===
 
   URL:: http://initd.org/Software/psycopg
-  licence::
-  platforms::
+  licence:: GPL
+  platforms:: Unix, win32 (beta)
   Python versions::
 
 ==== Extensions to DB API ====
 
+  * dictfetchone(), dictfetchmany(), dictfechall() methods on the cursor object; these will return dictionaries instead of tuples, so you can access rows by name instead of by index
+
 ==== Comments ====
+
+  * Written for heavily multithreaded applications in mind.
 
 === pyPgSQL ===
 
   URL:: http://pypgsql.sourceforge.net
-  licence::
-  platforms::
-  Python versions::
+  licence:: BSD-like
+  platforms:: Unix, win32
+  Python versions:: 2.0 thru 2.2
 
 ==== Extensions to DB API ====
+
+  * The fetch methods on cursors return an instances of PgResultSet, which you can use to access rows by index (like in DB-API), dictionary-like or with attributes. This feature can be turned off for a slight performance boost.
+  * Support for PostgreSQL notifications in the low-level API.
 
 ==== Comments ====
 
