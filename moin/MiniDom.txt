@@ -39,10 +39,10 @@ Create & add an XML element (Something like {{{<foo />}}}) to an XML document.
 {{{
 #!python
 from xml.dom.minidom import parse
-dom1 = parse("bar.xml")
-x = dom1.createElement("foo")  # creates <foo />
-dom1.childNodes[1].appendChild(x)  # appends at end of 1st child's children
-print x.toxml()
+dom = parse("bar.xml")
+x = dom.createElement("foo")  # creates <foo />
+dom.childNodes[1].appendChild(x)  # appends at end of 1st child's children
+print dom.toxml()
 }}}
 
 === Add an Element with Text Inside ===
@@ -51,7 +51,16 @@ Create & add an XML element to an XML document, the element has text inside.
 
 ex: {{{<foo>hello, world!</foo>}}}
 
-(researching)
+{{{
+#!python
+from xml.dom.minidom import parse
+dom = parse("bar.xml")
+x = dom.createElement("foo")  # creates <foo />
+txt = dom.createTextNode("hello, world!")  # creates "hello, world!"
+x.appendChild(txt)  # results in <foo>hello, world!</foo>
+dom.childNodes[1].appendChild(x)  # appends at end of 1st child's children
+print dom.toxml()
+}}}
 
 === Import a Node ===
 
