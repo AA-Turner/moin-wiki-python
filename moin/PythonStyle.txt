@@ -56,8 +56,8 @@ class ClassNameA:
 
     Document methods in here, with a short explanation.
 
-    EatEggs --  does X
-    EatSpam --  does Y
+    eat_eggs --  does X
+    eat_spam --  does Y
     """
 
     def __init__(self, green_eggs, green_spam):
@@ -66,12 +66,12 @@ class ClassNameA:
         bar()
         baz()
 
-    def EatEggs(self):
+    def eat_eggs(self):
         """One line documentation is like this."""
         foo()
         bar()
 
-    def EatSpam(self):
+    def eat_spam(self):
         """Short explanation.
 
         Multi-line spam has a one line description at top, seperated by
@@ -79,6 +79,16 @@ class ClassNameA:
         the final triple-quote appears beneath.
         """
         baz()
+
+    def _internal_use(self):
+        # Eat eggs and spam.
+        #
+        # Docstrings are not necessary for non-public methods, but you
+        # should have a comment that describes what the method does.
+        # This comment should appear after the "def" line.
+
+        self.eat_eggs()
+        self.eat_spam()
 
 
 def function_a(eggs, ham):
