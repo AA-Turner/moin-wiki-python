@@ -1,0 +1,38 @@
+From comp.python.c++ newsgroup:
+----
+1. ''The constructors of some classes I am trying to wrap are private because
+instances must be created by using a factory. Is it possible to wrap such
+classes using bpl v2?''
+
+Sure. Of course you can only create the instances using the factory...
+  
+If you look at libs/python/test/test_pointer_adoption.cpp you'll see the
+factory function "create" is being used to generate new instances of class
+A. It uses return_value_policy<manage_new_object> to instruct Python to
+adopt the A* to hold the instance.
+{{{
+A* create(std::string const& s)
+{
+    return new A(s);
+}
+
+BOOST_PYTHON_MODULE_INIT(test_pointer_adoption_ext)
+{
+    boost::python::module("test_pointer_adoption_ext")
+        .def("num_a_instances", num_a_instances)
+
+        // Specify the manage_new_object return policy to take
+        // ownership of create's result
+        .def("create", create, return_value_policy<manage_new_object>())
+        
+        .add(
+            
+            class_<A>()
+            .def("content", &A::content)
+            .def("get_inner", &A::get_inner, return_internal_reference<>())
+            )
+        ;
+}
+}}}
+----
+2.
