@@ -43,17 +43,15 @@ int get_derived_x(const Derived& d) {
     return d.x;
 }
 --------------------------------------------------------------------------------
-#include <boost/python/module.hpp>
-#include <boost/python/class.hpp>
-#include <boost/python/def.hpp>
+#include <boost/python.hpp>
 
 using namespace boost::python;
 
-BOOST_PYTHON_MODULE_INIT(my_module)
+BOOST_PYTHON_MODULE(my_module)
 {
-    class_<Base> ("Base", no_init());          
+    class_<Base> ("Base", no_init);          
                                                                               
-    class_<Derived, bases<Base> >("Derived", no_init()); 
+    class_<Derived, bases<Base> >("Derived", no_init); 
                                                                               
     def(derived_as_base, "derived_as_base");                        
     def(get_name, "get_name");                                      
