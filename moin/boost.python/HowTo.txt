@@ -268,3 +268,27 @@ implicitly_convertible<auto_ptr<MyClassWrap>, auto_ptr<ClassWrap> >();
 }}}
 
 And you still write the thin wrapper as described above.
+
+
+=== Python object from exposed C++ object ===
+The first, but incomplete, way to do this is to create an object with :{{{
+void MyFct( MyClass* my_obj )
+{
+  object obj(my_obj);
+  python_fct(obj);
+}
+}}}
+
+The problem is, if the dynamic type of my_obj is not MyClass but a class derived from MyClass, you won't have, in Python, the interface of the derived class. If you want to create the object with the interface of the real dynamic type you have to use the ResultConverter created by Boost : {{{
+void MyFct( MyClass* my_obj )
+{
+  reference_existing_object::apply<MyClass*>::type converter;
+  PyObject* obj = converter( my_obj );
+  object real_obj = object( handle<>( obj ) );
+  python_fct(real_obj);
+}
+}}}
+
+The python object must not be keep outside the execution of {{{python_fct}}}. If you do, then you have to take extra care about the lifetime of the Python object and the underlying C++ object for there are no lifetime guards possible (the original object being a C++ one, you have no automatic way to tie the lifetime of this object with the lifetime of the Python wrapper).
+
+Now, if you can copy the object and use the copy instead of a reference on the original one, you can change the ResultConverter and use {{{return_by_value}} instead of {{{reference_existing_object}}}.
