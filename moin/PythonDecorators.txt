@@ -249,6 +249,63 @@ class C(object):
         """
         raise NotYetImplemented
 }}}
+Without the pseudo-keyword acting as line continuation it reads :
+{{{
+class C(object):
+
+    def longMethodNameForEffect(longArgumentOne=None,
+                                longArgumentTwo=42) using [
+         staticmethod,
+         funcattrs(grammar="'@' dotted_name [ '(' [arglist] ')' ]",
+                   status="experimental", author="BDFL")]:
+        """This method blah, blah.
+
+        It supports the following arguments:
+        - longArgumentOne -- a string giving ...
+        - longArgumentTwo -- a number giving ...
+
+        blah, blah.
+
+        """
+        raise NotYetImplemented
+}}}
+which feel is more consistent with the rest of python parsing-wise, without decreasing readability...
+
+
+'''C3. tuple-after-def syntax with a (pseudo-)keyword'''
+{{{
+def foo(arg1,arg2) using classmethod,:
+    ...
+
+def bar(low,high) using accepts(int,int), returns(float):
+    ...
+class C(object):
+
+    def longMethodNameForEffect(longArgumentOne=None,
+                                longArgumentTwo=42) using (
+         staticmethod,
+         funcattrs(grammar="'@' dotted_name [ '(' [arglist] ')' ]",
+                   status="experimental", author="BDFL")):
+        """This method blah, blah.
+
+        It supports the following arguments:
+        - longArgumentOne -- a string giving ...
+        - longArgumentTwo -- a number giving ...
+
+        blah, blah.
+
+        """
+        raise NotYetImplemented
+}}}
+Very similar to C2, but with those slight differences
+
+ * + Nicer for one-line decoration when using multiple decorators.
+ * - The hanging comma feel strange for 1-element tuple, and will probably often been forgotten.
+ * - Decorator and arguments looks (too?) similar for multiline case.
+
+The 1st drawback could be removed if one allows both tuple and single-element after the pseudo-keyword,
+trading consistency for readability and convenience. 
+
 
 '''D. list at top of function body syntax'''
 {{{
