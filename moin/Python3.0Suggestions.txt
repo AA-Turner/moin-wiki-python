@@ -83,20 +83,3 @@ Guido has expressed that this is a highly popular, but badly misunderstood tool 
  * {{{__slots__}}} complicates and slows the implementation of new-style classes.
 
 
-== Use iterators instead of tuples in argument parsing when applicable ==
-
-This would allow code like: {{{#!python
->>> def f(x, y, *args):
-...     print x, y, repr(args)
-...
->>> f(*itertools.count())
-... 0 1 'count(2)'
-}}}  Currently, this code causes an infinite loop because Python's argument parsing mechanism fully expands an iterator into a tuple when used in a *args context as above.  When iterators are the standard, I would hope that instead of fully expanding the iterator, only the elements from the iterator necessary to fill positional arguments would be extracted.  See the thread "Python 3000, zip, *args and iterators" [[#a 1]] for more discussion of this idea and a real life example of where this might be useful.
-
-    ''Dare I even suggest that a `***args` form could be used in some bizarre way?  Personally I think the idea is unspeakably ugly. --JimD''
-
-    ''On the other hand I've often wished for something like: {{{(a, b, *c) = foo.parse(filedescriptor.readline())}}} which would unpack the first arg into `a`, the next into `b`, and the rest into `c`.  This desire is probably the result of years of shell scripting where I routinely use code like {{{ps fax | while read pid x x x cmd args; do ...}}} and don't care if args is empty or contains an interminately long list of items.  I'm still not sure I'd seriously recommend it to Python. --JimD''
-
-     ''Note that my proposal is not this extreme; I'm still only talking about `*args` in a function definition.  All I'm suggesting is that since only the first N items of the iterator are needed, there's no need to convert the entire iterator into a tuple.  Just pop off the necessary items from the front of the iterator and bind the `args` variable to the iterator containing the remaining items. The only change this makes to the language is that `*args` names in function definitions will be bound to iterator objects instead of tuple objects.  -- StevenBethard''
-
-[[Anchor(a)]] [1] Python-List -- Python 3000, zip, *args and iterators: http://mail.python.org/pipermail/python-list/2004-December/257282.html
