@@ -82,6 +82,10 @@ section2:
 very last = 7
 }}}
 
+== Dan Gass' ==
+
+[https://sourceforge.net/projects/config-py/ config-py] allows either strings (safe) or evaluated code (powerful) with the same API.  It needs python 2.3, or at least dict.pop()
+
 = Features =
 
 This is a list of features that should be taken into account.
@@ -171,6 +175,8 @@ Discuss.  Please sign your name.
 What exactly is the goal? A new API to access configuration info? Or a specific file format itself? Or both? I don't have much problem with the current ConfigParser but ideally I would like use a 'simpler' API. This would allow attribute access (a.b.c) to values, provide default values, convert some types, and do some constraint checking (xyz is required) etc. It's very possible to get this functionality through a wrapper on top of ConfigParser. IMO that is the best approach, as long as there is a way to map the same API over a different underlying file format, such as XML. I think the 'dynamic nesting' point above is outside the scope of the config access API. -- Shalabh
 
 Three features I want in a config parser are 1) keyed settings 2) pulling in settings from multiple configurition files, and 3) ability for user to pass in real python objects through the settings.  The "keyed" settings can be thought of as namespaces and I need an arbitrary number of key nestings.  For certain applications I EXPECT the user to pass in python objects that meet a specified API.  This allows the user to customize a certain operation however they would like with the full power and flexibility of python.  I then don't need my tool to be tailered with a switch statement having custom solutions for each user type.  This would require the configuration file (or parts of it) to be able to be executed as a python script and I realize this is a security hole that would be unacceptable to many.  What I would propose is the config parser module support two methodologies, both sharing the same API and configuration file syntax.  One would parse the config file and prevent security issues, the other would either execute the whole config file or be a combination parse/execute but would support attaching real python objects to configuration settings.  These features have been implemented in a configuration parser https://sourceforge.net/projects/config-py/ (needs python 2.3 unless the dict pops are reimplemented) and is available for experimentation/use. -- dan.gass@gmail.com  28oct04
+
+I think it is reasonable to ask the setting code to create the object (possibly by running a random string); the config system just needs to accept objects that have already been made.  A round-trip is useful, but I'm not sure source code is the best way to do that; editing will probably require an external tool anyhow.  Maybe just use pickle to save arbitrary objects?  (And avoid storing them *within* the config, as much as possible.) -- Jim J Jewett
 
 == Complexity killed the cat! ==
 
