@@ -100,6 +100,28 @@ This is an introduction to developing Jython, just to get someone started. It do
     * ...
 
 ''' Tests '''
+ After you've built the project, you may want to set up an excutable file on your path to make it easy to launch your build of jython. This file will need to:
+ *Set the python home property to the `dist` directory of your build (otherwise, you'll get import errors on the standard lib stuff).
+ *Execute the `jython.jar` in the `dist` produced by the build.      
+Here's one for windows:
+{{{
+:: jynsb.bat
+@echo off
+set ARGS=
+
+:: concatenate all the command line args into one
+:loop
+if [%1] == [] goto end
+        set ARGS=%ARGS% %1
+        shift
+        goto loop
+:end
+
+:: this is mine:  java -Dpython.home=C:\\workspace\\JythonNSB\\jython\\dist -jar c:\workspace\JythonNSB\jython\dist\jython.jar %ARGS%
+:: fill in <placeholders> below
+java -Dpython.home=<path to dist directory>\\dist -jar <path to dist directory>\dist\jython.jar %ARGS%
+}}}
+Now your ready to run tests...
 
   * There are a couple different places to find test cases
     * Jython's Lib/test
