@@ -1,7 +1,8 @@
-
 Python style conventions are described in PEPs.
  * [http://www.python.org/peps/pep-0008.html PEP 8] -- Style Guide for Python Code
  * [http://www.python.org/peps/pep-0257.html PEP 257] -- Docstring Conventions
+
+[[TableOfContents()]]
 
 == Learning Python Style ==
 
@@ -11,10 +12,101 @@ I've had a lot of success learning (and applying) the document in steps. Start w
 
 It is probably unrealistic to believe that you can get the whole thing at once.
 
-= Discussion =
+== Examples ==
 
 I wish there were good examples of well-styled Python code! (Most Python modules do ''not'' follow Python style guidelines!)
 
 I intend to write some examples here, and comment on the features of the formatting. Hopefully, people who understand the format better will correct the examples.
 
 -- LionKimbro [[DateTime(2005-02-19T08:10:35Z)]]
+
+=== Example Module ===
+
+This is my understanding of how a Python module by PEP-8 might look:
+
+{{{
+#!python
+"""Short description of module.
+
+Blah blah blah. This is the long description of the module. More brief
+explanations.
+
+ClassNameA --  short description
+function_a --  short description
+function_b --  short description
+"""
+
+import sys  # standard library imports
+import os
+
+import optparse  # related major package imports
+
+import eggs  # application specific imports
+import spam
+
+
+class ClassNameA:
+
+    """What it is.
+
+    Notes on what it is and how it does it.
+
+    Lots to say, lots to say.  I'm unclear on whether we need two spaces
+    between sentences or not.  72 characters wide.  Blah blah blah.
+
+    Document methods in here, with a short explanation.
+
+    EatEggs --  does X
+    EatSpam --  does Y
+    """
+
+    def __init__(self, green_eggs, green_spam):
+        """Init ClassNameA with some eggs and spam."""
+        foo()
+        bar()
+        baz()
+
+    def EatEggs(self):
+        """One line documentation is like this."""
+        foo()
+        bar()
+
+    def EatSpam(self):
+        """Short explanation.
+
+        Multi-line spam has a one line description at top, seperated by
+        a space, and then more multi-line spam afterwards.  Note that
+        the final triple-quote appears beneath.
+        """
+        baz()
+
+
+def function_a(eggs, ham):
+    """A function_a is a foobar.
+
+    Again, multi-line rules apply in here as well, the same way.  Note
+    that we have two spaces between module-level class and function
+    definitions.  That's PEP-8 at work.
+    """
+    foo()
+    bar()
+    baz()
+
+
+def function_b(eggs, ham):
+    """A function_b is a foobar.
+
+    Another one.  Still two spaces separating functions and classes.
+    """
+    foo()
+    bar()
+    baz()
+
+
+}}}
+
+This may be incorrect; please correct it if you know better.
+
+In particular, I'm not sure if there are zero, one, or two spaces between the module docstring, and the import lines.
+
+-- LionKimbro [[DateTime(2005-02-21T04:44:51Z)]]
