@@ -1617,26 +1617,13 @@ Evan Jones / University of Waterloo
 
 One of Python's primary benefits is that it automatically manages
 memory, as any high level language worth the name should. Unfortunately,
-it is possible to break Python's automatic memory management. I
-discovered this when I wrote a program that used gigabytes of RAM for a
-few minutes, then performed a lot of computation on the result. For some
-reason, my program was never releasing any memory, which slowed down the
-whole system. I thought I had a memory leak, but the actual problem
-turned out to be much more interesting, and ended up getting me to
-attempt to improve Python's memory allocator.
-
+Python never actually releases any RAM to the operating system.
 My presentation will discuss how Python's current memory allocator
-works, and what the problem is. I will then present some  workarounds to
-avoid the problem with the current version of Python. Next, I will
-present my proposed changes to the allocator which will resolve the
-problem. Finally, I will suggest a future directions for Python memory
+works, and describe the problem in detail. I will then present some
+workarounds to avoid the problem with the current version of Python.
+Next, I will present my proposed changes to the allocator which resolve the
+problem. Finally, I will suggest a future direction for Python memory
 management.
-
-The work on improving the allocator is not done yet, but I plan on
-working on it in January. If this presentation is accepted, I will
-*definitely* work on it. If the work is not done or is not acceptable to
-the core Python team, my insights into how Python deals with memory will
-still be useful to hard core Python programmers.
 
 For additional information on this topic, see my web page about the
 problem, or the Python-dev archives:
