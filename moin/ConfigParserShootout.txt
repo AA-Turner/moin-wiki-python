@@ -381,6 +381,30 @@ The part that isnt addressed here that bothers me yet is how to weave in the a
 
   When I use python to set up objects to pass in as settings I often use multiple lines of code to do it.  Sometimes I need to import modules so that I can instantiate a class.  Other times I'm using the os module to figure out where the configuration file is located because I need the path information to figure out the absolute paths of other things that are located relative to it.  Don't change yours on my account I'm holding tight with mine until a new and improved standard is available (so long as it works for me).   Who is concerned about the security hole of executing Python and what restrictions do they want? -- dan.gass@gmail.com
 
+== My Dramatic Plea ==
+
+  Our original problem is that of presenting configuration data - and I feel it has already been solved on all levels by existing code. I feel the marriage of optparse and a configuration file reader is wrong because it presents two mutually conflicting interfaces for specifying configuration, and as history has taught at least me, this can lead to buggy code and confused users.
+
+  Take if you will, an application that uses such a system - the venerable MySQL. Every MySQL binary/source package I have ever used has come with a wildly varied and poorly written configuration and init script - half the configuration is specified in the configuration file, and the other half on the command-line, for no apparent reason whatsoever. This is true of 'distribution constants' -- values that never change, aren't put in the config but passed as a startup argument every time MySQL starts. I invite you all to take a look at as many MySQL init scripts as you wish.
+
+  How can an external application determine the configuration of a package such as this? Well first off, we can parse it's configuration file -- but then we have to get smart and dirty, dipping into all sorts of shell files to find the rest, or worse, just assume the file contents is correct.
+
+  ConfigParser as it stands is a simple interface for creating groups of (k, v)'s, a very flat yet practical data format that covers most application configurations. Command-line options are just that: I believe they should change the overall fundamental operation of the program (--version, --conf-file, etc.) rather than tweak it in ways that can be done through a configuration file.
+
+  For rich and deep nested structures, well, what can I say? One of the first things I learned about Python was that it did not distinguish between data and function, as such it was natural to express a configuration or a dataset as a simple python module in exactly the same syntax and using exactly the same methods as the program itself would use to access that data. This is one of those beautiful things about Python, and I feel invented Yet Another Syntax(tm) for configuration files not only a) goes against the founding principles of the language which you are supposedly contributing to, but is completely pointless and wasteful. There are a trillion examples of successful applications doing just this - in fact you probably use one of them at least 10 times every working day - Mailman.
+
+  If Python syntax is too complicated for your users to specify their configuration in, explain why? I personally can't see how -- especially with the time-tested error messages the syntax parser produces for erroneous input. Have you seen some of the threads on python-dev regarding the wording of these messages? How does your replacement config module fare against such a robust and age-old time-proven system that you already use every day?
+
+  As for the case of interoperability - well, the W3C has just spent a good 5 years or more standardising on such a syntax, and whether you like it or not, it's here to stay. It's called XML, and you should learn it before you start losing contracts because of your technological ignorance and traditionalism.
+
+  Strong words for which I apologise. :)  But I am unconvinced that there is a hole in the standard library in the way most of you readers think. I will try again to advocate my own implementation - a modern replacement for the existing ConfigParser module, which is supposed to read and write portable INI files.
+
+  My opinion of the current proposals here can be mostly rounded up as follows: they are ugly and duplicate previously perfected work, so why bother? As for the merging of the command-line and the configuration file, I think that is a dangerous flaw that I urge you to reconsider. I can provide numerous examples of successful software that would have been a confusing mess to use if they had gone this route - subversion for instance, with its near-optimal UI, and I can also provide disasters where complex apps that tried to implement this scheme confused the hell out of everybody - MySQL for instance. Beyond being a minimally practical method for ad-hoc reconfigurations, the blurring of the command-line and the configuration is in my opinion a big mistake I really don't want to see in the stdlib.
+
+  For portable schema-based expression of data, see XML. For non-portable, time-tested concise and beautiful syntax we all adore, see Python itself. For that in-between, see ConfigParser.
+
+  Again I must apologise for such a large post, but I can't see how this opinion fits in well with that of others, and as such, I felt I needed to dump it in one large, opaque lump.  -- DavidWilson (wondering if people will think he's self-important for opening his own sub-heading ;))
+
 == Complexity killed the cat! ==
 
 Look at what happened to urllib2 - the entry level for new users was greatly enhanced, but the added functionality was really little more than what you could already do more simply with urllib. With that in mind, I think the new ConfigParser should in it's simplest form act very closely like the original ConfigParser.
