@@ -33,3 +33,72 @@ Search the Python reference for:
  * ["ShellRedirectionFails"]
  * ["UnicodeEncodeError"]
  * ["DefaultEncoding"]
+
+== Discussion ==
+
+Here's a conversation that I had on [http://communitywiki.org/ CommunityWiki;] I'd like to bring the main ideas into here.
+
+=== Conversation between Lion and Bayle ===
+
+
+
+That looks like 32-bits per character, so I'd say it's some form of little-endian utf-32.
+
+And for some strange reason, Python only comes with "utf-8" and "utf-16" as valid "decode" values.
+
+You can:
+
+{{{
+ >>> bytes = "H\x00i\x00\n\x00"
+ >>> unistring = bytes.decode('utf-16')
+ >>> print unistring
+ u'Hi\n'
+}}}
+
+You can do that for either "utf-8" or "utf-16." But for some reason, I can't say "utf-32" or "utf-32LE" (LE=little endian). I have no idea why. I also don't know how it is that my Python programs are producing UTF-32 for you..!
+
+I've been wanting to diagram how Python unicode works, like how I diagrammed it's time use, and regex use.
+
+Basically, "encode" is meant to be called ''from'' unicode data, and "decode" is meant to be called ''from'' bytes data. Continuing from above:
+
+{{{
+ >>> bytes
+ 'H\x00i\x00\n\x00'
+ >>> unistring = bytes.decode('utf-16')
+ >>> unistring
+ u'Hi\n'
+ >>> unistring.encode('utf-8')
+ 'Hi\n'
+ >>> unistring.encode('utf-16')
+ '\xff\xfeH\x00i\x00\n\x00'
+ >>> unistring.encode('utf-32')
+ Traceback (most recent call last):
+   File "<stdin>", line 1, in ?
+ LookupError: unknown encoding: utf-32
+}}}
+
+I'm guessing that the "\xff" at the beginning of the utf-16 encoding is a byte-order marker, saying "this is little endian."
+
+I learned about unicode stuff about 2-3 weeks ago. I kept notes about what I thought were the largest mental misconceptions, and what were the most revealing ways of thinking about it. Sadly, I've forgotten about all that. (Should'a documented it in the wiki!)
+
+In Python, the data in a unicode or byte string is exactly the same. The difference is only in how Python treats and presents the data. I found it super-helpful to ''not'' think about what the console said, or work with the console, because ''the console lies.'' That is, the characters go through conversions even being printed to the screen: Your console has an understanding of encoding, and your fonts have an understanding of encoding, and I had a lot of difficulty seperating it out.
+
+I had a lot easier time thinking about the concepts, instead of the concrete representations. (Which is opposite my usual course of thinking.)
+
+"Decoded," to Python's mind, is data being treated as unicode data. "Encoded," to Python's mind, is data being treated as bytes. The data isn't actually changing form, at all. It's just the ''treatment'' of the same data that is being changed. But there is ''no actual conversion taking place.''
+
+So, you only ever run "decode" on a byte string. (Another thing: Don't think of native Python strings as "strings." Think of them as "bytes." And indeed: In the new Python 3.0, they're calling it just that: strings are called "bytes" in Python3, and unicode strings are called just "strings" in Python3.)
+
+So you can ''decode'' bytes, and ''encode'' unicode strings.
+
+Don't think about decoding unicode strings, and don't think about encoding bytes. The bytes are already coded. Only unicode strings live in pure, abstract, heavenly, platonic form. There is no code there, only perfect clarity. (At least, that's how Python makes it seem for you.)
+
+Again, sadly, I have no idea how to get from UTF-32 to Python unicode. I don't see the path. I saw something somewhere about being able to compile something in to your Python.
+
+That said, if I'm actually serving UTF-32 to you somehow,... ...then there's probably a way I just don't know.
+
+=== (Discussion continued) ===
+
+On side-notes, I think the diagrams I've posted for WorkingWithTime and RegularExpressions were eaten up in the transition to MoinMoin 1.3; I'll repost them soon, after I get [http://wiki.taoriver.net/ my own wiki] upgraded to 1.3.
+
+-- LionKimbro [[DateTime(2005-02-06T02:56:28Z)]]
