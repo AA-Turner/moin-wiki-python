@@ -70,6 +70,46 @@ So, can we just pass our ``sys.argv`` to the child process?  Tentatively, yes.  
 Both of these issues could be fixed by regenerating a custom command line from the actual finalized command options for the parent distribution.  But it's not clear whether that's worth it.  During the sprint, we may just want to use the parent ``sys.argv``, and isolate it in a ``get_setup_argv()`` method for future enhancement.
 
 
+What options should be passed to a dependency's ``setup.py``?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+After more review of how distutils options and commands work, it seems that it would be best to pass only a specifically determined subset of options to dependency setup scripts.  These would include:
+
+* installation directory options and byte-compiler options for the ``install`` command
+
+* non-directory options for the ``build`` command (such as what compiler to use)
+
+* global options for verbose/dry-run (should we download and run the dependencies if it's a dry run?)
+
+We can't just use the standard ``finalize_options()`` idiom to get these options from other commands, because of quirks in how the ``install`` command processes its options.  Indeed, it seems the only ``install`` options we can reasonably support are:
+
+* ``prefix``
+
+* ``exec-prefix``
+
+* ``home``
+
+* ``install-base``
+
+* ``install-platbase``
+
+* ``root``
+
+* ``optimize``
+
+* ``force``
+
+We can ensure that the ones that specify directories are absolute, and we can get them all in raw form from the ``Distribution`` object's ``command_options`` dictionary, including any options that were set by editing ``setup.cfg``.  The same is true for options to ``build``, and we can reasonably support:
+
+* ``compiler``
+
+* ``debug``
+
+* ``force``
+
+We should probably track these options for subcommands like ``build_lib`` and ``install_lib``, although I'm not sure we want to support such fine-grained option settings passing through to dependencies.  We do, however, want to abort if any unsupported options are supplied to any of the build/install commands or their subcommands, telling the user to run just the dependency command with appropriate options, or to run a ``show_deps`` command and manually install the dependencies.  (That is, we should abort if there are any dependencies we'll need to install to complete a current command.)
+
+
 Dependency and Distribution Objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
