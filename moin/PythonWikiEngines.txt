@@ -17,10 +17,10 @@ Here is a list of known Python-based Wiki:WikiEngines.
 = Comparison of Features =
 
 ||Existing or Desired Features||MoinMoin||Wiki:PikiePikie||Wiki:Zwiki||''add others here''||
-||Cache Pages for Faster Loading?||no|| || || ||
+||Cache Pages for Faster Loading?||not yet|| || || ||
 ||Page storage||flat files|| ||ZoDb|| ||
 ||Support for Blogs ([http://ourpla.net/cgi/pikie?WikiWeblogs WikiLogs])||[http://www.seapig.org/BlogEditCode partially]||yes||[http://webseitz.fluxent.com/wiki/ZwikiCustomizations possible]|| ||
-||Page Permissions||no|| ||yes||
+||Page Permissions||CVS version: yes|| ||yes||
 ||Templating/Page Skins/CSS support||no||yes||yes|| ||
 ||Link icons, colorblind-friendly||yes|| || || ||
 ||Supports HTML tags||no|| ||yes || ||
@@ -28,13 +28,18 @@ Here is a list of known Python-based Wiki:WikiEngines.
 ||import/display RSS||no|| || || ||
 ||''add feature here''|| || || || ||
 
+Comment: "Support HTML tags" is more of an anti-feature in wiki.
+
 = Comments, Ratings, Reviews, Wishlists =
 
 Elements for building a full-featured wiki engine:
  * ''Page templating system like [http://smarty.php.net/ Smarty].''  Possible options include [http://www.alcyone.com/pyos/empy/ EmPy] or others listed in the [http://www.python.org/cgi-bin/moinmoin/WebProgramming#head-9d0636d6da8e88f8f09de1454c5961b44183b04d templating section] of the WebProgramming page.  Which one would you recommend?
  * ''Cache HTML versions of pages for faster loading.''  Ideally the page templating tool would handle caching.
+  * in a really dynamic context like wiki, you can't simply cache the HTML. 
  * ''User Authentication.''  A user authentication system perhaps integrated with MySQL or possibly even LDAP.  Allow for different user groups and permission levels.  Any recommendations?
+  * Moin has user / password auth in CVS. Groups and page ACLs also.
  * ''Database Integration.''  Can store data in mysql, postgresql, etc. or work without a database.
+  * that is more of an anti-feature, see the next 2 points.
  * ''Easy Install.''  Works completely in Python, and installs in one folder location.  Doesn't necessarily require a database or mod_python.  Doesn't require root privileges for install.
  * ''Small but Scalable.'' Doesn't require a huge server to run.
 
