@@ -176,8 +176,11 @@ def simple_decorator(decorator):
 # Sample Use:
 #
 @simple_decorator
-def mySimpleLoggingDecorator(f):
-    print 'calling %s' % f.__name__
+def mySimpleLoggingDecorator( func ):
+    def logged_func( *args, **kwargs ):
+        print 'calling %s' % func.__name__
+        return func( *args, **kwargs )
+    return logged_func
 
 @mySimpleLoggingDecorator
 def double(x):
@@ -186,6 +189,7 @@ def double(x):
 
 assert(double.__name__ == 'double')
 assert(double.__doc__ == 'Doubles a number')
+print double(155)
 }}}
 
 == Enable/Disable Decorators ==
