@@ -13,7 +13,7 @@ Created: 18-May-2001
 Post-History: Never
 
 
-Abstract
+= Abstract =
 
     Python has had a solid Database API for SQL databases since 1996 [1].
     This revision introduces iterator support and attempts to fix
@@ -25,19 +25,19 @@ Abstract
     API more fully.
 
 
-Copyright
+= Copyright =
 
     This document has been placed in the public domain, except for
     those sections attributed to other sources.
 
 
-Specification
+= Specification =
 
     Use of this wrapper requires a DB API v2.0 compliant driver to
     be installed in sys.path. The wrapper may support DB API v1.0
     drivers (to be determined).
 
-    Module Interface (sql.py)
+    == Module Interface (sql.py) ==
 
 	connect(driver,dsn,user,password,host,database)
 
@@ -65,7 +65,7 @@ Specification
 	    for code that is connecting to multiple databases
 	    using different drivers.
 
-    Connection Object
+    == Connection Object ==
 
 	close()
 	commit()
@@ -167,7 +167,7 @@ Specification
 	    be passed to the rollback method to rollback the transaction
 	    to this point.
 
-    Cursor Object
+    == Cursor Object ==
 
 	The cursor object becomes an iterator after its execute
 	method has been called. Rows are retrieved using the drivers
@@ -237,7 +237,7 @@ Specification
 
 	    Defaults to 1
 
-    Row Object
+    == Row Object ==
 
 	When a Cursor is iterated over, it returns Row objects.
 	dtuple.py (http://www.lyra.org/greg/python/) provides such an
@@ -252,7 +252,7 @@ Specification
 	    with the differing methods vendors use to capitalize their column
 	    names).
 
-    Type Objects and Constructors
+    == Type Objects and Constructors ==
 
 	As per DB API 2.0 spec.
 
@@ -264,11 +264,11 @@ Specification
 	sql module for the more intelligent DateTime object it would
 	need to provide even if they arn't using databases.
 
-    ConnectionPool Object
+    == ConnectionPool Object ==
 
 	A connection pool, to be documented.
 
-    Transaction Isolation Levels
+    == Transaction Isolation Levels ==
 
 	Insert description of dirty reads, non repeatable reads and
 	phantom reads, probably stolen from JDBC 3.0 documentation.
@@ -306,7 +306,7 @@ Specification
 	    Specifies that dirty reads, nonrepeatable reads, and phantom
 	    reads are prevented.
 
-    Test Suite
+    == Test Suite ==
 
 	A common test suite will be part of the implementation, to
 	allow driver authors and driver evaluators to test and excercise
@@ -315,7 +315,7 @@ Specification
 	Example DDL for various systems will need to be provided.
 
 
-Rationale
+= Rationale =
 
     The module is called sql.py, to avoid any ambiguity with non-realational
     or non-SQL compliant database interfaces. This also nicely limits
@@ -357,7 +357,7 @@ Rationale
 	level wrappers, such as that defined by this PEP.
 
 
-Language Comparison
+= Language Comparison =
 
     The design proposed in this PEP is the same as that used by Java,
     where a relational database API is shipped as part of the core language,
@@ -373,7 +373,7 @@ Language Comparison
     part of the core language.
 
 
-References
+= References =
 
     [1] PEP-248 and PEP-249
 
