@@ -265,7 +265,7 @@ A marriage of the two would make a lot of sense to me.  My thought is for the us
 
   An easy way, maybe, but it doesn't seem very useful to me. What's the advantage of fetching a command-line option from cfg.cmdline_values.verbose instead of options.verbose? Also, we need to specify every option twice, once for optparse and once in the configuration file itself. For docutils, this would mean every config file would have 40(!) lines which are, essentially, implementation details.
 
-    It was only an example, and I accept it may not be the best example to showcase the functionality. Consider this, though: you can use a ConfigList to cascade configurations. If one of these is a set of options picked up from the command line, and another is from configuration files, then you can easily in your application just get e.g. 'cfglist.verbosity' which is picked from a command line option (if defined) or from the configuration file (otherwise). There's no need to define things twice, other than to define what happens when command line options are not provided. I'll work with you, if you like, to see how docutils configuration can be achieved using the module.  -- VinaySajip
+    It was only an example, and I accept it may not be the best example to showcase the functionality. Consider this, though: you can use a ConfigList to cascade configurations. If one of these is a set of options picked up from the command line, and another is from configuration files, then you can easily in your application just get e.g. 'cfglist.verbosity' which is picked from a command line option (if defined) or from the configuration file (otherwise). There's no need to define things twice, other than to define what happens when command line options are not provided. I'll work with you, if you like, to see how docutils configuration can be achieved using the module. See the example for verbosity below - you'll see that you don't necessarily need to specify things twice, and can access values from either command line or configuration transparently. -- VinaySajip
 
   These are probably fixable, but I think they exist because you're not solving the interesting part of optparse integration: every application still has to merge the command-line options with the options from the configuration file manually. I just grepped through my 'src' directory and found shtoom, docutils, roundup, logilab-common and spambayes all have modules which allow them to specify options only once. IPython, offlineimap, and trac are still merging without the aid of such a module.
 
@@ -335,7 +335,7 @@ verbose output? True
 args: ['an_arg']
 }}}
 
-This admittedly simple example points to how simple the actual application code  - i.e. main() could be. I'm assuming that getMergedConfig() is a utility module which could be shared across multiple scripts, but even so it is pretty simple, in my view. Notice that main() does not know where the configured value of 'verbose' came from.
+This admittedly simple example points to how simple the actual application code  - i.e. main() could be. I'm assuming that getMergedConfig() is a utility function which could be shared across multiple scripts, but even so it is pretty simple, in my view. Notice that main() does not know where the configured value of 'verbose' came from.
 
 To forestall the complaint that the optparse specification appears to require some duplication, you could change the config file to:
 {{{
