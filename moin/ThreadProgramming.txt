@@ -1,8 +1,6 @@
-= Stopping Threads  Blocco dei processi= 
+= Stopping Threads = 
 
 I'd like to start this page off with a question.  How do you kill one thread from within another? Here's some code that shows the problem:
-
-Inizio questa pagina facendo una domanda. Come si può fermare un processo dall'interno di un altro?
 
 {{{
 #!python
@@ -34,15 +32,10 @@ worker.shutdown()
 }}}
 The problem here is that {{{EventChannel.waitEvent()}}} is a blocking operation.  So if no event ever arrives, then our worker thread never stops.  ''({{{EventChannel}}} and {{{EventHandler}}} are classes I've invented for this example)''
 
-Il problema è che {{{EventChannel.waitEvent()}}} è una operazione di blocco.  Così se l'evento non si verifica, allora il nostro lavoro non si fermerà mai.  ''({{{EventChannel}}} e {{{EventHandler}}} sono classi che io ho inventato per questo esempio)''
-
-
-== Suggestions   Suggerimenti==
+== Suggestions ==
 
  * Make the {{{shutdown()}}} method put some harmless event on the event channel:
  
- * Utilizzare il metodo {{{shutdown()}}} spinge alcuni innocui eventi  nelll'evento channel
-  
 {{{
   def shutdown(self):
     self.stopFlag = 1
@@ -50,8 +43,6 @@ Il problema è che {{{EventChannel.waitEvent()}}} è una operazione di blocco.  
 }}}
 
  * Or use a Queue to pass data. Handle errors in the handler (e.g. print them to the console), keep the thread alive. 
-
- * oppure usa una coda di dati passati. Manipolare errori con il manipolatore ( e.g. stampa poi alla console),mantiene vivo il processo                                                                                                                                                                                           
 
 {{{
 #!python
@@ -110,16 +101,17 @@ if __name__ == '__main__':
     w.stop()
 }}}
 
-= Call to C function blocks all threads  Chiamata ad una Funzione "C" che blocca tutti i processi=
+= Call to C function blocks all threads =
 
 I have a C module that does database queries. Those queries go off to an SQL server
 to be processed. I would like to use my query function within threads and to have it work
 like {{{time.sleep()}}}, that is, block the current thread until it finishes but allow other threads to continue operation. I haven't seen this issue addressed in any of the books I have.
 
-Ho un modulo in "c" che pone delle interrogazioni al D.B. Queste interrogazioni pongono ad off il server SQLper essere processato.Posso  usare delle mie funzioni di interrogazione dentro i processi per avere un lavoro come questo {{{time.sleep()}}},blocco il corrente processo finchè lui termina ma permette agli altri processi di continuare le operazioni. Non ho visto questi inidirizzamenti in qualsiasi libro che possiedo.
- 
   ''This can't be handled in Python code. The author of the database module should use Py_BEGIN_ALLOW_THREADS and Py_END_ALLOW_THREADS around blocking calls to permit other threads to run. ''
 " Ciò può essere attuato con il codice python. L'autore del D.B. 
-= Resources  Risorse =
 
- * [http://starship.python.net/crew/aahz/OSCON2001/index.html Aahz OSCON 2001 presentatione]
+= Resources =
+
+ * [http://starship.python.net/crew/aahz/OSCON2001/index.html Aahz OSCON 2001 presentation
+
+ * Italian version of this page: ProcessoProgramma
