@@ -3,6 +3,9 @@ This page follows a [http://groups.google.ca/groups?hl=en&lr=&selm=mailman.8378.
 == Premature Optimization ==
 Premature Optimization is spending effort on execution efficiency before determining which parts of the code are actually significant to the program efficiency.
 
+''Should premature optimization should really be on
+this page at all because it's not really a python-specific problem? ''
+
 === Dubious Way ===
 This occurs in a variety of contexts, all of which involve spending extra time making code run faster before first writing a simple, concise implementation that produces the correct results.
 
@@ -75,6 +78,7 @@ onebigstringinpieces}}}
 
 This is much more efficient, but is also rather more limited in the range of circumstances to which it applies. It could be made more general by constructing the formatting string as a function of `len(string_list)`, but this would be a bit dubious, too.  It's also less readible, less maintainible.  A better alternative is found in the next section.
 
+
 ==== The join method of strings ====
 The join method of the string type lets you perform the concatenation as follows:
 
@@ -102,6 +106,10 @@ onebigstringinpieces
 >>> underscore_join = '_'.join
 >>> print underscore_join(string_list)
 one_big_string_in_pieces}}}
+
+''The audience should be an expert in the idioms of a language when considering readability.''  The 
+join is simple to this crowd.
+
 
 
 == Boolean Redundancy ==
