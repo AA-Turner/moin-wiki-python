@@ -8,12 +8,15 @@ Some projects which saw progress during the sprint included:
 
  * The implementation of [http://www.python.org/peps/pep-0314.html PEP 314: Metadata for Python Software Packages v1.1] should be complete; someone who isn't involved in the implementation should review what's in CVS and check it against the PEP.  Work performed at the sprint included supporting the ''provides'', ''requires'', and ''obsoletes'' metadata fields in both the {{{distutils}}} package and in PyPI.  The work was performed by FredDrake, RichardJones, and AndyHarrington.  There may be some untracked changes in AndrewKuchling's draft of PEP 314; these should also be checked (also, the catalog-sig archives).  FredDrake believes that there are still some glaringly obvious metadata fields missing, necessitating a further revision of the package metadata specification.
 
- * RichardJones and Martin von Loewis worked on implementing [http://www.python.org/peps/pep-0243.html PEP 243: Module Repository Upload Mechanism], supporting a package repository as part of PyPI.  There are revisions needed to PEP 243 which haven't been written yet (mostly to do with cleaning up the use of the HTTP spec).  FredDrake thinks he uploaded the first package into the live repository, a tarball containing ZConfig 2.2.  Richard implemented the changes to the PyPI application, and Martin added an '''upload''' command to the {{{distutils}}} package to make it easy to add files from a command line.
+ * RichardJones migrated the database away from the single-user sqlite database to a multi-user postgres one.
+
+ * RichardJones and Martin von Loewis worked on implementing [http://www.python.org/peps/pep-0243.html PEP 243: Module Repository Upload Mechanism], supporting a package repository as part of PyPI.  There are revisions needed to PEP 243 which haven't been written yet (mostly to do with cleaning up the use of the HTTP spec).  FredDrake thinks he uploaded the first package into the live repository, a tarball containing ZConfig 2.2.  Richard implemented the changes to the PyPI application, and Martin added an '''upload''' command to the {{{distutils}}} package to make it easy to add files from a command line. Uploads may also have an accompanying MD5 (for simple validation) and OpenPGP signature.
 
  * AndrewKuchling integrated work done to add XML-RPC support based on efforts from the ChiPy sprint.  See [http://blog.ianbicking.org/first-chipy-sprint-pypi.html Ian Bicking's blog] for more on the ChiPy work.
 
- * Someone (please update!) integrated work started at the ChiPy sprint to convert the PyPI web interface to use ZopePageTemplates instead of hard-coded HTML in the Python code.  This should make it a lot easier to keep the logic and presentation separate.
+ * RichardJones and MichaelTwomey integrated work started at the ChiPy sprint to convert the PyPI web interface to use ZopePageTemplates instead of hard-coded HTML in the Python code.  This should make it a lot easier to keep the logic and presentation separate. "Unit" tests using Selenium were also developed.
 
+ * JohnCamara worked on some distutils bugs, and also implemented the ReStructuredText formatting of description fields. DavidGoodger implemented a couple of safety switches in docutils allowing us to turn off the "raw" and "include" directives.
 
 At a separate table in the other sprint room, this suggested topic was addressed:
 
