@@ -1,6 +1,8 @@
 === Background ===
 
-Currently, the support for Java Collections integration is a one-way street.  It's possible to make Collections object act as a Py``Object but it's not possible to make a Py``Object act as a Collection.
+This page considers the integration of java.util collections interfaces into core jython objects in going from Jython 2.1 to 2.2:
+
+Jython 2.1 support for Java Collections integration is a one-way street.  It's possible to make Collections object act as a Py``Object but it's not possible to make a Py``Object act as a Collection.
 
 The integration of Collections into Jython happens through the Collection``Proxy and Collection``Proxy``2 classes.  They wrap the Collection instance with the appropriate proxy and delegate Jython calls to the Collection instance.
 
@@ -37,6 +39,44 @@ Approach 2 offers the best integration options.  Jython is primarily an implemen
 
 
 === Discussion ===
+ClarkUpdike Mar 2 2005 [[BR]]
+This is in response to <waiting for post to show up on sourceforge>.  It is a work in progress--but feel free to comment.  I've concentrated on the impact of implementing the `List` interface:
+ 
+ `List`:: `java.util.List`
+ `list`:: python `list` type (nice to be able to say 'type', eh?)
+
+I've been thinking on how to accomplish the "Approach 2" design, which is basically a delegation model, in the sense that the subject classes will continue to subclass Py``Object.  Py``Sequence does not have an "element data" field--which leaves the concrete classes to handle that.  Here are some observations on the current 2.1 design:
+
+||'''Jython Class'''||'''Extends'''||'''current element data field'''||'''Notes'''||
+||Py``Sequence||Py``Object||N/A|| ||
+||Py``Array||Py``Sequence||`Object data;`||`data` is set to primitive array or array of arbitrary class ||
+||Py``List||Py``Sequence||`protected PyObject[] list;`|| ||
+||Py``String||Py``Sequence||`private String string;`|| jython depends heavily on interning of String ||
+||Py``Tuple||Py``Sequence||*`public PyObject[] list;`|| `list` field is referenced directly by 8 classes in 14 methods ||
+||Py``XRange||Py``Sequence||N/A|| int attributes start, stop, step, (useless without `PySequence.__iter__()` ||
+||Py``Set||Py``Object||`protected Hash``Set _set;`|| based on BrianZimmer's SetsModule ||
+||Py``Dictionary||Py``Object||`protected Hashtable table;`|| ||
+
+My current thinking is that we should add a new branch to Py``Sequence--let's call it Py``Sequence``List.  Py``Sequence would remain as is, and Py``Sequence``List would subclass Py``Sequence and implement the java.util.List interface.  Py``String and Py``XRange would subclass Py``Sequence and Py``Array, Py``List, Py``Tuple would subclass Py``Sequence``List.  This seems appropriate because, although Py``X``Range and Py``String technically fall under the description of `List`, the practicality of them as a `List` is nil.  Am I missing something obvious here?  Would anyone ever use Py``X``Range in java?  And Py``String is auto-converted to a `java.lang.String`.
+
+{{{
+Py``Sequence <--+-- Py``Sequence`List <---- (Py``Array, Py``List, Py``Tuple)
+                |
+                +-- (Py``String, Py``X``Range)
+}}}
+
+Not sure about Py``List and Py``Tuple sharing an additional base class with a predefined element data field.  Could do it that way, or could use delegation on a specialized element data class, or could leave it as-is (with copied code for certain methods--although the amount of copied code will increase.
+
+One key decision is about the element data field in Py``List and Py``Array.  Currently, it's Py``Object[].  This is efficient because it eliminates casting, but keeping it makes `List` implementation difficult (take a look at the source for `java.util.AbstractList`).  If we were to switch it to an ArrayList, it would buy us easier collection integration, but will cost performance (who knows how much).  There's also a "middle-of-the-road" approach, which is to use a specialized class to wrap a Py``Object array and provide `List` like behavior (I have some experience with doing this).  This approach might also be used with Py``Array.  
+
+Py``Array requires some important decisions also.  The collections methods are all `Object` based.  So anything coming or going throught these interfaces will require wrapping/boxing.  If Py``Array were to use an `Array``List` and fully box everything from both java and jython, their performance (their main reason for existing?) would take a major hit.  My thinking is this is not a viable option.  This means there could be some difficult code to write to implement `List`, unless we use the specialized class mentioned above (but typed to the particular primitive array types).
+
+Other general improvements:
+ *eliminate deprecated methods?
+ *Replace signatures to collection implementations (Vector, Hash``Set, Hash``Table) with intefaces (List, Set, Map)
+ *Clean up of Py``XRange copies field and deprecate `repeat()`, `getSlice()`
+
+----
  ClarkUpdike Feb 12 2005
   [http://java.sun.com/j2se/1.3/docs/api/java/util/Collections.html java.util.Collections]: Is there a need to provide a jython version of this class (especially the synchronized and unmodifiable wrapper methods)?  If it is not implemented and the java.util.Collections wrappers are used on new collection objects, the returned objects will only proxy for the java.util interface and will be broken in jython.  There is also a Py``Immutable``Set in BrianZimmer's SetsModule, but I don't think there is an immutable dictionary equivalent.
 
