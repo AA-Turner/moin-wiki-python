@@ -10,8 +10,10 @@ ties lifetimes of the arguments
 ties lifetimes of the arguments and results
 
 == return_internal_reference ==
-ties lifetime of one argument to that of result
-keep the owning object alive as long as the owned objects are also alive. 
+Builds a Python object around a pointer to
+the C++ result object (which must have a class_<> wrapper somewhere),
+and applies some lifetime management to keep the "self" object alive
+as long as the Python result is alive. 
 
 == return_value_policy<T> ==
 with T one of:
