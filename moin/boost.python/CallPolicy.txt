@@ -4,16 +4,14 @@ Different policies specifies different strategies of managing object ownership.
 [[TableOfContents]]
 
 == with_custodian_and_ward<M,N> ==
-Ties lifetimes of the arguments.
+Keeps N-th argument as long as M-th is alive.
 
 Use of template parameters M,N:
  * 0 - result
  * 1 - 1st argument (self for method calls)
  * 2 - 2nd argument (1st for method calls)
 
-Keeps N-th argument as long as M-th is alive.
-
-For example, container operation ''append'' usualy uses ''with_custodian_and_ward<1,2>'' which means keep argument alive with container itself is alive.
+For example, container operation ''append'' usualy uses {{{with_custodian_and_ward<1,2>}}} which means keep argument alive while container itself is alive.
 
 == with_custodian_and_ward_postcall ==
 ties lifetimes of the arguments and results
