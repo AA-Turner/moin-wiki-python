@@ -105,6 +105,7 @@ class TestDecorators(unittest.TestCase):
         self.assertEqual(foo.author, 'Cleese')
 }}}
 
+
 '''B. list-before-def syntax'''
 {{{
 [classmethod]
@@ -160,7 +161,7 @@ That doesn't look particularly ugly to me.
 
 ---
 
-It also isn't particular long.
+It also isn't very long.
 
 Here is an  [http://mail.python.org/pipermail/python-dev/2004-August/047112.html example Guido just sent to python-dev]:
 {{{
@@ -346,8 +347,9 @@ def bar(low,high):
  * + Same advantages of Pie decorator syntax
  * + Doesn't need a new character
  * - Angle brackets are "unpaired" characters
+ * - Parsing of greater-than and less-than becomes more fragile.
 
-'''J. new keyword decorator syntax'''
+'''J1. new keyword decorator syntax'''
 {{{
 decorate classmethod:
     def foo(arg1,arg2):
@@ -363,6 +365,28 @@ decorate accepts(int,int), returns(float):
  * - New keyword
  * - Increases minimum ident level on decorated functions
  * - Inconsistent identation level between methods with/without decorators
+ * - way to much indenting if there are multiple decorators.
+
+'''J2. expand the def suite'''
+{{{
+decorate:
+    classmethod
+def foo(arg1,arg2):
+    ...
+
+decorate:
+    accepts(int,int)
+    returns(float)
+def bar(low,high):
+    ...
+}}}
+ * + Uses widely known python syntax
+ * + Doesn't need extra characters with special meaning
+ * + Allows many decorated functions to be declared with a single statement
+ * - New keyword
+ * - Overkill for the simple case like classmethod.
+ * - Many people felt it was wrong use of an identation suite.
+ * - Technical problems with the current grammar parser if a suite *starts* with an optional part.  (Ending with an optional part, such as "else:" is OK, but starting with one is not.
 
 '''K. partitioned syntax syntax'''
 
@@ -388,6 +412,7 @@ def classmethod foo(arg1,arg2):
  * - Complicates things like colorization and other functions of helper tools
 
      Other syntaxes will need to be colorized too and will thus complicate colorization.
+ * - Since both methods are legal, it has all the downsides of either syntax, in terms of what it does to the rest of the language or newbie confusion.
 
 == Thinking ahead to Python 3 ? ==
 
