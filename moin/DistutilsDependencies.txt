@@ -101,6 +101,15 @@ For convenience's sake, it should be possible to make a single call to create a 
 Finally, by subclassing ``distutils.core.Distribution`` to add a ``dependencies`` attribute, we'll be able to supply a ``dependencies`` keyword to ``setup()`` in the parent distribution.
 
 
+Compatibility with other Distutils Extensions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+One potentially tricky issue is combining the dependency support with other distutils extensions.  For example, PEAK and PyProtocols add extra commands like ``test`` to install the software and run unit tests, ``happy`` to run HappyDoc and build an HTML API reference, a modified ``install_data`` command that installs data in package directories, and so on.  Zope 3 uses custom extensions to do a similar ``install_data`` fakeout, among other tasks.
+
+It may be that what we end up with, or want to end up with, is a ``setuptools`` mini-package for bundling with distributions that want these features.  We could then bundle in some of the more useful commands such as ``test`` and perhaps an ``install_package_data``.  And, the package could hack ``distutils.command.__path__`` to also check the ``setuptools`` package.  Thus, any new commands supplied by ``setuptools`` would be available without explicitly adding them.  Existing commands would have to be explicitly overridden in the ``cmdclass`` argument to setup, or initialized via ``self.cmdclass.setdefault()`` in our custom ``Distribution`` class's ``__init__``.
+
+
+
 Sprinting Strategies/Notes
 --------------------------
 
