@@ -110,3 +110,30 @@ you want to add stuff to our to-do list.
   [[BR]](currently the DNS servers are at zope.com/baymountain.com, 
   and Starship admins cannot edit the python.net DNS records)
   [[BR]][assigned: tismer (he owns the domain!)]
+
+
+== Detailed transfer plan ==
+
+The transfer itself will start at 2003-08-xx hh:mm UTC.
+
+  * disable logins on old starship
+  * shut down Exim, Courier-IMAP on old starship  
+  * disable any other user processes that might update the disk
+  (eg. CGI scripts that write state)
+  * maybe: remount home read-only on old machine
+  * rsync user directories (this assumes the main bulk transfer has
+  already been done)
+  * start Apache, ftpd on new machine
+  * change canonical name of new machine to starship.python.net
+  (including fixing reverse DNS resolution!)
+  * DNS change so "starship.python.net" resolves to the new machine
+  * tweak Exim config on new machine for production service
+  * start Exim, Courier-IMAP on new machine
+  * enable user logins on new machine
+
+
+
+
+
+
+
