@@ -1,0 +1,2143 @@
+(Based on [http://llama.med.harvard.edu/python/ an original] by the late Jak Kirman.)
+
+TODO: break up into multiple smaller pages; use modern Python idioms; use modern Perl idioms; 
+add more points of comparison.
+
+
+This phrasebook contains a collection of idioms, various ways of
+accomplishing common tasks, tricks and useful things to know, in Perl
+and Python side-by-side.  I hope this will be useful for people
+switching from Perl to Python, and for people deciding which to choose.
+The first part of the phrasebook is based on Tom Christiansen's 
+[http://www.perl.com/perl/pdsc/ Perl Data Structures Cookbook].
+
+
+I have only been working on this for a short time, so many of the
+translations could probably be improved, and the format could be greatly
+cleaned up.  
+
+
+I will get the data-structures
+cookbook translated first and then go back to clean up the code.  Please
+send me any comments or suggestions.  
+
+
+Also, since I have been using Python for far less time than Perl, there
+are certainly idioms I don't know or that I will misuse.  If you see any
+such cases, please send me mail.
+
+
+
+Things I would like to add to this phrasebook are:
+
+ * Simple types (strings, lists, dictionaries, etc.)
+ *Common tasks (reading from a file, exception handling, splitting    strings, regular expression manipulation, etc.)
+ *Sections 4 and 5 of the Perl Data Structures Cookbook.
+
+
+Thanks to David Ascher, Guido van Rossum, Tom Christiansen, Larry Wall
+and Eric Daniel for helpful comments.
+
+
+== Simple types ==
+
+
+=== Strings ===
+
+
+==== Creating a string ====
+
+
+{{{
+
+$s = 'a string';
+
+}}}
+
+{{{
+
+s = 'a string'
+
+}}}
+
+
+Note that string variables in Perl are specified with a dollar sign;
+in Python you just specify the name of the variable.
+
+Larry Wall points out:
+    This is rather oversimplifying what is going on in both
+    Perl and Python.  The `$` in Perl indicates a scalar variable,
+    which may hold a string, a number, or a reference.  There's
+    no such thing as a string variable in Python, where
+    variables may ''only'' hold references.
+
+    You can program in a Pythonesque subset of Perl by
+    restricting yourself to scalar variables and references.
+    The main difference is that Perl doesn't do implicit
+    dereferencing like Python does.
+
+==== Quoting ====
+
+
+{{{
+
+$s1 = "some string";
+$s2 = "a string with\ncontrol characters\n";
+$s3 = 'a "quoted" string';
+$s4 = "a 'quoted' string";
+$s5 = qq/a string with '" both kinds of quotes/;
+$s6 = "another string with '\" both kinds of quotes";
+
+for $i ($s1, $s2, $s3, $s4, $s5, $s6)
+{
+  print ("$i\n");
+}
+
+}}}
+
+{{{
+
+s1 = "some string"
+s2 = "a string with\ncontrol characters\n"
+s3 = 'a "quoted" string'
+s4 = "a 'quoted' string"
+s5 = '''a string with '" both kinds of quotes'''
+s6 = "another string with '\" both kinds of quotes"
+
+for i in (s1, s2, s3, s4, s5, s6):
+  print i
+
+}}}
+
+
+In both languages, strings can be single-quoted or double-quoted.  In
+Python, there is no difference between the two, whereas in Perl,
+double-quoted strings have control characters and variables interpolated
+inside them (see below) and single-quoted strings do not.  
+
+Both languages provide other quoting mechanisms; Python uses triple
+quotes (single or double, makes no difference) for multi-line strings;
+perl has very elaborate (and very useful) quoting mechanisms; see the
+operators q, qq, qw, qx, etc. in the Perl manual. 
+
+Quoting is definitely one of the areas where Perl excels.
+
+
+
+==== Interpolation ====
+
+
+{{{
+
+$name = "Fred";
+$header1 = "Dear $name,";
+$title = "Dr.";
+$header2 = "Dear $title $name,";
+
+print "$header1\n$header2\n";
+
+}}}
+
+{{{
+
+name = "Fred"
+header1 = "Dear %s," % name
+title = "Dr."
+header2 = "Dear %(title)s %(name)s," % vars()
+
+print header1
+print header2
+
+}}}
+
+
+
+Perl's interpolation is much more convenient, though slightly less
+powerful than Python's `%` operator.  Remember that in Perl
+variables are interpolated within double-quoted strings, but not
+single-quoted strings.
+
+Perl has a function `sprintf` that behaves similarly to
+Python's `%` operator; the above lines could have been
+written:
+{{{
+$name = "Fred";
+$header1 = sprintf ("Dear %s,", $name);
+$title = "Dr.";
+$header2 = sprintf ("Dear %s %s,", $name, $title);
+}}}
+
+
+Python's `%` (format) operator is generally the way to go
+when you have more than minimal string formatting to do (you can use
+`+` for concatenation, and `[:]` for slicing).  It
+has three forms.  In the first, there is a single `%`
+specifier in the string; the specifiers are roughly those of C's
+sprintf.  The right-hand side of the format operator specifies the value
+to be used at that point:
+{{{
+x = 1.0/3.0
+s = 'the value of x is roughly %.4f' % x
+}}}
+
+If you have several specifiers, you give the values in a list on the
+right hand side:
+{{{
+x = 1.0/3.0
+y = 1.0/4.0
+s = 'the value of x,y is roughly %.4f,%.4f' % (x, y)
+}}}
+
+Finally, you can give a name and a format specifier:
+{{{
+x = 1.0/3.0
+y = 1.0/4.0
+s = 'the value of x,y is roughly %(x).4f,%(y).4f' % vars()
+}}}
+
+The name in parentheses is used as a key into the dictionary you provide
+on the right-hand side; its value is formatted according to the
+specifier following the parentheses.  Some useful dictionaries are
+`locals()` (the local symbol table), `globals()`
+(the global symbol table), and `vars()` (what exactly is
+this?) 
+
+
+
+
+==== Modifying a string ====
+
+
+{{{
+
+$s1 = "new string";        # change to new string
+$s2 =~ s/\n/[newline]/g;   # substitute newlines with the text "[newline]"
+substr($s2, 0, 3) = 'X';   # replace the first 3 chars with an X
+
+print ("$s1\n$s2\n");
+
+}}}
+
+{{{
+
+s1 = "new string"          # change to new string
+                           # substitute newlines with the text "[newline]"
+s2 = regsub.gsub ('\n', '[newline]', s2)
+s2 = 'X' + s2[3:]
+
+print s1
+print s2
+
+}}}
+
+
+In Perl, strings are mutable; the third assignment modifies
+`s2`.  In Python, strings are immutable, so you have to do
+this operation a little differently, by slicing the string into the
+appropriate pieces.  
+
+
+A Python string is just an array of characters, so
+all of the array operations are applicable to strings.  In particular,
+if `a` is an array, `a[x:y]` is the slice of
+`a` from index `x` up to, but not including, index
+`y`.  If `x` is omitted, the slice starts at the
+beginning of the array; if `y` is omitted, the slice ends at
+the last element.  If either index is negative, the length of the array
+is added to it.
+
+
+Perl has similar slicing operations [describe].
+
+
+
+== Importing ==
+
+
+{{{
+
+use Module;
+
+use Module (symbol1, symbol2, symbol3);
+# or use Module qw(symbol1 symbol2 symbol3);
+
+}}}
+
+{{{
+
+from Module import *
+
+from Module import symbol1, symbol2, symbol3
+
+}}}
+
+
+I need to figure out the precise differences here.  Roughly,
+from..import * and use Module mean import the entire namespace; the
+other versions import only selected names.
+
+
+{{{
+
+require Module;
+
+Module::func();
+
+}}}
+
+{{{
+
+import Module;
+
+Module.func()
+
+}}}
+
+
+This "loads" the specified module, executing any initialization code.
+It does not modify the namespace.  In order to access symbols in the
+module, you have to explicitly qualify the name, as shown.
+
+
+
+
+== Common tasks ==
+
+
+=== Reading a file as a list of lines ===
+
+
+{{{
+
+$filename = "cooktest1.1-1";
+open (F, $filename) or die ("can't open $filename: $!\n");
+@lines = <F>;
+
+}}}
+
+{{{
+
+filename = "cooktest1.1-1"
+try:
+  f = open (filename)
+except:
+  sys.stderr.write ("can't open %s: %s %s\n" % 
+                     (filename, sys.exc_type, sys.exc_value))
+lines = f.readlines()
+
+
+}}}
+
+
+In Perl, variables are always preceded by a symbol that indicates their
+type.  A `$` indicates a simple type (number, string or
+reference), an `@` indicates an array, a `%`
+indicates a hash (dictionary), and an `&` indicates a
+function. 
+
+
+In Python, objects must be initialized before they are used, and the
+initialization determines the type.  For example, `a = []`
+creates an empty array `a`, `d = {}` creates an
+empty dictionary.
+
+
+
+
+
+
+== Some general comparisons ==
+
+This section is under construction; for the moment I am just putting
+random notes here.  I will organize them later.
+
+
+ *Perl's regular expressions are much more powerful than those of Python.
+ *Perl's quoting mechanisms are more powerful than those of Python.
+ *I find Python's syntax much cleaner than Perl's
+ *I find Perl's syntax too flexible, leading to silent errors.  The -w
+flag and `use strict` helps quite a bit, but still not as
+much as Python. 
+ *I like Python's small core with a large number of standard
+libraries.  Perl has a much larger core, and though many libraries are
+available, since they are not standard, it is often best to avoid them
+for portability. 
+ *Python's object model is very uniform, allowing you, for example, to
+define types that can be used wherever a standard file object can be used.
+ *Python allows you to define operators for user-defined types.
+ 
+
+
+
+
+
+== Lists of lists ==
+
+The perl code in this section is taken, with permission, almost directly
+from Tom Christiansen's [http://www.perl.com/perl/pdsc/ Perl Data Structures Cookbook], part 1, release 0.1, with a few typos
+fixed.
+
+
+
+
+
+=== Lists of lists: preliminaries ===
+
+
+{{{
+sub printSep {   print ("=" x 60, "\n"); }
+
+sub printLoL
+{
+  my ($s, $lol) = @_;
+  print ("$s\n");
+  for $l (@$lol)
+  {
+    print (join (" ", @$l));
+    print ("\n");
+  }
+  printSep();
+}
+
+# return numeric (or other) converted to string 
+sub somefunc {  my ($i) = shift;  "$i";  }
+
+}}}
+
+{{{
+def printSep ():
+  print '=' * 60
+
+def printLoL (s, lol):
+  print s
+  for l in lol:
+    print string.join (l)
+  printSep()
+
+def somefunc(i):
+  return repr(i)  # string representation of i (aka `i`)
+
+}}}
+
+
+`printLoL` pretty-prints a list of lists.
+
+`printSep` prints a line of equal signs as a separator.
+
+`somefunc` is a function that is used in various places below.
+
+Eric Daniel points out that
+some parts of these examples assume that the elements of the
+(lower-level) lists are strings; to convert an arbitrary list of lists
+to a list of lists of strings, you can use a function like:
+{{{
+# str_conv takes a list of lists of arbitrary objects, and returns a
+# list of lists of their string representations.
+def str_conv(lol):
+    result = []
+    for l in lol:
+        result.append(map (repr, l))
+    return result
+}}}
+
+
+
+
+
+=== requires/imports ===
+
+
+{{{
+
+import sys, string, regex, regsub
+
+}}}
+
+Perl's `use` is roughly equivalent to Python's
+`import`.  
+
+Perl has much more built in, so nothing here requires importing.
+
+
+
+
+
+
+
+=== Declaration of a list of lists ===
+
+{{{
+@LoL = ( 
+       [ "fred", "barney" ],
+       [ "george", "jane", "elroy" ],
+       [ "homer", "marge", "bart" ],
+     );
+@LoLsave = @LoL; # for later
+
+printLoL ('Families:', \@LoL); 
+}}}
+
+{{{
+LoL = [ 
+  [ "fred", "barney" ],
+  [ "george", "jane", "elroy" ],
+  [ "homer", "marge", "bart" ]
+]
+LoLsave = LoL[:]; # See comment below
+
+printLoL ('Families:', LoL)
+}}}
+
+
+In Python, you are always dealing with references to objects.  If you
+just assign one variable to another, e.g.,
+{{{
+a = [1, 2, 3]
+b = a
+}}}
+you have just made `b` refer to the same array as
+`a`.  Changing the values in `b` will affect
+`a`.
+
+Sometimes what you want is to make a copy of a list, so you can
+manipulate it without changing the original.  In this case, you want to
+make a new list whose elements are copies of the elements of the
+original list.  This is done with a full array slice --- the start of
+the range defaults to the beginning of the list and the end defaults to
+the end of the list, so
+{{{
+a = [1, 2, 3]
+b = a[:]
+}}}
+makes a separate copy of a.
+
+Note that this is not necessarily the same thing as a
+deep copy ([make a link here]), since references in the original array
+will be shared with references in the new array:
+{{{
+a = [ [1, 2, 3], [4, 5, 6] ]
+b = a[:]
+b[0][0] = 999
+print a[0][0]   # prints 999
+}}}
+
+
+
+
+
+=== Generation of a list of lists ===
+
+
+
+
+
+==== Reading from a file line by line ====
+
+
+{{{
+open (F, "cookbook.data1");
+@LoL = ();
+while ( <F> ) {
+    push @LoL, [ split ];
+}
+
+printLoL ("read from a file: ", \@LoL);
+}}}
+
+{{{
+f = open ('cookbook.data1')
+LoL = [];
+while (1):
+  line = f.readline()
+  if not line : break
+  LoL.append (string.split (line))
+
+printLoL ('read from a file: ', LoL)
+
+}}}
+
+
+Unless you expect to be reading huge files, or want feeback as you
+read the file, it is easier to slurp the file in in one go.
+
+In Perl, reading from a file-handle, e.g., `<STDIN>`, has a
+context-dependent effect.  If the handle is read from in a scalar
+context, like `$a = <STDIN>;`, one line is read.  If it is
+read in a list context, like `@a = <STDIN>;`the whole file is
+read, and the call evaluates to a list of the lines in the file.
+
+In Python, you read one line from a file with `f.readline()`
+and the entire file as a list of lines with `f.readlines()`.
+
+
+
+
+
+
+==== Reading from a file in one go ====
+
+
+{{{
+open (F, "cookbook.data1");
+
+@LoL = map { chop; [split]; } <F>;
+
+printLoL ("slurped from a file: ", \@LoL);
+
+}}}
+
+{{{
+f = open ('cookbook.data1')
+LoL = map (string.split, f.readlines())
+printLoL ("slurped from a file: ", LoL)
+
+}}}
+
+
+Thanks to Adam Krolnik for help with the perl syntax here.
+
+
+
+
+
+
+=== Filling a list of lists with function calls ===
+
+
+{{{
+
+    for $i ( 0 .. 9 ) {
+        $LoL[$i] = [ somefunc($i) ];
+    }
+
+printLoL ("filled with somefunc:", \@LoL);
+
+}}}
+
+{{{
+
+LoL = [0] * 10  # populate the array -- see comment below
+
+for i in range (10):
+  LoL[i] = [ somefunc(i) ]
+
+printLoL ('filled with somefunc:', LoL)
+
+}}}
+
+In python:
+
+ * You have to populate the matrix -- this doesn't happen automatically in Python.
+ * It doesn't matter what type the initial elements of the matrix are, as long as they exist.
+
+
+
+
+
+
+=== Filling a list of lists with function calls, using temporaries ===
+
+
+{{{
+    for $i ( 0 .. 9 ) {
+        @tmp = somefunc($i);
+        $LoL[$i] = [ @tmp ];
+    }
+
+printLoL ("filled with somefunc via temps:", \@LoL);
+}}}
+
+{{{
+for i in range (10):
+  tmp = somefunc(i)
+  LoL[i] = [tmp]
+
+printLoL ('filled with somefunc via temps:', LoL)
+
+}}}
+
+
+
+{{{
+@LoL = map { [ somefunc($_) ] } 0..9;
+printLoL ('filled with map', \@LoL);
+
+}}}
+
+{{{
+
+LoL = map (lambda x: [ somefunc(x) ], range(10))
+printLoL ('filled with map', LoL)
+
+}}}
+
+
+Both Perl and Python allow you to map an operation over a list, or to
+loop through the list and apply the operation yourself.
+
+I don't believe it is advisable to choose one of these techniques to the
+exclusion of the other --- there are times when looping is more
+understandable, and times when mapping is.  If conceptually the idea you
+want to express is "do this to each element of the list", I would
+recommend mapping because it expresses this precisely.  If you want
+more precise control of the flow during this process, particularly for
+debugging, use loops.
+
+Tom Christiansen suggests that it is often better to make it clear that
+a function is being defined, by writing:
+{{{
+@LoL = map { [ somefunc($_) ] }, 0..9;
+}}}
+Rather than
+{{{
+@LoL = map ({[ somefunc($_) ]}, 0..9);
+}}}
+or
+{{{
+@LoL = map ( [ somefunc($_) ] , 0..9);
+}}}
+
+
+
+
+
+
+
+=== Adding to an existing row in a list of lists ===
+
+{{{
+
+@LoL = @LoLsave;  # start afresh
+push @{ $LoL[0] }, "wilma", "betty";
+printLoL ('after appending to first element:', \@LoL);
+    
+}}}
+
+{{{
+
+LoL = LoLsave[:]  # start afresh
+LoL[0] = LoL[0] + ["wilma", "betty"]
+printLoL ('after appending to first element:', LoL);
+
+}}}
+
+
+In python, the `+` operator is defined to mean concatenation
+for sequences.  An alternative to the above code is to append each element
+of the list to `LoL[0]`:
+{{{
+LoL[0].append ("wilma")
+LoL[0].append ("betty")
+}}}
+
+
+
+
+
+=== Accessing elements of a list of lists ===
+
+
+
+
+
+==== One element ====
+
+{{{
+$LoL[0][0] = "Fred";
+print ("first element is now $LoL[0][0]\n");
+printSep();
+
+}}}
+
+{{{
+LoL[0][0] = "Fred"
+print 'first element is now', LoL[0][0]
+printSep()
+
+}}}
+
+
+
+==== Another element ====
+
+{{{
+# upcase the first letter
+$LoL[1][1] =~ s/(\w)/\u$1/;
+print ("element 1, 1 is now $LoL[1][1]\n");
+printSep();
+
+}}}
+
+{{{
+# upcase the first letter
+s = LoL[1][1]
+i = regex.search ('\w', s)
+if i != -1:
+  LoL[1][1] = string.upper (s[:i+1]) + string.lower (s[i+1:])
+print 'element 1, 1 is now', LoL[1][1]
+printSep()
+
+}}}
+
+
+Perl has a specific operation for capitalizing a string (I am not sure
+exactly what the definition of this is), whereas python does not.  This
+example seems quite tortuous in python, but I am not sure that it is a
+very common thing to want to do.  If you often want to capitalize the
+first letter of a string, define a function like:
+
+{{{
+def capitalize(s):
+  i = regex.search ('\w', s)
+  if i != -1:
+    result = string.upper (s[:i+1]) + string.lower (s[i+1:])
+  else:
+    result = s
+  return result
+}}}
+The above then becomes:
+{{{
+LoL[1][1] = capitalize (LoL[1][1])
+print 'element 1, 1 is now', LoL[1][1]
+printSep()
+}}}
+
+Perl's regexp matching and substitution is enormously powerful; see
+especially the new syntax for comments and whitespace inside regular
+expressions. 
+
+
+
+
+
+=== Printing a list of lists ===
+
+
+
+
+
+==== Print a list of lists using references ====
+
+
+{{{
+
+for $aref ( @LoL ) {
+    print "\t [ @$aref ],\n";
+}
+printSep();
+
+}}}
+
+{{{
+
+for a in LoL:
+  print "\t [ %s ]," % string.join(a)
+printSep()
+
+}}}
+
+[Need a pointer to the `%` operator]
+
+
+
+==== Print a list of lists using indices ====
+
+
+{{{
+
+for $i ( 0 .. $#LoL ) {
+    print "\t [ @{$LoL[$i]} ],\n";
+}
+printSep();
+
+}}}
+
+{{{
+
+for i in range(len(LoL)):
+  print "\t [ %s ]," % string.join(LoL[i])
+printSep()
+
+
+}}}
+
+
+In Perl, the highest valid index of an array `@A` is
+`$#A`.  In Python, it is `len(A)`.
+
+[Link to details of the range function]
+
+{{{
+
+
+}}}
+
+
+
+
+==== Print a list of lists element by element ====
+
+
+{{{
+
+for $i ( 0 .. $#LoL ) {
+    for $j ( 0 .. $#{$LoL[$i]} ) {
+        print "elt $i $j is $LoL[$i][$j]\n";
+    }
+}
+printSep();
+
+}}}
+
+{{{
+
+for i in range (len(LoL)):
+  for j in range (len(LoL[i])):
+    print 'elt %d %d is %s' % (i, j, LoL[i][j])
+printSep()
+
+}}}
+
+
+{{{
+
+
+}}}
+
+
+
+
+==== Print a list of lists using map ====
+
+{{{
+
+sub printLine { print (join (" ", @{shift()}), "\n"); }
+map (printLine ($_), @LoL);
+printSep();
+
+}}}
+
+{{{
+
+def printLine(l) : print string.join (l)
+map (printLine, LoL)
+printSep()
+
+}}}
+
+
+
+
+
+==== Print a list of lists using map and anonymous functions ====
+
+{{{
+
+print map { join (' ', @$_), "\n" } @LoL;
+printSep();
+
+}}}
+
+{{{
+# Can't do it without horrible kludges, as far as I know.
+# print is a statement, not a function, so you can't directly use
+# a lambda expression.  Suggestions?  For now, same as above.
+
+def printLine(l) : print string.join (l)
+map (printLine, LoL)
+printSep()
+
+
+}}}
+
+
+The lack of true lambda expressions in Python is not really a problem,
+since all it means is that you have to provide a name for the function.
+Since you can define a function within another function, this does not
+lead to namespace clutter.
+
+In perl, a function can be defined inside another function, but it is
+defined in the namespace of the current package.
+
+
+
+
+
+
+
+
+
+== Hashes/dictionaries of lists ==
+
+The perl code in this section is taken, with permission, almost directly
+from Tom Christiansen's [http://www.perl.com/perl/pdsc/ Perl Data Structures Cookbook], part 2, release 0.1, with a few typos
+fixed.
+
+Associative arrays are containers that hold pairs of elements.  The
+first element of a pair is the ''key'', the second is the
+''value''.  In Python, the key may be of almost any type [(link to
+explanation of why lists can't be keys)]; I am not what the 
+limitations are in Perl.
+
+Associative arrays are sometimes called maps, dictionaries (Python,
+Smalltalk), or hashes (Perl).
+
+
+
+
+
+
+=== Preliminaries ===
+
+
+{{{
+sub printSep {   print ("=" x 60, "\n"); }
+
+sub printHoL
+{
+  my ($s, $hol) = @_;
+  print ("$s\n");
+  for $k (sort keys (%$hol))
+  {
+    my ($v) = $hol->{$k};  
+    print ("$k : ", join (" ", @$v), "\n")
+  }
+  printSep();
+}
+
+sub get_family{
+  my ($group) = shift;
+  $group =~ s/s$//;
+  $group = "\u$group";
+  return ("Mr-$group", "Mrs-$group", "$group-Jr");
+  }
+
+}}}
+
+{{{
+import string, regex, regsub
+
+def printSep ():
+  print '=' * 60
+
+def printHoL(s, hol):
+  print s
+  ks = hol.keys(); ks.sort()
+  for k in ks:
+    print k, ':', string.join(hol[k])
+  printSep()
+
+def get_family(group):
+  group = regsub.sub ('s$', '', group)
+  group = string.upper (group[:1]) + string.lower (group[1:])
+  return ["Mr-" + group, "Mrs-" + group, group+ "-Jr"];
+
+}}}
+
+`printHoL` pretty-prints a hash/dictionary of lists.
+
+`printSep` prints a line of equal signs as a separator.
+
+`get_family` makes a list of names from a "group name", e.g.,
+`flintstones` becomes `[ "Mr-Flintstone",
+"Mrs-Flintstone", "Flintstone-Jr" ]`  This is for generating lists
+to fill a hash/dictionary.
+
+
+
+
+
+
+
+=== Declaration of a hash of lists ===
+
+
+{{{
+
+%HoL = ( 
+       flintstones        => [ "fred", "barney" ],
+       jetsons            => [ "george", "jane", "elroy" ],
+       simpsons           => [ "homer", "marge", "bart" ],
+     );
+
+printHoL ('names', \%HoL);
+
+}}}
+
+{{{
+
+HoL = { 'flintstones' : ['fred', 'barney'],
+        'jetsons' : ['george', 'jane', 'elroy'],
+        'simpsons': ['homer', 'marge', 'bart'], }
+
+printHoL ('names', HoL)
+
+}}}
+
+
+In python, the print statement has very good default semantics --- most
+of the time, it does exactly what you want, putting a space between the
+arguments, and a newline at the end.  If you want more control over the
+formatting, use the `%` operator [link to % operator]: rather
+than 
+{{{
+    print k, ':', string.join(v)
+}}}
+
+you could use
+{{{
+print "%s: %s", (k, string.join(v))
+}}}
+
+to avoid the space before the colon.
+
+Note that both perl and python let you have a comma after the last
+element of a list.  This is especially useful for automatically
+generated lists, where you don't want to have to worry about a special
+case at the end.
+
+
+Larry Wall says:
+	The Perl code can be written in a more Pythonesque way,
+	and means pretty much the identical thing.  Perl always
+	uses scalar variables for references. Note the brackets
+	rather than the parens to get an anonymous hash constructor.
+
+{{{
+$HoL = {
+       flintstones        => [ "fred", "barney" ],
+       jetsons            => [ "george", "jane", "elroy" ],
+       simpsons           => [ "homer", "marge", "bart" ],
+
+};
+printHoL (\'names\', $HoL);
+}}}
+
+
+Note that since `$HoL` is already a ref, the `\\`
+is no longer necessary.  
+
+
+
+
+
+
+
+=== Initializing hashes of lists ===
+
+
+
+
+==== Initializing hashes of lists from a file ====
+
+The file is assumed to consist of a sequence of lines of the form:
+{{{
+flintstones: fred barney wilma dino
+}}}
+
+
+
+{{{
+
+%HoL = ();
+open (F, "cookTest.2");
+while ( <F> ) {
+    next unless s/^(.*?):\s*//;
+    $HoL{$1} = [ split ];
+}
+printHoL ('read from file cookTest.2', \%HoL);
+
+}}}
+
+{{{
+
+HoL = {}
+f = open ('cookTest.2')
+while 1:
+  s = f.readline()
+  if not s: break
+  n = string.find (s, ':')
+  if n < 0 : continue # bad line
+  key = string.strip (s[:n])  
+  val = string.split (s[n+1:]) # n+1 to leave out the colon
+  HoL[key] = val
+
+printHoL ('read from file cookTest.2', HoL)
+
+}}}
+
+Note that the perl hash is initialized with an empty ''list'', not
+an empty hash reference (`{ }`).  Writing
+{{{
+%HoL = {}
+}}}
+
+Obviously, the python section could be done more concisely, for example
+eliminating temporary vars key and val, but this would make 
+it pretty impenetrable.
+
+The python section could be written using regular expressions:
+
+{{{
+prog = regex.compile("\([^:]*\):\(.*\)")
+while 1:
+  s = f.readline()
+  if not s: break
+  if prog.match(s) >= 0:
+    key, val = s.group(1, 2)
+    HoL[key] = val
+}}}
+
+
+
+
+
+
+==== Reading into a hash of lists from a file with temporaries ====
+
+
+{{{
+# flintstones: fred barney wilma dino
+open (F, "cookTest.3");
+%HoL = {};
+while ( $line = <F> ) {
+    next unless $line =~ /:/;
+    ($who, $rest) = split /:\s*/, $line, 2;
+    @fields = split ' ', $rest;
+    $HoL{$who} = [ @fields ];
+}
+
+printHoL ('read from cookTest.3', \%HoL);
+
+}}}
+
+{{{
+
+HoL = {}
+f = open ('cookTest.3')
+while 1:
+  line = f.readline()
+  if not line : break
+  n = string.find (line, ':')
+  if n < 0 : continue
+  who, rest = line[:n], line[n+1:]  # n+1 skips the colon
+  fields = string.split (rest)
+  HoL[who] = fields
+
+printHoL ('read from cookTest.3', HoL)
+
+}}}
+
+
+??? points out that, arguably, it makes more sense to say:
+{{{
+n = string.find (s, ':')
+if n < 0: continue
+}}}
+
+rather than
+{{{
+n = string.find (s, ':')
+if n == -1: continue
+}}}
+
+since it is the sign of `n` that is special.
+
+
+
+
+
+==== Initializing a hash of lists from function calls ====
+
+For each key of the hash, we call a function that creates a list, and
+associate the key with this list.
+
+
+{{{
+
+%HoL = {};
+for $group ( "simpsons", "jetsons", "flintstones" ) {
+    $HoL{$group} = [ get_family($group) ];
+}
+
+printHoL ('filled by get_family', \%HoL);
+
+}}}
+
+{{{
+
+HoL = {}
+for group in "simpsons", "jetsons", "flintstones":
+    HoL[group] = get_family(group)
+
+printHoL ('filled by get_family', HoL);
+
+}}}
+
+
+The python section could have been written:
+{{{
+HoL={}
+def set(group, hol=HoL): hol[group] = get_family(group)
+map(set, ("simpsons", "jetsons", "flintstones" ))
+
+printHoL ('filled by get_family', HoL);
+}}}
+ 
+
+The perl section could have been written:
+
+{{{
+%Hol = {};
+map { $HoL{$_} = [ get_family($_) ] } "simpsons", "jetsons", "flintstones";
+}}}
+
+
+
+
+
+==== Initializing a hash of lists from function calls with temporaries ====
+
+For each key of the hash, we call a function that creates a list, and
+associate the key with this list.  The list is assigned to a local
+variable (where it could be modified, for example). 
+
+
+{{{
+
+%LoL = {};
+for $group ( "simpsons", "jetsons", "flintstones" ) {
+    @members = get_family($group);
+    $HoL{$group} = [ @members ];
+}
+
+printHoL ('by get_family with temps', \%HoL);
+
+}}}
+
+{{{
+
+LoL = {}
+for group in ( "simpsons", "jetsons", "flintstones" ):
+  members = get_family(group)
+  HoL[group] = members
+
+printHoL ('by get_family with temps', HoL)
+
+}}}
+
+
+
+
+
+=== Append to a list in a hash of lists ===
+
+We want to add two strings to the list of strings indexed by the name
+`flintstones`.
+
+
+{{{
+
+push @{ $HoL{flintstones} }, "wilma", "betty";
+print (join (" ", @{$HoL{flintstones}}), "\n");
+printSep();
+
+}}}
+
+{{{
+
+HoL['flintstones'] = HoL['flintstones'] + ['wilma', 'betty']
+print string.join (HoL['flintstones'])
+printSep()
+
+}}}
+
+
+Tom Christiansen says: while it's not a great efficiency, it works to
+say
+{{{
+$HoL{'flintstones'} = [ @{ $HoL{'flintstones'} }, "wilma", "betty" ];
+}}}
+
+
+
+
+
+
+
+
+
+=== Access elements of a hash of lists ===
+
+
+
+
+==== Access a single element ====
+
+Assign to the first element of the list indexed by
+`flintstones`. 
+
+
+{{{
+$HoL{flintstones}[0] = "Fred";
+print ($HoL{flintstones}[0], "\n");
+printSep();
+
+}}}
+
+{{{
+HoL['flintstones'][0] = "Fred"
+print HoL['flintstones'][0]
+printSep()
+
+}}}
+
+
+Tom Christiansen explains when you don't need quotes around strings in
+perl: 
+
+	It's whenever you have a bareword (identifier token) in braces.
+        Thus
+	`${blah} and $something{blah}` don't need quotes.
+
+If blah were a function then you would have to use
+`$something{blah()}` to overwrite
+the stringificiation.  Barewords are autoquoted in braces and as
+the LHS operand of `=&rt;` as well.
+
+
+
+
+
+
+==== Change a single element ====
+
+This upcases the first letter in the second element of the array indexed
+by `simpsons`.
+
+# another element
+
+{{{
+$HoL{simpsons}[1] =~ s/(\w)/\u$1/;
+
+printHoL ('after modifying an element', \%HoL);
+
+}}}
+
+{{{
+HoL['simpsons'][1] = string.upper (HoL['simpsons'][1][0]) + \
+                     HoL['simpsons'][1][1:]
+
+printHoL ('after modifying an element', HoL)
+
+}}}
+
+
+
+=== Print a hash of lists ===
+
+Various different ways of printing it out.
+
+==== Simple print ====
+Printed sorted by family name, in the format:
+{{{
+family1: member1-1 member1-2...
+family2: member2-1 member2-2...
+...
+}}}
+
+
+
+{{{
+
+foreach $family ( sort keys %HoL ) {
+    print "$family: @{ $HoL{$family} }\n";
+}
+printSep();
+
+}}}
+
+{{{
+
+k = HoL.keys(); k.sort()
+for family in k:
+  print '%s: %s' % (family, string.join (HoL[family]))
+printSep()
+
+}}}
+
+
+Note that sorting is in-place in python --- if you want a sorted copy of
+a list, you first copy the list and then sort it.
+
+
+==== Print with indices ====
+
+
+
+{{{
+
+foreach $family ( sort keys %HoL ) {
+    print "family: ";
+    foreach $i ( 0 .. $#{ $HoL{$family}} ) {
+        print " $i = $HoL{$family}[$i]";
+    }
+    print "\n";
+}
+printSep();
+
+}}}
+
+{{{
+
+k = HoL.keys(); k.sort()
+for family in k:
+  print 'family: ',
+  for i in range (len (HoL[family])):
+    print '%d = %s' % (i, HoL[family][i]),
+  print
+printSep()
+
+}}}
+
+
+
+
+==== Print sorted by number of members ====
+
+
+{{{
+
+push (@{$HoL{'simpsons'}}, 'Lisa');
+foreach $family ( sort { @{$HoL{$b}} <=> @{$HoL{$a}} } keys %HoL ) {
+    print "$family: @{ $HoL{$family} }\n"
+}
+
+}}}
+
+{{{
+
+HoL['simpsons'] = HoL['simpsons'] + ['Lisa']
+def cmpNumberMembers(a,b):
+  return - cmp (len (HoL[a]), len (HoL[b]))
+k = HoL.keys()
+k.sort(cmpNumberMembers)
+for family in k:
+  print "%s:" % family, string.join (HoL[family])
+
+}}}
+
+
+Note that sorting is reversed here.  Not sure why this is different.
+
+You can use a lambda expression in python here, too, though I don't find
+it very readable:
+{{{
+HoL['simpsons'] = HoL['simpsons'] + ['Lisa']
+k = HoL.keys()
+k.sort(lambda a, b: - cmp (len (HoL[a]), len (HoL[b])))
+for family in k:
+  print "%s:" % family, string.join (HoL[family])
+}}}
+
+
+
+
+
+
+==== Print sorted by number of members, and by name within each list ====
+
+
+{{{
+
+foreach $family ( sort { @{$HoL{$b}} <=> @{$HoL{$a}} } keys %HoL ) {
+    print "$family: ", join(", ", sort @{ $HoL{$family}}), "\n";
+}
+
+}}}
+
+{{{
+
+k = HoL.keys()
+k.sort(lambda a, b: cmp (len (HoL[b]), len (HoL[a])))
+for family in k:
+  members = HoL[family]
+  members.sort()
+  print "%s:" % family, string.joinfields (members, ", ")
+
+
+}}}
+
+
+
+
+
+== Lists of hashes/dictionaries ==
+
+The perl code in this section is taken, with permission, almost directly
+from Tom Christiansen's [http://www.perl.com/perl/pdsc/ Perl Data Structures Cookbook], part 3, release 0.1, with a few typos
+fixed.
+
+
+
+
+
+=== Lists of hashes: preliminaries ===
+
+
+{{{
+sub printSep {   print ("=" x 60, "\n"); }
+
+sub printLoH
+{
+  my ($s, $loh) = @_;
+  print ("$s\n");
+  for $h (@$loh)
+  {
+    print ("[\n");
+    for $k (sort (keys %$h))
+    {
+      print ("  $k => $h->{$k}\n");
+    }
+    print ("]\n");
+  }
+  printSep();
+}
+
+}}}
+
+{{{
+import sys,string,regsub
+
+def printSep (): print '=' * 60
+
+def printLoH(s,loh):
+  def printH (h):
+    print "["
+    keys = h.keys(); keys.sort()
+    for k in keys:
+      print '  %s => %s' % (k, h[k])
+    print "]"
+  print s
+  map(printH, loh)
+  printSep()
+}}}
+
+
+The only reason I sort the keys here is to make sure that python and
+perl print the elements of the dictionary in the same order.
+
+Note that sorting in perl generates a new list, while in python sorting
+is done in-place.  This means that you can avoid making a copy while
+sorting in python.  The disadvantage is a clumsier syntax for the common
+case where you ''do'' want a copy.  Larry Wall says that in Perl,
+you almost always do want the copy; I am not sure whether this is true
+in Python.
+
+
+
+
+
+
+
+=== Declaration of a list of hashes ===
+
+
+{{{
+@LoH = ( 
+       { 
+          Lead      => "fred", 
+          Friend    => "barney", 
+       },
+       {
+           Lead     => "george",
+           Wife     => "jane",
+           Son      => "elroy",
+       },
+       {
+           Lead     => "homer",
+           Wife     => "marge",
+           Son      => "bart",
+       }
+ );
+
+printLoH ('initial value', \@LoH);
+}}}
+
+{{{
+LoH = [
+       {  "Lead"      : "fred", 
+          "Friend"    : "barney"
+       },
+       {
+           "Lead"     : "george",
+           "Wife"     : "jane",
+           "Son"      : "elroy"
+       },
+       {
+           "Lead"     : "homer",
+           "Wife"     : "marge",
+           "Son"      : "bart"
+       }
+      ]
+
+printLoH ('initial value', LoH)
+}}}
+
+
+
+
+
+
+=== Generation of a list of hashes ===
+
+
+
+
+
+==== Reading a list of hashes from a file ====
+The format of the file is expected to be:
+{{{
+LEAD=fred FRIEND=barney
+LEAD=homer WIFE=marge
+...
+}}}
+
+
+{{{
+@LoH = ();
+open (F, "cooktest.4");
+while ( <F> ) {
+    my ($rec) = {};
+    for $field ( split ) {
+        ($key, $value) = split /=/, $field;
+        $rec->{$key} = $value;
+    }
+    push @LoH, $rec;
+}
+
+printLoH ('after reading from file cooktest.4', LoH);
+
+}}}
+
+{{{
+file = open ("cooktest.4")
+LoH = []
+while 1:
+  line = file.readline()
+  if not line: break
+  rec = {}
+  for f in string.split (line):
+    [key, value] = string.splitfields (f, '=')
+    rec[key] = value
+  LoH.append (rec)
+
+printLoH ('after reading from file cooktest.4', LoH)
+
+}}}
+
+The behaviour of the python and perl programs is not quite the same in
+the face of errors in the input format, as ??? points out:
+
+    A field of the form `Fred=Barney=Mickey` (probably a mistake)
+    will result in key="Fred" and value="Barney=Mickey" in Perl but an
+    exception about the size of  the lists on the splitfields line in Python.
+
+
+==== Reading a list of hashes from a file without temporaries ====
+
+
+{{{
+
+@LoH = ();
+open (F, "cooktest.4");
+while ( <F> ) {
+    push @LoH, { split /[\s=]+/ };
+}
+
+printLoH ('direct read from file', \@LoH);
+}}}
+
+{{{
+# I don't know how to do this.  
+# For now, same as previous.
+
+file = open ("cooktest.4")
+LoH = []
+while 1:
+  line = file.readline()
+  if not line: break
+  rec = {}
+  for f in string.split (line):
+    [key, value] = string.splitfields (f, '=')
+    rec[key] = value
+  LoH.append (rec)
+
+printLoH ('direct read from file', LoH)
+}}}
+
+
+
+
+
+
+==== Generation of a list of hashes from function calls ====
+
+
+
+
+
+===== Preliminaries =====
+
+For convenience, these functions and variables are global.
+getnextpairset returns the elements of the array _getnextpairsetdata.  I
+don't know why Tom chose to make this return a list in perl, rather than
+a reference to a hash.  In python, returning a dictionary is definitely
+the way to go.
+
+
+{{{
+
+$_getnextpairsetcounter = 0;
+@_getnextpairsetdata =
+  ( ["lead", "fred", "daughter", "pebbles"],
+    ["lead", "kirk", "first_officer", "spock", "doc", "mccoy"]);
+
+sub getnextpairset{
+  if ($_getnextpairsetcounter > $#_getnextpairsetdata) { return (); }
+  return @{$_getnextpairsetdata[$_getnextpairsetcounter++]};
+}
+
+sub parsepairs{
+my ($line) = shift;
+chop ($line);
+return split (/[= ]/, $line);
+}
+
+
+}}}
+
+{{{
+  
+_getnextpairsetcounter = 0
+_getnextpairsetdata =\
+  [ {"lead" : "fred", "daughter" : "pebbles"},
+    {"lead" : "kirk", "first_officer" : "spock", "doc" : "mccoy"} ]
+
+def getnextpairset():
+  global _getnextpairsetcounter
+  if _getnextpairsetcounter == len(_getnextpairsetdata) : return ''
+  result = _getnextpairsetdata[_getnextpairsetcounter]
+  _getnextpairsetcounter = _getnextpairsetcounter + 1
+  return result
+
+def parsepairs(line):
+  line = line[:-1]   # chop last character off
+  dict = {}
+  pairs = regsub.split (line, "[= ]")
+  for i in range(0, len(pairs), 2):
+    dict[pairs[i]] = pairs[i+1]
+  return dict
+
+}}}
+
+`getnextpairset`: Note the unwieldiness in python due to the fact
+that it does not have increment operators.
+
+This would be much more elegant as a class, both in python and perl.
+[add a pointer to classes when we get there]
+
+
+
+===== Generation =====
+
+Call a function returning a list (in perl) or a dictionary (in python).
+In perl, the list is of the form
+`("lead","fred","daughter","pebbles")`; in python, the
+dictionary is of the form `{"lead" : "fred", "daughter" : "pebbles"}`.
+
+
+{{{
+# calling a function  that returns a key,value list, like
+
+@LoH = ();
+while ( %fields = getnextpairset() ) {
+   push @LoH, { %fields };
+}
+printLoH ('filled with getnextpairset', \@LoH);
+
+}}}
+
+{{{
+
+LoH = []
+while 1:
+  fields = getnextpairset()
+  if not fields: break
+  LoH.append (fields)
+
+printLoH ('filled with getnextpairset', LoH)
+
+}}}
+
+
+
+
+===== Generation without temporaries =====
+
+
+{{{
+
+@LoH = ();
+open (F, "cooktest.4");
+while (<F>) {
+        push @LoH, { parsepairs($_) };
+    }
+
+printLoH ('generated from function calls with no temps', \@LoH);
+
+
+}}}
+
+{{{
+
+LoH = []
+f = open ("cooktest.4")
+LoH = []
+while 1:
+  line = f.readline()
+  if not line: break
+  LoH.append (parsepairs(line))
+
+printLoH ('generated from function calls with no temps', LoH);
+
+}}}
+
+
+
+
+
+=== Adding a key/value pair to an element ===
+
+
+{{{
+
+$LoH[0]{"PET"} = "dino";
+$LoH[2]{"PET"} = "santa's little helper";
+
+printLoH ('after addition of key/value pairs', \@LoH);
+
+}}}
+
+{{{
+
+LoH[0]["PET"] = "dino"
+LoH[2]["PET"] = "santa's little helper"
+
+printLoH ('after addition of key/value pairs', LoH);
+
+
+}}}
+
+
+
+
+
+
+=== Accessing elements of a list of hashes ===
+
+
+{{{
+
+$LoH[0]{"LEAD"} = "fred";
+print ("$LoH[0]{LEAD}\n");
+
+$LoH[1]{"LEAD"} =~ s/(\w)/\u$1/;
+print ("$LoH[1]{LEAD}\n");
+
+printSep();
+
+}}}
+
+{{{
+
+LoH[0]["LEAD"] = "fred"
+print (LoH[0]["LEAD"])
+
+a = LoH[1]["LEAD"]
+b = string.upper (a[0])
+c = a[1:]
+d = b + c
+LoH[1]["LEAD"] = d
+# LoH[1]["LEAD"] = string.upper(LoH[1]["LEAD"][0]) + LoH[1]["LEAD"][1:]
+print (LoH[1]["LEAD"])
+
+printSep()
+
+
+}}}
+
+
+
+
+
+=== Printing a list of hashes ===
+
+
+
+
+
+==== Simple print ====
+
+
+{{{
+
+for $href ( @LoH ) {
+    print "{ ";
+    for $role ( sort keys %$href ) {
+        print "$role=$href->{$role} ";
+    }
+    print "}\n";
+}
+
+}}}
+
+{{{
+
+for href in LoH:
+  print "{",
+  keys = href.keys(); keys.sort()
+  for role in keys:
+    print "%s=%s" % (role, href[role]),
+  print "}"
+
+
+}}}
+
+
+Note the comma after the print in the python segment -- this means
+"don't add a newline".
+
+
+
+
+
+==== Print with indices ====
+
+
+{{{
+for $i ( 0 .. $#LoH ) {
+    print "$i is { ";
+    for $role ( sort keys %{ $LoH[$i] } ) {
+        print "$role=$LoH[$i]{$role} ";
+    }
+    print "}\n";
+}
+
+}}}
+
+{{{
+
+for i in range(len(LoH)):
+  print i, "is {",
+  keys = LoH[i].keys(); keys.sort()
+  for role in keys:
+    print "%s=%s" % (role, LoH[i][role]),
+  print "}"
+
+}}}
+
+
+Note the comma after the print in the python segment -- this means
+"don't add a newline".  It does, however, add a space.
+
+
+
+==== Print whole thing one at a time ====
+
+
+{{{
+
+for $i ( 0 .. $#LoH ) {
+    for $role ( sort keys %{ $LoH[$i] } ) {
+        print "elt $i $role is $LoH[$i]{$role}\n";
+    }
+}
+
+}}}
+
+{{{
+
+for i in range(len(LoH)):
+  keys = LoH[i].keys(); keys.sort()
+  for role in keys:
+    print "elt", i, role, "is", LoH[i][role]
+
+
+}}}
+
+
+
+
+= Interface to the Tk GUI toolkit =
+
+The perl versions of this code have not been tested, as we don't
+currently have a working version of perl and tk.
+
+[Links to tkinter doc]
+
+[Links to perl/tk doc (is there any yet?)]
+
+
+
+== Preliminaries ==
+
+All the following code snippets will need these declarations first:
+
+
+{{{
+
+use Tk;
+
+
+}}}
+
+{{{
+
+from Tkinter import *
+import sys
+
+
+
+}}}
+
+
+
+== Hello world label ==
+
+
+{{{
+
+$top = MainWindow->new;
+$hello = $top->Button('-text' => 'Hello, world',
+                      '-command' => sub {print STDOUT "Hello, world\n";exit;});
+$hello->pack;
+MainLoop;
+
+}}}
+
+{{{
+
+top = Tk()
+def buttonFunction () :
+  print 'Hello, world'
+  sys.exit (-1)
+  
+hello = Button (top, {'text' : 'Hello, world', 'command' : buttonFunction})
+hello.pack()
+top.mainloop()
+
+}}}
+
+
+
