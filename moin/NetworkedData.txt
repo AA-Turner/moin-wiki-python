@@ -1,0 +1,57 @@
+= Networked Data =
+
+I've created something that fits the pattern of "Networked Data" which seems to be ''the way'' right now.
+
+You can do things like this:
+
+{{{
+#!python
+>>> import graph
+>>> store = graph.GraphStore()
+>>> some_data = { "a": 4547,
+...               "b": 34,
+...               "c": 976,
+...               "other": store.new_ref( "http://taoriver.net/tmp/foo.txt" ) }
+>>> g = store.new_graph( "foo" )
+>>> g.accept( some_data )
+0
+>>> print g.serialize()
+0:DICT:1,2,3,4,5,6,7,8
+1:STR:a
+2:INT:4547
+3:STR:c
+4:INT:976
+5:STR:b
+6:INT:34
+7:STR:other
+8:REF:http://taoriver.net/tmp/foo.txt
+-1:FLAG:START 0
+
+>>> some_data["other"].resolve()
+>>> some_data["other"]
+[<reference into http://www.speakeasy.org/~lion/data/bar.txt>, 'hello', 'world!']
+>>> some_data["other"][0].resolve()
+>>> some_data
+{'a': 4547, 'c': 976, 'b': 34, 'other': [['the', 'river', 'of', 'hope', [...]], 'hello', 'world!']}
+>>> 
+}}}
+
+It's still messy, and it requires a little more work than it needs to, but it's really cool!
+
+What this means is that you can use ''native python data,'' which includes "Ref" objects,
+and then resolve it or publish it over the Internet. It resolves ''transparently!''
+
+There are some limitations in the present code that I want to get rid of:
+ * You have to register the containers of References with the Graph store. I'd like to find a way to use Python's internal object database, to get relatively quick access to objects that include references, to get around the registration requirement.
+ * The code sucks, and I'm working to clean it up.
+
+But it's really fun to think of things that you can do with this, or just- ''this type of thing.''
+
+For more on this particular work, see:
+
+ * [http://onebigsoup.wiki.taoriver.net/moin.cgi/nLSDgraphs OneBigSoup:nLSDgraphs]
+ * [http://communitywiki.org/nLSD CommunityWiki:nLSD]
+
+= Discussion =
+
+  (none yet!)
