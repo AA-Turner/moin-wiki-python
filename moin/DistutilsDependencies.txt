@@ -75,7 +75,11 @@ Dependency and Distribution Objects
 
 Dependency objects should be able to:
 
-* Check whether they are installed/up-to-date (probably via a function supplied to the constructor, or in the common case some metadata like the name of a module or module contents to import, or perhaps the module location of a version string to check, and the expected version.)  What about edge cases, where importing a module (particularly an extension) can have gnarly side-effects?  Do we build an easy way to spawn a python interpreter and acquire the result of this check, or do we force module authors to fix things such that importing them is safer?
+* Check whether they are installed/up-to-date (probably via a function supplied to the constructor, or in the common case some metadata like the name of a module or module contents to import, or perhaps the module location of a version string to check, and the expected version.)  
+
+  What about edge cases, where importing a module (particularly an extension) can have gnarly side-effects?  Do we build an easy way to spawn a python interpreter and acquire the result of this check, or do we force module authors to fix things such that importing them is safer?
+
+     This could be handled by regular expression matches or file-size checks against expected filenames relative to ``sys.path``.  Dealing with binary extensions would be a bit tricky, but still doable.
 
 * Select an appropriate "distribution" of the dependency (probably by selecting the first distribution that can be used on this platform)
 
