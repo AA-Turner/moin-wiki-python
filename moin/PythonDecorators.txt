@@ -77,7 +77,7 @@ def bar(low,high):
  * + Can be made backwards compatible-ish, with a "hack"
  * + Doesn't cause breakage in existing code-searching tools
  * - Doesn't cause breakage in existing code-searching tools
- * - Would not work an interactive mode (list would be interpreted right away)
+ * - Would not work in interactive mode (list would be interpreted right away)
  * - EuroPython didn't like it ( why? )
  * - The backwards compatability wouldn't be portable to Jython
  * - Looks like a normal expression, but has "magic" behavior of altering a function object
@@ -98,6 +98,8 @@ def bar(low,high) [accepts(int,int), returns(float)]:
  * + Looks ok for simple decorators such as classmethod
  * + Won't break simplistic code analyzers or grep for function def
  * - Long lists of decorators/arguments cause ugly line wraps
+ * - Little to distinguish it visually from argument list
+ * - For long argument list, decorators are very far from def
  * - Guido didn't like (maybe because of line wrap issue?) 
 
 I don't see why longs lists of decorators are an issue with this syntax.  Consider the following example:
