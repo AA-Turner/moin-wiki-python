@@ -1232,4 +1232,505 @@ locations
 Some of the features are only possible or easily implementable thanks to
 using a high-level language like Python:
 
-- 
+- sending GUI code for the wizard and component administration from the
+manager to the admin client, making the admin GUI a lightweight shell
+
+- sending component code to any of the workers over the wire at startup
+
+- rebuilding modules and reloading code on the fly while running;
+allowing for a distributed code upgrade without losing clients
+
+- rapid development of new components, allowing to catch up with and
+eventually to keep one step ahead of the competition
+
+- easy networking code thanks to Twisted
+
+In this project, we came up with solutions to specific problems
+presented to us that would be interesting to share with others.
+
+- all code is stored centrally and partitioned into "bundles" which are
+cached by clients who need them.  Versioning and dependencies are
+correctly handled, and to the code being run this is handled
+transparently. Code can still import as if it were one big file tree.
+
+- the manager sends GUI code to an admin client and component code to a
+worker.  The GUI code running on the admin machine then controls the
+behaviour of code running on the worker machine by going through the
+manager machine
+
+- state of components is automatically replicated one level deep to the
+manager, and two levels deep to all connected admin clients
+
+- authentication of any service in the network is handled by creating
+keycards which can be exchanged between all processes, implementing any
+type of challenge/response authentication as securely as possible.
+
+- Twisted's Perspective Broker was extended to use this generic keycard
+concept instead of the current (limited) username/password credentials.
+
+- the open-ended nature of Twisted and GStreamer is difficult to harness
+into a usable GUI.  The wizard provides a good way of crystallizing all
+possibilities into a sensible task-based presentation.  The design of
+the wizard also incorporates the flexibility of the network distribution
+and the dynamic code distribution by pulling in the necessary GUI code
+for the next step based on previous choices.
+
+- moving to run-time checks of functionality as opposed to
+compile/configure-time.  Since the server can be distributed over any
+number of machines, and actual components have different run-time needs,
+all checks for features (devices, required libraries, versions,
+permissions)
+
+
+Python also presents some specific challenges when used in a large
+project as compared to more low-level languages.  When handled right,
+these can actually be turned into project engineering advantages. 
+Python's weak argument typing forces developers to document the API
+correctly. Python's dynamic nature (running code from received chunks,
+extensive subclassing) and Flumotion's design (componentized
+functionality, lots of small pieces of code sent back and forth) forces
+us to aggressively write unit testing for all functionality.
+
+
+----
+[[Anchor(62)]] #62. '''Acceptance of XML in the Python Community'''
+
+Fred L. Drake, Jr.
+
+The acceptance of XML as a general tool in the Python community has been
+less than overwhelming.  This presentation discusses the reasons for
+this, and what, if anything, should be done to change the situation.
+
+
+----
+[[Anchor(64)]] #64. '''pyblosxom: A microkernel approach to
+blogging'''
+
+Ted Leung 
+
+pyblosxom is a weblogging system written in Python.  It uses
+the filesystem storage model pioneered by blosxom, but has diverged in
+terms of internal architecture and organization.  pyblosxom takes a
+microkernel approach to blogging software by providing a small core
+framework that embodies the blogging data flow.  Callbacks are placed at
+strategic points so that users may override as much or as little of the
+framework's default functionality as they desire. These callbacks can be
+used implement plugins whose functionality can range from alternate page
+rendering to comments to calendar based archives.
+
+pyblosxom has a growing user base and a small, friendly development
+community.  Our goal for this presentation is to increase awareness of
+blogging in the Python community, provide an introduction to pyblosxom
+and its capabilities, and describe enough of the pyblosxom internals to
+attract additional developers to the community.
+
+----
+[[Anchor(65)]] #65. '''Developing Database Applications With
+Schevo'''
+
+Matthew Scott / Schevo
+
+Schevo_ is an ODBMS and Application Framework for Python.  Schevo is a
+toolkit for developing object-oriented database applications.  Schevo
+provides a model for the design, persistence and evolution of
+application domain objects.
+
+It supports the storage of these objects in a variety of back-ends, such
+as Pypersyst_, ZODB_, and Durus_.  It supports the maintenance of these
+objects through a variety of user interface toolkits, such as Qt_/PyQt_,
+wxPython_, Plone_, and Nevow_.
+
+----
+[[Anchor(67)]] #67. '''PyWebOff: Mapping the python web application
+frameworks'''
+
+Michelle Levesque / University of Toronto
+
+Python's simplicity principle ("there should be one -- and preferably
+only one --obvious way to do it") has been a major contributer towards
+making Python so accessible to new users.  Unfortunately, this principle
+doesn't seem to apply when choosing a web application framework: there
+are several dozen to choose from and no guide is available to help make
+the decision easier.
+
+The presentation will consist of four parts: a description of
+the problem and justification for why it is indeed a problem (5-10
+mins), an introduction to PyWebOff (5-10 mins), a summary of some of the
+findings (20 mins), and a discussion of what the next few steps should
+be towards solving this problem (10 mins).
+
+This 45 minute presentation would be useful to those looking to choose a
+framework, framework developers, and anyone who has an interest in
+Python as a web development tool.
+
+----
+[[Anchor(69)]] #69. '''Stupidity and laser cat toys: Indexing the
+US Patent Database with Xapian, Twisted, and Nevow'''
+
+Michael Salib / Divmod
+
+I recently downloaded the full text of the US Patent Database. It seemed
+like a good idea at the time. This talk will show how I built a cool web
+search engine for it using Xapian, an open source full text indexing
+library, Twisted, the ultimate network coffee maker, and Nevow, the most
+awesome web templating system ever invented. While these tools are very
+powerful, they all have their own pitfalls. I'll show how to put them
+all together and get something useful as a result.
+
+
+----
+[[Anchor(70)]] #70. '''A Python Preprocessing Framework for
+Hydrologic Modeling '''
+
+Dr. Vic Kelson / WHPA Inc.
+
+At our hydrological consulting firm, we often encounter modeling
+problems in which a variety of different hydrological model codes are to
+be used on a single project. We typically use models that are based on
+the Analytic Element Method, in which the input data for the models are
+vectors and the model domain is a continuum. In particular, we often use
+the 2-D groundwater code ModAEM (Kelson, 1998) and TimML (a 3-D analytic
+element model written in Python with Fortran extensions). It is
+becomming more and more important to make use of ModAEM for regional
+simulations, then extract a local 3-D model for use in TimML. In
+addition, we make use of inverse modeling (parameter estimation) codes,
+such as PEST.
+
+The use scripts that within GIS software, such as ArcGIS or Manifold, is
+one option, but those codes run only on Windows, and we need the ability
+to run models on other platforms (e.g. a Linux cluster). We also
+encounter data in a wide variety of formats, ranging from GIS project
+files to ESRI Shapefiles to flat comma-separated variable files or even
+SQL databases. What we need is the ability to:
+
+1) Prepare model input files from spatial (and other) data sets
+
+2) Script the operation of our models (especially for use in inverse
+modeling)
+
+3) Use data from a wide variety of GIS and other formats
+
+4) Transfer results from one model as input for another
+
+5) Facilitate analysis of model results.
+
+We also prefer to make use of open file formats and we use Linux systems
+for large computational scripts.
+
+The author has developed a Python framework that hides the I/O details
+for a variety of different data storage formats, for the purpose of
+building preprocessing and postprocessing scripts for hydrological
+models. Currently, these tools are used with our in-house analytic
+element codes, but we expect to implement facilities for use with
+finite-difference codes, such as MODFLOW. The talk will describe the
+problem and the Python object-oriented framework for model
+preprocessing, including the way it has been extended for transferring
+data between models.
+
+
+----
+[[Anchor(71)]] #71. '''CMFEditions Internals'''
+
+Gregoire Weber
+
+This is about the design goals of CMFEditions and about the
+architecture chosen. CMFEditions' main design goal was easy replacement
+and extensibility of different components. A simple storage API allows
+third party to write new storages. There is also a registry for
+components which together define an objects boundaries.
+
+
+----
+[[Anchor(72)]] #72. '''WSGIKit: Utilizing WSGI as a platform for
+inter-framework cooperation'''
+
+[http://blog.ianbicking.org Ian Bicking] / [http://www.imagescape.com Imaginary Landscape]
+
+[http://www.python.org/peps/pep-0333.html WSGI] (the Web Server
+Gateway Interface) is a new standard for connecting servers to Python
+web development framework.  WSGI also has the potential to connect
+frameworks together, and to provide framework-neutral services.
+
+WSGIKit is a reimplementation based on WSGI of the Webware For Python
+web framework.  The implementation maintains backward compatibility,
+while decomposing many of the functions of Webware into
+framework-neutral pieces of "middleware".  The design of WSGIKit can
+provide an example of how to use WSGI outside of framework-server
+connections.
+
+
+----
+[[Anchor(73)]] #73. '''The Personal Internet Endpoint: Using Python
+and Twisted to write Reliable Peer-To-Peer Programs'''
+
+Glyph Lefkowitz / Divmod
+
+The internet is designed to facilitate symmetric connectivity between
+peers. With the advent of personal internet access, however, several
+features of today's internet, including network address translation,
+corporate firewalls, and dynamically assigned IP addresses, those
+connections are now far from symmetric, and in many cases not even
+possible.
+
+This paper will explore several solutions to this problem which use
+Python's inherent flexibility and Twisted's networking infrastructure to
+solve it in a general manner. Several code examples will be presented
+where, using Twisted's separation of protocol and transport layer,
+existing applications are made to work by modifying only one or two
+lines of code.
+
+It will cover each of the obstacles to connectivity in order of
+difficulty: dynamic IPs, NAT, and finally firewalls. It will also
+discuss the security, user interface, and application ramifications of
+being able to provide connectable services on each user's PC and/or
+other IP connected device.
+
+Covered networking techniques will include:
+
+ * Detecting the ability to open a port on a static, internet-visible IP, by providing a callback server. 
+ * Using stateful UDP filters on most modern firewalls to provide a temporary, virtual connection. 
+ * Load-balancing so that users with truly broken connections (such as those made through a corporate firewall using the "CONNECT" HTTP command
+through a proxy) can piggyback on users with more open connections without causing them an undue amount of load. 
+
+Existing internet standards will be covered as well:
+ * SIP * STUN * UPnP
+
+Finally, the paper will propose a standard set of techniques and an
+accompanying protocol for gradually and gracefully falling back to
+progressively less efficient techniques so that transport-level concerns
+don't interfere with an application's functionality until it is actually
+impossible to establish any kind of connection.
+
+The presentation will cover a several of the techniques explored in the
+paper and will focus on real-world implementation and deployment of
+these techniques. It will present code examples, and include several
+demonstrations, hopefully using the wireless internet access provided by
+the conference, but with a small virtual network if that one is
+unavailable for some reason.
+
+
+
+----
+[[Anchor(75)]] #75. '''Developing Responsive GUI Applications Using
+HTML and HTTP'''
+
+Donovan Preston / Divmod
+
+Google's Gmail was the first high-profile example of a highly responsive
+web application, blurring the line between the desktop and the web. The
+techniques employed by it to reduce perceived latency have been
+available for years, but involve a large amount of JavaScript that can
+be difficult to implement. This presentation will discuss the history of
+these techniques, implementation strategies, and the use of LivePage,
+included within the Nevow web application framework.
+
+
+----
+[[Anchor(76)]] #76. '''Pychinko: A Native Python Rule Engine'''
+
+Yarden Katz / MINDSWAP
+
+Rule processing engines have proven to be useful in several areas of
+Computer Science and software engineering, ranging from expert systems
+in bioinformatics to serving as backends for web content management
+platforms.  Pychinko is a forward-chaining rule engine capable of the
+generic use rule engines have traditionally received, but geared for
+Semantic Web applications.  Pychinko, implemented purely in Python,
+employs the well-known and scalable Rete algorithm for expert systems. 
+We present the use and architecture of Pychinko (including a brief
+exposition of the Rete algorithm), as well as several of its compelling
+use cases, including examples from software engineering, web
+applications, and Semantic Web specific tasks.
+
+----
+[[Anchor(77)]] #77. '''Scratching an Itch (or, how to insure your
+book collection with PyAmazon, ZODB, and wxPython)'''
+
+Michael Bernstein / Panhedron
+
+This presentation is about how I used Python to build a simple solution
+for inventorying my extensive book collection for insurance purposes. It
+demonstrates Python's strengths in increasing programmer productivity
+through simplicity, availability of standard and third-party libraries,
+and flexibility.
+
+----
+[[Anchor(78)]] #78. '''PyPy and type inference'''
+
+Armin Rigo 
+
+A technical status report on PyPy, the Python interpreter
+implemented in Python.
+
+The PyPy project aims at producing a simple runtime system for the
+Python language, expressing the basic abstractions within the Python
+language itself.  Simplicity and Flexibilty are the foremost goals.  We
+hope to reach around PyCon a C-translated version of PyPy that is able
+to work independently of CPython.
+
+To reach our goal, we are currently working on a Python source analysis
+and compilation toolchain -- based on PyPy as well -- and a minimal
+low-level core that doesn't need CPython any more.  The presentation
+will focus on these tools, which are able to perform automatic static
+type inference of "static enough" Python programs and then compile them
+to various lower-level languages (currently C, Lisp, Pyrex and Java). 
+This analysis works on fully standard Python sources (bytecodes,
+actually), and the distinguishing feature of the techniques we use --
+"abstract interpretation" -- is to allow type inference to be performed
+for any language for which we have an interpreter.  Moreover, it doesn't
+require explicit type annotations added by the user.
+
+In the presentation, we will see how these tools can be used generally,
+i.e. how you could use them to check or improve the performance of your
+programs.  In particular, what are the "staticness" restrictions that
+must be met for these tools to work?
+
+We will then look under the hood:
+
+* how we build control flow graphs;
+
+* how we perform type inference, and what "type inference" precisely
+means in this context;
+
+* type inference is not the end of the story: good code must be
+generated from the source and the inferred types.
+
+The techniques relate to Psyco's, the just-in-time specializer for
+CPython.  We will compare them, and also contrast the "internal" notion
+of type used as an implementation detail (as in PyPy and Psyco) with the
+other typical approach of explicit user-specified types.
+
+Our approach is motivated by the desire of flexibility: it allows issues
+that normally require early design decisions to be postponed, and
+addressed later in possibly more than one way, without rewriting
+everything.  Typical example: adding Stackless-style continuations in
+CPython required a whole-scale rewrite, but has only a "local" impact on
+PyPy.  We will plead for a framework based on interpreters as a way to
+gain the most flexibility from programming languages -- and the best
+performances too, for very-high-level languages!
+
+
+----
+[[Anchor(79)]] #79. '''Improving Python's Memory Allocator'''
+
+Evan Jones / University of Waterloo
+
+One of Python's primary benefits is that it automatically manages
+memory, as any high level language worth the name should. Unfortunately,
+Python never actually releases any RAM to the operating system.
+My presentation will discuss how Python's current memory allocator
+works, and describe the problem in detail. I will then present some
+workarounds to avoid the problem with the current version of Python.
+Next, I will present my proposed changes to the allocator which resolve the
+problem. Finally, I will suggest a future direction for Python memory
+management.
+
+For additional information on this topic, see my web page about the
+problem, or the Python-dev archives:
+
+http://evanjones.ca/python-memory.html
+
+http://mail.python.org/pipermail/python-dev/2004-October/049480.html
+
+----
+[[Anchor(80)]] #80. '''Advanced Server side Programming in
+Jython'''
+
+S.Prasanna / M.E Computer Science, Anna University
+
+The paper discusses in detail about servlet and servlet filters
+programming in Jython. When I started Jython programming I struggled to
+get some useful and genuine resources on Jython server side programming
+especially for servlet filters. This motivated me to write a unique and
+a different tutorial in jython. I hacked into Jython and did some work
+in this area and now I use Jython instead of pure Java for server side
+programming.
+
+This white paper can be regarded as a simple and a genuine Jython server
+side programming tutorial and its a small contribution from my side to
+the Jython community. This paper also explains how to compile some
+latest python modules in jython with a simple example.
+
+In short the objective behind this tutorial is to portray the
+capabilities of Jython in server side programming and how to use Jython
+with some latest Python modules.
+
+
+
+----
+[[Anchor(81)]] #81. '''Envisage - An Extensible Application
+Framework'''
+
+Martin Chilvers / Enthought Inc
+
+The Java world has two dominant frameworks for extensible application
+development: Netbeans and Eclipse.  Although many people think of these
+two projects as IDEs, they are both built upon open architectures that
+are designed to support generic GUI application development.  Treading
+lightly in the footsteps of these two excellent projects, Envisage
+attempts to bring similar capabilities to the Python community.
+
+The heart of Envisage is its plug-in architecture; in fact, the Envisage
+core is little more than a system for discovering, loading, starting and
+stopping plug-ins.  Developers construct applications by choosing from
+the set of supplied plug-ins (possibly the empty set) and then adding
+their own to provide domain-specific functionality.  Although an
+Envisage application need not have a GUI, Envisage comes with an
+ever-expanding set of plug-ins that simplify many of the more common and
+tedious aspects of GUI development (e.g., window management,
+menubars/toolbars, user preferences). It is worth noting that these
+'standard' plug-ins are written in exactly the same way as those written
+by an application developer.  Each plug-in uses the Envisage extension
+mechanism not only to contribute to what came before it, but also to
+define how future plug-ins can contribute to it.  This mechanism is
+simple but consistent, and ensures that even extensions to an
+application are extensible.
+
+Despite the fact that development is still in its early stages
+(especially when compared to the enormous effort that has gone into both
+Netbeans and Eclipse), Envisage has already been used to deliver
+production applications, with two more scheduled in the first half of
+this year.
+
+This presentation will introduce the Envisage plug-in architecture, and
+demonstrate how applications both with and without GUIs can be built
+with it.
+
+
+----
+[[Anchor(82)]] #82. '''Traits - The Next Generation'''
+
+David Morrill / Enthought Inc 
+
+Traits is an open source Python package developed at Enthought, Inc.
+that adds an interesting collection of capabilities to the Python
+developer's toolkit. In a nutshell, one could say that Traits "adds type
+checking" to Python, but that would be a misleading oversimplification.
+Perhaps a more useful characterization would be in terms of the five
+major features of the package:
+
+- Initialization - Validation - Notification - Delegation -
+Visualization
+
+Traits has been used at Enthought over the last two and half years in a
+variety of projects written for real-world clients. During that period,
+Traits has evolved from an interesting set of features embedded within
+the Chaco scientific plotting package to a separate package which, along
+with Envisage, is now the cornerstone for all of Enthought's Python
+development efforts.
+
+As part of that evolution, Traits has recently been rewritten from the
+ground up to take advantage of our experience developing applications
+using the orginal Traits package, and to address a number of performance
+and software engineering issues that had arisen. The result is a new,
+streamlined, faster version of Traits which is capable of solving a much
+broader range of programming problems in a very straightforward, simple,
+efficient, and, dare we say it, elegant, fashion.
+
+The purpose of this talk will be to introduce the audience to the Traits
+package, provide examples and demonstrations of Traits in action, and to
+describe some of the better design patterns, such as MVC (Model, View,
+Controller), that Traits supports, and in fact, encourages.
+
+----
+CategoryPyCon2005
