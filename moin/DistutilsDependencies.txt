@@ -1,0 +1,36 @@
+#format rst
+
+Distutils-based Dependency Support
+==================================
+
+
+Vision
+------
+
+We want to create a means whereby a package author can create a distutils-based package distribution that can automatically download and install the other distutils-based packages that the author's package requires.  This mechanism must *not* require that a depended-on package explicitly support it.  In other words, a newly created package should be able to depend on any existing distutils-based source distribution.  (Being able to use binary distributions to satisfy dependencies is also desirable, but support of all possible binary formats should not be a sprint goal.)  The means created should work with Python 2.2, must not require a modified distutils, and must be distributable by the packager so that the end user sees only the standard ``setup.py``-based installation process.
+
+Whatever mechanism used to denote and process dependencies should be isolated as a library for reuse by other tool efforts, such as user-friendly package management tools.  However, the package management tools themselves aren't the sprint goal, because these can be written independently.  The "simplest thing that could possibly work" here is to give package authors a tool they can use to make their dependencies easy to install.
+
+
+Intended Uses
+-------------
+
+* break up monolithic systems (PEAK, Zope, Twisted) into smaller package sets with dependencies
+
+* allow dependencies on other systems (e.g. Twisted using PyProtocols, PEAK using zope.publisher, etc.)
+
+* support painless install for end users (single command to download and install "everything needed") even at the cost of a little pain for the packager(s).
+
+
+Non-Goals
+---------
+
+* This is not an effort to develop an ultimate metadata format, repository, or best way to sign code
+
+* This is not a bitch session about how distutils and PyPI aren't CPAN
+
+* PEP 262 should be orthogonal to this effort, since we will be using standard distutils to do installations.
+
+* "uninstall" is out of scope
+
+
