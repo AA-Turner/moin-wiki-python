@@ -7,5 +7,93 @@ Articles:
 
 Libraries:
  * [http://www.mnot.net/python/RSS.py RSS.py] - reads most RSS versions, produces RSS 1.0
- * [http://diveintomark.org/projects/feed_parser/ rssparser.py] - reads 9 RSS versions
+ * [http://diveintomark.org/projects/feed_parser/ Feed Parser] - reads 9 RSS versions
 
+== Feed Parser ==
+
+[http://diveintomark.org/projects/feed_parser/ Feed Parser] is an awesome RSS reader.
+
+Download it, and then start a Python prompt in the same directory.
+
+{{{
+#!python
+import feedparser
+
+python_wiki_rss_url = "http://www.python.org/cgi-bin/moinmoin/" \
+                      "RecentChanges?action=macro&" \
+                      "macro=RecentChanges&do=rss_rc"
+
+feed = feedparser.parse( python_wiki_rss_url )
+}}}
+
+You now have the RSS feed data for the Python``Info wiki!
+
+Take a look at it; There's a lot of data there.
+
+Of particular interest: 
+
+|| {{{feed[ "bozo" ]}}} || {{{1}}} if the feed data can't be read. ||
+|| {{{feed[ "url" ]}}} || URL of the feed's RSS feed ||
+|| {{{feed[ "version" ]}}} || version of the RSS feed ||
+|| {{{feed[ "channel" ][ "title" ] }}} || {{{"PythonInfo Wiki"}}} - Title of the Feed. ||
+|| {{{feed[ "channel" ][ "description" ]}}} || {{{"RecentChanges at PythonInfo Wiki."}}} - Description of the Feed ||
+|| {{{feed[ "channel" ][ "link" ]}}} || Link to RecentChanges - Web page associated with the feed. ||
+|| {{{feed[ "channel" ][ "wiki_interwiki" ]}}} || {{{"Python``Info"}}} - For wiki, the wiki's preferred InterWiki moniker. ||
+|| {{{feed[ "items" ]}}} || A gigantic list of all of the Recent``Changes items. ||
+
+For each item in {{{feed["items"]}}}, we have:
+
+|| {{{item[ "date" ]}}} || {{{"2004-02-13T22:28:23+08:00"}}} - ISO 8601 (right#?) date ||
+|| {{{item[ "date_parsed" ]}}} || {{{(2004,02,13,14,28,23,4,44,0)}}} ||
+|| {{{item[ "title" ]}}} || title for item ||
+|| {{{item[ "summary" ]}}} || change summary ||
+|| {{{item[ "link" ]}}} || URL to the page ||
+|| {{{item[ "wiki_diff" ]}}} || for wiki, a link to the diff for the page ||
+|| {{{item[ "wiki_history" ]}}} || for wiki, a link to the page history ||
+
+== Aggregating Feeds with Feed Parser ==
+
+If you're pulling down a lot of feeds, and aggregating them:
+
+First, you probably want to use [http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/84317 Future threads] to pull down your feeds. That way, you can send out 5 requests immediately, and wait for them all to come back at once, rather than sending out a request, waiting for it to come in, send out another request, wait for it to come back in, etc., etc.,.
+
+{{{
+#!python
+from future import Future
+
+hit_list = [ "http://...", "...", "..." ] # list of feeds to pull down
+
+# pull down all feeds
+future_calls = [Future(feedparser.parse,rss_url) for rss_url in hit_list]
+# block until they are all in
+feeds = [future_obj() for future_obj in future_calls]
+}}}
+
+Now that you have your feeds, extract all the entries.
+
+{{{
+#!python
+entries = []
+for feed in filter( lambda x:x["bozo"]==0, feeds ):
+    entries.extend( feed[ "items" ] )
+}}}
+
+...and sort them, by SortingListsOfDictionaries:
+
+{{{
+#!python
+decorated = [(entry["date_parsed"], entry) for entry in entries]
+decorated.sort()
+decorated.reverse() # for most recent entries first
+sorted = [entry for (date,entry) in decorated]
+}}}
+
+Congradulations! You've aggregated a bunch of changes!
+
+== Contributors ==
+
+LionKimbro
+
+== Discussion ==
+
+(none yet)
