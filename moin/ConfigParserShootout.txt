@@ -264,7 +264,89 @@ A marriage of the two would make a lot of sense to me.  My thought is for the us
 
   I whole heartedly agree with Johannes' comments.  In my scripts I have no interest in knowing whether the setting came from the command line or from a configuration file.  It just adds complexity to the script and the explanation how to use it to even allow the use of such knowledge.  I don't know if I understood the ConfigList approach completely but it seems to me it adds an unnecessary layer and complexity.  If we were to go down the road of a marriage I believe it would be one of three possibilities 1) add functionality to optparse 2) subclass optparse or 3) make a new module independent of optparse that duplicates alot of its functionality.  I think we would need the input from the optparse implementors to help with the decision as the first option would require a great deal of work for them and the second option would require a commitment by them to an interface between us.  The third wouldn't require any work but they may want to be involved. -- dan.gass@gmail.com
 
-  I feel that the option "4) provide a mechanism for using optparse as is", as I have proposed, warrants further study because it lacks the drawbacks you have identified with the other 3 options. I'll try to address your concerns about how to make configuration-with-command-line-override work easily using the config module. As a first cut, I'll aim for a simple example of a "verbose" flag which can be placed in a configuration and overridden via a command-line option. If you think that's too simple as a proof of how it can work, please indicate a use case you'd like to see. -- VinaySajip
+  I feel that the option "4) provide a mechanism for using optparse as is", as I have proposed, warrants further study because it lacks the drawbacks you have identified with the other 3 options. I'll try to address your concerns about how to make configuration-with-command-line-override work easily using the config module. As a first cut, I'll aim for a simple example of a "verbose" flag which can be placed in a configuration and overridden via a command-line option. If you think that's too simple as a proof of how it can work, please indicate a use case you'd like to see. Otherwise, below is the 'verbose' example: -- VinaySajip
+
+Assume that the config file is simply
+{{{
+#This file is config.cfg
+verbose : False
+}}}
+
+and suppose you want to be able to override this using the command line. One possible program is:
+{{{
+#This is test.py
+from config import Config, ConfigList
+from optparse import OptionParser
+
+def getMergedConfig(filename):
+    filecfg = Config(filename)
+    parser = OptionParser()
+    parser.add_option('-v', '--verbose', action='store_true', dest='verbose', help='Produce verbose output')
+    options, args = parser.parse_args()
+    cfglist = ConfigList()
+    optcfg = Config()
+    for opt in options.__dict__:
+        optval = options.__dict__[opt]
+        if optval is not None:
+            optcfg[opt] = optval
+    cfglist.append(optcfg)
+    cfglist.append(filecfg)
+    return cfglist, args
+
+def main():
+    cfg, args = getMergedConfig('config.cfg')
+
+    print "verbose output? %r" % cfg.getByPath('verbose')
+    print "args: %s" % args
+
+main()
+}}}
+
+If you run this with
+
+{{{
+python test.py an_arg
+}}}
+
+the output is
+{{{
+verbose output? False
+args: ['an_arg']
+}}}
+
+whereas if you run this with
+
+{{{
+python test.py -v an_arg
+}}}
+
+the output is
+{{{
+verbose output? True
+args: ['an_arg']
+}}}
+
+This admittedly simple example points to how simple the actual application code  - i.e. main() could be. I'm assuming that getMergedConfig() is a utility module which could be shared across multiple scripts, but even so it is pretty simple, in my view. Notice that main() does not know where the configured value of 'verbose' came from.
+
+To forestall the complaint that the optparse specification appears to require some duplication, you could change the config file to:
+{{{
+#This file is config.cfg
+verbose : False
+optparse:
+[
+  { name: verbose, short: '-v', long: '--verbose', action: 'store_true', default: None, help: 'Produce verbose output'}
+]
+}}}
+
+and the code which sets the parser options to (indent appropriately):
+{{{
+for optspec in filecfg.optparse:
+    parser.add_option(optspec.short, optspec.long, action=optspec.action, dest=optspec.name, help=optspec.help)
+}}}
+
+Remember, this is just one way of doing it - not the only way and perhaps not the best way for your needs, but a simple enough way.
+
+-- VinaySajip
 
 A hierarchical key or namespace scheme should exist so that multiple settings may be stored in the user configuration file.  I would propose a standard -k, key option always present in the parser so the user can pass a list of keys to control the group of settings to use (Id also like some of the other ways to control keys that I use in my config.py module).  In addition Id propose a -c, config option that specifies a configuration file to use instead of the users default configuration file.
 
@@ -272,11 +354,24 @@ A hierarchical key or namespace scheme should exist so that multiple set
 
   Along the lines of Johannes' comment regarding "providing a mechanism *and* policy" (which I agree with), I think having a consistent command line option such as -k and -c is important.  I don't really care what specifically they are, even if we required the use of long form --keys and --config (change the names if you like).  So long as policy is set I'm happy. -- dan.gass@gmail.com
 
+  I'm not sure about the policy part, because people have different needs and I'm not sure it's good to be too prescriptive here. -- VinaySajip
+
 My last proposal for today is to change the options interface a bit from optparse.  Instead of returning a static object of options it should be an object with a get() method so that additional keys can be used to get at settings in the configuration on the fly.  One application where this is important is in test frameworks.  Test specification input files may have additional keys to be used and arent known when the parser is instantiated.
 
   Please take a look at [http://www.red-dove.com/python_config.html this config module] and let me know how you think it fails to meet the particular use case you have in mind. I don't see any need to change optparse to work well with a configuration module  -- VinaySajip
 
   I looked and here is where it falls short from my perspecitve.  To get a setting using your module you would use "cfg.setting".  Instead a method should be offered so that keys may be passed "cfg.setting.get('key1')".  Sometimes a script needs more than one instance of the setting.  Other times the script processes an input file (after the configuration has already been read) which specifies the key.  I'm sure there are other cases as well.  -- dan.gass@gmail.com
+
+  I don't think this is a real showstopper. To get a setting using my module you can use cfg.setting, cfg['setting'] or even cfg.getByPath('setting'). The last of these is useful when you have a hierarchical path which you compute, as in:
+
+{{{
+path = sys.platform + ".database.connection"
+connstr = cfg.getByPath(path)
+}}}
+
+  I'm assuming the config file could have a database connection setting for each platform, in the above example. If this is not what you meant by 'more than one instance of the setting', please clarify.
+
+  -- VinaySajip
 
 One benefit of this marriage is that the help messages available from the command line would also apply to what can be set in the configuration file.  Also there is a lot of flexibility for the user with this scheme.  For options they always use they can hard code them in their default configuration as settings.  If they want to temporarily override them they can use command line options.  For groups of settings that are always used together, they can be used by simply passing in a key with the -k option to select the group.
 
