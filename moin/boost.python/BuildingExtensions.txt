@@ -1,15 +1,17 @@
+#pragma section-numbers off
+
 = Building Extensions with boost.python =
 
 == Using bjam ==
-bjam is a standard tool for building boost library itself. Thus it is preferable way to build python extensions based on boost.python with bjam. 
+bjam is a standard tool for building boost library itself. Thus it is preferable way to build Python extensions based on ["boost.python"] with bjam. 
 Basic example listed in [http://www.boost.org/libs/python/doc/tutorial/doc/building_hello_world.html tutorial].
 
-However if you want to add external libraries in your extension (that is why you use boost.python, isn't it?), you must add them to dependency section:
+However if you want to add external libraries in your extension (that is why you use boost.python, isn't it?), you must add them to the '''Jamfile''':
 {{{
 # NOTE: Change [[VARIABLES]] according to your system
 
 # Specify our location in the boost project hierarchy
-subproject libs/python/MyExtension ; ##################### if you put your dir in boost hierarchy
+subproject libs/python/MyExtension ; ######## if you put your dir in boost hierarchy
 
 # Include definitions needed for Python modules
 SEARCH on python.jam = $(BOOST_BUILD_PATH) ;
@@ -26,9 +28,9 @@ extension Example
 :  # requirements
    <include>[[FULL_PATH_INCLUDE_DIR]]
    <include>[[RELATIVE_PATH_INCLUDE_DIR]]
-   <library-file>[[FULL_PATH_AND_LIBNAME]].lib # lib for Win32
+   <library-file>[[FULL_PATH_AND_LIBNAME]]
    <library-path>[[PATH_TO_LIB]]
-   <library-file>[[LIBNAME]].lib # lib for Win32
+   <library-file>[[LIBNAME]]
   ;
 
 # Declare a test for the extension module
@@ -38,25 +40,27 @@ boost-python-runtest test1
     # extension modules to use
     <pyd>Example ;
 }}}
-Keeping your projects under boost hierarchy is often inconvenient. You may adjust Jamfile to build your extension from any place by:
+Keeping your projects under boost hierarchy is often inconvenient. You may build your extension from any place by:
 
- * changing the line {{{subproject}}} in the Jamfile to the {{{
+ * changing the line {{{subproject}}} in the '''Jamfile''' to the {{{
 project-root ;
 }}}
 and
- * copying {{{boost-build.jam}}} file to the root of your project tree and changing the following line inside it: {{{
+ * creating '''boost-build.jam''' file in the root of your project tree like that: {{{
 boost-build [[PATH_TO_BOOST]]/tools/build ;
 }}}
 
 
 == Using make ==
 
+ * Make sure to link with ''boost_python'' or ''boost_python_debug'' library.
+
 == Using Windows IDE ==
 
  * Make sure you keep {{{"Use Managed Extension" == No}}} if you are using Visual Studio.NET.
 
 
-== Tips and tricks ==
+= Tips and tricks =
 
 To keep up with bjam rules you might want to have a ''dry'' run without actually building anything:
 {{{bjam -na
