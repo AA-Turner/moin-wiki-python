@@ -1,9 +1,12 @@
 There are various fixes and improvements that should form part of a 2.0 version of Distutils.
 
+ * Must be backwards-compatible with existing setup.py scripts, though some
+   methods may trigger PendingDeprecationWarnings.
  * Move various utility methods out of command implementations and onto the Distribution class.
  * Implement the package database described by PEP 262.
  * Consider always regenerating the MANIFEST from MANIFEST.in.
  * Finish bdist_dpkg.py
+ * Use optparse instead of fancy_getopt.py, and deprecate fancy_getopt.py.
  * sdist: Include scripts, data automatically in the source distribution.
  * Drop Python 1.5.2 compatibility. Keep Python 2.0 compatiblity.
  * Improve test coverage.
@@ -44,8 +47,6 @@ Maybe some traditional package concepts:
 
    -- Michiel de Hoon
 
-  --
-
  * If you use a version management system that toggles the read/write bits (e.g. perforce), distutils happily copies the mode bits when it copies files down to the build directory (etc), and then chokes when it tries to clean up after itself.  (or worse, skips important build steps so you end up with a broken release...)
 
   -- FredrikLundh
@@ -63,5 +64,7 @@ Maybe some traditional package concepts:
   -- Thomas Heller
 
  I think a decision about backwards compat needs to be made.  Do you what people to start their new setup.py scripts with "from distutils2.core import setup"?  If not, not breaking everyone's highly customized setup.py scripts might be *very* constraining.
+[The goal is backward compatibility. Redesigning everything is too great a risk
+for my taste.--amk]
 
   -- MichaelHudson
