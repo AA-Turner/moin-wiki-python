@@ -43,16 +43,65 @@ while True:
     print "received message:", data
 }}}
 
-== Discussion ==
-
-I have two questions:
- * What is the 1024 in recvfrom?
-   It is the buffer size.[[BR]]
-   >>> help (sock.recvfrom)
- * How do you subscribe to a WikiPedia:Multicast_address ?
-
-It seems that just setting UDP_IP to "224.0.0.250" (say) isn't quite good enough.
+= Discussion =
 
 *
 It would seem easy to extend this to a simple means to open a file on the sender side, send datagrams to the receiver side, and write those packets to a file there - I just wonder about synchronisation issues regarding the buffer...Anyone smart care to put something down, say as a simple practical extension of what is already here?  (And if you do it pls delete this message)
 *
+
+== Multicasting? ==
+
+I've been googling for some time now, and ''still'' have yet to find a ''working'' example of Python multicast listening.
+
+Here's my own, non-functioning, effort:
+{{{
+#!python
+import socket
+import struct
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+#sock.bind(('127.0.0.1', 1000))
+sock.bind(('', 1000))
+grpaddr = 0
+for byte in "239.192.0.100".split("."):
+    grpaddr = (grpaddr << 8) | int(byte)
+mreq = struct.pack('ll', socket.htonl(grpaddr),
+                   socket.htonl(socket.INADDR_ANY))
+sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+print sock.recvfrom(100)
+}}}
+
+The mreq packing is based on [http://www.senux.com/linux/network/multicast/ some code that I found,] ''that does not work.'' On my computer, at least.
+
+Sending to multicast groups is just fine; Here's some functional text:
+{{{
+#!python
+import socket
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
+sock.sendto("robot", ("239.192.0.100", 1000))
+}}}
+
+At this point, I'm beginning to think: "Python multicast simply ''does not work.''"
+
+It's too bad we don't have anything as simple as this:
+
+{{{
+#!python
+import UDP
+
+sock = UDP.MulticastListener("239.192.0.100", 1000)  # Listen on port 1000
+print sock.recv(100)
+}}}
+
+{{{
+#!python
+import UDP
+
+UDP.send("Hello, world!", "239.192.0.100", 1000)
+}}}
+
+...or something like that.
+
+-- LionKimbro [[DateTime(2005-01-19T19:54:19Z)]]
