@@ -37,8 +37,12 @@ See also: MixIns, MetaClasses
 
 After the @decorator syntax was "accepted", lots of people threw up alarms and a huge series of threads started exploding on Python-dev. Here are the current alternatives that I could find that are being argued, with pros and cons:
 
-'''@decorator  "pie decorator syntax"''' ''(Before def)''
-
+'''pie decorator syntax'''
+{{{
+@decorator
+def foo(arg1,arg2):
+    ...
+}}}
  * + Java-like, so not completely unknown to everyone.
  * + Makes the syntax obvious visually   
  * + Will not be silently ignored 
@@ -49,8 +53,12 @@ After the @decorator syntax was "accepted", lots of people threw up alarms and a
  * - Punctuation-based syntax raises Perlfears.
  * - Does not nessecarily 
     
-'''[decorator] "list-before-def syntax"''' ''(Before def)''
-
+'''list-before-def syntax'''
+{{{
+[decorator]
+def foo(arg1,arg2):
+    ...
+}}}
  * + C# like
  * + Can be made backwards compatible-ish, with a "hack"
  * + Doesn't cause breakage in existing code-searching tools
@@ -59,7 +67,12 @@ After the @decorator syntax was "accepted", lots of people threw up alarms and a
  * - The backwards compatability wouldn't be portable to Jython
  * - Looks like a normal expression, but has "magic" behavior of altering a function object
 
-'''def function(arguments) [decorator]: "list-after-def syntax"'''
+
+'''list-after-def syntax'''
+{{{
+def foo(arg1,arg2) [decorator]:
+    ...
+}}}
  * + Also somewhat C#-like
  * + Was a "community favorite" at one time
  * + Clearly a part of function declaration
@@ -67,23 +80,50 @@ After the @decorator syntax was "accepted", lots of people threw up alarms and a
  * + Won't break simplistic code analyzers or grep for function def
  * - Long lists of decorators/arguments cause ugly line wraps
  * - Guido didn't like (maybe because of line wrap issue?) 
-    
-'''def decorator function(arguments) "inline? syntax?"'''
 
+
+'''list at beginning of function body syntax'''
+{{{
+def foo(arg1,arg2):
+    [decorator]
+    ...
+}}}
+ * + Also somewhat C#-like
+ * + Consistent with how docstrings are used.
+ * + Looks ok for simple or complex decorators
+ * + Won't break simplistic code analyzers or grep for function def
+ * + Solves line wrap problem with above proposal
+ * 0 There is a hack that implements this now [http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/286147 here].
+ * - Guido's europython presentation said this didn't win out, but not why
+
+
+'''inline syntax'''
+{{{
+def decorator foo(arg1,arg2):
+    ...
+}}}
  * + Simple
  * + Obviousely attached to the function
  * - Does not allow for arguments to the decorator inline, or multiple decorators
  * - The natural place where everyone looks for the function name now is a possible container for other information
  * - Complicates things like colorization and other functions of helper tools
     
-'''as decorator''' ''(Before def)''
-
+'''as decorator'''
+{{{
+as decorator
+def foo(arg1,arg2):
+    ...
+}}}
  * + Non-punctuation based
  * + Does not use an existing mechanism with 'magic' behavior
  * - Guido specifically vetos: "as" means "rename" in too many logical, common places that are in-use, and decorators do not rename.
     
-'''with decorator''' ''(Before def)''
-
+'''with decorator, possibly indented?'''
+{{{
+with decorator:
+    def decorator foo(arg1,arg2):
+        ...
+}}}
  * + The benefits of "as" without the renaming oddity.
  * + Reads as, "with decorator define function", which seems accurate. Such as, "with staticmethod define foobar(baz)". 
  * - Adds a new keyword?    
