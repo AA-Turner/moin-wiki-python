@@ -1,26 +1,33 @@
-''The page contents below were copied with permission of author (BrianDorsey) from [http://www.seapig.org/DocXMLRPCServer SeaPig:DocXMLRPCServer]. I'd like to rework the page to fit the form of WorkingWithTime, RssLibraries, etc.,. See also: DocXmlRpcServer'' -- LionKimbro [[DateTime(2004-04-28T05:58:21Z)]]
+#pragma section-numbers off
+= XML-RPC =
 
-XML-RPC makes calling remote functions incredibly easy. 
+XML-RPC is a neat way to send messages across the Internet.
 
-From http://www.xml-rpc.com:
-''It's a spec and a set of implementations that allow software running on disparate operating systems, running in different environments to make procedure calls over the Internet.
+The neat thing about XML-RPC is that it transports ''native data structures''- you can ship off lists, strings, dictionaries, and numbers.
 
-It's remote procedure calling using HTTP as the transport and XML as the encoding. XML-RPC is designed to be as simple as possible, while allowing complex data structures to be transmitted, processed and returned.''
+You can [wiki:Wiki/XmlRpc read more about it over on C2,] or on [http://www.xml-rpc.com/ the XML-RPC home page.]
 
-
-Here is a bit of sample code to call a procedure ''message'' (passing in the first argument) on a server listening on localhost, port 8000:
+== Sample Code ==
 {{{
 #!python
-# messageclient.py 
-
 import xmlrpclib
-import sys
 
-if len(sys.argv) > 1:
-    s = xmlrpclib.ServerProxy('http://localhost:8000')
-    s.message(sys.argv[1])
+XMLRPC_SERVER_URL = "http://www.python.org/cgi-bin/moinmoin/?action=xmlrpc"
 
+pythoninfo = xmlrpclib.ServerProxy( XMLRPC_SERVER_URL )
+allpages = pythoninfo.getAllPages() # this is the XML-RPC call
+
+print ", ".join( allpages )
 }}}
 
-(also, see [http://www.python.org/doc/current/lib/xmlrpc-client-example.html this example] and the [http://www.python.org/doc/current/lib/module-xmlrpclib.html xmlrpclib documentation])
+This code calls the PythonInfo wiki, and receives the TitleIndex as a list.
 
+== See Also ==
+
+ * [http://www.python.org/doc/current/lib/xmlrpc-client-example.html official xmlrpclib example]
+ * [http://www.python.org/doc/current/lib/module-xmlrpclib.html xmlrpclib documentation]
+ * DocXmlRpcServer - class to help make an XML-RPC server
+
+= Discussion =
+
+  (none yet!)
