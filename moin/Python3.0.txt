@@ -2,65 +2,50 @@ This page lists features that GvR has mentioned as goals for Python 3.0.
 
 (Another list is at PythonThreeDotOh, but it incorporates items that GvR has never talked about.)
 
- * Reduce feature duplication:
-   * string module vs. string methods
-   * xrange() vs range()
-   * int vs. long
-   * 8 bit vs. Unicode strings
-   * map/filter/reduce vs. list comprehensions
-   * lambda vs. def
- * Library reorganization
- * Return iterators instead of lists
-   * d.keys(), .values(), .items()
-   * range(), zip(), map(), filter()
- * Consume iterators
-   * min(), max()
- * Optional static typing?
- * Support only new-style classes; classic classes will be gone.
- * Remove string exceptions, {{{`}}}x{{{`}}} for repr(x), sys.exc_type, coerce(), other deprecated stuff
- * print as a function -- write(x,y,z), writeln(x,y,z)
- * Do something so you can catch multiple exceptions using 'except E1, E2, E3:'. Maybe use 'except E1, E2, E3 as err:' if you want the error variable?  
- (added by GvR, suggested by Bram Cohen).
-
 See the "Python Regrets" talk and other recent presentations by Guido.
 
-== Other Ideas from the BDFL ==
+== Core Language Changes ==
 
- * I want to reserve the leading dot for attribute assignment to a special object specified by a 'with' statement, e.g. {{{
+ * Remove distinction between `int` and `long` types.
+ * Make all strings unicode, and have a separate bytes type.
+ * Make the `exec` statement a function (again.)
+ * Make the `print` statement a function. (`write(x,y,z), writeln(x,y,z)`)
+ * Remove support for old-style classes--all classes will be new-style.
+ * Remove {{{`x`}}} in favor of `repr(x)`.
+ * Remove the `lambda` statement.
+ * Remove support for string exceptions.
+ * Perhaps have optional declarations for static typing.
+ * Do something so you can catch multiple exceptions using 'except E1, E2, E3:'. Maybe use 'except E1, E2, E3 as err:' if you want the error variable?  (added by GvR, suggested by Bram Cohen).
+ * Add a `with` statement: {{{
 with self:
     .foo = [1, 2, 3]
     .bar(4, .foo)
 }}}
 
-== Rearrangements ==
+== Built-In Changes ==
 
-intern(), id(): put in sys
+ * Have `range()`, `zip()`, `dict.keys()`, `dict.items()`, and `dict.values()` return iterators.
+ * Remove `dict.iteritems()`, `dict.iterkeys()`, `dict.itervalues()`.
+ * Change `max()` and `min()` to consume iterators.
+ * Remove `apply()`.  Use `f(*args, **kw)` instead.
+ * Remove `xrange()`.  Use `range()` instead.
+ * Remove `map()` and `filter()`.  Use list comprehensions instead.
+ * Remove `coerce()` as it is obsolete.
+ * Remove `reduce()`.  Use a loop instead.
+ * Remove `callable()`.  Catch the exception instead.
+ * Remove `buffer()` in favor of a new `bytes` type.
+ * Remove `raw_input()`.  Use `sys.stdin.readline()` instead.
+ * Remove `input()`.  Use 'eval(sys.stdin.readline())` instead.
+ * Remove `execfile()` and `reload()`.  Use `exec()` instead.
+ * Move `compile()`, `intern()` and `id()` to the `sys` module.
 
-xrange(): make range() return an iterator
+== Standard Library Changes ==
 
-buffer(): must die (use bytes, PEP 296)
+ * Remove `string` and other deprecated modules.
+ * Remove `sys.exc_type` as it is not type safe.  Use `sys.exc_info` instead.
 
-raw_input(): use sys.stdin.readline()
+== Unresolved Issues ==
 
-input(): use eval(sys.stdin.readline())
-
-callable(): just call it, already
-
-execfile(), reload(): use exec()
-
-compile(): put in sys
-
-exec as a statement is not worth it -- make it a function
-
-== Dumb ideas ==
-
-
-== Other suggestions ==
-GvR didn't pronounced on this
-
- *lists:
-  * remove the extend method:  s+=x is equivalent to s.extend(x)
-  * change parameters order of the insert method and make the index parameter  optional so that the s.append method can be removed.
- * remove the <> operator
- * remove the is operator ?
- * put the compile() function in its own module: on small interpreters, compiler support can be removed  without changes to the core API.
+ * L += x and L.extend(x) are equivalent.
+ * Can the order of parameter of the insert method be changed so the the index parameter is optional and list.append can be removed?
+ * What is the status of the <> operator?
