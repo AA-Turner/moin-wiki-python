@@ -20,7 +20,7 @@ ties lifetimes of the arguments and results
 Builds a Python object around a pointer to
 the C++ result object (which must have a class_<> wrapper somewhere),
 and applies some lifetime management to keep the "self" object alive
-as long as the Python result is alive. 
+as long as the Python result is alive. NULL pointer returning as None.
 
 == return_value_policy<T> ==
 with T one of:
@@ -35,6 +35,7 @@ When the wrapped function is called, the value referenced by its return value is
 A new Python object is created which contains an unowned U* pointer to the referent of the wrapped function's return value, and no attempt is made to ensure that the lifetime of the referent is at least as long as that of the corresponding Python object.
 
 This class is used in the implementation of return_internal_reference.
+Also NULL pointer returning as None.
 
 === copy_non_const_reference ===
 
