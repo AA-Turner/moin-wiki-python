@@ -747,6 +747,9 @@ def foo(arg1,arg2):
     ...
 
 decorate:
+    """ I is now clear the docstring will 
+        survive the decoration process 
+    """
     accepts(int,int)
     returns(float)
 def bar(low,high):
@@ -756,6 +759,10 @@ def bar(low,high):
 }}}
  * + Uses widely known python syntax, albeit in an unusual way
  * + Doesn't need extra characters with special meaning
+ * + Docstring can be moved to Guido's favourite place, i. e before the def suite
+ * + Moves decorators, signature and implementation closer together for functions with a long docstring
+ * + With the right keyword, e. g. "transform", a new user gets a clear notion of the suite's purpose
+ * + Can smoothly be extended to a full-blown suite allowing for {{{if __debug__: trace}}} etc.
  * + Basic implementation has been posted here: [http://mail.python.org/pipermail/python-list/2004-August/233591.html]
 
  * - New keyword
@@ -1129,4 +1136,3 @@ Here it is with the @ symbol:
 
       return a+b*c
 }}}
-
