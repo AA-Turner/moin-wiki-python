@@ -109,6 +109,11 @@ Andrew Dalke [http://groups.google.com/groups?selm=yyq0d.3041%24xA1.1224%40newsr
 This differs from a solution using object adaptation in that it works at the source level, and thus can
 have some performance advantages.
 
+Perhaps we should try to keep the edge and node attributes/decorations separate from the GraphAPI.
+The API should specify that each node and edge store a pointer.  The pointer would be set to an object that
+handles all decorations and manipulations of those decorations.  The graph algorithms would work on the
+graph structure itself -- not the decorations -- and the user would need to interface those results to the decorations. 
+(dschult)
 
 === Specifics ===
 
@@ -127,6 +132,11 @@ Static graphs:
   * Node decoration: labels, weights, colors, capacities (can be done with external maps)
   * Edge decoration: labels, weights, colors, capacities
 
+(dschult) would add:
+  * Size of Graph:  Report the number of edges in the graph.
+  * Order of Graph: Report the number of nodes in the graph.
+  * Degree of node: Report the number of neighbors for a node (or sum of edge weights incident on the node).
+
 Accessing incident edges based on their labels can also be useful (e.g. in FSAs).
 
 Dynamic graphs:
@@ -137,7 +147,7 @@ Dynamic graphs:
   * Edge deletion
   * Node decoration modification
   * Edge decoration modification
-  * Edge contraction
+  * Edge contraction  (Can't this be done using the add and delete above? Do we want to get this specialized? (dschult))
   * Node and edge hiding?
 
 It may be that a given representation only supports a subset of the given operations, and that
@@ -178,5 +188,6 @@ standard graph API, for example. (Magnus)
   * Istvan Albert
   * Paul Moore
   * Van Lindberg
+  * Dan Schult
 
 (See also the Usenet discussion above for more contributors.)
