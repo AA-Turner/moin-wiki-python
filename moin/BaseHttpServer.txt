@@ -23,7 +23,7 @@ HOST_NAME = 'something.somewhere.net' # !!!REMEMBER TO CHANGE THIS!!!
 PORT_NUMBER = 80 # Maybe set this to 9000.
 
 
-class MyHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
+class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_HEAD(s):
         s.send_response(200)
         s.send_header("Content-type", "text/html")
@@ -33,17 +33,16 @@ class MyHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
         s.send_response(200)
         s.send_header("Content-type", "text/html")
         s.end_headers()
-        s.wfile.write( "<html><head><title>Title goes here.</title></head>" )
-        s.wfile.write( "<body><p>This is a test.</p>" )
+        s.wfile.write("<html><head><title>Title goes here.</title></head>")
+        s.wfile.write("<body><p>This is a test.</p>")
         # If someone went to "http://something.somewhere.net/foo/bar/",
         # then s.path equals "/foo/bar/".
-        s.wfile.write( "<p>You accessed path: %s</p>" % s.path )
-        s.wfile.write( "</body></html>" )
+        s.wfile.write("<p>You accessed path: %s</p>" % s.path)
+        s.wfile.write("</body></html>")
 
 if __name__ == '__main__':
     server_class = BaseHTTPServer.HTTPServer
-    httpd = server_class( (HOST_NAME, PORT_NUMBER),
-                          MyHandler )
+    httpd = server_class((HOST_NAME, PORT_NUMBER), MyHandler)
     print time.asctime(), "Server Starts - %s:%s" % (HOST_NAME, PORT_NUMBER)
     try:
         httpd.serve_forever()
@@ -70,24 +69,21 @@ import sys
 
 HOST_NAME = 'something.somewhere.net' # !!!REMEMBER TO CHANGE THIS!!!
 PORT_NUMBER = 80 # Maybe set this to 9000.
-REDIRECTIONS = {
-    "/slashdot/" : "http://slashdot.org/",
-    "/freshmeat/" : "http://freshmeat.net/",
-    }
-REDIRECTION_OF_LAST_RESORT = "http://google.com/"
+REDIRECTIONS = {"/slashdot/": "http://slashdot.org/",
+                "/freshmeat/": "http://freshmeat.net/"}
+LAST_RESORT = "http://google.com/"
 
-class RedirectHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
+class RedirectHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_HEAD(s):
-        s.send_response( 301 )
-        s.send_header( "Location", REDIRECTIONS.get( s.path, REDIRECTION_OF_LAST_RESORT ) )
+        s.send_response(301)
+        s.send_header("Location", REDIRECTIONS.get(s.path, LAST_RESORT))
         s.end_headers()
     def do_GET(s):
         s.do_HEAD()
 
 if __name__ == '__main__':
     server_class = BaseHTTPServer.HTTPServer
-    httpd = server_class( (HOST_NAME, PORT_NUMBER),
-                          RedirectHandler )
+    httpd = server_class((HOST_NAME, PORT_NUMBER), RedirectHandler)
     print time.asctime(), "Server Starts - %s:%s" % (HOST_NAME, PORT_NUMBER)
     try:
         httpd.serve_forever()
@@ -113,3 +109,5 @@ I'd also like to add code here showing how to service a POST request.
 -- LionKimbro [[DateTime(2004-07-03T23:07:53Z)]]
 
 There exist tools like CherryPy which will create a single-file Python HTTP server (based on BaseHTTPServer).  This is a fair amount easier to work with than the raw BaseHTTPServer.  For most cases, using a more complete framework will be preferable (see WebProgramming).  -- IanBicking
+
+I like the BaseHttpServer because it is in the default Python distributions. I encourage all work towards putting a standard web framework into the default Python distribution. I'm not picky, just as long as something is chosen. -- LionKimbro [[DateTime(2005-01-25T04:53:53Z)]]
