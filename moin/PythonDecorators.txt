@@ -715,8 +715,10 @@ def qux:
 from arg1, arg2:
     ...
 
-def quux staticmethod from (arg1, arg2):  # possible one-liner (see K)
-    ...
+def quux staticmethod from (arg1, arg2):  return arg1 + arg2 # possible one-liner (see K)
+
+# which probably is not much needed because of shorter legacy:
+quux = staticmethod(lambda arg1, arg2: arg1 + arg2)
 
 # unstylish, but still possible:
 def quuux: decor1; decor2
