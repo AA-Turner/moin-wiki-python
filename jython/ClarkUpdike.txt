@@ -2,7 +2,7 @@
 
 == Deleting wiki pages ==
 
-These are the directions I use for deleting pages on an intranet moinmoin wiki I administer.  These directions assume you have a login on the host machine, allowing you to temporarily turn on a flag in a config file that let's you delete a page and then turn it off (making it safe since it's only temporarily enabled).
+These are the directions I use for deleting pages on an intranet moinmoin wiki I administer.  These directions assume you have a login on the host machine, allowing you to temporarily turn on a flag in a config file that let's you delete a page and then turn it off (making it safe since it's only temporarily enabled).  I've tried to adapt them for this (jython) wiki.
 
 First of all, if you aren't in the MoinPagesEditorGroup, you'll need to contact an admin, and remind them to follow the directions on this page.
 
@@ -11,7 +11,7 @@ To delete a wiki page:
  * turn on the Delete``Page action in moin_config.py (look for the 'security critical actions' section towards the bottom of the file and set the "if 0:" to  "if 1:" )
  * put an acl entry on the page:
 {{{
-#acl AdminGroup:read,delete
+#acl MoinPagesEditorGroup:read,delete
 }}}
  * edit the page and look for the Delet``Page action at the very bottom
  * follow the steps to delete the page
