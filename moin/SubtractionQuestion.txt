@@ -36,3 +36,35 @@ print math.modf(-25/12)
 #to just print the whole number as an int:
 print int(math.modf(25/12)[1])
 }}}
+
+----
+
+-3 is the correct answer to the expression -25/12
+
+Here is why.
+
+Consider the statement print 25/12 and print 25%12
+{{{>>> print 25/12
+2
+>>> print 25%12
+1}}}
+
+This is because 25 = 2 * '''12''' + 1
+
+So print -25/12 and print -25%12 gives you
+{{{>>> print -25/12
+-3
+>>> print -25%12
+11}}}
+
+Because -25 = -3 * '''12''' + 11
+
+Your suggested answer -25/12 = -2 implies that -25%12 = -1
+
+-25 = -2 * '''12''' + -1
+
+But the result of A%B must be positive so -25%12 = 11  instead of -1
+thus -25/12 must be -3 instead of -2
+
+
+
