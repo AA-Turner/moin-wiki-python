@@ -1,8 +1,7 @@
-From comp.python.c++ newsgroup:
-----
-1. ''The constructors of some classes I am trying to wrap are private because
-instances must be created by using a factory. Is it possible to wrap such
-classes using bpl v2?''
+[[TableOfContents]] 
+Composed from comp.python.c++ newsgroup.
+
+=== The constructors of some classes I am trying to wrap are private because instances must be created by using a factory. Is it possible to wrap such classes? ===
 
 Sure. Of course you can only create the instances using the factory...
   
@@ -18,34 +17,29 @@ A* create(std::string const& s)
 
 BOOST_PYTHON_MODULE(test_pointer_adoption_ext)
 {
-        def("num_a_instances", num_a_instances);
-
         // Specify the manage_new_object return policy to take
         // ownership of create's result
         def("create", create, return_value_policy<manage_new_object>());
         
-        class_<A>()
+        class_<A>("A", no_init)
             .def("content", &A::content)
             .def("get_inner", &A::get_inner, return_internal_reference<>())
         ;
 }
 }}}
-----
-2. ''What is the relation between this '''no_init''' and '''boost::noncopyable?'''''
+
+=== What is the relation between this '''no_init''' and '''boost::noncopyable?''' ===
 
 The only relationship is that they both deal with constructors.
- *  `no_init` means "do not try to create an instance of that Python object - __init__ function that throws an exception"
- *  `noncopyable` means "do not try to register a converter which can convert C++ T return values to python".
-----
-3. ''Is it is possible to convert pointers to existing classes to PyObjects* and then be
-able to pass an existing instance of an object directly to and from python?''
+ *  `no_init` means "do not try to create an instance of that Python object, create __init__ function that throws an exception"
+ *  `noncopyable` means "do not try to register a converter which can convert C++ return values of that class to Python".
+
+=== Is it is possible to convert pointers to existing classes to PyObjects* and then be able to pass an existing instance of an object directly to and from python? ===
 
 It is.
 
 Example:
-In C++ I create a CWheel and I set its member m_diameter to 1233.  In
-python I have a function that receives a CWheel and displays the
-diameter (Lets suppose that Python knows the CWheel from Boost.Python
+In C++ I create a CWheel and I set its member m_diameter to 1233.  In python I have a function that receives a CWheel and displays the diameter (Lets suppose that Python knows the CWheel from Boost.Python
 {{{
 def printCWheelDiam(awheel):
     print awheel.m_diameter
@@ -72,8 +66,8 @@ the library to build a Python object around the pointer, but then you need
 to make sure the lifetime of the C++ object being referenced by the pointer
 extends past the lifetime of all Python references to the object or your
 program will crash.
-----
-4. ''How to I expose static class data members ?''
+
+=== How to I expose static class data members? ===
 {{{
 object x_class
     = class_<X>("X")
@@ -85,10 +79,8 @@ x_class.attr("fu") = X::fu;
 x_class.attr("bar") = X::bar;
 ...
 }}}
-----
-4. ''Why operators.hpp imports certain functions (such as 'str')
-into the global namespace, instead of the namespace
-boost::python. That looks like an error...''
+
+=== Why operators.hpp imports certain functions (such as 'str') into the global namespace, instead of the namespace boost::python. That looks like an error... ===
 
 It's only on broken compilers which don't support KoenigLookup, and
 it's intentional. The negative impact should be limited due to the
