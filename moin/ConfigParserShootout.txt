@@ -89,7 +89,7 @@ very last = 7
 
 == Dan Gass' ==
 
-[https://sourceforge.net/projects/config-py/ config-py] allows either strings (safe) or evaluated code (powerful) with the same API.  It needs python 2.3, or at least dict.pop()
+I've had a need for some of the ideas in section 4.3 and 4.4 so I've been busy creating a new configuration parser.  It can parse .ini (extended syntax as documented in section 4.3) or run Python configuration files (just like [https://sourceforge.net/projects/config-py/ config-py]).  It can easily be extended to parse any format such as XML.  It is modeled after optparse and can be "partnered" with an optparse.OptionParser() object.  I'm very please with it but I'm sure there will be some suggestions for improvement.  It is working but I want to clean up a few things, and document and test it before putting it up on sourceforge.  If anyone is interested in playing with it ahead of time email me and I'll be happy to send you it.  -- dan.gass@gmail.com
 
 == Vinay Sajip's implementation ==
 
@@ -485,16 +485,15 @@ comm_path = path_C0              # same as comm_path['grpC']['dev0'] = 'path_C0'
 [grpC.dev1]                      # starts a new section
 comm_path = path_C1              # same as comm_path['grpC']['dev1'] = 'path_C1'
 
-# Ian wants ability to retain characters we normally split on.  [(node1.node2)(key1)]
-# notation where presence of parenths clues the parser to split on parenths instead of 
-# normal split characters (.,)
+# Ian wants ability to retain characters we normally split on.  Parenths may be used
+# to clue the parser in to honor the normal split characters and split on the parenths:
+# [(node1.node2)(key1)]
 
-# In theory user could override default keys specified in this file from 
-# the command line to communicate with device 1 of group C:
+# User could override default keys specified in this file from the command line to 
+# communicate with device 1 of group C (assuming application supported this):
 #   application.py --keys=dev1,grpC
 }}}
-
-I've been tinkering with a "cooperation" between optparse and a new configuration parser to get the benefits described earlier without the design, implementation, and documentation headaches.  More on this later after I get more sleep and do more research. -- dan.gass@gmail.com
+-- dan.gass@gmail.com
 
 == API Proposal, optparse Model With Partnership Support ==
 
