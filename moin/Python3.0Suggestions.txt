@@ -61,3 +61,12 @@ suggests that it is doing something that it isn't:   {'a'=1}.fromkeys('poof') # 
  * Alway require instantation.  IOW, prefer ''raise ValueError(dat)'' to  ''raise ValueError, dat''.
  * Require that all exceptions subclass from ''Exception''.
  * Have ''Exception'' be a new-style class
+
+== Fix implementation of in-place operators ==
+
+The current implementation will call __iadd__(), allowing it to do the in-place change, but then require that the method return the new value and then store it again.  Ideally, all the responsibility for the update should lie with the __iadd__() method and it should return None.  This simplifies the bytecode and eliminates some annoying behavior (such as a[0]+=1 succeeding '''and''' raising an error when a=([0],)).
+
+== Remove the distinction between data and non-data decriptors ==
+
+Having the distinction provides a tiny benefit but incurs a large cost in terms of implementation complexity and increasing the learning curve for descriptors.  Using the presence or absence of a setter to distinquish the two is somewhat hackish and confuses the heck out of anyone first trying to master descriptors.   Even after using descriptor for a while, that nuance remains an annoying distraction.
+
