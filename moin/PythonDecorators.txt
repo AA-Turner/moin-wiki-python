@@ -849,11 +849,25 @@ Same as J2 but has advantages:
        # body goes here
 }}}
 
+I think the p_statement_expr makes this look more complicated than it is.  Consider
+
+{{{
+   def func(self, arg1)
+       @staticmethod
+       @grammarrule('statement : expression')
+       @version("Added in 2.4")
+   as:
+       """Docstring could be here, or in decorator part above"""
+       # body goes here
+}}}
+
+
  * + doesn't require new keyword ("as" can be unambiguously parsed in context)
  * + Leverages the visibility of "@" to overcome visibility problems 
      of list-after-def syntaxes
  * + Even better definition-reflects-usage than the current method (unless you put that colon back in, then equal).
  * + Adds a well-defined header, but still backwards-compatible, because of the @ leading each line in the header.  (So a non-@ line means an old-style definition, rather than a header.)
+ * + Gives the option of putting the docstring as the final decorator, so that wrapping decorators don't have to take care to restore it.
 
 === K. partitioned syntax syntax ===
 
