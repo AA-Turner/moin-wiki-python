@@ -84,6 +84,19 @@ program will crash.
     }
 }}}
 
+--
+Or better?
+
+{{{
+object result = ...
+result.ptr() == Py_None
+}}}
+
+Python C/Api Reference Manual says: 
+
+PyObject* Py_None 
+... Since None is a singleton, testing for object identity (using "==" in C) is sufficient. ...
+
 === Why operators.hpp imports certain functions (such as 'str') into the global namespace, instead of the namespace boost::python. That looks like an error... ===
 
 It's only on broken compilers which don't support KoenigLookup, and
