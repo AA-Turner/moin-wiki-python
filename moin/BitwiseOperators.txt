@@ -2,7 +2,7 @@
 
 These are Python's bitwise operators.
 
-=== Preamble: Twos-Compliment Numbers ===
+=== Preamble: Twos-Complement Numbers ===
 
 All of these operators share something in common -- they are 
 "bitwise" operators. That is, they operate on numbers (normally), but
@@ -20,13 +20,13 @@ binary. So a brief summary of twos-complement binary is in order:
  * 1029 is "10000000101" == 2**10 + 2**2 + 2**0 == 1024 + 4 + 1
 
 Negative numbers are written with a leading one instead of a leading 
-zero. So if you  are using only 8 bits for your twos-compliment
+zero. So if you  are using only 8 bits for your twos-complement
 numbers, then you treat patterns from "00000000" to "01111111" as
 the whole numbers from 0 to 127, and reserve "1xxxxxxx" for writing
 negative numbers. A negative number, -x, is written using the bit
-pattern for (x-1) with all of the bits complimented (switched from 1 
-to 0 or 0 to 1). So -1 is compliment(1 - 1) = compliment(0) = "11111111",
-and -10 is compliment(10 - 1) = compliment(9) = compliment("00001001")
+pattern for (x-1) with all of the bits complemented (switched from 1 
+to 0 or 0 to 1). So -1 is complement(1 - 1) = complement(0) = "11111111",
+and -10 is complement(10 - 1) = complement(9) = complement("00001001")
 = "11110110". This means that negative numbers go all the way down
 to -128 ("10000000").
 
@@ -49,9 +49,9 @@ this already), the operators are easy to explain:
 
  x | y:: Does a "bitwise or". Each bit of the output is 0 if the corresponding bit of x AND of y is 0, otherwise it's 1.
 
- ~ x::   Returns the compliment of x - the number you get by switching each 1 for a 0 and each 0 for a 1. This is the same as -x - 1.
+ ~ x::   Returns the complement of x - the number you get by switching each 1 for a 0 and each 0 for a 1. This is the same as -x - 1.
 
- x ^ y:: Does a "bitwise exclusive or". Each bit of the output is the same as the corresponding bit in x if that bit in y is 0, and it's the compliment of the bit in x if that bit in y is 1.
+ x ^ y:: Does a "bitwise exclusive or". Each bit of the output is the same as the corresponding bit in x if that bit in y is 0, and it's the complement of the bit in x if that bit in y is 1.
 
 Just remember about that infinite series of 1 bits in a negative 
 number, and these should all make sense.
