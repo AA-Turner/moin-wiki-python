@@ -25,21 +25,22 @@ class foo(object):
 }}}
 So in C++, it would be something like:
 {{{
-   class_<foo>("foo")
+    class_<foo>("foo")
         .def("f", &foo::f)
         .staticmethod("f")  // **
         ;
 }}}
 Where the marked line would be implemented something like this:
 {{{
-   self& staticmethod(char const* name)
-   {
-        dict d(handle<>(borrowed(downcast<PyTypeObject>(this->ptr())->tp_dict))); 
-        object method = (object)(d[name]); 
-        this->attr(name) = object(handle<>(
-             PyStaticMethod_New( callable_check(method.ptr()) ) 
-            ));
-   }
+self& staticmethod(char const* name)
+{
+    dict d(handle<>(borrowed(downcast<PyTypeObject>(this->ptr())->tp_dict))); 
+    object method = (object)(d[name]); 
+    this->attr(name) = object(handle<>(
+         PyStaticMethod_New( callable_check(method.ptr()) ) 
+      ));
+    return *this;
+}
 }}}
 To create overloaded staticmethods in python, you overload first, then you make it static.
 
