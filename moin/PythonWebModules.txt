@@ -3,12 +3,14 @@ A framework for WebProgramming.
 === Masthead ===
 
    URL::  http://www.pythonweb.org
-   version:: 0.4.1 (''[[Date(2004-09-13T00:00:00)]]'')
-   licence:: GPL (will consider BSD-Style or Python if GPL is a problem)
-   platforms:: Windows, Linux, UNIX (not tested on MacOS but should work)
+   Version:: 0.4.1 (''[[Date(2004-09-13T00:00:00)]]'')
+   Licence:: GPL (will consider BSD-Style or Python if GPL is a problem)
+   Platforms:: Windows, Linux, UNIX (not tested on MacOS but should work)
    Python versions:: Python 2.2 and above
 
-   These modules used to be known as the lemon modules. The CVS is still hosted at http://lemon.sourceforge.net/
+=== Introduction ===
+
+These modules used to be known as the lemon modules. The CVS is still hosted at http://lemon.sourceforge.net/
 
 "It is better to have a flexible module that can be used intuitively than 
 an all-singing, all-dancing framework that no-one can be bothered to learn."
@@ -26,6 +28,57 @@ beginning.
 The modules can easily be used on shared web hosting accounts running Apache and
 Python for example.
 
+=== Getting Started ===
+
+First you need to download the latest relase from http://www.pythonweb.org/release/0.4.1/index.html and then read the getting started guide at http://www.pythonweb.org/doc/0.4.1/overview/index.html
+
+=== Session, Identification and Authentication ===
+
+Session handling is done through the web.session module as follows:
+
+import web.session
+session = web.session.start( options... )
+session['myVariable'] = 'This will be available at each request'
+
+The module supports cookies or cgi variables.
+ 
+The use of the term "session" on its own can be confusing, especially in the context of the terminology of particular Web frameworks. Therefore, this document uses the following terms:
+
+Identity and identification handling is achieved through the web.auth module which uses the web.session module to store its information. Users may have multiple access levels to multiple applicaitons. Login handling and password reminder code is handled automatically.
+
+Both modules can either use a database supported by web.database or a file store to store the information between requests.
+
+=== Forms and Fields ===
+
+One of the more tedious tasks of web programing is creating HTML forms and validating field input. The web.form module allows you to create forms from Field objects. There are Field objects for all the standard HTML fields. 
+
+HTML generation and user input validation and requesting the user to correct errors are all handled by the Form object.
+
+Fields also exist for the common Python objects such integers, string, datetime objects etc as well as email and URL fields. These fields convert the value chosen by the user in the form directly to the appropriate Python type so no conversion is required. A DateTime field returns a datetime.datetime object, an Integer field returns an integer. a StringSelect field allows the user to choose one string from a choice and an EmailCheckBoxGroup allows the choice of one or more Email addresses.
+
+
+=== Database Support ===
+
+A major part of the project are the database modules. 
+
+The web.database module is a simple SQL abstraction layer which sits on top of a DB-API 2.0 cursor to implement data type conversions, provide database independance and offer a more Python-like interface to the data returned from queries.
+
+Here are the main features of the module:
+
+    * 100% compatible with the underlying DB-API 2.0 cursor. A web.database cursor is also a DB-API 2.0 cursor.
+    * Provides methods including select(), insert(), update(), delete(), create(), alter() and drop() which build and customise the SQL depending on the database being used providing database independance.
+    * Provides strong typing for the data being used. No need to deal with SQL strings, the module automatically encodes and decodes data for the approriate column.
+
+The web.database.object module is an object-relational mapper. It allows you to simply define complex database structures in Python code and then create the necessary tables automatically. It then allows you to manipulate the Python objects you have defined to transparently manipulate the underlying database including the facility to use multiple joins without knowing any SQL.
+
+The feature which sets the web.database.object apart from rivals like SQLObject is that the Table column classes are derived from web.form.field objects which means you can transparently create HTML interfaces to edit the data structures through a web browser using the Table object's form() method with all validation handled for you. This makes web.database.object module ideal as a middle layer for writing data-driver websites although it has broader uses as well.
+
+A database object can in theory have any storage driver (text, XML, SQL Datbase, DBM) although currently only a driver for the web.database module has been written. This means that any storage system with a driver for web.database can be used with web.database.object. This currently includes MySQL, ODBC, SQLite and, to an extent, Gadlfy. 
+
+More information is available in the module reference at http://www.pythonweb.org/doc/0.4.1/lib/web.html
+
+=== Presentation Support ===
+
 === Deployment Platforms ===
 
 The Web Modules were written because although there are quite a few web application frameworks available they are either too simplistic, or require adminster rights to install and so cannot be used with most shared hosting accounts.
@@ -34,26 +87,27 @@ The modules provide everything needed to write data-driven websites without need
 
 Developers can use the modules with other servers such as Zope or on their own but the author tends to use them in CGI scripts on Apache running on FreeBSD or Linux servers.
 
-Future releases will also conform to the WSGI being discussed on the WEB-SIG mailing list at the moment.
-
-=== Database Support ===
-
-A major part of the project are the database modules. The modules include support for the following:
-
-
-
 === Development Interfaces ===
 
-=== Environment Access ===
+The modules are desinged to be used in any way you like. They do not tie you to a CGI way of working or a servlet architecture. You can use them as building blocks to create your own way of doing things. 
 
-=== Session, Identification and Authentication ===
+If you prefer some help though the examples in the documentation assume for simplicity you are using a CGI approach. 
 
-=== Persistence Support ===
-
-=== Presentation Support ===
+The examples are listed at http://www.pythonweb.org/doc/0.4.1/web/examples.html
 
 === InTheirOwnWords ===
 
-=== Comments ===
+
+
+=== Future ===
+
+Future releases will also conform to the WSGI being discussed on the WEB-SIG mailing list at the moment. [http://www.pythonweb.org/project/plan.html Read the project plan].
+
 
 === Hosting ===
+
+
+=== Comments ===
+
+
+More to come soon!
