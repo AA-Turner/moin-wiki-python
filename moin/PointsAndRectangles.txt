@@ -15,67 +15,60 @@ This code is lacking a zillion essential features (such as "Length"). I only put
 {{{
 #!python
 # Code is Public Domain.
-def normalize( x1,y1,x2,y2 ):
-    return (min(x1,x2),min(y1,y2),max(x1,x2),max(y1,y2))
+def normalize(x1, y1, x2, y2):
+    return min(x1,x2), min(y1,y2), max(x1,x2), max(y1,y2)
 
 class Point:
-    def __init__( self, x,y ):
+    def __init__(self, x, y):
         self.x = x
         self.y = y
-    def __add__( self, other ):
-        return Point( self.x+other.x, self.y+other.y )
-    def __sub__( self, other ):
-        return Point( self.x-other.x, self.y-other.y )
+    def __add__(self, other):
+        return Point(self.x+other.x, self.y+other.y)
+    def __sub__(self, other):
+        return Point(self.x-other.x, self.y-other.y)
     def __mul__( self, scalar ):
-        return Point( self.x*scalar, self.y*scalar )
-    def __div__( self, scalar ):
-        return Point( self.x/scalar, self.y/scalar )
-    def __str__( self ):
-        return "(%s,%s)" % (self.x,self.y)
-    def XY( self ):
+        return Point(self.x*scalar, self.y*scalar)
+    def __div__(self, scalar):
+        return Point(self.x/scalar, self.y/scalar)
+    def __str__(self):
+        return "(%s, %s)" % (self.x, self.y)
+    def __repr__(self):
+        return "%s(%r, %r)" % (self.__class__.__name__, self.x, self.y)
+    def XY(self):
         return self.x,self.y
-    def Clone( self ):
-        return Point( self.x, self.y )
-    def Integerize( self ):
-        self.x = int( self.x )
-        self.y = int( self.y )
-    def Floatize( self ):
-        self.x = float( self.x )
-        self.y = float( self.y )
+    def Clone(self):
+        return Point(self.x, self.y)
+    def Integerize(self):
+        self.x = int(self.x)
+        self.y = int(self.y)
+    def Floatize(self):
+        self.x = float(self.x)
+        self.y = float(self.y)
 
 class Rect:
-    def __init__( self, pt1,pt2 ):
-        self.Set( pt1,pt2 )
-    def Contains( self, pt ):
+    def __init__(self, pt1, pt2):
+        self.Set(pt1, pt2)
+    def Contains(self, pt):
         x,y = pt.XY()
-        if (x >= self.left and
-            x <= self.right and
-            y >= self.top and
-            y <= self.bottom ):
-            return 1
-        return 0
+        return self.left <= x <= self.right and self.top <= y <= self.bottom
     def Set( self, pt1, pt2 ):
-        l,t,r,b = normalize( pt1.x, pt1.y, pt2.x, pt2.y )
-        self.left   = l
-        self.top    = t
-        self.right  = r
-        self.bottom = b
-    def Overlaps( self, other ):
-        return (self.right>other.left) and (self.top < other.bottom) and (self.left<other.right) and (self.bottom>other.top)
-    def GetTL( self ):
-        return Point( self.left, self.top )
-    def GetBR( self ):
-        return Point( self.right, self.bottom )
-    def ExpandedBy( self, n ):
-        p1 = Point( self.left-1, self.top+1 )
-        p2 = Point( self.right+1, self.bottom+1 )
-        return Rect( p1, p2 )
-    def TransformedByFunction( self, foo ):
-        p1 = Point( self.left,  self.top )
-        p2 = Point( self.right, self.bottom )
-        p1 = foo( p1 )
-        p2 = foo( p2 )
-        return Rect p1, p2 )
+        extrema = normalize(pt1.x, pt1.y, pt2.x, pt2.y)
+        self.left, self.top, self.right, self.bottom = extrema
+    def Overlaps(self, other):
+        return (self.right > other.left and self.left < other.right
+                and self.top < other.bottom and self.bottom > other.top)
+    def GetTL(self):
+        return Point(self.left, self.top)
+    def GetBR(self):
+        return Point(self.right, self.bottom)
+    def ExpandedBy(self, n):
+        p1 = Point(self.left-n, self.top+n)
+        p2 = Point(self.right+n, self.bottom+n)
+        return Rect(p1, p2)
+    def TransformedByFunction(self, foo):
+        p1 = Point(self.left,  self.top)
+        p2 = Point(self.right, self.bottom)
+        return Rect(foo(p1), foo(p2))
     def __str__( self ):
         return "<Rect (%s,%s)-(%s,%s)>" % (self.left,self.top,
                                            self.right,self.bottom)
