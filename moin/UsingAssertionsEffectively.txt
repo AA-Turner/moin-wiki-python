@@ -32,6 +32,7 @@ database-like class which keeps an index from name to a numeric id,
 and from id to name.
 
 {{{
+#!python
   class MyDB:
     def __init__(self):
       self._id2name_map = {}
@@ -62,6 +63,7 @@ A good place to add assertions to this class would be to check that
 the data-structure invariants are correct.  For example:
 
 {{{
+#!python
     def by_name(self, name):
       id = self._name2id_map[name]
       assert self._id2name_map[id] == name 
@@ -85,6 +87,7 @@ getting confused and calling by_name when they meant by_id.
 For example:
 
 {{{
+#!python
   from types import *
   class MyDB:
     ...
@@ -106,6 +109,7 @@ You can also do this for classes, though the expression is a bit
 different.
 
 {{{
+#!python
   class PrintQueueList:
     ...
     def add(self, new_queue):
