@@ -1,0 +1,131 @@
+ 
+= Where Is Jython Going? =
+
+First of all, Jython recently received one of three PSF grants for so development and community building will continue. The Big Picture as the start of 2005 can be found  in MovingJythonForward.
+
+----
+
+=== February 2005 ===
+
+Jython.org update and addition of a wiki. ''If you're reading this, we're getting somewhere ;)''
+
+'''Milestone:''' Implementation of NewStyleClasses. One of the primary missing features in Jython is the implementation of new style classes. SamuelePedroni has done a ton of work to implement this. 
+
+Assign bugs. The buglist needs to be prioritized and non-bugs need to be remove. In part this has to happen with NewStyleClasses. as bugs will be best evaluated in light of that shipment. The patch list will also need to be cleaned up and reviewed.
+
+
+=== March 2005 ===
+
+Start fixing bugs. High priority bugs will need to be dealt with, and the community will need to be made aware of critical open bugs!
+
+Removal of makefiles, update the ant build. It's likely this could involve a reorganisation of the repository. '''Any repository reorg is dependent on NewStyleClasses having shipped'''. Some people have indicated a preference for Subversion going forward - the community should allow that merely discussing a change of VCS is going to take a good amount of time.
+
+'''Milestone:''' A transparent process for incorporating patches and contributions.
+
+=== April 2005 ===
+
+'''Milestone:''' Jython 2.4 alpha. The completion of the new-style class integration, the fixing of critical bugs will culminate in the release of an initial alpha. 
+
+Final decision on choice of VCS and repository layout.
+
+Creation of repeatable build, deployment and installation scripts to facilitate future releases. The current installer is known not to work.
+
+
+=== May 2005 ===
+
+Simplifying import (removing PackageManager).  Simplifying the importing of Java classes would ease a lot frustration and make things more consistent.
+
+'''Milestone:''': Removing 1.1 support (to gain Collection framework support, simpler code, ...). Consider the current situation:
+
+    {{{
+    >>> from java.util import ArrayList
+    >>> a = ArrayList([1,2,3])
+    Traceback (innermost last):
+      File "<console>", line 1, in ?
+    TypeError: java.util.ArrayList(): 1st arg can't be coerced to java.util.Collection or int
+    }}}
+
+and as a result, slate the following for implementation:
+
+ * Support for boolean type
+ * JythonC integration into standard interpreter compiler
+ * PEP 302 (New Import Hooks)
+ * Logging (PEP 282, there exists a patch proposal for integration with Log4J)
+ * DataType marshalling from the Jython runtime to Java runtime
+ * sets module using java.util.Set
+ * datetime module java.util.[Date|Calendar]
+ * User-defined types
+
+A good amount of time in may can be expected to deal with feedback from the alpha release.
+
+
+=== June 2005 ===
+
+Fix issues found in the alpha and incorporate the tighter Java integration features as they arrive. 
+
+'''Milestone:''': Jython 2.4 beta. The resulting work will be released as a beta candidate.
+
+
+=== July 2005 ===
+
+bugs, bugs, bugs. And who knwos what else. Plus this time of year a lot of people are on vacation.
+
+
+=== August 2005 ===
+
+
+'''Milestone:''': Jython 2.4 final. 
+
+
+=== September 2005 ===
+
+With the final release, focus is expected to center on AbsentModules. It is proposed that at least following modules be delivered by this time:
+
+    * sets
+    * select
+    * datetime
+
+The community will dictate the remainder of the modules to be delivered.
+
+
+=== October 2005 ===
+
+Missing Built-ins. A number of built-ins are missing as well methods core classes have grown since 2.1. Some of the missing features have been documented in the whatsnew lists available with each new release:
+
+    * [WWW] http://www.python.org/doc/2.2.1/whatsnew/whatsnew22.html
+    * [WWW] http://python.org/2.3/highlights.html
+    * [WWW] http://python.org/2.4/highlights.html
+
+
+'''Milestone:''': Jython 2.4.1 release candidate.
+
+
+=== November 2005 ===
+
+'''Milestone:''': Jython 2.4.1 final. 
+
+
+
+----
+
+Unschedule
+
+ * Polishing the cluster PyJavaClass/PyJavaInstance/PyClass/PyInstance
+    
+  * Changes required for new Java 1.5 updates
+          enum
+          assert
+
+  * Upgrade compatibility with Python 2.4
+          Currently uses CPython 2.2 Lib/
+
+  * Implementation of popular missing modules (see AbsentModules)
+          sets
+          select
+          datetime
+
+
+----
+CategoryContribute
+
+  * 
