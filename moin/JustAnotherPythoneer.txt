@@ -302,6 +302,13 @@ print func_defaults().func_defaults()
 print __doc__
 }}}
 
+{{{
+#!python
+try:
+  vars()["Just another Pythoneer"]
+except KeyError, e:
+  print eval(str(e))
+}}}
 
 == Credits ==
 AndrewDalke[[BR]]
@@ -311,12 +318,3 @@ TaroOgawa[[BR]]
 KazuoMoriwaka[[BR]]
 "just another Pythoneer"
 
-print __doc__
-def jopgen():
-    yield "Just"
-    yield "another"
-    yield "Pythoneer"
-
-iter = jopgen()
-for item in iter:
-    print item,
