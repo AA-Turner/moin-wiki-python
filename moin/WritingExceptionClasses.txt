@@ -5,9 +5,9 @@ Exception classes are not special, you just derive them from Exception:
 {{{
 #!python
 class HostNotFound(Exception):
-    def __init__( self, host ):
+    def __init__(self, host):
         self.host = host
-        Exception.__init__(self, 'Host Not Found exception: missing %s' % host)
+        super(HostNotFound, self)('Host Not Found exception: missing %s' % host)
 }}}
 
 You may later write:
@@ -15,11 +15,11 @@ You may later write:
 {{{
 #!python
 try:
-    raise HostNotFound( "taoriver.net" )
+    raise HostNotFound("taoriver.net")
 except HostNotFound, exc:
     # Handle exception.
-    print exc # -> 'Host Not Found exception: missing taoriver.net'
-    print exc.host # -> 'taoriver.net'
+    print exc  # -> 'Host Not Found exception: missing taoriver.net'
+    print exc.host  # -> 'taoriver.net'
     
 }}}
 
