@@ -231,3 +231,18 @@ See ["../extract"]
 The best way to safely unblock Python threads is to write a
 thin wrapper around your function which uses Py_BEGIN_ALLOW_THREADS
 and Py_END_ALLOW_THREADS around a call to the real function.
+
+=== ownership of C++ object ===
+Wrap object with auto_ptr<> storage: {{{
+class_<Myclass, auto_ptr<MyClass> >("MyClass");
+}}}
+Write a small helper function to call the function which wants to take ownership of My``Class object:
+{{{
+void caller(auto_ptr<MyClass> obj)
+{
+  new_owner_function(obj.get());
+  obj.release();
+}
+}}}
+Wrap {{{caller}}} under the {{{new_owner_function}}} Python name.
+
