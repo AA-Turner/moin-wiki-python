@@ -30,11 +30,22 @@
   Python versions:: 1.5.2 - 2.2
 
 ==== Programming Model ====
+{{{
+cursor = session.sql ("select * from messages")
+for msgno, lang, text in cursor:
+    print msgno, text
 
- * session.sql (...) -> Result''''''Set
- * session.prepare (...) -> Prepared''''''Statement
- * prepared.execute ([...]) -> Result''''''Set
+insert = session.prepare ("insert into sometable values (?, ?)")
+print insert.getDescription ()
+insert.execute (["string", 1])
 
+select = session.prepare ("select * from messages where msgno < :msgno")
+cursor = select.execute ([200])
+print cursor.next ()
+print cursor.relative (100)
+print cursor.absolute (4)
+print cursor.absolute (-4)
+}}}
 ==== Comments ====
 
 == Supported Python Applications ==
