@@ -133,6 +133,14 @@ Bienvenue, Yves
 
 One problem I have with this implementation is the configuration file syntax.  I respect the need for a syntax to handle dictionaries and lists but why invent yet another language?  If one wants a Python like syntax make it the Python syntax.  I don't think everyone is on board with a Python syntax for configuration files though.  My biggest concern is to have a syntax that supports heirarchies and being able to construct Python objects for configuration settings.  I lean toward using Python as the syntax (and even the parser) because of the flexibility offered but if there was another way that makes sense I'm ok with that. -- dan.gass@gmail.com
 
+My reasons for not using Python itself for the syntax and parser are:
+
+  1. I couldn't see how to just parse the required subset of Python - lists and dicts - while preventing arbitrary code from being executed.
+  1. I wanted to be more forgiving of missing commas.
+  1. I wanted to allow easy cross-referencing, inclusion and evaluation, using a more compact notation, which precludes the use of standard Python.
+
+If someone could show me a way to meet the above desires whilst using Python syntax and parser, I'll gladly revisit the issue. -- VinaySajip
+
 == cfgparse ==
 
 [http://www.cs.wisc.edu/~param/software/cfgparse/ cfgparse] - cfgparse is a Python module that provides mechanisms for managing configuration information. It is backward compatible with ConfigParser, in addition to having the following features:
