@@ -1,9 +1,8 @@
-= Starship Python is Moving! =
+= Starship Python has Moved! =
 
-On September 1, 2003, the machine that has been hosting Starship Python (courtesy of Zope Corporation) will be 
-shutdown.  Consequently, Starship is being transferred to a new machine, kindly provided by Stefan Drees.
-This page exists so the Starship admins can keep track of what tasks have to be done, what tasks have been
-done, and who's taking care of what.  Also, the Starship user community can track the progress of the transfer here.
+On September 1, 2003, the machine that has been hosting Starship Python (courtesy of Zope Corporation) has been 
+shutdown.  Consequently, Starship has being transferred to a new machine, kindly provided by Stefan Drees.
+This page exists as a record for the Starship admins, so they can keep track of what tasks had to be done, for the successful transfer to happen smoothly.  We are currently in the everlasting post-transfer phase, where new features and services are enabled. Probably we should list the core and special features of the current machine here...
 
 If you're a Starship admin, feel free to update this page.  Otherwise, please email webmaster@python.net if
 you want to add stuff to our to-do list.
@@ -56,7 +55,7 @@ you want to add stuff to our to-do list.
     building custom 4.22-gw1 packages]
 
     * configure/test Exim ('''critical path''')
-    [[BR]][mostly done: gward 2003/08/24; still need to test with real users]
+    [[BR]][done: gward 2003/08/24]
 
     * get elspy working with Debian Exim packages ('''critical path''')
     [[BR]](recompile necessary?  or just fix elspy to work with dlopen() patch?)
@@ -73,13 +72,13 @@ you want to add stuff to our to-do list.
 
     * install, configure, and test Apache ('''critical path''')
     [[BR]](with mod-proxy, mod-rewrite, and mod-ssl, please! Content data is already transfered by greg 2003/08/25)
-    [[BR]][assigned: sdrees][[BR]]
+    [[BR]][done: admins 2003/08/26][[BR]]
     [.cgi/.spy files enabled for crew, Server Name updated to starship.python.net Jim 2003/08/27][[BR]]
     [enabled server side includes for .shtml files  Jim 2003/08/28]
 
     * install, configure, and test Zope ('''not''' critical path)
     [[BR]](Zope 2.7 preferable; (really?) note that Debian testing has Zope 2.6.1 and a working plone on top ;) )
-    [[BR]][assigned: sdrees]
+    [[BR]][installed 2.6.1 with plone -- sdrees 2003/08]
 
   * install, configure, and test ProFTPd ('''critical path''')[[BR]][done: sdrees 2003/08/12]
 
@@ -96,7 +95,7 @@ you want to add stuff to our to-do list.
     * Future - I'd like to reduce the amount of manual work involved in installing a new Python version.  I'd like to tie in with the platform's package management system.  I'd like to see nightly builds from CVS made available to crew members.  
     * Plan - Install Python 2.2 and Python 2.3 with our normal third party modules as locally built software in /usr/local/.  That will ensure some continuity in the short term when we move to the new Starship.  After the move is complete, we can spend some time later to work out how we want to handle our local Python installations on a Debian machine.  Then I'll remove the hand-built /usr/local/ installs and implement the new strategy.
 
-  * compare /etc/{passwd,group,shadow} and friends on both ships, evaluate migration strategy of credential data ('''critical path''')[[BR]]user credential transfer will be greatly simplified by starship policy of using ssh keys for authentication. So the (shadowed) passwords will be a local secret ... greg wrote a little script already[[BR]][assigned: gward ;) ]
+  * compare /etc/{passwd,group,shadow} and friends on both ships, evaluate migration strategy of credential data ('''critical path''')[[BR]]user credential transfer will be greatly simplified by starship policy of using ssh keys for authentication. So the (shadowed) passwords will be a local secret ... greg wrote a little script already[[BR]][done: gward ;) ]
 
 
 
@@ -117,19 +116,18 @@ you want to add stuff to our to-do list.
 
 == Detailed transfer plan ==
 
-The transfer itself will start at 2003-08-xx hh:mm UTC.
+The transfer itself start at 2003-08-27 14:30 UTC.
 
-  * disable logins on old starship
+  * disabled logins on old starship
   * shut down Exim, Courier-IMAP on old starship  
-  * disable any other user processes that might update the disk
+  * disabled any other user processes that might update the disk
   (eg. CGI scripts that write state)
-  * maybe: remount home read-only on old machine
-  * rsync user directories (this assumes the main bulk transfer has
+  * remounted home read-only on old machine
+  * rsynced user directories (this assumed the main bulk transfer had
   already been done)
-  * ensure ftpd running and working on new machine
-  (need to change anything for name change?)
-  * change canonical name of new machine to starship.python.net
-  (including fixing reverse DNS resolution!)
+  * ensured ftpd running and working on new machine
+  * changed canonical name of new machine to starship.python.net
+  (not being able fixing reverse DNS resolution, since hosting provider is not capable ...)
   * edit Apache config for name change (drydock -> starship) and restart[[BR]]
     [done: jim 2003/08/27]
   * edit Exim config for name change and restart
@@ -137,4 +135,6 @@ The transfer itself will start at 2003-08-xx hh:mm UTC.
   * start Exim, Courier-IMAP on new machine
   * enable user logins on new machine
 
+Transfer completed at 2003-08-28 03:11 UTC.
 
+Thanks to everyone who participated!
