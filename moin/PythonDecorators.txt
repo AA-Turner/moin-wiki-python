@@ -89,6 +89,22 @@ class C(object):
         raise NotYetImplemented
 }}}
 
+And here is an example taken from the current test_decorators.py.
+This exposes the problem of using two lines together with some
+meaning but without identation.
+{{{
+class TestDecorators(unittest.TestCase):
+
+    ...
+
+    def test_dotted(self):
+        decorators = MiscDecorators()
+        @decorators.author('Cleese')
+        def foo(): return 42
+        self.assertEqual(foo(), 42)
+        self.assertEqual(foo.author, 'Cleese')
+}}}
+
 '''B. list-before-def syntax'''
 {{{
 [classmethod]
