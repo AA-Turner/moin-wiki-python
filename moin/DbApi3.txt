@@ -1,0 +1,28 @@
+This page should summarize topics for the DB API 3.0.
+It is meant to provide
+ * clarifications of the DB API 2.0
+ * new optional features
+ * new recommendations
+
+A related page is ExtendingTheDbApi, which lists features that aren't general enough to make it into the spec.
+
+[[TableOfContents]]
+
+= Unified Parameter Style =
+
+Possibilities
+ * currently: one parameter style per driver
+ * one parameter style for all drivers
+ * multiple parameter styles per driver, switchable per Connection, Cursor or .execute ()
+
+= Additional Driver Objects =
+
+Prepared statements in addition to Connection and Cursor.
+
+= Parameter Passing =
+
+{{{cursor.execute ("SELECT where size = :size", {'size': localvar})}}} vs.{{{cursor.execute ("SELECT where size = :size", size = localvar)}}}
+
+{{{cursor.execute ("SELECT where size = ?", [localvar])}}} vs. {{{cursor.execute ("SELECT where size = ?", localvar)}}}
+
+= Schema Information =
