@@ -8,11 +8,11 @@ See the "Python Regrets" talk and other recent presentations by Guido.
 
  * Remove distinction between `int` and `long` types.
  * Make all strings unicode, and have a separate bytes type.
- * Make the `exec` statement a function (again.)
- * Make the `print` statement a function. (`write(x,y,z), writeln(x,y,z)`)
+ * Make the `exec` statement a function (again.) [[#a 1]]
+ * Make the `print` statement a function. (`write(x,y,z), writeln(x,y,z)`) [[#a 1]]
  * Remove support for old-style classes--all classes will be new-style.
- * Remove {{{`x`}}} in favor of `repr(x)`.
- * Remove the `lambda` statement.
+ * Remove {{{`x`}}} in favor of `repr(x)`. [[#a 1]]
+ * Remove the `lambda` statement. [[#a 1]]
  * Remove support for string exceptions.
  * Perhaps have optional declarations for static typing.
  * Do something so you can catch multiple exceptions using 'except E1, E2, E3:'. Maybe use 'except E1, E2, E3 as err:' if you want the error variable?  (added by GvR, suggested by Bram Cohen).
@@ -27,25 +27,29 @@ with self:
  * Have `range()`, `zip()`, `dict.keys()`, `dict.items()`, and `dict.values()` return iterators.
  * Remove `dict.iteritems()`, `dict.iterkeys()`, `dict.itervalues()`.
  * Change `max()` and `min()` to consume iterators.
- * Remove `apply()`.  Use `f(*args, **kw)` instead.
- * Remove `xrange()`.  Use `range()` instead.
- * Remove `map()` and `filter()`.  Use list comprehensions instead.
- * Remove `coerce()` as it is obsolete.
- * Remove `reduce()`.  Use a loop instead.
- * Remove `callable()`.  Catch the exception instead.
- * Remove `buffer()` in favor of a new `bytes` type.
- * Remove `raw_input()`.  Use `sys.stdin.readline()` instead.
- * Remove `input()`.  Use 'eval(sys.stdin.readline())` instead.
- * Remove `execfile()` and `reload()`.  Use `exec()` instead.
- * Move `compile()`, `intern()` and `id()` to the `sys` module.
+ * Remove `apply()`.  Use `f(*args, **kw)` instead. [[#a 1]]
+ * Remove `xrange()`.  Use `range()` instead. [[#a 1]]
+ * Remove `map()` and `filter()`.  Use list comprehensions instead. [[#a 1]]
+ * Remove `coerce()` as it is obsolete. [[#a 1]]
+ * Remove `reduce()`.  Use a loop instead. [[#a 1]]
+ * Remove `callable()`.  Catch the exception instead. [[#a 1]]
+ * Remove `buffer()` in favor of a new `bytes` type. [[#a 1]]
+ * Remove `raw_input()`.  Use `sys.stdin.readline()` instead. [[#a 1]]
+ * Remove `input()`.  Use 'eval(sys.stdin.readline())` instead. [[#a 1]]
+ * Remove `execfile()` and `reload()`.  Use `exec()` instead. [[#a 1]]
+ * Move `compile()`, `intern()` and `id()` to the `sys` module. [[#a 1]]
 
 == Standard Library Changes ==
 
  * Remove `string` and other deprecated modules.
- * Remove `sys.exc_type` as it is not type safe.  Use `sys.exc_info` instead.
+ * Remove `sys.exc_type` as it is not type safe.  Use `sys.exc_info` instead. [[#a 1]]
 
 == Unresolved Issues ==
 
- * L += x and L.extend(x) are equivalent.
- * Can the order of parameter of the insert method be changed so the the index parameter is optional and list.append can be removed?
- * What is the status of the <> operator?
+ * `L += x` and `L.extend(x)` are equivalent.
+ * Can the order of parameter of the `insert` method be changed so the the index parameter is optional and `list.append` can be removed?
+ * What is the status of the `<>` operator?
+
+== References ==
+
+ * [[Anchor(a)]] [1] Python Regrets: http://www.python.org/doc/essays/ppt/regrets/PythonRegrets.pdf
