@@ -67,6 +67,27 @@ def bar(low,high):
  * - Comes before the def keyword.  Supercedes the function declaration itself.
  * 0 The @ character is often used (in other languages) to mean "attribute".  For annotations, this is good.  For more active decorators, it may not be so good.
 
+FWIW, here is Guido's jumble example in this syntax.
+{{{
+class C(object):
+
+    @staticmethod
+    @funcattrs(grammar="'@' dotted_name [ '(' [arglist] ')' ]",
+               status="experimental", author="BDFL")
+    def longMethodNameForEffect(longArgumentOne=None,
+                                longArgumentTwo=42):
+        """This method blah, blah.
+
+        It supports the following arguments:
+        - longArgumentOne -- a string giving ...
+        - longArgumentTwo -- a number giving ...
+
+        blah, blah.
+
+        """
+        raise NotYetImplemented
+}}}
+
 '''B. list-before-def syntax'''
 {{{
 [classmethod]
@@ -135,12 +156,12 @@ class C(object):
         """This method blah, blah.
 
         It supports the following arguments:
-- longArgumentOne -- a string giving ...
+        - longArgumentOne -- a string giving ...
         - longArgumentTwo -- a number giving ...
 
-blah, blah.
+        blah, blah.
 
-"""
+        """
         raise NotYetImplemented
 }}}
 
@@ -183,10 +204,31 @@ of either, so I will only list those that are unique to the combination.
  * + Groups the decorators with a list, but explains what they are doing, so the list no longer has a magical new meaning.
  * + Easily extended; No special characters are "used up", and in the future, other pseudo-keywords could be added.
  * + The pseudo-keyword makes it easier to see the separation between the argument tuple and the decorator list.
- * + The pseudo-keyword can act as an implicit line-continuation, so that decorators would not need to start or end mid-line.
+ * + The pseudo-keyword can act as an implicit line-continuation, which helps with (but does not solve) the midline problem.
  * - Some proponents objected to adding a keyword, because of more typing.  
  * 0 Makes the decoration look like a second-class or optional part of the definition.  This is true, but may have caused some emotional objection.
  * - There was very little agreement on which word should be used.
+
+FWIW, here is Guido's jumble example in this syntax.
+{{{
+class C(object):
+
+    def longMethodNameForEffect(longArgumentOne=None,
+                                longArgumentTwo=42) using
+        [staticmethod,
+         funcattrs(grammar="'@' dotted_name [ '(' [arglist] ')' ]",
+                   status="experimental", author="BDFL")]:
+        """This method blah, blah.
+
+        It supports the following arguments:
+        - longArgumentOne -- a string giving ...
+        - longArgumentTwo -- a number giving ...
+
+        blah, blah.
+
+        """
+        raise NotYetImplemented
+}}}
 
 '''D. list at top of function body syntax'''
 {{{
