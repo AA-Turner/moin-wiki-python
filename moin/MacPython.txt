@@ -1,3 +1,45 @@
-You can find information on Python on the Macintosh at http://www.cwi.nl/~jack/macpython. Installers, documentation and much more is available there too.
+Welcome to the MacPython Wiki page. MacPython is much more than just a port of Python to the Mac, it includes many Mac-specific tools and modules that make developing Mac applications using Python very easy, and dare I say fun! (Note that most of this information is specific to MacPython on OS X, which is now the actively maintained and developed port.) Many of these tools can be found in the /Applications/MacPython-2.3 folder.
 
-(We could/should add pages about PackageManager (or PackMan), PyObjC / PythonCocoa, AppleEvents or AppleScript, CarbonApi, MacPythonIde, etc. Please expand. But first: should we use a "Mac" prefix for all MacPython-related wiki words?)
+This wiki page is for emerging documentation for all the new Mac-specific tools and modules being developed thanks to great support by the MacPython community. In addition to this wiki page, you can find information on Python on the Macintosh at http://www.cwi.nl/~jack/macpython. Installers, documentation and much more is available there too. A Mac help file is also available from the MacPythonIDE and can be accessed by clicking on the Help menu, and selecting Mac-specific help.
+
+== MacPython Tools ==
+
+These tools come "out of the box" with every MacPython installation and make developing on MacPython a breeze. 
+
+=== Downloading and Installing Modules ===
+
+When downloading packages for Mac, in addition to the traditional method of downloading from source and running setup.py, you can use the Python PackageManager, which automatically downloads and installs the appropriate binaries for your platform. (Note: There is also a wxPython port of PackageManager in the works so that PyPM can be run on Windows and Linux as well.) 
+
+Also, note that Bob Ippolito has compiled a number of additional packages that can be installed from PackageManager. To gain access to these packages, open the following URL in PackageManager: http://undefined.org/python/pimp/darwin-6.6-Power_Macintosh.plist
+
+=== Developing on Mac ===
+
+There's a MacPythonIDE which provides script building, debugging, and other services. Check out the tutorial. 
+
+=== Distributing your App ===
+
+There's a BuildApplet script that makes "applets" that look and feel like traditional Mac programs. Just drop your script onto BuildApplet! However, these applets still require MacPython to be installed. You can also create standalone application bundles that do not require MacPython on the user's machine using the BundleBuilder script.   
+
+== Mac-specific modules ==
+
+There are also a number of modules which allow developers to access Mac-specific functionality from MacPython. 
+ 
+=== Want to script AppleScript-enabled Mac applications from Python? ===
+
+Check out the aeve module, which lets you generate Python 'wrappers' for AppleScript-enabled programs. 
+
+You can get it here: http://undefined.org/python/
+
+=== Want to write GUI apps for Mac? ===
+
+If you want to develop GUIs for Mac only, you can directly access the Carbon module. Carbon support is built into the MacPython package. There's also PyObjC, which gives you access to the Cocoa framework from Python. PyObjC can be found here: http://pyobjc.sourceforge.net/
+
+If you want a cross-platform application, wxPython runs on Mac as well.  wxPython is available from http://www.wxpython.org/
+
+=== Need to run Mac programs and scripts from Python? ===
+
+Check out the LaunchServices module, which lets you load programs and even URLs from Python. It can be found at: http://undefined.org/python/
+
+== Wiki ToDo ==
+
+(We could/should add pages about PackageManager (or PackMan), PyObjC / PythonCocoa, AppleEvents or AppleScript, CarbonApi, MacPythonIde, etc. Please expand. But first: should we use a "Mac" prefix for all MacPython-related wiki words? Kevin: I think it's OK not to use the Mac prefix except when referring to MacPython itself, like MacPythonIDE. Mac modules and such should use unique names anyways to avoid confusion and conflicts with counterparts on other platforms.)
