@@ -1,0 +1,23 @@
+ * PythonLibraryReference, [http://www.python.org/doc/current/lib/module-re.html 4.2 re module]
+ * PythonLibraryReference, [http://www.python.org/doc/current/lib/re-syntax.html 4.2.1 Regular Expression Syntax]
+
+You can ''search'' or ''match.''
+ * ''search'' -- find something ''anywhere'' in the string, and return it
+ * ''match'' -- find something ''from the beginning'' of the string, and return it
+
+You can also ''split'' on a pattern.
+
+For example:
+
+{{{
+#!python
+import re
+split_up = re.split( r"(\(\([^)]+\)\))",
+                     "This is a ((test)) of the ((emergency broadcasting station.))" )
+}}}
+
+...which produces:
+
+{{{
+["This is a ", "((test))", " of the ", "((emergency broadcasting station.))" ]
+}}}
