@@ -5,9 +5,9 @@ Python 2.3 introduced a new module datetime.
  * http://online.effbot.org/2003_08_01_archive.htm#librarybook-datetime-module
  * http://docs.python.org/lib/module-datetime.html
 
-Since these modules are implemented in C, it would be nice to have a Java implementation for Jython.  A pure python implementation of datetime can be find at http://cvs.sf.net/viewcvs.py/python/python/nondist/sandbox/datetime/ .  I plan on using this implementation extensively as the Java version is developed.  If it turns out that a Java implementation is infeasible or will take too long, we could always fall back on using this module directly.
+Since these modules are implemented in C, it would be nice to have a Java implementation for Jython.  A pure Python implementation of datetime can be found at http://cvs.sf.net/viewcvs.py/python/python/nondist/sandbox/datetime/ .  I plan on using this implementation extensively as the Java version is developed.  If it turns out that a Java implementation is infeasible or will take too long, we could always fall back on using this module directly.
 
-My original plan was to write the entire module in Java, using mxDateTime for guidance http://cvs.sourceforge.net/viewcvs.py/zxpy/zxDateTime/ .  However, after reading this addition to JythonModulesInJava by BrianZimmer:
+My original plan was to write the entire module in Java, using mxDateTime for guidance http://cvs.sourceforge.net/viewcvs.py/zxpy/zxDateTime/ .  However, after reading this addition to JythonModulesInJava:
 
 {{{
   My new approach is borrowed slightly from CPython where it's very
@@ -18,7 +18,7 @@ Python offers the dual benefits of being easy to maintain and refactor
 as well as requiring less development time.
 }}}
 
-I've re-thought that approach, and I now plan to start with the pure python datetime and replace the date related code with java.util.Calendar code.
+After discussing this with Brian, I've re-thought that approach, and I now plan to start with the pure python datetime and replace the date related code with java.util.Calendar code.
 === Design ===
 
 ||'''Jython Class'''||'''Strategy'''||
@@ -31,4 +31,4 @@ I've re-thought that approach, and I now plan to start with the pure python date
 
 
 === Discussion ===
-For the short term I plan to use the Python unittests as the definition of the datetime class, and will not try to go beyond the CPython implementation.  This may change once Jython starts to catch up with the leading edge of CPython development.
+For the short term I plan to use the Python unittests as the absolute definition of the datetime module, and will not try to go beyond the CPython implementation.  This means (for example) that dates will be limited to 1-9999AD, because that is what the CPython unit tests expect.  Even though java.util.Calendar does not have this limitation, I will enforce it for now.  This may change once Jython starts to catch up with the leading edge of CPython development and we can productively review the unit tests themselves.
