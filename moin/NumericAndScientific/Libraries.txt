@@ -1,15 +1,512 @@
 The following are links to scientific software libraries that have
 been recommended by Python users.
 
-  * [http://www.fftw.org FFTW] claims to be the Fastest Fourier Transform in the West.
+=== Number Crunching and Related Tools ===
 
-  * The [http://starship.python.net/crew/hinsen/MMTK/ MMTK] Molecular
-  Modeling Toolkit, by Konrad Hinsen, is a set of modules for
-  molecular simulation applications.
+This page lists a number of packages related to numerics, number crunching, signal processing,
+financial modeling, linear programming, statistics, data structures, date-time processing,
+random number generation, and crypto.
 
-  * [http://www.amk.ca/python/code/crypto.html  Python Cryptography Modules]
+==== Data Structures ====
 
-  An extensive toolkit including Python extensions for encryption,
-  authentication, key exchange, and other cryptography operations.
+  * PyPolyhedron
+  [http://cens.ioc.ee/projects/polyhedron/ [details]]
+  [http://cens.ioc.ee/projects/polyhedron/src/polyhedron.tgz [source]]
 
+  Calculate polyhedron's V- and H-representation.  This is a Python
+  interface to a C-library cddlib (Pearu Peterson)
+
+  * avl_tree
+  [http://www.nightmare.com/software.html [details]]
+  [ftp://squirl.nightmare.com/pub/python/python-ext/avl/avl-2.0.tar.gz [source]]
+
+  AVL module provide a hybrid between a dictionary and a list which
+  can come in handy.  AVL trees (named after the inventors,
+  Adel'son-Vel'skii and Landis) are balanced binary search trees.
+  (Sam Rushing)
+
+  * bplustree
+  [http://www.pythonpros.com/arw/bplustree [details]]
+  [http://www.pythonpros.com/arw/bplustree/bplustree.py.txt [source]]
+
+  Classical compsci B+trees, implemented entirely in Python: Fast,
+  portable file based indexing with range queries and including a
+  dbm-compatibility mode.  (Aaron Watters)
+
+  * fsm
+  [http://musi-cal.mojam.com/~skip/python/ [details]]
+  [http://musi-cal.mojam.com/~skip/python/fsm.py [source]]
+
+  Finite State Machine module.  (Skip Montanaro)
+
+  * graph_lib
+  [http://www.ece.arizona.edu/~denny/python_nest/ [details]]
+  [http://www.ece.arizona.edu/~denny/python_nest/graph_lib.py [source]]
+
+  This module defines the Python class Graph.  Graph is loosely
+  modelled after the Library of Efficient Data types and Algorithms
+  (LEDA).  It includes methods for constructing graphs, BFS and DFS
+  traversals, topological sort, etc.
+
+  * kjbuckets
+  [http://www.pythonpros.com/arw/kjbuckets/ [details]]
+  [http://www.pythonpros.com/arw/kjbuckets/kjb.tar.gz [source]]
+
+  kjbuckets is a C extension to python which defines three Python data
+  types kjSet, kjGraph, and kjDict, implemented using a fast and space
+  efficient hash table strategy.  The types are tightly coupled and
+  may be combined and manipulated using a collection of fast "set at a
+  time" operations written in C.  If you need to manipulate
+  collections and mappings quickly take a look at this module.  It
+  comes with no warrantee of course, but it has been pounded pretty
+  heavily and I consider it fairly solid.  (Aaron Watters)
+
+  * npstruct
+  [http://www.nightmare.com/software.html [details]]
+  [ftp://squirl.nightmare.com/pub/python/python-ext/misc/npstruct.tar.gz [source]]
+
+  An extension module useful for parsing and unparsing binary data
+  structures. Somewhat like the standard struct module, but with a few
+  extra features (bitfields, user-function-fields, byte order
+  specification, etc...) and a different API more convenient for
+  streamed and context-sensitive formats like network protocol
+  packets, image and sound files, etc.  (Sam Rushing)
+
+==== Date/Time ====
+
+
+  * mxDateTime
+  [http://www.lemburg.com/files/python/mxDateTime.html [details]]
+  [http://www.lemburg.com/files/python/egenix-mx-base-2.0.2.tar.gz [source]]
+
+  These types were created to provide a consistent way of transferring
+  date and time data between Python and databases. Apart from handling
+  date before the Unix epoch (1.1.1970) they also correctly work with
+  dates beyond the Unix time limit (currently with Unix time values
+  being encoded using 32bit integers, the limit is reached in 2038)
+  and thus is Year 2000 and Year 2038 safe.  (M.-A. Lemburg)
+
+  * Mayalib
+  [http://www.pauahtun.org/ftp.html [details]]
+  [FTP://www.pauahtun.org/pub/mayalib.zip [source]]
+
+  Mayan dates and numbers (math) for Python.  (Ivan Van Laningham)
+
+  * normalDate
+  [http://starship.python.net/crew/jbauer/normalDate/ [details]]
+  [http://starship.python.net/crew/jbauer/normalDate/normalDate.py [source]]
+
+  NormalDate is a specialized class to handle dates without all the
+  excess baggage (time zones, daylight savings, leap seconds, etc.) of
+  other date structures.  (Jeff Bauer)
+
+==== FFT ====
+
+
+  * Fftw-numpy
+  [http://pylab.sourceforge.net/ [details]]
+  [http://pylab.sourceforge.net/packages/fftw-numpy-0.6.2.tar.gz [source]]
+
+  Fftw-numpy is a generic wrapping of the FFTW-2.1.3 C-library into
+  Python done using SWIG. FFTW is advertised as a very fast
+  implementation of the FFT and I believe it lives up to its
+  billing. It has support for arbitrary N-dimensional arrays as well
+  as fast real-to-complex FFT's.  As part of the package, I have
+  included a module called FFT2 that can act as a drop-in replacement
+  for FFT in NumPy (except there is no real-to-complex transform
+  yet). There is also a benchmark script that shows that FFT2 is about
+  18-25% faster than fftpack (at least on pentium machines). There is
+  also support for arbitrary multidimensional transforms (not just
+  2-D).  (Travis Oliphant)
+
+  * fourier
+  [http://starship.python.net/~hochberg/ [details]]
+  [http://starship.python.net/~hochberg/fourier.py [source]]
+
+  A set of routines to perform Fourier transforms using pure
+  (Numerical) Python. These are slower by a factor of 2-10 than pure C
+  version in the FFT module (which is pretty good for a pure Python
+  solution), but they make an interesting example.  (Tom Hochberg)
+
+  * Signaltools
+  [http://pylab.sourceforge.net/ [details]]
+  [http://pylab.sourceforge.net/packages/signaltools-0.5.3.tar.gz [source]]
+
+  A work in progress toolbox intended to contain most of the signal
+  processing functionality available in other array-oriented systems
+  like MATLAB. the included routines are fast N-D convolution and N-D
+  correlation procedures for use when filtering big datasets with
+  small kernels and a fast N-D order statistic filter routine. (A
+  median filter is an example of an order-filter and is also
+  included).  There is also a routine to filter along an arbitrary
+  dimension of an N-D array with a rational transfer function filter
+  (like the filter function in MATLAB) and a remez-exchange algorithm.
+  Recently added are an N-D median filter and an N-D wiener filter.
+  (Travis Oliphant)
+
+==== Finance ====
+
+
+  * pyfi
+  [http://metro.yak.net/pyfi.html [details]]
+  [http://metro.yak.net/pyfi.py [source]]
+
+  pyfi provides a set of functions that perform commonly used financial calculations.
+  (Rupert Scammell)
+
+  * pyFinancials
+  [http://starship.python.net/~zanzi/ [details]]
+  [http://starship.python.net/~zanzi/pyFinancials-0.66.tgz [source]]
+
+  A collection of algorithms for advanced financial calculations.
+  (G. P. Ciceri)
+
+==== Interface ====
+
+
+  * Multipack
+  [http://pylab.sourceforge.net/ [details]]
+  [http://pylab.sourceforge.net/ [source]]
+
+  A collection of FORTRAN routines interfaced with NumPy.  There are
+  modules for special function evaluation, signal and image
+  processing, and modules that wrap common FORTRAN functions from
+  ODEPACK, MINPACK, and QUADPACK.  (Travis Oliphant)
+
+  * SAML
+  [http://topo.math.u-psud.fr/~bousch/saml-eng.html [details]]
+  [ftp://topo.math.u-psud.fr/pub/bousch/ [source]]
+
+  Interface to the "Simple Algebraic Math Library", a C library for
+  computer algebra, together with some application programs: a desktop
+  calculator, a spreadsheet (sort of) and a program to factorize
+  integers.  (Thierry Bousch)
+
+  * pymat
+  [http://claymore.engineer.gvsu.edu/~steriana/Python [details]]
+  [http://claymore.engineer.gvsu.edu/~steriana/Python/pymat.zip [source]]
+
+  PyMat is an interface between NumPy and a MATLAB engine
+  session. It can be used to support NumPy's functionality with the
+  features of MATLAB. An  example module is included that presents a very
+  simple interface to MATLAB's plotting functions. This allows you to, for
+  example, plot NumPy arrays in a  MATLAB plot window.  (Andrew Sterian)
+
+
+  * PYML
+  [http://www.mathsource.com/cgi-bin/MathSource/Enhancements/Interfacing/Other/0209-292 [details]]
+  [http://www.mathsource.com/MathSource/Enhancements/Interfacing/Other/0209-292/pyml.tar.gz [source]]
+
+  PYML is an interface between the computer language Python and
+  Mathematica. Mathematica expressions can be written in Python code,
+  evaluated, and their results returned to Python.  Support for postscript
+  graphics returned from Mathematica exists.
+  (David Konerding)
+
+==== Linear Programming ====
+
+
+  * lpsolvpy
+  [http://eda.ei.tum.de/~mcp/lpsolvepy [details]]
+  [http://eda.ei.tum.de/~mcp/lpsolvepy/lpsolve-3.2-0.2.tar.gz [source]]
+
+  An interface to the LGPL'd numerical linear program solver lp_solve.
+  (Michael Pronath)
+
+  * optimize
+  [http://pylab.sourceforge.net/ [details]]
+  [http://oliphant.netpedia.net/packages/optimize.py [source]]
+
+  A module containing optimization algorithms written in pure
+  Python. Currently it contains implementations of the Nelder-Mead
+  simplex algorithm, the Broyden-Fletcher-Goldfarb-Shanno (BFGS)
+  quasi-Newton algorithm, and a line-search conjugate-gradient Newton
+  algorithm for minimizing a function of many variables.  (Travis
+  Oliphant)
+
+  * pySimplex
+  [http://www.pythonpros.com/arw/pysimplex/ [details]]
+  [http://www.pythonpros.com/arw/pysimplex/pysimplex.tgz [source]]
+
+  Pysimplex provides some basic symbolic programming tools for
+  constructing, solving and optimizing systems of linear equations and
+  inequalities. It includes an implementation of the classical SIMPLEX
+  linear optimization algorithm as well as a filter for parsing and
+  optimizing linear models encoded using the standard MPS format.
+  (Aaron Watters)
+
+  * Simplex
+  [http://www.omniscia.org/~vivake/python/ [details]]
+  [http://www.omniscia.org/~vivake/python/Simplex.py [source]]
+
+  Simplex minimizes an arbitrary nonlinear function of N variables by
+  the Nedler-Mead Simplex method.  (Vivake Gupta)
+
+  ==== Matrix/Vector ====
+
+
+  * matrix
+  [http://www.nightmare.com/software.html [details]]
+  [http://www.nightmare.com/squirl/python-ext/misc/matrix.py [source]]
+
+  Yet Another Matrix Module. This one leans more toward the flexible
+  end of the spectrum, sacrificing performance for correctness. For
+  example, it can correctly handle rationals and other strange things
+  being inserted into it. Also implemented: LU[P] decomposition, and a
+  simultaneous linear equation solving capability. Most of the
+  standard matrix ops: transpose, determinant, inverse, etc.. along
+  with some functional-style methods for mapping and iteration.  (Sam
+  Rushing)
+
+  * SparsePy
+  [http://pylab.sourceforge.net/ [details]]
+  [http://pylab.sourceforge.net/packages/SparsePy-0.1.tar.gz [source]]
+
+  A module that implements a sparse matrix class for Python. The
+  attributes of the class are Numeric arrays and the methods are based
+  on the included toolkits SPARSEKIT2 by Yousef Saad (in FORTRAN) and
+  SuperLU (in C) by Xiaoye Li and Jim Demmel. Note: You need the BLAS
+  library (in LAPACK at netlib or from your vendor) and a FORTRAN
+  compiler to compile this package. (The binary for Linux just needs
+  Python and NumPy).  (Travis Oliphant)
+
+  * Sparsemodule
+  [http://www.enme.ucalgary.ca/~nascheme/ [details]]
+  [http://www.enme.ucalgary.ca/~nascheme/python/sparsemodule-0.4.tar.gz [source]]
+
+  An extension module wrapping the sparse library.  It can be used for
+  solving large systems of linear equations.  (Neil Schemenauer)
+
+  * MatPy
+  [http://MatPy.sourceforge.net [details]]
+  [ftp://MatPy.sourceforge.net/pub/MatPy/ [source]]
+
+  A Python package for numerical computation and plotting with a
+  MatLab-like interface. It currently consists of wrappers around the
+  Numeric, Gnuplot and SpecialFuncs packages. It provides an
+  alternative interface to NumPy that is somewhat more convenient for
+  matrix and vector computation. Eventually both will be based
+  directly on the same low level routines. We are also looking for the
+  possibility of interface to Octave.  (H. Zhu)
+
+==== Music ====
+
+
+  * ratio
+  [http://www.execpc.com/~wsannis/ratio.html [details]]
+  [http://www.execpc.com/~wsannis/ratio.py.txt [source]]
+
+  For those who are big fans of Just Intonation, one tedious aspect of
+  this is that you end up fondling ratios a lot. The math gets boring
+  after a while, though I do believe you should be able to do the math
+  on your own to get a feel for what it is you're doing.  Having said
+  that, I decided I needed some help because I got sick of reducing
+  multiplied ratios.  I've written a quick Python module, ratio.py,
+  which handles a lot of the tedium. In particular, building up JI
+  tetrachords and scales based on justly intuned chords or by
+  katapyknosis is pretty simple with this module.  (William Annis)
+
+==== Neural Networks ====
+
+  * bpnn
+  [http://www.enme.ucalgary.ca/~nascheme/python/ [details]]
+  [http://www.enme.ucalgary.ca/~nascheme/python/bpnn.py [source]]
+
+  A simple back-propagation neural network module.
+  (Neil Schemenauer)
+
+==== Number Theory ====
+
+
+  * logic
+  [http://www.ourobourus.com [details]]
+  [http://www.ourobourus.com/logic.py-1.0.1.zip [source]]
+
+  A class which provides pure 2, 3 and multi-value (fuzzy) logic.
+  (Mark Summerfield)
+
+==== Numerics ====
+
+
+  * numberTheory
+  [http://www.dorb.com/python/numberTheory.py [details]]
+  [http://www.dorb.com/python/numberTheory.py [source]]
+
+  Collection of functions from the book numberTheory.
+  Darrell Gallion.
+
+  * FixedPoint
+  [http://sunsite.compapp.dcu.ie/pub/linux/redhat/DMA/ [details]]
+  [http://sunsite.compapp.dcu.ie/pub/linux/redhat/DMA/Python/SRPMS/FixedPoint-0.0.3-2.src.rpm [source]]
+
+  Fixed decimal precision arithmetic.
+
+  * Fraction
+  [http://www.binary.net/thehaas/fractionpy.shtml [details]]
+  [http://www.binary.net/thehaas/fraction.tar.gz [source]]
+
+  Simple class implemented in pure Python that does fraction arithmetic.
+  (Mike Hostetler)
+
+  * SILOON
+  [http://www.acl.lanl.gov/siloon/index.html [details]]
+  [http://www.acl.lanl.gov/distributions/siloon-current.tgz [source]]
+
+  SILOON (Scripting Interface Languages for Object-Oriented Numerics)
+  gives users the ability to rapidly prototype their scientific codes
+  in a simple yet elegant fashion using the popular scripting
+  languages Python and Perl. While programming in these flexible and
+  dynamic languages, SILOON users maintain the capability of accessing
+  the full power and complexity of C++ and FORTRAN (coming soon)
+  libraries executed on high-performance parallel computers.  (SILOON
+  Team)
+
+  * surd
+  [http://sunsite.compapp.dcu.ie/pub/linux/redhat/DMA/ [details]]
+  [http://sunsite.compapp.dcu.ie/pub/linux/redhat/DMA/Python/SRPMS/surd-1.1-1.src.rpm [source]]
+
+  Irrational numbers (surds) as objects.
+
+  * yarn
+  [http://sunsite.compapp.dcu.ie/pub/linux/redhat/DMA/ [details]]
+  [http://sunsite.compapp.dcu.ie/pub/linux/redhat/DMA/Python/SRPMS/yarn-0.2.0-1.src.rpm [source]]
+
+  Yet Another Rational Numbers module.
+
+
+==== Other Tools ====
+
+
+  * Evol
+  [http://home.nikocity.de/polzin/python.html [details]]
+  [http://th.informatik.uni-mannheim.de/cgi-bin/local/download.py?name=evol.py [source]]
+
+  Evolutions strategies: Powerful global optimisation Basic class for
+  a global optimisation strategie called 'Evolutionsstrategie' by
+  Prof. Schwefel.  (Tobias Polzin)
+
+  * explore
+  [http://home.nikocity.de/polzin/python.html [details]]
+  [http://th.informatik.uni-mannheim.de/cgi-bin/local/download.py?name=explore.py [source]]
+
+  Explore Array Data with Gnuplot  Interactive Rotating, Zooming of 3D-gnuplot surface plot.
+  (Tobias Polzin)
+
+  * emath
+  [http://www.python.org/topics/scicomp/recipes_in_python.html [details]]
+  [http://www.python.org/topics/scicomp/recipes_in_python.html [source]]
+
+  100% Python functions which are based on the famous Numerical
+  Recipes -- polynomial evaluation, zero- finding, integration, FFT's,
+  and vector operations.  "They are loosely modelled after Numerical
+  Recipes in C because I needed, at the time, actual source codes
+  which I can examine instead of just wrappers around Fortran
+  libraries like NumPy and Octave. As evident from the documentations,
+  the routines were written with emphasis on clarity rather than on
+  runtime efficiency."  (William Park)
+
+  * PyClimate
+  [http://starship.python.net/crew/jsaenz/pyclimate/ [details]]
+  [http://starship.python.net/crew/jsaenz/pyclimate/downloads/PyClimate-1.1.1.tar.gz [source]]
+
+  A Python package designed to accomplish some usual tasks during the
+  analysis of climate variability using Python. It provides functions
+  to perform some simple IO operations, operations with
+  COARDS-compliant netCDF files, EOF analysis, SVD and CCA analysis of
+  coupled data sets, some linear digital filters, kernel based
+  probabilitydensity function estimation and access to DCDFLIB.C
+  library from Python.  (Jon Saenz)
+
+  * Pythonica
+  [http://home.nikocity.de/polzin/python.html [details]]
+  [http://th.informatik.uni-mannheim.de/cgi-bin/local/download.py?name=pythonica-0.2.tar.gz [source]]
+
+  A simple version of mathematica for python.
+  (Tobias Polzin)
+
+  * Quadrature
+  [http://pylab.sourceforge.net/ [details]]
+  [http://pylab.sourceforge.net/packages/quadrature.py [source]]
+
+  A module that allows one to perform Gaussian Quadrature (numerical integration) over a finite interval  for arbitrary Python functions.
+  (Travis Oliphant)
+
+  * ScientificPython
+  [http://starship.python.net/crew/hinsen/scientific.html [details]]
+  [http://starship.python.net/crew/hinsen/ScientificPython-2.2.tar.gz [source]]
+
+  A collection of Python modules that are useful for scientific
+  computing. In this collection you will find modules that cover basic
+  geometry (vectors, tensors, transformations, vector and tensor
+  fields), quaternions, automatic derivatives, (linear) interpolation,
+  polynomials, elementary statistics, nonlinear least-squares fits,
+  unit calculations, Fortran-compatible text formatting, 3D
+  visualization via VRML, and two Tk widgets for simple line plots and
+  3D wireframe models.  (Konrad Hinsen)
+
+
+==== Random Number Generators ====
+
+
+  * ccrandom
+  [http://www.ccraig.org/software [details]]
+  [http://www.ccraig.org/software/ccrandom.py [source]]
+
+  This module is mostly compatible with Python's random module, but
+  uses Linux or BSD's /dev/urandom device to generate numbers, thus
+  yielding more random output than the default Python module.
+  (Christopher A. Craig)
+
+  * crng
+  [http://www.sbc.su.se/~per/crng [details]]
+  [http://www.sbc.su.se/~per/crng/crng-1.1.tar.gz [source]]
+
+  The Python module crng implements random-number generators (RNGs)
+  based on several different algorithms producing uniform deviates in
+  the open interval (0,1), i.e. exclusive of the end-point values 0
+  and 1. A few continuous and integer-valued non-uniform deviates are
+  also available. Each RNG algorithm is implemented as a separate
+  Python extension type. The RNG types are independent of each other,
+  but have very similar interfaces. The entire module is implemented
+  as one single C source code file.  (Per J. Kraulis)
+
+
+  * MTRand
+  [http://www.dorb.com/darrell/randomNumber/ [details]]
+  [http://www.dorb.com/darrell/randomNumber/Rand.zip [source]]
+
+  Mersenne Twister random number generator.  Far longer period and far
+  higher order of equidistribution than any other implemented
+  generators.  Fast generation and efficient use of memory.  (Darrell
+  Gallion)
+
+==== Special Functions ====
+
+
+  * Cephesmodule
+  [http://pylab.sourceforge.net/ [details]]
+  [http://oliphant.netpedia.net/packages/cephes-1.2.tar.gz [source]]
+
+  A module patterned after the umath (ufuncs) module that comes with
+  Numerical Python; it makes most of the special functions (like
+  elliptic, and modified Bessel) from the cephes and amos libraries
+  available to python.  (Travis Oliphant)
+
+==== Statistics ====
+
+
+  * stats
+  [http://www.nmr.mgh.harvard.edu/Neural_Systems_Group/gary/python.html [details]]
+  [http://www.nmr.mgh.harvard.edu/Neural_Systems_Group/gary/python/stats.py [source]]
+
+  A collection of statistical functions, ranging from descriptive
+  statistics (mean, median, histograms, variance, skew, kurtosis,
+  etc.) to inferential statistics (t-tests, F-tests, chi-square,
+  etc.). The functions are defined for operation on lists and, if
+  Numeric is installed, also defined for array arguments. REQUIRES
+  pstat.py (v0.3 or later) and io.py (v0.1 or later).  (Gary
+  Strangman)
+
+For more information on related numeric packages, see the
+[http://www.python.org/pypi Python Package Index].
 
