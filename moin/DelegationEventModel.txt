@@ -1,0 +1,127 @@
+'''Delegation Event Model''' is ...
+
+----
+''' pro '''
+
+ * ??
+
+----
+''' cons '''
+
+ * ??
+
+{{{
+#!python
+# Code is Public Domain.
+# Basic objects:
+
+class Event(object):
+    """ Object that contain information on the event message """
+    def __init__(self):
+        self._source = None
+        
+    def getSource(self):
+        return self._source
+
+    def setSource(self,value):
+        self._source = value
+
+    source = property(getSource,setSource)
+
+    def getEventType(self):
+        return self.__class__.__name__
+
+    eventType = property(getEventType)
+
+class Listener(object):
+    """ Object that wait for Event Message """
+    def processEvent(self,event):
+        funcName = "process%sEvent" % event.eventType
+        if hasattr(self,funcName):
+            apply(getattr(self,funcName),[event])
+
+class Source(object):
+    """ Object that produce Event Message """
+    def __init__(self):
+        self._listeners = {}
+
+    def _initListenersList(self,eventType):
+        if not eventType in self._listeners:
+            self._listeners[eventType] = []
+
+    def addEventListener(self,eventType,listener):
+        self._initListenersList(eventType)
+        self._listeners[eventType].append(listener)
+
+    def publishEvent(self,event):
+        self._initListenersList(event.eventType)
+        event.source = self
+        for listener in self._listeners[event.eventType]:
+            listener.processEvent(event)
+
+# let's go for subclassing all of this stuff:
+
+class Command(Event):
+    """ a command has an action attribute that indicate what has to be done"""
+    def __init__(self,action):
+        super(Command,self).__init__()
+        self.action = action
+
+class CommandListener(Listener):
+    """ listen for command event.
+    It call the method do<<Action>> when a command event occur...
+    """
+    def processCommandEvent(self,event):
+        funcName = "do%s" % event.action.capitalize()
+        if hasattr(self,funcName):
+            apply(getattr(self,funcName),[event])
+
+class CommandSource(Source):
+    """ here the producer of command Event """
+    addCommandListener = lambda self,listener: self.addEventListener('Command',listener)
+
+    def push(self):
+        # do stuf here
+        e = Command('push')
+        self.publishEvent(e)
+
+    def move(self):
+        # do stuff here
+        e = Command('move')
+        self.publishEvent(e)
+
+    def sayHello(self):
+        print "Hi! I'm the  Command source"
+
+# and now implement some listeners :
+
+class MyCommandListener(CommandListener):
+    """ here one listener of command Event """
+    def doPush(self,event):
+        print 'MyCmdListener:\tpush\t',event.source
+
+    def doMove(self,event):
+        print 'MyCmdListener:\tmove\t',event.source
+        # see how you can act on the source
+        event.source.sayHello()
+
+class MyAllEventListener(Listener):
+    """ here a special listener that wait for any event """
+    def processEvent(self,event):
+        print 'AllEvent:\t',event.eventType,'\t',event
+
+def test():
+    s = CommandSource()
+    # add both listener to the producer
+    s.addCommandListener(MyCommandListener())
+    s.addCommandListener(MyAllEventListener())
+    # now do some stuf on the source
+    print '-'*10,'push','-'*10
+    s.push()
+    print '-'*10,'move','-'*10
+    s.move()
+
+
+test()
+
+}}}
