@@ -2,6 +2,13 @@
 But often enough they need futher explanation.
 Some of them are mentioned below:
 
-==== TypeError: bad argument type for built-in operation ====
+=== TypeError: bad argument type for built-in operation ===
 Usualy means BPL couldn't find c++ method/function with appropriate signature.
 Very often that is wrong number of arguments, wrong argument(s) type and so on.
+
+=== TypeError: No to_python converter found for C++ type: <type> ===
+=== TypeError: No to_python (by-value) converter found for C++ type: <type> ===
+BPL was unable to get C++ value from Python object.
+
+For example, when calling {{{ extract<int>(<object>.attr("__len__")()) }}} to get object length
+you omitted "'''()'''".
