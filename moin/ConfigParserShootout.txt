@@ -149,6 +149,13 @@ desired.
  the in-memory version play well with other ways of setting parameters -- 
  including some that set arbitrary python objects.
 
+To be more explicit, it should work well with at least optparse (Optik), 
+.ini files, .xml files, and computed-at-runtime values.  The interface to
+the various storage mechanisms can be different, but developers shouldn't
+have to repeat information across the various formats; adding an option
+(and default value/help message/restrictions) should only need to be done
+once.
+
  * Backward compatible; at least to Python 2.2, best if portable to Python 2.1.
 
  * Implements a true parser that can be subclassed and specialized.  If it only
