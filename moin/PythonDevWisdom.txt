@@ -22,9 +22,7 @@ Refcounts are much easier to keep straight if you use forward gotos for error ex
 
 === Python changes line endings for you ===
 
-I've seen this documented in a book (Martelli) but can't find any mention of it online. 
-
-If you open a file in text mode, and send out the newline character '\n' then Python will substitute the contents of os.linesep. Similarly, if you are reading a file and Python encounters the os.linesep sequence it will substitute the newline character. 
+If you open a file in text mode, and send out the newline character '\n' then Python will substitute the contents of os.linesep. Similarly, if you are reading a file and Python encounters the os.linesep sequence it will substitute the newline character. (This will happen ONLY to files opened in text mode, files opened in binary mode will not perform any conversion.)
 
 For example, if you have this code in Windows:
 
