@@ -16,7 +16,8 @@ This code is lacking a zillion essential features (but interpoint distance can n
 #!python
 # Code is Public Domain.
 
-import math # required because of 'sqrt' in 'distanceTo' function (and now rotation)
+import math # required because of 'sqrt' in 'distanceTo' function 
+            # also tan and atan for rotations.
 
 def normalize(x1, y1, x2, y2):
     '''I am not sure what this is for, care to comment?'''
@@ -67,7 +68,8 @@ class Point:
         self.y = self.y + dy
     def Rotate(self,theta):
         '''Clockwise rotation about origin, theta in Degrees.  Returns the new position as Point()'''
-        # Err..this math is not exactly readable.  It is elementary though, involving only Pythogoras and basic trig.
+        # Err..this math is not exactly readable.  
+        # It is elementary though, involving only Pythogoras and basic trig.
 	  r2 = sqr(self.x)+sqr(self.y)
 	  tmp = math.tan(theta*math.pi/90 + math.atan(self.x/self.y))
 	  ret = Point()
