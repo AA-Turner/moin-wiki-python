@@ -1,0 +1,31 @@
+I'd like to start this page off with a question.  How do you kill one thread from within another? Here's some code that shows the problem:
+
+{{{
+import threading
+
+class Worker(threading.Thread):
+  def __init__(self, eventChannel, eventHandler):
+    self.eventChannel = eventChannel
+    self.eventHandler = eventHandler
+    self.stopFlag = 0
+
+  def shutdown(self):
+    self.stopFlag = 1
+
+  def run(self):
+    self.stopFlag = 0
+    while(!self.stopFlag):
+      event = self.eventChannel.waitEvent()
+      self.eventHandler.dispatchEvent(event)
+
+eventChannel = EventChannel()
+eventHandler = eventHandler()
+
+worker = Worker(eventChannel, eventHandler)
+worker.run()
+time.sleep(20)
+worker.shutdown()
+}}}
+The problem here is that {{{EventChannel.waitEvent()}}} is a blocking operation.  So if no event ever arrives, then our worker thread never stops.  Suggestions? --ChrisSteinbach
+
+
