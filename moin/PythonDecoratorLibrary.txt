@@ -210,3 +210,24 @@ globalEnableFlag = True
 def specialFunctionFoo():
     print "function was enabled"
 }}}
+
+
+== Easy Dump of Function Arguments ==
+
+{{{
+#!python
+def dumpArgs(func):
+    "This decorator dumps out the arguments passed to a function before calling it"
+    argnames = func.func_code.co_varnames[:func.func_code.co_argcount]
+    def echoArgFunc(*args):
+        for argn,argv in zip(argnames,args):
+            print argn,":",argv
+        func(*args)
+    return echoArgFunc
+    
+@dumpArgs
+def f1(a,b,c):
+    print a+b+c
+    
+f1(1,2,3)
+}}}
