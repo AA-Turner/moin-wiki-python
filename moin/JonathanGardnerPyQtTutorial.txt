@@ -136,7 +136,7 @@ So we have that at.ui file, and the at_auto.py file. How do we actually run the 
 We have to create at.py. Here is what it will look like.
 
   {{{
-#!python
+#!/usr/bin/env python
 from qt import *
 from at_auto import at_auto
 
@@ -215,7 +215,7 @@ Our application is going to respond to only one signal: the "Schedule" button be
 
 Here is the code to initiate the connection:
   {{{
-#!python
+#!/usr/bin/env python
 self.connect(
     self.schedule, SIGNAL('clicked()'),
     self.schedule_clicked
@@ -225,7 +225,7 @@ self.connect(
 Notice that we are connecting a C++ Signal to a Python Slot. However, that slot doesn't exist yet. Let's add it to the 'at' class.
 
   {{{
-#!python
+#!/usr/bin/env python
     def schedule_clicked(self):
         if not str(self.command.text()):
             QMessageBox.critical(self,
@@ -250,7 +250,7 @@ Good? Okay.
 Here is the final code for the 'at.py' file.
 
   {{{
-#!python
+#!/usr/bin/env python
 from qt import *
 from at_auto import at_auto
 import time
