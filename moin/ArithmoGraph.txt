@@ -35,9 +35,8 @@ from operator import add, sub, mul
 def DigitPoly(letterdigits):
     """Creates polynomial from digit IDs specified as abc..."""
     # 'abc' = 10*(10*a + b) + c
-    digids = []
-    for x in letterdigits:
-        digids.append(ord(x.lower()) - ord('a'))
+    orda = ord('a')
+    digids = [ord(x.lower()) - orda for x in letterdigits]
     def tmp(values):
         val = 0
         for x in digids:
