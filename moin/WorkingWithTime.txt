@@ -33,6 +33,25 @@ attachment:TimeTransitionsImage/v1.png
 
 (nothing yet)
 
+== ISO 8601 with xml.utils.iso8601 ==
+
+If you have {{{xml.utils.iso8601}}}, you can do the following:
+
+{{{
+#!python
+import xml.utils.iso8601
+import time
+
+# Present time, in ISO8601
+print xml.utils.iso8601.tostring( time.time() ) # returns "2004-04-10T04:44:08.19Z"
+# From ISO8601 string, to seconds since epoch UTC
+print xml.utils.iso8601.parse( "2004-04-09T21:39:00-08:00" ) # -8:00 for Seattle, WA
+# The epoch, in ISO8601
+print xml.utils.iso8601.ctime( 0 ) # returns "1969-12-31T16:00-08:00"
+}}}
+
+The module isn't perfect; If you omit the dashes, (perfectly valid ISO8601,) you'll get a {{{ValueError}}} exception.
+
 == See Also ==
 
 This page is meant just to give you the basics. You may also want to read:
