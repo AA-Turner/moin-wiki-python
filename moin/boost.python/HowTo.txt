@@ -291,4 +291,4 @@ void MyFct( MyClass* my_obj )
 
 The python object must not be keep outside the execution of {{{python_fct}}}. If you do, then you have to take extra care about the lifetime of the Python object and the underlying C++ object for there are no lifetime guards possible (the original object being a C++ one, you have no automatic way to tie the lifetime of this object with the lifetime of the Python wrapper).
 
-Now, if you can copy the object and use the copy instead of a reference on the original one, you can change the ResultConverter and use {{{return_by_value}} instead of {{{reference_existing_object}}}.
+Now, if you can copy the object and use the copy instead of a reference, you can change the ResultConverter and use {{{return_by_value}}} instead of {{{reference_existing_object}}}.
