@@ -863,7 +863,7 @@ Proposals differ on how some sort of indicator of "decoratorhood" is use.  These
 === Location ===
 Proposals also differ on exactly where the decorator declaration should be made.  These include:
 
- * Pre-def - own line
+ * Pre-def
   * + Decorators are easy to find
   * + Won't break simplistic code analyzers or grep for function def
   * 0 Not consistent with docstring location
@@ -871,18 +871,17 @@ Proposals also differ on exactly where the decorator declaration should be made.
   * - Following empty lines or comments may separate decorators from function declaration.
   * - May require extra mental "stack space" to process decorators before seeing function name
 
- * Pre-def - same line
-  * + Decorators are easy to find
-  * - function definitions become hard to find -- can no longer scan the left margin.
-  * + works well for short decorators like staticmethod.
-  * - works very badly with user-defined decorations -- particularly long ones.
- 
- * Within-def
+ * Within-def (i.e. on the same line)
   * + Decorators are clearly part of the function declaration
   * 0 Not consistent with docstring location
   * - Long lists of decorators/arguments cause ugly line wraps
   * - More cumbersome to copy decorator lists because they are in the middle
   * ''Some within-def options'':
+   * Before def
+    * + Decorators are easy to find
+    * - May break simplistic code analyzers or grep for function def
+    * - Long lists of decorators hide function names
+    * - May require extra mental "stack space" to process decorators before seeing function name
    * Between def and function name
     * - Long lists of decorators hide function names
     * - May break simplistic code analyzers or grep for function def
