@@ -52,10 +52,19 @@ For each item in {{{feed["items"]}}}, we have:
 || {{{item[ "wiki_history" ]}}} || for wiki, a link to the page history ||
 
 == Aggregating Feeds with Feed Parser ==
+RawDog is a ready made aggregator if you don't want to write your own.
 
 If you're pulling down a lot of feeds, and aggregating them:
 
-First, you probably want to use [http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/84317 Future threads] to pull down your feeds. That way, you can send out 5 requests immediately, and wait for them all to come back at once, rather than sending out a request, waiting for it to come in, send out another request, wait for it to come back in, etc., etc.,.
+First, you may want to use [http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/84317 Future threads] to pull down your feeds. That way, you can send out 5 requests immediately, and wait for them all to come back at once, rather than sending out a request, waiting for it to come in, send out another request, wait for it to come back in, etc., etc.,.
+
+Usuallly, such performance is not necessary, unless you have thousands of feeds to retrieve every hour. If you have less than a few hundred feeds an hour to retrieve, one a time is probably better - why peak out your processor/bandwidth?  
+
+Other things to help you be polite:
+   * try and retrieve things a few times a day or week.  don't request hourly updates unless you need them.
+   * avoid updates on the hour or half hour.  Try a random time into the hour, like 27 or 33 or whatever, or poll at an interval like 693 minutes rather than 600, so that only rarely do you poll sites near the hour boundry.  It is problematic for sites to get polled by hundreds of aggregators on the hour.
+   * be sure to use HttpConditionalGetRequests and honour content-expires response flags
+   * be sure to support HttpCompression in the responses.
 
 {{{
 #!python
