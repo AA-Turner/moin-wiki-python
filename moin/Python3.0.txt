@@ -51,11 +51,9 @@ def foo (a as int, b as float) as float:
  * Make true division default.
  * Remove `__cmp__` (and possibly `cmp()`). [[#h 8]]
    * Reason: ["TOOWTDI"] and rich comparisons are another way.
- * Raise an exception when comparing two heterogeneous types with operators other than `==` and `!=`.
-   * Reason: such comparisons do not make sense, and are especially confusing to new users of Python.
- * Have types compare as unequal when they are heterogeneous. [[#i 9]]
-   * Reason: equality does not make sense between heterogeneous types.
- * Require that all exceptions inherit a common base classs. [[#j 10]]
+ * Raise an exception when making comparisons between two incongruent types (other than equality and inequality.)
+   * Reason: such comparisons do not make sense and are especially confusing to new users of Python.
+ * Require that all exceptions inherit a common base classs. [[#i 9]]
    * Reason: forces the use of classes as objects raised by exceptions and simplifies the implementation.
 
 
@@ -119,6 +117,7 @@ def foo (a as int, b as float) as float:
  * [[Anchor(e)]] [5] PEP 3000 -- Python 3.0 Plans: http://python.org/peps/pep-3000.html
  * [[Anchor(f)]] [6] Python-Dev -- Constancy of None: http://mail.python.org/pipermail/python-dev/2004-July/046294.html
  * [[Anchor(g)]] [7] Python-Dev -- "as" to be a keyword?: http://mail.python.org/pipermail/python-dev/2004-July/046316.html
- * [[Anchor(h)]] [8] Python-Dev -- lists vs. tuples: http://mail.python.org/pipermail/python-dev/2003-March/034073.html
- * [[Anchor(i)]] [9] Python-Dev -- lists vs. tuples: http://mail.python.org/pipermail/python-dev/2003-March/034074.html
- * [[Anchor(j)]] [10] Python-Dev -- Exceptional inheritance patterns: http://mail.python.org/pipermail/python-dev/2004-August/047114.html
+ * [[Anchor(h)]] [8] Python-Dev -- lists vs. tuples:
+   * http://mail.python.org/pipermail/python-dev/2003-March/034073.html
+   * http://mail.python.org/pipermail/python-dev/2003-March/034074.html
+ * [[Anchor(i)]] [9] Python-Dev -- Exceptional inheritance patterns: http://mail.python.org/pipermail/python-dev/2004-August/047114.html
