@@ -14,6 +14,8 @@ This page is intended to be used from the EducationalCd.
 
 Are they anywhere else NOT in powerpoint format, but in html or pdf?
 
+''If you open them in Powerpoint or Open Office, you can save them to HTML or PDF.''
+
 = Essays =
  * [http:/docs/pythonology.com/whypython.html Why Python? by esr]
 
@@ -25,3 +27,40 @@ Are they anywhere else NOT in powerpoint format, but in html or pdf?
 
   * Docs, Tutorials and FAQs to non-core components (like PyGtk etc.)
 
+= Python Wiki =
+
+You said you wanted to mirror the Python wiki on the CD, here is a little script to suck the pages from the wiki to a folder:
+{{{
+#!python
+import socket, os, sys, urllib2
+socket.setdefaulttimeout(15)
+from time import sleep
+
+def suckwiki(pagelist, #url to plain text list of wiki pages
+             rawpage, #url to raw wiki text of a page
+             foldername="wikifiles", #name of folder to save files to
+             sleeptime=1 #seconds to sleep between page accesses
+             ):
+    foldername = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), foldername)
+    if not os.path.exists(foldername): os.mkdir(foldername)
+    opener = urllib2.build_opener()
+    listrequest = urllib2.Request(pagelist)
+    listresponse = opener.open(listrequest)
+    sleep(sleeptime)
+    for pagename in listresponse:
+        pagename=pagename.strip()
+        print pagename
+        fullpagename = rawpage % {'pagename':pagename}
+        pagerequest = urllib2.Request(fullpagename)
+        page = opener.open(pagerequest)
+        f = open(os.path.join(foldername,pagename),"wb")
+        f.write(page.read())
+        f.close()
+        sleep(sleeptime)
+
+if __name__ == '__main__':
+    pagelist = "http://www.python.org/cgi-bin/moinmoin/TitleIndex?action=titleindex"
+    rawpage = r"http://www.python.org/cgi-bin/moinmoin/%(pagename)s?action=raw"
+    foldername = "pythonwiki" #name of folder to save pages to
+    suckwiki(pagelist,rawpage,foldername)
+}}}
