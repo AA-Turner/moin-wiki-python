@@ -1,0 +1,40 @@
+#pragma section-numbers off
+
+= Singleton =
+
+=== classmethod ===
+----
+''' pro '''
+
+You can use both as simple class or as a singleton...
+
+----
+''' cons '''
+
+
+
+{{{
+#!python
+# Code is Public Domain.
+class Singleton:
+    _singleton = None
+    
+    def getSingleton(cls):
+        if not Singleton._singleton:
+            Singleton._singleton = cls()
+        return Singleton._singleton
+
+    getSingleton = classmethod(getSingleton)
+
+
+class Test(Singleton):
+    def test(self):
+        print self.__class__,id(self)
+
+
+t1 = Test.getSingleton()
+t2 = Test.getSingleton()
+
+t1.test()
+t2.test()
+}}}
