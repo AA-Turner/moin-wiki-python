@@ -19,6 +19,7 @@ This code is lacking a zillion essential features (but interpoint distance can n
 import math # required because of 'sqrt' in 'distanceTo' function.
 
 def normalize(x1, y1, x2, y2):
+    '''I am not sure what this is for, care to comment?'''
     return min(x1,x2), min(y1,y2), max(x1,x2), max(y1,y2)
 
 class Point:
@@ -38,13 +39,17 @@ class Point:
     def __repr__(self):
         return "%s(%r, %r)" % (self.__class__.__name__, self.x, self.y)
     def XY(self):
+        '''Returns a tuple (x,y).'''
         return self.x,self.y
     def Clone(self):
+        '''Returns a full copy of this point.''' 
         return Point(self.x, self.y)
     def Integerize(self):
+        '''Rounds co-ordinate values to integers.'''
         self.x = int(self.x)
         self.y = int(self.y)
     def Floatize(self):
+        '''Converts co-ordinate values to floating point (is this necessary?)'''
         self.x = float(self.x)
         self.y = float(self.y)
     def distanceTo(self,pt):
