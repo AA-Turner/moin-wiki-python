@@ -1,5 +1,24 @@
+= Game Programming With Python =
+
 You can write whole games in Python using [http://www.pygame.org/ PyGame]. 
 
 If you have an existing game and want to add a scripting engine to make it more flexible, Python is also a very good choice. But you'll have to learn about IntegratingPythonWithOtherLanguages.
 
 Read [http://www.onlamp.com/pub/a/python/2002/07/11/pythonnews.html Humongous Python] for a case study.
+
+== Testimony ==
+
+I tried porting [http://taoriver.net/eouwiki/ Escape of the Unicorn] to Python/PySDL, but the game dropped from 30 fps to 6 fps.
+
+After a lot of profiling and unrolling screen draw code, I was able to reach 8 frames a second.
+
+If you look at PyGame and PySDL games, you'll notice that they aren't action or arcade games.
+
+I have only heard of few efforts that succeeded in embedding Python in C++, and I have forgotten them. For the most part, people (including Humongous, as described in [http://www.onlamp.com/pub/a/python/2002/07/11/pythonnews.html the case study described]) extend Python with C++. If you are going to mix Python and C++, I think it is best to extend Python- that is the intended direction. I consider this a failing of Python.
+
+If you want to embed a scripting system because you already have a huge system, embed something like Guile. I think it is an inferior solution, but that it will result in a lot less heartbreak.
+
+I suspect I'll try to rewrite Escape of the Unicorn as a C++/Python mixture some day, and pay careful attention to how I cut the C++/Python lines.
+I think only a few things need to be given to C++, such as display loops, animation management, and collision detection.
+
+-- LionKimbro [[DateTime(2002-07-19T10:45:57)]]
