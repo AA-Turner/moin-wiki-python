@@ -69,7 +69,8 @@ void set(const std::string& name, const T& value) {
 }
 }}}
 
-Note:: ''interpreter()'' is to be added about now. [[Date]]
+Note:: ''interpreter()'' is going to be added.
+
 === mutable C++ object ===
 Perhaps you'd like the resulting Python object to contain a raw
 pointer to the argument?  In that case, the caveat is that if the
@@ -156,6 +157,7 @@ class_<Map>("Map")
   .def("items", &map_item<Key,Val>().items)
   ;
 }}}
+
 === "Raw" function ===
 ''I want to write in python:''
     {{{
@@ -223,6 +225,19 @@ object(x); // now we have an object.
 Than you can try to `extract` a value:
 {{{
 Type v = extract<Type>(x);
+}}}
+
+Or from the start. Suppouse you wrap your class T as:
+{{{
+object Tclass = class_<T>("T")/* defs, etc. */;
+}}}
+Then you can create such object by
+{{{
+object pyt = Tclass(/* constructor args*/);
+}}}
+and get the underlying T this way:
+{{{
+T& t = extract<T&>(pyt);
 }}}
 
 See ["../extract"]
