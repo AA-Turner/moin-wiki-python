@@ -1,0 +1,60 @@
+= Building Extensions with boost.python =
+
+== Using bjam ==
+bjam is a standart tool for building boostlibrary itself. Thus it is prefereble way to build python extensions based on boost.python with bjam. Basic example listed in tutorial.
+
+However if you want to add external libraries in your extension (that is why you use boost.python, isn't it?), you must add them to dependancy section:
+{{{
+# Specify our location in the boost project hierarchy
+subproject libs/python/MyExtension ; ##################### if you put your dir in boost hierarhy
+
+# Include definitions needed for Python modules
+SEARCH on python.jam = $(BOOST_BUILD_PATH) ;
+include python.jam ;
+
+# Declare a Python extension
+extension Example
+:  # sources
+   Example.cpp
+   <dll>../build/boost_python
+  
+:  # dependencies
+   <include>FULL_PATH_INCLUDE_DIR
+   <include>RELATIVE_PATH_INCLUDE_DIR
+   <library-file>FULL_PATH.lib
+   <library-path>PATH_TO_LIB
+   <library-file>LIBNAME.lib
+  ;
+
+# Declare a test for the extension module
+boost-python-runtest test1
+    :  # Python test driver
+    test1.py
+    # extension modules to use
+    <pyd>Example ;
+}}}
+Keeping your projects under boost hierarhy is often inconvinient. You may adjust Jamfile to build your extension from any place by 
+  * specifying BOOST_BUILD_PATH environment variable pointing to the root of your boost tree '''or'''
+  * copying boost-build.jam file to the root of your project tree
+and changing the line {{{subproject}}} to the {{{
+project-root ;
+}}}
+in the Jamfile.
+
+== Using make ==
+
+== Using Windows IDE ==
+
+
+== Tips and tricks ==
+
+To keep up with bjam rules you might want to have a ''dry'' run without actually building anything:
+{{{bjam -na
+}}}
+----
+To copy resulting executable to desired directory take a look at the '''stage''' rule.
+
+
+=== MS Windows ===
+
+ * Make sure you keep {{{"Use Managed Extension" == No}}} if you are using Visual Studio.NET.
