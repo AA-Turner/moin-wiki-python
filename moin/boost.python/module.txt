@@ -1,27 +1,27 @@
-Boost.Python v2 now supports a free-function version of def which defines
+== def ==
+Boost.Python now supports a free-function version of def which defines
 its function in the current scope:
 {{{
-  #include <boost/python/def.hpp>
-  #include <boost/python/module_init.hpp>
+  #include <boost/python.hpp>
 
-  BOOST_PYTHON_MODULE_INIT(my_module)
+  BOOST_PYTHON_MODULE(my_module)
   {
     def("name", function_ptr);
     def("name", function_ptr, call_policies);
     def("name", function_ptr, "documentation string");
     def("name", function_ptr, call_policies, "documentation string");
-
-    def("name", function_ptr, default_stubs);
   }
 }}}
 etc.
 
+
+== scope ==
 To get access to the current module, you can declare the current
 scope:
 {{{
-  #include <boost/python/scope.hpp>
+  #include <boost/python.hpp>
 
-  BOOST_PYTHON_MODULE_INIT(my_module)
+  BOOST_PYTHON_MODULE(my_module)
   {
     // set the docstring of the current module scope
     scope().attr("__doc__") = "my module's docstring";
