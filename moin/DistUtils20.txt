@@ -65,7 +65,7 @@ Maybe some traditional package concepts:
 
   -- Thomas Heller
 
- * Python packages should have a canonical way of having C/C++ headers, executable scripts, dynamic libraries (For Win32, OS X), documentation, examples, and other arbitrary data (like fonts, icons, etc.) associated with them in the same or folder (or a closely related folder with identical permissions) as the package itself.  We could use something like Apple's bundles for this purpose (sans versioning, most likely).  If a package wants to put things in places such as /usr/local/bin, they should be symlinks to what is in this new structure.
+ * Python packages should have a canonical way of having C/C++ headers, executable scripts, dynamic libraries (For Win32, OS X), documentation, examples, and other arbitrary data (like fonts, icons, etc.) associated with them in the same folder (or a closely related folder with identical permissions) as the package itself.  We could use something like Apple's bundles for this purpose (sans versioning, most likely).  If a package wants to put things in places such as /usr/local/bin, they should be symlinks to what is in this new structure.
 
  * Multi-module installs (more than one importable thing that goes into site-packages) should be deprecated.  If they want this behavior they should install a package and use a pth file.
 
@@ -116,18 +116,10 @@ Maybe some traditional package concepts:
 
   -- BobIppolito
 
- * A way to run an arbitrary script immediately after the Windows installer finishes.  This would allow for all kinds of useful post-install stuff such as adding Start Menu items etc.  Alternatively, moving to a more complete and scriptable installer would be nice (though being able to script it with Python would be nicer...)
-
-  --- Michael Droettboom
-
-   Well, this is already done. See [http://www.python.org/doc/current/dist/postinstallation-script.html#SECTION000631000000000000000 the postinstallation script]
-
-   --- Thomas Heller
-
  * Extend bdist_rpm for 'hardcoding' the python interpreter into the RPM and generate different Package names depending on the interpreter. See ["Changes for bdist_rpm"] for reasoning and codesnippets.
 
   --- Hartmut Goebel
 
  * Zope Corporation is looking at having some better packaging tools, including support for dependencies and automated package composition.  There's a start of a [http://dev.zope.org/Zope3/Zope3PackagingProposal discussion document] in the [http://dev.zope.org/Zope3/ Zope 3 wiki].
 
-  --- Fred Drake
+  --- FredDrake
