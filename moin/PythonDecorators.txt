@@ -116,7 +116,55 @@ def foo(arg1, arg2) [
     even_more_complicated(42)]:
     ...
 }}}
-That doesn't look particularly ugly to me.
+That doesn't look particularly ugly to me.  
+---
+It also isn't particular long.
+
+Here is an example Guido just sent to python-dev
+{{{
+class C(object):
+
+    def longMethodNameForEffect(longArgumentOne=None,
+                                longArgumentTwo=42) [
+        staticmethod,
+        funcattrs(grammar="'@' dotted_name [ '(' [arglist] ')' ]",
+                  status="experimental", author="BDFL")
+        ]:
+        """This method blah, blah.
+
+        It supports the following arguments:
+- longArgumentOne -- a string giving ...
+        - longArgumentTwo -- a number giving ...
+
+blah, blah.
+
+"""
+        raise NotYetImplemented
+}}}
+
+And he editorializes:
+
+{{{
+That's a total jumble of stuff ending with a smiley.  (True story: I
+left out the colon when typing up this example and only noticed in
+proofing.)
+
+Problems with this form:
+
+- it hides crucial information (e.g. that it is a static method)
+  after the signature, where it is easily missed
+
+- it's easy to miss the transition between a long argument list and a
+  long decorator list
+
+- it's cumbersome to cut and paste a decorator list for reuse, because
+  it starts and ends in the middle of a line
+
+Given that the whole point of adding decorator syntax is to move the
+decorator from the end ("foo = staticmethod(foo)" after a 100-line
+body) to the front, where it is more in-your-face, it should IMO be
+moved all the way to the front.
+}}}
 
 '''C2. list-after-def syntax with a (pseudo-)keyword'''
 {{{
@@ -132,6 +180,8 @@ of either, so I will only list those that are unique to the combination.
 
  * + Groups the decorators with a list, but explains what they are doing, so the list no longer has a magical new meaning.
  * + Easily extended; No special characters are "used up", and in the future, other pseudo-keywords could be added.
+ * + The pseudo-keyword makes it easier to see the separation between the argument tuple and the decorator list.
+ * + The pseudo-keyword can act as an implicit line-continuation, so that decorators would not need to start or end mid-line.
  * - Some proponents objected to adding a keyword, because of more typing.  
  * 0 Makes the decoration look like a second-class or optional part of the definition.  This is true, but may have caused some emotional objection.
  * - There was very little agreement on which word should be used.
