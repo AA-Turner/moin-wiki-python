@@ -1,0 +1,28 @@
+Some notes on how to use {{{xml.dom.minidom}}}:
+
+{{{
+#!python
+from xml.dom.minidom import parse, parseString
+
+dom1 = parse( "foaf.rdf" )   # parse an XML file
+dom2 = parseString( "<myxml>Some data <empty/> some more data</myxml>" )
+}}}
+
+Then you can do things like:
+
+{{{
+#!python
+dir( dom2 ) # get a list of things to do
+
+print dom2.toxml() # prints out "<?xml version="1.0" ?>..."
+print dom2.nodeName # will return "#document"
+print dom2.firstChild.nodeName # will return "myxml" because it's <myxml>...
+print dom2.firstChild.nodeValue # it's None! (everything's in the children.)
+print dom2.firstChild.hasChildNodes() # it's True.
+print dom2.firstChild.firstChild.nodeName # will return "#text"
+print dom2.firstChild.firstChild.nodeValue # will return "Some data"
+print dom2.firstChild.firstChild.nextSibling.nodeName # will return "empty" because it's <empty/>
+print dom2.firstChild.firstChild.nextSibling.nodeValue # it's None!
+print dom2.firstChild.firstChild.nextSibling.nextSibling.nodeName # will return "#text"
+print dom2.firstChild.firstChild.nextSibling.nextSibling.nodeValue # will return " some mode data"
+}}}
