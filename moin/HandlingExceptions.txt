@@ -25,15 +25,13 @@ print z # output: "integer division or modulo by zero"
 
 == General Error Catching ==
 
-Sometimes, you want to catch ''all'' errors that could possibly be generated.
-
-''In most cases, you don't.'' In most cases, you want to be as specific as possible. If a user presses Ctrl-C, generating a KeyboardInterrupt, you don't want the program to interpret it as a File I/O error. (Wiki:CatchWhatYouCanHandle)
+Sometimes, you want to catch ''all'' errors that could possibly be generated, but usually ''you don't''.In most cases, you want to be as specific as possible (Wiki:CatchWhatYouCanHandle). In the first example above, if you were using a catch-all exception clause and a user presses Ctrl-C, generating a KeyboardInterrupt, you don't want the program to print "divide by zero".
 
 However, there are some situations where it's best to catch ''all'' errors.
 
 For example, suppose you are writing an extension module to a web service. You want the error information to output the output web page, and the server to continue to run, if at all possible. But you have no idea what kind of errors you might have put in your code.
 
-In situations like these, you may want code something like this:
+In situations like these, you may want to code something like this:
 
 {{{
 #!python
