@@ -61,6 +61,56 @@ I'm currently working on a module to parse this format, though I've nothing whic
 -- VinaySajip
 
 ----------
+I (PeterOtten) have tried to translate the above sample configuration into a much simpler format that was recently suggested by SkipMontanaro.
+
+I think that calculations like building an email address should not be performed in a configfile but are rather the task of the application that uses it. The example has therefore significantly been dumbed down.
+
+{{{
+
+# -*- coding: ascii -*-
+#
+# allows the usual comment style
+#
+loggers:
+    root:
+        level=DEBUG
+        handler=console
+        handler=file
+        handler=email
+    input: 
+        handler=socket
+    input_xls:
+        name=input.xls
+        handler=nt_eventlog
+        
+handlers:
+    console:  
+        class=StreamHandler
+        level=WARNING
+        stream=sys.stderr
+    file:     
+        class=FileHandler
+        filename=myapp.log
+        mode=a
+    socket:   
+        class=SocketHandler
+        host=localhost
+        port=DEFAULT_TCP_LOGGING_PORT
+    nt_eventlog: 
+        class=NTEventLogHandler
+        appname=MyApplication
+        logtype=Application
+    email:    
+        class=handlers.SMTPHandler
+        level=CRITICAL
+        host=localhost
+        port=25
+        from=myapp@mydomain.com
+        to=support@pythonsolutions.com
+        subject=Take cover
+
+}}}
+----------
 
 [http://cvs.zope.org/Zope3/doc/zcml/ ZCML] (unlike .ini files) handles nested input fairly well.  The syntax looks a little like an Apache config; though from much of what I've seen, it's straight XML.  -- IanBicking
 
