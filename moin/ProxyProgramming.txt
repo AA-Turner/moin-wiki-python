@@ -1,0 +1,63 @@
+#pragma section-numbers off
+
+= Proxy =
+
+See also http://www.python.org/workshops/1997-10/proceedings/savikko.html
+
+=== special method names ===
+----
+''' pro '''
+
+ * ??
+
+----
+''' cons '''
+
+ * ??
+
+{{{
+#!python
+# Code is Public Domain.
+class Proxy(object):
+    def __init__(self, subject):
+        self._subject = subject
+        
+    def __getattr__(self, attrName):
+        return getattr(self._subject, attrName)
+    
+    def __setattr__(self, attrName, value):
+        object.__setattr__(self, attrName, value)
+
+    def __delattr__(self, attrName):
+        delattr(self._subject, attrName)
+
+    def __call__(self,*args,**keys):
+        apply(object.__getattribute__(self,'_subject'),args,keys)
+
+    def __getitem__(self,key):
+        return object.__getattribute__(self,'_subject')[key]
+
+##    should implement other special method names here
+
+class Test:
+    def __init__(self):
+        self.toto = "toto"
+
+    def foo(self):
+        print "foo"
+
+    def __call__(self,a,b,more=False):
+        print self.__class__.__name__,id(self)
+        print a,b,more
+
+    def __getitem__(self,key):
+        return 'Test%s' % key
+
+t = Test()
+p = Proxy(t)
+
+print p.toto
+p.foo()
+p('1',2,more=True)
+print p['Blabla']
+}}}
