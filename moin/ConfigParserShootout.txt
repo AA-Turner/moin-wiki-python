@@ -22,6 +22,27 @@ library, probably in addition to the current ConfigParser module
 
 Please list interesting implementations of config parsers here.
 
+* [http://www.mcherm.com/publish/2004-10-17/config.py M. Chermside's candidate] and [http://www.mcherm.com/publish/2004-10-17/configTest.py test cases].  Currently allows files in either str or unicode, with sensible defaults.  Allows dictionary or dotted-name access (though dotted-name can fail in some cases). Allows subsections of arbitrary length.  For example, 
+{{{
+    x.y = True 
+    x.y.z = 47
+    x.y.a = prime
+}}}
+Would allow x.y to be viewed as either a value ("True") or a section.
+{{{
+    x.y == "True"
+}}}
+but also 
+{{{
+    x.y['a'] = 'prime'
+    x.y['z'] = '47'
+}}}
+
+(Note that keys and values are always strings or unicode -- no autoconversion to other types.)
+
+
+
+
 = Features =
 
 This is a list of features that should be taken into account.
