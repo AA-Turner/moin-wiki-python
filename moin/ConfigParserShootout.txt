@@ -244,13 +244,13 @@ Three features I want in a config parser are 1) keyed settings 2) pulling in set
 
 I think it is reasonable to ask the setting code to create the object (possibly by running a random string); the config system just needs to accept objects that have already been made.  A round-trip is useful, but I'm not sure source code is the best way to do that; editing will probably require an external tool anyhow.  Maybe just use pickle to save arbitrary objects?  (And avoid storing them *within* the config, as much as possible.) -- Jim J Jewett
 
-== ConfigParser, OptParse Marriage ==
+== ConfigParser, optparse Marriage ==
 
-A marriage of the two would make a lot of sense to me.  My thought is for the user (script) to instantiate a parser and add options to it much like OptParse does today.  When the parser processes the command line args (or args passed to it) it should also look at the configuration file (possibly using the long setting name) for the option settings.  Its first priority would be command line args.
+A marriage of the two would make a lot of sense to me.  My thought is for the user (script) to instantiate a parser and add options to it much like optparse does today.  When the parser processes the command line args (or args passed to it) it should also look at the configuration file (possibly using the long setting name) for the option settings.  Its first priority would be command line args.
 
 A hierarchical key or namespace scheme should exist so that multiple settings may be stored in the user configuration file.  I would propose a standard -k, key option always present in the parser so the user can pass a list of keys to control the group of settings to use (Id also like some of the other ways to control keys that I use in my config.py module).  In addition Id propose a -c, config option that specifies a configuration file to use instead of the users default configuration file.
 
-My last proposal for today is to change the options interface a bit from OptParse.  Instead of returning a static object of options it should be an object with a get() method so that additional keys can be used to get at settings in the configuration on the fly.  One application where this is important is in test frameworks.  Test specification input files may have additional keys to be used and arent known when the parser is instantiated.
+My last proposal for today is to change the options interface a bit from optparse.  Instead of returning a static object of options it should be an object with a get() method so that additional keys can be used to get at settings in the configuration on the fly.  One application where this is important is in test frameworks.  Test specification input files may have additional keys to be used and arent known when the parser is instantiated.
 
 One benefit of this marriage is that the help messages available from the command line would also apply to what can be set in the configuration file.  Also there is a lot of flexibility for the user with this scheme.  For options they always use they can hard code them in their default configuration as settings.  If they want to temporarily override them they can use command line options.  For groups of settings that are always used together, they can be used by simply passing in a key with the -k option to select the group.
 
