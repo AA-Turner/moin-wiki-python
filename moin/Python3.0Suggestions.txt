@@ -25,10 +25,11 @@ Suggested syntaxes:
 
 == Improved default value logic for Dictionaries ==
 
- * The setdefault() method is badly named and poorly designed.  In a typical call, d.setdefault.(k, []).append(v), the list may be unnecessarily instantiated and discarded on every call.  At a minimum, default value should be a new empty list instead of None:   d.setdefault(k).append(v).
+ * The setdefault() method is badly named and poorly designed.  In a typical call, d.setdefault.(k, []).append(v), the list may be unnecessarily instantiated and discarded on every call.  At a minimum, default value should be a new empty list instead of None:  {{{ d.setdefault(k).append(v) }}}.
 
  * A more versatile idea is to realize that defaults generalize to the whole dictionary instead of an individual lookup.  A call to setdefault would then change the whole dictionary's behavior when a key is not found::
 
+{{{
     counts = {}
     counts.setdefault(value=0)
     for elem in data:
@@ -40,31 +41,35 @@ Suggested syntaxes:
         for line in page:
             for word in line.split():
                  index[word].append(line)
+}}}
 
 == Better boolean logic ==
 
 The and/or operators should only return boolean values.  This makes their use less error-prone, less prone to abuse,
 and more closely match other languages.   Also, it will simplify the underlying bytecode which currently inserts
-many ''POP_TOP'' instructions to complete conditionals.  The need to insert these instructions also results in extra
+many {{{POP_TOP}}} instructions to complete conditionals.  The need to insert these instructions also results in extra
 code paths and jump instructions.  Overall, the language will become more intuitive, more reliable, simpler, and
 faster.
 
 == Disallow calling class methods from instances ==
 
 Calling with a instance is almost never what you want.  When it is done, the results are not especially readable the code
-suggests that it is doing something that it isn't:   {'a'=1}.fromkeys('poof') # what happened to 'a'?
+suggests that it is doing something that it isn't:   
+{{{ 
+{'a'=1}.fromkeys('poof') # what happened to 'a'? 
+}}}
 
 
 == Simplify the syntax for raising exceptions ==
 
  * Eliminate string exceptions entirely.
- * Alway require instantation.  IOW, prefer ''raise ValueError(dat)'' to  ''raise ValueError, dat''.
+ * Alway require instantation.  IOW, prefer {{{raise ValueError(dat)}}} to  {{{raise ValueError, dat}}}.
  * Require that all exceptions subclass from ''Exception''.
  * Have ''Exception'' be a new-style class
 
 == Fix implementation of in-place operators ==
 
-The current implementation will call __iadd__(), allowing it to do the in-place change, but then require that the method return the new value and then store it again.  Ideally, all the responsibility for the update should lie with the __iadd__() method and it should return None.  This simplifies the bytecode and eliminates some annoying behavior (such as a[0]+=1 succeeding '''and''' raising an error when a=([0],)).
+The current implementation will call {{{__iadd__()}}}, allowing it to do the in-place change, but then require that the method return the new value and then store it again.  Ideally, all the responsibility for the update should lie with the {{{__iadd__()}}} method and it should return None.  This simplifies the bytecode and eliminates some annoying behavior (such as {{{a[0]+=1}}} succeeding '''and''' raising an error when {{{a=([0],)}}}.
 
 == Remove the distinction between data and non-data decriptors ==
 
