@@ -16,7 +16,7 @@ This code is lacking a zillion essential features (but interpoint distance can n
 #!python
 # Code is Public Domain.
 
-import math # required because of 'sqrt' in 'distanceTo' function.
+import math # required because of 'sqrt' in 'distanceTo' function (and now rotation)
 
 def normalize(x1, y1, x2, y2):
     '''I am not sure what this is for, care to comment?'''
@@ -52,11 +52,37 @@ class Point:
         '''Converts co-ordinate values to floating point (is this necessary?)'''
         self.x = float(self.x)
         self.y = float(self.y)
-    def distanceTo(self,pt):
+    def DistanceTo(self,pt):
         '''Distance between 2 points.'''
         dy = self.y - pt.y
         dx = self.x - pt.x
         return sqrt(dy*dy + dx*dx)
+    def Move(newx,newy):
+        '''Changes coordinates to those given.'''
+        self.x = newx
+        self.y = newy
+    def MoveDelta(dx,dy):
+        '''Move to new (x+dx,y+dy)'''
+        self.x = self.x + dx
+        self.y = self.y + dy
+    def Rotate(self,theta):
+        '''Clockwise rotation about origin, theta in Degrees.  Returns the new position as Point()'''
+        # Err..this math is not exactly readable.  It is elementary though, involving only Pythogoras and basic trig.
+	  r2 = sqr(self.x)+sqr(self.y)
+	  tmp = math.tan(theta*math.pi/90 + math.atan(self.x/self.y))
+	  ret = Point()
+	  ret.x = math.sqrt(r2/(1+tmp*tmp))
+	  ret.y = ret.x * tmp
+	  return ret
+    def RotateAbout(self,OtherPoint,theta):
+        '''Clockwise rotation about another point.  Returns a Point() at new position'''
+        tmpx = OtherPoint.x
+        tmpy = OtherPoint.y
+        self.MoveDelta(-tmpx,-tmpy)
+        tmpPoint = self.Rotate(theta)
+        tmpPoint.MoveDelta(tmpx,tmpy)
+        return tmpPoint
+
 
 class Rect:
     def __init__(self, pt1, pt2):
