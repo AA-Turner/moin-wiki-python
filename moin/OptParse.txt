@@ -2,4 +2,22 @@ OptParse is a module introduced in Python2.3 that makes it easy to write command
 
 You give a description of the options that the program can receive, and OptParse will do reasonable stuff for you.
 
-Official Python 2.3 Opt``Parse Documentation: http://www.python.org/doc/current/lib/module-optparse.html
+For example:
+
+{{{
+#!python
+import optparse
+
+if __name__=="__main__":
+    parser = optparse.OptionParser()
+    parser.add_option( "-H", "--host", dest="hostname", default="127.0.0.1",
+                       type="string", help = "specify hostname to run on" )
+    parser.add_option( "-p", "--port", dest="portnum", default=80,
+                       type="int", help = "port number to run on" )
+
+    (options, args) = parser.parse_args()
+    hostname = options.hostname
+    portnum = options.portnum
+}}}
+
+ * [http://www.python.org/doc/current/lib/module-optparse.html Official Python 2.3 OptParse Documentation]
