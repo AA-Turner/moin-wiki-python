@@ -1,18 +1,44 @@
 This page lists features that GvR has mentioned as goals for Python 3.0.
 
-* Reduce feature duplication:
-  - string module vs. string methods
-  - xrange() vs range()
-  - int vs. long
-  - 8 bit vs. Unicode strings
-  - map/filter vs. list comprehensions
-  - lambda vs. def
-* Library reorganization
-* Return iterators instead of lists
-  - d.keys(), .values(), .items()
-  - range(), zip(), map(), filter()
-* Consume iterators
-  - min(), max()
-* Optional static typing?
-* Support only new-style classes; classic classes will be gone.
+ * Reduce feature duplication:
+   * string module vs. string methods
+   * xrange() vs range()
+   * int vs. long
+   * 8 bit vs. Unicode strings
+   * map/filter/reduce vs. list comprehensions
+   * lambda vs. def
+ * Library reorganization
+ * Return iterators instead of lists
+   * d.keys(), .values(), .items()
+   * range(), zip(), map(), filter()
+ * Consume iterators
+   * min(), max()
+ * Optional static typing?
+ * Support only new-style classes; classic classes will be gone.
+ * Remove string exceptions, `x` for repr(x), sys.exc_type, coerce(), other deprecated stuff
+ * print as a function -- write(x,y,z), writeln(x,y,z)
+
+See the "Python Regrets" talk and other recent presentations by Guido.
+
+== Rearrangements ==
+
+intern(), id(): put in sys
+
+xrange(): make range() return an iterator
+
+buffer(): must die (use bytes, PEP 296)
+
+raw_input(): use sys.stdin.readline()
+
+input(): use eval(sys.stdin.readline())
+
+callable(): just call it, already
+
+execfile(), reload(): use exec()
+
+compile(): put in sys
+
+exec as a statement is not worth it -- make it a function
+
+
 
