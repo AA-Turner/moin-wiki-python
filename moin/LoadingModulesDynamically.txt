@@ -1,0 +1,34 @@
+You can load a module dynamically like so:
+
+{{{
+#!python
+__import__("os")
+}}}
+
+If you do that, though, "os" isn't bound to anything.
+
+{{{
+#!python
+>>> __import__("os")
+<module 'os' from '/usr/lib/python2.3/os.pyc'>
+>>> os
+Traceback (most recent call last):
+  File "<stdin>", line 1, in ?
+NameError: name 'os' is not defined
+>>>
+}}}
+
+Once you have the module, you probably want to find classes and functions and data inside of it.
+
+Use {{{getattr}}}:
+
+{{{
+#!python
+>>> m=__import__("mine")
+>>> m
+<module 'mine' from 'mine.pyc'>
+>>> getattr(m, "eggs")
+4654
+>>> getattr(m, "ham")
+'Monty Python'
+}}}
