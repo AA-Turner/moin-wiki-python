@@ -86,9 +86,50 @@ very last = 7
 
 [https://sourceforge.net/projects/config-py/ config-py] allows either strings (safe) or evaluated code (powerful) with the same API.  It needs python 2.3, or at least dict.pop()
 
-== Vinay Sajip's Implementation ==
+== Vinay Sajip's implementation ==
 
-The [http://www.red-dove.com/python_config.html config] module allows a hierarchical configuration scheme with support for mappings and sequences, cross-references between one part of the configuration and another, the ability to flexibly access real Python objects without full-blown eval(), an include facility, simple expression evaluation and the ability to change and save configurations.  It has been developed on python 2.3 and not been tested on earlier versions, at least at present.
+The [http://www.red-dove.com/python_config.html config] module allows a hierarchical configuration scheme with support for mappings and sequences, cross-references between one part of the configuration and another, the ability to flexibly access real Python objects without full-blown eval(), an include facility, simple expression evaluation and the ability to change, save and merge configurations.  It has been developed on python 2.3 but should work on version 2.2 or greater.
+
+A simple example - with the example configuration file:
+{{{
+messages:
+[
+  {
+    stream : `sys.stderr`
+    message: 'Welcome'
+    name: 'Harry'
+  }
+  {
+    stream : `sys.stdout`
+    message: 'Welkom'
+    name: 'Ruud'
+  }
+  {
+    stream : $messages[0].stream
+    message: 'Bienvenue'
+    name: Yves
+  }
+]
+}}}
+a program to read the configuration would be::
+{{{
+from config import Config
+
+f = file('simple.cfg')
+cfg = Config(f)
+for m in cfg.messages:
+    s = '%s, %s' % (m.message, m.name)
+    try:
+        print >> m.stream, s
+    except IOError, e:
+        print e
+}}}
+which, when run, would yield the console output::
+{{{
+Welcome, Harry
+Welkom, Ruud
+Bienvenue, Yves
+}}}
 
 = Features =
 
