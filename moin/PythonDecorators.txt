@@ -801,6 +801,7 @@ Proposals differ on how some sort of indicator of "decoratorhood" is use.  These
   * + Makes it clear that this is not a normal statement
   * + Will not be silently ignored
   * + Makes syntax highlighting easy
+  * 0 Will make the semantics clear -- but may therefore be misleading for some types of decorators.  (Can you think of a word that works well with all of classmethod, annotations, adding a transaction capability, registering the function with a generic method, and replacing the function with something else depending on runtime environment?  If so, you're partway there.)
   * - New keywords can break existing code
   * ''Some keyword options'':
    * '''decorate '''
@@ -823,7 +824,7 @@ Proposals differ on how some sort of indicator of "decoratorhood" is use.  These
   * + Makes it clear that this is not a normal statement
   * + Will not be silently ignored
   * + Saves keystrokes
-  * 0 Introduces a new character in the language
+  * - Introduces a new character in the language.  This either overloads an old character with new meaning, or uses up an increasingly scarce resource.  (There are only three unused characters now, and none are reserved to the user.)
   * ''Some symbol options'':
    * '''@'''
     * + Java-like, so not completely unknown.
@@ -836,7 +837,7 @@ Proposals differ on how some sort of indicator of "decoratorhood" is use.  These
     * + Vertical bars visually "attach" the decorators to the name (with a vertical ASCII art line).
     * 0 Reminiscent of Unix "pipe" operations (though order may be "backwards")
     * - Not intuitively associated with the decorator semantics
-    * - Gives substantially new meaning to '|', may be confusing for beginners
+    * - Gives substantially new meaning to '|', may be confusing for beginners.  Adds new obfuscation possibilities depending on line continuations.
     * - For some fonts, "|" looks similar to "I" or "l" or "1".
     * - The key with "|" on it is often in an awkward location on laptop keyboards
     * - Narrow character, may not be obvious enough
@@ -859,7 +860,7 @@ Proposals differ on how some sort of indicator of "decoratorhood" is use.  These
 === Location ===
 Proposals also differ on exactly where the decorator declaration should be made.  These include:
 
- * Pre-def
+ * Pre-def - own line
   * + Decorators are easy to find
   * + Won't break simplistic code analyzers or grep for function def
   * 0 Not consistent with docstring location
@@ -867,6 +868,12 @@ Proposals also differ on exactly where the decorator declaration should be made.
   * - Following empty lines or comments may separate decorators from function declaration.
   * - May require extra mental "stack space" to process decorators before seeing function name
 
+ * Pre-def - same line
+  * + Decorators are easy to find
+  * - function definitions become hard to find -- can no longer scan the left margin.
+  * + works well for short decorators like staticmethod.
+  * - works very badly with user-defined decorations -- particularly long ones.
+ 
  * Within-def
   * + Decorators are clearly part of the function declaration
   * 0 Not consistent with docstring location
@@ -881,6 +888,8 @@ Proposals also differ on exactly where the decorator declaration should be made.
     * + Should not require extra mental "stack space" to process decorators (function name has already been seen)
     * - May break simplistic code analyzers or grep for function def
     * - Easy to miss the transition between a long argument list and a long decorator list
+    * - Breaks the symmetry between definition and use -- you can no longer just cut and paste the definition to write a call, or vice versa.
+    * - Guido has ruled it out, because of the separation between function name and function arguments.
    * Between argument list and colon
     * + Should not require extra mental "stack space" to process decorators (function name has already been seen)
     * + Won't break simplistic code analyzers or grep for function def
@@ -889,7 +898,7 @@ Proposals also differ on exactly where the decorator declaration should be made.
   * + Should not require extra mental "stack space" to process decorators (function name has already been seen)
   * + Won't break simplistic code analyzers or grep for function def
   * 0 Consistent with docstring location
-  * - Decorators may look like part of the function's code, not its declaration.  (That is, they look like they're evaluated when the function is called, not when it is parsed.)
+  * - Decorators may look like part of the function's code, not its declaration.  (That is, they look like they're evaluated when the function is called, not when it is parsed.)  This is a problem for decorations that change the signature, like staticmethod.
   * ''Some post-def options'':
    * Before docstring
    * After docstring
