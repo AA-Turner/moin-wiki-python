@@ -279,16 +279,12 @@ from config import Config, ConfigList
 from optparse import OptionParser
 
 def getMergedConfig(filename):
+    optcfg = Config()
     filecfg = Config(filename)
     parser = OptionParser()
     parser.add_option('-v', '--verbose', action='store_true', dest='verbose', help='Produce verbose output')
-    options, args = parser.parse_args()
+    args = parser.parse_args(None, optcfg)[1]
     cfglist = ConfigList()
-    optcfg = Config()
-    for opt in options.__dict__:
-        optval = options.__dict__[opt]
-        if optval is not None:
-            optcfg[opt] = optval
     cfglist.append(optcfg)
     cfglist.append(filecfg)
     return cfglist, args
