@@ -1,6 +1,6 @@
-= Programming Jython =
-
 [:../:FAQ Home]
+
+= Programming Jython =
 
 ----
 
@@ -34,6 +34,7 @@ By default, as in Java, these methods are protected from external access, but th
 ----
 
 '''Can I reload a java class as is possible for python modules?'''
+
 The support for reloading java classes through reload(java-class), is disabled. The reload(java-class) only worked when the java class was a standalone class without any dependencies on other java classes (except the system class). When there was more than one class involved, the simple reload(java-class) no longer worked.
 
 Now on the other hand Jython 2.0 comes with some alternative (experimental) user-level support for java classes reloading ("jreload" module).
@@ -91,6 +92,25 @@ Assigning __debug__=0 has been used to get -O behavior from things like "assert"
 
 ----
 
+''When I write to a file, it's empty. Why?'''
+
+The addition of buffering to the org.python.core.PyFile class in the 2.1 development cycle changed the autoflushing of Jython file objects. In Jython 2.1x, you must explicitly flush() and/or close() a file object opened for writing or appending before any data will actually be saved.
+
+This reflects the current status and is not meant to imply this will always be the case for Jython (but it may be for certain java versions).
+
+Currently, For example:
+{{{#!python
+    f = open("myFile", "w")
+    # if the program terminates here, the file is empty
+    f.flush() # or f.close()
+    # If the program terminates here ,the file has data
+}}}
+Another example:
+{{{#!python
+    open("myFile", "w").write("some data")
+}}}
+This will create an empty file, but note that the standard lib does not use write on anonymouse file objects as it is considered poor practice anyway.
+
 ----
 
 '''The Jython's os module is missing some functions, why?'''
@@ -120,3 +140,4 @@ You'll need to delete the 'from __future__ import division' line from javaos.py 
 Alternatively, you could use java.lang.Runtime.exec() directly, but the os functions handle a lot of complexity for you. 
 
 ---
+-
