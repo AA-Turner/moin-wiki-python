@@ -1,0 +1,51 @@
+Basically some of the most common code ideas are welcomed here. you probably want python as a shell. Here's some tips:
+
+= Hacks =
+
+== general ideas ==
+for all your code,
+== lack of symbol for command execution ==
+Solution: write short method names:
+<code>
+def S(arg):
+  """returns string of executed command arg"""
+  return os.popen(arg).read()
+
+def SN(arg):
+  """returns list of executed command arg"""
+  return os.popen(arg).read().split('\n')
+
+def SP(arg):
+  """prints string of executed command arg"""
+  print S(arg)
+
+def SNP(arg):
+  """prints with lines list executed command arg"""
+  for i in SN():
+    print i
+</code>
+
+== dirname comprables ==
+you might not know that you have improved functionality.
+os.path.split replaces dirname and basename returning a tuple containing both.
+os.path.splitext splits on the extension returning a tuple
+To complete the set you might want to split the path at the root, use:
+<code>
+import re
+def splitroot(s):
+  if string.find(s,"/") == -1:
+    return '',s
+  if s[0] == '/':
+    s = s[1:]
+  m = re.match("(.*?)/(.*)$",s)
+  return m.groups()
+</code>
+
+== awk comprables ==
+simply use re. its a fuller set of regular expressions. create a wrapper function 
+for a utility for this if you want call it inlinegrep.
+
+
+
+Limitations:
+  killall functionality in bash was reject by guido himself (BS explantion) "talk to maintainers of posix"
