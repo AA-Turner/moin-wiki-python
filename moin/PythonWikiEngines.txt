@@ -32,15 +32,21 @@ Comment: "Support HTML tags" is more of an anti-feature in wiki.
 
 = Comments, Ratings, Reviews, Wishlists =
 
-Elements for building a full-featured wiki engine:
+== Elements for building a full-featured wiki engine: ==
  * ''Page templating system like [http://smarty.php.net/ Smarty].''  Possible options include [http://www.alcyone.com/pyos/empy/ EmPy] or others listed in the [http://www.python.org/cgi-bin/moinmoin/WebProgramming#head-9d0636d6da8e88f8f09de1454c5961b44183b04d templating section] of the WebProgramming page.  Which one would you recommend?
  * ''Cache HTML versions of pages for faster loading.''  Ideally the page templating tool would handle caching.
-  * in a really dynamic context like wiki, you can't simply cache the HTML. 
  * ''User Authentication.''  A user authentication system perhaps integrated with MySQL or possibly even LDAP.  Allow for different user groups and permission levels.  Any recommendations?
-  * Moin has user / password auth in CVS. Groups and page ACLs also.
  * ''Database Integration.''  Can store data in mysql, postgresql, etc. or work without a database.
-  * that is more of an anti-feature, see the next 2 points.
  * ''Easy Install.''  Works completely in Python, and installs in one folder location.  Doesn't necessarily require a database or mod_python.  Doesn't require root privileges for install.
  * ''Small but Scalable.'' Doesn't require a huge server to run.
 
+
 See the [http://colorstudy.com/docs/shootout.html Web Framework shootout] where different Python WebProgramming frameworks are used to implement a bare bones wiki.
+
+=== Arguments that MoinMoin is a candidate ===
+
+  * in a really dynamic context like wiki, you can't simply cache the HTML. 
+   * There are parts of the page that definitely can be cached.  And most wiki pages do not use any dynamic macros.
+  * Moin has user / password auth in CVS. Groups and page ACLs also.
+  * Database integration is more of an anti-feature, see the next 2 points.
+   * The best tool would have ''flexibility.''  Be able to run standalone with an easy install, or integrated with Apache and a fast database server.  In PHP, this is incredibily simple if you use ADODB or PEAR.
