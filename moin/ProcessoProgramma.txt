@@ -1,0 +1,115 @@
+''[note: I cobbled this page's name together from an internet dictionary. As such, it's probably wrong, grammatically or otherwise. If your Italian is better than mine, please rename the page (including backlinks, of course).]''
+
+= Blocco dei processi =
+
+Inizio questa pagina facendo una domanda. Come si può fermare un processo dall'interno di un altro?
+
+{{{
+#!python
+import threading
+import time
+
+class Worker(threading.Thread):
+  def __init__(self, eventChannel, eventHandler):
+    self.eventChannel = eventChannel
+    self.eventHandler = eventHandler
+    self.stopFlag = 0
+
+  def shutdown(self):
+    self.stopFlag = 1
+
+  def run(self):
+    self.stopFlag = 0
+    while not self.stopFlag:
+      event = self.eventChannel.waitEvent() # blocking call
+      self.eventHandler.dispatchEvent(event)
+
+
+eventChannel = EventChannel()
+eventHandler = EventHandler()
+worker = Worker(eventChannel, eventHandler)
+worker.start()
+time.sleep(20)
+worker.shutdown()
+}}}
+
+
+Il problema è che {{{EventChannel.waitEvent()}}} è una operazione di blocco.  Così se l'evento non si verifica, allora il nostro lavoro non si fermerà mai.  ''({{{EventChannel}}} e {{{EventHandler}}} sono classi che io ho inventato per questo esempio)''
+
+== Suggerimenti == 
+
+ * Utilizzare il metodo {{{shutdown()}}} spinge alcuni innocui eventi  nelll'evento channel
+
+{{{
+  def shutdown(self):
+    self.stopFlag = 1
+    self.eventChannel.push_event(NullEvent())
+}}}
+
+
+ * oppure usa una Queue di dati passati. Manipolare errori con il manipolatore ( e.g. stampa poi alla console),mantiene vivo il processo                                                                                                                                                                                           
+
+{{{
+#!python
+import Queue, threading, traceback
+
+class StopMarker:
+    """This is used as an individual stopper item."""
+    
+class Worker(threading.Thread):
+    """Get items from a queue and call the handler with the item.
+    Errors in the handler are printed to stderr, the thread
+    continues to run.
+    An individual stop marker is used, so you can pass everyting
+    as item (including None).
+    """
+    
+    def __init__(self, handler):
+        """Initialize Thread object and worker."""
+        threading.Thread.__init__(self)
+        self.running = 1
+        self.handler = handler
+        self.queue   = Queue.Queue()
+        self.stopper = StopMarker()
+    
+    def run(self):
+        """Worker loop. Errors in the handler are printed to
+        stderr and the thread continues with the next item."""
+        while self.running:
+            try:
+                item = self.queue.get()
+                if item is self.stopper:
+                    break
+                else:
+                    self.handler(item)
+            except:
+                traceback.print_exc()
+    
+    def stop(self):
+        """Stop the worker thread and wait until it terminates.
+        (Waits until last item is processed)"""
+        self.queue.put(self.stopper)    #stopper item, then...
+        self.join()                     #wait until the thread has shutdown
+
+    def put(self, item):
+        """Put an item in the queue to be processed by the handler."""
+        self.queue.put(item)
+
+if __name__ == '__main__':
+    def printer(item):
+        print "printer(%r)" % item
+    
+    w = Worker(printer)
+    w.start()
+    for i in range(10):
+        w.put(i)
+    w.stop()
+}}}
+
+= Chiamata ad una Funzione "C" che blocca tutti i processi =
+
+Ho un modulo in "c" che pone delle interrogazioni al D.B. Queste interrogazioni pongono ad off il server SQLper essere processato.Posso  usare delle mie funzioni di interrogazione dentro i processi per avere un lavoro come questo {{{time.sleep()}}},blocco il corrente processo finchè lui termina ma permette agli altri processi di continuare le operazioni. Non ho visto questi inidirizzamenti in qualsiasi libro che possiedo.
+
+= Risorse =
+
+ * [http://starship.python.net/crew/aahz/OSCON2001/index.html Aahz OSCON 2001 presentatione]
