@@ -21,8 +21,17 @@ Also see capabilities as mentioned on:
  * http://www.python.org/cgi-bin/moinmoin/PythonThreeDotOh
  * http://mail.python.org/pipermail/python-dev/2003-March/034149.html
 
-I thought there was a PEP about restricted execution in Python, but I can't seem to find it, so I don't know the current thinking of the BDFL or python-dev on this issue, but it is a sorely missed feature that we lost with Python 2.2 and above.
+Prior to Python 2.3, there were two modules, rexec and Bastion which were attempted to provide a sandboxed environment. Unfortunately there were known bugs and work-arounds in these modules, and the introduction of new-style classes in Python 2.3 simply made matters worse. Rather than provide a false sense of security, the modules were removed in Python 2.3.
+
+There are a number of people who are interested in creating a new sandboxing system for Python. Zope provides a system which many believe is secure (please include a link!), but is only permits a very restricted subset of Python.
+
+-------
 
 For my part, I think this is something that the PSF should fund development on so that it happens sooner rather than later. There are enough interested parties, that lends itself to getting government or other grant funding. -- KevinAltis
 
 Having used the rexec stuff years ago (1995-6), I seem to recall that the principles of that module involved restricting the modules available, possibly along with the attributes available from each module, class and object. Is there a concise summary of how such mechanisms could have been subverted/exploited and a description of why they are particularly hard to fix? Or is that what this page is about? -- PaulBoddie
+
+I think it should be what the page is about. The basic problem is that Python's introspection allows several ways to "escape". For instance, code which is passed a file object, f, are given access to that single file, but it ALSO can use "type(f)", or "f.__class__" to get access to "file" itself, and then use it to open any file. Security experts will tell you that "plugging holes" is generally a poor approach to security because there usually turn out to be additional "holes" you hadn't considered -- true security requires an overall design with security considerations included. Doing this for Python is not impossible, but may prove difficult. On the other hand, I would agree that it is worthwhile. -- MichaelChermside
+
+I also have another idea... I have long thought that much of the issues could be handled by creating a module which would make it easy to run bits of Python code in a ''separate'' interpreter, running as a separate process, and sandboxed using OS features. The difficulty would be that such a module would require OS-specific code... but it would have the potential to provide sandboxing that was as reliable as the OS would allow. -- MichaelChermside
+
