@@ -121,6 +121,19 @@ Any other ideas where to find this code completion shell?
 
 -- it works now (16. May 03)
 
+= Running SCons from CDT Eclipse =
+
+SCons is a powerful software construction tool in python, more flexible than ant and simpler than make.  It is primarily intended to manage builts for C/C++ programs.  To set up SCons as the builder from CDT, add it as a custom builder:
+
+ * Select the project and edit its properties.
+ * From the Builder menu on the left, select new.
+ * Enter the full path to "scons.bat" file that comes with your installation.
+ * Add command line targets as necessary in the box below.
+ * Make sure python is setup in the default environment.
+
+Note: Eclipse cannot currently spawn arbitrary shell programs, so even if the .py extension is registered, calling scons.py will fail from Eclipse.
+
+For more information about SCons, see http://www.scons.org/
 
 = Some Eclipse features people want with Jython/Python =
  * project/file management (module organization)
