@@ -6,23 +6,12 @@ Python IDE.  Some of these are stable enough for early use:
  * pe4eclipse, 0.0.1 prealpha (September 17, 2002): http://sourceforge.net/projects/pe4eclipse/
  * pythoneclipse, no files (as of May 17, 2003): http://sourceforge.net/projects/pythoneclipse/
 
-= Embedding Jython into Eclipse =
+== What these plug-ins actually do ==
 
-Don Coleman has written a jython code completion shell which he says he would be happy to rewrite for Eclipse.
- * http://don.freeshell.org/jython/
+ * Both plug-ins (pyeclipse and pe4eclipse) only really give you color highlighting for editing .py python/jython files.  That's all. ''''(as of May 2003)''''
+ * You '''can''' use Eclipse ''''bookmarking'''' and creating ''''Task bookmarking'''' inside the python editor.  This is way cool.
 
-This URL was given by Don Coleman in an ASPN jython users newsgroup, 
- * http://aspn.activestate.com/ASPN/Mail/Message/Jython-users/1620125
-but the domain "don.freeshell.org" is non-existent (DNS Error). 
-Any other ideas where to find this code completion shell?
-
--- it works now (16. May 03)
-
-= What these plug-ins actually do =
-
- * Both plug-ins (pyeclipse and pe4eclipse) only really give you color highlighting for editing .py python/jython files.  That's all. "(as of May 2003)"
- * You '''can''' use Eclipse bookmarking and creating Tasks inside the python editors.  This is "way cool".  Not even IDLE has bookmarking (though pythonwin does).
- * The ability to run jython or python on the current file needs to be configured manually (see step 2, below) and doesn't require either of these plugins to do.
+'''Note: The ability to run jython or python on the current file needs to be configured manually (see step 2, below) and doesn't require either of these plugins to do.'''
 
 == Which plug-in is better? ==
 
@@ -40,6 +29,19 @@ Unzip the plugin download and drag it into the eclipse/plugins directory, then r
 
 You can switch between the plug-ins by moving one directory "out" of the plugins folder and the other "in" to the plugins folder.
 
+= Embedding Jython into Eclipse =
+
+Don Coleman has written a jython code completion shell which he says he would be happy to rewrite for Eclipse.
+ * http://don.freeshell.org/jython/
+
+This URL was given by Don Coleman in an ASPN jython users newsgroup, 
+ * http://aspn.activestate.com/ASPN/Mail/Message/Jython-users/1620125
+but the domain "don.freeshell.org" is non-existent (DNS Error). 
+Any other ideas where to find this code completion shell?
+
+-- it works now (16. May 03)
+
+
 = Configuring Eclipse for running Python and Jython =
 
 == Configuring to run regular python from within Eclipse ==
@@ -50,19 +52,25 @@ However, I prefer to set my Working Directory to ${container_loc} since this let
  
  #1 Select from the menu: Run -> External Tools -> Configure -> New 
  Fill in the following values: 
-   Name: python 
-   Tool Location: E.g. /usr/bin/python or C:\Python22\python.exe 
-   Working Directory: -> Browse Variables -> ${container_loc}
-   Tool Arguments: -> Browse Variables -> ${resource_name} 
+ Name: python 
+ Tool Location: E.g. /usr/bin/python or C:\Python22\python.exe 
+ Working Directory: -> Browse Variables -> ${container_loc}
+ Tool Arguments: -> Browse Variables -> ${resource_name} 
  
 == Configuring to run jython from within Eclipse ==
 
  #1 Select from the menu: Run -> External Tools -> Configure -> New 
+
  Fill in the following values: 
+
   Name: jython 
+
   Tool Location: E.g. C:\jython-2.1\jython.bat
+
   Working Directory: -> Browse Variables -> ${container_loc}
+
   Tool Arguments: -> Browse Variables -> ${resource_name} 
+
 
 === Supplying paramters to your jython or python program ===
 
@@ -74,8 +82,11 @@ If you need to run an app which requires arguments, you will need to make anothe
 Notice I have supplied the argument c:\\ 
 
 Hope this helps
+
 -Andy Bulka
+
 http://www.atug.com/andypatterns
+
 
 = Other Links =
 
