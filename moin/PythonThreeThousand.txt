@@ -1,0 +1,50 @@
+= Introduction =
+
+Python 3 (aka "Python 3000" or "Python3K") is the next major revision of Python.  It's been rumored for a long time as a "clean up" of Python, a chance to clean out the attic so-to-speak.  I've just started this page to try and identify topics that have come up as possible inclusions (or exclusions) in Python 3.  The content below is organized as it popped out of my head.  Feel free to rearrange things to provide a more cohesive document.  
+
+'''Note:''' None of this is cast in stone.  Don't blame Guido, Tim, Barry, Fred or Jeremy for any of this.  There is no projected date for Python 3.  All blame for errors goes to [http://www.musi-cal.com/~skip/ Skip Montanaro] (skip@pobox.com).  Feel free to add to what's here.
+
+= Builtins =
+
+ * A number of builtins are on the short list for removal (some may be removed before Python 3).  See this [http://mail.python.org/pipermail/python-dev/2003-November/039967.html python-dev thread] for details:
+
+    {{{
+    apply
+    buffer
+    coerce
+    intern
+    long
+    open
+    raw_input
+    reduce
+    reload
+    slice 
+    xrange
+    filter
+    }}}
+
+ * There has been some discussion of making the builtins read-only so the interpreter can optimize some things which are currently not possible.
+
+ * ```range()``` becomes iterator factory (see ```UK 2003```).
+
+= Syntax =
+
+ * removal of backquotes as syntactic sugar for ```repr()```.
+
+= Standard Library =
+
+ * removal of string module (see ```UK 2003```)
+
+ * turn the current standard library into a possibly multi-level package (e.g std.time.datetime, std.time.calendar, etc)
+
+= Object Model =
+
+ * Classic classes removed (see ```UK 2003```).
+
+ * More complete string/Unicode convergence with perhaps a separate ```byte``` object to hold non-text character data (like the output of ```file("/vmunix").read()```).
+
+= References =
+
+ 1. [http://python.org/doc/essays/ppt/uk2003/uk2003.ppt UK 2003] - keynote address to Python UK 2003 conference.
+
+ 1. See also PythonThreeDotOh
