@@ -3,6 +3,7 @@ Generators are very useful and can help simplify your code and improve its perfo
 = simple examples =
 For example, the RangeGenerator can be used to iterate over a large number of values, without creating a massive list (like range would)
 {{{
+#!python
 #the for loop will generate each i (i.e. 1,2,3,4,5, ...), add it to sum,  and throw it away
 #before the next i is generated.  This is opposed to iterating through range(...), which creates
 #a potentially massive list and then iterates through it.
@@ -13,16 +14,19 @@ for i in irange(1000000):
 Generators  can be composed.  Here we create a generator on the squares of consecutive integers.
 
 {{{
+#!python
 #square is a generator 
 square = (i*i for i in irange(1000000))
 #add the squares
 for i in square:
    sum = sum +i
 }}}
+
 Here, we compose a square generator with the takewhile generator, to generate 
 squares less than 100
 
 {{{ 
+#!python
 #add squares less than 100
 square = (i*i for i in count())
 bounded_squares = takewhile(lambda x : x< 100, square)
@@ -30,3 +34,4 @@ for i in bounded_squares:
    sum += i
 }}}
 
+= Generators made from classes? =
