@@ -61,3 +61,44 @@ There is a way to do that, but it's more convoluted than it should be:
       return f(x);
   }
 }}}
+
+=== "Raw" function ===
+''I want to write in python:''
+    {{{
+    def function( *args ):
+        # Mess arount with elements of args.
+    }}}
+
+You can make one with the
+library's implementation details.  Be warned that these interfaces may
+change, but hopefully we'll have an "official" interface for what you
+want to do by then.
+{{{
+python::objects::function_object(
+    f                       // must be py_function compatible
+    , 0, std::numeric_limits<unsigned>::max()  // arity range
+    , python::detail::keyword_range());        // no keywords
+}}}
+will create a Python callable object.
+
+'''f''' is any function pointer, function reference, or function object
+which can be invoked with two Py``Object* arguments and returns
+something convertible to a Py``Object*.
+
+You can add this to your module namespace with:
+{{{
+scope().attr("name") = function_object(f, ... );
+}}}
+Now you can also
+{{{
+class_<foo>("foo")
+    .def("bar",function_object(f, ... ) );
+}}}
+aswell, but '''''not'''''
+{{{
+function_object bar(f, ... );
+...
+class_<foo>("foo")
+    .def("bar",bar);
+}}}
+because function_object is a function, not a class.
