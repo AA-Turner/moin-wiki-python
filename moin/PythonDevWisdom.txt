@@ -1,0 +1,14 @@
+== Useful, practical notes and code snippets from the python-dev mailing list ==
+
+After an 8-hour bug hunt, Tim Peters [noted this bit of wisdom|http://mail.python.org/pipermail/python-dev/2003-April/034557.html]
+
+"""
+Word to the wise:  don't ever try to reuse a variable whose address is
+passed to PyArg_ParseTuple for anything other than holding what
+PyArg_ParseTuple does or doesn't store into it.  You'll never get the
+decrefs straight (and even if you manage to at first, the next person to
+modify your code will break it).
+"""
+
+---
+
