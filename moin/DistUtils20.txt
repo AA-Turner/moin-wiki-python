@@ -76,6 +76,8 @@ Maybe some traditional package concepts:
   
   -- BobIppolito
 
+ * 
+
  * Files that are used by a package, i.e. config and data files (possibly others), should be relocatable. 
    --Moxo
 
@@ -89,3 +91,8 @@ Maybe some traditional package concepts:
  * Why would you ever need to move files around on Windows?  Where would they go?  There's no /usr/local/include on Windows.  Similar OS X, you would have two package databases (system and user).  OS X has a use case for at least three (vendor, system, user), because putting anything in /System (the vendor root) unless you're Apple is a horrible idea.
 
  -- BobIppolito
+
+ * Files need to be relocatable on any platform simply because there may not be sufficient disk space where the package "wants" to go. This is partially the responsibility of the native package manager for bdist* commands, but distutils needs to support it by providing for relative installation paths via PYTHONDIR, PACKAGEDIR, CONFIGDIR, DATADIR, etc., variables with reasonable defaults based on the target system. There's no reason to arbitrarily impose locations on a sysadmin that needs additional flexibility, or prevent users without root access from installing binary packages into a user-writable area.
+
+  -- Mark Alexander
+
