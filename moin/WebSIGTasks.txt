@@ -1,0 +1,33 @@
+Bill Janssen has suggested reviving the Web SIG:
+http://mail.python.org/pipermail/meta-sig/2003-September/001277.html
+
+Possible deliverables:
+
+= SSL server support =
+
+Add SSL server-side support to the "socket" module.  This will
+include some way of managing certificates.  Probably modelled
+strongly after the way we did it in ILU, if [Bill Janssen does] it :-).
+
+http://pyopenssl.sourceforge.net/ has a more complete wrapper.
+
+
+= HTTP client updates =
+
+Update the "httplib" module to include all of the client-side
+functionality available in the Linux "curl" program (a reasonable    checklist, I think, but am open to better suggestions).
+
+Better support for HTTP Digest Authentication.
+
+= HTTP server improvements =
+
+Replace/extend the BaseHTTPServer and SimpleHTTPServer modules with
+an extended webserver module which provides at least the
+functionality in Medusa.
+
+= cgi module improvements =
+
+The cgi module is really old and has a number of obsolete classes.
+It should be cleaned up and modernized.
+
+Anecdote: file upload support in Quixote was unreliable until Greg Ward threw up his hands, ditched cgi.py, and reimplemented file uploads from scratch.  
