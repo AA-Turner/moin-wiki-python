@@ -43,6 +43,18 @@ except Exception, e:
 
 MoinMoin software is a good example of where this is done. If you write Moin``Moin extension macros, and trigger an error, Moin``Moin will give you a detailed report of your error and the chain of events leading up to it.
 
+''umm.  that snippet doesn't actually catch all exceptions, though...  here a more robust solution:''
+
+{{{
+#!python
+import sys
+try:
+  untrusted.execute()
+except: # catch *all* exceptions
+  e = sys.exc_info()[1]
+  write_to_page( "<p>Error: %s</p>" % e )
+}}}
+
 == Finding Specific Exception Names ==
 
 Standard exceptions that can be raised are detailed at:
