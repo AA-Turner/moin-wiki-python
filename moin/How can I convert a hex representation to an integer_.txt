@@ -24,3 +24,18 @@ and I need to convert the values following user ('\x00\xcc\x15\xa4') into an int
 }}}
 
 ...but these aren`t hex values. Try ord() on each character, and see if that gives you the results you need.
+
+
+YerMat:
+
+See module struct !
+
+{{{
+#!python
+>>> import struct
+>>> struct.unpack('I', '\x00\xcc\x15\xa4')
+(2752891904L,)
+>>> struct.unpack('i', '\x00\xcc\x15\xa4')
+(-1542075392,)
+>>>
+}}}
