@@ -38,7 +38,10 @@ def DigitPoly(letterdigits):
     orda = ord('a')
     digids = [ord(x.lower()) - orda for x in letterdigits]
     def tmp(values):
-        return reduce(lambda x, y: 10*x + y, [values[x] for x in digids])
+        val = 0
+        for x in digids:
+            val = 10*val + values[x]
+        return val
     return tmp
 
 def Equation(eqndata):
