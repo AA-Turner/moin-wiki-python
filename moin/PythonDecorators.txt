@@ -949,6 +949,42 @@ new block.  These include:
  * Indent decorators only
   * + Makes locating the function definition easy
   * 0 Different semantics from that of other paired, nested blocks (e.g. if/elif/else, try/except, try/finally)
-  * - Technical problems if a block *starts* with an optional part?
+  * - Technical problems if a block *starts* with an optional part?  (Someone said yes, someone else said that they tried it and had no problems.)
+  * - [http://mail.python.org/pipermail/python-dev/2004-August/047666.html David Eppstein] points out that most indented suites can contain arbitrary code.  It isn't clear what should happen if someone uses a statement (does not return a value); should it be run once?  Should it cause an error?
+
  * No indent
   * - Uncommon in Python that one line following another one with the same identation has a meaning like this.
+
+=== Order of Decorators ===
+Should decorators be applied in textual order, or in reverse order (as if they were in nested parentheses around the def).
+
+It seems to have been settled that decorators will be applied starting with the one closest to the "def" statement.  (This means in-order vs reverse will depend on the eventual location.)
+
+=== Allowable Decorators ===
+The eventual decision was that anything should be allowed, but it *will* be called with a single argument (the function object) before the function's name is bound in the enclosing namespace.
+
+Should None be allowed and just not called?  
+This would allow statements in the decorator suite, and might be useful, but ... it wasn't deemed useful enough for a special case, at least in 2.4
+
+=== Meaning of decorators ===
+{{{
+@deco1
+@deco2(darg1, darg2)
+@deco3
+def func(arg1, arg2):
+    pass
+}}}
+
+is equivalent to 
+
+{{{
+__tempd1 = deco1
+__tempd2 = deco2(darg1, darg2)
+__tempd3 = deco3
+__tempf = lambda arg1, arg2: pass
+func = tempd1(tempd2(tempd3(tempf)))
+}}}
+with the following exctions:
+
+ * The __temp variarables aren't really created.  Those are just placeholders to indicate that the expression is evaluated (hopefully to produce a callable) before the function definition.
+ * The function can be any function, not just a lambda expression (which is more restricted).
