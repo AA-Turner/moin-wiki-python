@@ -1,18 +1,20 @@
-
-[:../: FAQ Home]
-
+#acl MoinPagesEditorGroup:read,write,delete,revert All:read
 = Installation and Setup =
+
+JythonFaq
+
+[[TableOfContents]]
 
 ----
 
-'''Why do I get NoClassDefFoundError when running the installer'''
+ == Why do I get NoClassDefFoundError when running the installer ==
 
 Make sure that the class name on the command line doesn't end in .class. Also make sure that the installer actually exists in your current working directory.
 
 ----
 
 
-'''Why can't I use "from java import ..." on Windows?"'''
+ == Why can't I use "from java import ..." on Windows?" ==
 
 This problem can occur if you are using Microsoft's VM (i.e. jview.exe) which provides the standard classes in a different format. You need to run the following command in a console window before using Jython:
 
@@ -22,7 +24,7 @@ This problem can occur if you are using Microsoft's VM (i.e. jview.exe) which pr
 
 ----
 
-'''What is "python.path" and "python.prepath" mean in the Jython registry'''
+ == What is "python.path" and "python.prepath" mean in the Jython registry ==
 
 The key "python.path" in the Jython registry has recently changed. This FAQ entry is intended to clarify registry keys related to sys.path settings.
 
@@ -52,23 +54,23 @@ If there is confusion about site.py:
 
 ----
 
-'''Why no command-line history in Jython?'''
+ == Why no command-line history in Jython? ==
 
 The shells and other tools commonly associated with having a command-line history get this functionality from the C 'readline' package. There is experimental 'readline' classes in Java, and is likely to be in Jython's future. For the current release, there is console.py in the demo directory that adds a simple up/down.
 
-It is not commonly the case that programs look to the shell for this functionality, it is more common that readline is compiled in to the shell (or CPython) you are using which provides this functionality. However, some shells wrap the stdin/out of other programs (Jython). Shell mode in emacs is an excellent example. "rlterm", a shell that comes with the Unix version of Yorick, also does this (i.e. "rlterm jython"). There may be many others do the same so you can supplant the functionality of readline. 
+It is not commonly the case that programs look to the shell for this functionality, it is more common that readline is compiled in to the shell (or CPython) you are using which provides this functionality. However, some shells wrap the stdin/out of other programs (Jython). Shell mode in emacs is an excellent example. "rlterm", a shell that comes with the Unix version of Yorick, also does this (i.e. "rlterm jython"). There may be many others do the same so you can supplant the functionality of readline.
 
 ----
 
-'''Why do I get the error, "can't create package cache dir, '/cachedir/packages'"'''
+ == Why do I get the error, "can't create package cache dir, '/cachedir/packages'" ==
 
 An essential optimization in Jython is the caching of Java package information. The caching requires '/cachedir/packages/' in the python.home directory. It is often the case on *nix that users lack sufficient priveledges to create or write to this directory.
 
-Because the problem is merely permissions, something similar to "mkdir cachedir; chmod a+rw cachedir" within Jython's directory should eliminate this error message. 
+Because the problem is merely permissions, something similar to "mkdir cachedir; chmod a+rw cachedir" within Jython's directory should eliminate this error message.
 
 ----
 
-'''Where's the registry file'''
+ == Where's the registry file ==
 
 Jython's installation includes a file called "registry" that you will find in the root directory of the Jython installation (e.g. /usr/local/jython or c:\jython).
 
@@ -89,7 +91,7 @@ If you run into complaints about create ".jython", don't worry- Jython can:
 
 ----
 
-'''GUI-less installer?'''
+ == GUI-less installer? ==
 
 If you do not have a GUI, then add -o dir_to_install_to to the command. Jython will install to the specified directory without bringing up the graphical installer. E.g. to install all modules to a Jython-2.1 subdirectory in the current directory do:
 
