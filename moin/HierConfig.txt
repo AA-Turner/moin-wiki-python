@@ -110,6 +110,13 @@ handlers:
         subject=Take cover
 
 }}}
+
+I (VinaySajip) like this syntax, except for:
+ * I don't see why we need to (in the above example, under loggers/root) say "handler=XXX" three times, rather than using a notation like "handlers = [console, file, email]".
+ * It may be restrictive to only allow identifiers as keys.
+
+As far as use of expressions in the config file, I am ambivalent, and curious to hear more opinions; sometimes a declarative approach is good. But more than the syntax, I'm interested in what people think about the semantics: for example, allowing cross-references between config elements (perhaps across multiple files), and the ability to perform restricted "special" evaluation of some elements (e.g. `sys.stderr`)
+
 ----------
 
 [http://cvs.zope.org/Zope3/doc/zcml/ ZCML] (unlike .ini files) handles nested input fairly well.  The syntax looks a little like an Apache config; though from much of what I've seen, it's straight XML.  -- IanBicking
