@@ -1,0 +1,47 @@
+#pragma section-numbers off
+
+=== Masthead ===
+
+   URL::  http://karrigell.sourceforge.net
+   version:: 1.1 (''[[Date(2003-03-22T15:00:00)]]'')
+   licence:: GPL
+   platforms:: any platform that supports Python 2.2
+   Python versions:: 2.2
+
+=== Deployment Platforms ===
+No requirement besides Python : Karrigell is provided with a web server and a relational database (gadfly)
+=== Suitability ===
+Web sites with moderate traffic, such as personal sites running on a home computer, or stand-alone programs using a web interface
+Demos included in the distribution include a minimal Wiki server, an interface for script internationalization, a forum, and a portal with user login/logout, personalization and news editing
+=== Development Interfaces ===
+Servlet-style : the scripts, either pure Python or mixing HTML and Python, are executed in a namespace which provides all useful information, including HTTP headers, authentication data, etc. For instance, form fields are available as the QUERY dictionary, or with a variable with a leading underscore (the field myField is available as _myField, either a string or a list depending on the field type)
+The namespace also provides custom exceptions to stop its execution, such as HTTP_REDIRECTION (see the on-line documentation)
+=== Environment Access ===
+Standard Python mechanisms
+=== Session, Identification and Authentication ===
+Provided through functions available in scripts
+Session() returns a session object, to which attributes can be set (arbitrary Python objects : user login, database connexion and cursor, etc)
+Basic HTTP authentication is available with Authentication(''testFunction''[,''realm,errorMessage'']) where testFunction is a user-defined function taking no argument, which returns true if the authentication test succeeds (depending on the values of AUTH_USER and AUTH_PASSWORD) and false otherwise, realm is a string with the name of the authentication domain (the one that will appear on the popup window) and errorMessage is a string displayed on the browser if the user cancels the authentication request
+=== Persistence Support ===
+Karrigell is provided with the gadfly database and a relational-object mapping which allows easy storing of the session objects, and of user-related information (preferences, etc)
+It can be linked to all databases for which there is a Python API (mySql, Post''''''Gres to remain on the Open''''''Source side)
+=== Presentation Support ===
+Python scripts, where the "print" statement is used to send output to the client
+"Python Inside HTML" (PIH) which looks like PHP, ASP, etc : HTML code with Python code inserted inside <% and %>, with shortcuts for variables : <%= myVar %> and for translated strings which use the gettext mechanism (for which Karrigell provides a simple interface) : <%_ "string to translate" %>
+"HTM Inside Python" which are Python scripts, except that the lines beginning with a string are sent to standard output as if there were a "print" statement before
+=== InTheirOwnWords ===
+Karrigell aims at simplicity for web developers : 
+	* no separate web server (the standard Python distribution provides one)
+	* no separate database (gadfly is included), although users can link to any base they like provided there is a Python API for it
+	* a namespace for Python scripts in which developers will find all useful data and functions for the most ordinary tasks
+	* and a way to nest pages and scripts with the Include() function
+
+The inspirations were EasyPHP, a package which provides Apache, PHP, mySql and PHPmy''''''Admin all in one, and saves the pain of installing each of them and make them work all together ; the wittily named Poor Man's Zope (PMZ) which showed how easy it was to make Python servlets (unfortunately unmaintained) ; and the pleasure I have programming things in Python
+
+Karrigell will remain light and simple. Current concerns are stability, testing on different platforms, and adding new demos to validate the design and functionalities
+
+Of course, with only 600 kb and the poor programming skills of its author, it does not try to rival products such as Zope or Web''''''Ware for Python : "Karrigell" means "cart" in Breton, a light and handy tool, but don't put too much load on it !
+
+=== Comments ===
+
+=== Hosting ===
