@@ -226,3 +226,8 @@ Type v = extract<Type>(x);
 }}}
 
 See ["../extract"]
+
+=== multithreading support for my function ===
+The best way to safely unblock Python threads is to write a
+thin wrapper around your function which uses Py_BEGIN_ALLOW_THREADS
+and Py_END_ALLOW_THREADS around a call to the real function.
