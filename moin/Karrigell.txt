@@ -24,6 +24,8 @@ Servlet-style : the scripts, either pure Python or mixing HTML and Python, are e
 
 The namespace also provides custom exceptions to stop its execution, such as HTTP_REDIRECTION (see the on-line documentation)
 
+A function Include(script_or_file, **args) allows the inclusion of an html file or of a file inside a script. If script B is included inside script A, it is executed in the script A's namespace ; additional **args can be added to this namespace
+
 === Environment Access ===
 
 Standard Python mechanisms
@@ -34,8 +36,7 @@ Provided through functions available in scripts
 
 Session() returns a session object, to which attributes can be set (arbitrary Python objects : user login, database connexion and cursor, etc.)
 
-Basic HTTP authentication is available with Authentication(''testFunction''[,''realm,errorMessage'']) where testFunction is a user-defined function taking no argument, which returns true if the authentication test succeeds (depending on the values of AUTH_USER and AUTH_PASSWORD) and false otherwise, realm is a string with the name of the authentication domain (the one that will appear on the popup window) and errorMessage is a string displayed on the browser if the user cancels the authentication request
-
+Basic HTTP authentication is available with Authentication(''testFunction''[,''realm,errorMessage'']) where testFunction is a user-defined function taking no argument, which returns true if the authentication test succeeds (depending on the values of AUTH_USER and AUTH_PASSWORD) and false otherwise
 === Persistence Support ===
 
 Karrigell is provided with the gadfly database and a relational-object mapping which allows easy storing of the session objects, and of user-related information (preferences, etc)
