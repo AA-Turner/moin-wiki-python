@@ -1,0 +1,66 @@
+= Problem =
+I'd like to include Python scripts into my .pdbrc, but only pdb commands are allowed there.
+
+
+= Solution =
+Use execfile() to run a file containing your Python code.
+
+'''.pdbrc''' may look like this:
+{{{
+# .pdbrc only allows for debugger commands; you cannot insert Python
+# scripts.
+
+# To overcome this restriction, this .pdbrc executes ~/.pdbrc.py,
+# which can contain arbitrary Python commands (including a call to a
+# local pdbrc.py (no leading dot!) in your working directory if it
+# exists).
+
+# Note that (at least with Python 2.3) this .pdbrc is called twice when you're
+# in your home directory.
+
+# If ~/.pdbrc.py is missing, you get an error message (which doesn't
+# hurt).
+
+execfile(os.path.expanduser("~/.pdbrc.py"))
+}}}
+
+and this is an example '''~/.pdbrc.py''':
+{{{
+print ".pdbrc.py started"
+
+# Command line history:
+import readline
+histfile = ".pdb-pyhist"
+try:
+    readline.read_history_file(histfile)
+except IOError:
+    pass
+import atexit
+atexit.register(readline.write_history_file, histfile)
+del histfile
+readline.set_history_length(200)
+
+# return to debugger after fatal exception (Python cookbook 14.5):
+def info(type, value, tb):
+    if hasattr(sys, 'ps1') or not sys.stderr.isatty():
+        sys.__excepthook__(type, value, tb)
+    import traceback, pdb
+    traceback.print_exception(type, value, tb)
+    print
+    pdb.pm()
+
+sys.excepthook = info
+
+
+# Try to execute local file (if any)
+try:
+    execfile("pdbrc.py")
+except IOError:
+    pass
+
+print ".pdbrc.py finished"
+}}}
+
+
+----
+CategoryDistutilsCookbook
