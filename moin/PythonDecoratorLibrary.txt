@@ -219,11 +219,11 @@ def specialFunctionFoo():
 def dumpArgs(func):
     "This decorator dumps out the arguments passed to a function before calling it"
     argnames = func.func_code.co_varnames[:func.func_code.co_argcount]
-    def echoArgFunc(*args):
-        for argn,argv in zip(argnames,args):
-            print argn,":",argv
-        func(*args)
-    return echoArgFunc
+    fname = func.func_name
+    def echoFunc(*args,**kwargs):
+        print fname,":", zip(argnames,args)
+        func(*args,**kwargs)
+    return echoFunc
     
 @dumpArgs
 def f1(a,b,c):
