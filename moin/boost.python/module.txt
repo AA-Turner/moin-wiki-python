@@ -1,5 +1,5 @@
 == def ==
-Boost.Python now supports a free-function version of def which defines
+Boost.Python now supports a free-function version of '''def''' which defines
 its function in the current scope:
 {{{
   #include <boost/python.hpp>
@@ -37,8 +37,13 @@ Of course, you can also set the current scope to any object:
   scope within(some_obj);
   def("foo", &foo); // define a function within some_obj as a namespace
 }}}
+and all subsequent definitions (classes, enums etc.) will go inside current then scope.
+
 Be warned, however, that although you can set the current scope from a
 class_<> instance, the class_<>'s def() member function will work properly
 in some cases where the free-function def() cannot, since the latter is
 missing information about the class type being wrapped.
 
+'''''what is a scope?'''''
+
+The scope is a class that has an associated global Python object which controls the Python namespace in which new extension classes and wrapped functions will be defined as attributes. Details can be found at["boost.python/scope"]. 
