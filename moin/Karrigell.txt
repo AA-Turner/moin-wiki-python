@@ -3,7 +3,7 @@
 === Masthead ===
 
    URL::  http://karrigell.sourceforge.net
-   version:: 1.2 (''[[Date(2003-06-07T15:00:00)]]'')
+   version:: 1.3 beta (''[[Date(2003-10-12T15:00:00)]]'')
    licence:: GPL
    platforms:: any platform that supports Python 2.2
    Python versions:: 2.2 or more
@@ -25,6 +25,8 @@ Servlet-style : the scripts, either pure Python or mixing HTML and Python, are e
 The namespace also provides custom exceptions to stop its execution, such as HTTP_REDIRECTION (see the on-line documentation)
 
 A function Include(script_or_file, **args) allows the inclusion of an html file or of a file inside a script. If script B is included inside script A, it is executed in script A's namespace ; additional **args can be added to this namespace
+
+A whole component (a set of scripts performing an elementary service, agenda or forum for instance) can be included in a page with the IncludeComponent(componentUrl) function. The component can be developed and tested stand-alone and will run unmodified in the calling page
 
 === Environment Access ===
 
@@ -58,13 +60,14 @@ Karrigell aims at simplicity for web developers :
 	* no separate web server (the standard Python distribution provides one)
 	* no separate database (gadfly is included), although users can link to any base they like provided there is a Python API for it
 	* a namespace for Python scripts in which developers will find all useful data and functions for the most ordinary tasks
-	* and a way to nest pages and scripts with the Include() function
+	* a way to nest pages and scripts with the Include() function
+	* components with the IncludeComponent() function
 
 The inspirations were EasyPHP, a package which provides Apache, PHP, mySql and PHPmy''''''Admin all in one, and saves the pain of installing each of them and make them all work together ; the wittily named Poor Man's Zope (PMZ) which showed how easy it was to make Python servlets (unfortunately unmaintained) ; and the pleasure I have programming things in Python
 
 Karrigell will remain light and simple. Current concerns are stability, testing on different platforms, and adding new demos to validate the design and functionalities
 
-Of course, with only 650 kb, it does not try to rival products such as Zope or Web''''''Ware for Python : "Karrigell" means "cart" in Breton, a light and handy tool, but don't put too much load on it !
+Of course, with only 750 kb, it does not try to rival products such as Zope or Web''''''Ware for Python : "Karrigell" means "cart" in Breton, a light and handy tool, but don't put too much load on it !
 
 === Comments ===
 
