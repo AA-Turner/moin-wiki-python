@@ -1,18 +1,31 @@
 == Schedule ==
 
-Let's plan to start at 10:00am, at least on Saturday and Sunday.  That's as early as I (FredDrake) expect to be able to make it in, at least.  (But you're welcome to start earlier if you like.)
+FredDrake suggested we start at 10:00am, at least on Saturday and Sunday, but apparantly others were better able to rise in the mornings.  The DistutilsSprint was held in room 301 at the conference center.
 
 == Topics ==
 
-There are a number of areas that we can address at the sprint:
+Some projects which saw progress during the sprint included:
+
+ * The implementation of [http://www.python.org/peps/pep-0314.html PEP 314] should be complete; someone who isn't involved in the implementation should review what's in CVS and check it against the PEP.  Work performed at the sprint included supporting the ''provides'', ''requires'', and ''obsoletes'' metadata fields in both the {{{distutils}}} package and in PyPI.  The work was performed by FredDrake, RichardJones, and AndyHarrington.  There may be some untracked changes in AndrewKuchling's draft of PEP 314; these should also be checked (also, the catalog-sig archives).
+
+ * RichardJones and Martin von Loewis worked on implementing [http://www.python.org/peps/pep-0243.html PEP 243], supporting a package repository as part of PyPI.  There are revisions needed to PEP 243 which haven't been written yet (mostly to do with cleaning up the use of the HTTP spec).  FredDrake thinks he uploaded the first package into the live repository, a tarball containing ZConfig 2.2.  Richard implemented the changes to the PyPI application, and Martin added an '''upload''' command to the {{{distutils}}} package to make it easy to add files from a command line.
+
+ * AndrewKuchling integrated work done to add XML-RPC support based on efforts from the ChiPy sprint.  See [http://blog.ianbicking.org/first-chipy-sprint-pypi.html Ian Bicking's blog] for more on the ChiPy work.
+
+ * Someone (please update!) integrated work started at the ChiPy sprint to convert the PyPI web interface to use ZopePageTemplates instead of hard-coded HTML in the Python code.  This should make it a lot easier to keep the logic and presentation separate.
+
+
+At a separate table in the other sprint room, this suggested topic was addressed:
+
+ * Phillip Eby brought up the idea of application plugins; it would be really nice to see this happen.  He and Bob Ippolito have some [http://peak.telecommunity.com/DevCenter/PythonEggs design notes] and Bob Ippolito has begun an implementation of the runtime.  In addition to plugins, this "Python Egg" format should be useful for distributing libraries and building applications (via py2exe/py2app) as well.
+
+
+The following topics had been suggested, but were not discussed during the [PyConDC2005/Sprints]:
 
  * Installing large applications; see [http://mail.python.org/pipermail/distutils-sig/2005-February/004389.html Fred's post to the Distutils-SIG] for more on this topic.
 
  * Defining a way to define new ''classes'' of files that can be installed.  Zope 3 would like this for the "package-includes" files we use; it's likely generally useful.
 
- * Phillip Eby brought up the idea of application plugins; it would be really nice to see this happen.  He and Bob Ippolito have some [http://peak.telecommunity.com/DevCenter/PythonEggs design notes] and Bob Ippolito has begun an implementation of the runtime.  In addition to plugins, this "Python Egg" format should be useful for distributing libraries and building applications (via py2exe/py2app) as well.
-
- * RichardJones wants to work on PEPs [http://www.python.org/peps/pep-0314.html 314] and [http://www.python.org/peps/pep-0243.html 243] (implement metadata spec 1.1 and a source package upload mechanism / repository).  FredDrake would be glad to work on PEP 314 support. Note that the online version of PEP 314 needs revision (AMK has the revised copy) - see the recent catalog-sig archives for detail. Also, there's revisions needed to PEP 243 which haven't been written yet (mostly to do with cleaning up the use of the HTTP spec). To support the PEP 243 effort, it would be good to have someone available who has root access to python.org to get that side of things running.
 
 == Participants ==
 
@@ -27,3 +40,11 @@ If you aren't planning to be available for all four days of the sprints, please 
  * JohnCamara
 
  * AndrewKuchling (Saturday and Sunday)
+
+ * AndyHarrington
+
+ * JeffreyHarrington
+
+ * Martin von Loewis
+
+ * IanBicking (Saturday, maybe Sunday?)
