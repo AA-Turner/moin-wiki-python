@@ -34,3 +34,15 @@ The general performance problems people have with pygame are related to using th
 Still, I concede that there are types of games that just won't be suited towards python. But the situation is far more hopeful than the experiences of 'Escape of the Unicorn'.
 
 -- Pete 'ShredWheat' Shinners
+
+
+I work for a publicly held MMP game publishing company. I can't provided too many details because most of the interesting stuff is company confidential. However, I can testify that we are using Python to develop both the client and the server architectures. To be fair, the core graphics engine and high performance stuff is written in C++, but the game code is in Python. It goes something like this:
+
+Client: The executable is the Python interpreter, and it loads C++ extension modules for 3D rendering, collision, UI, movement, and such. Game code is written in Python. The main rendering loop is in C++, however, which is a critical point for performance. In development we get around 50 FPS with a high-poly scene, and up to several hundred FPS rendering a single large triangle :P.
+
+Server: The executable is a C++ server framework that embeds the Python interpreter, which also imports C++ extension modules. Again, high performance code, such as networking, movement, AI, and physics is in C++ (combining extensions and native code). Game code is in Python. But this is most of the code. Game code on the server consists of every system that has anything to do with the rules of the game, scripting, object interaction, combat, trade, inventory, etc. etc.
+
+We do not use SDL, so I can't comment on it. However, I can say that, the right mix of Python and C++ is an ideal combination of technologies for game development. Just like any Python app, you have to keep the performance critical stuff in extensions, and minimize the calls between Python and C++. But the high level logic, game code, and other "fun stuff" lends itself to Python very well.
+
+-- Matt Walker
+
