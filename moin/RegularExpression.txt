@@ -1,3 +1,5 @@
+#pragma section-numbers off
+
  * PythonLibraryReference, [http://www.python.org/doc/current/lib/module-re.html 4.2 re module]
  * PythonLibraryReference, [http://www.python.org/doc/current/lib/re-syntax.html 4.2.1 Regular Expression Syntax]
 
@@ -21,3 +23,32 @@ split_up = re.split( r"(\(\([^)]+\)\))",
 {{{
 ["This is a ", "((test))", " of the ", "((emergency broadcasting station.))" ]
 }}}
+
+== Compiling ==
+
+If you use a regex a lot, ''compile it'' first.
+
+Consider:
+
+{{{
+#!python
+import re
+match_obj=re.match( "<(.*?)>(.*?)</(.*?)>", "<h1>robot</h1>" )
+print mo.groups()
+}}}
+
+...which outputs: {{{('h1', 'robot', 'h1')}}}
+
+If you were going to do that match a lot, you could compile it, like so:
+
+{{{
+#!python
+import re
+match_re=re.compile( "<(.*?)>(.*?)</(.*?)>" )
+match_obj=match_re.match( "<h1>robot</h1>" )
+print mo.groups()
+}}}
+
+...which yields the same result.
+
+I don't know how much faster compiled forms are than non-compiled forms.
