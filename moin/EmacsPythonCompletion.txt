@@ -1,0 +1,30 @@
+= Python Completion in emacs =
+
+I whipped up some support for completion of python code when using emacs, which basically completes based on the stuff in scope in the current interactive python session. It's rather crude, but seems to work rather nice for me at least.
+
+Several uses are supported:
+
+  1. hippie-expand support via try-complete-py-complete-symbol, just like the lisp-version, nice for the [S-tab] hungry.
+
+  1. minibuffer-complete, pressing [M-return] brings up a minibuffer completion of the expression before point, usefull if you want to get an overview of your options.
+
+  1. pressing [f1] brings up help on a python symbol before point (just what "help(thingy)" gives
+
+  1. pressing "(" tries to parse the preceeding tokens as a funtion or method, and retrieve the signature via the "inspect" module, and messages it to you
+
+  1. pressing "," shows last signature.
+
+  1. tries to work for both py-execute-buffer and py-execute-import-or-reload oriented work-styles.
+
+TRICK: (4+5) is great for calling functions like:
+    string.join
+where I can _never_ remember whether it's the list or seperator first
+
+Get it from http://www.slog.dk/~jensen/elisp/index.html as: http://www.slog.dk/~jensen/elisp/py-complete.el:
+
+Feel free to suggest improvements, or to just improve the code yourself.
+
+-- 
+Helge
+
+
