@@ -361,3 +361,22 @@ bool my_fct(MyClass* my_obj)
   return extract<bool>( python_function(final_obj) );
 }
 }}}
+
+=== access to a Python extension in the same app that embeds Python? ===
+Suppose you have an extension module "hello" with function "greet".
+
+Module init function named "inithello" must be imported:{{{
+  PyImport_AppendInittab("hello", inithello);
+}}} before {{{
+  Py_Initialize();
+}}}
+and later:{{{
+  object strRes(handle<>(PyRun_String(
+                "from hello import *\n"
+                "result = greet()\n",
+                Py_file_input,
+                main_namespace.ptr(),
+                main_namespace.ptr()) ));
+
+  const char* res = extract<const char*>(main_namespace["result"]);
+}}}
