@@ -462,10 +462,10 @@ Please take a look at this sample configuration file and comment.  It is extreme
 
                                  # start of section [] is assumed
 <keys> : grpA,dev0,sb1           # by default use these keys to get options
-<read> : more.cfg,evenmore.cfg   # opt=val for opt,val in cfg.py
+<read> : more.cfg;evenmore.cfg   # opt=val for opt,val in cfg.py
 comm_driver = standard           # same as comm_driver = 'standard'
-comm_path[grpA,dev0] = path_A0   # same as comm_path['grpA']['dev0'] = 'path_A0'
-comm_path[grpA,dev1] = path_A1   # same as comm_path['grpA']['dev1'] = 'path_A1'
+comm_path[grpA.dev0] = path_A0   # same as comm_path['grpA']['dev0'] = 'path_A0'
+comm_path[grpA.dev1] = path_A1   # same as comm_path['grpA']['dev1'] = 'path_A1'
 
 [sb1]                            # starts a new section
 sandbox = /home/dmgass/build_v1  # inserts this value under sandbox['sb1']
@@ -479,11 +479,15 @@ sandbox = /home/dmgass/build_v2  # inserts this value under sandbox['sb2']
 comm_path[dev0] = path_B0        # same as comm_path['grpB']['dev0'] = 'path_B0'
 comm_path[dev1] = path_B1        # same as comm_path['grpB']['dev1'] = 'path_B1'
 
-[grpC,dev0]                      # starts a new section
+[grpC.dev0]                      # starts a new section
 comm_path = path_C0              # same as comm_path['grpC']['dev0'] = 'path_C0'
 
-[grpC,dev1]                      # starts a new section
+[grpC.dev1]                      # starts a new section
 comm_path = path_C1              # same as comm_path['grpC']['dev1'] = 'path_C1'
+
+# Ian wants ability to retain characters we normally split on.  [(node1.node2)(key1)]
+# notation where presence of parenths clues the parser to split on parenths instead of 
+# normal split characters (.,)
 
 # In theory user could override default keys specified in this file from 
 # the command line to communicate with device 1 of group C:
@@ -534,16 +538,14 @@ cfggrp_a.add_option('somesetting',help='No default, exception raised when no opt
 # and metavar are inherited by the cfgpar option from the optpar option if nothing was 
 # specified when the option was added.  cfgpar option help strings are automatically 
 # updated with command line switch information to help identify interactions (maybe vice 
-# versa too?).  By default cfgpar will modify the optpar help screen to include 
-# configuration file help at the bottom.  This can be turned off using the optional
-# combinehelp keyword argument.  Options and args are passed back as they would from
-# optpar.  
+# versa too?).  
 options, args = cfgpar.parse_args(optparser=optpar,combinehelp=False)
 
 # args are what you would expect
 print "args=",args
 
-# Options should be used to access only unpartnered optpar options.
+# options object is what is returned from the optparser but is updated with partnered (only
+# if command line switch wasn't present) and unpartnered options from the configuration.
 print "o option=",options.o
 
 # Partnered options should be accessed through cfgpar so that if they aren't found
