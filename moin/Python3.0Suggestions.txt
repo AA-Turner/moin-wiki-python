@@ -22,3 +22,42 @@ Suggested syntaxes:
 
  * http://logix.livelogix.com/intro.html
  * [http://groups-beta.google.com/group/comp.lang.python/browse_frm/thread/6fb45278f4a24648/93ce3e9a08f5e4c7#93ce3e9a08f5e4c7 "Other notes" thread]
+
+== Improved default value logic for Dictionaries ==
+
+ * The setdefault() method is badly named and poorly designed.  In a typical call, d.setdefault.(k, []).append(v), the list may be unnecessarily instantiated and discarded on every call.  At a minimum, default value should be a new empty list instead of None:   d.setdefault(k).append(v).
+
+ * A more versatile idea is to realize that defaults generalize to the whole dictionary instead of an individual lookup.  A call to setdefault would then change the whole dictionary's behavior when a key is not found::
+
+    counts = {}
+    counts.setdefault(value=0)
+    for elem in data:
+        counts[elem] += 1
+
+    index = {}
+    index.setdefault(function=list)
+    for pageno, page in enumerate(pages):
+        for line in page:
+            for word in line.split():
+                 index[word].append(line)
+
+== Better boolean logic ==
+
+The and/or operators should only return boolean values.  This makes their use less error-prone, less prone to abuse,
+and more closely match other languages.   Also, it will simplify the underlying bytecode which currently inserts
+many ''POP_TOP'' instructions to complete conditionals.  The need to insert these instructions also results in extra
+code paths and jump instructions.  Overall, the language will become more intuitive, more reliable, simpler, and
+faster.
+
+== Disallow calling class methods from instances ==
+
+Calling with a instance is almost never what you want.  When it is done, the results are not especially readable the code
+suggests that it is doing something that it isn't:   {'a'=1}.fromkeys('poof') # what happened to 'a'?
+
+
+== Simplify the syntax for raising exceptions ==
+
+ * Eliminate string exceptions entirely.
+ * Alway require instantation.  IOW, prefer ''raise ValueError(dat)'' to  ''raise ValueError, dat''.
+ * Require that all exceptions subclass from ''Exception''.
+ * Have ''Exception'' be a new-style class
