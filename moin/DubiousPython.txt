@@ -131,6 +131,32 @@ Using a lambda when a function is already named incurs the extra overhead of one
 dict(a=str,
      b=some_dict.get)}}}
 
+== Inappropriate use of Lambda ==
+There are situations where the usage of Lambda is completely inappropriate. The most inappropriate usage is where a lambda is used to create a named function. Especially when that named function uses recursion.
+
+=== Dubious Way ===
+{{{#!python
+bstr = lambda n, l=16: n<0 and binarystr((2L<<l)+n) or n and bstr(n>>1).lstrip('0')+str(n&1) or '0'}}}
+
+=== The Problem ===
+This code was presented on comp.lang.python as a solution to "How do I turn a number into a string of 1's and 0's. The person who posted it copied it verbatim out of the python cookbook, and didn't realise there were significant problems with it.
+
+The code is compressed to the level that it is practically impossible at a first glance to realise if there is anything wrong with it at all. Lets break it down to see the errors. Rewritten as a real function.
+
+{{{#!python
+def bstr(n, length=16):
+    if n == 0:
+        return '0'
+    if n<0:
+        return binarystr((long(2)<<length)+n)
+    return bstr(n>>1).lstrip('0') + str(n&1)}}}
+
+The code calls itself by the wrong name in the if n<0 branch! It calls 'binarystr' recursively instead of 'bstr'.
+
+=== The Solutions ===
+Don't give a lambda a name, even if it only has localised and limited usage. If it needs to be given a name, it has a right to be a normal function. Use 'def' and make a named function.
+
+Don't write lambdas that use 'and' and 'or' with shortcut evaluation in order to return the correct value. The example presented is a good indication of why that can lead to subtly buggy code. Instead, use if statements, and your code will be more readable, and you will be able to spot bugs far more easily.
 
 == Overuse of Regular Expressions ==
 Regular Expressions provde a powerful tool for doing complicated string searches.  However, for simple string searches, regular expressions are often overkill.
