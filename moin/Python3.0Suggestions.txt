@@ -101,3 +101,20 @@ Guido has expressed that this is a highly popular, but badly misunderstood tool 
  * The purpose of the tool is '''not''' to make it more difficult to assign attributes.
  * {{{__slots__}}} do not inherit.
  * {{{__slots__}}} complicates and slows the implementation of new-style classes.
+
+== Extra operators for strings and lists ==
+
+Operators as {{{- & | ^}}} should be used for strings and lists directly in place of making firs a {{{set}}} data type (see [http://www.python.org/peps/pep-0218.html PEP 218 - Adding a Built-In Set Object Type]).
+
+The operators {{{/}}}, {{{*}}} and {{{%}}} could also be used to split and stitch strings and lists:
+{{{#!python
+# split:
+'spameggsham' / 'a' == 'spameggsham'.split('a') == ['sp', 'meggsh', 'm']
+# reminder:
+'spameggsham' % 'a' == 'aa'
+# stitch:
+['sp', 'meggsh', 'm'] * 'a' == 'spameggsham'
+
+# split list:
+[1, 2, 3, 4, 5] / [2, 3] == [[1], [4, 5]]
+}}}
