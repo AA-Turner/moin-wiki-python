@@ -47,7 +47,7 @@ struct hello_callback : hello
 Finally, we add hello_callback to the `class_<>` declaration in our module initialization function, and when we define the function, we must tell Boost.Python about the ''default'' implementation:
 {{{
 // Create the Python type object for our extension class
-class_<hello,hello_callback> ("hello")
+class_<hello,hello_callback> ("hello", init<std::string>())
     // Add a virtual member function
     .def("greet", &hello_callback::default_greet);
 }}}
