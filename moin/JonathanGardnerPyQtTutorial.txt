@@ -1,10 +1,12 @@
 = Jonathan Gardner's PyQt Tutorial =
 
+This is a short tutorial to get you up to speed with PyQt. It assumes some knowledge of bash, Python, and Qt.
+
+If you have questions or comments, you can send them to me at jgardner@jonathangardner.net. You may also make corrections to this page.
+
 [[TableOfContents]]
 
 == Abstract ==
-
-This tutorial was presented at the 2003 Northwest Linux Fest by Jonathan Gardner (jgardner@jonathangardner.net). Feel free to email him with questions.
 
 We will cover:
   * Using Qt Designer to generate Qt ui files.
@@ -212,10 +214,67 @@ Go ahead and run the application now, and use the 'atq' command to see if the 'a
 
 Good? Okay. 
 
+Here is the final code for the 'at.py' file.
+
+  {{{
+from qt import *
+from at_auto import at_auto
+import time
+import sys
+import os
+
+class at(at_auto):
+
+    def __init__(self, parent=None, name=None, fl=0):
+        at_auto.__init__(self,parent,name,fl)
+
+        # Set the date to now
+        now = QDateTime()
+        now.setTime_t(time.time()) # Time in seconds since Unix Epoch
+        self.time.setDateTime(now)
+
+        self.connect(
+            self.schedule, SIGNAL('clicked()'),
+            self.schedule_clicked
+        )
+
+    def schedule_clicked(self):
+        if not str(self.command.text()):
+            QMessageBox.critical(self,
+                "Invalid event", "You must specify an event", 
+                QMessageBox.Ok)
+            return
+        
+        t = str(self.time.dateTime().toString('hh:mm MM/dd/yyyy'))
+        p = os.popen('at -m "%s"'%t, 'w') 
+        p.write(str(self.command.text()))
+        self.close()
+
+if __name__ == "__main__":
+    a = QApplication(sys.argv)
+    QObject.connect(a,SIGNAL("lastWindowClosed()"),a,SLOT("quit()"))
+    w = at()
+    a.setMainWidget(w)
+    w.show()
+    a.exec_loop()
+}}}
+
 == Homework ==
 
 With the time remaining, you may want to add a few extensions.
 
-  * After you schedule the at job, you may want the application to close. Find an appropriate slot to close the 'at' widget or the entire application. Q: Why does closing the 'at' widget shut down the entire application?
+  * Using Qt Designer, add QLabels to describe what each of the inputs do. Notice that you don't have to change any code, just edit the 'at.ui' file and run 'make'.
+
+  * After you schedule the 'at' job, you may want the application to close. Find an appropriate slot to close the 'at' widget or the entire application. Question: Why does closing the 'at' widget shut down the entire application?
 
   * Do some error checking when you schedule the at job . If there are any messages, show them to the user with a QMessageBox.
+
+  * Write an application to list the 'at' queue.
+
+  * Add functionality to edit or remove queued 'at' jobs. Try to reuse as much code as possible. (Hint: the widget that will schedule a new 'at' job is already finished. Try embedding it in a QDialog.)
+
+== Future Directions ==
+
+This application could be part of a suite of Unix command line interfaces. What other commands would you like to implement? I suggest giving things like "crontab" and "ps" a try. Parsing the output of these commands isn't too difficult, and the interface with them is pretty easy.
+
+You may also want to try and combine your new apps with the 'at' app. If you like, you can sell them as a Unix graphical interface, but you'll have to buy the commercial license for both Qt and PyQt unless you stick with something like the GPL.
