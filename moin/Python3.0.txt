@@ -43,20 +43,20 @@ def foo (a as int, b as float) as float:
     ...
 }}}
 
- * Make list comprehensions equivalent to passing a generator expression to `list()`
-   * Reason: essentially the same and removes edge-case differences between the two
- * `as` a keyword [[#g 7]]
- * Have `True` and `False` be keywords [[#f 6]]
-   * Reason: stop assignment to them
- * True division becomes default
- * Remove `__cmp__` (and possibly cmp() ) [[#h 8]]
-  * Reason: TOOWTDI and rich comparisons are another way
- * Raise exception when comparing two heterogeneous types with operators other than `==` and `!=`
-  * Reason: comparisons do not make sense
- * Automatically have types compare as not equal when types are heterogeneous [[#i 9]]
-  * Reason: equality does not make sense between heterogeneous types
- * Exceptions inherit from common base class [[#j 10]]
-  * Reason: forces use of classes as objects raised by exceptions; simplifies implementation
+ * Make list comprehensions equivalent to passing a generator expression to `list()`.
+   * Reason: they are essentially the same and it would remove edge-case differences between them.
+ * Make `as` a true keyword. [[#g 7]]
+ * Make `True` and `False` keywords. [[#f 6]]
+   * Reason: make assignment to them impossible.
+ * Make true division default.
+ * Remove `__cmp__` (and possibly `cmp()`). [[#h 8]]
+   * Reason: [TOOWTDI] and rich comparisons are another way.
+ * Raise an exception when comparing two heterogeneous types with operators other than `==` and `!=`.
+   * Reason: such comparisons do not make sense, and are especially confusing to new users of Python.
+ * Have types compare as unequal when they are heterogeneous. [[#i 9]]
+   * Reason: equality does not make sense between heterogeneous types.
+ * Require that all exceptions inherit a common base classs. [[#j 10]]
+   * Reason: forces the use of classes as objects raised by exceptions and simplifies the implementation.
 
 
 == Built-In Changes ==
@@ -95,8 +95,9 @@ def foo (a as int, b as float) as float:
  * Remove `sys.exc_type`. [[#a 1]]
    * Instead: use `sys.exc_info`.
    * Reason: it is not thread safe.
- * Reorganize with more package structure
-   * Reason: too many modules to have in a flat hierarchy
+ * Reorganize standard library to have more package structure.
+   * Reason: there are too many modules to keep a flat hierarchy.
+
 
 == Unresolved Issues ==
 
@@ -105,8 +106,9 @@ def foo (a as int, b as float) as float:
  * Should the `raise x, y` syntax be removed as to favor `raise x(y)`?
  * Are `repr()` and `str()` both needed? [[#a 1]]
  * Should `globals()`, `locals()` and `vars()` be removed? [[#a 1]]
- * Keyword for allowing shadowing of built-ins?
- * Prevent injecting into another modules global namespace?
+ * Should there be a keyword for allowing the shadowing of built-ins?
+ * Should injecting into another module's global namespace be prevented?
+
 
 == References ==
 
@@ -115,8 +117,8 @@ def foo (a as int, b as float) as float:
  * [[Anchor(c)]] [3] PEP 4 -- Deprecation of Standard Modules: http://python.org/peps/pep-0004.html
  * [[Anchor(d)]] [4] PyCon 2003 State of the Union Address: http://www.python.org/doc/essays/ppt/pycon2003/pycon2003.ppt
  * [[Anchor(e)]] [5] PEP 3000 -- Python 3.0 Plans: http://python.org/peps/pep-3000.html
- * [[Anchor(f)]] [6] "Constancy of None" thread -- http://mail.python.org/pipermail/python-dev/2004-July/046294.html
- * [[Anchor(g)]] [7] " "as" to be a keyword?" thread -- http://mail.python.org/pipermail/python-dev/2004-July/046316.html
- * [[Anchor(h)]] [8] "lists vs. tuples" thread -- http://mail.python.org/pipermail/python-dev/2003-March/034073.html
- * [[Anchor(i)]] [9] another email from "lists vs. tuples" thread -- http://mail.python.org/pipermail/python-dev/2003-March/034074.html
- * [[Anchor(j)]] [10] "Exceptional inheritance patterns" thread -- http://mail.python.org/pipermail/python-dev/2004-August/047114.html
+ * [[Anchor(f)]] [6] Python-Dev -- Constancy of None: http://mail.python.org/pipermail/python-dev/2004-July/046294.html
+ * [[Anchor(g)]] [7] Python-Dev -- "as" to be a keyword?: http://mail.python.org/pipermail/python-dev/2004-July/046316.html
+ * [[Anchor(h)]] [8] Python-Dev -- lists vs. tuples: http://mail.python.org/pipermail/python-dev/2003-March/034073.html
+ * [[Anchor(i)]] [9] Python-Dev -- lists vs. tuples: http://mail.python.org/pipermail/python-dev/2003-March/034074.html
+ * [[Anchor(j)]] [10] Python-Dev -- Exceptional inheritance patterns: http://mail.python.org/pipermail/python-dev/2004-August/047114.html
