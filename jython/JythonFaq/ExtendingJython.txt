@@ -1,10 +1,13 @@
-[:../: FAQ Home]
-
+#acl MoinPagesEditorGroup:read,write,delete,revert All:read
 = Extending Jython =
+
+JythonFaq
+
+[[TableOfContents]]
 
 ----
 
-'''How do I create Java classes that emulate Jython Dictionaries and Sequences?'''
+== How do I create Java classes that emulate Jython Dictionaries and Sequences? ==
 
 In order to emulate Dictionaries and Sequences, first your Java class must "extend" the org.python.core.PyObject class. The following methods can then be defined on your class in order to emulate these basic Jython types:
 
@@ -15,11 +18,11 @@ In order to emulate Dictionaries and Sequences, first your Java class must "exte
 
     public void __delitem__(PyObject key);
   }}}
-Additionally, you might want to throw the org.python.core.Py.KeyError object if you have any exceptions (Note, you need not declare the Java method as throwing anything.) 
+Additionally, you might want to throw the org.python.core.Py.KeyError object if you have any exceptions (Note, you need not declare the Java method as throwing anything.)
 
 ----
 
-'''How do I emulate Jython object attribute access with a Java class?'''
+== How do I emulate Jython object attribute access with a Java class? ==
 
 You can develop your own Java class that emulates Jython objects by first extending the org.python.core.PyObject class. Then, implement the following methods on your Java class:
   {{{#!java
@@ -43,12 +46,12 @@ If you plan on storing functions as attributes of your Java object (so that you 
 
     public PyObject invoke(String name, PyObject[] args);
 
-    public PyObject invoke(String name, PyObject[] args, String[] keywords); 
+    public PyObject invoke(String name, PyObject[] args, String[] keywords);
   }}}
 
 ----
 
-'''How do I support *args and **kw in Java methods?'''
+== How do I support *args and **kw in Java methods? ==
 
 ''(thanks to Finn Bock for the information)''
 
@@ -62,4 +65,6 @@ The keywords array contains all of the keywords for the keyword-defined argument
   }}}
 args would be: [1, 2, 3, 4, 5] and keywords would be: ['four', 'five'] (an array of 2 elements.)
 
-Additionally, you can use the experimental argument parser org.python.core.ArgParser to deal mapping these two arrays. Consult the Javadocs (or source) for further details on org.python.core.ArgParser. 
+Additionally, you can use the experimental argument parser org.python.core.ArgParser to deal mapping these two arrays. Consult the Javadocs (or source) for further details on org.python.core.ArgParser.
+
+----
