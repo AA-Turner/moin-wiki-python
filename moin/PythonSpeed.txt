@@ -70,6 +70,20 @@ There are various common pitfalls when it comes to performance in Python.
  * ''sorting with custom sort order.''
    Sometimes bad: using a custom comparison function to the {{{sort}}} method. It causes a lot of relatively slow function calls during the sorting. It's often better (but not always - try it first!) to use the [http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/52234 Decorate-Sort-Undecorate] pattern (create a temporary list with all sort keys in the correct place, call builtin sort, extract sorted data from the resulting list). Note that Python 2.4 will include the DSU pattern in the list.sort method already, to optimize this common case.
 
+'''Use the correct tools for the job.'''
+
+Investigate what tools are best suited to do the job. 
+''Python comes with a lot of highly optimized modules for a wide range of tasks.
+A lot of them are actually not written in Python, but in C/C++!''
+Examples of such modules: array, struct, cPickle, md5, zlib, cStringIO, regular expressions, XML parsers (expat). Before writing some algorithm or function in Python, first have a good look at what the standard library already offers. Chances are that even when the standard library's offering is written in Python (instead of being a C extension module), it performs faster than what you would write, because a lot of people have already looked at it and improved its performance.
+
+Also Python's built-in types such as Long, dictionaries and lists are implemented in highly optimized C code.
+When you use these types in your Python code, it will execute at very high speed because the underlying
+implementation is compiled C code. Long multiplication, list sorting, and so on are all executed
+at maximum speed.
+
+If you find that a particular piece of Python code runs too slow, you should consider to build an extension module in C or C++ for that piece of code. It's not too hard, Python's C API is very rich and there are various tools to make it even easier: Pyrex, Boost, distutils.
+
 '''Psyco JIT-compiler'''
 
 For a quick win, use [http://psyco.sourceforge.net/ Psyco]. It's a Just-in-time compiler for Python, that will
@@ -84,22 +98,6 @@ instance when you call a complex calculation 1000 times, and 900 times the input
 is the integer 100 and the output is the integer 99887, Psyco can insert a piece
 of machine code that checks if the input is 100, and then returns 99887 directly,
 if it's not 100, only then do the calculation.
-
-'''Use the correct tools for the job.'''
-
-Investigate what tools are best suited to do the job. 
-Python comes with a lot of highly optimized modules for a wide range of tasks.
-A lot of them are actually not written in Python, but in C/C++!
-Examples of such modules: array, struct, cPickle, md5, zlib, cStringIO, regular expressions, XML parsers (expat).
-
-Also Python's built-in types such as Long, dictionaries and lists are implemented in highly optimized C code.
-When you use these types in your Python code, it will execute at very high speed because the underlying
-implementation is compiled C code. Long multiplication, list sorting, and so on are all executed
-at maximum speed.
-
-If you find that a particular piece of Python code runs too slow, you should consider to
-build an extension module in C or C++ for that piece of code. It's not too hard, Python's
-C API is very rich and there are various tools to make it even easier: Pyrex, Boost, distutils.
 
 == Premature optimization ==
 
