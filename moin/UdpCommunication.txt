@@ -20,7 +20,7 @@ print "message:", MESSAGE
 
 sock = socket.socket( socket.AF_INET, # Internet
                       socket.SOCK_DGRAM ) # UDP
-sock.sendto( MESSAGE, (UDP_IP,_PORT) )
+sock.sendto( MESSAGE, (UDP_IP, UDP_PORT) )
 }}}
 
 == Receiving ==
@@ -39,7 +39,7 @@ sock = socket.socket( socket.AF_INET, # Internet
 sock.bind( (UDP_IP,UDP_PORT) )
 
 while True:
-    data, addr = sock.recvfrom( 1024 ) # what is 1024? "buf"..?
+    data, addr = sock.recvfrom( 1024 ) # buffer size is 1024 bytes
     print "received message:", data
 }}}
 
@@ -47,6 +47,8 @@ while True:
 
 I have two questions:
  * What is the 1024 in recvfrom?
+   It is the buffer size.[[BR]]
+   >>> help (sock.recvfrom)
  * How do you subscribe to a WikiPedia:Multicast_address ?
 
 It seems that just setting UDP_IP to "224.0.0.250" (say) isn't quite good enough.
