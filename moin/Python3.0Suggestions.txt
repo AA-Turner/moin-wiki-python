@@ -41,6 +41,13 @@ Other syntax ideas and feature ideas for Python 3.0.
                  index[word].append(line)
 }}}
 
+    ''I definitely agree that this is the right way to go with setdefault.  Note though that setdefault should probably take *args and **kwds parameters so that the following would also be valid: {{{#!python
+d.setdefault(function=list, [0]) }}} {{{#!python
+d.setdefault(function=dict, a=0, b=1)
+}}} It'd make the argument parsing a little bit more of a pain, but I think it'd make the function version of setdefault much more flexible. -- StevenBethard''
+
+
+
 == Better boolean logic ==
 
 The and/or operators should only return boolean values.  This makes their use less error-prone, less prone to abuse,
