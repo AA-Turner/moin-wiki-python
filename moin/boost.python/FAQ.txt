@@ -31,4 +31,10 @@ BOOST_PYTHON_MODULE_INIT(test_pointer_adoption_ext)
 }
 }}}
 ----
-2.
+2. ''What is the relation between this no_init and boost::noncopyable?''
+
+The only relationship is that they both deal with constructors.
+ *  no_init means "do not try to define a Python __init__ function"
+ *  noncopyable means "do not try to register a converter which can
+    convert C++ T return values to python".
+----
