@@ -76,8 +76,6 @@ Maybe some traditional package concepts:
   
   -- BobIppolito
 
- * 
-
  * Files that are used by a package, i.e. config and data files (possibly others), should be relocatable. 
    --Moxo
 
@@ -96,3 +94,8 @@ Maybe some traditional package concepts:
 
   -- Mark Alexander
 
+ * Well it already has to support at least three package locations anyway (vendor, system, user), so surely you'll be able to jigger some site_config.py or environment variable to add whatever installation path you'd like and create a new installation database there.  What I'm against is moving things once they're already installed, especially when you only move PART of a package (i.e. just data files, not code).  You should of course be free to choose whichever installation root you'd like, but I'm totally against giving the user a supported method for move things around on their own without an uninstall/reinstall cycle or at least some software tool to do it for them.  It's NOT worth the pain.  
+
+ * I don't consider consolidation of PYTHONDIR/PACKAGEDIR/CONFIGDIR/DATADIR arbitrarily imposed, there's good reason to keep stuff together.  For example, if they're always close to each other on the filesystem, the code could ALWAYS locate its data dir relatively without having to look in /usr/local/share or some such, even if it were wholly moved elsewhere (another volume, not mounted as / maybe).  Makes things much easier to package into self-contained units (i.e. py2exe, bundlebuilder on OS X) and it makes sense for something like Win32, which doesn't really have anywhere sensible to put that stuff in the first place.  If you REALLY REALLY want to put python data files in /usr/local/share somewhere, then it should be "/usr/local/share/python%(Python-Version)s/data/%(Package-Name)s" or something completely unambiguous and standard.  You shouldn't have to guess.
+
+ -- BobIppolito
