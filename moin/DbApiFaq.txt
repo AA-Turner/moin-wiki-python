@@ -1,0 +1,13 @@
+These are the frequently asked questions from the DB-SIG mailing list.
+
+1. How do I pass parameters to the cursor.execute method?
+
+Don't, use the '%' concatenation operator, pass them as a series of extra parameters. For instance
+
+>>> cursor.execute("SELECT * FROM my_table WHERE my_column = '%s'" % "column_value")
+
+May do what you want, but more by accident than design. If you change it to;
+
+>>> cursor.execute("SELECT * FROM my_table WHERE my_column = %s", "column_value")
+
+Then the DB-API module will make sure your value is correctly escaped and turned into an object appropriate for the database. 
