@@ -15,6 +15,7 @@ Boost.Python extension classes support single and multiple-inheritance in Python
 >>> x.g()
 'MyExtensionClass.g()'
 }}}
+
 == Reflecting C++ Inheritance Relationships ==
 Boost.Python also allows us to represent C++ inheritance relationships so that wrapped derived classes may be passed where values, pointers, or references to a base class are expected as arguments. The declare_base member function of class_builder<> is used to establish the relationship between base and derived classes: 
 {{{
@@ -49,13 +50,13 @@ using namespace boost::python;
 
 BOOST_PYTHON_MODULE(my_module)
 {
-    class_<Base> ("Base", no_init);          
+    class_<Base>("Base", no_init);          
                                                                               
     class_<Derived, bases<Base> >("Derived", no_init); 
                                                                               
-    def(derived_as_base, "derived_as_base");                        
-    def(get_name, "get_name");                                      
-    def(get_derived_x, "get_derived_x"); 
+    def("derived_as_base", derived_as_base);                        
+    def("get_name", get_name);                                      
+    def("get_derived_x", get_derived_x); 
 }
 }}}
 Then, in Python: 
@@ -74,10 +75,3 @@ objects of wrapped class Derived can be passed where Derived is expected but whe
 >>> get_derived_x(derived_as_base()) 
 -1
 }}}
-
-|| comment: || def(derived_as_base, "derived_as_base"); etc. would rather be def("derived_as_base", derived_as_base); etc. ||
-
-== Inheritance Without Virtual Functions ==
-If for some reason your base class has no virtual functions but you still want to represent the inheritance relationship between base and derived classes, '''???'''
-
-|| DA? || Is it still possible/necessary? ||
