@@ -45,7 +45,7 @@ Create a new widget. Name it 'at_auto'. Add some stuff to it:
 
   * Add a QLineEdit. Name it "command" in the property dialog.
   * Add a QPushButton. Name it "schedule" in the property dialog. Change its text to "Schedule".
-  * Add a QDateTime. Name it "time" in the property dialog.
+  * Add a QDateTimeEdit. Name it "time" in the property dialog.
 
 Now, rearrange the layout using the Qt layout tools to your heart's content. You may need to use some spacers as well.
 
@@ -129,6 +129,21 @@ $ python at.py
 
 Tada! You have your application.
 
+== Setting the Default Date / Time ==
+
+Let's set a default value for the QDateTimeEdit widget. The QDateTimeEdiy widget expects a QDateTime for an argument to the setDateTime method, so we'll have to create one. But how to set the time of the QDateTime? Examination of the documentation reveals that the setTime_t method will allow us to set the date with the time in seconds from the Unix epoch. We can get that from the time() function in the built-in time module.
+
+Here's the code that does that. We'll put this in the __init__ method so that it gets populated correctly from the beginnin. Remember to import time!
+
+  {{{
+        # Set the date to now
+        now = QDateTime()
+        now.setTime_t(time.time()) # Time in seconds since Unix Epoch
+        self.time.setDateTime(now)
+}}}
+
+This code snippet should show how easily python and PyQt work with each other. It should also demonstrate the thought processes you'll have to go through to manipulate Qt's widgets.
+
 == Signals and Slots ==
 
 Everything you do from here on out is connecting Signals to Slots. It's pretty easy, which is why I like PyQt.
@@ -165,4 +180,26 @@ QObject.connect(some_object, SIGNAL('toggled(bool)'), some_object, SLOT('the_slo
 
 Our application is going to respond to only one signal: the "Schedule" button being pressed. What it will do is run the "at" command with appropriate arguments.
 
-< More later... >
+Here is the code to initiate the connection:
+  {{{
+self.connect(
+    self.schedule, SIGNAL('clicked()'),
+    self.schedule_clicked
+)
+}}}
+
+Notice that we are connecting a C++ Signal to a Python Slot. However, that slot doesn't exist yet. Let's add it to the 'at' class.
+
+  {{{
+    def schedule_clicked(self):
+        if not str(self.event.text()):
+            QMessageBox.critical(self,
+                "Invalid event", "You must specify an event", 
+                QMessageBox.Ok)
+            return
+        
+        t = str(self.date_time.dateTime().toString('hh:mm MM/dd/yyyy'))
+        p = os.popen('at -m "%s"'%t, 'w') 
+        p.write(str(self.event.text()))
+        self.close()
+}}}
