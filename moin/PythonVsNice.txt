@@ -40,8 +40,8 @@ In order of the Nice manual:
 
    * Functions and methods are first-class objects in BOTH Jython and Nice.
    * Jython does NOT support multi-dispatch, only single-dispatch.
-   * Nice distinguishes between "functions" and "methods" (the latter can be specialized for multi-dispatch).
-   * "Functions" and "methods" are the same in Jython, except that there exists something called a "bound method". If "fido" is an instance of the class "Dog" with the method "bark(timesToBark)", then Dog.bark is an ordinary function taking two arguments, a Dog and an integer, while fido.bark is a "bound method" taking ONE argument (an integer), and performing a call to Dog.bark with the first parameter automatically set to fido.
+   * Nice distinguishes between "functions" and "methods" (the latter can be specialized for multi-dispatch). ''Not anymore: everything is a method in Nice, a "function" is now simply a method with a default implementation. This might allow to reorganize these sections, but I leave that to somebody more fluent in Python.''
+   * "Functions" and "methods" are the same in Jython, except that there exists something called a "bound method". If "fido" is an instance of the class "Dog" with the method "bark(timesToBark)", then Dog.bark is an ordinary function taking two arguments, a Dog and an integer, while fido.bark is a "bound method" taking ONE argument (an integer), and performing a call to Dog.bark with the first parameter automatically set to fido. In Nice, you would need to write "fido.bark" as the closure "int timesToBark => fido.bark(timesToBark)".
     
 == Functions ==
 
@@ -67,7 +67,7 @@ In order of the Nice manual:
    * Both Nice and Jython allow local and package-level variables.
    * Nice allows local and package-level constants. Jython has no way of enforcing constantness, relying solely on the convention that a name in ALL_CAPS is never intended to be changed.
    * Both Jython and Nice allow looping through the items in a container with a simple for statement. Although this seems trivial, it is in fact a very important simplification of nearly all programs, improving readability and reducing errors. Both allow looping over the characters of a string, and the items in a list; Jython also allows looping over dicts.
-   * Nice allows the declaration of local functions with access to their enclosing scope. Jython allows this also, but it permits the local functions to be named. In either case, the result is a first-class object which captures its local environment.
+   * Nice allows the declaration of local functions with access to their enclosing scope. Jython allows this also, but it permits the local functions to be named. (''Nice also requires local functions to be named. Anonymous functions are also allowed, but these are expressions. An anonymous local function declaration statement does not seem to make sense: how would you refer to it?'') In either case, the result is a first-class object which captures its local environment.
    
 == Expressions ==
 
@@ -95,12 +95,12 @@ The above is organized according to the Nice manual, but there are a few points 
    * '''Whitespace:''' Jython uses indentation level to indicate subsidiary statements instead of using "{" "}" pairs. This is the feature most frequently and most vehamently denounced by people who have never used the language (and is usually mis-named "significant whitespace"). But almost NO ONE who has used the language for at least a week complains about this, nearly all find it BETTER (after all, you're going to indent anyway... why not have the programmer and the compiler looking for the same indicators). Try it out... you'll like it.
    * '''Data Types:''' Jython has some more powerful data types built in. In addition to tuples (which Nice also has) it has Lists (automatically re-sizing, like A''''''rrayList, not like arrays), and Dicts (like Map). Furthermore, there is basic language syntax supporting these elementry types ("myDict['abc']" to access an item in myDict, or "myList[3:6] = []" to delete items 3 up through 6 from myList. These data types make the language tremendously more expressive.
    * '''Booleans:''' Nice uses java's (primitive) boolean type. Jython provides all objects with a truth value (0, "", and empty collection types are false, most other things are true). Normally, Jython will use 1 and 0 for true and false (can also be spelled "True" and "False". This offers less type safety (might accidentally test truth value of something you didn't intend to), but often is more expressive (eg: "if myList:" instead of "if (myList.size() > 0) {").
-   * '''Operator Overloading:''' Jython allows user-defined classes to declare special methods to overload operators and special language syntax (like subscripting). Nice provides a similar ability to overload the "[]" syntax (collection subscripting), but it doesn't support operator overloading.
+   * '''Operator Overloading:''' Jython allows user-defined classes to declare special methods to overload operators and special language syntax (like subscripting). Nice provides a similar ability to overload the "[]" syntax (collection subscripting) and all existing operators. Does Jython allow the definition of arbitrary operators (e.g. "+==+") ?
    * '''Changing objects dynamically:''' In Nice (or java) an object, once created, has a particular set of fields and methods... no more, no fewer. In Jython, new fields or new methods can be added AT RUNTIME, even to INDIVIDUAL OBJECTS. Imagine, your function was passed some random objects, and you simply add a "sortOrder" field to each one. Or you take an individual object and replace some of its methods (kind of like value dispatch, but performed at runtime).
    * '''Creating classes dynamically:''' In Jython, functions or methods can also create new classes dynamically, even at runtime. The feature is rarely used, but can be quite powerful for advanced users. Nice has no equivalent feature.
    * '''Interpreter:''' Jython is called a "scripting language" for two reasons -- it is easy to write very simple programs in it (no classes required if not desired... no functions required either if just one "function" is to be performed). And secondly, because it is interpreted. You can fire up a Jython interpreter and just type code at it... create a new class, create an instance, run some code, then stop and examine the objects returned. This is a very useful way of "playing around" with Jython code (it takes less time to just TRY IT than to look up syntax in the manual!). It is also an invaluable debugging tool -- I often use Jython to debug my pure java programs because it provides a way to interactively investigate a live program.
    
 ----
 
-Contributors: MichaelChermside
+Contributors: MichaelChermside, DanielBonniot
 See also LanguageComparisons.
