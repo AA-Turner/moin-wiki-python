@@ -23,12 +23,10 @@ namespace { // Avoid cluttering the global namespace.
 }}}
 To expose the class, we use a ''class_'' builder. Class member functions are exposed by using the ''def()'' member:
 {{{
-#include <boost/python/module.hpp>
-#include <boost/python/class.hpp>
-#include <boost/python/def.hpp>
+#include <boost/python.hpp>
 using namespace boost::python;
 
-BOOST_PYTHON_MODULE_INIT(getting_started2)
+PYTHON_MODULE(getting_started2)
 {
     // Create the Python type object for our extension class and define __init__ function.
     class_<hello>("hello", init<std::string>())
