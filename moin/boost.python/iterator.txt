@@ -1,29 +1,27 @@
 ==== Iterators ====
 Python iterator support a highly flexible interface allowing:
- 
- * Direct exposure of a class' begin() and end() functions: 
+
+ * Direct exposure of a class' begin() and end() functions:
 {{{
     ...
     .def("__iter__", iterator<list_int>())
 }}}
- * Creation of iterators from member functions... 
+ * Creation of iterators from member functions...
 {{{
     ...
     .def("__iter__"
          , range(&my_class::x_begin, &my_class::x_end))
-    )
 }}}
- * ...and member data: 
+ * ...and member data:
 {{{
     ...
     .def("__iter__"
          , range(&std::pair<char*,char*>::first, &std::pair<char*,char*>::second))
-    )
 }}}
- * The ability to specify boost.python/CallPolicies, e.g. to prevent copying of heavyweight values: 
+ * The ability to specify [http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/*checkout*/boost/boost/libs/python/doc/v2/CallPolicies.html CallPolicies], e.g. to prevent copying of heavyweight values:
 {{{
     ...
-    .def("__iter__", 
+    .def("__iter__"
          , range<return_value_policy<copy_non_const_reference> >(
                &my_sequence<heavy>::begin
              , &my_sequence<heavy>::end))
