@@ -96,15 +96,46 @@ There is a way to do that, but it's more convoluted than it should be:
 
 === std::C++ container ===
 You can always wrap the container with class_ directive.
-For example:
+For example for std::map:
 {{{
 template<class Key, class Val>
 struct map_item
 {
-  typedef std::map<Key,Val> Map;
+    typedef std::map<Key,Val> Map;
 
-  static Val& get(Map& self, const Key idx) { return self[idx]; }
-  static void set(Map& self, const Key idx, const Val val) { self[idx]=val; }
+    static Val& get(Map& self, const Key idx) {
+      if( x.find(n) != x.end() ) return x[n];
+      PyErr_SetString(PyExc_KeyError,"Map key not found");
+      throw_error_already_set();
+    }
+
+    static void set(Map& self, const Key idx, const Val val) { self[idx]=val; }
+
+    static void del(Map& self, const Key n) { self.erase(n); }
+
+    static bool in(T const& x, const Key n) { return x.find(n) != x.end(); }
+
+    static list keys(Map const& x)
+    {
+        list t;
+        for(T::const_iterator it=x.begin(); it!=x.end(); ++it)
+            t.append(it->first);
+        return t;
+    }
+    static list values(Map const& x)
+    {
+        list t;
+        for(T::const_iterator it=x.begin(); it!=x.end(); ++it)
+            t.append(it->second);
+        return t;
+    }
+    static list items(Map const& x)
+    {
+        list t;
+        for(T::const_iterator it=x.begin(); it!=x.end(); ++it)
+            t.append( make_tuple(it->first, it->second) );
+        return t;
+    }
 }
 
 using namespace boost::python;
@@ -113,7 +144,13 @@ class_<Map>("Map")
   .def("__len__", &Map::size)
   .def("__getitem__", &map_item<Key,Val>().get, return_value_policy<copy_non_const_reference>() )
   .def("__setitem__", &map_item<Key,Val>().set)
-  .def("append", &Map::insert)
+  .def("__delitem__", &map_item<Key,Val>().del)
+  .def("clear", &Map::clear)
+  .def("__contains__", &map_item<Key,Val>().in)
+  .def("has_key", &map_item<Key,Val>().in)
+  .def("keys", &map_item<Key,Val>().keys)
+  .def("values", &map_item<Key,Val>().values)
+  .def("items", &map_item<Key,Val>().items)
   ;
 }}}
 === "Raw" function ===
