@@ -57,6 +57,28 @@ Available at:
  * svn://colorstudy.com/home/ianb/config/
  * http://colorstudy.com/cgi-bin/viewcvs.cgi/home/ianb/config/
 
+== Skip's Idea ==
+
+In my use of INI files I've always been annoyed that I couldn't nest sections to an arbitrary depth.
+I also figured indentation would be a good way to go, though YAML always seemed too complex.
+I worked up a little [http://www.musi-cal.com/~skip/python/cfgparse.py config file parser] that
+reads and writes files like
+
+{{{
+empty section1:
+level1 = new val
+section1:
+# this is a comment for section1.item1:
+    item1 = item 1
+          # this is another comment
+    subsection:  
+        item2 = item 2
+section2:
+   subsection:
+       item3 = item 3
+very last = 7
+}}}
+
 = Features =
 
 This is a list of features that should be taken into account.
