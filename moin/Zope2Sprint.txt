@@ -22,6 +22,13 @@ Topic Suggestions for Zope 2 sprint at Pycon
    employer and would help justify my attending the sprint ;-)
    - PaulWinkler
 
+   Addendum: I now suspect that 99% of the problem in practice is due
+   to the initial load time when using ZEO. Without ZEO, zope benchmarks
+   much slower than apache on localhost - but across a network zope is
+   very close to apache. Adding ZEO to the mix is about 10 times slower.
+   After that, if the data (or most of it) is in the ZEO cache, speed is
+   very close to plain-Zope speed. More testing needed.
+
  CMF Core / Default
 
    There's probably plenty of useful work that could be done on CMF.
