@@ -9,7 +9,8 @@ String concatenation is building up a relatively lengthy string from a collectio
 === Dubious Way ===
 Newcomers to Python often try to build strings up like this:
 
-{{{>>> string_list = ['one', 'big', 'string', 'in', 'pieces']
+{{{#!python
+>>> string_list = ['one', 'big', 'string', 'in', 'pieces']
 >>> new_string = "" 
 >>> for s in string_list: 
         new_string = new_string + s
@@ -24,22 +25,25 @@ This is slow and resource heavy. Each time through the {{{for}}} loop, a new str
 ==== String Formatting ====
 For short cases where the number of strings to be joined is known, you can use string formatting as follows:
 
-{{{>>> print '%s%s%s%s%s' %tuple(string_list)
+{{{#!python
+>>> print '%s%s%s%s%s' %tuple(string_list)
 onebigstringinpieces}}}
 
-This is much more efficient, but is also rather more limited in the range of circumstances to which it applies. It could be made more general by constructing the formatting string as a function of {{{len(string_list)}}}, but this would be a bit dubious, too, when we have
+This is much more efficient, but is also rather more limited in the range of circumstances to which it applies. It could be made more general by constructing the formatting string as a function of `len(string_list)`, but this would be a bit dubious, too, when we have
 
 ==== The join method of strings ====
 The join method of the string type lets you perform the concatenation as follows:
 
-{{{>>> print "".join(string_list)
+{{{#!python
+>>> print "".join(string_list)
 onebigstringinpieces}}}
 
 This is quite efficient and perfectly general as it applies to any arbitrary list of strings. (You don't need to know the list length in advance.)
 
-The major thing to puzzle the newcomer here is why {{{"".join(some_list)}}} rather than {{{some_list.join()}}}. The way to think of this is that you are using the string "" to join the elements of some_list. Hence,
+The major thing to puzzle the newcomer here is why `"".join(some_list)` rather than `some_list.join()`. The way to think of this is that you are using the string "" to join the elements of some_list. Hence,
 
-{{{>>> print 'JOINT'.join(string_list)
+{{{#!python
+>>> print 'JOINT'.join(string_list)
 oneJOINTbigJOINTstringJOINTinJOINTpieces}}}
 
 That said, some do consider this aspect of the join method of strings odd enough to count as a PythonWart.
@@ -50,12 +54,14 @@ That said, some do consider this aspect of the join method of strings odd enough
 Among the most common tasks in programming is to test if a condition obtains and act accordingly. It is common for newcomers to Python to adopt an all-together overly verbose idiom for this.
 
 === Dubious Way ===
-{{{if (count > 10) == True:
+{{{#!python
+if (count > 10) == True:
     # continue process}}}
 
 and 
 
-{{{def count_tester(count):
+{{{#!python
+def count_tester(count):
     if count > 10:
         return True
     else:
@@ -65,7 +71,8 @@ and
 There is a (very slight) speed of execution inefficiency in these examples. But much more important is the speed of entry and understanding inefficiency. All other things being equal, extra typing is evil. And, unless some gain in clarity is purchased by the extra characters, the more characters in the code, the longer that code will take to understand. (The programming time you save could well be your own!)
 
 === Preferred Alternatives ===
-{{{if count > 10:
+{{{#!python
+if count > 10:
     # continue process
 
 def count_tester(count):
