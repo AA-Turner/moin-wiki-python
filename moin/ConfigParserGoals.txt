@@ -1,5 +1,6 @@
 There has been some confusion between "In memory storage of configuration data" and "Simple persistent storage of configuration data".  Part of the problem is that almost every configuration storage system (including ConfigParser, optparse, and getopt) comes with its own in-memory API.  In memory needs a good programmer API.  Persistent needs a good user API, and may not need to reflect the full power of the in-memory.  How should we separate these?
 
+  I (VinaySajip) think these concerns are to some extent orthogonal. Access to values should be powerful but easy, whether the data comes from a persistent store or not. I presume that's what you mean by 'programmer API'. If by 'Persistent needs a good user API' you mean 'The file format should be easy to use', I agree. Or is there some other aspect of 'user API', other than the file format, which I'm missing?
 
 = ConfigParser NG Goals: Competing Concepts =
 
