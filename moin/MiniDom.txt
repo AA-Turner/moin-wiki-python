@@ -27,11 +27,26 @@ print dom2.firstChild.firstChild.nextSibling.nextSibling.nodeName # will return 
 print dom2.firstChild.firstChild.nextSibling.nextSibling.nodeValue # will return " some mode data"
 }}}
 
-== Common Use ==
+== Examples of Use ==
 
  * node.nodeName
  * node.nodeValue
  * node.childNodes
+
+=== Import a Node ===
+
+You can use DOM 2 "importNode" to take part of one XML document, and put it into another XML document.
+
+{{{
+#!python
+from xml.dom.minidom import parse
+dom1 = parse("foo.xml")
+dom2 = parse("bar.xml")
+x = dom1.importNode(dom2.childNodes[1],  # take 2nd node in "bar.xml"
+                    True)  # deep copy
+dom1.childNodes[1].appendNode(x)  # append to children of 2nd node in "foo.xml"
+print dom1.toxml()
+}}}
 
 == Links ==
 
