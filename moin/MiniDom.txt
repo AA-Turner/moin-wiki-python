@@ -6,25 +6,8 @@ from xml.dom.minidom import parse, parseString
 
 dom1 = parse( "foaf.rdf" )   # parse an XML file
 dom2 = parseString( "<myxml>Some data <empty/> some more data</myxml>" )
-}}}
-
-Then you can do things like:
-
-{{{
-#!python
-dir( dom2 ) # get a list of things to do
-
-print dom2.toxml() # prints out "<?xml version="1.0" ?>..."
-print dom2.nodeName # will return "#document"
-print dom2.firstChild.nodeName # will return "myxml" because it's <myxml>...
-print dom2.firstChild.nodeValue # it's None! (everything's in the children.)
-print dom2.firstChild.hasChildNodes() # it's True.
-print dom2.firstChild.firstChild.nodeName # will return "#text"
-print dom2.firstChild.firstChild.nodeValue # will return "Some data"
-print dom2.firstChild.firstChild.nextSibling.nodeName # will return "empty" because it's <empty/>
-print dom2.firstChild.firstChild.nextSibling.nodeValue # it's None!
-print dom2.firstChild.firstChild.nextSibling.nextSibling.nodeName # will return "#text"
-print dom2.firstChild.firstChild.nextSibling.nextSibling.nodeValue # will return " some mode data"
+print dom1.toxml()
+print dom2.toxml()
 }}}
 
 == Examples of Use ==
@@ -32,6 +15,43 @@ print dom2.firstChild.firstChild.nextSibling.nextSibling.nodeValue # will return
  * node.nodeName
  * node.nodeValue
  * node.childNodes
+
+=== Find Elements ===
+
+You can manually walk through the {{{childNodes}}} tree, comparing {{{nodeName}}}s.
+
+You might be able to use {{{getElementsByTagName}}} as well:
+
+{{{
+#!python
+from xml.dom.minidom import parse
+dom = parse("foo.xml")
+for node in dom.getElementsByTagName('bar'):  # visit every node <bar />
+    print node.toxml()
+}}}
+
+{{{getElementsByTagName}}}, works recursively into the tree, I believe.
+
+=== Add an Element ===
+
+Create & add an XML element (Something like {{{<foo />}}}) to an XML document.
+
+{{{
+#!python
+from xml.dom.minidom import parse
+dom1 = parse("bar.xml")
+x = dom1.createElement("foo")  # creates <foo />
+dom1.childNodes[1].appendChild(x)  # appends at end of 1st child's children
+print x.toxml()
+}}}
+
+=== Add an Element with Text Inside ===
+
+Create & add an XML element to an XML document, the element has text inside.
+
+ex: {{{<foo>hello, world!</foo>}}}
+
+(researching)
 
 === Import a Node ===
 
