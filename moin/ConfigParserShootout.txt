@@ -90,7 +90,35 @@ very last = 7
 
 == Dan Gass' ==
 
-I've had a need for some of the ideas in section 4.3 and 4.4 so I've been busy creating a new configuration parser.  It can parse .ini (extended syntax as documented in section 4.3) or run Python configuration files (just like [https://sourceforge.net/projects/config-py/ config-py]).  It can easily be extended to parse any format such as XML.  It is modeled after optparse and can be "partnered" with an optparse.OptionParser() object.  I'm very please with it but I'm sure there will be some suggestions for improvement.  It is working but I want to clean up a few things, and document and test it before putting it up on sourceforge.  If anyone is interested in playing with it ahead of time email me and I'll be happy to send you it.  -- dan.gass@gmail.com
+I've just released a new configuration parser (http://cfgparse.sourceforge.net/).  It has many of the features outlined as desireable:
+
+  * Simple ini style configuration syntax
+  * Type checking with error handling and help messages
+  * Help summary modelled after that in optparse
+  * Round trip - read, modify, write configuration files with comment retention
+  * Cooperates with optparse for configuration file options that should be overridden by command line options
+  * Supports heirarchically organized option settings
+    * User may store multiple option settings in a arbitrarily deep keyed dictionary.
+    * Application uses a key list to walk into the dictionary to obtain a setting.
+    * User controls key list with setting in configuration file.
+    * Supports adding keys to the list through a command line option or from environment variables.
+  * Supports allowing user control of configuration files used.
+    * Environment variables may be used to allow user to specify a default configuration file.
+    * Command line options to specify configuration file supported.
+    * Configuration files may include other configuration files where sections are read in parallel.
+    * Configuration files may be nested heirarchically by including configuration files from within a section or subsection.
+  * Configuration files may alternatively be written in Python.
+    * full power and flexibility of Python available for creation of option settings
+    * allows options settings to be real Python objects
+    * this feature is NOT enabled by default
+  * May be extended to support syntax such as XML.
+
+The documentation is complete and is available in HTML and PDF.  The home page (http://cfgparse.sourceforge.net/) is the HTML version online.  The documentation and the module functionality is quite complete and useful as it is.  But I am looking forward to feedback so that it may be improved.  The distribution contains the module, help documentation (including source) and a fairly extensive test suite (you'll need Python2.4 to run the tests).
+
+I figure I will make an announcement after any dust settles from this posting.  By the way, I apologize for using the same name (cfgparse) as another entry but since this is modelled after optparse, that was the most logical choice.
+
+Enjoy,
+Dan Gass -- dan.gass@gmail.com
 
 == Vinay Sajip's implementation ==
 
