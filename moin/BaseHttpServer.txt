@@ -2,12 +2,16 @@
 
 You can use this to make a simple HTTP web server.
 
+[[TableOfContents()]]
+
 == Official Documentation ==
 
  * [http://www.python.org/doc/2.3.4/lib/module-BaseHTTPServer.html BaseHTTPServer module documentation] - what we use directly
  * [http://www.python.org/doc/2.3.4/lib/module-SocketServer.html SocketServer module documentation] - behind the BaseHttpServer
 
 == Example Code ==
+
+=== Responding with an HTML Page ===
 
 {{{
 #!python
@@ -49,6 +53,50 @@ if __name__ == '__main__':
     print time.asctime(), "Server Stops - %s:%s" % (HOST_NAME, PORT_NUMBER)
 }}}
 
+=== Responding with URL Redirection ===
+
+This code demonstrates simple URL redirection:
+
+{{{
+#!python
+"""
+URL redirection example.
+"""
+
+import BaseHTTPServer
+import time
+import sys
+
+
+HOST_NAME = 'something.somewhere.net' # !!!REMEMBER TO CHANGE THIS!!!
+PORT_NUMBER = 80 # Maybe set this to 9000.
+REDIRECTIONS = {
+    "/slashdot/" : "http://slashdot.org/",
+    "/freshmeat/" : "http://freshmeat.net/",
+    }
+REDIRECTION_OF_LAST_RESORT = "http://google.com/"
+
+class RedirectHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
+    def do_HEAD(s):
+        s.send_response( 301 )
+        s.send_header( "Location", REDIRECTIONS.get( s.path, REDIRECTION_OF_LAST_RESORT ) )
+        s.end_headers()
+    def do_GET(s):
+        s.do_HEAD()
+
+if __name__ == '__main__':
+    server_class = BaseHTTPServer.HTTPServer
+    httpd = server_class( (HOST_NAME, PORT_NUMBER),
+                          RedirectHandler )
+    print time.asctime(), "Server Starts - %s:%s" % (HOST_NAME, PORT_NUMBER)
+    try:
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    httpd.close()
+    print time.asctime(), "Server Stops - %s:%s" % (HOST_NAME, PORT_NUMBER)
+}}}
+
 == See Also ==
 
 DocXmlRpcServer
@@ -58,3 +106,7 @@ DocXmlRpcServer
 I'd ultimately like to see a BaseHttpServer here that can both handle XML-RPC requests (with ''that'' request handler,) and normal web requests (with a custom handler.)
 
 Yes- I know and love TwistedPython. But I want to make something that works in a single install. -- LionKimbro [[DateTime(2004-05-31T01:13:16Z)]]
+
+I'd also like to add code here showing how to service a POST request.
+
+-- LionKimbro [[DateTime(2004-07-03T23:07:53Z)]]
