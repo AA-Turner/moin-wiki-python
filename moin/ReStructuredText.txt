@@ -17,7 +17,75 @@ More information:
 
 == Reading reST, Writing HTML ==
 
-There's surprisingly little on the web and in the documentation about how to read reST, and output HTML.
+There's surprisingly little on the web and in the documentation about reading reST, and writing HTML.
+
+There's documentation on how to read reST, and output an entire HTML document. But if you want just a fragment of HTML, there's almost nothing.
+
+Here are two approaches that have been found.
+
+=== The "Official" Way ===
+
+There is no "official" way, but here's a method that works with the reST system.
+
+{{{
+#!python
+from docutils import core
+from docutils.writers.html4css1 import Writer,HTMLTranslator
+
+class HTMLFragmentTranslator( HTMLTranslator ):
+    def __init__( self, document ):
+        HTMLTranslator.__init__( self, document )
+        self.head_prefix = ['','','','','']
+        self.body_prefix = []
+        self.body_suffix = []
+        self.stylesheet = []
+    def astext(self):
+        return ''.join(self.body)
+
+html_fragment_writer = Writer()
+html_fragment_writer.translator_class = HTMLFragmentTranslator
+
+def reST_to_html( s ):
+    return core.publish_string( s, writer = html_fragment_writer )
+
+if __name__ == '__main__':
+    test = """
+H1 text
+=======
+
+*Italic* and **Bold.**
+
+::
+
+  # Preformatted,
+  # For communicating code.
+
+  # Yes, it can have spaces.
+
+Here's a `link to Python.org.`
+
+__ http://www.python.org/
+
+List items:
+
+- item 1
+- item 2
+- item 3
+"""
+    print reST_to_html(test)
+}}}
+
+If you want everything wrapped in a div tag, (perhaps to, say, delineate a "comment" tag,) you can add the following to the {{{HTMLFragmentTranslator}}} class:
+
+{{{
+#!python
+    def visit_document(self,node):
+        self.body.append(self.starttag(node,"div",CLASS="comment"))
+}}}
+
+These techniques were culled from [http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/193890 an ASPN article,] and connected comments.
+
+=== The "Easy" Way ===
 
 IanBicking has contributed this code, which reads a source text (in reST), and writes HTML:
 
@@ -31,8 +99,6 @@ html = html[html.find('<body>')+6:html.find('</body>')].strip()
 
 "It may feel wrong, but it works, and works reliably."
 
-There's a more "official" way, that feels less dirty, [http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/193890 described at ASPN.]
- 
 == Discussion ==
 
   (none)
