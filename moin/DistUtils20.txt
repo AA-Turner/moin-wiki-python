@@ -99,3 +99,9 @@ Maybe some traditional package concepts:
  * I don't consider consolidation of PYTHONDIR/PACKAGEDIR/CONFIGDIR/DATADIR arbitrarily imposed, there's good reason to keep stuff together.  For example, if they're always close to each other on the filesystem, the code could ALWAYS locate its data dir relatively without having to look in /usr/local/share or some such, even if it were wholly moved elsewhere (another volume, not mounted as / maybe).  Makes things much easier to package into self-contained units (i.e. py2exe, bundlebuilder on OS X) and it makes sense for something like Win32, which doesn't really have anywhere sensible to put that stuff in the first place.  If you REALLY REALLY want to put python data files in /usr/local/share somewhere, then it should be "/usr/local/share/python%(Python-Version)s/data/%(Package-Name)s" or something completely unambiguous and standard.  You shouldn't have to guess.
 
  -- BobIppolito
+
+  * One of the greate problems that exist with perl's CPAN is the inability to keep track of what it has installed, which means one
+cannot unistall packages through CPAN. Windows installer and RPM's (and .deb's when they finally show up) built using Distutils do not
+suffer from this fortunately... But 'bdist' binary distribution does. Would it make sense if these were kept track of so that there
+could be be an 'unistall'? "make; make install;make clean" is not attractive without "make uninstall".
+-- Moxo
