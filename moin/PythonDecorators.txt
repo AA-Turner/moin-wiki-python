@@ -308,6 +308,9 @@ class C(object):
 }}}
 which feel is more consistent with the rest of python parsing-wise, without decreasing readability...
 
+(See also J4 below, which moves the keyword, and uses "@" signs to make
+the decorators stand out more.)
+
 
 '''C3. tuple-after-def syntax with a (pseudo-)keyword'''
 {{{
@@ -731,6 +734,23 @@ Same as J2 but has advantages:
  * + one-liner has special different syntax
  * + reads as natural language: "define quux [with] <these decorators> from <this function>
  * - loses the "definition reflects use"; you can no longer cut and paste from a call to the definition, or vice versa, because the name is not near the arguments.
+
+
+'''J4. two part def suite with "@" decorators'''
+{{{
+   def p_statement_expr(self, p)
+       @staticmethod
+       @grammarrule('statement : expression')
+       @version("Added in 2.4")
+       @returns(None)
+   as:
+       """Docstring could be here, or in decorator part above"""
+       # body goes here
+}}}
+
+ * + doesn't require new keyword ("as" can be unambiguously parsed in context)
+ * + Leverages the visibility of "@" to overcome visibility problems 
+     of list-after-def syntaxes
 
 '''K. partitioned syntax syntax'''
 
