@@ -1,0 +1,662 @@
+Python Library Reference
+
+Guido van Rossum 
+
+Fred L. Drake, Jr., editor
+
+PythonLabs 
+
+Email: docs@python.org 
+
+Release 2.3.3
+
+December 19, 2003
+
+(conversion to WikiFormat by ALloydFlanagan)
+
+--------------------------------------------------------------------------------
+
+FrontMatter 
+
+TableOfContents 
+
+1. ReferenceIntroduction 
+
+2. BuiltInObjects 
+
+2.1 BuiltInFunctions 
+
+2.2 NonEssentialBuiltInFunctions 
+
+2.3 BuiltInTypes 
+
+2.4 BuiltInExceptions 
+
+2.5 BuiltInConstants 
+
+3. PythonRuntimeServices 
+
+3.1 SysModule -- System-specific parameters and functions 
+
+3.2 GcModule -- Garbage Collector interface 
+
+3.3 WeakrefModule -- Weak references 
+3.3.1 WeakReferenceObjects 
+3.3.2 WeakrefExample 
+3.3.3 WeakReferencesInExtensionTypes 
+3.4 FpectlModule -- Floating point exception control 
+3.4.1 FpectlExample 
+3.4.2 FpectlLimitationsAndOtherConsiderations 
+3.5 AtexitModule -- Exit handlers 
+3.5.1 atexit Example 
+3.6 types -- Names for built-in types 
+3.7 UserDict -- Class wrapper for dictionary objects 
+3.8 UserList -- Class wrapper for list objects 
+3.9 UserString -- Class wrapper for string objects 
+3.10 operator -- Standard operators as functions. 
+3.10.1 Mapping Operators to Functions 
+3.11 inspect -- Inspect live objects 
+3.11.1 Types and members 
+3.11.2 Retrieving source code 
+3.11.3 Classes and functions 
+3.11.4 The interpreter stack 
+3.12 traceback -- Print or retrieve a stack traceback 
+3.12.1 Traceback Example 
+3.13 linecache -- Random access to text lines 
+3.14 pickle -- Python object serialization 
+3.14.1 Relationship to other Python modules 
+3.14.2 Data stream format 
+3.14.3 Usage 
+3.14.4 What can be pickled and unpickled? 
+3.14.5 The pickle protocol 
+3.14.6 Subclassing Unpicklers 
+3.14.7 Example 
+3.15 cPickle -- A faster pickle 
+3.16 copy_reg -- Register pickle support functions 
+3.17 shelve -- Python object persistence 
+3.17.1 Restrictions 
+3.17.2 Example 
+3.18 copy -- Shallow and deep copy operations 
+3.19 marshal -- Internal Python object serialization 
+3.20 warnings -- Warning control 
+3.20.1 Warning Categories 
+3.20.2 The Warnings Filter 
+3.20.3 Available Functions 
+3.21 imp -- Access the import internals 
+3.21.1 Examples 
+3.22 pkgutil -- Package extension utility 
+3.23 code -- Interpreter base classes 
+3.23.1 Interactive Interpreter Objects 
+3.23.2 Interactive Console Objects 
+3.24 codeop -- Compile Python code 
+3.25 pprint -- Data pretty printer 
+3.25.1 PrettyPrinter Objects 
+3.26 repr -- Alternate repr() implementation 
+3.26.1 Repr Objects 
+3.26.2 Subclassing Repr Objects 
+3.27 new -- Creation of runtime internal objects 
+3.28 site -- Site-specific configuration hook 
+3.29 user -- User-specific configuration hook 
+3.30 __builtin__ -- Built-in functions 
+3.31 __main__ -- Top-level script environment 
+3.32 __future__ -- Future statement definitions 
+4. String Services 
+4.1 string -- Common string operations 
+4.2 re -- Regular expression operations 
+4.2.1 Regular Expression Syntax 
+4.2.2 Matching vs Searching 
+4.2.3 Module Contents 
+4.2.4 Regular Expression Objects 
+4.2.5 Match Objects 
+4.2.6 Examples 
+4.3 struct -- Interpret strings as packed binary data 
+4.4 difflib -- Helpers for computing deltas 
+4.4.1 SequenceMatcher Objects 
+4.4.2 SequenceMatcher Examples 
+4.4.3 Differ Objects 
+4.4.4 Differ Example 
+4.5 fpformat -- Floating point conversions 
+4.6 StringIO -- Read and write strings as files 
+4.7 cStringIO -- Faster version of StringIO 
+4.8 textwrap -- Text wrapping and filling 
+4.9 codecs -- Codec registry and base classes 
+4.9.1 Codec Base Classes 
+4.9.2 Standard Encodings 
+4.9.3 encodings.idna -- Internationalized Domain Names in Applications 
+4.10 unicodedata -- Unicode Database 
+4.11 stringprep -- Internet String Preparation 
+5. Miscellaneous Services 
+5.1 pydoc -- Documentation generator and online help system 
+5.2 doctest -- Test docstrings represent reality 
+5.2.1 Normal Usage 
+5.2.2 Which Docstrings Are Examined? 
+5.2.3 What's the Execution Context? 
+5.2.4 What About Exceptions? 
+5.2.5 Advanced Usage 
+5.2.6 How are Docstring Examples Recognized? 
+5.2.7 Warnings 
+5.2.8 Soapbox 
+5.3 unittest -- Unit testing framework 
+5.3.1 Basic example 
+5.3.2 Organizing test code 
+5.3.3 Re-using old test code 
+5.3.4 Classes and functions 
+5.3.5 TestCase Objects 
+5.3.6 TestSuite Objects 
+5.3.7 TestResult Objects 
+5.3.8 TestLoader Objects 
+5.4 test -- Regression tests package for Python 
+5.4.1 Writing Unit Tests for the test package 
+5.4.2 Running tests Using test.regrtest 
+5.5 test.test_support -- Utility functions for tests 
+5.6 math -- Mathematical functions 
+5.7 cmath -- Mathematical functions for complex numbers 
+5.8 random -- Generate pseudo-random numbers 
+5.9 whrandom -- Pseudo-random number generator 
+5.10 bisect -- Array bisection algorithm 
+5.10.1 Examples 
+5.11 heapq -- Heap queue algorithm 
+5.11.1 Theory 
+5.12 array -- Efficient arrays of numeric values 
+5.13 sets -- Unordered collections of unique elements 
+5.13.1 Set Objects 
+5.13.2 Example 
+5.13.3 Protocol for automatic conversion to immutable 
+5.14 itertools -- Functions creating iterators for efficient looping 
+5.14.1 Itertool functions 
+5.14.2 Examples 
+5.15 ConfigParser -- Configuration file parser 
+5.15.1 RawConfigParser Objects 
+5.15.2 ConfigParser Objects 
+5.16 fileinput -- Iterate over lines from multiple input streams 
+5.17 xreadlines -- Efficient iteration over a file 
+5.18 calendar -- General calendar-related functions 
+5.19 cmd -- Support for line-oriented command interpreters 
+5.19.1 Cmd Objects 
+5.20 shlex -- Simple lexical analysis 
+5.20.1 Module Contents 
+5.20.2 shlex Objects 
+5.20.3 Parsing Rules 
+6. Generic Operating System Services 
+6.1 os -- Miscellaneous operating system interfaces 
+6.1.1 Process Parameters 
+6.1.2 File Object Creation 
+6.1.3 File Descriptor Operations 
+6.1.4 Files and Directories 
+6.1.5 Process Management 
+6.1.6 Miscellaneous System Information 
+6.2 os.path -- Common pathname manipulations 
+6.3 dircache -- Cached directory listings 
+6.4 stat -- Interpreting stat() results 
+6.5 statcache -- An optimization of os.stat() 
+6.6 statvfs -- Constants used with os.statvfs() 
+6.7 filecmp -- File and Directory Comparisons 
+6.7.1 The dircmp class 
+6.8 popen2 -- Subprocesses with accessible I/O streams 
+6.8.1 Popen3 and Popen4 Objects 
+6.8.2 Flow Control Issues 
+6.9 datetime -- Basic date and time types 
+6.9.1 Available Types 
+6.9.2 timedelta Objects 
+6.9.3 date Objects 
+6.9.4 datetime Objects 
+6.9.5 time Objects 
+6.9.6 tzinfo Objects 
+6.9.7 strftime() Behavior 
+6.10 time -- Time access and conversions 
+6.11 sched -- Event scheduler 
+6.11.1 Scheduler Objects 
+6.12 mutex -- Mutual exclusion support 
+6.12.1 Mutex Objects 
+6.13 getpass -- Portable password input 
+6.14 curses -- Terminal handling for character-cell displays 
+6.14.1 Functions 
+6.14.2 Window Objects 
+6.14.3 Constants 
+6.15 curses.textpad -- Text input widget for curses programs 
+6.15.1 Textbox objects 
+6.16 curses.wrapper -- Terminal handler for curses programs 
+6.17 curses.ascii -- Utilities for ASCII characters 
+6.18 curses.panel -- A panel stack extension for curses. 
+6.18.1 Functions 
+6.18.2 Panel Objects 
+6.19 getopt -- Parser for command line options 
+6.20 optparse -- Powerful parser for command line options. 
+6.20.1 Philosophy 
+6.20.2 Basic Usage 
+6.20.3 Advanced Usage 
+6.20.4 Callback Options 
+6.20.5 Extending optparse 
+6.21 tempfile -- Generate temporary files and directories 
+6.22 errno -- Standard errno system symbols 
+6.23 glob -- Unix style pathname pattern expansion 
+6.24 fnmatch -- Unix filename pattern matching 
+6.25 shutil -- High-level file operations 
+6.25.1 Example 
+6.26 locale -- Internationalization services 
+6.26.1 Background, details, hints, tips and caveats 
+6.26.2 For extension writers and programs that embed Python 
+6.26.3 Access to message catalogs 
+6.27 gettext -- Multilingual internationalization services 
+6.27.1 GNU gettext API 
+6.27.2 Class-based API 
+6.27.3 Internationalizing your programs and modules 
+6.27.4 Acknowledgements 
+6.28 logging -- Logging facility for Python 
+6.28.1 Logger Objects 
+6.28.2 Handler Objects 
+6.28.3 Formatter Objects 
+6.28.4 Filter Objects 
+6.28.5 LogRecord Objects 
+6.28.6 Thread Safety 
+6.28.7 Configuration 
+6.28.8 Using the logging package 
+7. Optional Operating System Services 
+7.1 signal -- Set handlers for asynchronous events 
+7.1.1 Example 
+7.2 socket -- Low-level networking interface 
+7.2.1 Socket Objects 
+7.2.2 SSL Objects 
+7.2.3 Example 
+7.3 select -- Waiting for I/O completion 
+7.3.1 Polling Objects 
+7.4 thread -- Multiple threads of control 
+7.5 threading -- Higher-level threading interface 
+7.5.1 Lock Objects 
+7.5.2 RLock Objects 
+7.5.3 Condition Objects 
+7.5.4 Semaphore Objects 
+7.5.5 Event Objects 
+7.5.6 Thread Objects 
+7.5.7 Timer Objects 
+7.6 dummy_thread -- Drop-in replacement for the thread module 
+7.7 dummy_threading -- Drop-in replacement for the threading module 
+7.8 Queue -- A synchronized queue class 
+7.8.1 Queue Objects 
+7.9 mmap -- Memory-mapped file support 
+7.10 anydbm -- Generic access to DBM-style databases 
+7.11 dbhash -- DBM-style interface to the BSD database library 
+7.11.1 Database Objects 
+7.12 whichdb -- Guess which DBM module created a database 
+7.13 bsddb -- Interface to Berkeley DB library 
+7.13.1 Hash, BTree and Record Objects 
+7.14 dumbdbm -- Portable DBM implementation 
+7.14.1 Dumbdbm Objects 
+7.15 zlib -- Compression compatible with gzip 
+7.16 gzip -- Support for gzip files 
+7.17 bz2 -- Compression compatible with bzip2 
+7.17.1 (De)compression of files 
+7.17.2 Sequential (de)compression 
+7.17.3 One-shot (de)compression 
+7.18 zipfile -- Work with ZIP archives 
+7.18.1 ZipFile Objects 
+7.18.2 PyZipFile Objects 
+7.18.3 ZipInfo Objects 
+7.19 tarfile -- Read and write tar archive files 
+7.19.1 TarFile Objects 
+7.19.2 TarInfo Objects 
+7.19.3 Examples 
+7.20 readline -- GNU readline interface 
+7.20.1 Example 
+7.21 rlcompleter -- Completion function for GNU readline 
+7.21.1 Completer Objects 
+8. Unix Specific Services 
+8.1 posix -- The most common POSIX system calls 
+8.1.1 Large File Support 
+8.1.2 Module Contents 
+8.2 pwd -- The password database 
+8.3 grp -- The group database 
+8.4 crypt -- Function to check Unix passwords 
+8.5 dl -- Call C functions in shared objects 
+8.5.1 Dl Objects 
+8.6 dbm -- Simple ``database'' interface 
+8.7 gdbm -- GNU's reinterpretation of dbm 
+8.8 termios -- POSIX style tty control 
+8.8.1 Example 
+8.9 TERMIOS -- Constants used with the termios module 
+8.10 tty -- Terminal control functions 
+8.11 pty -- Pseudo-terminal utilities 
+8.12 fcntl -- The fcntl() and ioctl() system calls 
+8.13 pipes -- Interface to shell pipelines 
+8.13.1 Template Objects 
+8.14 posixfile -- File-like objects with locking support 
+8.15 resource -- Resource usage information 
+8.15.1 Resource Limits 
+8.15.2 Resource Usage 
+8.16 nis -- Interface to Sun's NIS (Yellow Pages) 
+8.17 syslog -- Unix syslog library routines 
+8.18 commands -- Utilities for running commands 
+9. The Python Debugger 
+9.1 Debugger Commands 
+9.2 How It Works 
+10. The Python Profiler 
+10.1 Introduction to the profiler 
+10.2 How Is This Profiler Different From The Old Profiler? 
+10.3 Instant Users Manual 
+10.4 What Is Deterministic Profiling? 
+10.5 Reference Manual 
+10.5.1 The Stats Class 
+10.6 Limitations 
+10.7 Calibration 
+10.8 Extensions -- Deriving Better Profilers 
+10.9 hotshot -- High performance logging profiler 
+10.9.1 Profile Objects 
+10.9.2 Using hotshot data 
+10.9.3 Example Usage 
+10.10 timeit -- Measure execution time of small code snippets 
+10.10.1 Command Line Interface 
+10.10.2 Examples 
+11. Internet Protocols and Support 
+11.1 webbrowser -- Convenient Web-browser controller 
+11.1.1 Browser Controller Objects 
+11.2 cgi -- Common Gateway Interface support. 
+11.2.1 Introduction 
+11.2.2 Using the cgi module 
+11.2.3 Higher Level Interface 
+11.2.4 Old classes 
+11.2.5 Functions 
+11.2.6 Caring about security 
+11.2.7 Installing your CGI script on a Unix system 
+11.2.8 Testing your CGI script 
+11.2.9 Debugging CGI scripts 
+11.2.10 Common problems and solutions 
+11.3 cgitb -- Traceback manager for CGI scripts 
+11.4 urllib -- Open arbitrary resources by URL 
+11.4.1 URLopener Objects 
+11.4.2 Examples 
+11.5 urllib2 -- extensible library for opening URLs 
+11.5.1 Request Objects 
+11.5.2 OpenerDirector Objects 
+11.5.3 BaseHandler Objects 
+11.5.4 HTTPRedirectHandler Objects 
+11.5.5 ProxyHandler Objects 
+11.5.6 HTTPPasswordMgr Objects 
+11.5.7 AbstractBasicAuthHandler Objects 
+11.5.8 HTTPBasicAuthHandler Objects 
+11.5.9 ProxyBasicAuthHandler Objects 
+11.5.10 AbstractDigestAuthHandler Objects 
+11.5.11 HTTPDigestAuthHandler Objects 
+11.5.12 ProxyDigestAuthHandler Objects 
+11.5.13 HTTPHandler Objects 
+11.5.14 HTTPSHandler Objects 
+11.5.15 FileHandler Objects 
+11.5.16 FTPHandler Objects 
+11.5.17 CacheFTPHandler Objects 
+11.5.18 GopherHandler Objects 
+11.5.19 UnknownHandler Objects 
+11.5.20 Examples 
+11.6 httplib -- HTTP protocol client 
+11.6.1 HTTPConnection Objects 
+11.6.2 HTTPResponse Objects 
+11.6.3 Examples 
+11.7 ftplib -- FTP protocol client 
+11.7.1 FTP Objects 
+11.8 gopherlib -- Gopher protocol client 
+11.9 poplib -- POP3 protocol client 
+11.9.1 POP3 Objects 
+11.9.2 POP3 Example 
+11.10 imaplib -- IMAP4 protocol client 
+11.10.1 IMAP4 Objects 
+11.10.2 IMAP4 Example 
+11.11 nntplib -- NNTP protocol client 
+11.11.1 NNTP Objects 
+11.12 smtplib -- SMTP protocol client 
+11.12.1 SMTP Objects 
+11.12.2 SMTP Example 
+11.13 telnetlib -- Telnet client 
+11.13.1 Telnet Objects 
+11.13.2 Telnet Example 
+11.14 urlparse -- Parse URLs into components 
+11.15 SocketServer -- A framework for network servers 
+11.16 BaseHTTPServer -- Basic HTTP server 
+11.17 SimpleHTTPServer -- Simple HTTP request handler 
+11.18 CGIHTTPServer -- CGI-capable HTTP request handler 
+11.19 Cookie -- HTTP state management 
+11.19.1 Cookie Objects 
+11.19.2 Morsel Objects 
+11.19.3 Example 
+11.20 xmlrpclib -- XML-RPC client access 
+11.20.1 ServerProxy Objects 
+11.20.2 Boolean Objects 
+11.20.3 DateTime Objects 
+11.20.4 Binary Objects 
+11.20.5 Fault Objects 
+11.20.6 ProtocolError Objects 
+11.20.7 Convenience Functions 
+11.20.8 Example of Client Usage 
+11.21 SimpleXMLRPCServer -- Basic XML-RPC server 
+11.21.1 SimpleXMLRPCServer Objects 
+11.21.2 CGIXMLRPCRequestHandler 
+11.22 DocXMLRPCServer -- Self-documenting XML-RPC server 
+11.22.1 DocXMLRPCServer Objects 
+11.22.2 DocCGIXMLRPCRequestHandler 
+11.23 asyncore -- Asynchronous socket handler 
+11.23.1 asyncore Example basic HTTP client 
+11.24 asynchat -- Asynchronous socket command/response handler 
+11.24.1 asynchat - Auxiliary Classes and Functions 
+11.24.2 asynchat Example 
+12. Internet Data Handling 
+12.1 formatter -- Generic output formatting 
+12.1.1 The Formatter Interface 
+12.1.2 Formatter Implementations 
+12.1.3 The Writer Interface 
+12.1.4 Writer Implementations 
+12.2 email -- An email and MIME handling package 
+12.2.1 Representing an email message 
+12.2.2 Parsing email messages 
+12.2.3 Generating MIME documents 
+12.2.4 Creating email and MIME objects from scratch 
+12.2.5 Internationalized headers 
+12.2.6 Representing character sets 
+12.2.7 Encoders 
+12.2.8 Exception classes 
+12.2.9 Miscellaneous utilities 
+12.2.10 Iterators 
+12.2.11 Differences from email v1 (up to Python 2.2.1) 
+12.2.12 Differences from mimelib 
+12.2.13 Examples 
+12.3 mailcap -- Mailcap file handling. 
+12.4 mailbox -- Read various mailbox formats 
+12.4.1 Mailbox Objects 
+12.5 mhlib -- Access to MH mailboxes 
+12.5.1 MH Objects 
+12.5.2 Folder Objects 
+12.5.3 Message Objects 
+12.6 mimetools -- Tools for parsing MIME messages 
+12.6.1 Additional Methods of Message Objects 
+12.7 mimetypes -- Map filenames to MIME types 
+12.7.1 MimeTypes Objects 
+12.8 MimeWriter -- Generic MIME file writer 
+12.8.1 MimeWriter Objects 
+12.9 mimify -- MIME processing of mail messages 
+12.10 multifile -- Support for files containing distinct parts 
+12.10.1 MultiFile Objects 
+12.10.2 MultiFile Example 
+12.11 rfc822 -- Parse RFC 2822 mail headers 
+12.11.1 Message Objects 
+12.11.2 AddressList Objects 
+12.12 base64 -- Encode and decode MIME base64 data 
+12.13 binascii -- Convert between binary and ASCII 
+12.14 binhex -- Encode and decode binhex4 files 
+12.14.1 Notes 
+12.15 quopri -- Encode and decode MIME quoted-printable data 
+12.16 uu -- Encode and decode uuencode files 
+12.17 xdrlib -- Encode and decode XDR data 
+12.17.1 Packer Objects 
+12.17.2 Unpacker Objects 
+12.17.3 Exceptions 
+12.18 netrc -- netrc file processing 
+12.18.1 netrc Objects 
+12.19 robotparser -- Parser for robots.txt 
+12.20 csv -- CSV File Reading and Writing 
+12.20.1 Module Contents 
+12.20.2 Dialects and Formatting Parameters 
+12.20.3 Reader Objects 
+12.20.4 Writer Objects 
+12.20.5 Examples 
+13. Structured Markup Processing Tools 
+13.1 HTMLParser -- Simple HTML and XHTML parser 
+13.1.1 Example HTML Parser Application 
+13.2 sgmllib -- Simple SGML parser 
+13.3 htmllib -- A parser for HTML documents 
+13.3.1 HTMLParser Objects 
+13.4 htmlentitydefs -- Definitions of HTML general entities 
+13.5 xml.parsers.expat -- Fast XML parsing using Expat 
+13.5.1 XMLParser Objects 
+13.5.2 ExpatError Exceptions 
+13.5.3 Example 
+13.5.4 Content Model Descriptions 
+13.5.5 Expat error constants 
+13.6 xml.dom -- The Document Object Model API 
+13.6.1 Module Contents 
+13.6.2 Objects in the DOM 
+13.6.3 Conformance 
+13.7 xml.dom.minidom -- Lightweight DOM implementation 
+13.7.1 DOM Objects 
+13.7.2 DOM Example 
+13.7.3 minidom and the DOM standard 
+13.8 xml.dom.pulldom -- Support for building partial DOM trees 
+13.8.1 DOMEventStream Objects 
+13.9 xml.sax -- Support for SAX2 parsers 
+13.9.1 SAXException Objects 
+13.10 xml.sax.handler -- Base classes for SAX handlers 
+13.10.1 ContentHandler Objects 
+13.10.2 DTDHandler Objects 
+13.10.3 EntityResolver Objects 
+13.10.4 ErrorHandler Objects 
+13.11 xml.sax.saxutils -- SAX Utilities 
+13.12 xml.sax.xmlreader -- Interface for XML parsers 
+13.12.1 XMLReader Objects 
+13.12.2 IncrementalParser Objects 
+13.12.3 Locator Objects 
+13.12.4 InputSource Objects 
+13.12.5 The Attributes Interface 
+13.12.6 The AttributesNS Interface 
+13.13 xmllib -- A parser for XML documents 
+13.13.1 XML Namespaces 
+14. Multimedia Services 
+14.1 audioop -- Manipulate raw audio data 
+14.2 imageop -- Manipulate raw image data 
+14.3 aifc -- Read and write AIFF and AIFC files 
+14.4 sunau -- Read and write Sun AU files 
+14.4.1 AU_read Objects 
+14.4.2 AU_write Objects 
+14.5 wave -- Read and write WAV files 
+14.5.1 Wave_read Objects 
+14.5.2 Wave_write Objects 
+14.6 chunk -- Read IFF chunked data 
+14.7 colorsys -- Conversions between color systems 
+14.8 rgbimg -- Read and write ``SGI RGB'' files 
+14.9 imghdr -- Determine the type of an image 
+14.10 sndhdr -- Determine type of sound file 
+14.11 ossaudiodev -- Access to OSS-compatible audio devices 
+14.11.1 Audio Device Objects 
+14.11.2 Mixer Device Objects 
+15. Cryptographic Services 
+15.1 hmac -- Keyed-Hashing for Message Authentication 
+15.2 md5 -- MD5 message digest algorithm 
+15.3 sha -- SHA-1 message digest algorithm 
+15.4 mpz -- GNU arbitrary magnitude integers 
+15.5 rotor -- Enigma-like encryption and decryption 
+16. Graphical User Interfaces with Tk 
+16.1 Tkinter -- Python interface to Tcl/Tk 
+16.1.1 Tkinter Modules 
+16.1.2 Tkinter Life Preserver 
+16.1.3 A (Very) Quick Look at Tcl/Tk 
+16.1.4 Mapping Basic Tk into Tkinter 
+16.1.5 How Tk and Tkinter are Related 
+16.1.6 Handy Reference 
+16.2 Tix -- Extension widgets for Tk 
+16.2.1 Using Tix 
+16.2.2 Tix Widgets 
+16.2.3 Tix Commands 
+16.3 ScrolledText -- Scrolled Text Widget 
+16.4 turtle -- Turtle graphics for Tk 
+16.4.1 Pen and RawPen Objects 
+16.5 Idle 
+16.5.1 Menus 
+16.5.2 Basic editing and navigation 
+16.5.3 Syntax colors 
+16.6 Other Graphical User Interface Packages 
+17. Restricted Execution 
+17.1 rexec -- Restricted execution framework 
+17.1.1 RExec Objects 
+17.1.2 Defining restricted environments 
+17.1.3 An example 
+17.2 Bastion -- Restricting access to objects 
+18. Python Language Services 
+18.1 parser -- Access Python parse trees 
+18.1.1 Creating AST Objects 
+18.1.2 Converting AST Objects 
+18.1.3 Queries on AST Objects 
+18.1.4 Exceptions and Error Handling 
+18.1.5 AST Objects 
+18.1.6 Examples 
+18.2 symbol -- Constants used with Python parse trees 
+18.3 token -- Constants used with Python parse trees 
+18.4 keyword -- Testing for Python keywords 
+18.5 tokenize -- Tokenizer for Python source 
+18.6 tabnanny -- Detection of ambiguous indentation 
+18.7 pyclbr -- Python class browser support 
+18.7.1 Class Descriptor Objects 
+18.7.2 Function Descriptor Objects 
+18.8 py_compile -- Compile Python source files 
+18.9 compileall -- Byte-compile Python libraries 
+18.10 dis -- Disassembler for Python byte code 
+18.10.1 Python Byte Code Instructions 
+18.11 distutils -- Building and installing Python modules 
+19. Python compiler package 
+19.1 The basic interface 
+19.2 Limitations 
+19.3 Python Abstract Syntax 
+19.3.1 AST Nodes 
+19.3.2 Assignment nodes 
+19.3.3 Examples 
+19.4 Using Visitors to Walk ASTs 
+19.5 Bytecode Generation 
+20. SGI IRIX Specific Services 
+20.1 al -- Audio functions on the SGI 
+20.1.1 Configuration Objects 
+20.1.2 Port Objects 
+20.2 AL -- Constants used with the al module 
+20.3 cd -- CD-ROM access on SGI systems 
+20.3.1 Player Objects 
+20.3.2 Parser Objects 
+20.4 fl -- FORMS library for graphical user interfaces 
+20.4.1 Functions Defined in Module fl 
+20.4.2 Form Objects 
+20.4.3 FORMS Objects 
+20.5 FL -- Constants used with the fl module 
+20.6 flp -- Functions for loading stored FORMS designs 
+20.7 fm -- Font Manager interface 
+20.8 gl -- Graphics Library interface 
+20.9 DEVICE -- Constants used with the gl module 
+20.10 GL -- Constants used with the gl module 
+20.11 imgfile -- Support for SGI imglib files 
+20.12 jpeg -- Read and write JPEG files 
+21. SunOS Specific Services 
+21.1 sunaudiodev -- Access to Sun audio hardware 
+21.1.1 Audio Device Objects 
+21.2 SUNAUDIODEV -- Constants used with sunaudiodev 
+22. MS Windows Specific Services 
+22.1 msvcrt - Useful routines from the MS VC++ runtime 
+22.1.1 File Operations 
+22.1.2 Console I/O 
+22.1.3 Other Functions 
+22.2 _winreg - Windows registry access 
+22.2.1 Registry Handle Objects 
+22.3 winsound -- Sound-playing interface for Windows 
+A. Undocumented Modules 
+A.1 Frameworks 
+A.2 Miscellaneous useful utilities 
+A.3 Platform specific modules 
+A.4 Multimedia 
+A.5 Obsolete 
+A.6 SGI-specific Extension modules 
+B. Reporting Bugs 
+C. History and License 
+C.1 History of the software 
+C.2 Terms and conditions for accessing or otherwise using Python 
+Module Index 
+Index 
+About this document ... 
