@@ -1,21 +1,23 @@
+#pragma section-numbers off
+
+= ReStructuredText (reST) =
+
 ReStructuredText is a complete rewrite of StructuredText by David Goodger. 
 
 More information:
 
-  * [http://docutils.sourceforge.net/spec/rst/introduction.html An Introduction to ReStructuredText]
-  * [http://docutils.sourceforge.net/docs/rst/quickstart.html A ReStructuredText Primer]
-  * [http://docutils.sourceforge.net/spec/rst/reStructuredText.html ReStructuredText Markup Specification]
+  * [http://docutils.sourceforge.net/spec/rst/introduction.html An Introduction to ReStructuredText] - goals & history
+  * [http://docutils.sourceforge.net/docs/rst/quickstart.html A ReStructuredText Primer] - how to write reST text
+  * [http://docutils.sourceforge.net/spec/rst/reStructuredText.html ReStructuredText Markup Specification] - details on writing reST text
   * [http://www.ocf.berkeley.edu/~bac/rest_tutorial.html Brett Cannon's PyCon Tutorial]
 
 {i} MoinMoin contains an (incomplete) bridge to the docutils's parser, you can try this by using "#format rst" as the first line of a wiki page. See MoinMoin:RestSample for an example. This of course only works when you use the current CVS version, and when docutils is installed.
 
-== Discussion ==
+== Reading reST, Writing HTML ==
 
-I really wanted to use ReStructuredText for a blogging program. It would take a string of ReStructuredText, and then turn that into an HTML fragment. However, reST seems ''extremely'' resistant to giving you anything but a full HTML document. It's probably possible to get a fragment, but it'd take longer to figure out how than to make my own miniature "structured text"-like language.
+There's surprisingly little on the web and in the documentation about how to read reST, and output HTML.
 
--- LionKimbro
-
-Of course, it's very easy to take a full HTML document and extract the body.  It may feel wrong, but it works, and works reliably.  PyDS uses reST successfully for blogging (though I don't know the specifics of its integration).  Here's a little recipe:
+IanBicking has contributed this code, which reads a source text (in reST), and writes HTML:
 
 {{{
 #!python
@@ -25,8 +27,8 @@ html = docutils.core.publish_string(
 html = html[html.find('<body>')+6:html.find('</body>')].strip()
 }}}
 
--- IanBicking
+"It may feel wrong, but it works, and works reliably."
 
-You're right- it ''does'' feel wrong. But, it also ''works.'' I'm a satisfied customer. ;)
+== Discussion ==
 
--- LionKimbro
+  (none)
