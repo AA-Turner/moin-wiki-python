@@ -380,3 +380,18 @@ and later:{{{
 
   const char* res = extract<const char*>(main_namespace["result"]);
 }}}
+
+== Howto debug your extensions.. ==
+
+=== [NOTE] Problems using M$ Visual C++ Debugger ===
+
+If you want to debug your extensions using the M$ Visual C++ debugger you need to remember to compile all libraries and extensions with the '''/MDd''' flag.
+
+If you forget this compiler flag, it's likely that your debugger will halt on a breakpoint with an error something like this:
+
+''HEAP[python.exe]: Invalid Address specified to RtlValidateHeap( 00E30000, 00D48FA8 )''
+
+The actual statement which halts your debugger is executed in the NTDLL and therefor is not debuggable.
+While this seems to apply to all of the boost libraries, it can be annoying and it's hard to actually find the problem.
+
+AFAIK, the actual problem is, if you've not compiled all your libs/extensions with ''/MDd'', that you have objects on different heaps and the debugger stops with an assert because the extensions tries to access objects from the wrong heap.
