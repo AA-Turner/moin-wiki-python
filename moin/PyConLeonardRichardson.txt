@@ -8,7 +8,48 @@ corresponding software written in time. :)
 
 If you're interested in me personally, you can visit [http://www.crummy.com/ my homepage].
 
-= About the Talk =
+= Talk Synopsis =
+
+Oftentimes, a very small or very new web application will keep all of
+its configuration settings inside the code itself (hopefully as
+variable settings in some obvious place). To change the configuration,
+a user must become a developer of the application. For example:
+{{{
+    #Whether or not to enable image uploads
+    ENABLE_IMAGE_UPLOADS = 1
+
+    #The maximum size of an uploaded image, in kilobytes
+    MAXIMUM_IMAGE_SIZE = 100
+}}}
+A larger, more flexible, or more mature application may keep its
+configuration settings in a text file loaded by the application at
+runtime. When configuring such an application a user is changing data,
+rather than code, and acting as an administrator rather than a
+developer. Python's ConfigParser module provides built-in support for
+this level of flexibility, for example:
+
+{{{
+    [Images]
+    enable-image-upload=1 #Whether or not to enable image uploads
+    maximum-image-size=100 #Maximum size of an uploaded image, in kb
+}}}
+
+The natural next step towards better usability is to provide an
+interface to the configuration file from within the application
+itself, using the same framework and UI standards found in the rest of
+the application. This allows a user to configure the application while
+remaining just that--a user:
+
+{{{
+    Enable image uploads? [X]
+
+    Maximum image size? 100___ kb
+
+}}}
+
+
+The easiest and best way to take this next step is to use a
+configuration framework.
 
 The purpose of my talk is to get more of the world's configuration
 data out of configuration files and into web interfaces. Web
