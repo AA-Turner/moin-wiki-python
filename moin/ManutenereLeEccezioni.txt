@@ -1,0 +1,122 @@
+= Manutenere le Eccezioni =
+
+
+Un semplice modo per manutenere le eccezioni è usare il blocco "try-except" --> "prova all'innfuoridi"
+
+{{{
+#!python
+(x,y) = (5,0)
+try:
+  z = x/y
+except ZeroDivisionError:
+  print "divide by zero"
+}}}
+
+Se volete esaminare l'eccezione dal codice,guardate qua: 
+
+{{{
+#!python
+(x,y) = (5,0)
+try:
+  z = x/y
+except ZeroDivisionError, e:
+  z = e # representation: "<exceptions.ZeroDivisionError instance at 0x817426c>"
+print z # output: "integer division or modulo by zero"
+}}}
+
+== Prendiamo il controllo generale del codice ==
+
+Talvolta,potete prendere "all" tutti gli errori che è possibile generare, ma di solito non è possibile.Nella mag-
+gior parte dei casi,quanto specificate tanto è possibile (Wiki:CatchWhatYouCanHandle). Nel primo caso, se stavate usando una clausola eccezione incontrata e l'utente ha premuto Ctrl-C,generando una KeyboardInterrupt (interruzione da tastiera),non desiderate che il programma emetta il messaggio "divide by zero"--> (divisione per zero.)
+
+Tuttavia,ci sono alcune situazioni in cui è meglio prendere ''all'' tutti gli errori
+
+Per esempio, supponiamo che scriviate un modulo per un servizio web. Vorrete che le informazioni inerenti gli errori sia riportate in una pagina web, e il server continui a girare,se tutto ciò è possibile.Ma voi non avete idea che tipo di errori dovete mettere nbel vs codice.
+
+In una situazio9ne di questo tipo,il codice potrebbe essere simile a questo:
+
+{{{
+#!python
+import sys
+try:
+  untrusted.execute()
+except: # catch *all* exceptions
+  e = sys.exc_info()[1]
+  write_to_page( "<p>Error: %s</p>" % e )
+}}}
+
+
+MoinMoin software è un buon esempio su dove in generale catturare  gli errori. Se scrivte Moin``Moin macro estensione,e diamo avvio ad un errore,Moin''Moin prepareà un dettagliato rapporto circa l'errore e la catena di eventi che conduce a lui. Il software Python deve essere abilitato a catturare tutti gli errori, e li spedisce poi alla pagina web. 
+
+== Ricerca di Nomi Specifici di Eccezioni ==
+
+Eccezioni Standard che possono essere emesse sono dettaglaite in questo sito:
+
+  http://python.org/doc/lib/module-exceptions.html
+
+Osservate la Classe documentazione per trovare che eccezioni una data classe può emeyttere.
+
+= Vedi Anche =
+
+Su questa wiki:WritingExceptionClasses, TracebackModule.
+
+Per idde generali(non specificate in Python) circa le eccezioni,consulatre Wiki:ExceptionPatterns.
+
+= Per scrivere sull'argomento....... =
+
+  * Dammi un esempio di IOError, e interpretiamo il codice di errore
+
+  * Dammi un esempio di eccezioni multiple. Manteniamo le eccezioni multiple in linea
+
+  * Mostra come usare "else" e "finalità"
+
+  * Mostra come continuare con un "rialzo" 
+
+= Domande =
+
+== Manutenzione generale degli errori ==
+
+Nella sezione "manutenzione generale degli errori", si è detto che per la cattura degli errori userete questo codice:
+
+{{{
+#!python
+import sys
+try:
+  untrusted.execute()
+except: # catch *all* exceptions
+  e = sys.exc_info()[1]
+  write_to_page( "<p>Error: %s</p>" % e )
+}}}
+
+Tuttavia in origine era:
+
+{{{
+#!python
+try:
+  untrusted.execute()
+except Exception, e:
+  write_to_page( "<p>Error: %s</p>" % str(e) )
+}}}
+
+Alcune indicano che "except" catturano piu di un semplice "except Exception, e."
+
+''Perchè è questo il caso??.Qual è la differenza?'' --LionKimbro.
+
+Per ora ( nella ver. 2.3) l'eccezionempm ha ereditato da Exception. Allora pianifichiamo 'except:' catturiamo tutte le eccezioni,non solo quelle di sistema. -- MikeRovner [[DateTime(2004-01-19T05:49:19Z)]]
+
+== Prendiamo utili Informazioni da una eccezione ==
+
+Cosi si pò avere qualcosa di simile:
+
+{{{
+#!python
+(a,b,c) = d
+}}}
+
+... e Python soffia indietro
+
+{{{
+ValueError: unpack list of wrong size
+}}}
+
+.... e cosi,naturalmente chiederete, "bene che, cosa 'era' in {{{d}}}?"
