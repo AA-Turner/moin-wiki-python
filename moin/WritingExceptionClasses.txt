@@ -37,3 +37,30 @@ HandlingExceptions, TracebackModule
   * What better exception-foo is out there?
 
   ''AlexMartelli's "Dos and Don'ts".''
+
+  * The new text involving {{{super}}} doesn't seem to work for me.
+
+Using Python 2.3:
+
+{{{
+#!python
+class LocalNamesSyntaxError(Exception):
+    def __init__(self, msg):
+        self.msg=msg
+        super(LocalNamesSyntaxError, self)('Local Names v1.1 Syntax Error: %s' % msg)
+}}}
+
+{{{
+Traceback (most recent call last):
+  File "parser.py", line 92, in ?
+    pprint.pprint(parse_text(test_string))
+  File "parser.py", line 69, in parse_text
+    cursor=parse_record_type(cursor,line,results)
+  File "parser.py", line 43, in parse_record_type
+    raise LocalNamesSyntaxError("unrecognized v1.1 record type- require LN, NS, X, or PATTERN")
+  File "parser.py", line 17, in __init__
+    super(LocalNamesSyntaxError, self)('Local Names v1.1 Syntax Error: %s' % msg)
+TypeError: super() argument 1 must be type, not classobj
+}}}
+
+Is this a Python2.4 v. Python2.3 thing? Or is there a simple error in my code? -- LionKimbro [[DateTime(2004-12-28T21:00:40Z)]]
