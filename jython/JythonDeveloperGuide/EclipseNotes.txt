@@ -55,12 +55,13 @@ At a high level, you need to:
 [[Anchor(ANT)]]
 At this point, you should be able to build the project using Eclipse's `Java Builder`.  This will only compile the classes though --you'll want to use `<yourProjectName>/jython/build.xml` to get the full ant build.  To do this:
  *First, set up an `ant.properties` file to supply "parameters" to `build.xml`
-  *Create the file directly under `<yourProjectName>`
+  *Put the file directly under `<yourProjectName>/jython`.  It seems like it '''must''' be in the same directory as `build.xml`.  Eclipse seems to let you specify other locations, but I couldn't ever get it to work unless it was right along side `build.xml`.  If anyone knows why, please add details.
   *Put in info such as
 {{{
     build.compiler=modern
-    debug=on
-    optimize=off
+    debug=false
+    #debuglevel=lines,vars,source
+    optimize=false
 
     #javaccHome=/Users/bzimmer/Library/Java/Extras/javacc-3.2
 
@@ -117,5 +118,7 @@ BUILD SUCCESSFUL
 Total time: 2 seconds
 }}}
 Note that this sample was actually a re-build, so it didn't do that much (you'll see more output on the first build) and ran pretty fast (2 seconds).  Also, note that I did not link in the optional "user-supply-able" jars.  To do so, just add those entries to your ant.properties (look for the placeholders).
+
+Also, you can specify the ant targets that you want to run using the `Targets` tab under `External Tools` dialog.  For example, the `copy-dist` seems to run by default.  To force a full build, check the `all` target.
 
 And here is a [wiki:Self:/JythonDeveloperGuide#sampleBatch sample batch file (windows)] that runs the eclipse-built jython.jar
