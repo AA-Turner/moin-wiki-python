@@ -449,13 +449,42 @@ def longMethodNameForEffect(longArgumentOne=None,
  * + Reads naturally as "pipe" operator to unix hackers (which is semantically correct, since the defined function gets passed through the decorators, one at a time, and the result is used.
  * - Misleading to Unix hackers, since the order of evaluation is "backwards".
  * + Doesn't use up one of the currently unused characters (such as "@") -- it's always possible that we'll find another good use for those later.
- * - For some fonts, "|" looks similar to "I" or "l" or "1".  Some think that code highlighting would remove this problem, but with normal-sized fonts, there are not many pixels in it to show a color clearly.  "@" has a big blob of pixels, and is very distinct.
+ * - For some fonts, "|" looks similar to "I" or "l" or "1".  Some think that code highlighting would remove this problem, but with normal-sized fonts, there are not many pixels in it to show a color clearly.  "@" has a big blob of pixels, and is very distinct.  If proper style uses a space after the "|", the decoration will be a syntax error if I, 1, l (or !) are used.
  * - The key with "|" on it is often in an awkward location on laptop keyboards
  * 0 Perhaps decorators should be allowed before or after the docstring.  If you have to choose, I'd choose making it before the docstring.
  * - No implementation currently exists.
  * - When using just one bar, it isn't noticable enough.  It seems more a part of the actual decorator function name than something demarking the function. 
  * - When using multiple decorators, the pattern formed by the vertical bars draws the eyes too much and makes it hard to focus on the signature.
  * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [http://mail.python.org/pipermail/python-dev/2004-August/047279.html]
+
+Restyled version:
+{{{
+def foo(arg1,arg2):
+    | classmethod
+    ...
+
+def bar(low,high):
+    | accepts(int,int)
+    | returns(float)
+    ...
+
+def longMethodNameForEffect(longArgumentOne=None,
+                            longArgumentTwo=42):
+    | staticmethod
+    | funcattrs(grammar="'@' dotted_name [ '(' [arglist] ')' ]",
+               status="experimental", author="BDFL")
+    """This method blah, blah.
+
+    It supports the following arguments:
+    - longArgumentOne -- a string giving ...
+    - longArgumentTwo -- a number giving ...
+
+    blah, blah.
+
+    """
+
+}}}
+
 
 '''E3. vbar decorator after arg'''
 {{{
@@ -546,10 +575,22 @@ Same pros and cons as @decorator, but additionally:
  * 0 Less 'in-your-face' than @ (some claim it blends in too much, and others, that it's a good thing)
  * - Most characters (including pipe) already have a meaning.  Ending an expression at the linebreak will probably keep these from becoming ambiguous, but ... that gets fragile.
  * - Misleading to Unix hackers, since the order of evaluation is "backwards".
- * - For some fonts, "|" looks similar to "I" or "l" or "1"  Some think that code highlighting would remove this problem, but with normal-sized fonts, there are not many pixels in it to show a color clearly.  "@" has a big blob of pixels, and is very distinct.
+ * - For some fonts, "|" looks similar to "I" or "l" or "1"  Some think that code highlighting would remove this problem, but with normal-sized fonts, there are not many pixels in it to show a color clearly.  "@" has a big blob of pixels, and is very distinct.  If proper style uses a space after the "|", the decoration will be a syntax error if I, 1, l (or !) are used.
  * - The key with "|" on it is often in an awkward location on laptop keyboards
  * - When using just one bar, it isn't noticable enough.  It seems more a part of the actual decorator function name than something demarking the function. 
  * - When using multiple decorators, the pattern formed by the vertical bars draws the eyes too much and makes it hard to focus on the signature.
+
+Restyled version:
+{{{
+| classmethod
+def foo(arg1,arg2):
+    ...
+
+| accepts(int,int)
+| returns(float)
+def bar(low,high):
+    ...
+}}}
 
 '''I. angle brackets decorator syntax'''
 {{{
