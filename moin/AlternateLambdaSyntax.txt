@@ -1,4 +1,28 @@
-As it stands, Guido van Rossum has suggested that lambda forms will disappear in ["Python3.0"].  This started a number of threads on comp.lang.python suggesting alternate syntaxes for lambda in the hopes that one of them might be more amenable to GvR's tastes.  This pages summarizes these suggestions:
+As it stands, Guido van Rossum has suggested that lambda forms will disappear in ["Python3.0"].  This started a number of threads on comp.lang.python suggesting alternate syntaxes for lambda in the hopes that one of them might be more amenable to GvR's tastes.  This pages summarizes these suggestions.
+
+The main hope of this page is to find a way to retain the functionality of existing Python lambdas - a way to create simple deferred expressions within another expression. For many uses (e.g. lazy argument evaluation, or simple callbacks) separating the deferred expression out into a named function can actually reduce clarity, as it overemphasises the deferred expression at the expense of the expression that the deferred expression is only one part of.
+
+== Goals for Alternate Form ==
+
+=== Definitely Desirable Features ===
+ * Acceptable to BDFL
+   If Guido doesn't like it, it ain't gonna happen!
+
+ * At least as capable as current lambda expressions
+   If a new syntax is to replace the status quo, it needs to be at least equivalent in expressiveness
+
+ * More Pythonic / Less ugly
+   The current lambda syntax simply doesn't blend well with the rest of Python's syntax. A syntax which mixes in with other expressions as cleanly as list comprehensions and generator expressions do should have a much better chance of gaining BDFL approval.
+
+ * More friendly to inexperienced users
+   Compared to other Python keywords, 'lambda' is rather esoteric. In the challenge for "farthest outside day-to-day English usage", its closest competitor would probably be 'assert', as even 'def' and 'elif' are just abbreviations for 'define' and 'else if'. Use of simpler keywords may make deferred expressions appear less intimidating than they seem with the current unusual keyword.
+
+ * Less external baggage
+   One of the problems with lambda is that developers familiar with lambda calculus expect more of it than it provides. They expect full anonymous functions, whereas Python's lambda expressions allow deferred evaluation of only a single expression. An alternate syntax described as providing deferred evaluation of expressions rather than anonymous functions may be less prone to trigger complaints about the single expression limitation (consider: how often are complaints heard regarding the restriction of the expression section of list comprehensions or generator expressions to single expressions?).
+
+=== Arguably Desirable Features ===
+ * Support anonymous suites
+   No discussion of lambda is complete without it being suggested that it should be possible to embed entire suites inside expressions. Accordingly, some suggestions along these lines are included below under the heading Real Closures.
 
 == Current Syntax ==
 
