@@ -93,3 +93,62 @@ document_root = /some/path
 }}}
 
 Anyway, there's still some other possibilities when using the ini syntax.
+
+ I agree, but the approach is still more verbose than it need be. Java properties work like this; although they don't have sections, they give each property a hierarchical dotted name, and that can be used to create a hierarchy. For example:
+
+{{{
+app.name=GenericApp
+app.varname=surveyMaster
+app.logfile=/var/logs/${app.name}.log
+app.servlet=default_servlet
+app.templates=templates
+entity.user=User
+user.firstName.description=first name
+user.lastName.description=last name
+user.emailAddress.description=email address
+user.emailAddress.validator=email
+entity.group=Group
+group.description=respondent group
+group.name.description=name
+group.description.description=description
+}}}
+
+ You could use the above to indicate that a user entity is described by a class called User, and that a user instance has firstName, lastName and emailAddress properties ... and so on. It's workable, but hardly optimal.
+
+Using my scheme, you could express the virtual hosts either like this:
+
+{{{
+virtual_hosts :
+{
+  host1 : { domain: 'host1.my-company.com', root : '/var/www/domains/host1.my-company.com/docs' }
+  'host two' : { domain: 'host2.my-company.com', root : '/var/www/domains/host2.my-company.com/docs' }
+}
+}}}
+
+or like this:
+
+{{{
+virtual_hosts : 
+[
+  { domain: 'host1.my-company.com', root : '/var/www/domains/host1.my-company.com/docs' }
+  { domain: 'host2.my-company.com', root : '/var/www/domains/host2.my-company.com/docs' }
+]
+}}}
+
+The first form would be more useful for being able to refer to individual hosts by name (using $virtual_hosts.host1 or $virtual_hosts['host two']. You can also have your cake and eat it, by specifying both forms and having one refer to the other:
+
+{{{
+virtual_host_definitions :
+{
+  host1 : { domain: 'host1.my-company.com', root : '/var/www/domains/host1.my-company.com/docs' }
+  'host two' : { domain: 'host2.my-company.com', root : '/var/www/domains/host2.my-company.com/docs' }
+}
+
+virtual_hosts : 
+[
+  $virtual_host_definitions.host1
+  $virtual_host_definitions['host two']
+]
+}}}
+
+You might use the dict to access a specific host, and the sequence for iterating over the hosts in a pre-determined order. -- VinaySajip
