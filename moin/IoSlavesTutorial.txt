@@ -1,0 +1,73 @@
+= IOSlaves Tutorial =
+
+== Abstract ==
+
+A small library was written to allow IOSlaves, the
+protocol handlers for the [http://www.kde.org/ K Desktop Environment], to be written in Python
+using the PyQt and PyKDE modules. An example IOSlave was created for the purpose of examining
+multiple images contained in single files (Acorn Spritefiles) using this library and a simple
+Python class. Since Python works well as a "glue" language, it is hoped that the creation of IOSlaves
+will be made more accessible to a wider range of users, leading to a richer, more transparent user
+experience on the desktop.
+
+== Introduction ==
+
+In KDE's infrastructure, IOSlaves handle the transfer of data between applications and
+remote servers using common protocols such as ''http'' and ''ftp'', but also for more
+mundane protocols like the ''file'' protocol for local files. Many of the mainstream protocols
+provided in the standard KDE distribution are implemented in C++, although some, like the
+''finger'' IOSlave, rely on support scripts to handle various aspects of communication with
+remote servers. Since PyKDE provides Python implementations (or ''wrappers'') for the
+relevant classes in the {{{kio}}} library, it is possible to write IOSlaves almost
+completely in Python; a simple C++ handling function is only required for
+dynamic linking purposes and to set up the interpreter.
+
+Much of the documentation describing the creation of IOSlaves is,
+naturally, written to assist the C++ programmer by providing examples of the
+appropriate classes in use. When read alongside some of the distributed
+examples in the {{{kdebase}}} package of the KDE distribution, these
+tutorials provide most of the information required to write an IOSlave in
+Python "from scratch". However, some aspects of their operation would benefit
+from further description so it is useful to take this opportunity, when
+translating the material for a new audience, to try and provide clear and
+concise documentation to complement existing material. Note that I am not a
+implentor of IOSlaves in C++ so there may be scope for future additions and
+corrections to this document from KDE experts.
+
+We will begin by describing the implementation of the Python module, since
+the C++ handler should be transparent in use, before discussing potential
+problems with IOSlaves, methods for debugging them and any known limitations
+to their use.
+
+== Implementation ==
+
+We begin by importing the necessary modules. Some of these are needed for general interoperability
+with the KDE IOSlave infrastructure:
+
+{{{
+from qt import QString, QByteArray, QDataStream, IO_ReadOnly
+from kio import KIO
+from kdecore import KURL
+}}}
+
+Other familiar Python modules are used when performing tasks specific to this IOSlave:
+
+{{{
+import os, time, types, urllib2
+
+import Image, spritefile
+}}}
+
+Additionally, we need to use the StringIO class and would prefer the C implementation:
+
+{{{
+try:
+
+    from cStringIO import StringIO
+
+except ImportError:
+
+    from StringIO import StringIO
+}}}
+
+To be continued...
