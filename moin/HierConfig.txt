@@ -66,3 +66,30 @@ I'm currently working on a module to parse this format, though I've nothing whic
 
  Is there a better link for ZCML than the one above? There appears to be nothing in the form of overview documentation on the Zope site, including dev.zope.org - I did site searches for "ZCML" and "configuration" and nothing came up which looked immediately useful. I don't have a particular problem with ZCML, other than the fact that by dint of being XML, it is fairly verbose; and I would guess (please correct me if I'm wrong) that it is Zope-centric rather than general-purpose. -- VinaySajip
  
+I don't know -- I looked around too, and didn't find much.  There was a presentation at PyCon2003 on it.  I'm pretty sure it was written to be usable outside of Zope, though it hasn't been packaged for such.
+
+Another way to deal with nested configurations would be to parse the names.  I think one package I've seen does this.  So sections are just a sort of "with" statement.  I.e.:
+
+{{{
+loggers.input = nt_eventlog
+[logggers]
+input.nt_eventlog.filename = /some/path
+}}}
+
+Well, not a very good example.  Anyway, this creates the keys "loggers.input" and "loggers.input.nt_eventlog".  This works for keys that are nicely named; it might be harder for a virtual host, which I'd be apt to do like:
+
+{{{
+[vhost my.vhost.domain]
+document_root = /some/path
+}}}
+
+Or something like that.  Anyway, you want to create something like vhost['my.vhost.domain'].document_root, not vhost.my.vhost.domain.document_root.  Maybe it could be like:
+
+{{{
+vhost[my.vhost.domain].document_root = /some/path
+# or....
+[vhost[my.vhost.domain]]
+document_root = /some/path
+}}}
+
+Anyway, there's still some other possibilities when using the ini syntax.
