@@ -1,0 +1,22 @@
+Occasionally the Wiki is hit by spammers trying to increase Google's ranking for their sites by 
+adding links to them.  These spammers may replace a page's content with dozens of links, 
+or they may insert links into the existing text.
+
+= Fixing the changes =
+
+To fix changes, follow the little 'i' icon at the top of the page. 
+You'll find a history of all versions and a
+revert button for each of them. Usually you can just revert to the
+previous version.
+
+= Preventing future attacks =
+
+Edit the LocalBadContent page.  This page records a bunch of regex patterns that are applied
+to all of the links in a page; if a matching link is found when the page content is saved, 
+the save will be disallowed and an error will be reported.
+
+Remember that this page lists regular expressions, not strings, so the '.' character will match
+any character.  If you're matching a domain such as foo.com, add `foo\.com` to the page.
+
+See http://moinmoin.wikiwikiweb.de/AntiSpamGlobalSolution for more details.
+
