@@ -479,7 +479,7 @@ An alternative (inspired by a typing error I corrected in E2 in the Guido exampl
 Basically it has the same characteristic than E2, with the following slight differences:
  * + More obviously attached to function definition
  * + Possible 1-line version as readable as the inline syntax (see F.) for short function/decoration
- * - More difficult to parse?
+ * - More difficult to parse? The end-of-statement rules in Python mandate the colon be on the same line as the close of the argument list (less any line continuations); this syntax breaks that rule. Either the rule would have to be changed (yikes!), or line continuations would have to be used.
  * - New syntax having no equivalent in other part of python (but all @ / | propositions suffer from that )
  * - No implementation currently exists.
 
@@ -573,6 +573,8 @@ decorate accepts(int,int), returns(float):
  * - Increases minimum ident level on decorated functions (see following question)
  * - Inconsistent identation level between methods with/without decorators (see following question)
  * - way to much indenting if there are multiple decorators. (see following question)
+ * - Determining which decorators apply to a function requires scanning an arbitrarily large amount of code (with real functions and nesting, the decorator can be literally hundreds of lines away from the def).
+ * - In practice, functions are likely to each require slightly different decorator sets, which means that we either do not group them (in which case, the new indent level doesn't gain us anything), or functions will be heavily and unevenly nested. (See below for an example.)
  * - No implementation currently exists.
 
 Wouldn't be possible to allow both syntaxes?:
@@ -582,6 +584,22 @@ decorate classmethod def foo(arg1, arg2):
 
 decorate classmethod:
    def foo(arg1, arg2):
+}}}
+
+Here's an example of run-away nesting (imagine trying to figure out which decorators apply to baz if these were non-trivial functions):
+
+{{{
+ decorate static, synchronized:
+   decorate returns(None):
+     decorate accepts(int):
+       def foo(a):
+         pass
+     decorate accepts(int, int):
+       def bar(a, b):
+         pass
+   decorate accepts(), returns(int):
+     def baz():
+       return 0
 }}}
 
 '''J2. expand the def suite'''
@@ -597,13 +615,14 @@ decorate:
 def bar(low,high):
     ...
 }}}
- * + Uses widely known python syntax
+ * + Uses widely known python syntax, albeit in an unusual way
  * + Doesn't need extra characters with special meaning
  * + Allows many decorated functions to be declared with a single statement
  * - New keyword
  * - Overkill for the simple case like classmethod.
  * - Many people felt it was wrong use of an identation suite.
- * - Technical problems with the current grammar parser if a suite *starts* with an optional part.  (Ending with an optional part, such as "else:" is OK, but starting with one is not.
+ * - Has the same problem as 5.A, in that the decorate block implicitly affects the following def. This does not occur elsewhere in Python.
+ * - Technical problems with the current grammar parser if a suite *starts* with an optional part.  (Ending with an optional part, such as "else:" is OK, but starting with one is not.)
  * - No implementation currently exists.
 
 '''K. partitioned syntax syntax'''
