@@ -65,6 +65,12 @@ def foo (a as int, b as float) as float:
 def bar(low: int, high: int) -> float:
     ...
 }}}
+   * Since some types only implement parts of an interface have 'strict' and 'lax' interfaces. Strict requires a complete implementation of the interface, lax requiring only a partial implementation with the rest being taken from interface defaults or ignored. This would require a new keyword/reserved word (strict) with lax mode being the default. This is to help duck typing. Ex: {{{
+#!python
+def baz(x as list, y as strict file):
+    # x must (be adapted to) implement the whole list interface
+    # y must only (be adapted to) implement part of the file interface 
+}}}
 
  * Make `as` a true keyword. [[#g 7]]
  * Make `True` and `False` keywords. [[#f 6]]
