@@ -7,8 +7,8 @@ The simplest way to handle exceptions is with a "try-except" block:
 (x,y) = (5,0)
 try:
   z = x/y
-except:
-  z = "divide by zero"
+except ZeroDivisionError:
+  print "divide by zero"
 }}}
 
 If you wanted to examine the exception from code, you could have:
@@ -18,7 +18,7 @@ If you wanted to examine the exception from code, you could have:
 (x,y) = (5,0)
 try:
   z = x/y
-except Exception, e:
+except ZeroDivisionError, e:
   z = e # representation: "<exceptions.ZeroDivisionError instance at 0x817426c>"
 print z # output: "integer division or modulo by zero"
 }}}
