@@ -23,13 +23,24 @@ except ZeroDivisionError, e:
 print z # output: "integer division or modulo by zero"
 }}}
 
+This page previously used a catch-all exception clause:
+
+{{{
+#!python
+(x,y) = (5,0)
+try:
+  z = x/y
+except:
+  print "divide by zero"
+}}}
+
+This is bad because you'll almost certainly catch too many errors. As a simple example, when the user presses Ctrl-C, thus generating a KeyboardInterrupt, it will be caught and the code above will print "divide by zero". Now that's confusing!
+
 == To Write About... ==
 
 Give example of IOError, and interpreting the IOError code.
 
 Give example of multiple excepts. Handling multiple excepts in one line.
-
-Catch-all "Exception" exception handling. (Note: JohannesGijsbers says this is ''bad.'' We should have a note about why it's bad, next to how to do it.)
 
 Show how to use "else" and "finally".
 
