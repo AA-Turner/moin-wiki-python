@@ -85,7 +85,7 @@ def bar(low,high):
  * - Breaks in interactive shell
 
 
-'''C. list-after-def syntax'''
+'''C1. list-after-def syntax'''
 {{{
 def foo(arg1,arg2) [classmethod]:
     ...
@@ -112,6 +112,29 @@ def foo(arg1, arg2) [
     ...
 }}}
 That doesn't look particularly ugly to me.
+
+'''C2. list-after-def syntax with a (pseudo-)keyword'''
+{{{
+def foo(arg1,arg2) using [classmethod]:
+    ...
+
+def bar(low,high) using [accepts(int,int), returns(float)]:
+    ...
+}}}
+
+This combines C1 with a keyword; it general, it has all the advantages
+of either, so I will only list those that are unique to the combination.
+
+ * + Groups the decorators with a list, but explains what they are
+doing, so the list no longer has a magical new meaning.
+ * + Easily extended; No special characters are "used up", and in 
+the future, other pseudo-keywords could be added.
+ * - Some proponents objected to adding a keyword, because of more
+typing.  
+ * 0 Makes the decoration look like a second-class or optional part of 
+the definition.  This is true, but may have caused some emotional
+objection.
+ * - There was very little agreement on which word should be used.
 
 '''D. list at top of function body syntax'''
 {{{
