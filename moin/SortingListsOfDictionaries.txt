@@ -14,7 +14,7 @@ c = {"key1": 6 , "key2": 1, "key3": 1}
 undecorated = [a, b, c] # how do you sort this list?
 }}}
 
-There are many ways to do this. Here's the fastest way to do it, as it avoids using a custom comparison function, instead using builtin comparisons. This is the ''decorate-sort-undecorate'' (DSU) pattern, or the ''Schwartzian transform'' if you're coming from Perl.
+There are many ways to do this. Here's the fastest way to do it, as it avoids using a custom comparison function, instead using builtin comparisons. This is the ''decorate-sort-undecorate'' pattern, or the ''Schwartzian transform'' if you're coming from Perl.
 
 {{{
 #!python
@@ -24,6 +24,4 @@ decorated.sort()
 sorted = [dict_ for (key, dict_) in l]
 }}}
 
-== Questions ==
-
-What does the {{{dict_}}} underscore do? -- LionKimbro
+In case you're wondering, the variable is named `dict_` because we want to have Wiki:MeaningfulNames, but we don't want to shadow the `dict` builtin, so we append an underscore.
