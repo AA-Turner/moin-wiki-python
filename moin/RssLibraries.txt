@@ -52,19 +52,10 @@ For each item in {{{feed["items"]}}}, we have:
 || {{{item[ "wiki_history" ]}}} || for wiki, a link to the page history ||
 
 == Aggregating Feeds with Feed Parser ==
-RawDog is a ready made aggregator if you don't want to write your own.
 
 If you're pulling down a lot of feeds, and aggregating them:
 
 First, you may want to use [http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/84317 Future threads] to pull down your feeds. That way, you can send out 5 requests immediately, and wait for them all to come back at once, rather than sending out a request, waiting for it to come in, send out another request, wait for it to come back in, etc., etc.,.
-
-Usuallly, such performance is not necessary, unless you have thousands of feeds to retrieve every hour. If you have less than a few hundred feeds an hour to retrieve, one a time is probably better - why peak out your processor/bandwidth?  
-
-Other things to help you be polite:
-   * try and retrieve things a few times a day or week.  don't request hourly updates unless you need them.
-   * avoid updates on the hour or half hour.  Try a random time into the hour, like 27 or 33 or whatever, or poll at an interval like 693 minutes rather than 600, so that only rarely do you poll sites near the hour boundry.  It is problematic for sites to get polled by hundreds of aggregators on the hour.
-   * be sure to use HttpConditionalGetRequests and honour content-expires response flags
-   * be sure to support HttpCompression in the responses.
 
 {{{
 #!python
@@ -103,7 +94,52 @@ Congradulations! You've aggregated a bunch of changes!
 
 LionKimbro
 
+== Links ==
+
+ * [http://offog.org/code/rawdog.html RawDog] is an RSS aggregator written in Python & using [http://diveintomark.org/projects/feed_parser/ Feed Parser]
+
 == Discussion ==
 
 Getting the "author"/"contributor" out of most ModWiki RSS feeds with the feedparser module is a bit confusing as of now. Right now (feedparser 3.3), it goes into the "rdf_value" attribute of the entry.
 
+----
+
+I'm moving the following out of the main text:
+
+  RawDog is a ready made aggregator if you don't want to write your own.
+
+Are you concerned that I'm encouraging people to reduplicate efforts, making aggregator after aggregator after aggregator?
+
+That's not the case; there are good reasons to write aggregators yet.
+
+In particular: I wrote the code because I needed a MoinMoin macro that aggregated RSS feeds.
+
+I imagine that there are other good reasons to write aggregating code.
+
+That said, RawDog ''is'' Python, and it ''is'' using Feed Parser, so I've linked it at the bottom of the page.
+
+-- LionKimbro [[DateTime(2004-12-27T08:44:40Z)]]
+
+----
+
+Next, I moved this out of the main text:
+
+  Usually, such performance is not necessary, unless you have thousands of feeds to retrieve every hour. If you have less than a few hundred feeds an hour to retrieve, one a time is probably better - why peak out your processor/bandwidth?  
+
+This makes sense if you're just writing a client aggregator for reading blogs. But if you're compiling parts of a web page, then you want to generate a response within 20 seconds, not 3 minutes.
+
+Similarly, I'm removing:
+
+  Other things to help you be polite:
+    * try and retrieve things a few times a day or week.  don't request hourly updates unless you need them.
+    * avoid updates on the hour or half hour.  Try a random time into the hour, like 27 or 33 or whatever, or poll at an interval like 693 minutes rather than 600, so that only rarely do you poll sites near the hour boundry.  It is problematic for sites to get polled by hundreds of aggregators on the hour.
+    * be sure to use HttpConditionalGetRequests and honour content-expires response flags
+    * be sure to support HttpCompression in the responses.
+
+Maybe there's some other page on some other wiki where this belongs. I don't think that space is here.
+
+I'm mainly concerned here with giving an example of how the RSS library works, the kinds of things you can do with it, how to combine it's use with the Futures module.
+
+This isn't really about writing aggregators.
+
+-- LionKimbro [[DateTime(2004-12-27T08:44:40Z)]]
