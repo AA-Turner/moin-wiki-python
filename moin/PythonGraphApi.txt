@@ -156,6 +156,17 @@ How do we handle the proliferation of other graph classes (such as multigraphs, 
 are only minor tweaks of the basic structure? How about more radical departures such as hypergraphs (which allow
 an arbitrary number of nodes per edge)?
 
+One possibility would be to base the API definition on the [http://www.gupro.de/GXL Graph eXchange Langage] (GXL). It is derived from many separate graph representation languages and seems quite
+complete (it even supports hypergraphs and hierarchical graphs!), logical, and well-thought-out.
+The language itself
+consists of an XML and a UML notation,
+but it is based on a clearly defined object model/ADT, which we could adapt to a Python interface.
+I'm not sure about how (or whether) they model graph modification (although I think there is
+some support for transformations of some kind) but that could probably be done as a simple, logical
+extension. We might not want to support ''all'' of the GXL model, of course. We might even want
+to define several layers of standard compliance, with Layer 0 being only the current de facto
+standard graph API, for example. (Magnus)
+
 == Contributors ==
 
 (''Add your name to this list if you contribute.'')
