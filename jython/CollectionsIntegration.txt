@@ -14,23 +14,23 @@ Going the other way fails.  Take for example:
     TypeError: java.util.ArrayList(): 1st arg can't be coerced to java.util.Collection or int
     }}}
 
-In this example the ArrayList constructor is expecting a java.util.Collection instance but since the PyList does not implement this interface the TypeError is thrown.  Since the Collection framework is fundamental to Java since 1.2 the JythonDevelopmentTeam will address this issue.  The work is currently being managed by ClarkUpdike.
+In this example the Array````List constructor is expecting a java.util.Collection instance but since the Py````List does not implement this interface the Type````Error is thrown.  Since the Collection framework is fundamental to Java since 1.2 the JythonDevelopmentTeam will address this issue.  The work is currently being managed by ClarkUpdike.
 
 === Design ===
 
 There are two different approaches:
 
  1. Subclass the Abstract classes available in java.util for the Collection framework.
- 2. Continuing subclassing PyObject with the additional work of implementing the appropriate interface.
+ 2. Continuing subclassing Py````Object with the additional work of implementing the appropriate interface.
 
 Approach 2 offers the best integration options.  Jython is primarily an implementation of Python so implementing the data structures as they are in Python takes priority over the Java implementations.  In addition, the keyword and index arguments for method calls are already done.  The implementation of the interfaces will need only delegate to the appropriate PyObject instance's method for the same functionality.
 
 ||Jython Class||Extends||Implements||
-||PySequence||PyObject||List (Collection)||
-||PyArray||PySequence||||
-||PyList||PySequence||||
-||PyString||PySequence||||
-||PyTuple||PySequence||||
-||PyXRange||PySequence||||
-||PySet||PyObject||Set||
-||PyDictionary||PyObject||Map||
+||Py````Sequence||Py````Object||List (Collection)||
+||Py````Array||Py````Sequence||||
+||Py````List||Py````Sequence||||
+||Py````String||Py````Sequence||||
+||Py````Tuple||Py````Sequence||||
+||Py````XRange||Py````Sequence||||
+||Py````Set||Py````Object||Set||
+||Py````Dictionary||Py````Object||Map||
