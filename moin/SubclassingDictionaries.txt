@@ -10,22 +10,28 @@ ex:
 
 {{{
 #!python
-class Msg( dict ):
+class Msg(dict):
+
     __slots__ = [] # no attributes
-    def __init__( self, msg_type, kv_dict = {} ):
-        dict.__init__( self )
-        self[ "msg-type" ] = msg_type
-        self.update( kv_dict )
-    def Type( self ):
-        return self[ "msg-type" ]
-    def __getitem__( self, k ):
-        return self.get( k, None )
-    def __delitem__( self, k ):
-        if self.has_key( k ):
-            dict.__delitem__( self, k )
-    def __str__( self ):
-        pp = pprint.pformat( dict(self) )
-        return "%s:  %s" % (self.Type(), pp )
+
+    def __init__(self, msg_type, kv_dict = {}):
+        dict.__init__(self)
+        self["msg-type"] = msg_type
+        self.update(kv_dict)
+
+    def Type(self):
+        return self["msg-type"]
+
+    def __getitem__(self, k):
+        return self.get(k, None)
+
+    def __delitem__(self, k):
+        if self.has_key(k):
+            dict.__delitem__(self, k)
+
+    def __str__(self):
+        pp = pprint.pformat(dict(self))
+        return "%s:  %s" % (self.Type(), pp)
 }}}
 
 The {{{__slots__}}} line indicates that Msg has no attributes of its own, preserving memory; see UsingSlots.
