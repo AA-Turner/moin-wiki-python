@@ -1,0 +1,61 @@
+Add your questions here and we'll do our best to answer them.
+
+But see also:
+  * The [http://www.python.org/cgi-bin/faqw.py Python FAQ Wizard].
+  * The FAQTs [http://www.faqts.com/knowledge_base/index.phtml/fid/199 knowledge base].
+  * The [http://norvig.com/python-iaq.html Infrequently Asked Questions] list maintained by [http://norvig.com Peter Norvig].
+  * Python20FrequentlyAskedQuestions (archive)
+
+----
+
+[[TableOfContents]]
+
+==== Win 95 Installation ====
+
+'''Q.''' I run a Windows 95 200 MHz Compaq computer, when I tried to install Python 2.0, the installation program consistently crashes/freezes at 52% of the process. Can you give me any suggestions?
+
+'''A.''' Make sure you have enough disk space.  Accept the default choices the installer suggests.  Make sure all other programs are killed first, especially virus scanners (use Ctrl+Alt+Del repeatedly to kill off everything except Explorer and Systray).  Try a more recent version of Python (like 2.2.1), which uses better installer technology.  Try an ActiveState installer, which uses completely different installer technology.  Try the minimalist PythonWare installer, which seems to amount to an automated unzip.  Accept that Microsoft no longer supports Win95 and plan to get another OS.
+
+==== pyexpat Module ====
+
+'''Q.''' I just downloaded version 2.0. When I try to run the test_sax.py module it complains that it can't find the driver pyexpat.py. I looked in the distribution and it doesn't seem to be there? I'm running on Solaris 2.7. Thank You.
+
+'''A.''' The pyexpat module is a compiled extension module.  See the comments in the Modules/Setup file for
+instructions on getting and building the required C library.  Once you've built that, enable the module in the
+Modules/Setup file and type "make" in the top level of the Python source tree.  "make --install" will re-install
+Python for you, or you can copy Modules/pyexpat.so to $exec_prefix/lib/python2.0/lib-dynload/ if you're building
+modules as shared objects.
+
+==== Documentation in Windows Helpfile Format ====
+
+'''Q.''' Where do I get the documentation for Python in the CHM (Compiled HTML) format?
+
+'''A.''' See http://www.orgmf.com.ar/condor/pytstuff.html.
+
+==== Windows XP look-and-feel ====
+
+'''Q.''' How can I make ["WxPython"] on Windows XP assume XP look-and-feel?
+
+'''A.''' Put two files '''python.exe.manifest''' and '''pythonw.exe.manifest''', both with the following contents:
+
+{{{
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+<assemblyIdentity version="1.0.0.0" processorArchitecture="X86" name="*.*.*" type="win32" />
+<description>*</description>
+<dependency>
+<dependentAssembly>
+<assemblyIdentity type="win32" name="Microsoft.Windows.Common-Controls"
+ version="6.0.0.0" processorArchitecture="X86" publicKeyToken="6595b64144ccf1df" language="*" />
+</dependentAssembly>
+</dependency>
+</assembly>
+}}}
+
+in your Python installation directory (where respective '''.exe''' files reside). Next time you run
+your wxPython applications, they'll look like "normal" XP applications.
+
+This may also affect other Python modules that use Windows display API.
+
+----
+Contributors: SteveHolden, FredrikLundh, JohannesGijsbers
