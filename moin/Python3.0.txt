@@ -69,17 +69,6 @@ def bar(low: int, high: int) -> float:
  * Make `as` a true keyword. [[#g 7]]
  * Make `True` and `False` keywords. [[#f 6]]
    * Reason: make assignment to them impossible. 
-     ''Note that this isn't currently possible due to backwards compatibility concerns; a lot of code trying to support versions of Python before and after True and False were introduced looked something like {{{#!python
-try:
-    True, False
-except NameError:
-    True, False = 0 == 0, 0 == 1}}}  If True and False were keywords, this would cause a syntax error as potential assignment to None does in Python 2.4: {{{#!python
->>> try:
-...     None
-... except NameError:
-...     None = 0
-Traceback (SyntaxError: assignment to None)}}}  Even though we never reach the assignment in the `except` block, we get a SyntaxError.  This is because SyntaxErrors happen well before any code is executed. -- StevenBethard''
-
  * Make true division default.
  * Raise an exception when making comparisons between two incongruent types (other than equality and inequality.)
    * Reason: such comparisons do not make sense and are especially confusing to new users of Python.
