@@ -1,9 +1,12 @@
 There are various fixes and improvements that should form part of a 2.0 version of Distutils.
 
- * Must be backwards-compatible with existing setup.py scripts, though some
-   methods may trigger PendingDeprecationWarnings.
+The ultimate goal:
+ * '''Must be backwards-compatible with existing setup.py scripts.'''
+
+Other ideas:
+ * Some methods may trigger PendingDeprecationWarning``s
  * Move various utility methods out of command implementations and onto the Distribution class.
- * Implement the package database described by PEP 262.
+ * Implement the package database described by PEP PEP:0262.
  * Consider always regenerating the MANIFEST from MANIFEST.in.
  * Finish bdist_dpkg.py
  * Use optparse instead of fancy_getopt.py, and deprecate fancy_getopt.py.
@@ -14,9 +17,9 @@ There are various fixes and improvements that should form part of a 2.0 version 
  * Package installation from PyPI (probably driven by the pythonmac-sig)
  * Add more autoconf-like tests to the config command
  * Make the design more extensible w.r.t. 'foreign' module compilation, specifically:
- * Allow the integration of autoconf/make based build systems for C/C++ extensions
- * Allow 'Extension' to be composed of components, each with their own build rules
- * Provide a means for scripts / modules to access installation parameters such as datafile directories
+   * Allow the integration of autoconf/make based build systems for C/C++ extensions
+   * Allow 'Extension' to be composed of components, each with their own build rules
+   * Provide a means for scripts / modules to access installation parameters such as datafile directories
  * Define more default commands to build documentation, run (unit) tests, etc.
 
   -- StefanSeefeld
@@ -63,17 +66,11 @@ Maybe some traditional package concepts:
 
   -- Thomas Heller
 
- I think a decision about backwards compat needs to be made.  Do you what people to start their new setup.py scripts with "from distutils2.core import setup"?  If not, not breaking everyone's highly customized setup.py scripts might be *very* constraining.
-[The goal is backward compatibility. Redesigning everything is too great a risk
-for my taste.--amk]
-
-  -- MichaelHudson
-
  * Python packages should have a canonical way of having C/C++ headers, executable scripts, dynamic libraries (For Win32, OS X), documentation, examples, and other arbitrary data (like fonts, icons, etc.) associated with them in the same or folder (or a closely related folder with identical permissions) as the package itself.  We could use something like Apple's bundles for this purpose (sans versioning, most likely).  If a package wants to put things in places such as /usr/local/bin, they should be symlinks to what is in this new structure.
 
  * Multi-module installs (more than one importabl ething that goes into site-packages) should be deprecated.  If they want this behavior they should install a package and use a pth file.
 
- * Add the following fields to PEP-241 (PKG-INFO):  Package-Name (the actual python-importable name of what was just installed), Depends (a list of other packages, by Package-Name, that this package depends on), Recommends (a list of other packages, by Package-Name, that enhance the functionality of this package when present).  These headers make the REQUIRES and PROVIDES (how was PROVIDES useful anyways?) files from PEP-262 obsolete.
+ * Add the following fields to PEP PEP:0241 (PKG-INFO):  Package-Name (the actual python-importable name of what was just installed), Depends (a list of other packages, by Package-Name, that this package depends on), Recommends (a list of other packages, by Package-Name, that enhance the functionality of this package when present).  These headers make the REQUIRES and PROVIDES (how was PROVIDES useful anyways?) files from PEP PEP:0262 obsolete.
 
  * Perhaps a better way of finding C/C++ libraries/headers that an extension depends on, include support for OS X frameworks.  Make linking to frameworks less hackish.
   
