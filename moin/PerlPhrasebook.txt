@@ -290,7 +290,7 @@ Module::func();
 
 {{{
 
-import Module;
+import Module
 
 Module.func()
 
@@ -486,7 +486,7 @@ LoL = [
   [ "george", "jane", "elroy" ],
   [ "homer", "marge", "bart" ]
 ]
-LoLsave = LoL[:]; # See comment below
+LoLsave = LoL[:] # See comment below
 
 printLoL ('Families:', LoL)
 }}}
@@ -549,7 +549,7 @@ printLoL ("read from a file: ", \@LoL);
 
 {{{
 f = open ('cookbook.data1')
-LoL = [];
+LoL = []
 while (1):
   line = f.readline()
   if not line : break
@@ -720,7 +720,7 @@ printLoL ('after appending to first element:', \@LoL);
 
 LoL = LoLsave[:]  # start afresh
 LoL[0] = LoL[0] + ["wilma", "betty"]
-printLoL ('after appending to first element:', LoL);
+printLoL ('after appending to first element:', LoL)
 
 }}}
 
@@ -1033,7 +1033,7 @@ def printHoL(s, hol):
 def get_family(group):
   group = regsub.sub ('s$', '', group)
   group = string.upper (group[:1]) + string.lower (group[1:])
-  return ["Mr-" + group, "Mrs-" + group, group+ "-Jr"];
+  return ["Mr-" + group, "Mrs-" + group, group+ "-Jr"]
 
 }}}
 
@@ -1273,7 +1273,7 @@ HoL = {}
 for group in "simpsons", "jetsons", "flintstones":
     HoL[group] = get_family(group)
 
-printHoL ('filled by get_family', HoL);
+printHoL ('filled by get_family', HoL)
 
 }}}
 
@@ -1284,7 +1284,7 @@ HoL={}
 def set(group, hol=HoL): hol[group] = get_family(group)
 map(set, ("simpsons", "jetsons", "flintstones" ))
 
-printHoL ('filled by get_family', HoL);
+printHoL ('filled by get_family', HoL)
 }}}
  
 
@@ -1912,7 +1912,7 @@ while 1:
   if not line: break
   LoH.append (parsepairs(line))
 
-printLoH ('generated from function calls with no temps', LoH);
+printLoH ('generated from function calls with no temps', LoH)
 
 }}}
 
@@ -1937,7 +1937,7 @@ printLoH ('after addition of key/value pairs', \@LoH);
 LoH[0]["PET"] = "dino"
 LoH[2]["PET"] = "santa's little helper"
 
-printLoH ('after addition of key/value pairs', LoH);
+printLoH ('after addition of key/value pairs', LoH)
 
 
 }}}
