@@ -22,10 +22,81 @@ print ", ".join( allpages )
 
 This code calls the PythonInfo wiki, and receives the TitleIndex as a list.
 
+== Message Format ==
+
+If you can communicate strings, you can do XML-RPC. You could even do it by e-mail!
+
+Here's how to make your string:
+
+{{{
+#!python
+import xmlrpclib
+
+func_name = "foo"
+arg_1 = "robot"
+arg_2 = { "some":1, "dict":2 }
+arg_3 = [1,2,3,4,5]
+
+call_string = xmlrpclib.dumps( (arg_1,arg_2,arg_3,), func_name )
+}}}
+
+...resulting in the following {{{call_string}}} value:
+
+{{{
+<?xml version='1.0'?>
+<methodCall>
+<methodName>foo</methodName>
+<params>
+<param>
+<value><string>robot</string></value>
+</param>
+<param>
+<value><struct>
+<member>
+<name>dict</name>
+<value><int>2</int></value>
+</member>
+<member>
+<name>some</name>
+<value><int>1</int></value>
+</member>
+</struct></value>
+</param>
+<param>
+<value><array><data>
+<value><int>1</int></value>
+<value><int>2</int></value>
+<value><int>3</int></value>
+<value><int>4</int></value>
+<value><int>5</int></value>
+</data></array></value>
+</param>
+</params>
+</methodCall>
+}}}
+
+...which can then be turned ''back'' into Python data:
+
+{{{
+#!python
+call_data = xmlrpclib.loads( call_string )
+}}}
+
+...which then builds:
+
+{{{
+(('robot', {'some': 1, 'dict': 2}, [1, 2, 3, 4, 5]), u'foo')
+}}}
+
+That is, the first item is the arguments tuple, and the second item is the name of the function.
+
+For some reason, these capabilities do not seem to be described in [http://www.python.org/doc/current/lib/module-xmlrpclib.html the xmlrpclib documentation.]
+
 == See Also ==
 
  * [http://www.python.org/doc/current/lib/xmlrpc-client-example.html official xmlrpclib example]
  * [http://www.python.org/doc/current/lib/module-xmlrpclib.html xmlrpclib documentation]
+ * [http://www.onlamp.com/pub/a/python/2001/01/17/xmlrpcserver.html XML-RPC: It Works Both Ways (onlamp.com)]
  * DocXmlRpcServer - class to help make an XML-RPC server
 
 = Discussion =
