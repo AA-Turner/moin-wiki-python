@@ -1,0 +1,25 @@
+Python GUI application for the Gutenberg e-text project.
+
+Homepage: http://pyge.sourceforge.net/ - including .deb package for Debian
+
+First encounter problems (can those be solved?):
+ * installed the debian package, worked.
+ * tried to invoke pyge<tab> from the shell, nothing there. OK, found out that they use PyGE* for their commands
+ * tried the reader, it can't fetch from the internet
+ * used PyGETS to try fetching from the internet:
+  * first tried "acquire" as it didn't show me anything
+   * acquire did download some stuff that I saved into ~/gutenberg.xml
+   * but loading that file still doesn't show anything
+  * then read the hint about using the !SampleData/ directory
+   * but where is it? Had to use `dpkg -L pyge` to find out that it is /usr/share/PyGE/SampleData/. Of course I first tried /usr/share/doc/pyge, /usr/lib/pyge, and some others unsuccessfully.
+  * OK, that helped, now I have at least a list of stuff on the screen.
+  * But it shows me year and author by default, not the (maybe more interesting TITLE), so I switched to title view (but it then shows the title ONLY!?).
+  * Tried to download some title, doesn't work, "download" button is greyed.
+  * Switch back to other view (w/o title), there you can download stuff (without knowing what exactly it is).
+  * Downloaded some 12345678.txt file from Jules Verne.
+  * But PyGERS can only work on *.pdb, so I have to convert it first, using the converter tool.
+  * Then finally loaded it using the reader, and it shows me the title page plus 200 BLANK WHITE pages!?
+  * Looks like the default font doesnt work, so I configure some other, colours where ok at least.
+  * I finally have Jules Verne readable - but in french X)
+
+Is this a typical PyGE first encounter experience? If yes, why doesn't it work much easier? I can imagine many people having given up before they can see any e-text on their screen.
