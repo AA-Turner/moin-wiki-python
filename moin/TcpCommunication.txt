@@ -1,0 +1,116 @@
+= UDP Communication =
+
+[[TableOfContents()]]
+
+== Sending ==
+
+Here's simple code to post a note by UDP in Python:
+
+{{{
+#!python
+import socket
+
+UDP_IP="127.0.0.1"
+UDP_PORT=5005
+MESSAGE="Hello, World!"
+
+print "UDP target IP:", UDP_IP
+print "UDP target port:", UDP_PORT
+print "message:", MESSAGE
+
+sock = socket.socket( socket.AF_INET, # Internet
+                      socket.SOCK_DGRAM ) # UDP
+sock.sendto( MESSAGE, (UDP_IP, UDP_PORT) )
+}}}
+
+== Receiving ==
+
+Here's simple code to receive UDP messages in Python:
+
+{{{
+#!python
+import socket
+
+UDP_IP="127.0.0.1"
+UDP_PORT=5005
+
+sock = socket.socket( socket.AF_INET, # Internet
+                      socket.SOCK_DGRAM ) # UDP
+sock.bind( (UDP_IP,UDP_PORT) )
+
+while True:
+    data, addr = sock.recvfrom( 1024 ) # buffer size is 1024 bytes
+    print "received message:", data
+}}}
+
+----
+
+See also: TcpCommunication
+
+= Discussion =
+
+*
+It would seem easy to extend this to a simple means to open a file on the sender side, send datagrams to the receiver side, and write those packets to a file there - I just wonder about synchronisation issues regarding the buffer...Anyone smart care to put something down, say as a simple practical extension of what is already here?  (And if you do it pls delete this message)
+*
+
+== Multicasting? ==
+
+I've been googling for some time now, and ''still'' have yet to find a ''working'' example of Python multicast listening.
+
+Here's my own, non-functioning, effort:
+{{{
+#!python
+import socket
+import struct
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+#sock.bind(('127.0.0.1', 1000))
+sock.bind(('', 1000))
+grpaddr = 0
+for byte in "239.192.0.100".split("."):
+    grpaddr = (grpaddr << 8) | int(byte)
+mreq = struct.pack('ll', socket.htonl(grpaddr),
+                   socket.htonl(socket.INADDR_ANY))
+sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+print sock.recvfrom(100)
+}}}
+
+The mreq packing is based on [http://www.senux.com/linux/network/multicast/ some code that I found,] ''that does not work.'' On my computer, at least.
+
+Sending to multicast groups is just fine; Here's some functional text:
+{{{
+#!python
+import socket
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
+sock.sendto("robot", ("239.192.0.100", 1000))
+}}}
+
+At this point, I'm beginning to think: "Python multicast simply ''does not work.''"
+
+  Are you running on Windows 2000/XP (pre-SP2)/Server 2003 with more than one network adapter? If so, the problem is Windows, not Python. The original code works for me on Windows 2000 (1 network adapter), but fails under XP Pro (pre-SP2, 3 adapters though 2 are disabled). Microsoft has a [http://support.microsoft.com/default.aspx?scid=kb;en-us;827536 support page] on the issue. The problem appears to be in the receiver: with both machines running the receiver, the Win2K machine sees packets sent from both machines, while the receiver on XP sees messages sent from the Win2K machine only. This, despite specifying the local IP address of the appropriate adapter in the second part of the mreq structure in the IP_ADD_MEMBERSHIP call. -- VinaySajip
+
+  ''Hm, that's interesting. No, I'm not running on Windows; I'm running on FC3. That said, I hadn't considered the machine as a possible problem. What I'll do is this: I'll run this on my ''home'' FC3 computer, and on my ''home'' Redhat 9 computer, and see if I can get it to work on one of them.'' -- LionKimbro [[DateTime(2005-01-20T02:07:18Z)]]
+
+
+It's too bad we don't have anything as simple as this:
+
+{{{
+#!python
+import UDP
+
+sock = UDP.MulticastListener("239.192.0.100", 1000)  # Listen on port 1000
+print sock.recv(100)
+}}}
+
+{{{
+#!python
+import UDP
+
+UDP.send("Hello, world!", "239.192.0.100", 1000)
+}}}
+
+...or something like that.
+
+-- LionKimbro [[DateTime(2005-01-19T19:54:19Z)]]
