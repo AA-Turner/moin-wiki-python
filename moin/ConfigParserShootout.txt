@@ -113,6 +113,14 @@ desired.
  the in-memory version play well with other ways of setting parameters -- 
  including some that set arbitrary python objects.
 
+ * Backward compatible; at least to Python 2.2, best if portable to Python 2.1.
+
+ * Implements a true parser that can be subclassed and specialized.  If it only
+ has a method that parses the config file into a dictionary, then any attempts
+ to extend or specialize the parser won't have access to line information.  The
+ parser need not be a high-profile part of the module, so long as it is 
+ available.
+
 = Discussion =
 
 Discuss.  Please sign your name.
