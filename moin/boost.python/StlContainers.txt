@@ -2,6 +2,17 @@
 
 It's a pity that BPL doesn't wrap STL containers out of the box. 
 It would be good to have "batteries included".
+But to be fair, a fully featured container wrapper is a lot of code and will take very long to compile.
+It is a major research project to develop "a best" fully featured container
+wrapper. Note that what you want depends on the element
+type (e.g. what makes sense for std::complex<> as an element type does not
+necessarily make sense for double, what makes sense for double might not make
+sense for int and vice versa, etc. etc.)! I cannot even imagine what a
+comprehensive solution for std::map<> could look like since it will have to
+deal with combinations of two types. 
+To see an example of a more-or-less fully featured multi-dimensional array wrapper look
+at [http://cvs.sourceforge.net/cgi-in/viewcvs.cgi/cctbx/scitbx/include/scitbx/array_family/boost_python/flex_wrapper.h?rev=HEAD&content-type=text/vnd.viewcvs-markup flex_wrapper.h]
+
 
 [[TableOfContents]]
 
@@ -13,10 +24,9 @@ In our case we have vector and map to wrap and had to decide how to wrap them.
         typedef vector<Shape> Geometry;
         typedef map<string,Geometry> Layer;
 }}}
-We have three choises:
-  a. wrap them with class_<> ourself,
-  a. use scitbx/include/scitbx/array_family/boost_python/flex_wrapper.h to wrap them or
-  a. write to_pyton_converter() and XXX_from python.
+We have two choises:
+  a. wrap them with ''class_<>'' ourself or
+  a. write ''to_pyton_converter()'' and some wrappers to ''extract<data>'' from python.
 
 Our goal is to get to the working prototype as soon as we can. 
 So in simplistic (a) approach {{{
@@ -26,15 +36,12 @@ So in simplistic (a) approach {{{
         class_<Layer>("Layer");
 }}}
 We'll have our containers exposed but without any working machinery inside them.
-Approach (b) doesn't work out of the box for two reasons:
- * it doesn't include map,
- * it's too complex (for me) to maintain and adapt.
-Approach (c) {{{
+Approach (b) {{{
         class vector_adapter
 }}}
 seems to be easiest to get the C++ containers exposed as Python containers {{{
 }}}
-but doesn't work.
+but doesn't work (for me :)).
 
 So we have to revert to approach (a) and write a wrapper to add Python container machinery to the exposed classes.
 
