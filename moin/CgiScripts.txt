@@ -1,0 +1,63 @@
+= CGI Scripts =
+
+The [http://www.python.org/doc/current/lib/module-cgi.html cgi module] is at the core of the Python CGI scripts.
+
+Basically, you just need to print out an HTTP header ("Content-type: text/html"), a web page, and handle any forms you may have received.
+
+Getting Apache's permissions just right can be annoying, and is sadly beyond this page's scope.
+
+== Sample Code ==
+
+{{{
+#!python
+#!/usr/bin/env python
+
+import cgi
+
+print "Content-type: text/html"
+print
+print
+
+print """
+<html>
+
+<head><title>Sample CGI Script</title></head>
+
+<body>
+
+  <h3> Sample CGI Script </h3>
+"""
+
+form = cgi.FieldStorage()
+if form.has_key( "message" ):
+    message = form["message"].value
+else:
+    message = "(no message)"
+
+print """
+
+  <p>Previous message: %s</p>
+
+  <p>form:</p>
+
+  <form method="post" action="index.cgi">
+    <p>message: <input type="text" name="message"/></p>
+  </form>
+
+</body>
+
+</html>
+""" % message
+}}}
+
+== See Also ==
+
+ * [http://www.python.org/doc/current/lib/module-cgi.html cgi module documentation]
+ * [http://www.python.org/doc/current/lib/module-Cookie.html Cookie module documentation]
+ * [http://www.cs.virginia.edu/~lab2q/lesson_7/ python CGI tutorial] - w/ hints about maintaining sessions either through forms or through cookies
+ * [http://gnosis.cx/publish/programming/feature_5min_python.html python CGI tutorial] - w/ hints about printing out tracebacks
+ * [http://www.python.org/doc/current/lib/internet.html other internet protocol module documentation]
+
+= Discussion =
+
+  (none yet!)
