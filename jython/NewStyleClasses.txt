@@ -35,10 +35,10 @@ So the type_name is 'list'.
 
 It is intended to expose methods for Py``List.
 
- * It exposes the method 'append' which takes a Py``Object and returns void.
- * It exposes the method 'count' which takes a Py``Object and returns an int.
- * It exposes the method 'pop' which takes an optional int and returns a Py``Object.
- * It exposes the method '__nonzero__' which takes no arguments and returns a boolean.
+ * It exposes the method '{{{append}}}' which takes a Py``Object and returns void.
+ * It exposes the method '{{{count}}}' which takes a Py``Object and returns an int.
+ * It exposes the method '{{{pop}}}' which takes an optional int and returns a Py``Object.
+ * It exposes the method '{{{__nonzero__}}}' which takes no arguments and returns a boolean.
 
 Running gexpose.py produces some Java code.
 
@@ -63,12 +63,12 @@ final void list_append(PyObject o) {
 
 Notice the new method is final and package protected.  So follow the pattern for each method that needs to be exposed.
 
-The special method __init__ should delegate to 'list_init' which needs to handle the constructor arguments of a list.  If there is no argument, create a new list.  If an argument, copy it's contents to a new list.
+The special method {{{__init__}}} should delegate to 'list_init' which needs to handle the constructor arguments of a list.  If there is no argument, create a new list.  If an argument, copy it's contents to a new list.
 
 Make sure the class has a constructor which takes a Py``Type.
 
-Finally, make sure the type is registered with __builtin__.
-  It should also be noted an existing 'list' was registered which provided the construction of a new list under the old scheme.  I moved this code to Py``List and deleted it from __builtin__.  This is much better since all list construction now happens in one spot.
+Finally, make sure the type is registered with {{{__builtin__}}}.
+  It should also be noted an existing 'list' was registered which provided the construction of a new list under the old scheme.  I moved this code to Py``List and deleted it from {{{__builtin__}}}.  This is much better since all list construction now happens in one spot.
 
 Run some quick tests:
 
@@ -89,7 +89,7 @@ After that was done, run the regrtest and the bugtests.  The bugtests caught a b
 Next steps:
  * automate this process a bit more if possible
  * tuple, string, float, file -> new-style
- * [].index.__self__ does not work correctly
- * mutable __bases__ and __class__
- * support for __del__
- * support for __slots__
+ * {{{[].index.__self__}}} does not work correctly
+ * mutable {{{__bases__}}} and {{{__class__}}}
+ * support for {{{__del__}}}
+ * support for {{{__slots__}}}
