@@ -96,14 +96,12 @@ for i in (s1, s2, s3, s4, s5, s6, s7):
   print i
 }}}
 
-
 In both languages, strings can be single-quoted or double-quoted.  In
 Python, there is no difference between the two except that in single-
 quoted strings double-quotes need not be escaped by doubling them, and
 vice versa. In Perl, double-quoted strings have control characters and
 variables interpolated inside them (see below) and single-quoted
 strings do not.
-
 
 Both languages provide other quoting mechanisms; Python uses triple
 quotes (single or double, makes no difference) for multi-line strings;
@@ -187,11 +185,15 @@ The name in parentheses is used as a key into the dictionary you provide
 on the right-hand side; its value is formatted according to the
 specifier following the parentheses.  Some useful dictionaries are
 `locals()` (the local symbol table), `globals()`
-(the global symbol table), and `vars()` (what exactly is
-this?)
+(the global symbol table), and `vars()` (equivalent to `locals()` except
+when an argument is given, in which case it returns {{{arg.__dict__}}}). 
 
 
-
+[http://www.python.org/peps/pep-0215.html PEP215] proposes a {{{$"$var"}}} 
+substitution mode as an alternative to {{{"%(var)s" % locals()}}}, but 
+seems to be losing traction to the explicit Template class proposed in 
+[http://www.python.org/peps/pep-0292.html PEP292], which requires no syntax 
+changes.
 
 ==== Modifying a string ====
 
