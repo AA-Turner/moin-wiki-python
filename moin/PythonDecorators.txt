@@ -861,9 +861,12 @@ Same as J2 but has advantages:
  * - loses the "definition reflects use"; you can no longer cut and paste from a call to the definition, or vice versa, because the name is not near the arguments.
 
 
-=== J4. two part def suite with "@" decorators ===
+=== J4.1 two part def suite with "@" decorators ===
+
+(Originally, this was posted without the colon.  It wasn't clear whether that was a typo.  So now J4.1 is the colon version, and J4.2 is the uncoloned version.)
+
 {{{
-   def p_statement_expr(self, p)
+   def p_statement_expr(self, p):
        @staticmethod
        @grammarrule('statement : expression')
        @version("Added in 2.4")
@@ -874,6 +877,30 @@ Same as J2 but has advantages:
 }}}
 
 I think the p_statement_expr makes this look more complicated than it is.  Consider
+
+{{{
+   def func(self, arg1):
+       @staticmethod
+       @grammarrule('statement : expression')
+       @version("Added in 2.4")
+   as:
+       """Docstring could be here, or in decorator part above"""
+       # body goes here
+}}}
+
+
+ * + doesn't require new keyword ("as" can be unambiguously parsed in context)
+ * + Leverages the visibility of "@" to overcome visibility problems 
+     of list-after-def syntaxes
+ * + definition-reflects-usage equal to current definitions.
+ * + Adds a well-defined header, but still backwards-compatible, because of the @ leading each line in the header.  (So a non-@ line means an old-style definition, rather than a header.)
+ * + Gives the option of putting the docstring as the final decorator, so that wrapping decorators don't have to take care to restore it.
+ * - Nothing to do with signification of "as" in other languages and Python  (Other words OK, but choosing one is not straightforward -- as may well be best.)
+ * - Some may argue that the "as" is not necessary and that the syntax if very similar to a in-body syntax.  (The unindented "as" is precisely what separates this from the in-body syntax.  To me, the difference is startling.)
+
+=== J4.2 two part def suite with "@" decorators ===
+
+(Originally, this was posted without the colon.  It wasn't clear whether that was a typo.  So now J4.1 is the colon version, and J4.2 is the uncoloned version.)
 
 {{{
    def func(self, arg1)
@@ -889,11 +916,21 @@ I think the p_statement_expr makes this look more complicated than it is.  Consi
  * + doesn't require new keyword ("as" can be unambiguously parsed in context)
  * + Leverages the visibility of "@" to overcome visibility problems 
      of list-after-def syntaxes
- * + Even better definition-reflects-usage than the current method (unless you put that colon back in, then equal).
+ * + Even better definition-reflects-usage than the current method
  * + Adds a well-defined header, but still backwards-compatible, because of the @ leading each line in the header.  (So a non-@ line means an old-style definition, rather than a header.)
  * + Gives the option of putting the docstring as the final decorator, so that wrapping decorators don't have to take care to restore it.
  * - Nothing to do with signification of "as" in other languages and Python
- * - The decorators are indented but are not preceded by a : or an unclosed parenthesis.
+ * - There is no line-continuating character, and the indentation cannot be enforced.  At best, the grammar could notice the missing colon and treat this as equivalent to 
+
+{{{
+   def func(self, arg1) @staticmethod @version("Added in 2.4")
+   as:
+       """Docstring could be here, or in decorator part above"""
+       # body goes here
+}}}
+
+which could get awkward if people don't use the continuation by convention.
+
  * - Some may argue that the "as" is not necessary and that the syntax if very similar to a in-body syntax.
 
 === K. partitioned syntax syntax ===
