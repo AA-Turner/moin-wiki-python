@@ -23,6 +23,30 @@ Example of non-optimized but more readable attribute access:
 for item in iterable:
     lst.append(func(item))}}}
 
+''The above examles look equally readable to me.  In fact, the binding of a function to an
+object 
+{{{
+app = lst.append
+}}}
+
+enhances readiblity and maintainability if used more than once:
+
+{{{
+app("a")
+app("b")
+}}}
+
+is preferred over 
+{{{
+lst.append("a")
+lst.append("b")
+}}}
+since the binding of lst and append happens twice - copy and paste.''
+
+
+
+
+
 == String Concatenation ==
 String concatenation is building up a relatively lengthy string from a collection of strings.
 
@@ -52,7 +76,7 @@ For short cases where the number of strings to be joined is known, you can use s
 >>> print '%s%s%s%s%s' %tuple(string_list)
 onebigstringinpieces}}}
 
-This is much more efficient, but is also rather more limited in the range of circumstances to which it applies. It could be made more general by constructing the formatting string as a function of `len(string_list)`, but this would be a bit dubious, too, when we have
+This is much more efficient, but is also rather more limited in the range of circumstances to which it applies. It could be made more general by constructing the formatting string as a function of `len(string_list)`, but this would be a bit dubious, too, when we have.  Its also less readible, less maintainible.  What value does it provide to the end user?
 
 ==== The join method of strings ====
 The join method of the string type lets you perform the concatenation as follows:
