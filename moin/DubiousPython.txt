@@ -67,17 +67,13 @@ join is simple to this crowd.
 
 
 
-== Boolean Redundancy ==
-(Please name me better!)
-
+== Overly Verbose Conditionals ==
 Among the most common tasks in programming is to test if a condition obtains and act accordingly. It is common for newcomers to Python to adopt an all-together overly verbose idiom for this.
 
 === Dubious Way ===
 {{{#!python
 if (count > 10) == True:
-    # continue process}}}
-
-and 
+    # do something}}}
 
 {{{#!python
 def count_tester(count):
@@ -86,18 +82,37 @@ def count_tester(count):
     else:
         return False}}}
 
+{{{#!python
+if len(somecontainer) > 0:
+    # do something}}}
+
 === The Problem ===
-There is a (very slight) speed of execution inefficiency in these examples. But much more important is the speed of entry and understanding inefficiency. All other things being equal, extra typing is evil. And, unless some gain in clarity is purchased by the extra characters, the more characters in the code, the longer that code will take to understand. (The programming time you save could well be your own!)
+There is a slight speed of execution inefficiency in these examples. The first example has the overhead of an extra method lookup (`bool.__eq__`) and an extra name lookup (`True`).  The second example has the overhead of an extra branch statement.  The third example has the overhead of two extra method lookups (`somecontainer.__len__` and `int.__cmp__`).
+
+But much more important is the speed of entry and understanding inefficiency. All other things being equal, extra typing is evil. And, unless some substantial gain in clarity is purchased by the extra characters, the more characters in the code, the longer that code will take to understand. (The programming time you save could well be your own!)
 
 === Preferred Alternatives ===
 {{{#!python
 if count > 10:
-    # continue process
+    # do something}}}
 
+{{{#!python
 def count_tester(count):
     return count > 10}}}
 
-    
+Most non-empty containers evaluate to True in a boolean context, so no test on len() is generally necessary:
+
+{{{#!python
+if somecontainer:
+    # do something}}}
+
+Some containers (e.g. numarray.array) do not evaluate this way.  In these cases, the preferred idiom is:
+
+{{{#!python
+if len(somecontainer):
+    # do something}}}
+
+
 == Overuse of lambda ==
 Lambda forms allow anonymous functions to be created and used as part of an expression.  However, when a function is already named, wrapping this function in a lambda can decrease readability and affect program efficiency.
 
