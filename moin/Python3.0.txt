@@ -5,9 +5,12 @@ and is actively maintained. [[#e 5]]
 (At the time of writing there was already such a document [[#l 12]], but it
 incorporates items that GvR has never talked about.)
 
+ ''(Hope it's okay to insert some questions and comments into this page. -- JimD)''
+
 == Core Language Changes ==
 
- * Remove distinction between `int` and `long` types. [[#d 4]]
+ * Remove distinction between `int` and `long` types. [[#d 4]]  
+   ''(With 2.4 released, this is mostly done? -- JimD)''
  * Make all strings unicode [[#d 4]], and have a separate `bytes` [[#b 2]] type. [[#m 13]]
  * Replace all old-style classes. [[#d 4]]
  * Make the `exec` statement a function (again.) [[#a 1]]
@@ -16,13 +19,24 @@ incorporates items that GvR has never talked about.)
 #!python
 except E1, E2, E3 as err:  # Store error variable
    ...
-}}} (Added by GvR, suggested by Bram Cohen.)
+}}} (Added by GvR, suggested by Bram Cohen.) 
+   ''(If `except` just accepted a tuple of exception objects, would this arise naturally? -- JimD)''
  * Add a `with` statement: [[#j 10]] {{{
 #!python
 with self:
     .foo = [1, 2, 3]
     .bar(4, .foo)
 }}}
+
+  ''(I like this, but is the following too ugly for use until then?
+   {{{
+   #!python
+    _ = self
+    _.foo = [1, 2, 3]
+    _.bar(4, _.foo)
+    }}}
+  ... seems quirky, but it does serve to remove most of the visual cluster of `self.`this and `self.`that which seems to be the primary benefit of the `with` statement. 
+   -- JimD)''
 
  * Remove {{{`x`}}}. [[#a 1]]
    * Instead: use `repr(x)`.
@@ -51,7 +65,8 @@ def bar(low: int, high: int) -> float:
 
  * Make `as` a true keyword. [[#g 7]]
  * Make `True` and `False` keywords. [[#f 6]]
-   * Reason: make assignment to them impossible.
+   * Reason: make assignment to them impossible. 
+     ''(Ugh!  Why wasn't that done in 2.4 along with `None`? -- JimD)''
  * Make true division default.
  * Raise an exception when making comparisons between two incongruent types (other than equality and inequality.)
    * Reason: such comparisons do not make sense and are especially confusing to new users of Python.
@@ -99,7 +114,8 @@ if expression:
 == Standard Library Changes ==
 
  * Remove `string` module. [[#c 4]]
-   * Instead: use string methods.
+   * Instead: use string methods. 
+   ''(I like having the members like `string.letters` and `string.digits` even if the methods have all been integrated into the strings type -- JimD)''
  * Remove `types` module.
    * Instead: use the types in `__builtins__`.
  * Remove other deprecated modules. [[#c 3]]
