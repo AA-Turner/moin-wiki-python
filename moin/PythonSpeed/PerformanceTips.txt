@@ -282,9 +282,9 @@ something like:
 
 {{{
 wdict = {}
-has_key = wdict.has_key
 for word in words:
-    if not has_key(word): wdict[word] = 0
+    if word not in wdict:
+        wdict[word] = 0
     wdict[word] += 1
 }}}
 
@@ -313,8 +313,9 @@ if the desired key isn't found in the dictionary. This simplifies the loop:
 
 {{{
 wdict = {}
+get = wdict.get
 for word in words:
-    wdict[word] = wdict.get(word, 0) + 1
+    wdict[word] = get(word, 0) + 1
 }}}
 
 When I originally wrote this section, there were clear situations where
@@ -565,6 +566,16 @@ and use it to conclude that Python must be much slower than Perl. As
 others have pointed out numerous times, Python is slower than Perl for
 some things and faster for others. Relative performance also often
 depends on your experience with the two languages.
+
+Starting with Python 2.2, it has become possible to replace the Perl
+idiom with the similarly simple Python fragment:
+
+{{{
+import sys
+
+for line in sys.stdin:
+    print line,
+}}}
 
 [[Anchor(profiling)]]
 == Profiling Code ==
