@@ -13,13 +13,39 @@
    as monolithic scripts or as a collection of page modules.  Switching deployment between CGI and mod_python can be
    achieved by changing less than 10 lines of code.
 
+   Server or client side sessions are supported.
+
 === Suitability ===
+
+   Albatross is particularly suited to building small stateful CGI applications quickly.
 
 === Development Interfaces ===
 
+   Albatross functionality is provided via a collection of mixin classes which provide variant implementations of
+   common functional areas.  There are also a collection of pre-packed classes which combine the basic mixins to
+   implement commonly used functionality.
+
+   If any aspect of the functionality does not suit your needs you can substitute your own mixin classes.
+
 === Environment Access ===
 
+   Albatross applications are a collection of Python modules and HTML template files.  All code and templates are
+   stored in the host file system.
+
 === Session, Identification and Authentication ===
+
+   Albatross session functionality is provided by a combination of application and execution context mixins.  The
+   supplied mixins support the following session options.
+
+   * No sessions.
+
+   * Client side sessions using MD5 signed pickles in hidden fields.
+
+   * Server side sessions using the Albatross TCP session server.
+
+   * Server side sessions using the file system.
+
+   All session ids are randomly generated 64 bit numbers using /dev/urandom if available falling back to random module.
 
 === Persistence Support ===
 
