@@ -4,6 +4,12 @@
 
 TODO: break up into multiple smaller pages; use modern Python idioms; use modern Perl idioms; 
 add more points of comparison.
+TODO: Use sorted() where appropriate once 2.4 has been out a while
+TODO: Get rid of map() where possible.
+
+QUESTION: Should function and data structure names for python code be in
+python_style (and more appropriate/informative)?
+
 
 Other references: [http://pleac.sourceforge.net/ PLEAC]
 
@@ -32,17 +38,15 @@ such cases, please send me mail.
 
 
 Things I would like to add to this phrasebook are:
-
  * Simple types (strings, lists, dictionaries, etc.)
- *Common tasks (reading from a file, exception handling, splitting    strings, regular expression manipulation, etc.)
- *Sections 4 and 5 of the Perl Data Structures Cookbook.
+ * Common tasks (reading from a file, exception handling, splitting strings, regular expression manipulation, etc.)
+ * Sections 4 and 5 of the Perl Data Structures Cookbook.
 
 
 Thanks to David Ascher, Guido van Rossum, Tom Christiansen, Larry Wall
 and Eric Daniel for helpful comments.
 
 
-#//TODO: Fix sorting - should be using DSU and/or sorted() where appropriate
 
 == The obvious ==
 
@@ -58,17 +62,12 @@ Python don't need no steenking semicolons.
 
 
 {{{
-
 $s = 'a string';
-
 }}}
 
 {{{
-
 s = 'a string'
-
 }}}
-
 
 Note that string variables in Perl are specified with a dollar sign;
 in Python you just specify the name of the variable.
@@ -89,7 +88,6 @@ Larry Wall points out:
 
 
 {{{
-
 $s1 = "some string";
 $s2 = "a string with\ncontrol characters\n";
 $s3 = 'a "quoted" string';
@@ -102,11 +100,9 @@ for $i ($s1, $s2, $s3, $s4, $s5, $s6, $s7)
 {
   print ("$i\n");
 }
-
 }}}
 
 {{{
-
 s1 = "some string"
 s2 = "a string with\ncontrol characters\n"
 s3 = 'a "quoted" string'
@@ -117,7 +113,6 @@ s7 = r"a stri\ng that au\tomatically escapes backslashes"
 
 for i in (s1, s2, s3, s4, s5, s6, s7):
   print i
-
 }}}
 
 
@@ -144,18 +139,15 @@ Quoting is definitely one of the areas where Perl excels.
 
 
 {{{
-
 $name = "Fred";
 $header1 = "Dear $name,";
 $title = "Dr.";
 $header2 = "Dear $title $name,";
 
 print "$header1\n$header2\n";
-
 }}}
 
 {{{
-
 name = "Fred"
 header1 = "Dear %s," % name
 title = "Dr."
@@ -163,7 +155,6 @@ header2 = "Dear %(title)s %(name)s," % vars()
 
 print header1
 print header2
-
 }}}
 
 
@@ -225,17 +216,14 @@ this?)
 
 
 {{{
-
 $s1 = "new string";        # change to new string
 $s2 =~ s/\n/[newline]/g;   # substitute newlines with the text "[newline]"
 substr($s2, 0, 3) = 'X';   # replace the first 3 chars with an X
 
 print ("$s1\n$s2\n");
-
 }}}
 
 {{{
-
 s1 = "new string"          # change to new string
                            # substitute newlines with the text "[newline]"
 s2 = s2.replace("\n", "[newline]")
@@ -243,7 +231,6 @@ s2 = 'X' + s2[3:]
 
 print s1
 print s2
-
 }}}
 
 
@@ -271,20 +258,20 @@ Perl has similar slicing operations [describe].
 
 
 {{{
-
 use Module;
 
 use Module (symbol1, symbol2, symbol3);
 # or use Module qw(symbol1 symbol2 symbol3);
-
 }}}
 
 {{{
+from module import symbol1, symbol2, symbol3
 
-from Module import *
+# Allows mysymbol.func()
+from module import symbol1 as mysymbol
 
-from Module import symbol1, symbol2, symbol3
-
+# Unless the module is specifically designed for this kind of import, don't use it
+from module import *
 }}}
 
 
@@ -294,19 +281,15 @@ other versions import only selected names.
 
 
 {{{
-
 require Module;
 
 Module::func();
-
 }}}
 
 {{{
+import module
 
-import Module
-
-Module.func()
-
+module.func()
 }}}
 
 
@@ -324,24 +307,19 @@ module, you have to explicitly qualify the name, as shown.
 
 
 {{{
-
 $filename = "cooktest1.1-1";
 open (F, $filename) or die ("can't open $filename: $!\n");
 @lines = <F>;
-
 }}}
 
 {{{
-
 filename = "cooktest1.1-1"
 try:
-  f = open (filename)
-except:
-  sys.stderr.write ("can't open %s: %s %s\n" % 
-                     (filename, sys.exc_type, sys.exc_value))
+  f = open(filename)
+except IOError:
+  sys.stderr.write("can't open %s: %s %s\n" % 
+                                   (filename, sys.exc_type, sys.exc_value))
 lines = f.readlines()
-
-
 }}}
 
 
@@ -359,9 +337,6 @@ empty dictionary.
 
 
 
-
-
-
 == Some general comparisons ==
 
 This section is under construction; for the moment I am just putting
@@ -376,7 +351,6 @@ random notes here.  I will organize them later.
  *Python's object model is very uniform, allowing you, for example, to define types that can be used wherever a standard file object can be used.
  *Python allows you to define operators for user-defined types.
  
-
 
 
 
@@ -411,23 +385,19 @@ sub printLoL
 
 # return numeric (or other) converted to string 
 sub somefunc {  my ($i) = shift;  "$i";  }
-
 }}}
 
 {{{
-def printSep ():
+def printSep():
     print '=' * 60
 
-def printLoL (s, lol):
-    print s
-    
-    for l in lol:
-        print " ".join(l)
+def printLoL(s, lol):
+    out = [s] + [" ".join(str(elem)) for elem in lol]
+    print "\n".join(out)
     printSep()
 
 def somefunc(i):
-    return repr(i)  # string representation of i (aka `i`)
-
+    return str(i)  # string representation of i
 }}}
 
 
@@ -437,40 +407,24 @@ def somefunc(i):
 
 `somefunc` is a function that is used in various places below.
 
-Eric Daniel points out that
-some parts of these examples assume that the elements of the
-(lower-level) lists are strings; to convert an arbitrary list of lists
-to a list of lists of strings, you can use a function like:
-{{{
-# str_conv takes a list of lists of arbitrary objects, and returns a
-# list of lists of their string representations.
-def str_conv(lol):
-    return [repr(elem) for elem in lol]
-}}}
-
-
-
 
 
 === requires/imports ===
 
-
 {{{
-
-import sys, string, regex, regsub
-
+import sys
 }}}
-
-Perl's `use` is roughly equivalent to Python's
-`import`.  
+Perl's `use` is roughly equivalent to Python's `import`.  
 
 Perl has much more built in, so nothing here requires importing.
 
 
+    "Some people, when confronted with a problem, think 'I know, I'll use
+    regular expressions.' Now they have two problems." - Jamie Zawinski
 
-
-
-
+For many simple operations, Perl will use a regular expression where
+Pythonic code won't.  Should you really need to use regular expressions,
+import the `re` module.
 
 === Declaration of a list of lists ===
 
@@ -486,14 +440,12 @@ printLoL ('Families:', \@LoL);
 }}}
 
 {{{
-LoL = [ 
-  [ "fred", "barney" ],
-  [ "george", "jane", "elroy" ],
-  [ "homer", "marge", "bart" ]
-]
+LoL = [["fred", "barney"],
+       ["george", "jane", "elroy"],
+       ["homer", "marge", "bart"]]
 LoLsave = LoL[:] # See comment below
 
-printLoL ('Families:', LoL)
+printLoL('Families:', LoL)
 }}}
 
 
@@ -520,7 +472,7 @@ b = a[:]
 makes a separate copy of a.
 
 Note that this is not necessarily the same thing as a
-deep copy ([make a link here]), since references in the original array
+deep copy, since references in the original array
 will be shared with references in the new array:
 {{{
 a = [ [1, 2, 3], [4, 5, 6] ]
@@ -529,14 +481,19 @@ b[0][0] = 999
 print a[0][0]   # prints 999
 }}}
 
+You can make a deep copy using the copy module:
+{{{
+import copy
 
+a = [[1, 2, 3], [4, 5, 6]]
+b = copy.deepcopy(a)
+b[0][0] = 999
+print a[0][0]   # prints 1    
+}}}
 
 
 
 === Generation of a list of lists ===
-
-
-
 
 
 ==== Reading from a file line by line ====
@@ -556,7 +513,7 @@ printLoL ("read from a file: ", \@LoL);
 LoL = []
 for line in open('cookbook.data1'):
     LoL.append(line[:-1].split())
-printLoL ('read from a file: ', LoL)
+printLoL('read from a file: ', LoL)
 }}}
 
 Unless you expect to be reading huge files, or want feeback as you
@@ -567,10 +524,6 @@ context-dependent effect.  If the handle is read from in a scalar
 context, like `$a = <STDIN>;`, one line is read.  If it is
 read in a list context, like `@a = <STDIN>;`the whole file is
 read, and the call evaluates to a list of the lines in the file.
-
-
-
-
 
 
 ==== Reading from a file in one go ====
@@ -586,10 +539,8 @@ printLoL ("slurped from a file: ", \@LoL);
 }}}
 
 {{{
-
 LoL = [line[:-1].split() for line in open('cookbook.data1')]
-printLoL ("slurped from a file: ", LoL)
-
+printLoL("slurped from a file: ", LoL)
 }}}
 
 
@@ -597,18 +548,13 @@ Thanks to Adam Krolnik for help with the perl syntax here.
 
 
 
-
-
-
 === Filling a list of lists with function calls ===
 
 
 {{{
-
-    for $i ( 0 .. 9 ) {
-        $LoL[$i] = [ somefunc($i) ];
-    }
-
+for $i ( 0 .. 9 ) {
+    $LoL[$i] = [ somefunc($i) ];
+}
 printLoL("filled with somefunc:", \@LoL);
 
 }}}
@@ -626,10 +572,8 @@ printLoL('filled with somefunc:', LoL)
 
 Alternatively, you can use a list comprehension:
 {{{
-
 LoL = [somefunc(i) for i in range(10)]
 printLoL('filled with somefunc:', LoL)
-
 }}}
 
 
@@ -647,21 +591,20 @@ In python:
 
 
 {{{
-    for $i ( 0 .. 9 ) {
-        @tmp = somefunc($i);
-        $LoL[$i] = [ @tmp ];
-    }
+for $i ( 0 .. 9 ) {
+    @tmp = somefunc($i);
+    $LoL[$i] = [ @tmp ];
+}
 
 printLoL ("filled with somefunc via temps:", \@LoL);
 }}}
 
 {{{
-for i in range (10):
-  tmp = somefunc(i)
-  LoL[i] = [tmp]
+for i in range(10):
+    tmp = somefunc(i)
+    LoL[i] = [tmp]
 
 printLoL('filled with somefunc via temps:', LoL)
-
 }}}
 
 
@@ -669,14 +612,11 @@ printLoL('filled with somefunc via temps:', LoL)
 {{{
 @LoL = map { [ somefunc($_) ] } 0..9;
 printLoL ('filled with map', \@LoL);
-
 }}}
 
 {{{
-
-LoL = map (lambda x: [ somefunc(x) ], range(10))
-printLoL ('filled with map', LoL)
-
+LoL = map(lambda x: [ somefunc(x) ], range(10))
+printLoL('filled with map', LoL)
 }}}
 
 
@@ -714,19 +654,15 @@ or
 === Adding to an existing row in a list of lists ===
 
 {{{
-
 @LoL = @LoLsave;  # start afresh
 push @{ $LoL[0] }, "wilma", "betty";
-printLoL ('after appending to first element:', \@LoL);
-    
+printLoL ('after appending to first element:', \@LoL); 
 }}}
 
 {{{
-
 LoL = LoLsave[:]  # start afresh
 LoL[0] += ["wilma", "betty"]
-printLoL ('after appending to first element:', LoL)
-
+printLoL('after appending to first element:', LoL)
 }}}
 
 
@@ -734,8 +670,8 @@ In python, the `+` operator is defined to mean concatenation
 for sequences.  An alternative to the above code is to append each element
 of the list to `LoL[0]`:
 {{{
-LoL[0].append ("wilma")
-LoL[0].append ("betty")
+LoL[0].append("wilma")
+LoL[0].append("betty")
 }}}
 
 
@@ -754,14 +690,12 @@ LoL[0].append ("betty")
 $LoL[0][0] = "Fred";
 print ("first element is now $LoL[0][0]\n");
 printSep();
-
 }}}
 
 {{{
 LoL[0][0] = "Fred"
 print 'first element is now', LoL[0][0]
 printSep()
-
 }}}
 
 
@@ -777,46 +711,38 @@ printSep();
 }}}
 
 {{{
-# upcase the first letter
-LoL[1][1] = LoL[1][1].capitalize()
+LoL[1][1] = LoL[1][1].title()
 print 'element 1, 1 is now', LoL[1][1]
 printSep()
-
 }}}
-
 
 Perl's regexp matching and substitution is enormously powerful; see
 especially the new syntax for comments and whitespace inside regular
 expressions. 
 
-In python, string methods are often used where perl would use a regex.  
-
+In python, string methods are often used where perl would use a regex.  Among
+these string methods are `title()` and `capitalize()`.  In the context of
+names, `title()` will be used as it correctly changes "smith-jones" to
+"Smith-Jones" whereas `capitalize()` would produce "Smith-jones".
 
 
 === Printing a list of lists ===
 
 
 
-
-
 ==== Print a list of lists using references ====
 
-
 {{{
-
 for $aref ( @LoL ) {
     print "\t [ @$aref ],\n";
 }
 printSep();
-
 }}}
 
 {{{
-
 for a in LoL:
-  print "\t [ %s ]," % " ".join(a)
+    print "\t [ %s ]," % a
 printSep()
-
 }}}
 
 [Need a pointer to the `%` operator]
@@ -827,7 +753,6 @@ printSep()
 
 
 {{{
-
 for $i ( 0 .. $#LoL ) {
     print "\t [ @{$LoL[$i]} ],\n";
 }
@@ -836,9 +761,8 @@ printSep();
 }}}
 
 {{{
-
 for i in range(len(LoL)):
-  print "\t [ %s ]," % string.join(LoL[i])
+  print "\t [ %s ]," % LoL[i]
 printSep()
 
 }}}
@@ -849,35 +773,24 @@ In Perl, the highest valid index of an array `@A` is
 
 [Link to details of the range function]
 
-{{{
-
-
-}}}
-
-
-
 
 ==== Print a list of lists element by element ====
 
 
 {{{
-
 for $i ( 0 .. $#LoL ) {
     for $j ( 0 .. $#{$LoL[$i]} ) {
         print "elt $i $j is $LoL[$i][$j]\n";
     }
 }
 printSep();
-
 }}}
 
 {{{
-
-for (i, mylist) in enumerate(LoL):
-  for (j, elem) in enumerate(mylist):
-    print 'elt %d %d is %s' % (i, j, elem)
+for i, mylist in enumerate(LoL):
+    for j, elem in enumerate(mylist):
+        print 'elt %d %d is %s' % (i, j, elem)
 printSep()
-
 }}}
 
 
@@ -885,20 +798,18 @@ printSep()
 ==== Print a list of lists using map ====
 
 {{{
-
 sub printLine { print (join (" ", @{shift()}), "\n"); }
 map (printLine ($_), @LoL);
 printSep();
-
 }}}
 
 
 {{{
 # This is legal but Do Not Do This
-def printLine(l) : print " ".join(l)
-map (printLine, LoL)
+def printLine(l):
+    print " ".join(l)
+map(printLine, LoL)
 printSep()
-
 }}}
 
 
@@ -908,18 +819,14 @@ printSep()
 ==== Print a list of lists using map and anonymous functions ====
 
 {{{
-
 print map { join (' ', @$_), "\n" } @LoL;
 printSep();
-
 }}}
 
 {{{
-
 # This is legal but Do Not Do This
 map(lambda x: sys.stdout.write(" ".join(x)), LoL)
 printSep()
-
 }}}
 
 
@@ -946,10 +853,6 @@ limitations are in Perl.
 
 Associative arrays are sometimes called maps, dictionaries (Python,
 Smalltalk), or hashes (Perl).
-
-
-
-
 
 
 === Preliminaries ===
@@ -980,21 +883,20 @@ sub get_family{
 }}}
 
 {{{
-def printSep ():
+def printSep():
     print '=' * 60
 
 def printHoL(s, hol):
     print s
-    ks = hol.keys();
-    ks.sort()
-    for k in ks:
-        print k, ':', " ".join(hol[k])
+    items = hol.items();
+    items.sort()
+    for key, value in items:
+        print key, ':', " ".join(value)
     printSep()
 
 def get_family(group):
-  group = group.title()             # correctly capitalize 'barrett-browning'
+  group = group.title()
   return ["Mr-" + group, "Mrs-" + group, group + "-Jr"]
-
 }}}
 
 `printHoL` pretty-prints a hash/dictionary of lists.
@@ -1002,21 +904,20 @@ def get_family(group):
 `printSep` prints a line of equal signs as a separator.
 
 `get_family` makes a list of names from a "group name", e.g.,
-`flintstones` becomes `[ "Mr-Flintstone",
-"Mrs-Flintstone", "Flintstone-Jr" ]`  This is for generating lists
-to fill a hash/dictionary.
+`flintstones` becomes `[ "Mr-Flintstone", "Mrs-Flintstone", "Flintstone-Jr" ]`
+This is for generating lists to fill a hash/dictionary.
 
 
-
-
-
+hol.items()` converts a dictionary to a list of (key, value) pairs, eg:
+`[('flintstones', ['fred', 'barney']), ('jetsons', ['george', 'jane', 'elroy']), ('simpsons', ['homer', 'marge', 'bart'])]`
+This list is then sorted (sorting is in-place in python) and then the
+pairs in the list are unpacked and used.
 
 
 === Declaration of a hash of lists ===
 
 
 {{{
-
 %HoL = ( 
        flintstones        => [ "fred", "barney" ],
        jetsons            => [ "george", "jane", "elroy" ],
@@ -1024,17 +925,14 @@ to fill a hash/dictionary.
      );
 
 printHoL ('names', \%HoL);
-
 }}}
 
 {{{
-
 HoL = { 'flintstones' : ['fred', 'barney'],
         'jetsons' : ['george', 'jane', 'elroy'],
         'simpsons': ['homer', 'marge', 'bart'], }
 
-printHoL ('names', HoL)
-
+printHoL('names', HoL)
 }}}
 
 
@@ -1044,12 +942,12 @@ arguments, and a newline at the end.  If you want more control over the
 formatting, use the `%` operator [link to % operator]: rather
 than 
 {{{
-    print k, ':', string.join(v)
+print k, ':', " ".join(v)
 }}}
 
 you could use
 {{{
-print "%s: %s", (k, string.join(v))
+print "%s: %s" % (k, " ".join(v))
 }}}
 
 to avoid the space before the colon.
@@ -1082,10 +980,6 @@ is no longer necessary.
 
 
 
-
-
-
-
 === Initializing hashes of lists ===
 
 
@@ -1101,7 +995,6 @@ flintstones: fred barney wilma dino
 
 
 {{{
-
 %HoL = ();
 open (F, "cookTest.2");
 while ( <F> ) {
@@ -1109,21 +1002,18 @@ while ( <F> ) {
     $HoL{$1} = [ split ];
 }
 printHoL ('read from file cookTest.2', \%HoL);
-
 }}}
 
 {{{
-
 HoL = {}
 for line in open('cookTest.2'):
     try:
         surname, people = line.split(":", 1)    
-    except ValueError:                 # can't split on ":" so no ":" in the line
+    except ValueError:             # can't split on ":" so no ":" in the line
         continue
     HoL[surname] = people.split()
 
-printHoL ('read from file cookTest.2', HoL)
-
+printHoL('read from file cookTest.2', HoL)
 }}}
 
 
@@ -1149,11 +1039,9 @@ while ( $line = <F> ) {
 }
 
 printHoL ('read from cookTest.3', \%HoL);
-
 }}}
 
 {{{
-
 HoL = {}
 for line in open('cookTest.3'):
     try:
@@ -1165,7 +1053,6 @@ for line in open('cookTest.3'):
     HoL[who] = fields
 
 printHoL ('read from cookTest.3', HoL)
-
 }}}
 
 
@@ -1177,24 +1064,20 @@ associate the key with this list.
 
 
 {{{
-
 %HoL = {};
 for $group ( "simpsons", "jetsons", "flintstones" ) {
     $HoL{$group} = [ get_family($group) ];
 }
 
 printHoL ('filled by get_family', \%HoL);
-
 }}}
 
 {{{
-
 HoL = {}
 for group in ("simpsons", "jetsons", "flintstones"):
     HoL[group] = get_family(group)
 
 printHoL ('filled by get_family', HoL)
-
 }}}
 
 
@@ -1228,7 +1111,6 @@ variable (where it could be modified, for example).
 
 
 {{{
-
 %LoL = {};
 for $group ( "simpsons", "jetsons", "flintstones" ) {
     @members = get_family($group);
@@ -1236,18 +1118,15 @@ for $group ( "simpsons", "jetsons", "flintstones" ) {
 }
 
 printHoL ('by get_family with temps', \%HoL);
-
 }}}
 
 {{{
-
 LoL = {}
 for group in ("simpsons", "jetsons", "flintstones"):
-  members = get_family(group)
-  HoL[group] = members
+    members = get_family(group)
+    HoL[group] = members
 
 printHoL ('by get_family with temps', HoL)
-
 }}}
 
 
@@ -1261,19 +1140,15 @@ We want to add two strings to the list of strings indexed by the name
 
 
 {{{
-
 push @{ $HoL{flintstones} }, "wilma", "betty";
 print (join (" ", @{$HoL{flintstones}}), "\n");
 printSep();
-
 }}}
 
 {{{
-
 HoL['flintstones'] += ['wilma', 'betty']
 print " ".join(HoL['flintstones'])
 printSep()
-
 }}}
 
 
@@ -1282,11 +1157,6 @@ say
 {{{
 $HoL{'flintstones'} = [ @{ $HoL{'flintstones'} }, "wilma", "betty" ];
 }}}
-
-
-
-
-
 
 
 
@@ -1306,14 +1176,12 @@ Assign to the first element of the list indexed by
 $HoL{flintstones}[0] = "Fred";
 print ($HoL{flintstones}[0], "\n");
 printSep();
-
 }}}
 
 {{{
 HoL['flintstones'][0] = "Fred"
 print HoL['flintstones'][0]
 printSep()
-
 }}}
 
 
@@ -1345,15 +1213,12 @@ by `simpsons`.
 $HoL{simpsons}[1] =~ s/(\w)/\u$1/;
 
 printHoL ('after modifying an element', \%HoL);
-
 }}}
 
 {{{
-#Normally .title() would be more appropriate - "smith-jones" => "Smith-Jones"
-HoL['simpsons'][1] = HoL['simpsons'][1].capitalize()   
+HoL['simpsons'][1] = HoL['simpsons'][1].title()   
 
 printHoL ('after modifying an element', HoL)
-
 }}}
 
 
@@ -1371,37 +1236,25 @@ family2: member2-1 member2-2...
 }}}
 
 
-
 {{{
-
 foreach $family ( sort keys %HoL ) {
     print "$family: @{ $HoL{$family} }\n";
 }
 printSep();
-
 }}}
+
 
 {{{
-
-k = HoL.keys(); 
-k.sort()
-for family in k:
-    print '%s: %s' % (family, " ".join(HoL[family]))
+families = HoL.items(); 
+families.sort()
+for surname, members in families:
+    print '%s: %s' % (surname, " ".join(members))
 printSep()
-
 }}}
-
-
-Note that sorting is in-place in python --- if you want a sorted copy of
-a list, you first copy the list and then sort it.
-
 
 ==== Print with indices ====
 
-
-
 {{{
-
 foreach $family ( sort keys %HoL ) {
     print "family: ";
     foreach $i ( 0 .. $#{ $HoL{$family}} ) {
@@ -1414,16 +1267,14 @@ printSep();
 }}}
 
 {{{
-
 k = HoL.keys(); 
 k.sort()
-for family in k:
-    print 'family: ',
-    for (i, member) in enumerate(HoL[family]):
-      print '%d = %s' % (i, member),
+for surname in k:
+    print 'surname: ',
+    for (i, member) in enumerate(HoL[surname]):
+        print '%d = %s' % (i, member),
     print
 printSep()
-
 }}}
 
 
@@ -1442,28 +1293,25 @@ foreach $family ( sort { @{$HoL{$b}} <=> @{$HoL{$a}} } keys %HoL ) {
 }}}
 
 {{{
-
 HoL['simpsons'] += ['Lisa']
+
 def cmpNumberMembers(a,b):
-  return - cmp(len(HoL[a]), len(HoL[b]))
-k = HoL.keys()
-k.sort(cmpNumberMembers)
-for family in k:
-    print "%s:" % family, " ".join(HoL[family])
+  return cmp(len(a[1]), len(b[1]))
 
+families = HoL.items()
+families.sort(cmpNumberMembers)
+for surname, members in families:
+    print "%s:" % surname, " ".join(members)
 }}}
-
-
-Note that sorting is reversed here.  Not sure why this is different.
 
 You can use a lambda expression in python here, too, though I don't find
 it very readable:
 {{{
-HoL['simpsons'] = HoL['simpsons'] + ['Lisa']
-k = HoL.keys()
-k.sort(lambda a, b: - cmp (len (HoL[a]), len (HoL[b])))
-for family in k:
-  print "%s:" % family, string.join (HoL[family])
+HoL['simpsons'] += ['Lisa']
+families = HoL.items()
+families.sort(lambda a, b: cmp(len(a[1]), len(b[1])))
+for surname, members in k:
+    print "%s:" % surname, " ".join(members))
 }}}
 
 
@@ -1484,12 +1332,11 @@ foreach $family ( sort { @{$HoL{$b}} <=> @{$HoL{$a}} } keys %HoL ) {
 
 {{{
 
-k = HoL.keys()
-k.sort(lambda a, b: cmp (len(HoL[b]), len(HoL[a])))
-for family in k:
-  members = HoL[family]
-  members.sort()
-  print "%s: %s" % (family, ", ".join(members))
+families = HoL.items()
+families.sort(lambda a, b: cmp(len(a[1]), len(b[1])))
+for surname, members in families:
+    members.sort()
+    print "%s: %s" % (family, ", ".join(members))
 }}}
 
 
@@ -1531,20 +1378,20 @@ sub printLoH
 }}}
 
 {{{
-import sys,string,regsub
+import sys
 
-def printSep (): print '=' * 60
+def printSep():
+    print '=' * 60
 
 def printLoH(s,loh):
-    def printH (h):
-        print "["
-        keys = h.keys();
-        keys.sort()
-        for k in keys:
-            print '  %s => %s' % (k, h[k])
-        print "]"
     print s
-    map(printH, loh)
+    for h in loh:
+        print "["
+        items = h.items()
+        items.sort()
+        for key, val in items:
+            print '  %s => %s' % (key, val)
+        print "]"
     printSep()
 }}}
 
@@ -1873,7 +1720,7 @@ printSep();
 LoH[0]["LEAD"] = "fred"
 print (LoH[0]["LEAD"])
 
-LoH[1]["LEAD"] = LoH[1]["LEAD"].capitalize()
+LoH[1]["LEAD"] = LoH[1]["LEAD"].title()
 print (LoH[1]["LEAD"])
 
 printSep()
@@ -1909,22 +1756,17 @@ for $href ( @LoH ) {
 {{{
 
 for href in LoH:
-  print "{",
-  keys = href.keys();
-  keys.sort()
-  for role in keys:
-    print "%s=%s" % (role, href[role]),
-  print "}"
-
-
+    print "{",
+    items = href.items();
+    items.sort()
+    for role, val in items:
+        print "%s=%s" %(role, val),
+    print "}"
 }}}
 
 
 Note the comma after the print in the python segment -- this means
 "don't add a newline".
-
-
-
 
 
 ==== Print with indices ====
@@ -1942,15 +1784,13 @@ for $i ( 0 .. $#LoH ) {
 }}}
 
 {{{
-
-for i in range(len(LoH)):
+for i, elem in enumerate(LoH):
     print i, "is {",
-    keys = LoH[i].keys();
-    keys.sort()
-    for role in keys:
-        print "%s=%s" % (role, LoH[i][role]),
+    items = elem.items();
+    items.sort()
+    for role, val in items:
+        print "%s=%s" % (role, val),
     print "}"
-
 }}}
 
 
@@ -1969,18 +1809,14 @@ for $i ( 0 .. $#LoH ) {
         print "elt $i $role is $LoH[$i]{$role}\n";
     }
 }
-
 }}}
 
 {{{
-
-for i in range(len(LoH)):
-  keys = LoH[i].keys();
-  keys.sort()
-  for role in keys:
-    print "elt", i, role, "is", LoH[i][role]
-
-
+for i, elem in enumerate(LoH):
+    items = elem.items();
+    items.sort()
+    for role, val in items:
+        print "elt", i, role, "is", val
 }}}
 
 
@@ -2003,19 +1839,12 @@ All the following code snippets will need these declarations first:
 
 
 {{{
-
 use Tk;
-
-
 }}}
 
 {{{
-
 from Tkinter import *
 import sys
-
-
-
 }}}
 
 
@@ -2024,25 +1853,20 @@ import sys
 
 
 {{{
-
 $top = MainWindow->new;
 $hello = $top->Button('-text' => 'Hello, world',
                       '-command' => sub {print STDOUT "Hello, world\n";exit;});
 $hello->pack;
 MainLoop;
-
 }}}
 
 {{{
-
 top = Tk()
 def buttonFunction () :
     print 'Hello, world'
     sys.exit (-1)
   
-hello = Button (top, {'text' : 'Hello, world', 'command' : buttonFunction})
+hello = Button(top, {'text' : 'Hello, world', 'command' : buttonFunction})
 hello.pack()
 top.mainloop()
-
 }}}
-
