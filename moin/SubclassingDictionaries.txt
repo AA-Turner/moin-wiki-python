@@ -11,8 +11,8 @@ ex:
 {{{
 #!python
 class Msg( dict ):
+    __slots__ = [] # no attributes
     def __init__( self, msg_type, kv_dict = {} ):
-        __slots__ = [] # no attributes
         dict.__init__( self )
         self[ "msg-type" ] = msg_type
         self.update( kv_dict )
