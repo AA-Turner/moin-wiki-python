@@ -192,14 +192,30 @@ Notice that we are connecting a C++ Signal to a Python Slot. However, that slot 
 
   {{{
     def schedule_clicked(self):
-        if not str(self.event.text()):
+        if not str(self.command.text()):
             QMessageBox.critical(self,
                 "Invalid event", "You must specify an event", 
                 QMessageBox.Ok)
             return
         
-        t = str(self.date_time.dateTime().toString('hh:mm MM/dd/yyyy'))
+        t = str(self.time.dateTime().toString('hh:mm MM/dd/yyyy'))
         p = os.popen('at -m "%s"'%t, 'w') 
-        p.write(str(self.event.text()))
+        p.write(str(self.command.text()))
         self.close()
 }}}
+
+The process here is two fold. First, we check to see if something is specified in the "command" QLineEdit widget. If not, we show a QMessageBox with a critical message.
+
+If there is something in the command box, we open up a pipe to the 'at' command. 'at' expects the command to be coming in on stdin. We then write to it's stdin the command we want to execute. Notice that we don't do any error checking here.
+
+Go ahead and run the application now, and use the 'atq' command to see if the 'at' job was queued up.
+
+Good? Okay. 
+
+== Homework ==
+
+With the time remaining, you may want to add a few extensions.
+
+  * After you schedule the at job, you may want the application to close. Find an appropriate slot to close the 'at' widget or the entire application. Q: Why does closing the 'at' widget shut down the entire application?
+
+  * Do some error checking when you schedule the at job . If there are any messages, show them to the user with a QMessageBox.
