@@ -9,7 +9,7 @@
 #language en
 
 
-''Jython, lest you do not know of it, is the most compelling weapon the Java platform has for its survival into the 21st century - Sean McGrath''
+''Jython, lest you do not know of it, is the most compelling weapon the Java platform has for its survival into the 21st century - SeanMcGrath''
 
 ----
 
@@ -29,25 +29,45 @@ There are numerous [http://grunge.cs.tu-berlin.de/~tolk/vmlanguages.html alterna
 
   * Protyping
   * Java investigation
-  {{{
-  >>> from java.util import Date
-  >>> d = Date()
-  >>> print d
-  Sat Jan 08 16:26:16 CST 2005
-  >>> from java.util import Random
-  >>> print dir(Random)
-  ['__init__', 'nextBoolean', 'nextBytes', 'nextDouble', 'nextFloat',
-  'nextGaussian', 'nextInt', 'nextLong', 'seed', 'setSeed']
-  >>>
-  }}}
+    {{{
+    >>> from java.util import Date
+    >>> d = Date()
+    >>> print d
+    Sat Jan 08 16:26:16 CST 2005
+    >>> from java.util import Random
+    >>> print dir(Random)
+    ['__init__', 'nextBoolean', 'nextBytes', 'nextDouble', 'nextFloat',
+    'nextGaussian', 'nextInt', 'nextLong', 'seed', 'setSeed']
+    >>>
+    }}}
+
   
   * Bean properties accesible
-  {{{
-  >>> print Date().time
-  1105500911121
-  }}}
+    {{{
+    >>> print Date().time
+    1105500911121
+    }}}
   * Glue together libraries already written in Java
   * Excellent embedded scripting language
     *  Object Domain UML Tool
     *  PushToTest
     *  Drools
+
+
+== Differences - Python & Jython ==
+
+'''Python'''
+  * C
+  * Multi-platform
+  * Compiles to .pyc
+  * Extend with C
+  * GIL
+  * Python Garbage Collection
+
+'''Jython'''
+  * 100% Java
+  * Any JVM (currently 1.1+)
+  * Compiles to .class
+  * Extend with Java
+  * Truly multi-threaded
+  * Java garbage collection
