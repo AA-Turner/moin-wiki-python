@@ -1,0 +1,75 @@
+Now let's expose a C++ class to Python: 
+{{{
+#include <iostream>
+#include <string>
+
+namespace { // Avoid cluttering the global namespace.
+
+  // A friendly class.
+  class hello
+  {
+    public:
+      hello(const std::string& country) { this->country = country; }
+      std::string greet() const { return "Hello from " + country; }
+    private:
+      std::string country;
+  };
+
+  // A function taking a hello object as an argument.
+  std::string invite(const hello& w) {
+    return w.greet() + "! Please come soon!";
+  }
+}
+}}}
+To expose the class, we use a ''class_'' builder. Class member functions are exposed by using the ''def()'' member: 
+{{{
+#include <boost/python/module.hpp>
+#include <boost/python/class.hpp>
+#include <boost/python/def.hpp>
+using namespace boost::python;
+
+BOOST_PYTHON_MODULE_INIT(getting_started2)
+{
+    // Create the Python type object for our extension class and define __init__ function.
+    class_<hello>("hello", init<std::string>())
+        .def("greet", &hello::greet)  // Add a regular member function.
+        .def("invite", invite)  // Add invite() as a regular function to the module.
+    ;
+    
+    def("invite", invite); // Even better, invite() can also be made a member of module!!!
+}
+}}}
+Now we can use the class normally from Python: 
+{{{
+>>> from getting_started2 import *
+>>> hi = hello('California')
+>>> hi.greet()
+'Hello from California'
+>>> invite(hi)
+'Hello from California! Please come soon!'
+>>> hi.invite()
+'Hello from California! Please come soon!'
+}}}
+Notes:
+ * We expose the class' constructor by calling ''def()'' on the ''class_'' builder with an argument whose type is ''constructor<params>'', where ''params'' matches the list of constructor argument types; 
+ * Regular member functions are defined by calling ''def()'' with a member function pointer and its Python name; 
+ * Any function added to a class whose initial argument matches the class (or any base) will act like a member function in Python. 
+ * To define a nested class, just '''???'''. 
+
+We can even make a subclass of hello.world: 
+{{{
+>>> class wordy(hello):
+...     def greet(self):
+...         return hello.greet(self) + ', where the weather is fine'
+...
+>>> hi2 = wordy('Florida')
+>>> hi2.greet()
+'Hello from Florida, where the weather is fine'
+>>> invite(hi2)
+'Hello from Florida! Please come soon!'
+}}}
+Pretty cool! You can't do that with an ordinary Python extension type! Of course, you may now have a slightly empty feeling in the pit of your little pythonic stomach. Perhaps you wanted to see the following ''wordy'' invitation: 
+{{{
+'Hello from Florida, where the weather is fine! Please come soon!'
+}}}
+After all, ''invite'' calls ''hello::greet()'', and you reimplemented that in your Python subclass, ''wordy''.
