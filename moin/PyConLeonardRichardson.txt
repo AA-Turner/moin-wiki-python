@@ -58,7 +58,7 @@ shell access to the hosting machine. The framework I'll describe is
 also useful for doing a user preferences engine.
 
 The framework I'm using in my talk is based on the one I wrote for [http://newsbruiser.tigris.org/ NewsBruiser].
-[http://newsbruiser.tigris.org/source/browse/newsbruiser/nb/Options.py Here it is in CVS.] 
+[http://newsbruiser.tigris.org/source/browse/newsbruiser/nb/lib/IWantOptions.py Here it is in CVS.] 
 
 My talk is currently [http://www.python.org/pycon/pycon-schedule.html scheduled]
 for 11:30-12:00 on Thursday, March 27, in the Elliot room, wherever
@@ -67,8 +67,6 @@ that is. I assume there will be signs.
 = To do =
 
 * Write the slides!
-
-* Make Options.py fully generic, prove this by moving it into lib/ dir of NewsBruiser.
 
 * Write 3 simple example apps to do the same thing (or one app which can get its variable in any of 3 ways):
 
@@ -89,6 +87,11 @@ Second, what kind of apps should I write? I'd like them to be extremely simple, 
 An example of the simple app would be something that prints out a string some configurable number of times. An example of the more complex app might be a silly text generator that reads a web page and does something to it (what it does being controlled by the configuration interface). 
 
 = Work Log =
+
+02/21: Got all the NewsBruiser-specific code out of Options.py. To celebrate, moved it out of NewsBruiser proper and into the lib/
+directory. It's now a reusable library called [http://newsbruiser.tigris.org/source/browse/newsbruiser/nb/lib/IWantOptions.py I Want Options].
+
+To get all the code moved out I had to define a plugin class (it's currently called 'wrapper', but that doesn't make much sense) which contains application-specific code and is passed into the OptionGroup and Option constructors. It basically simulates a superclass of all the Option classes, so that you can change the generic Option behavior without having to change all the Option classes to subclass a different class. There might be a design pattern that describes this which would make renaming it easy. Or it might just be an OO hack, in which case I'll probably call it "Implementation" or "ImplementationDetails".
 
 02/19: Yesterday I worked on cleaning up Options.py: moving out NewsBruiserisms, adding comments and PyDoc. 
 I tell myself that this is useful work for the talk and not just a heavily disguised method of procrastination.
