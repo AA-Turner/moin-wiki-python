@@ -1,9 +1,58 @@
-stub page - intend to expand with an example full test suite, as written in PyUnit.
+= PyUnit =
 
-http://pyunit.sourceforge.net 
+PyUnit is an easy way to create unit testing programs with Python.
 
-reference http://pyunit.sourceforge.net/pyunit.html#USING
+== Basic Example ==
 
-This page will just show a simple example, alone, and then point the user to the full tutorial.
+Here's a basic example, making use of standard PyUnit conventions.
 
-The online book [http://www.diveintopython.org/toc/index.html Dive into Python] has a chapter on unit testing in python with PyUnit.
+{{{
+#!python
+import unittest
+
+from foobarbaz import Foo # code from module you're testing
+
+class SimpleTestCase(unittest.TestCase):
+    def setUp(s):
+        """
+        Called before every single test case.
+        """
+        s.foo = Foo()
+        s.file = open( "blah", "r" )
+    def tearDown(s):
+        """
+        Called after every single test case.
+        """
+        s.file.close()
+    def testA(s):
+        """test case A; note that all test method names must begin with 'test.'"""
+        assert foo.bar() == 543, "bar() not calculating values correctly"
+    def testB(s):
+        """test case B"""
+        assert foo+foo == 34, "can't add Foo instances"
+    def testC(s):
+        """test case C"""
+        assert foo.baz() == "blah", "baz() not returning blah correctly"
+
+class OtherTestCase(unittest.TestCase):
+    def setUp(s):
+        blah_blah_blah()
+    def tearDown(s):
+        blah_blah_blah()
+    def testBlah(s):
+        assert s.blahblah == "blah", "blah isn't blahing blahing correctly"
+
+if __name__ == "__main__":
+    unittest.main() # run all tests
+}}}
+
+For more details, see [http://pyunit.sourceforge.net/pyunit.html the PyUnit manual.]
+
+== See Also ==
+ * [http://pyunit.sourceforge.net SourceForge.net PyUnit site]
+ * [http://pyunit.sourceforge.net/pyunit.html#USING Using Section of the PyUnit manual]
+ * [http://www.diveintopython.org/toc/index.html Dive into Python] chapter on unit testing with PyUnit
+
+= Discussion =
+
+  (none yet!)
