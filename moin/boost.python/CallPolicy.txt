@@ -1,0 +1,37 @@
+CallPolicy allows boost.python to deal with raw references and pointers.
+Different policies specifies different strategies of managing object ownership.
+
+[[TableOfContents]]
+
+== with_custodian_and_ward ==
+ties lifetimes of the arguments
+
+== with_custodian_and_ward_postcall ==
+ties lifetimes of the arguments and results
+
+== return_internal_reference ==
+ties lifetime of one argument to that of result
+keep the owning object alive as long as the owned objects are also alive. 
+
+== return_value_policy<T> ==
+with T one of:
+
+=== reference_existing_object ===
+naïve (dangerous) approach
+
+=== copy_non_const_reference ===
+
+=== copy_const_reference ===
+Boost.Python v1 approach
+
+=== manage_new_object ===
+Adopt a pointer and hold the instance
+
+Use case:
+{{{
+T* factory() { return new T(); }
+
+class_<T>("T");
+
+def("Tfactory", factory, return_value_policy<manage_new_object> );
+}}}
