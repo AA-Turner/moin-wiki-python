@@ -23,18 +23,27 @@ except ZeroDivisionError, e:
 print z # output: "integer division or modulo by zero"
 }}}
 
-This page previously used a catch-all exception clause:
+== General Error Catching ==
+
+Sometimes, you want to catch ''all'' errors that could possibly be generated.
+
+''In most cases, you don't.'' In most cases, you want to be as specific as possible. If a user presses Ctrl-C, generating a KeyboardInterrupt, you don't want the program to interpret it as a File I/O error. (Wiki:CatchWhatYouCanHandle)
+
+However, there are some situations where it's best to catch ''all'' errors.
+
+For example, suppose you are writing an extension module to a web service. You want the error information to output the output web page, and the server to continue to run, if at all possible. But you have no idea what kind of errors you might have put in your code.
+
+In situations like these, you may want code something like this:
 
 {{{
 #!python
-(x,y) = (5,0)
 try:
-  z = x/y
-except:
-  print "divide by zero"
+  untrusted.execute()
+except Exception, e:
+  write_to_page( "<p>Error: %s</p>" % str(e) )
 }}}
 
-This is bad because you'll almost certainly catch too many errors. As a simple example, when the user presses Ctrl-C, thus generating a KeyboardInterrupt, it will be caught and the code above will print "divide by zero". Now that's confusing, so you should only Wiki:CatchWhatYouCanHandle.
+MoinMoin software is a good example of where this is done. If you write Moin``Moin extension macros, and trigger an error, Moin``Moin will give you a detailed report of your error and the chain of events leading up to it.
 
 == To Write About... ==
 
@@ -49,3 +58,7 @@ Show how to continue with a "raise".
 = See Also: =
 
 WritingExceptionClasses, TracebackModule, Wiki:CoupleLeapingWithLooking
+
+= Questions =
+
+(put your question here)
