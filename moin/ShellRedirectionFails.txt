@@ -1,0 +1,7 @@
+If you try to redirect printing of non-ascii unicode string into a file Python doesn't know how to encode non-ascii characters because there are many text encoding in use across the world. You need to wrap standard output with encoder that will convert unicode characters into encoding of you choice. For example to convert characters into utf-8 encoding use
+{{{
+#!python
+import codecs
+sys.stdout = codecs.getwriter("utf-8")(sys.__stdout__)
+}}}
+Of course this code is not portable since most users in the world don't use utf-8 encoding for files. locale module provides function getpreferredencoding that will try to guess what is the preffered encoding for text files. There are also other ways to ask user for encoding of text files: command line options of your script, parameter stored in a configuration file, GUI dialog and so on...
