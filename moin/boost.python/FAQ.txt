@@ -85,3 +85,13 @@ x_class.attr("fu") = X::fu;
 x_class.attr("bar") = X::bar;
 ...
 }}}
+----
+4. ''Why operators.hpp imports certain functions (such as 'str')
+into the global namespace, instead of the namespace
+boost::python. That looks like an error...''
+
+It's only on broken compilers which don't support KoenigLookup, and
+it's intentional. The negative impact should be limited due to the
+fact that these functions only operate on objects of type
+boost::python::self_ns::self_t. Do you anticipate a real problem with
+this?
