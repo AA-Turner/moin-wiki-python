@@ -118,6 +118,35 @@ I (VinaySajip) like this syntax, except for:
 As far as use of expressions in the config file, I am ambivalent, and curious to hear more opinions; sometimes a declarative approach is good. But more than the syntax, I'm interested in what people think about the semantics: for example, allowing cross-references between config elements (perhaps across multiple files), and the ability to perform restricted "special" evaluation of some elements (e.g. `sys.stderr`)
 
 ----------
+I (StephenHansen) have been evaluating this module and went so far as to plug it into our system to see how it works, and I like it a great deal. 
+
+In particular, I prefer the "python like list" format for specifying multiple values to using the same name multiple times, or having something like 'handler0=...' 'handler1=...'. It actually makes the config file less readable by users, I think.
+
+The references are very useful as well, allowing a seperate 'database.cfg' to be imported and easy that looks like...
+
+{{{
+Server: ourServer
+Database: Devel
+Username: Joe
+Password: ''
+}}}
+
+In a very "user-friendly" format, which is then turned into a proper DSN in our main config file..
+
+{{{
+DB:@"database.cfg"
+
+database:
+  { 
+    'win32':
+       'Driver={SQL Server};Server=' + $DB.Server + 'Database=' + $DB.Database,
+    'darwin':
+       {'server': $DB.server, 'database': $DB.database' }
+  }
+}}}
+
+... etc. Especially in our case where we actually check to see if the "primary config file" is digitally signed, references and such are great. We get one unified config object in the application code and organize our configuration in whatever user-friendly way we need.
+----------
 
 [http://cvs.zope.org/Zope3/doc/zcml/ ZCML] (unlike .ini files) handles nested input fairly well.  The syntax looks a little like an Apache config; though from much of what I've seen, it's straight XML.  -- IanBicking
 
