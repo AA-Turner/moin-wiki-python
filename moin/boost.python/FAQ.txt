@@ -34,12 +34,14 @@ The only relationship is that they both deal with constructors.
  *  `no_init` means "do not try to create an instance of that Python object, create __init__ function that throws an exception"
  *  `noncopyable` means "do not try to register a converter which can convert C++ return values of that class to Python".
 
+When wrapping an abstract class, it's necessary to specify both.
+
 === Is it is possible to convert pointers to existing classes to PyObjects* and then be able to pass an existing instance of an object directly to and from python? ===
 
 It is.
 
 Example:
-In C++ I create a CWheel and I set its member m_diameter to 1233.  In python I have a function that receives a CWheel and displays the diameter (Lets suppose that Python knows the CWheel from Boost.Python
+In C++ I create a CWheel and I set its member m_diameter to 1233.  In python I have a function that receives a CWheel and displays the diameter (Let's suppose that Python knows the CWheel from Boost.Python):
 {{{
 def printCWheelDiam(awheel):
     print awheel.m_diameter
