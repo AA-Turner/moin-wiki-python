@@ -1,4 +1,5 @@
 == How to expose... ==
+[[TableOfContents]]
 
 === static class data members ===
 {{{
@@ -93,6 +94,28 @@ There is a way to do that, but it's more convoluted than it should be:
   }
 }}}
 
+=== std::C++ container ===
+You can always wrap the container with class_ directive.
+For example:
+{{{
+template<class Key, class Val>
+struct map_item
+{
+  typedef std::map<Key,Val> Map;
+
+  static Val& get(Map& self, const Key idx) { return self[idx]; }
+  static void set(Map& self, const Key idx, const Val val) { self[idx]=val; }
+}
+
+using namespace boost::python;
+typedef std::map<Key,Val> Map;
+class_<Map>("Map")
+  .def("__len__", &Map::size)
+  .def("__getitem__", &map_item<Key,Val>().get, return_value_policy<copy_non_const_reference>() )
+  .def("__setitem__", &map_item<Key,Val>().set)
+  .def("append", &Map::insert)
+  ;
+}}}
 === "Raw" function ===
 ''I want to write in python:''
     {{{
