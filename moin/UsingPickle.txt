@@ -6,27 +6,34 @@
  * [http://www.python.org/doc/current/lib/pickle-example.html Official Pickle Example]
  * [http://www.python.org/doc/current/lib/module-pickle.html Official Pickle Module Documentation]
 
+== Pickle Example ==
+
+{{{
+#!python
+# Save a dictionary into a pickle file.
+import pickle
+
+favorite_color = { "lion": "yellow", "kitty": "red" }
+
+pickle.dump( favorite_color, open( "save.p", "w" ) )
+}}}
+
+{{{
+#!python
+# Load the dictionary back from the pickle file.
+import pickle
+
+favorite_color = pickle.load( open( "save.p" ) )
+# favorite_color is now { "lion": "yellow", "kitty": "red" }
+}}}
+
+For a more complex example, see [http://www.python.org/doc/current/lib/pickle-example.html the official Pickle example,] and for API details, see the [http://www.python.org/doc/current/lib/node64.html official Pickle use documentation.]
+
 == Flying Pickle Alert! ==
 
 Pickle files can be hacked. If you receive a raw pickle file over the network, ''don't trust it!'' It could have malicious code in it, that would run arbitrary python when you try to de-pickle it.
 
 However, if you are doing your own pickle writing and reading, you're safe. (Provided no one else has access to the pickle file, of course.)
-
-== Code Example ==
-
-''Need some simple code here, when it's figured out.''
-
-''Should pickle a dictionary, list, and string. Simple simple simple.''
-
-{{{
-#!python
-# Relevant Python code
-class Something():
-  pass
-
-x=Something()
-print x
-}}}
 
 == Contributors ==
 
