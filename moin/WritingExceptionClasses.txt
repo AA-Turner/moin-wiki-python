@@ -9,7 +9,7 @@ Exception classes are not special, you just derive them from Exception:
 class HostNotFound(Exception):
     def __init__( self, host ):
         self.host = host
-        Exception.__init__(self)
+        Exception.__init__(self, 'Host Not Found exception: missing %s' % host)
 }}}
 
 You may later write:
@@ -19,45 +19,16 @@ You may later write:
 try:
     raise HostNotFound( "taoriver.net" )
 except HostNotFound, X:
-    print "Host Not Found:", X.host
+    # Handle exception.
+    # "X" is the HostNotFound instance.
 }}}
 
-== Overloading __str__ ==
+== See Also ==
 
-You can overload {{{__str__}}} to get the exception to explain itself:
-
-{{{
-#!python
-class HostNotFound(Exception):
-    def __init__( self, host ):
-        self.host = host
-    def __str__( self ):
-        return "Host Not Found exception: missing %s" % self.host
-}}}
-
-That way, you only need print the exception instance:
-
-{{{
-#!python
-try:
-    raise HostNotFound( "taoriver.net" )
-except HostNotFound, X:
-    print X
-}}}
-
-I don't know if this is a good idea or not.
-
-''In this instance, there's no need to overload {{{__str__}}}, as the standard Exception already has a {{{__str__}}} method:''
-
-{{{
-#!python
-class HostNotFound(Exception):
-    def __init__(self, host):
-        self.host = host
-        Exception.__init__(self, 'Host Not Found exception: missing %s' % host)
-}}}
+HandlingExceptions, TracebackModule
 
 == Questions ==
 
   * How do you relay the traceback information? ''Relay the traceback information? Moving it higher up the call-stack? Could you try to explain your question?''
+     * When you're logging exceptions, you want access to the traceback information to. After some research, I believe what you use is extract_tb or extract_stack from the traceback module. -- 216.254.10.130 [[DateTime(2003-09-07T15:23:43Z)]]
   * What better exception-foo is out there?
