@@ -13,3 +13,11 @@ This is a dump of my interpreter session:
 'user\x00\xcc\x15\xa4'
 }}}
 and I need to convert the values following user ('\x00\xcc\x15\xa4') into an integer value... what am I doing wrong here?
+
+["lwickjr"]: you use 
+
+>>> print int('0a', 16)
+10
+>>>
+
+...but these aren`t hex values. Try ord() on each character, and see if that gives you the results you need.
