@@ -1,6 +1,6 @@
 Following a suggestion (not yet linkable on google groups) of FernadoPerez on comp.lang.python, I am inaugurating this wiki page. Fernado's suggestion was that there should somewhere be a collection of bad python practices together with an explanation of the badness and a preferred alternative. As a hobbyist uni-lingual programmer, I can say that I'd certainly find such a resources useful. I can kick it off, but I'm afraid that I likely have more to offer on the dubious than the preferred side of the ledger. 
 
-Anyway,  I thought it was a good idea, and a wiki page seems the best way to distribute the lifting. I'm hopeful this will get it started, but don't have any investment in the form or content of what is here; refactor at will. -- BrianvandenBroek
+Anyway,  I thought it was a good idea, and a wiki page seems the best way to distribute the lifting. I'm hopeful this will get it started, but don't have any investment in the form or content of what is here;  refactor at will. (I don't know how to format code in moinmoin, so if you see it goofy before I've figured it out, please be a gnome!-- BrianvandenBroek
 
 
 == String Concatenation ==
@@ -10,12 +10,17 @@ String concatenation is building up a relatively lengthy string from a collectio
 Newcomers to Python often try to build strings up like this:
 
 >>> string_list = ['one', 'big', 'string', 'in', 'pieces']
->>> new_string = ""
->>> for s in string_list:
+
+>>> new_string = "" 
+
+>>> for s in string_list: 
+
         new_string = new_string + s
 
->>> print new_string
-onebigstringinpieces
+>>> print new_string 
+
+onebigstringinpieces 
+
 >>> 
 
 === The Problem ===
@@ -26,6 +31,7 @@ This is slow and resource heavy. Each time through the for loop, a new string is
 For short cases where the number of strings to be joined is know, you can use string formatting as follows:
 
 >>> print '%s%s%s%s%s' %tuple(string_list)
+
 onebigstringinpieces
 
 This is much more efficient, but is also rather more limited in the range of circumstances to which it applies. It could be made more general by constructing the formatting string as a function of len(string_list), but this would be a bit dubious, too, when we have
@@ -34,6 +40,7 @@ This is much more efficient, but is also rather more limited in the range of cir
 The join method of the string type lets you perform the concatenation as follows:
 
 >>> print "".join(string_list)
+
 onebigstringinpieces
 
 This is quite efficient and perfectly general as it applies to any arbitrary list of strings. (You don't need to know the list length in advance.)
@@ -41,6 +48,7 @@ This is quite efficient and perfectly general as it applies to any arbitrary lis
 The major thing to puzzle the newcomer here is why "".join(some_list) rather than some_list.join(). The way to think of this is that you are using the string "" to join the elements of some_list. Hence,
 
 >>> print 'JOINT'.join(string_list)
+
 oneJOINTbigJOINTstringJOINTinJOINTpieces
 
 That said, some do consider this aspect of the join method of strings odd enough to count as a PythonWart.
@@ -52,14 +60,19 @@ Among the most common tasks in programming is to test if a condition obtains and
 
 === Dubious Way ===
 if (count > 10) == True:
+
     # continue process
 
 and 
 
 def count_tester(count):
+
     if count > 10:
+
         return True
+
     else:
+
         return False
 
 === The Problem ===
@@ -67,9 +80,11 @@ There is a (very slight) speed of execution inefficiency in these examples. But 
 
 === Preferred Alternatives ===
 if count > 10:
+
     # continue process
 
 def count_tester(count):
+
     return count > 10
 
     
