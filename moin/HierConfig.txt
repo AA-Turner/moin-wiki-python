@@ -1,0 +1,61 @@
+Many programs are built these days by assembling components together, and Python programs are no exception. In general, the designer may choose to expose multiple configuration points, and will benefit if there is one standard way of doing so. From the perspective which views programs as hierarchical constructions of configurable components, it would seem to follow logically that configuration of the components should also be hierarchical in nature. The two-level (section, key) model as exemplified by the present ConfigParser does not offer sufficient power. If it did, why does Windows need a registry? ;-)
+
+I've been thinking about how to improve the configuration of the logging package (which currently uses ConfigParser) and playing with some ideas which may have more general applicability. I'm posting them here and seeking feedback.
+
+I think a good configuration system should provide the following (in addition to being textual, easy to read and edit):
+
+ 1. Allow a hierarchy of configuration information, with no specific limit on the depth of the hierarchy.
+ 1. Allow inclusion of sub-configurations held in external files, at any point in the hierarchy
+ 1. Allow the defining of sequences of items as well as items accessed by key
+ 1. Allow late-bound references to any point in the hierarchy
+ 1. Allow *simple* expression evaluation.
+ 1. The ability to specify standard library entities (e.g. sys.stderr or os.sep)
+
+To illustrate these points, two example configuration files are given below.
+
+The first is the application configuration file. It includes the logging configuration file using the notation @"logging.cfg".
+
+{{{
+app:
+{
+  name : MyApplication
+  base: '/path/to/app/logs/'
+  support_team: myappsupport
+  mail_domain: '@my-company.com'
+}
+logging: @"logging.cfg"
+}}}
+
+The second file contains the logging configuration. It refers to the application configuration through $app
+{{{
+root:
+{
+  level     : DEBUG
+  handlers  : [$handlers.console, $handlers.file, $handlers.email]
+}
+handlers:
+{
+  console:  [ StreamHandler, { level : WARNING, stream  : `sys.stderr` } ]
+  file:     [ FileHandler, { filename: $app.base + $app.name + '.log', mode : 'a' } ]
+  socket:   [ `handlers.SocketHandler`, { host: localhost, port: `handlers.DEFAULT_TCP_LOGGING_PORT`} ]
+  nt_eventlog: [`handlers.NTEventLogHandler`, { appname: $app.name, logtype : Application } ]
+  email:    [ `handlers.SMTPHandler`,
+              { level: CRITICAL,
+                host: localhost,
+                port: 25,
+                from: $app.name + $app.mail_domain,
+                to: [$app.support_team + $app.mail_domain, 'QA' + $app.mail_domain, 'product_manager' + $app.mail_domain],
+                subject: 'Take cover' } ]
+}
+loggers:
+{
+  "input"     : { handlers: [$handlers.socket] }
+  "input.xls" : { handlers: [$handlers.nt_eventlog] }
+}
+}}}
+
+The $-notation resolves entries when they are required. The use of specific characters such as '@' and '$' is preliminary and can be easily changed.
+
+I'm currently working on a module to parse this format, though I've nothing which is yet in a fit state to show :-(
+
+-- VinaySajip
