@@ -1,22 +1,40 @@
-If the class had no
-`def_init(...)` calls, you now must pass `python::no_init` instead. On the
-upside, you never need to call `def_init()` with no arguments, since that's
-the default. So:
+'''class_<>''' statement constructs python class object. 
+
+Usually it's included in BOOST_PYTHON_MODULE to wrap C++ class:
+{{{
+class A { ... };
+BOOST_PYTHON_MODULE(example)
+{
+  class_<A>("A");
+}
+}}}
+Also it can be used explicitly to create class instances from C++:
+{{{
+BOOST_PYTHON_MODULE(example1)
+{
+  object class_a = class_<A>("A");
+
+  object instance_a = class_a();
+}
+}}}
+If you want to forbid creating class instancies from python, you now must pass `no_init` to class_<> definition. Default, as in python, will be init with no arguments. There is no limit to number of init<>'s in the boost.python.
+
+'''Synopsis:'''
 {{{
 class_<A>("A")
-    .def_init(args<int, int>())
+    .def(init<int, int>())
     .def(...)
     ;
 
-class_<B>("B", args<int, int>())
+class_<B>("B", init<int, int>())
     .def(...)
     ;
 
-class_<C>("C", "C's docstring", args<int, int>())
+class_<C>("C", "C's docstring", init<int, int>())
     .def(...)
     ;
 
-class_<D>("D", "D's docstring", args<int, int>(), "__init__ doc")
+class_<D>("D", "D's docstring", init<int, int>(), "__init__ doc")
     .def(...) 
     ;
 
@@ -36,3 +54,4 @@ class_<G>("G", "G's docstring", no_init)
 class_<H>("H", "H's docstring")
     .def(...) 
     ;
+}}}
