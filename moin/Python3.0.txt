@@ -11,7 +11,10 @@ and is actively maintained. [[#e 5]]
  * Replace all old-style classes. [[#a 4]]
  * Make the `exec` statement a function (again.) [[#a 1]]
  * Make the `print` statement a function. (`write(x,y,z), writeln(x,y,z)`) [[#a 1]]
- * Do something so you can catch multiple exceptions using `except E1, E2, E3:`. Perhaps use `except E1, E2, E3 as err:` if you want the error variable.  (Added by GvR, suggested by Bram Cohen.)
+ * Add a mechanism so that multiple exceptions can be caught using `except E1, E2, E3:`.  For instance: {{{
+except E1, E2, E3 as err:  # Store error variable
+   ...
+}}} (Added by GvR, suggested by Bram Cohen.)
  * Add a `with` statement: {{{
 with self:
     .foo = [1, 2, 3]
@@ -19,67 +22,68 @@ with self:
 }}}
 
  * Remove {{{`x`}}}. [[#a 1]]
-   Alternatively: use `repr(x)`.
-
-   Reasoning: backticks are hard to read in many fonts and can be mangled by typesetting software.
+   * Instead: use `repr(x)`.
+   * Reason: backticks are hard to read in many fonts and can be mangled by typesetting software.
+ * Remove the `<>` operator.
+   * Instead: use `!=`.
  * Remove the `lambda` statement. [[#a 1]] [[#a 4]]
-   Alternatively: use a local function.
-
-   Reasoning: `lambda` supports only one statement.
+   * Instead: use a local function.
+   * Reason: `lambda` supports only one statement.
  * Remove support for string exceptions. [[#a 1]]
-   Alternatively: use a class.
+   * Instead: use a class.
  * Perhaps have optional declarations for static typing.
-  * One suggestion is to [http://mail.python.org/pipermail/python-dev/2004-February/042795.html use an "as" keyword for this] and for adaptation ([http://www.python.org/peps/pep-0246.html PEP 246]): {{{
-"x as y" means: adapt x to the y protocol
+   * One suggestion is to [http://mail.python.org/pipermail/python-dev/2004-February/042795.html use an "as" keyword for this] and for adaptation ([http://www.python.org/peps/pep-0246.html PEP 246]): {{{
+# "x as y" means: adapt x to the y protocol
 
 def foo (a as int, b as float) as float:
-    a2 = a as float # same as: adapt(a,float)
+    a2 = a as float  # Same as: adapt(a, float)
     ...
 }}}
+
 
 == Built-In Changes ==
 
  * Have `range()`, `zip()`, `dict.keys()`, `dict.items()`, and `dict.values()` return iterators.
  * Move `compile()`, `intern()` and `id()` to the `sys` module. [[#a 1]]
  * Change `max()` and `min()` to consume iterators.
-
- * Remove `dict.iteritems()`, `dict.iterkeys()`, and `dict.itervalues()`.
-   Alternatively: use `dict.items()`, `dict.keys()`, and `dict.values()` respectively.
- * Remove `apply()`. [[#a 1]]
-   Alternatively: use `f(*args, **kw)`.
- * Remove `xrange()`. [[#a 1]] [[#a 4]]
-   Alternatively: use `range()`.
- * Remove `map()` and `filter()`.  [[#a 1]] [[#a 4]]
-   Alternatively: use list comprehensions.
  * Remove `coerce()` as it is obsolete. [[#a 1]]
+ * Remove `dict.iteritems()`, `dict.iterkeys()`, and `dict.itervalues()`.
+   * Instead: use `dict.items()`, `dict.keys()`, and `dict.values()` respectively.
+ * Remove `apply()`. [[#a 1]]
+   * Instead: use `f(*args, **kw)`.
+ * Remove `xrange()`. [[#a 1]] [[#a 4]]
+   * Instead: use `range()`.
+ * Remove `map()` and `filter()`.  [[#a 1]] [[#a 4]]
+   * Instead: use list comprehensions.
  * Remove `reduce()`. [[#a 1]]
-   Alternatively: use a loop.
+   * Instead: use a loop.
  * Remove `callable()`. [[#a 1]]
-   Alternatively: catch the exception.
+   * Instead: catch the exception.
  * Remove `buffer()`. [[#a 1]] [[#a 2]]
-   Alternatively: use new `bytes` type. 
+   * Instead: use new `bytes` type. 
  * Remove `raw_input()`. [[#a 1]]
-   Alternatively: use `sys.stdin.readline()`.
+   * Instead: use `sys.stdin.readline()`.
  * Remove `input()`. [[#a 1]]
-   Alternatively: use `eval(sys.stdin.readline())`.
+   * Instead: use `eval(sys.stdin.readline())`.
  * Remove `execfile()` and `reload()`.  [[#a 1]]
-   Alternatively: use `exec()`.
+   * Instead: use `exec()`.
+
 
 == Standard Library Changes ==
 
  * Remove `string` module. [[#c 4]]
-   Alternatively: use string methods.
+   * Instead: use string methods.
  * Remove other deprecated modules. [[#c 3]]
  * Remove `sys.exc_type`. [[#a 1]]
-   Alternatively: use `sys.exc_info`.
+   * Instead: use `sys.exc_info`.
+   * Reason: it is not thread safe.
 
-   Reasoning: it is not thread safe.
 
 == Unresolved Issues ==
 
  * `L += x` and `L.extend(x)` are equivalent.
- * Can the order of parameter of the `insert` method be changed so the the index parameter is optional and `list.append` can be removed?
- * What is the status of the `<>` operator?  Answer: it's dead.  (GvR)
+ * Can the parameter order of the `insert` method be changed so the the index parameter is optional and `list.append` may be removed?
+
 
 == References ==
 
