@@ -553,6 +553,53 @@ print "sandbox option",cfgpar.sandbox.get('optional,key,list')
 print "flag option",cfgpar.flag.get() # no optional keys
 }}}
 
+== Round trip with section reorganization, remark retention, and help insertion ==
+
+This is a proposal that is an extension of the improved INI syntax I proposed earlier.  I think it would be pretty easy to provide round trip functionality if I was allowed to order the sections in alphabetical order.  I'd like to propose adding a special <remark> psuedo-option for making section comments.  I would think it best to merge subsections into their parent section if they don't have remarks in them (see example below).  Also, my proposals to date suggest an interface similar to optparse in that options are added to the parser, usually with help text (useful because the configuration parser should be able to dump help to the screen similar to optparse).  As long as this help is available it might as well be inserted into the configuration file on a round trip.  So here is an example:
+
+{{{
+[DEFAULT]
+# this type of comment cannot be round tripped
+<remark> : Comment for default section (this will round trip though)
+
+[SECTION1]
+<remark> : Comment for Section 1
+option1 : value1
+
+[SECTION1.SUBSECTA]
+# notice no <remark> so contents of this section will get merged into 
+# section above with extended section syntax
+option1 : value1a
+
+[SECTION2]
+option2 : value2 
+
+[SECTION2.SUBSECTA]
+# since this section has a remark it will not be merged into Section 2
+<remark> : Comment for Section 2, Subsection A
+}}}
+
+Would round trip to:
+
+{{{
+[DEFAULT]
+<remark> : Comment for default section (this will round trip though)
+
+[SECTION1]
+<remark> : Comment for Section 1
+# Help text will automatically be placed here (like this) for option 1.
+option1 : value1
+option1[SUBSECTA] : value1a
+
+[SECTION2]
+# Help text will automatically be placed here (like this) for option 2.
+option2 : value2 
+
+[SECTION2.SUBSECTA]
+<remark> : Comment for Section 2, Subsection A
+}}}
+
+Feedback is appreciated.  -- Dan.Gass@gmail.com
 
 == Complexity killed the cat! ==
 
