@@ -1,10 +1,6 @@
 = Handling Exceptions =
 
-= Manutenere le Eccezioni =
-
 The simplest way to handle exceptions is with a "try-except" block:
-
-Un semplice modo per manutenere le eccezioni è usare il blocco "try-except" --> "prova all'innfuoridi"
 
 {{{
 #!python
@@ -16,8 +12,6 @@ except ZeroDivisionError:
 }}}
 
 If you wanted to examine the exception from code, you could have:
-
-Se volete esaminare l'eccezione dal codice,guardate qua: 
 
 {{{
 #!python
@@ -31,24 +25,13 @@ print z # output: "integer division or modulo by zero"
 
 == General Error Catching ==
 
-== Prendiamo il controllo generale del codice ==
-
 Sometimes, you want to catch ''all'' errors that could possibly be generated, but usually ''you don't''.In most cases, you want to be as specific as possible (Wiki:CatchWhatYouCanHandle). In the first example above, if you were using a catch-all exception clause and a user presses Ctrl-C, generating a KeyboardInterrupt, you don't want the program to print "divide by zero".
-
-Talvolta,potete prendere "all" tutti gli errori che è possibile generare, ma di solito non è possibile.Nella mag-
-gior parte dei casi,quanto specificate tanto è possibile (Wiki:CatchWhatYouCanHandle). Nel primo caso, se stavate usando una clausola eccezione incontrata e l'utente ha premuto Ctrl-C,generando una KeyboardInterrupt (interruzione
-da tastiera),non desiderate che il programma emetta il messaggio "divide by zero"--> (divisione per zero.)
 
 However, there are some situations where it's best to catch ''all'' errors.
 
-Tuttavia,ci sono alcune situazioni in cui è meglio prendere ''all'' tutti gli errori
-
 For example, suppose you are writing an extension module to a web service. You want the error information to output the output web page, and the server to continue to run, if at all possible. But you have no idea what kind of errors you might have put in your code.
-Per esempio, supponiamo che scriviate un modulo per un servizio web. Vorrete che le informazioni inerenti gli errori sia riportate in una pagina web, e il server continui a girare,se tutto ciò è possibile.Ma voi non avete idea che tipo di errori dovete mettere nbel vs codice.
-  
-
+ 
 In situations like these, you may want to code something like this:
-In una situazio9ne di questo tipo,il codice potrebbe essere simile a questo:
 
 {{{
 #!python
@@ -62,64 +45,35 @@ except: # catch *all* exceptions
 
 MoinMoin software is a good example of where general error catching is good. If you write Moin``Moin extension macros, and trigger an error, Moin``Moin will give you a detailed report of your error and the chain of events leading up to it. Python software needs to be able to catch ''all'' errors, and deliver them to the recipient of the web page.
 
-MoinMoin software è un buon esempio su dove in generale catturare  gli errori. Se scrivte Moin``Moin macro estensione,e diamo avvio ad un errore,Moin''Moin prepareà un dettagliato rapporto circa l'errore e la catena di eventi che conduce a lui. Il software Python deve essere abilitato a catturare tutti gli errori, e li spedisce poi alla pagina web. 
-
 == Finding Specific Exception Names ==
 
-== Ricerca di Nomi Specifici di Eccezioni ==
-
 Standard exceptions that can be raised are detailed at:
-
-Eccezioni Standard che possono essere emesse sono dettaglaite in questo sito:
 
   http://python.org/doc/lib/module-exceptions.html
 
 Look to class documentation to find out what exceptions a given class can raise.
-Osservate la Classe documentazione per trovare che eccezioni una data classe può emeyttere.
 
 = See Also: =
 
-= Vedi Anche =
-
 On this wiki: WritingExceptionClasses, TracebackModule.
-
-Su questa wiki:WritingExceptionClasses, TracebackModule.
 
 For general (non-Python specific) ideas about exceptions, consult Wiki:ExceptionPatterns.
 
-Per idde generali(non specificate in Python) circa le eccezioni,consulatre Wiki:ExceptionPatterns.
-
 = To Write About... =
 
-= Per scrivere sull'argomento......."
-
-  * Give example of IOError, and interpreting the IOError code.
-   
-  * Dammi un esempio di IOError, e interpretiamo il codice di errore
+  * Give example of IOError, and interpreting the IOError code.   
                         
   * Give example of multiple excepts. Handling multiple excepts in one line.
 
-  * Dammi un esempio di eccezioni multiple. Manteniamo le eccezioni multiple in linea
-
   * Show how to use "else" and "finally".
-
-  * Mostra come usare "else" e "finalità"
 
   * Show how to continue with a "raise".
 
-  * Mostra come continuare con un "rialzo" 
-
 = Questions =
-
-= Domande =
 
 == General Error Handling ==
 
-== Manutenzione generale degli errori ==
-
 In the "general error handling" section above, it says to catch all exceptions, you use the following code:
-
-Nella sezione "manutenzione generale degli errori", si è detto che per la cattura degli errori userete questo codice:
 
 {{{
 #!python
@@ -133,8 +87,6 @@ except: # catch *all* exceptions
 
 However, it originally was:
 
-Tuttavia in origine era:
-
 {{{
 #!python
 try:
@@ -145,24 +97,13 @@ except Exception, e:
 
 Someone pointed out that "except" catches more than just "except Exception, e."
 
-Alcune indicano che "except" catturano piu di un semplice "except Exception, e."
-
 ''Why is that the case? What is the difference?''-- LionKimbro
-
-''Perchè è questo il caso??.Qual è la differenza?'' --LionKimbro.
 
 For now (version 2.3) exception doesn't have to be inherited from Exception. Thus plain 'except:' catches all exceptions, not only system. -- MikeRovner [[DateTime(2004-01-19T05:49:19Z)]]
 
-Per ora ( nella ver. 2.3) l'eccezionempm ha ereditato da Exception. Allora pianifichiamo 'except:' catturiamo tutte le eccezioni,non solo quelle di sistema. -- MikeRovner [[DateTime(2004-01-19T05:49:19Z)]]
-
-
 == Getting Useful Information from an Exception ==
 
-== Prendiamo utili Informazioni da una eccezione ==
-
 So, I've got something like:
-
-Cosi si pò avere qualcosa di simile:
 
 {{{
 #!python
@@ -171,13 +112,13 @@ Cosi si pò avere qualcosa di simile:
 
 ...and Python spits back:
 
-... e Python soffia indietro
 {{{
 ValueError: unpack list of wrong size
 }}}
 
 ...and so, you naturally wonder, "Well, what ''was'' in {{{d}}}?"
 
-.... e cosi,naturalmente chiederete, "bene che, cosa 'era' in {{{d}}}?"
-
 You know- you can put a {{{print d}}} in there, and that works. But is there a better, more interesting way to get at that information that people know of?
+
+----
+See also: Italian translation at ManutenereLeEccezioni.
