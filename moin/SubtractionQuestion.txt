@@ -20,4 +20,19 @@ from __future__ import division
 See also this for more info about this and other stumbling blocks:
 http://developers.coedit.net/BeginnerErrorsWithPythonProgramming
 
+----
+
 I am not troubled by the integer division which it seems is what you thought I was asking about. Let me put this in context: The students had an improper fraction, say 25/12. To obtain the whole number part for this fraction you should just be able to do integer division and obtain 2 (12 divides into 25 2 times). This is okay as long as the 25 is positive. However if it is -25/12 Python returns -3 which is not the correct answer for the whole number part of the fraction. It is possible to work around this but I was curious why the Python developers chose to handle negatives in this way. Thanks for any insight anyone might have. Terry S
+
+That is what floor division does, it reduces the value to the next lowest whole number.  If you want to separate the whole number and fractional part, use math.modf:
+{{{
+from __future__ import division
+import math
+print math.modf(25/12)
+--> (0.08333, 2.0)
+print math.modf(-25/12)
+--> (-0.08333, -2.0)
+
+#to just print the whole number as an int:
+print int(math.modf(25/12)[1])
+}}}
