@@ -41,10 +41,10 @@ Other syntax ideas and feature ideas for Python 3.0.
                  index[word].append(line)
 }}}
 
-    ''I definitely agree that this is the right way to go with setdefault.  Note though that setdefault should probably take *args and **kwds parameters so that the following would also be valid: {{{#!python
+    ''I definitely agree that this is the right way to go with setdefault.  Probably when the 'function' keyword argument is supplied, setdefault should take *args and **kwds parameters so that the following would also be valid: {{{#!python
 d.setdefault(function=list, [0]) }}} {{{#!python
 d.setdefault(function=dict, a=0, b=1)
-}}} It'd make the argument parsing a little bit more of a pain, but I think it'd make the function version of setdefault much more flexible. -- StevenBethard''
+}}} The problem with this though is that then the function passed to setdefault can't take keyword parameters named either 'function' or 'value'.  I wonder if it wouldn't be better to replace setdefault with two functions, setdefaultvalue and setdefaultfunction... -- StevenBethard''
 
 
 
