@@ -1,6 +1,7 @@
 Generators are very useful and can help simplify your code and improve its performance.
 
-= simple examples =
+= Examples =
+
 For example, the RangeGenerator can be used to iterate over a large number of values, without creating a massive list (like range would)
 {{{
 #!python
@@ -34,4 +35,36 @@ for i in bounded_squares:
    sum += i
 }}}
 
-= Generators made from classes? =
+to be written: Generators made from classes?
+
+== Links ==
+
+ * [http://www.python.org/peps/pep-0255.html PEP-255: Simple Iterators] -- the original
+ * [http://www-106.ibm.com/developerworks/library/l-pycon.html?n-l-9271 Iterators and Simple Generators]
+ * [http://www-106.ibm.com/developerworks/linux/library/l-cpyiter.html combinatorial functions in itertools]
+ * [http://linuxgazette.net/100/pramode.html Python Generator Tricks] -- various infinite sequences, recursions, ...
+ * [http://www-106.ibm.com/developerworks/linux/library/l-pythrd.html "weightless threads"] -- simulating threads using generators
+ * [http://www-106.ibm.com/developerworks/library/x-tipgenr.html XML processing] -- yes, using generators
+ * [http://c2.com/cgi/wiki?GeneratorsAreNotCoroutines C2:GeneratorsAreNotCoroutines] -- particulars on generators, coroutines, and continuations
+
+= Discussion =
+
+I once saw MikeOrr demonstrate Before and After examples. But, I forget how they worked.
+
+Can someone demonstrate here?
+
+He did something like: Show how a normal list operation could be written to use generators. Something like:
+
+{{{
+#!python
+def double(L):
+    return [x*2 for x in L]
+
+eggs = double([1, 2, 3, 4, 5])
+}}}
+
+...he showed how that, or something like that, could be rewritten using iterators, generators.
+
+It's been a while since I've seen it, I may be getting this all wrong.
+
+-- LionKimbro [[DateTime(2005-04-02T19:12:19Z)]]
