@@ -1,0 +1,27 @@
+== How to expose... ==
+
+=== static class data members ===
+{{{
+object x_class 
+    = class_<X>("X") 
+         .def( ... ) 
+         ... 
+         ; 
+ 
+x_class.attr("fu") = X::fu; 
+x_class.attr("bar") = X::bar; 
+... 
+}}}
+
+=== module level objects ===
+First, create those objects like
+{{{
+object class_X = class_<X>("X");
+object x = class_X();
+}}}
+Second, expose them:
+{{{
+scope().attr("x") = x; // injects x into current scope
+}}}
+By default current scope is module.
+
