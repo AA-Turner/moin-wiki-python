@@ -1,0 +1,168 @@
+= Jonathan Gardner's PyQt Tutorial =
+
+[[TableOfContents]]
+
+== Abstract ==
+
+This tutorial was presented at the 2003 Northwest Linux Fest by Jonathan Gardner (jgardner@jonathangardner.net). Feel free to email him with questions.
+
+We will cover:
+  * Using Qt Designer to generate Qt ui files.
+  * Using pyuic to generate python programs.
+  * Using Qt Signals and Slots in Python.
+  * Creating a simple application to interface with the 'at' program.
+
+== Requirements ==
+
+You will need:
+  * Red Hat 8.0 with the following configuration:
+  * qt-devel RPM properly installed
+  * PyQt-devel RPM properly installed
+
+PyQt works on other systems. This tutorial may or may not work as well. However, I cannot provide all the details on how to get them to work on all the systems that can use PyQt. You are responsible for figuring that out.
+
+You should already know:
+  * How to use a text editor, and how to get that text editor to edit Python code properly.
+  * How to program in Python.
+  * Some basic bash commands.
+  * The basics of Qt programming.
+
+If you haven't fulfilled these requirements, you may have some trouble getting the tutorial to work.
+
+== Using Qt Designer ==
+
+First things first. We'll start where I start. Open up a bash prompt. Start Qt Designer by typing the following command:
+
+  {{{
+$ designer
+}}}
+
+You are presented with Qt designer. Depending on which version you are running, it may appear slightly different.
+
+I won't assume you are totally inept at using Qt Designer. If you are, you can easily read the documentation.
+
+Create a new widget. Name it 'at_auto'. Add some stuff to it:
+
+  * Add a QLineEdit. Name it "command" in the property dialog.
+  * Add a QPushButton. Name it "schedule" in the property dialog. Change its text to "Schedule".
+  * Add a QDateTime. Name it "time" in the property dialog.
+
+Now, rearrange the layout using the Qt layout tools to your heart's content. You may need to use some spacers as well.
+
+Save the file in a project directory for this tutorial. If you haven't already created one, create one called "pyqt_tutorial" or something. Save the file as "at.ui".
+
+== Using pyuic ==
+
+Go back to your bash prompt, or open up a new one. Go into the project directory, and run these commands.
+
+  {{{
+$ pyuic at.ui
+}}}
+
+This command will print out to stdout the generated python file that comes from the Qt ui file. We want to give some permanence to its existence so we run this command.
+
+  {{{
+$ pyuic at.ui > at_auto.py
+}}}
+
+We dump it into at_auto.py. Everytime we change the ui file, we need to regenerate the at_auto.py file. Let's add this command to a makefile.
+
+/!\Tabs are important!
+
+    {{{
+$ cat > Makefile
+at_auto.py : at.ui
+	pyuic at.ui > at_auto.py
+^D
+}}}
+
+Now run the makefile.
+
+    {{{
+$ make
+}}}
+
+Notice that it says something about all the files being up to date. Let's touch at.ui so it appears newer than at_auto.py, and then run make again.
+
+  {{{
+$ touch at.ui
+$ make
+}}}
+
+Now it echos out the commands it runs. You see that it has successfully regenerated at_auto.py.
+
+=== Theory ===
+
+The idea here is that you want the GUI developer to be able to go and make changes to the GUI interface (like moving stuff around) without affecting the logic behind the GUI. So with your setup right now, all the GUI developer has to do is use Qt Designer to change the at.ui file, and then run make to see his changed take effect.
+
+Your make file will get more complicated as you add more files. Be sure to read more about make so that you make good design decisions early on about how to use make properly.
+
+== Running Your Application ==
+
+So we have that at.ui file, and the at_auto.py file. How do we actually run the app?
+
+We have to create at.py. Here is what it will look like.
+
+  {{{
+from qt import *
+from at_auto import at_auto
+
+class at(at_auto):
+    def __init__(self, parent=None, name=None, fl=0):
+        at_auto.__init__(self,parent,name,fl)
+
+if __name__ == "__main__":
+    import sys
+    a = QApplication(sys.argv)
+    QObject.connect(a,SIGNAL("lastWindowClosed()"),a,SLOT("quit()"))
+    w = at()
+    a.setMainWidget(w)
+    w.show()
+    a.exec_loop()
+}}}
+
+Now, run it.
+
+  {{{
+$ python at.py
+}}}
+
+Tada! You have your application.
+
+== Signals and Slots ==
+
+Everything you do from here on out is connecting Signals to Slots. It's pretty easy, which is why I like PyQt.
+
+Python isn't C++. So it has to deal with Signals and Slots in a new way.
+
+First, in Python, anything that is callable is a slot. It can be a bound method, a function, or even a lambda expression. Second, in Python, a signal is just some text that is meaningless.
+
+Let me clarify the distinction between a C++ Signal/Slot and a Python Signal/Slot. It has nothing to do with where the object was created. It has everything to do with where the Signal originated, and where the Slot is located. For instance, a QPushButton has a C++ Signal, "clicked()". If you create your own subclass in Python, called "PyPushButton", it still has a C++ Signal, "clicked()". If you created a new Signal in Python, called "GobbledyGook()", then it is a Python Signal, because nothing in C++ even knows of its existence.
+
+When you bind a signal to a slot, you can do one of the following:
+
+  * Bind a C++ Signal to a Python slot
+
+    You'll do this all day long. This is done by making the call as follows:
+
+    {{{
+QObject.connect(some_object, SIGNAL('toggled(bool)'), some_python_callable)
+}}} 
+
+  * Bind a C++ Signal to a C++ Signal
+
+    You won't do this very often, but it comes in handy.
+
+    {{{
+QObject.connect(some_object, SIGNAL('toggled(bool)'), some_object, SLOT('the_slot(bool)'))
+}}} 
+
+  * Bind a Python Signal to C++ or Python Slot
+
+    You won't be using Python Signals too often, but this is how to do it. Basically, you imagine up a new signal name. Then you change "SIGNAL" above to "PYSIGNAL".
+
+    If you are using a lot of Python signals, it may make some sense to bypass the Qt signalling library and use your own. If you plan on porting the code to C++ one day, that won't make any sense at all. I have done this because I found the syntax a bit burdensome, and the debugging difficult.
+
+Our application is going to respond to only one signal: the "Schedule" button being pressed. What it will do is run the "at" command with appropriate arguments.
+
+< More later... >
