@@ -4,21 +4,21 @@ I've been assigned the job of creating a test harness for a voice over IP (VOIP)
 
 They have several models of SIP phone.  All of them that I'll be testing have serial port headers inside, which I use by opening them up, running a ribbon cable out to a small interface port which then leads to a standard RS-232 DB-9 serial connector.  These phones are embedded systems (some PowerPC, some MIPS) running Linux and some proprietary code.  Through the serial port I can simulate key presses (dial numbers, put calls on hold, transfer them, access the menus, etc.) and I can read the LCD screen's contents.  I have a few other features (set some LEDs, set some debugging options, even access a BusyBox shell.
 
-Now the brute force approach would be to simply code up scripts that send sequences of keys and read back screens.  I was able to pull up the Python interpreter in the first minutes after I had my workstation set up with my serial ports plugged into one of these phone; and send keys.  Reading was a little more difficult (I had to get [http://pyserial.sourceforge.net/ PySerial], which took all of five minutes to locate, download and install).  So, within
+Now the brute force approach would be to simply code up scripts that send sequences of keys and read back screens.  I was able to pull up the Python interpreter in the first minutes after I had my workstation set up with my serial ports plugged into a couple of these phones; and send keys.  Reading was a little more difficult (I had to get [http://pyserial.sourceforge.net/ PySerial], which took all of five minutes to locate, download and install).  So, within
 ten minutes of my first day on the job I had a scriptable interface working.
 
-Over the next couple of hours a wrote a crude shellf for sending commands and key sequences to the phone, and reading back raw serial responses and screen back.  While crude this shell did over command editing and history ([http://docs.python.org/lib/module-readline.html readline]) with automatically persistent history, it saves logs of all output to the phone (seperate logs for raw serial commands and for the key sequences which are embedded therein) and all input read back from the phone (again in separate streams, for raw characters read from the device and for each screenshot I take), and it allows me to insert comments into the history and log files (so I can take notes in the shell that I can correlate to specific entries in the logs).  Also my crude interactive shell uses the [http://docs.python.org/lib/module-optparse.html optparse] module to initialize my serial connection (different phones have different speeds and are connect to different serial ports --- I have an 8-port Moxa board installed on my Linux box).  I also played a littled with [http://docs.python.org/lib/module-ConfigParser.html ConfigParser] so I could store most of the connection details and log file names in an .ini file and just call my script with a label representing which phone/port I want to play with.
+Over the next couple of hours a wrote a crude shell (in Python) for sending commands and key sequences to the phone, and reading back raw serial responses and screens back.  While crude this shell does offer command editing and history (via [http://docs.python.org/lib/module-readline.html readline]) with automatically persistent history, it saves logs of all output to the phone (seperate logs for raw serial commands and for the key sequences which are embedded therein) and all input read back from the phone (again in separate streams, for raw characters read from the device and for each screenshot I take), and it allows me to insert comments into the history and log files (so I can take notes in the shell that I can correlate to specific entries in the logs).  
 
-So that was only about four hours of scripting.  My boss was impressed, but really it's only about 150 lines of code and the modules, PySerial, readline, and ConfigParser are really doing all of the hard work.  I'm not so easily impressed with myself.  That was just some throwaway scripting to help me understand the
-tools.  There's no design, and I didn't see an easy way to use the shell's artifacts (log files) to automate any sort of playback.  It isn't even suitable
-for doing things like: add 100 entries to the phone's built-in address book, validate that they're all there, ensure that it gives this particular error when
-you try to add another.  (I wrote that up as another script, which is still semi-blind and offers almost no code reuse).
+Also my crude interactive shell uses the [http://docs.python.org/lib/module-optparse.html optparse] module to initialize my serial connection (different phones have different speeds and are connected to different ports --- I have an 8-port Moxa board installed on the Linux desktop workstation).  I also played a littled with [http://docs.python.org/lib/module-ConfigParser.html ConfigParser] so I could store most of the connection details and log file names in an .ini file and just call my script with a label representing which phone/port I want to play with.
+
+So that was about four hours of scripting.  My boss was impressed, but really it's only about 150 lines of code. PySerial, readline, and ConfigParser are really doing all of the work.  I'm not so easily impressed with myself.  That was just some throwaway scripting to help me understand the
+tools.  There's no design, and I didn't see an easy way to use this shell's artifacts (log files) to automate any sort of playback.  Also a lack of loop and condition handling makes it unsuitable for doing things like adding 99 entries to the phone's built-in address book, validate that they're all there, ensure that it gives this particular error when you try to add another, etc.  (I wrote that up as another, stand alone, script, which is still semi-blind and offers almost no code reuse).
 
 My point in posting all this is to solicit advice on a robust design for a real test harness.  I'm reasonably good at scripting but not experienced in design and have almost no formal CS training.
 
 I've been looking at packages like [http://pexpect.sourceforge.net/ PExpect] (''Expect'' for Python), and at the [http://docs.python.org/lib/module-doctest.html doctest] and [http://docs.python.org/lib/module-unittest.html unittest] standard libraries, as well as some of the discussions around [http://c2.com/cgi/wiki?TestingFramework c2.com:TestingFrameWork] for inspiration.
 
-One think I've started doing is writing some psuedo-Python-code of what I might like my tests to look to a colleague who was charged with writing more of them.  At first I thought of something that wasn't code at all but something like:
+One think I've started doing is writing some psuedo-Python-code. These show what I might like my tests to look to a colleague who was charged with writing more of them.  At first I thought of something that wasn't code at all but something like:
 
 {{{
 >> 1234 Menu Down Down Enter 12*Down Enter Enter Esc
@@ -30,8 +30,7 @@ One think I've started doing is writing some psuedo-Python-code of what I might 
 >> Enter
 }}}
 
-(Simple send this, expect to see that sequences).  However, I realized that this would be far to limiting.  I need to be able to do loops, create
-macros, and create higher level methods that incorporate sequences, even conditionals of these primitives.  Also I'm sure that there are many undiscovered requirements that will need to be implemented.  So I scrapped that idea before coding any of it (though my throwaway shell actually did output files similar to this).
+(Simple "send this," and "expect that" sequences).  However, I realized that this would be far too limiting.  I need to be able to do loops, handle conditions, and create higher level methods that build on these primitives.  Also I'm sure that there are many undiscovered requirements that will need to be implemented.  So I scrapped that idea before coding any of it (though my throwaway shell does output files similar to this).
 
 Then I thought about creating a class and using it something like:
 
@@ -48,8 +47,11 @@ if not tst.screen("# some screen substring or regex"):
 # ...
 }}}
 
-This a bit better.  I can also implemeent methods like '''`PhoneTest.setFactoryDefaults()`''' and '''`PhoneTest.selectMenu()`''' and I can have the PhoneTest class instantiate and contain a Phone object which abstracts some things (like the fact that accessing the menus on some models takes two keys rather than one key, and that the "Enter" key symbol is called "OK" on it, etc).  Doing a loop (adding 99 phone entries) is pretty easy in this model.
-I can just:
+This a bit better.  I can also implement methods like '''`setFactoryDefaults()`''' and '''`selectMenu()`''' and I can have the PhoneTest class instantiate and contain a Phone object which abstracts some things (like the fact that accessing the menus on some models takes two keys rather than one key, and that the "Enter" key symbol is called "OK" on it, etc).  (My function to send key sequences parses abstract common key notation into a dictionary of dictionaries keyed by each phone model and returning the real key symbols and sequences, it has to do things like press 2 three times for a letter "c" and detect if the next letter/digit is on the same button to pause for a full second to make the phone "take" that letter).
+
+Obviously this exposes our responses and screen captures to Python's own conditional handling.
+
+In this model, doing loops (adding 99 phone entries) is pretty easy:
 
 {{{
 #!python
@@ -63,10 +65,9 @@ for i in range(99):
 
 ... ''etc.''
 
-However, it's still not very good.  Obviously I have to report all my results (text output for now, later posting to a MySQL database).  I'lll also need  options for debugging and logging (shades of AspectOrientedProgramming?).  I suppose the PhoneTest object can also contain a reporting object to abstract out that.
+However, it's still not very good.  Obviously I have to report all my results (text output for now, later posting to a MySQL database).  I'll also need  options for debugging and logging (shades of AspectOrientedProgramming?).  I suppose the PhoneTest object can also contain a reporting object to handle that abstractly.
 
-My main objection to this interface is that all the conditional logic is exposed.  It seems silly to repeatedly type: `tst.key(...); if tst.screen(...) ...`
-and it clutters the flow of the test case.  Of course I can hide `tst.fail()` inside `tst.screen()` (and `tst.expect()`)
+My main objection to this interface is that '''all''' the conditional logic is exposed.  It seems silly to repeatedly type: `tst.key(...); if tst.screen(...) ...` and it clutters the flow of the test case.  It's hot data driven at all. Of course I can hide `tst.fail()`, and `tst.expect()` inside `tst.screen()` 
 
 Then I'm back to something more linear like:
 
@@ -86,16 +87,17 @@ for i in range(99):
 
 ... where all the failures are implicit.
 
-For some reason this just looks '''wrong''' to me.
+For some reason this just looks '''wrong''' to me.  (It would violate the principle of least surprise to a Python coder, hiding all of the
+reporting logic inside the objects and having success determined implicitly by fall through)!
 
 Another problem is that some of these screens will have variable data embeded in them (time of day, connection results, ''etc.'' and I need more flexible ways of determining if a given screen (or raw text response) is actually a success or failure.  Also I have to be account for differences in screen size
 among the models of phone.
 
-Meanwhile this format looks almost like the first one, with ''<<<'' and ''>>>'' replaced by ''tst.key()'' and ''tst.screen()'' respectively.  In other words for the simple case it's just more cluttered, all to add the ability to put in the `for` loop.
+Meanwhile this format looks almost like the first one, with ''<<'' and ''>>'' replaced by ''tst.key()'' and ''tst.screen()'' respectively.  In other words for the simple case it's just more cluttered.
 
 A thought I had to address one of those issues involves building and maintaining a dictionary of screens for each phone model.  Then in the the `tst.screen('XXX')` calls 'XXX' becomes a key into the dictionary (or I just extend the `.screen` method to accept a string, a regex, '''or''' a key='keyName' keyword argument).
 
-If I use a keyword argument and since I usually need sequences of "send this" and "expect that" I might change things more by implementing a `.__call__()` methode which looks something like:
+If I use keyword arguments and since I usually need sequences of "send this" '''and''' "expect that" I might change things more by implementing a `.__call__()` methode which looks something like:
 
 {{{
 #!python
@@ -111,10 +113,10 @@ for i in range(99):
 
 It's more terse but it doesn't actually look less cluttered.  I also still don't like hiding the failure/reporting so deeply inside the class methods.
 
-One of my objectives is to write a test harness that others will be using --- they they'll be coding up their own test cases into after I've moved on.  Another is to creating something that's reasonably similar to what we'll be using to test other interfaces (these phonse have web interfaces as well as the serial ones I've described) and to test functionality beyond just what the screen displays in response to various button events and other commands.  For example I know that later test cases will require me to initiate calls from one device to another and interact with the receiving device to see that the call was actually receieved.  I'll also probably need to correlate some of my regressions to specific network capture behaviors.  So I might need to use [http://pycap.sourceforge.net/ PyCap] (libpcap interface), for example.
+One of my objectives is to write a test harness that others will be using --- that they'll be coding up their own test cases into long after I've moved on.  Another is to creating something that's reasonably similar to what we'll be using to test other interfaces (these phonse have web interfaces as well as the serial ones I've described) and to test functionality beyond just what the screen displays in response to various button events and other commands.  For example I know that later test cases will require me to initiate calls from one device to another and interact with the receiving device to see that the call was actually receieved.  I'll also probably need to correlate some of my regressions to specific network capture behaviors.  So I might need to use [http://pycap.sourceforge.net/ PyCap] (libpcap interface), for example.
 
 (There's all sorts of work that's been done on HTTP automation in Python from the basic [http://docs.python.org/lib/module-socket.html socket], and
-[ http://docs.python.org/lib/module-httplib.html httplib] standard libraries through the [http://wwwsearch.sourceforge.net/ ClientForm] and
+[http://docs.python.org/lib/module-httplib.html httplib] standard libraries through the [http://wwwsearch.sourceforge.net/ ClientForm] and
 Client''''''Cookie modules and [http://www.puffinhome.org/docs.htm Puffin] up through Frank Cohen's [http://www.pushtotest.com/ TestMaker] (in [http://www.jython.org Jython]).
 
 The other thing I don't like about this last speculative psuedo-code is that it's still too cluttered for the most common case.  I don't see a way for tests to be more data driven and less entwined in the code.
@@ -153,3 +155,5 @@ So, that's an overview of my thoughts.  These are possible approaches.  Of cours
 Unfortunately none of what I'm coding here can be released to open source (grump) but I hope that the discussion will still be entertaining and maybe even a little enlighteing for all.
 
 I'm hoping others will chew on these notions and spit on them mercilessly.  Of course I'm also hoping for some pointers to similar code; tools, or just a really good guide to test case/harness/framework design.
+
+In any event, unless there's an outcry against my verbosity, I'll update this page as I work on the problem (and as I incorporate any good suggestioins).
