@@ -48,7 +48,7 @@ After the @decorator syntax was "accepted", lots of people threw up alarms and a
  * - Punctuation-based syntax raises Perlfears.
  * - Does not nessecarily 
     
-'''[decorator] "list syntax"'''
+'''[decorator] "list-before-def syntax"'''
  * + C# like
  * + Can be made backwards compatible-ish, with a "hack"
  * + Doesn't cause breakage in existing code-searching tools
@@ -56,6 +56,15 @@ After the @decorator syntax was "accepted", lots of people threw up alarms and a
  * - EuroPython didn't like it ( why? )
  * - The backwards compatability wouldn't be portable to Jython
  * - Looks like a normal expression, but has "magic" behavior of altering a function object
+
+'''def function() [decorator]: "list-after-def syntax"'''
+ * + Also somewhat C#-like
+ * + Was a "community favorite" at one time
+ * + Clearly a part of function declaration
+ * + Looks ok for simple decorators such as classmethod
+ * + Won't break simplistic code analyzers or grep for function def
+ * - Long lists of decorators/arguments cause ugly line wraps
+ * - Guido didn't like (maybe because of line wrap issue?) 
     
 '''def decorator function() "inline? syntax?"'''
  * + Simple
@@ -73,5 +82,5 @@ After the @decorator syntax was "accepted", lots of people threw up alarms and a
  * + The benefits of "as" without the renaming oddity.
  * + Reads as, "with decorator define function", which seems accurate. Such as, "with staticmethod define foobar(baz)". 
  * - Adds a new keyword?    
-
+ * - Guido is reserving "with" for the usage it has in VB, Turbo Pascal, et al
     
