@@ -2,7 +2,7 @@
 A framework for WebProgramming.
 === Masthead ===
 
-   URL::  http://www.python.org/pypi?:action=display&name=WebStack&version=0.3
+   URL::  [http://www.python.org/pypi?:action=display&name=WebStack&version=0.3]
    version:: 0.3 (''[[Date(2004-04-26T00:00:00)]]'')
    licence:: Old-style Python Licence
    platforms:: Where most of the supported frameworks can run
@@ -10,13 +10,21 @@ A framework for WebProgramming.
 
 === Deployment Platforms ===
 
-Supports CGI for the most basic hosting environments, BaseHTTPServer and Twisted for standalone applications, Webware and mod_python for Apache environments. Java Servlet support is present but not functioning.
+Supports CGI for the most basic hosting environments, BaseHTTPServer and Twisted for standalone applications, Webware and mod_python for Apache environments. Java Servlet support is present but not currently functioning.
 
 === Suitability ===
 
+WebStack applications should have the luxury of being unaware of their deployment environment. Suitability should really only be an issue in selecting the underlying framework for such an environment.
+
 === Development Interfaces ===
 
+The WebStack API is a servlet-like API reminiscent of the request objects from mod_python but has much in common with Webware's HTTPRequest and HTTPResponse objects, amongst other sources of influence. Users of the WebStack API could concentrate on building higher-level frameworks which expose different development paradigms (eg. presentation-driven development), although they could also develop applications directly for the API.
+
+Unlike a number of frameworks, WebStack delegates the process of interpreting URLs to other components. Therefore, no "object publishing", "context" or "deployment descriptor" antics are involved.
+
 === Environment Access ===
+
+Applications and frameworks built on WebStack will typically import Python modules and packages to access services, files and so on.
 
 === Session, Identification and Authentication ===
 
@@ -24,12 +32,18 @@ Uses the underlying framework support for users and cookies - sessions will be a
 
 === Persistence Support ===
 
+WebStack does not attempt to cover persistence functionality, although session support will be added in a later release.
+
 === Presentation Support ===
 
-WebStack does not attempt to cover functionality above basic Web transactions.
+WebStack leaves the issue of resource presentation to higher-level frameworks and applications.
 
 === InTheirOwnWords ===
+
+Although there seems to be some demand for more coherency in Python Web development, many of the discussions around standard APIs seem to have ended with no apparent resolution. I thought it would be more effective to show that existing frameworks could be unified under a common API, thus demonstrating that many of these frameworks do not offer compelling advantages in their APIs for typical Web applications, and that the process of selecting a framework should be focused on criteria such as deployment, execution model and hosting availability. Ultimately, the choice of framework should not be unduly constrained by the availability of applications, just because the developers of any given application just happened to have a particular framework installed. -- Paul Boddie
 
 === Comments ===
 
 === Hosting ===
+
+It should be possible to deploy a WebStack-compliant application, along with the WebStack package, in a hosting environment providing one of the frameworks or technologies supported by WebStack.
