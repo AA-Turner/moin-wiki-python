@@ -1,0 +1,24 @@
+== Memory consumption ==
+
+In general, a wrapped C++ object with a corresponding Python object is
+the size of:
+  * a new-style class (derived from 'object' in Python) instance plus
+  * the extra size required to allow variable-length data in the instance, plus
+  * the size of the C++ object, plus
+  * the size of a ''vtable'' pointer, plus
+  * a pointer to the C++ object's instanceholder, plus
+  * zero or more bytes of padding required to ensure that the instanceholder is properly aligned.  
+
+You can see this in {{{boost/python/object/instance.hpp}}}. Most Python
+objects are represented by {{{instance<value_holder<T> >}}}, for some C++ class T.
+
+All the code for implementing C++ object wrappers is in
+{{{libs/python/src/object/class.cpp}}}.  Instance dictionaries are created
+only "on demand", the first time the instance's __dict__ attribute is
+accessed (see instance_get_dict).
+
+If your C++ data structure contains pointers or smart pointers, you
+can arrange for Python objects to be created which only embed those
+pointers (instance<pointer_holder<Ptr> >). These Python objects will
+be in existence only as long as your Python code holds a reference to
+them.
