@@ -1,0 +1,155 @@
+= Test Harness Design =
+
+I've been assigned the job of creating a test harness for a voice over IP (VOIP) company's product line.  I've been asked to focus just on the SIP/RTP (ethernet connected) phones first.
+
+They have several models of SIP phone.  All of them that I'll be testing have serial port headers inside, which I use by opening them up, running a ribbon cable out to a small interface port which then leads to a standard RS-232 DB-9 serial connector.  These phones are embedded systems (some PowerPC, some MIPS) running Linux and some proprietary code.  Through the serial port I can simulate key presses (dial numbers, put calls on hold, transfer them, access the menus, etc.) and I can read the LCD screen's contents.  I have a few other features (set some LEDs, set some debugging options, even access a BusyBox shell.
+
+Now the brute force approach would be to simply code up scripts that send sequences of keys and read back screens.  I was able to pull up the Python interpreter in the first minutes after I had my workstation set up with my serial ports plugged into one of these phone; and send keys.  Reading was a little more difficult (I had to get [http://pyserial.sourceforge.net/ PySerial], which took all of five minutes to locate, download and install).  So, within
+ten minutes of my first day on the job I had a scriptable interface working.
+
+Over the next couple of hours a wrote a crude shellf for sending commands and key sequences to the phone, and reading back raw serial responses and screen back.  While crude this shell did over command editing and history ([http://docs.python.org/lib/module-readline.html readline]) with automatically persistent history, it saves logs of all output to the phone (seperate logs for raw serial commands and for the key sequences which are embedded therein) and all input read back from the phone (again in separate streams, for raw characters read from the device and for each screenshot I take), and it allows me to insert comments into the history and log files (so I can take notes in the shell that I can correlate to specific entries in the logs).  Also my crude interactive shell uses the [http://docs.python.org/lib/module-optparse.html optparse] module to initialize my serial connection (different phones have different speeds and are connect to different serial ports --- I have an 8-port Moxa board installed on my Linux box).  I also played a littled with [http://docs.python.org/lib/module-ConfigParser.html ConfigParser] so I could store most of the connection details and log file names in an .ini file and just call my script with a label representing which phone/port I want to play with.
+
+So that was only about four hours of scripting.  My boss was impressed, but really it's only about 150 lines of code and the modules, PySerial, readline, and ConfigParser are really doing all of the hard work.  I'm not so easily impressed with myself.  That was just some throwaway scripting to help me understand the
+tools.  There's no design, and I didn't see an easy way to use the shell's artifacts (log files) to automate any sort of playback.  It isn't even suitable
+for doing things like: add 100 entries to the phone's built-in address book, validate that they're all there, ensure that it gives this particular error when
+you try to add another.  (I wrote that up as another script, which is still semi-blind and offers almost no code reuse).
+
+My point in posting all this is to solicit advice on a robust design for a real test harness.  I'm reasonably good at scripting but not experienced in design and have almost no formal CS training.
+
+I've been looking at packages like [http://pexpect.sourceforge.net/ PExpect] (''Expect'' for Python), and at the [http://docs.python.org/lib/module-doctest.html doctest] and [http://docs.python.org/lib/module-unittest.html unittest] standard libraries, as well as some of the discussions around [http://c2.com/cgi/wiki?TestingFramework c2.com:TestingFrameWork] for inspiration.
+
+One think I've started doing is writing some psuedo-Python-code of what I might like my tests to look to a colleague who was charged with writing more of them.  At first I thought of something that wasn't code at all but something like:
+
+{{{
+>> 1234 Menu Down Down Enter 12*Down Enter Enter Esc
+<< "Add a Phone Entry\nName:"
+>> "John" Enter
+<< "Address:"
+>> SIP:169.254.1.1
+<< "Speed Dial Entry:"
+>> Enter
+}}}
+
+(Simple send this, expect to see that sequences).  However, I realized that this would be far to limiting.  I need to be able to do loops, create
+macros, and create higher level methods that incorporate sequences, even conditionals of these primitives.  Also I'm sure that there are many undiscovered requirements that will need to be implemented.  So I scrapped that idea before coding any of it (though my throwaway shell actually did output files similar to this).
+
+Then I thought about creating a class and using it something like:
+
+{{{
+#!python
+# ...
+tst = PhoneTest(port='/dev/ttyM0', speed=9600, ...)
+tst.send("# a raw text command")
+if not tst.expect("# some raw response"):
+   tst.fail("some failure message")
+tst.key("#keys parsed by name")
+if not tst.screen("# some screen substring or regex"):
+   tst.fail("some other failure message")
+# ...
+}}}
+
+This a bit better.  I can also implemeent methods like '''`PhoneTest.setFactoryDefaults()`''' and '''`PhoneTest.selectMenu()`''' and I can have the PhoneTest class instantiate and contain a Phone object which abstracts some things (like the fact that accessing the menus on some models takes two keys rather than one key, and that the "Enter" key symbol is called "OK" on it, etc).  Doing a loop (adding 99 phone entries) is pretty easy in this model.
+I can just:
+
+{{{
+#!python
+# ....
+for i in range(99):
+  tst.menuSelect("Add Phonebook Entry")
+  if tst.screen() != "Name: ":
+     tst.fail(tst.screen())
+# ...
+}}}
+
+... ''etc.''
+
+However, it's still not very good.  Obviously I have to report all my results (text output for now, later posting to a MySQL database).  I'lll also need  options for debugging and logging (shades of AspectOrientedProgramming?).  I suppose the PhoneTest object can also contain a reporting object to abstract out that.
+
+My main objection to this interface is that all the conditional logic is exposed.  It seems silly to repeatedly type: `tst.key(...); if tst.screen(...) ...`
+and it clutters the flow of the test case.  Of course I can hide `tst.fail()` inside `tst.screen()` (and `tst.expect()`)
+
+Then I'm back to something more linear like:
+
+{{{
+#!python
+# ...
+tst = PhoneTest(port='/dev/ttyM0', speed=9600, ...)
+tst.send("# a raw text command")
+tst.expect("# some raw response") # fails if response not found
+tst.key("#keys parsed by name")
+tst.screen("# some screen substring or regex"):
+for i in range(99):
+  tst.menuSelect("Add Phonebook Entry")
+  tst.screen() != "Name: "
+# ...
+}}}
+
+... where all the failures are implicit.
+
+For some reason this just looks '''wrong''' to me.
+
+Another problem is that some of these screens will have variable data embeded in them (time of day, connection results, ''etc.'' and I need more flexible ways of determining if a given screen (or raw text response) is actually a success or failure.  Also I have to be account for differences in screen size
+among the models of phone.
+
+Meanwhile this format looks almost like the first one, with ''<<<'' and ''>>>'' replaced by ''tst.key()'' and ''tst.screen()'' respectively.  In other words for the simple case it's just more cluttered, all to add the ability to put in the `for` loop.
+
+A thought I had to address one of those issues involves building and maintaining a dictionary of screens for each phone model.  Then in the the `tst.screen('XXX')` calls 'XXX' becomes a key into the dictionary (or I just extend the `.screen` method to accept a string, a regex, '''or''' a key='keyName' keyword argument).
+
+If I use a keyword argument and since I usually need sequences of "send this" and "expect that" I might change things more by implementing a `.__call__()` methode which looks something like:
+
+{{{
+#!python
+# ...
+tst = PhoneTest(port='/dev/ttyM0', speed=9600, ...)
+tst( send=" a raw text command"         expect="some response")
+tst( key="key sequence",                screen='screenName')
+for i in range(99):
+  tst.menuSelect("Add Phonebook Entry" screen=re.compile('some regexp'))  # dynamically use string or regex object
+  
+# ...
+}}}
+
+It's more terse but it doesn't actually look less cluttered.  I also still don't like hiding the failure/reporting so deeply inside the class methods.
+
+One of my objectives is to write a test harness that others will be using --- they they'll be coding up their own test cases into after I've moved on.  Another is to creating something that's reasonably similar to what we'll be using to test other interfaces (these phonse have web interfaces as well as the serial ones I've described) and to test functionality beyond just what the screen displays in response to various button events and other commands.  For example I know that later test cases will require me to initiate calls from one device to another and interact with the receiving device to see that the call was actually receieved.  I'll also probably need to correlate some of my regressions to specific network capture behaviors.  So I might need to use [http://pycap.sourceforge.net/ PyCap] (libpcap interface), for example.
+
+(There's all sorts of work that's been done on HTTP automation in Python from the basic [http://docs.python.org/lib/module-socket.html socket], and
+[ http://docs.python.org/lib/module-httplib.html httplib] standard libraries through the [http://wwwsearch.sourceforge.net/ ClientForm] and
+Client''''''Cookie modules and [http://www.puffinhome.org/docs.htm Puffin] up through Frank Cohen's [http://www.pushtotest.com/ TestMaker] (in [http://www.jython.org Jython]).
+
+The other thing I don't like about this last speculative psuedo-code is that it's still too cluttered for the most common case.  I don't see a way for tests to be more data driven and less entwined in the code.
+
+Another idea I've been toying with is creating a mess of classes and subclasses.  There's be a `TestCase` class with various descendents for different classes of tests; a `Phone` class with descendents for each model of phone, a `TestBaseException` and many descendents for each type of test failure.  Each descendent of the `TestCase` would implement a `.run()` method and would `raise` exceptions from the `TestBaseException` family.  I suppose that model would appeal to the OO purist in some way.  However I'm not seeing how I'd actually instantiate and call the `.run()` methods of each of these subclasses.
+
+{{{
+#!python
+tst = Add99Entries(model='xx' port='/dev/ttyM0')
+tst.run()
+tst2 + RegressBug999()  # settings pulled from INI file or database?
+# ...
+}}}
+
+I don't see it.  This isn't data driven at all.  Where to I maintain the list of available tests and the sequencing?
+
+I've also thought of something like:
+
+{{{
+#!python
+# ...
+try:
+   tst.idle()
+   tst.keys('some key squence')
+   tst.screen('screenName')
+   # ...
+except TestCaseError, e:
+   tst.fail(e.args)
+# ...
+}}}
+
+... which looks reasonable. It doesn't completely hide the failures.  At least it makes it obvious to a Python coder that these `tst` methods are expected to `raise` errors; and it lets me catch different subclasses of errors and handle them differently (with multiple `except` clauses ordered from most specific towards more general).  That will be import, for example, since I will have pre-condition and setup methods and exceptions that should be raised and reported to the operator but should '''not''' be recorded as bugs to the developers; they are errors in the test harness or hardware set-up rather than bugs in the target of our testing.
+
+So, that's an overview of my thoughts.  These are possible approaches.  Of course I've only just started.  Meanwhile I will re-write my interactive shell script (probably using the [http://docs.python.org/lib/module-cmd.html Cmd] class or something out of [http://ipython.scipy.org/ IPython]).  I will create my core `TestCase` and `Phone` classes (along with `Feedback` and `Reporter` classes), and start creating tables of keys, menus and screens for each phone;  and methods to load, access, compare, and manage them.
+
+Unfortunately none of what I'm coding here can be released to open source (grump) but I hope that the discussion will still be entertaining and maybe even a little enlighteing for all.
+
+I'm hoping others will chew on these notions and spit on them mercilessly.  Of course I'm also hoping for some pointers to similar code; tools, or just a really good guide to test case/harness/framework design.
