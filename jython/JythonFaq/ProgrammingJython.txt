@@ -1,0 +1,122 @@
+= Programming Jython =
+
+[:../:FAQ Home]
+
+----
+
+'''Why can't I multiply inherit from two Java classes?'''
+
+In earlier versions of JPython, you actually could. This was deliberately disabled in 1.1 for a variety of good reasons. For a detailed discussion on this issue see the following archive messages:
+
+  http://www.python.org/pipermail/jpython-interest/1998-April/000213.html
+  http://www.python.org/pipermail/jpython-interest/1999-June/001874.html
+
+Note that you can still multiply inherit from any number of Python classes.
+
+----
+
+'''Why does dir(someJavaObject) return the empty list?'''
+
+Because the built-in dir() function returns a list of names called from the object's __dict__, __methods__, and __members__ attributes. In Python, an instance's methods live in the instance's class's dictionary, so dir(someJavaObject.__class__) would return a list of the method names (although only for the direct class, not for any base classes).
+
+----
+
+'''I'm trying to execute a 'protected' or 'private' Java Instance Method or attribute in a Java package. How can I get access?'''
+
+By default, as in Java, these methods are protected from external access, but there may be reasons, such as test scaffolding scripts, that this feature is not wanted. In the [jython home]/registry file:
+
+{{{
+  # Setting this to false will allow Jython to provide access to
+  # non-public fields, methods, and constructors of Java objects.
+  python.security.respectJavaAccessibility = false
+}}}
+
+----
+
+'''Can I reload a java class as is possible for python modules?'''
+The support for reloading java classes through reload(java-class), is disabled. The reload(java-class) only worked when the java class was a standalone class without any dependencies on other java classes (except the system class). When there was more than one class involved, the simple reload(java-class) no longer worked.
+
+Now on the other hand Jython 2.0 comes with some alternative (experimental) user-level support for java classes reloading ("jreload" module).
+
+See: http://www.jython.org/docs/jreload.html
+
+Further Jython 2.0 internal changes enable the expert user to play with reloading and class-loaders as he would from native java. 
+
+----
+
+'''How can I access Java protected (static) members from a Jython subclass?'''
+
+The short answer: you can't. At least not without setting the registry option python.security.respectJavaAccessibility to false.
+
+It is difficult to add in a nice manner. The problem is a bit like this:
+
+A normal (public) static method is from jython called on the parent java class:
+
+   javaclass.method()
+
+Such a call does not originate from the subclass, but from internal reflection code in jython. If we want to add support for calling protected static methods from a jython subclass, the call will have to originate from the subclass (ie. the proxy class), so we will have to generate a referring method in subclass proxy like:
+
+{{{#!java
+  public static void method() {
+     javaclass.method()
+  }
+}}}
+(with the right return type and throws clauses) and the jython subclass will have to call the method on its own class, not the java class.
+
+----
+ 
+'''How can I use a Java null value in Jython?'''
+ 
+A java null is turned into a Python None value.
+
+{{{
+  import java
+  >>> h = java.util.Hashtable()
+  >>> print h.get("abc")
+  None
+  >>> if h.get("abc") is None:
+  ...   print "null returned" 
+  ... 
+  null returned 
+  >>>    
+}}}
+
+----
+
+'''Where's the -O switch?'''
+
+Jython 2.0 does not have a -O command-line switch.
+
+Assigning __debug__=0 has been used to get -O behavior from things like "assert", but such assignments to __debug__ are considered an error, and in the future, will raise an exception. __debug__ is supposed to be a read-only variable. 
+
+----
+
+----
+
+'''The Jython's os module is missing some functions, why?'''
+
+Python's and Jython's os modules differ necessarily because of differences Java imposes on natvie system access. For example, Java does not have a chdir equivalent, so it does not exist in Jython's os.
+
+There is an alternative os module that does provide additional functionality, and it is the jnios module found at:
+
+    http://sourceforge.net/projects/jnios
+
+The jnios module replaces the default os module with a Java/JNI implementation of Python's os and posix modules.
+
+Jython CVS also has more functions in the os module (like system and the popen* functions). See ''The Jython's os module is missing some functions, why?'' below.
+
+----
+
+'''The Jython's os module is missing some functions, why?'''
+
+Use the os.system or os.popen* functions from Jython CVS.
+
+To use these functions, you'll need javaos.py, javashell.py, and popen2.py:
+
+    http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/jython/jython/Lib/
+
+You'll need to delete the 'from __future__ import division' line from javaos.py (this is a Python 2.2 feature not supported in Jython 2.1)
+
+Alternatively, you could use java.lang.Runtime.exec() directly, but the os functions handle a lot of complexity for you. 
+
+---
