@@ -270,7 +270,7 @@ implicitly_convertible<auto_ptr<MyClassWrap>, auto_ptr<ClassWrap> >();
 And you still write the thin wrapper as described above.
 
 
-=== Python object from exposed C++ object ===
+=== python object from derived C++ object ===
 The first, but incomplete, way to do this is to create an object with :{{{
 void MyFct( MyClass* my_obj )
 {
@@ -292,3 +292,57 @@ void MyFct( MyClass* my_obj )
 The python object must not be keep outside the execution of {{{python_fct}}}. If you do, then you have to take extra care about the lifetime of the Python object and the underlying C++ object for there are no lifetime guards possible (the original object being a C++ one, you have no automatic way to tie the lifetime of this object with the lifetime of the Python wrapper).
 
 Now, if you can copy the object and use the copy instead of a reference, you can change the ResultConverter and use {{{return_by_value}}} instead of {{{reference_existing_object}}}.
+
+=== python object from extended C++ object ===
+We still want the previous behaviour, but now the C++ class may be extended in Python. We so have a class wrapper :{{{
+class MyClassWrap : public MyClass
+{
+public:
+  MyClassWrap(PyObject *self_, ...) : MyClass(...), self(self_) { ... }
+  virtual bool virtual_method() { return call_method<bool>(self, "virtual_method"); }
+  ...
+  PyObject *self;
+  ...
+};
+}}}
+
+Let's say you have a C++ method, calling Python with the object. If you create the function as :{{{
+bool my_fct(MyClass* my_obj)
+{
+  bool result = extract<bool>( python_function(my_obj) );
+}
+}}}
+Boost will create a new MyClass wrapper and you won't have access to the Python methods. To access the Python object you have to explicitly send the Python wrapper boost gave you at the object creation :{{{
+bool my_fct(MyClass* my_obj)
+{
+  MyClassWrap *wrap_obj = dynamic_cast<MyClassWrap*>(my_obj);
+  object final_obj;
+  if( wrap_obj != NULL ) // Means we have a Python-defined object
+    {
+      final_obj = object(handle<>(borrowed(wrap_obj->self)));
+    }
+  else
+    {
+      final_obj = my_obj;
+    }
+  return extract<bool>( python_function(final_obj) );
+}
+}}}
+
+Of course, if you also have  C++ classes derived from MyClass, you'll have to implement the function as :{{{
+bool my_fct(MyClass* my_obj)
+{
+  MyClassWrap *wrap_obj = dynamic_cast<MyClassWrap*>(my_obj);
+  object final_obj;
+  if( wrap_obj != NULL ) // Means we have a Python-defined object
+    {
+      final_obj = object(handle<>(borrowed(wrap_obj->self)));
+    }
+  else
+    {
+      reference_existing_object::apply<const Base*>::type converter;
+      final_obj = object(handle<>(convert(my_obj)));
+    }
+  return extract<bool>( python_function(final_obj) );
+}
+}}}
