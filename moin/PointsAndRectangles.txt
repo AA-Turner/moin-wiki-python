@@ -70,12 +70,12 @@ class Point:
         '''Clockwise rotation about origin, theta in Degrees.  Returns the new position as Point()'''
         # Err..this math is not exactly readable.  
         # It is elementary though, involving only Pythogoras and basic trig.
-	  r2 = sqr(self.x)+sqr(self.y)
-	  tmp = math.tan(theta*math.pi/90 + math.atan(self.x/self.y))
-	  ret = Point()
-	  ret.x = math.sqrt(r2/(1+tmp*tmp))
-	  ret.y = ret.x * tmp
-	  return ret
+        r2 = sqr(self.x)+sqr(self.y)
+        tmp = math.tan(theta*math.pi/90 + math.atan(self.x/self.y))
+        ret = Point()
+        ret.x = math.sqrt(r2/(1+tmp*tmp))
+        ret.y = ret.x * tmp
+        return ret
     def RotateAbout(self,OtherPoint,theta):
         '''Clockwise rotation about another point.  Returns a Point() at new position'''
         tmpx = OtherPoint.x
