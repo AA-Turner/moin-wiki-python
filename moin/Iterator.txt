@@ -1,6 +1,10 @@
-An '''iterator''' is an object that implements {{{__iter__}}} and and {{{next}}}.
+An '''iterable''' object is an object that implements {{{__iter__}}}. {{{__iter__}}} is expected to return an '''iterator''' object.
 
-You can use them in for loops, and you can use them to construct lists.
+An '''iterator''' is an object that implements {{{next}}}.  {{{next}}} is expected to return the next element of the iterable object that returned it, and raise a {{{StopIteration}}} exception when no more elements are available.
+
+In the simplest case the iterable will implement {{{next}}} itself and return {{{self}}} in {{{__iter__}}}.
+
+You can use iterables in for loops, and you can use them to construct lists.
 
 == Example Iterator ==
 
@@ -10,7 +14,7 @@ Here is an iterator that returns a random number of 1's:
 #!python
 import random
 
-class RandomIterator:
+class RandomIterable:
     def __iter__(self):
         return self
     def next(self):
@@ -21,11 +25,15 @@ class RandomIterator:
 
 '''Q:''' Why is {{{__iter__}}} there, if it just returns self?
 
-'''A:''' This is so that the iterator can be used in a for...in loop.
+'''A:''' This is a very simple case. More complex iterables may very well return separate iterator objects.
+
+'''Q:''' When would I need an extra iterator?
+
+'''A:''' Iterator will typically need to maintain some kind of position state information (like the index of the last element returned or the like). If the iterable maintained that state itself, it would become inherently non-reentrant (meaning you could use it only one loop at a time).
 
 {{{
 #!python
-for eggs in RandomIterator():
+for eggs in RandomIterable():
     print eggs
 }}}
 
@@ -33,19 +41,19 @@ You can also use it in list construction:
 
 {{{
 #!python
->>> list(RandomIterator())
+>>> list(RandomIterable())
 [1]
->>> list(RandomIterator())
+>>> list(RandomIterable())
 []
->>> list(RandomIterator())
+>>> list(RandomIterable())
 [1, 1, 1, 1, 1]
->>> list(RandomIterator())
+>>> list(RandomIterable())
 [1]
 }}}
 
 ...both of these uses require {{{__iter__}}}.
 
-An object isn't an iterator unless it provides ''both'' methods. If it ''does'' provide these methods, then it's an iterator.
+An object isn't iterable unless it provides {{{__iter__}}}. And for an object to be a valid iterator, it must provide {{{next}}}.
 
 == Links ==
 
