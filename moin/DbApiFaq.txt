@@ -1,6 +1,7 @@
 These are the frequently asked questions from the DB-SIG mailing list.
 
-1. How do I pass parameters to the cursor.execute method?
+[[TableOfContents]]
+== How do I pass parameters to the cursor.execute method? ==
 
 Don't, use the '%' concatenation operator, pass them as a series of extra parameters. For instance
 
@@ -11,3 +12,9 @@ May do what you want, but more by accident than design. If you change it to;
 {{{>>> cursor.execute("SELECT * FROM my_table WHERE my_column = %s", "column_value") }}}
 
 Then the DB-API module will make sure your value is correctly escaped and turned into an object appropriate for the database. 
+
+/!\ Drivers differ in the way the parameters are passed to .execute ()
+  * a list: {{{.execute ("... col = ?", ["value"])}}}
+  * variable arguments: {{{.execute ("... col = ?", "value")}}}
+  * a dictionary: {{{.execute ("... col = :arg", {'arg': "value"})}}}
+  * keyword args: {{{.execute ("... col = :arg", arg = "value")}}}
