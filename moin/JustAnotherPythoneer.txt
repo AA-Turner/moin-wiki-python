@@ -18,16 +18,16 @@ includes the maxims:[[BR]]
 ''There should be one-- and preferably only one --obvious way to do it.''[[BR]]
 
 
-The net effect is that there is a limited set of good solutions for a given problem, and user are strongly encouraged to use them.
+The net effect is that there is a limited set of good solutions for a given problem, and users are strongly encouraged to use them.
 
-While Python attempts to discourage bad practices, and its indentation-based block structure and limited anonymous blocks (lambdas) make certain techniques difficult, it is possible to produce many more bad solutions than good for a given problem.  This page attempts to demonstrate this for the benefit of non-users, and should be linked to when incorrect claims of Python's limitations are made.
+While Python attempts to discourage bad practices, and its indentation-based block structure and limited anonymous blocks (lambdas) make certain techniques difficult, it is possible to produce many more bad solutions than good for a given problem.
 
 Please Feel Free to extend with more examples.
 
 
 == The Problem ==
 
-Q: How do I write code for a signature block (up to four lines of 78 characters each) that prints "Just another Pythoneer" to screen?
+Your signature block (up to four lines of 78 characters each) needs code that prints "Just another Pythoneer".
 
 
 == The Limited Set of Good Solutions ==
@@ -136,7 +136,7 @@ print
 
 {{{
 #!python
-import string, re
+import re
 a = ["Pythoneer", "extra", "Just", "words", "another", "Hello!"]
 m = re.match("(?P<three>\d+).(?P<one>\d+).(?P<two>\d+)", "1A5l2")
 print a[m.start("one")], a[m.start("two")], a[m.start("three")]
@@ -177,9 +177,9 @@ Print().Just.another.Pythoneer()
 {{{
 #!python
 #Sometimes_code_does_not_really_need_to_have_syntacally_significant_whitespace
-G,U,N=range(3),"Why don't I use Java or Perl?",lambda(x),y:reduce(x.__add__,y)
-print"".join([U[P:H+P]for(P,H)in(zip([16,12,8,19,6,5,8,1,25,23,2,8,1,5,14,25],
-N(list,N(tuple,[([D],N(list,[[1+C%2]*(C+1)for(C)in(G)]))for(D)in(G)])[1:])))])
+g,u,n=range(3),"Why don't I use Java or Perl?",lambda(x),y:reduce(x.__add__,y)
+print"".join([u[P:H+P]for(H,P)in(zip(n(list,n(tuple,[([d],n(list,[[1+c%2]*(c+1
+)for(c)in(g)]))for(d)in(g)])[1:]),[16,12,8,19,6,5,8,1,25,23,2,8,1,5,14,25]))])
 }}}
 
 {{{
@@ -243,6 +243,59 @@ print "I'm just another Pythoneer".split(" ",1)[1].capitalize()
 #!python
 print u"Whfg nabgure Clgubarre".encode('rot13')
 }}}
+
+{{{
+#!python
+import platform as p; d=[list(x)for x in open(p.__file__[:-1])]; a=d[28]+d[12]
+for f,t in zip([0,5,7,8,10,12,19,20,21,22],[15,6,9,14,19,41,25,24,23,99]):
+    del a[f:t]; a[8]=a[8].lower()
+print "".join(a)
+}}}
+
+{{{
+#!python
+d,n=dict(zip("0123456789ABx"," aehnosturyPJ")), 10157833755785421529629225
+print "".join([d[c] for c in str(hex(n))[:-1]]).strip()
+}}}
+
+{{{
+#!python
+try: __import__("Just another Pythoneer")
+except ImportError, m: print str(m)[-22:]
+}}}
+
+{{{
+#!python
+class JAPy(int):
+    def __str__(self):
+        return "%s"*5%("Just",chr(self),"another", chr(self), "Pythoneer")
+print JAPy(32)
+}}}
+
+{{{
+#!python
+class JAPy(int): pass
+def s(s): s+=1; return "Just" + chr(s) + "another" + chr(s) + "Pythoneer"
+n, JAPy.__str__ = JAPy(31), s
+print n
+}}}
+
+{{{
+#!python
+class JAPy: pass
+def i(self,x="Just another Pythoneer"): pass
+def s(self): return self.__init__.func_defaults[0]
+print JAPy.__dict__.update({"__init__":i,"__str__":s}) or JAPy()
+}}}
+
+{{{
+#!python
+class func_defaults:
+    func_defaults = "Just another Pythoneer";func_defaults=lambda \
+    func_defaults = func_defaults:func_defaults.func_defaults.func_defaults[0]
+print func_defaults().func_defaults()
+}}}
+
 == Credits ==
 AndrewDalke[[BR]]
 HansNowak[[BR]]
