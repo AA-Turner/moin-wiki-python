@@ -98,4 +98,21 @@ Someone pointed out that "except" catches more than just "except Exception, e."
 
 For now (version 2.3) exception doesn't have to be inherited from Exception. Thus plain 'except:' catches all exceptions, not only system. -- MikeRovner [[DateTime(2004-01-19T05:49:19Z)]]
 
+== Getting Useful Information from an Exception ==
 
+So, I've got something like:
+
+{{{
+#!python
+(a,b,c) = d
+}}}
+
+...and Python spits back:
+
+{{{
+ValueError: unpack list of wrong size
+}}}
+
+...and so, you naturally wonder, "Well, what ''was'' in {{{d}}}?"
+
+You know- you can put a {{{print d}}} in there, and that works. But is there a better, more interesting way to get at that information that people know of?
