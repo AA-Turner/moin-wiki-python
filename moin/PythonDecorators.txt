@@ -250,7 +250,8 @@ def bar(low,high):
  * + Solves line wrap problem with above proposal
  * 0 There is a hack that implements this now [http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/286147 here].
  * - Guido's europython presentation said this didn't win out, but not why
- * - Adds 'magic' behavior to a normal python expression (lists).
+ * - Adds 'magic' behavior to a normal python expression (lists). Not exactly true: there is nothing magic in string when it's used in docstring - it's a normal string in the "magic" place.
+ * - Compatibility issue: program that is working under 2.4 will not work properly under earlier versions without any explanation (old syntax compatible decorators will not blow in your face)
  * 0 Perhaps decorators should be allowed before or after the docstring.  If you have to choose, I'd choose making it before the docstring.
 
 '''E. pie decorator at top of function body syntax'''
