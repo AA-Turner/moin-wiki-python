@@ -22,7 +22,7 @@ cleaned up.
 
 I will get the data-structures
 cookbook translated first and then go back to clean up the code.  Please
-send me any comments or suggestions.  
+feel free to fix and update.  
 
 
 Also, since I have been using Python for far less time than Perl, there
@@ -40,6 +40,9 @@ Things I would like to add to this phrasebook are:
 
 Thanks to David Ascher, Guido van Rossum, Tom Christiansen, Larry Wall
 and Eric Daniel for helpful comments.
+
+
+#//TODO: Fix sorting - should be using DSU and/or sorted() where appropriate
 
 
 == Simple types ==
@@ -403,16 +406,17 @@ sub somefunc {  my ($i) = shift;  "$i";  }
 
 {{{
 def printSep ():
-  print '=' * 60
+    print '=' * 60
 
 def printLoL (s, lol):
-  print s
-  for l in lol:
-    print string.join (l)
-  printSep()
+    print s
+    
+    for l in lol:
+        print " ".join(l)
+    printSep()
 
 def somefunc(i):
-  return repr(i)  # string representation of i (aka `i`)
+    return repr(i)  # string representation of i (aka `i`)
 
 }}}
 
@@ -431,10 +435,7 @@ to a list of lists of strings, you can use a function like:
 # str_conv takes a list of lists of arbitrary objects, and returns a
 # list of lists of their string representations.
 def str_conv(lol):
-    result = []
-    for l in lol:
-        result.append(map (repr, l))
-    return result
+    return [repr(elem) for elem in lol]
 }}}
 
 
@@ -542,17 +543,11 @@ printLoL ("read from a file: ", \@LoL);
 }}}
 
 {{{
-f = open ('cookbook.data1')
 LoL = []
-while (1):
-  line = f.readline()
-  if not line : break
-  LoL.append (string.split (line))
-
+for line in open('cookbook.data1'):
+    LoL.append(line[:-1].split())
 printLoL ('read from a file: ', LoL)
-
 }}}
-
 
 Unless you expect to be reading huge files, or want feeback as you
 read the file, it is easier to slurp the file in in one go.
@@ -562,9 +557,6 @@ context-dependent effect.  If the handle is read from in a scalar
 context, like `$a = <STDIN>;`, one line is read.  If it is
 read in a list context, like `@a = <STDIN>;`the whole file is
 read, and the call evaluates to a list of the lines in the file.
-
-In Python, you read one line from a file with `f.readline()`
-and the entire file as a list of lines with `f.readlines()`.
 
 
 
@@ -584,8 +576,8 @@ printLoL ("slurped from a file: ", \@LoL);
 }}}
 
 {{{
-f = open ('cookbook.data1')
-LoL = map (string.split, f.readlines())
+
+LoL = [line[:-1].split() for line in open('cookbook.data1')]
 printLoL ("slurped from a file: ", LoL)
 
 }}}
@@ -607,7 +599,7 @@ Thanks to Adam Krolnik for help with the perl syntax here.
         $LoL[$i] = [ somefunc($i) ];
     }
 
-printLoL ("filled with somefunc:", \@LoL);
+printLoL("filled with somefunc:", \@LoL);
 
 }}}
 
@@ -615,12 +607,21 @@ printLoL ("filled with somefunc:", \@LoL);
 
 LoL = [0] * 10  # populate the array -- see comment below
 
-for i in range (10):
+for i in range(10):
   LoL[i] = [ somefunc(i) ]
 
-printLoL ('filled with somefunc:', LoL)
+printLoL('filled with somefunc:', LoL)
 
 }}}
+
+Alternatively, you can use a list comprehension:
+{{{
+
+LoL = [somefunc(i) for i in range(10)]
+printLoL('filled with somefunc:', LoL)
+
+}}}
+
 
 In python:
 
@@ -649,7 +650,7 @@ for i in range (10):
   tmp = somefunc(i)
   LoL[i] = [tmp]
 
-printLoL ('filled with somefunc via temps:', LoL)
+printLoL('filled with somefunc via temps:', LoL)
 
 }}}
 
@@ -713,7 +714,7 @@ printLoL ('after appending to first element:', \@LoL);
 {{{
 
 LoL = LoLsave[:]  # start afresh
-LoL[0] = LoL[0] + ["wilma", "betty"]
+LoL[0] += ["wilma", "betty"]
 printLoL ('after appending to first element:', LoL)
 
 }}}
@@ -767,43 +768,18 @@ printSep();
 
 {{{
 # upcase the first letter
-s = LoL[1][1]
-i = regex.search ('\w', s)
-if i != -1:
-  LoL[1][1] = string.upper (s[:i+1]) + string.lower (s[i+1:])
+LoL[1][1] = LoL[1][1].capitalize()
 print 'element 1, 1 is now', LoL[1][1]
 printSep()
 
 }}}
 
-
-Perl has a specific operation for capitalizing a string (I am not sure
-exactly what the definition of this is), whereas python does not.  This
-example seems quite tortuous in python, but I am not sure that it is a
-very common thing to want to do.  If you often want to capitalize the
-first letter of a string, define a function like:
-
-{{{
-def capitalize(s):
-  i = regex.search ('\w', s)
-  if i != -1:
-    result = string.upper (s[:i+1]) + string.lower (s[i+1:])
-  else:
-    result = s
-  return result
-}}}
-The above then becomes:
-{{{
-LoL[1][1] = capitalize (LoL[1][1])
-print 'element 1, 1 is now', LoL[1][1]
-printSep()
-}}}
 
 Perl's regexp matching and substitution is enormously powerful; see
 especially the new syntax for comments and whitespace inside regular
 expressions. 
 
-
+In python, string methods are often used where perl would use a regex.  
 
 
 
@@ -828,7 +804,7 @@ printSep();
 {{{
 
 for a in LoL:
-  print "\t [ %s ]," % string.join(a)
+  print "\t [ %s ]," % " ".join(a)
 printSep()
 
 }}}
@@ -854,7 +830,6 @@ printSep();
 for i in range(len(LoL)):
   print "\t [ %s ]," % string.join(LoL[i])
 printSep()
-
 
 }}}
 
@@ -888,19 +863,12 @@ printSep();
 
 {{{
 
-for i in range (len(LoL)):
-  for j in range (len(LoL[i])):
-    print 'elt %d %d is %s' % (i, j, LoL[i][j])
+for (i, mylist) in enumerate(LoL):
+  for (j, elem) in enumerate(mylist):
+    print 'elt %d %d is %s' % (i, j, elem)
 printSep()
 
 }}}
-
-
-{{{
-
-
-}}}
-
 
 
 
@@ -914,9 +882,10 @@ printSep();
 
 }}}
 
-{{{
 
-def printLine(l) : print string.join (l)
+{{{
+# This is legal but Do Not Do This
+def printLine(l) : print " ".join(l)
 map (printLine, LoL)
 printSep()
 
@@ -936,14 +905,10 @@ printSep();
 }}}
 
 {{{
-# Can't do it without horrible kludges, as far as I know.
-# print is a statement, not a function, so you can't directly use
-# a lambda expression.  Suggestions?  For now, same as above.
 
-def printLine(l) : print string.join (l)
-map (printLine, LoL)
+# This is legal but Do Not Do This
+map(lambda x: sys.stdout.write(" ".join(x)), LoL)
 printSep()
-
 
 }}}
 
@@ -955,13 +920,6 @@ lead to namespace clutter.
 
 In perl, a function can be defined inside another function, but it is
 defined in the namespace of the current package.
-
-
-
-
-
-
-
 
 
 == Hashes/dictionaries of lists ==
@@ -1012,22 +970,20 @@ sub get_family{
 }}}
 
 {{{
-import string, regex, regsub
-
 def printSep ():
-  print '=' * 60
+    print '=' * 60
 
 def printHoL(s, hol):
-  print s
-  ks = hol.keys(); ks.sort()
-  for k in ks:
-    print k, ':', string.join(hol[k])
-  printSep()
+    print s
+    ks = hol.keys();
+    ks.sort()
+    for k in ks:
+        print k, ':', " ".join(hol[k])
+    printSep()
 
 def get_family(group):
-  group = regsub.sub ('s$', '', group)
-  group = string.upper (group[:1]) + string.lower (group[1:])
-  return ["Mr-" + group, "Mrs-" + group, group+ "-Jr"]
+  group = group.title()             # correctly capitalize 'barrett-browning'
+  return ["Mr-" + group, "Mrs-" + group, group + "-Jr"]
 
 }}}
 
@@ -1149,45 +1105,23 @@ printHoL ('read from file cookTest.2', \%HoL);
 {{{
 
 HoL = {}
-f = open ('cookTest.2')
-while 1:
-  s = f.readline()
-  if not s: break
-  n = string.find (s, ':')
-  if n < 0 : continue # bad line
-  key = string.strip (s[:n])  
-  val = string.split (s[n+1:]) # n+1 to leave out the colon
-  HoL[key] = val
+for line in open('cookTest.2'):
+    try:
+        surname, people = line.split(":", 1)    
+    except ValueError:                 # can't split on ":" so no ":" in the line
+        continue
+    HoL[surname] = people.split()
 
 printHoL ('read from file cookTest.2', HoL)
 
 }}}
+
 
 Note that the perl hash is initialized with an empty ''list'', not
 an empty hash reference (`{ }`).  Writing
 {{{
 %HoL = {}
 }}}
-
-Obviously, the python section could be done more concisely, for example
-eliminating temporary vars key and val, but this would make 
-it pretty impenetrable.
-
-The python section could be written using regular expressions:
-
-{{{
-prog = regex.compile("\([^:]*\):\(.*\)")
-while 1:
-  s = f.readline()
-  if not s: break
-  if prog.match(s) >= 0:
-    key, val = s.group(1, 2)
-    HoL[key] = val
-}}}
-
-
-
-
 
 
 ==== Reading into a hash of lists from a file with temporaries ====
@@ -1211,36 +1145,18 @@ printHoL ('read from cookTest.3', \%HoL);
 {{{
 
 HoL = {}
-f = open ('cookTest.3')
-while 1:
-  line = f.readline()
-  if not line : break
-  n = string.find (line, ':')
-  if n < 0 : continue
-  who, rest = line[:n], line[n+1:]  # n+1 skips the colon
-  fields = string.split (rest)
-  HoL[who] = fields
+for line in open('cookTest.3'):
+    try:
+        n = line.index(":")
+    except ValueError:         # ":" not found
+        continue
+    who, rest = line[:n], line[n+1:]  # n+1 skips the colon
+    fields = rest.split()
+    HoL[who] = fields
 
 printHoL ('read from cookTest.3', HoL)
 
 }}}
-
-
-??? points out that, arguably, it makes more sense to say:
-{{{
-n = string.find (s, ':')
-if n < 0: continue
-}}}
-
-rather than
-{{{
-n = string.find (s, ':')
-if n == -1: continue
-}}}
-
-since it is the sign of `n` that is special.
-
-
 
 
 
@@ -1264,7 +1180,7 @@ printHoL ('filled by get_family', \%HoL);
 {{{
 
 HoL = {}
-for group in "simpsons", "jetsons", "flintstones":
+for group in ("simpsons", "jetsons", "flintstones"):
     HoL[group] = get_family(group)
 
 printHoL ('filled by get_family', HoL)
@@ -1272,10 +1188,11 @@ printHoL ('filled by get_family', HoL)
 }}}
 
 
-The python section could have been written:
+The python section could [but should NOT] have been written:
 {{{
 HoL={}
-def set(group, hol=HoL): hol[group] = get_family(group)
+def set(group, hol=HoL): 
+    hol[group] = get_family(group)
 map(set, ("simpsons", "jetsons", "flintstones" ))
 
 printHoL ('filled by get_family', HoL)
@@ -1315,7 +1232,7 @@ printHoL ('by get_family with temps', \%HoL);
 {{{
 
 LoL = {}
-for group in ( "simpsons", "jetsons", "flintstones" ):
+for group in ("simpsons", "jetsons", "flintstones"):
   members = get_family(group)
   HoL[group] = members
 
@@ -1343,8 +1260,8 @@ printSep();
 
 {{{
 
-HoL['flintstones'] = HoL['flintstones'] + ['wilma', 'betty']
-print string.join (HoL['flintstones'])
+HoL['flintstones'] += ['wilma', 'betty']
+print " ".join(HoL['flintstones'])
 printSep()
 
 }}}
@@ -1422,8 +1339,8 @@ printHoL ('after modifying an element', \%HoL);
 }}}
 
 {{{
-HoL['simpsons'][1] = string.upper (HoL['simpsons'][1][0]) + \
-                     HoL['simpsons'][1][1:]
+#Normally .title() would be more appropriate - "smith-jones" => "Smith-Jones"
+HoL['simpsons'][1] = HoL['simpsons'][1].capitalize()   
 
 printHoL ('after modifying an element', HoL)
 
@@ -1456,9 +1373,10 @@ printSep();
 
 {{{
 
-k = HoL.keys(); k.sort()
+k = HoL.keys(); 
+k.sort()
 for family in k:
-  print '%s: %s' % (family, string.join (HoL[family]))
+    print '%s: %s' % (family, " ".join(HoL[family]))
 printSep()
 
 }}}
@@ -1487,12 +1405,13 @@ printSep();
 
 {{{
 
-k = HoL.keys(); k.sort()
+k = HoL.keys(); 
+k.sort()
 for family in k:
-  print 'family: ',
-  for i in range (len (HoL[family])):
-    print '%d = %s' % (i, HoL[family][i]),
-  print
+    print 'family: ',
+    for (i, member) in enumerate(HoL[family]):
+      print '%d = %s' % (i, member),
+    print
 printSep()
 
 }}}
@@ -1514,13 +1433,13 @@ foreach $family ( sort { @{$HoL{$b}} <=> @{$HoL{$a}} } keys %HoL ) {
 
 {{{
 
-HoL['simpsons'] = HoL['simpsons'] + ['Lisa']
+HoL['simpsons'] += ['Lisa']
 def cmpNumberMembers(a,b):
-  return - cmp (len (HoL[a]), len (HoL[b]))
+  return - cmp(len(HoL[a]), len(HoL[b]))
 k = HoL.keys()
 k.sort(cmpNumberMembers)
 for family in k:
-  print "%s:" % family, string.join (HoL[family])
+    print "%s:" % family, " ".join(HoL[family])
 
 }}}
 
@@ -1556,13 +1475,11 @@ foreach $family ( sort { @{$HoL{$b}} <=> @{$HoL{$a}} } keys %HoL ) {
 {{{
 
 k = HoL.keys()
-k.sort(lambda a, b: cmp (len (HoL[b]), len (HoL[a])))
+k.sort(lambda a, b: cmp (len(HoL[b]), len(HoL[a])))
 for family in k:
   members = HoL[family]
   members.sort()
-  print "%s:" % family, string.joinfields (members, ", ")
-
-
+  print "%s: %s" % (family, ", ".join(members))
 }}}
 
 
@@ -1609,15 +1526,16 @@ import sys,string,regsub
 def printSep (): print '=' * 60
 
 def printLoH(s,loh):
-  def printH (h):
-    print "["
-    keys = h.keys(); keys.sort()
-    for k in keys:
-      print '  %s => %s' % (k, h[k])
-    print "]"
-  print s
-  map(printH, loh)
-  printSep()
+    def printH (h):
+        print "["
+        keys = h.keys();
+        keys.sort()
+        for k in keys:
+            print '  %s => %s' % (k, h[k])
+        print "]"
+    print s
+    map(printH, loh)
+    printSep()
 }}}
 
 
@@ -1718,28 +1636,17 @@ printLoH ('after reading from file cooktest.4', LoH);
 }}}
 
 {{{
-file = open ("cooktest.4")
 LoH = []
-while 1:
-  line = file.readline()
-  if not line: break
-  rec = {}
-  for f in string.split (line):
-    [key, value] = string.splitfields (f, '=')
-    rec[key] = value
-  LoH.append (rec)
+for line in open("cooktest.4")
+    rec = {}
+    for field in line.split():
+        key, value = field.split('=', 1)
+        rec[key] = value
+    LoH.append (rec)
 
 printLoH ('after reading from file cooktest.4', LoH)
 
 }}}
-
-The behaviour of the python and perl programs is not quite the same in
-the face of errors in the input format, as ??? points out:
-
-    A field of the form `Fred=Barney=Mickey` (probably a mistake)
-    will result in key="Fred" and value="Barney=Mickey" in Perl but an
-    exception about the size of  the lists on the splitfields line in Python.
-
 
 ==== Reading a list of hashes from a file without temporaries ====
 
@@ -1756,23 +1663,24 @@ printLoH ('direct read from file', \@LoH);
 }}}
 
 {{{
-# I don't know how to do this.  
-# For now, same as previous.
-
-file = open ("cooktest.4")
+# This builds a list of (key, value) pairs, and then creates the
+# dictionary from those.  A temporary pairs is used for readability
 LoH = []
-while 1:
-  line = file.readline()
-  if not line: break
-  rec = {}
-  for f in string.split (line):
-    [key, value] = string.splitfields (f, '=')
-    rec[key] = value
-  LoH.append (rec)
+for line in open("cooktest.4")
+    pairs = [field.split("=", 1) for field in line.split()]
+    LoH.append(dict(pairs))
 
 printLoH ('direct read from file', LoH)
 }}}
 
+If you really want no temporaries at all, you could (but shouldn't) use the one line list comprehension (line breaks for legibility):
+{{{
+LoH = [dict([field.split("=", 1) 
+             for field in line.split()])
+                 for line in open("cooktest.4")]
+
+printLoH ('direct read from file', LoH)
+}}}
 
 
 
@@ -1898,13 +1806,7 @@ printLoH ('generated from function calls with no temps', \@LoH);
 
 {{{
 
-LoH = []
-f = open ("cooktest.4")
-LoH = []
-while 1:
-  line = f.readline()
-  if not line: break
-  LoH.append (parsepairs(line))
+LoH = [parsepairs(line) for line in open("cooktest.4")
 
 printLoH ('generated from function calls with no temps', LoH)
 
@@ -1961,12 +1863,7 @@ printSep();
 LoH[0]["LEAD"] = "fred"
 print (LoH[0]["LEAD"])
 
-a = LoH[1]["LEAD"]
-b = string.upper (a[0])
-c = a[1:]
-d = b + c
-LoH[1]["LEAD"] = d
-# LoH[1]["LEAD"] = string.upper(LoH[1]["LEAD"][0]) + LoH[1]["LEAD"][1:]
+LoH[1]["LEAD"] = LoH[1]["LEAD"].capitalize()
 print (LoH[1]["LEAD"])
 
 printSep()
@@ -2003,7 +1900,8 @@ for $href ( @LoH ) {
 
 for href in LoH:
   print "{",
-  keys = href.keys(); keys.sort()
+  keys = href.keys();
+  keys.sort()
   for role in keys:
     print "%s=%s" % (role, href[role]),
   print "}"
@@ -2036,11 +1934,12 @@ for $i ( 0 .. $#LoH ) {
 {{{
 
 for i in range(len(LoH)):
-  print i, "is {",
-  keys = LoH[i].keys(); keys.sort()
-  for role in keys:
-    print "%s=%s" % (role, LoH[i][role]),
-  print "}"
+    print i, "is {",
+    keys = LoH[i].keys();
+    keys.sort()
+    for role in keys:
+        print "%s=%s" % (role, LoH[i][role]),
+    print "}"
 
 }}}
 
@@ -2066,7 +1965,8 @@ for $i ( 0 .. $#LoH ) {
 {{{
 
 for i in range(len(LoH)):
-  keys = LoH[i].keys(); keys.sort()
+  keys = LoH[i].keys();
+  keys.sort()
   for role in keys:
     print "elt", i, role, "is", LoH[i][role]
 
@@ -2127,14 +2027,12 @@ MainLoop;
 
 top = Tk()
 def buttonFunction () :
-  print 'Hello, world'
-  sys.exit (-1)
+    print 'Hello, world'
+    sys.exit (-1)
   
 hello = Button (top, {'text' : 'Hello, world', 'command' : buttonFunction})
 hello.pack()
 top.mainloop()
 
 }}}
-
-
 
