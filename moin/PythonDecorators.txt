@@ -334,8 +334,7 @@ def bar(low,high):
  * - Compatibility issue: program that is working under 2.4 will not work properly under earlier versions without any explanation (old syntax compatible decorators will not blow in your face)
  * 0 Perhaps decorators should be allowed before or after the docstring.  If you have to choose, I'd choose making it before the docstring.
  * - No implementation currently exists.
- * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important
-external properties of the function." [http://mail.python.org/pipermail/python-dev/2004-August/047279.html]
+ * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [http://mail.python.org/pipermail/python-dev/2004-August/047279.html]
 
 '''E1. pie decorator at top of function body syntax'''
 {{{
@@ -351,8 +350,7 @@ def bar(low,high):
  * Same as above but with pie syntax.
  * Could use @doc too as a docstring alternative
  * - No implementation currently exists.
- * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important
-external properties of the function." [http://mail.python.org/pipermail/python-dev/2004-August/047279.html]
+ * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [http://mail.python.org/pipermail/python-dev/2004-August/047279.html]
 
 '''E2. vbar decorator at top of function body syntax'''
 {{{
@@ -393,8 +391,9 @@ def longMethodNameForEffect(longArgumentOne=None,
  * - The key with "|" on it is often in an awkward location on laptop keyboards
  * 0 Perhaps decorators should be allowed before or after the docstring.  If you have to choose, I'd choose making it before the docstring.
  * - No implementation currently exists.
- * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important
-external properties of the function." [http://mail.python.org/pipermail/python-dev/2004-August/047279.html]
+ * - When using just one bar, it isn't noticable enough.  It seems more a part of the actual decorator function name than something demarking the function. 
+ * - When using multiple decorators, the pattern formed by the vertical bars draws the eyes too much and makes it hard to focus on the signature.
+ * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [http://mail.python.org/pipermail/python-dev/2004-August/047279.html]
 
 '''E3. vbar decorator after arg'''
 {{{
@@ -484,6 +483,8 @@ Same pros and cons as @decorator, but additionally:
  * - Most characters (including pipe) already have a meaning.  Ending an expression at the linebreak will probably keep these from becoming ambiguous, but ... that gets fragile.
  * - For some fonts, "|" looks similar to "I" or "l"; but code highlighting would remove this problem.
  * - The key with "|" on it is often in an awkward location on laptop keyboards
+ * - When using just one bar, it isn't noticable enough.  It seems more a part of the actual decorator function name than something demarking the function. 
+ * - When using multiple decorators, the pattern formed by the vertical bars draws the eyes too much and makes it hard to focus on the signature.
 
 '''I. angle brackets decorator syntax'''
 {{{
