@@ -8,13 +8,14 @@ Some ideas:
  * Add a module of statistical and reduction functions:  stddev, average,
  nlargest, nsmallest, product, etc.
 
- * Examine two optimizations proposed by Neal Norwitz:
-
-   + Add gotos from opcodes that set "why" since their jump target is
-   known in advance
+ * Examine optimizations proposed by Neal Norwitz and Michael Hudson
 
    + Add 2 custom op-codes for CALL_FUNCTION where the number of
    arguments is known in advance
+
+   + Have the interpreter just handle code strings instead of arbitrary
+     objects with a file interface (all large systems are paying a cost
+     for an unused small system feature)
 
  * Add 'diff3' and 'patch' to difflib
 
@@ -26,6 +27,10 @@ Some ideas:
     itertools.  Apply that model to other parts of the docs.  For
     instance, the email and logging packages would be a lot easier to use
     if there were a semi-comprehensive example section in the docs.
+
+    + document the smtpd module
+
+    + document the platform module
 
  * Python bug fixing sprint
 
@@ -39,11 +44,8 @@ Some ideas:
  fixed up when the total number of bytes changes.  Also, the line
  numbering has to be kept intact during the transformations.
 
- * Speed up list comprehensions by pre-allocating blocks of 100 list
- elements, writing using `PyList_SET_ITEM`, and adjusting the total size
- at the end of the comprehension.
-
  * Update, pare-down, and clean-up Demo and Tools/Scripts
 
+ * Guido to practice throwing pies.
 
 Back to SprintPlan2004
