@@ -17,7 +17,9 @@ Possibilities
 
 = Additional Driver Objects =
 
-Prepared statements in addition to Connection and Cursor.
+Prepared statements in addition to Connection and Cursor. Related is the idea of statement caching:
+ * Cursor object as a prepapared statement
+ * Cursor object accesses a pool of cached prepared statements
 
 = Parameter Passing =
 
@@ -25,4 +27,13 @@ Prepared statements in addition to Connection and Cursor.
 
 {{{cursor.execute ("SELECT where size = ?", [localvar])}}} vs. {{{cursor.execute ("SELECT where size = ?", localvar)}}}
 
+Should the argument passing be driver dependent, should there be additional methods, should only one be allowed?
+
 = Schema Information =
+
+= Role of the DB API spec =
+
+ * programs should be completely portable, including the SQL
+ * programs should be portable at the API level
+ * it should be possible to write portable programs, but extensions are allowed
+ * why bother, real apps write their own higher level API
