@@ -1,0 +1,18 @@
+A page for useful (or potentially abusive?) decorator ideas.
+
+
+== __main__ ==
+This decorator does not alter a function, but causes it to be executed if `__name__ == '__main__'`. This provides an experimental cleaner syntax to the traditional way of bootstrapping a python script. This should not be used on class methods.
+
+The function gets a copied list of sys.argv arguments.
+
+{{{
+#!python
+def __main__(func):
+
+    if __name__ == "__main__":
+        import sys, os
+        args = sys.argv[:]
+        args[0] = os.path.abspath(args[0])
+        func(args)
+}}}
