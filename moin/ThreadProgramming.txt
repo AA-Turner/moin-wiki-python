@@ -1,6 +1,9 @@
-= Stopping Threads =
+= Stopping Threads  Fermare un Processo=
 
 I'd like to start this page off with a question.  How do you kill one thread from within another? Here's some code that shows the problem:
+
+<font color = blue> Vorrei iniziare questa pagina con una domanda. Come posso terminare un nprocesso dall'interno di un altro?
+Ecco il codice che mostra come risolvere il problema:</font>
 
 {{{
 #!python
@@ -31,6 +34,7 @@ time.sleep(20)
 worker.shutdown()
 }}}
 The problem here is that {{{EventChannel.waitEvent()}}} is a blocking operation.  So if no event ever arrives, then our worker thread never stops.  ''({{{EventChannel}}} and {{{EventHandler}}} are classes I've invented for this example)''
+
 
 == Suggestions ==
 
