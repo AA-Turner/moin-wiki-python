@@ -18,6 +18,15 @@ There was at the time no need to distinguish between different uses of "default"
 values, as MartinManey suggests below.  (It's not clear to me know that there's
 a real need to do so, since the API provided by `ConfigParser` is so spare.)
 
+The use of a "magic section name" for the current "defaults" in the current
+implementation is something I consider unfortunate; the defaults dictionary
+should be completely separate from the dictionary of sections.  Should additional
+namespaces ("types of defaults") ever be considered, I'd hope they don't become
+part of the set of section names by dumb accident.  The inclusion of the defaults
+by the `write()` method is unfortunate; these were intended to be a way for an
+application to supply computed values that would be used if a specific
+configuration did not override them.
+
 ----
 
 I've been thinking about writing up some thoughts I've had while trying to use `ConfigParser` for what seemed like a dirt-simple application a while ago.
