@@ -1,9 +1,9 @@
-= Stopping Threads  Fermare un Processo=
+= Stopping Threads  Fermare un Processo =
 
 I'd like to start this page off with a question.  How do you kill one thread from within another? Here's some code that shows the problem:
 
-<font color = blue> Vorrei iniziare questa pagina con una domanda. Come posso terminare un nprocesso dall'interno di un altro?
-Ecco il codice che mostra come risolvere il problema:</font>
+ Vorrei iniziare questa pagina con una domanda. Come posso terminare un nprocesso dall'interno di un altro?
+Ecco il codice che mostra come risolvere il problema:
 
 {{{
 #!python
@@ -35,10 +35,13 @@ worker.shutdown()
 }}}
 The problem here is that {{{EventChannel.waitEvent()}}} is a blocking operation.  So if no event ever arrives, then our worker thread never stops.  ''({{{EventChannel}}} and {{{EventHandler}}} are classes I've invented for this example)''
 
+il costrutto o funzione {{{EventChannel.waitEvent()}}} è un blocco operativo. Cosi se un evento mai arriva il nostro lavoro non fermera mai il processo. Attenzione!!! Le ({{{EventChannel}}} and {{{EventHandler}}} sono classi da me inventate per questo esempio.
 
-== Suggestions ==
+
+== Suggestions Suggerimento ==
 
  * Make the {{{shutdown()}}} method put some harmless event on the event channel:
+ * Realiziamo il metodo  {{{shutdown()}}}  e spingiamo un innocuo evento  nel channel event:
  
 {{{
   def shutdown(self):
@@ -47,6 +50,7 @@ The problem here is that {{{EventChannel.waitEvent()}}} is a blocking operation.
 }}}
 
  * Or use a Queue to pass data. Handle errors in the handler (e.g. print them to the console), keep the thread alive. 
+ * Oppure usiamo una coda per passare i dati. M
 
 {{{
 #!python
