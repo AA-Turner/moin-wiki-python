@@ -167,3 +167,32 @@ for count, item in enumerate(iterable):
         do_something(item)
     except Exception:
         raise Exception('error on item %r' % count)}}}
+
+== Overuse of Regular Expressions ==
+Regular Expressions provde a powerful tool for doing complicated string searches.  However, for simple string searches, regular expressions are often overkill.
+
+(Note that such overuse of regular expressions is often the result of converting Perl code to Python code.)
+
+=== Dubious Way ===
+{{{#!python
+matcher = re.compile(r'defg')
+if matcher.search(s):
+    do_something()}}}
+
+{{{#!python
+matcher = re.compile(r'(\S+)')
+words = matcher.findall(s)}}}
+
+=== The Problem ===
+For simple tasks, using a regular expression can add unnecessary overhead from compiling the regular expression and using the match object to search.  When applicable, using string methods can often be faster and more concise.
+
+=== Preferred Alternatives ===
+
+{{{#!python
+if 'defg' in s:
+    do_something()}}}
+
+Note that in pre-2.3 Pythons 'in' only worked with single character strings.  In Python 2.3 and above, 'in' works with multi-character substrings as above.
+
+{{{#!python
+words = s.split()}}}
