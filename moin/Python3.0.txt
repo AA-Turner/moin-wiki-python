@@ -55,6 +55,15 @@ def foo (a as int, b as float) as float:
    * Reason: such comparisons do not make sense and are especially confusing to new users of Python.
  * Require that all exceptions inherit a common base classs. [[#i 9]]
    * Reason: forces the use of classes as objects raised by exceptions and simplifies the implementation.
+ * Require that the first statement of a suite be on its own line. [[#a 1]] {{{
+#!python
+if expression: statement
+
+# -->
+
+if expression:
+    statement
+}}}
 
 
 == Built-In Changes ==
@@ -106,6 +115,7 @@ def foo (a as int, b as float) as float:
  * Should `globals()`, `locals()` and `vars()` be removed? [[#a 1]]
  * Should there be a keyword for allowing the shadowing of built-ins?
  * Should injecting into another module's global namespace be prevented?
+ * If line continuations (`\`) are removed from the language [[# 1]], what should be done about the instances where statements do not allow parentheses?  Furthermore, the Python style guide [[#k 11]] recommends their usage in some cases.
 
 
 == References ==
@@ -122,3 +132,4 @@ def foo (a as int, b as float) as float:
    * http://mail.python.org/pipermail/python-dev/2003-March/034074.html
  * [[Anchor(i)]] [9] Python-Dev -- Exceptional inheritance patterns: http://mail.python.org/pipermail/python-dev/2004-August/047114.html
  * [[Anchor(j)]] [10] Python-Dev -- With statement: http://mail.python.org/pipermail/python-dev/2004-March/043545.html
+ * [[Anchor(k)]] [11] PEP 8 -- Style Guide for Python Code: http://python.org/peps/pep-0008.html
