@@ -9,12 +9,12 @@
 #language en
 
 
- * ''JEP:  1''
- * ''Title:  JepGuidelines''
+ * ''JEP:  JepGuidelines''
+ * ''Title:  JEP Guidelines''
  * ''Version:  1''
  * ''Last-Modified:  20050205''
  * ''Author: BillDehora''
- * ''Status: Active''
+ * ''Status: Draft''
  * ''Type: Informational''
  * ''Created:  20050205''
 
@@ -58,7 +58,7 @@ Each JEP must have a champion -- someone who writes the JEP using the style and 
 
 The JEP champion then creates the JEP with a proposed title and a rough, but fleshed out, draft of the JEP on the Jython Wiki. This draft must be written in JEP style as described below.
 
-If the community approves, the JEP will be assigned a number, label it as Standards Track or Informational, give it status "Draft". The community will not unreasonably deny a JEP. Reasons for denying JEP status include duplication of effort, being technically unsound, not providing proper motivation or addressing backwards compatibility, or not in keeping with the Jython philosophy.
+If the community approves, the JEP will be assigned a wiki page, label it as Standards Track or Informational, give it status "Draft". The community will not unreasonably deny a JEP. Reasons for denying JEP status include duplication of effort, being technically unsound, not providing proper motivation or addressing backwards compatibility, or not in keeping with the Jython philosophy.
 
 If a pre-JEP is rejected, the author may elect to take the pre-JEP to the jython-dev list to help flesh it out, gain feedback and consensus from the community at large, and improve the JEP for re-submission.
 
@@ -97,7 +97,7 @@ Some Informational JEPs may also have a status of "Active" if they are never mea
 
 Each JEP should have the following parts:
 
-   1.  Preamble -- RFC 822 style headers containing meta-data about the JEP, including the JEP number, a short descriptive title (limited to a maximum of 44 characters), the names, and optionally the contact info for each author, etc.
+   1.  Preamble -- RFC 822 style headers containing meta-data about the JEP, including the JEP WikiPage, a short descriptive title (limited to a maximum of 44 characters), the names, and optionally the contact info for each author, etc.
    1.  Abstract -- a short (~200 word) description of the technical issue being addressed.
    1.  Copyright/public domain -- Each JEP must either be explicitly labelled as placed in the public domain (see this JEP as an example) or licensed under the Open Publication License [8].
    1.  Specification -- The technical specification should describe the syntax and semantics of any new language feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current Jython platforms (CJython, Jython, Jython .NET).
@@ -114,20 +114,20 @@ The final implementation must include test code and documentation appropriate fo
 Each JEP must begin with an RFC 822 alike header preamble. The headers must appear in the following order. Headers marked with "?" are optional and are described below. All other headers are required.
 
 {{{
-  JEP: <pep number>
-  Title: <pep title>
+  JEP: <jep wiki page>
+  Title: <jep title>
   Version: <version string>
   Last-Modified: <date string>
   Author: <list of authors' real names and optionally, email addrs>
   ?Discussions-To: <email address>
   Status: <Draft | Active | Accepted | Deferred | Rejected | Final | Replaced>
   Type: <Informational | Standards Track>
-  ?Requires: <pep numbers>
+  ?Requires: <jep numbers>
   Created: <date created on, in yyyymmdd format>
   ?Jython-Version: <version number>
   Post-History: <dates of postings to python-list and python-dev>
- ?Replaces: <pep number>
- ?Replaced-By: <pep number>
+ ?Replaces: <jep wiki page>
+ ?Replaced-By: <jep number>
 }}}
 
 The Author header lists the names, and optionally the email addresses of all the authors/owners of the JEP. The format of the Author header value must be
@@ -148,13 +148,13 @@ The Type header specifies the type of JEP: Informational or Standards Track.
 
 The format of a JEP is specified with a Content-Type header. The acceptable values are "text/plain" for plaintext JEPs (see JEP 9 [3]) and "text/x-rst" for reStructuredText JEPs (see JEP 12 [4]). Plaintext ("text/plain") is the default if no Content-Type header is present.
 
-The Created header records the date that the JEP was assigned a number, while Post-History is used to record the dates of when new versions of the JEP are posted to python-list and/or python-dev. Both headers should be in yyyymmdd  format, e.g. 20050205.
+The Created header records the date that the JEP was created, while Post-History is used to record the dates of when new versions of the JEP are posted to python-list and/or python-dev. Both headers should be in yyyymmdd  format, e.g. 20050205.
 
 Standards Track JEPs must have a Jython-Version header which indicates the version of Jython that the feature will be released with. Informational JEPs do not need a Jython-Version header.
 
 JEPs may have a Requires header, indicating the JEP numbers that this JEP depends on.
 
-JEPs may also have a Replaced-By header indicating that a JEP has been rendered obsolete by a later document; the value is the number of the JEP that replaces the current document. The newer JEP must have a Replaces header containing the number of the JEP that it rendered obsolete.
+JEPs may also have a Replaced-By header indicating that a JEP has been rendered obsolete by a later document; the value is the WikiPage of the JEP that replaces the current document. The newer JEP must have a Replaces header containing the WikiPage of the JEP that it rendered obsolete.
 Reporting JEP Bugs, or Submitting JEP Updates
 
 How you report a bug, or submit a JEP update depends on several factors, such as the maturity of the JEP, the preferences of the JEP author, and the nature of your comments. For the early draft stages of the JEP, it's probably best to send your comments and changes directly to the JEP author. For more mature, or finished JEPs you may want to submit corrections to the Jython issue list or better yet as a patch so that your changes don't get lost. 
