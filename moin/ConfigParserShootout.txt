@@ -52,16 +52,12 @@ and might reasonably be in a separate module for each format supported.
 
 == .ini file parser and schema ==
 
-Now contains two modules -- iniparser is a parser for .ini files.  It needs to be subclassed to produce useful output.
-By subclassing the parser you can implement complex or simple config parsers, while allowing for
-context-sensitive error messages.
-
-inischema allows schema definitions, with type specifications, attribute access, etc.  It is still quite young, and missing some major features (like handling sections).
+Contains several modules.  iniparser is a reusable ini-file parser, with almost no information loss or associated semantics, suitable for reuse.  lazyloader can load config files, retain line information and ordering, non-destructively nest configuration files (e.g., you can add and remove config files from the config layering), runtime validation with error messages that specify filename and line number, nested configuration values (using dotted key and section names), and you can compose the configuration files in several ways, for instance superimposing a section onto the main configuration to override configuration based on runtime values.
 
 Available at:
 
- * svn://colorstudy.com/home/ianb/config/
- * http://colorstudy.com/cgi-bin/viewcvs.cgi/home/ianb/config/
+ * svn://colorstudy.com/trunk/WSGIKit/wsgikit/config/
+ * http://svn.colorstudy.com/trunk/WSGIKit/wsgikit/config/
 
 == Skip's Idea ==
 
