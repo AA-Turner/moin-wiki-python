@@ -1,0 +1,169 @@
+##language: en
+
+= Why lists are not used as dictionary keys =
+
+The existence of lists and tuples and the impossibility to use
+lists as dictionary keys is a constant source of irritation for
+Python newcomers. To understand why tuples but not lists can be
+used as dictionary keys let us first take a closer look at
+dictionaries.
+
+== How dictionaries work ==
+
+Unlike strings, lists and tuples a dictionary is not a sequence but
+a mapping. A dictionary d maps key values to data values:
+
+{{{
+data = d[key]
+}}}
+
+To accomplish this the dictionary has to search the key in a key set
+and to return the associated data value. If the dictionary would search
+the key set sequentially this could take some time because the search
+time is proportional to the size of the key set: O(n). Fortunately the
+dictionary does better: It computes the storage location from the key
+and jumps directly to this storage location. The search time is the
+same no matter how large the key set is: O(1).
+
+This search method is called hashing and the function that computes
+the storage location is called a hash function. A hash gives a hint
+that two items might be equal therefore a hash function hf has to
+satisfy a condition:
+
+{{{
+for all i1, i2: hf(i1) != hf(i2) => i1 != i2
+}}}
+
+I.e. if two items values have different hash values than these
+items must not compare equal.
+
+With Python's functions hash() and
+cmp() this reads:
+
+{{{
+(*) for all i1, i2: hash(i1) != hash(i2) => cmp(i1, i2) != 0
+}}}
+ 
+Example of a hash function:
+
+{{{
+#!python
+def hashfunc(string):
+    return ord(string[0])
+}}}
+
+This function maps strings to integers in the range 0..256 and could
+be used to find strings in an array of length 256. What happens if
+two strings start with the same character? They have to be stored
+at the same array location and we have a hash collision. If too many
+strings are stored in the array then hash collisions occur frequently
+and the strings stored at the same location have to be searched
+sequentially. Of course this is not desired and the hash function has
+to be carefully designed in order to avoid frequent hash collisions. 
+This means that a hash function should satisfy in most cases:
+
+{{{
+for all i1, i2: hash(i1) == hash(i2) => cmp(i1, i2)
+}}}
+
+Fortunately this is the case for Python's dictionary hash function
+so that dictionary search is very fast.
+ 
+To get a complete picture here is a sketch of a dictionary lookup
+(data = d[key] expressed as: data = lookup(d, key)):
+
+{{{
+#!python
+def lookup(d, key):
+    '''dictionary lookup is done in three steps:
+       1. A hash value of the key is computed using a hash function.
+
+       2. The hash value addresses a location in d.data which is
+          supposed to be an array of bins. A bin contains a collision
+          list of (key,value) pairs.
+
+       3. The collision list addressed by the hash value is searched
+          sequentially until a pair is found with pair[0] == key. The
+          return value of the lookup is then pair[1]. Equality (==) is
+          defined by the function cmp(). The return value for equality is
+          0, for inequality some other value.
+    '''
+    h = hash(key)                  # step 1
+    cl = d.data[h]                 # step 2
+    for pair in cl:                # step 3
+        if cmp(key, pair[0]) == 0:
+            return pair[1]
+    else:
+        raise KeyError, "Key %s not found." % key
+}}}
+
+== Data types usable as dictionary keys ==
+
+The lookup function above shows which data types can be used as dictionary
+keys:
+
+----
+'''A data type must be a valid input for hash() and cmp() to be usable
+as a dictionary key. hash() and cmp() must satisfy the condition (*)
+above for this data type.'''
+----
+
+=== Why tuples are OK and lists are not ===
+
+Is a list a suitable candidate for a dictionary key? hash(list) = id(list) and cmp(list1, list2) = cmp(id(list1), id(list2)) would satisfy condition (*). But this definition completely ignores list contents, causing big surprises for programmers:
+
+ * Different lists with the same content would be mapped to different dictionary values.
+ * Dictionary lookup with list literals would be impossible.
+
+To avoid these surprises dictionary lookup would have to use list contents
+instead of list id. Consider the (hypothetical, not working) code:
+
+{{{
+#!python
+>>> d = dict()
+>>> li = [1,2,3]
+>>> d[li] = "123"
+>>> d[[1,2,3]]
+"123"
+}}}
+
+Now assume li is changed (e.g. li[2] = 4). There are two options to handle this.
+Let the dictionary ignore changes
+
+{{{
+#!python
+>>> d[li]
+KeyError: [1,2,4] not found in dictionary. (even worse: a previously existing
+[1,2,4] map is returned).
+}}}
+
+or let the dictionary follow changes
+
+{{{
+#!python
+>>> d[[1,2,3]]
+MovedError: Please address future lookups to [1,2,4]
+
+}}}
+
+Both are pretty unsatisfactory. Conclusion: 
+
+----
+'''
+Dictionary lookup with
+mutable types like lists is a source of unpleasant surprises for the
+programmer and therefore impossible in Python.
+'''
+----
+
+This is the point where tuples come in. They have nearly the same interface as lists but cannot
+be changed once they have been created thereby avoiding the problems discussed for lists. Thus tuples can be used as dictionary keys.
+
+=== Instances of user defined classes ===
+
+What about instances of user defined classes?
+
+User defined classes can be anything the programmer likes but yet their instances are usable as dictionary keys because there is a default: hash(object) = id(object) and cmp(object1, object2) = cmp(id(object1), id(object2)). The same setting has been discussed above for lists and has been found unsatisfactory. What is different here?
+
+ 1. It is a default setting which can be adapted to each class by defining/overriding the methods `__hash__` and `__cmp__`.
+ 2. For objects identity is more important than for lists.
