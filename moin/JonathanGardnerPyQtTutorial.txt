@@ -162,6 +162,25 @@ $ python at.py
 
 Tada! You have your application.
 
+NOTE:
+If you are using Qt designer with Qt version 3.3.0 your .ui file contains:
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+in the header, and pyuic (3.8.1 at least) complains that the version is too recent and
+won't produce any output.
+
+This is easy to solve; you can create a tiny script which will automatically fix this error,
+run make and run your new application:
+
+#!/bin/bash
+
+sed -i s/3.3/3.3.0/g at.ui
+
+make
+
+exec python at_auto.py
+
+chmod 700 myscript and you're set !
+
 == Setting the Default Date / Time ==
 
 Let's set a default value for the QDate``Time``Edit widget. The QDate``Time``Edit widget expects a QDate``Time for an argument to the set``Date``Time method, so we'll have to create one. But how to set the time of the QDate``Time? Examination of the documentation reveals that the setTime_t method will allow us to set the date with the time in seconds from the Unix epoch. We can get that from the time() function in the built-in time module.
@@ -195,7 +214,7 @@ When you bind a signal to a slot, you can do one of the following:
 
     {{{
 QObject.connect(some_object, SIGNAL('toggled(bool)'), some_python_callable)
-}}} 
+}}}
 
   * Bind a C++ Signal to a C++ Signal
 
@@ -203,7 +222,7 @@ QObject.connect(some_object, SIGNAL('toggled(bool)'), some_python_callable)
 
     {{{
 QObject.connect(some_object, SIGNAL('toggled(bool)'), some_object, SLOT('the_slot(bool)'))
-}}} 
+}}}
 
   * Bind a Python Signal to C++ or Python Slot
 
@@ -229,12 +248,12 @@ Notice that we are connecting a C++ Signal to a Python Slot. However, that slot 
     def schedule_clicked(self):
         if not str(self.command.text()):
             QMessageBox.critical(self,
-                "Invalid event", "You must specify an event", 
+                "Invalid event", "You must specify an event",
                 QMessageBox.Ok)
             return
-        
+
         t = str(self.time.dateTime().toString('hh:mm MM/dd/yyyy'))
-        p = os.popen('at -m "%s"'%t, 'w') 
+        p = os.popen('at -m "%s"'%t, 'w')
         p.write(str(self.command.text()))
         self.close()
 }}}
@@ -245,7 +264,7 @@ If there is something in the command box, we open up a pipe to the 'at' command.
 
 Go ahead and run the application now, and use the 'atq' command to see if the 'at' job was queued up.
 
-Good? Okay. 
+Good? Okay.
 
 Here is the final code for the 'at.py' file.
 
@@ -275,12 +294,12 @@ class at(at_auto):
     def schedule_clicked(self):
         if not str(self.command.text()):
             QMessageBox.critical(self,
-                "Invalid event", "You must specify an event", 
+                "Invalid event", "You must specify an event",
                 QMessageBox.Ok)
             return
-        
+
         t = str(self.time.dateTime().toString('hh:mm MM/dd/yyyy'))
-        p = os.popen('at -m "%s"'%t, 'w') 
+        p = os.popen('at -m "%s"'%t, 'w')
         p.write(str(self.command.text()))
         self.close()
 
