@@ -37,10 +37,17 @@ See also: MixIns, MetaClasses
 
 After the @decorator syntax was "accepted", lots of people threw up alarms and a huge series of threads started exploding on Python-dev. Here are the current alternatives that I could find that are being argued, with pros and cons:
 
+I give two examples that might be common uses in the future.  Classmethod declarations, and something like static typing (adapters), declaring what type parameters a function expects and returns.
+
 '''pie decorator syntax'''
 {{{
-@decorator
+@classmethod
 def foo(arg1,arg2):
+    ...
+
+@accepts(int,int)
+@returns(float)
+def bar(low,high):
     ...
 }}}
  * + Java-like, so not completely unknown to everyone.
@@ -55,8 +62,12 @@ def foo(arg1,arg2):
     
 '''list-before-def syntax'''
 {{{
-[decorator]
+[classmethod]
 def foo(arg1,arg2):
+    ...
+
+[accepts(int,int), returns(float)]
+def bar(low,high):
     ...
 }}}
  * + C# like
@@ -70,7 +81,10 @@ def foo(arg1,arg2):
 
 '''list-after-def syntax'''
 {{{
-def foo(arg1,arg2) [decorator]:
+def foo(arg1,arg2) [classmethod]:
+    ...
+
+def bar(low,high) [accepts(int,int), returns(float)]:
     ...
 }}}
  * + Also somewhat C#-like
@@ -85,7 +99,11 @@ def foo(arg1,arg2) [decorator]:
 '''list at beginning of function body syntax'''
 {{{
 def foo(arg1,arg2):
-    [decorator]
+    [classmethod]
+    ...
+
+def bar(low,high):
+    [accepts(int,int), returns(float)]
     ...
 }}}
  * + Also somewhat C#-like
@@ -99,8 +117,10 @@ def foo(arg1,arg2):
 
 '''inline syntax'''
 {{{
-def decorator foo(arg1,arg2):
+def classmethod foo(arg1,arg2):
     ...
+
+?
 }}}
  * + Simple
  * + Obviousely attached to the function
@@ -110,9 +130,11 @@ def decorator foo(arg1,arg2):
     
 '''as decorator'''
 {{{
-as decorator
+as classmethod
 def foo(arg1,arg2):
     ...
+
+?
 }}}
  * + Non-punctuation based
  * + Does not use an existing mechanism with 'magic' behavior
@@ -120,9 +142,11 @@ def foo(arg1,arg2):
     
 '''with decorator, possibly indented?'''
 {{{
-with decorator:
-    def decorator foo(arg1,arg2):
+with classmethod:
+    def foo(arg1,arg2):
         ...
+
+?
 }}}
  * + The benefits of "as" without the renaming oddity.
  * + Reads as, "with decorator define function", which seems accurate. Such as, "with staticmethod define foobar(baz)". 
