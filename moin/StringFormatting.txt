@@ -44,14 +44,14 @@ The standard print statement automatically inserts newlines.  This can be overco
 {{{
 #!python
 for i in range(10):
-    print '['+str(i)+']',  # NOTE the trialing comma
+    print '['+str(i)+']',  # NOTE the trailing comma
 }}}
-but a space will get inserted between successive prints.  The way to get around this is using sys.stdout:
+but a space will get inserted between successive prints.  One way to get around this is using sys.stdout:
 {{{
 #!python
 import sys
 for i in range(10):
-    sys.stdout.write('['+str(i)+'[')
+    sys.stdout.write('['+str(i)+']')
 }}}
 which will work properly.
 
