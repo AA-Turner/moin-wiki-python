@@ -182,3 +182,31 @@ def double(x):
 assert(double.__name__ == 'double')
 assert(double.__doc__ == 'Doubles a number')
 }}}
+
+== Enable/Disable Decorators ==
+
+{{{
+#!python
+def unchanged(func):
+    "This decorator doesn't add any behavior"
+    return func
+
+def disabled(func):
+    "This decorator disables the provided function, and does nothing"
+    def emptyFunc(*args,**kargs):
+        pass
+    return emptyFunc
+
+# define this as equivalent to unchanged, for nice symmetry with disabled
+enabled = unchanged
+
+#
+# Sample use
+#
+
+globalEnableFlag = True
+
+@(disabled, enabled)[globalEnableFlag]
+def specialFunctionFoo():
+    print "function was enabled"
+}}}
