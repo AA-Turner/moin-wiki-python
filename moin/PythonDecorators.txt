@@ -396,7 +396,7 @@ bar = bar % accepts(int,int) % returns(float)
 
 
 
-=== D. list at top of function body syntax ===
+=== D1. list at top of function body syntax ===
 {{{
 def foo(arg1,arg2):
     [classmethod]
@@ -418,6 +418,67 @@ def bar(low,high):
  * 0 Perhaps decorators should be allowed before or after the docstring.  If you have to choose, I'd choose making it before the docstring.
  * - No implementation currently exists.
  * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [http://mail.python.org/pipermail/python-dev/2004-August/047279.html]
+
+=== D2. 'dot'decorators at top of function body syntax ===
+{{{
+def bar(low,high):
+    .accepts(int,int)
+    .returns(float)
+    """docstring"""
+    pass
+
+def longMethodNameForEffect(longArgumentOne=None,
+                            longArgumentTwo=42):
+    .staticmethod
+    .funcattrs(grammar="'@' dotted_name [ '(' [arglist] ')' ]",
+               status="experimental", author="BDFL")
+    """
+    asdfasdf
+    """
+    raise NotYetImplemented
+}}}
+Advantages/disadvantages of .decorators:
+
+ * + Unambiguous "target" for decorators, matches Python's precedents for indentation and modify-what-came-before
+
+ * + Decorators won't get lost in long argument lists (they are indented differently in Guido's preferred formatting, and are separated by the smiley in the all-args-on-individual-lines formatting)
+
+ * 0 Compatible with some future "with ...:" syntax, as decorators must immediately follow a 'def ...:' (or possibly a 'class ...:'), so if there is a 'with ...:' what follows cannot be a decorator.
+
+ * + Separate from def syntax (to keep def the same avoiding breakage)
+
+ * + No extra cut-and-paste issues, no extra indentation level.
+
+ * + No smileys.  (Does that get a :)   or a  ]:  ?)
+
+ * + Will not be silently ignored (doesn't use currently legal syntax)
+
+ * + Simple for simple decorators, supports complex decorators as cleanly as possible
+
+ * + Less ugly (YMMV). Doesn't feel like executable line noise (to 1 out of 1 pythonistas polled...)
+
+ * + No new punctuation or keywords (avoids breaking Leo/IPython/existing code)
+
+ * + Really nice syntax for assigning attributes, if desired (Not sure I like this overloading, but it /looks/ good)
+
+{{{
+def func():
+    .author = "Kevin Butler"
+    pass
+}}}
+
+ * +/0 Syntax obvious visually (Someone will complain that the leading period gets lost - that person should switch to a fixed-width font, as used when coding.  <.5 wink>) Easy to highlight.
+
+ * 0 Although it is a punctuation-based syntax, it is compatible with existing/proposed '.' usage ('.' can mean subordination to a containing construct like 'with', and passing the implicit "func" argument is analogous to passing "self")
+
+ * 0 Perhaps decorators should be allowed before or after the docstring. If you have to choose, I'd choose making it before the docstring.
+
+ * - Minor extension to use of '.'
+
+ * - Some people may have too much dust on their monitors
+
+ * + Could use {{{.doc()}}} or {{{.doc =}}} or {{{.__doc__ =}}}  as a docstring alternative
+
 
 === E1. pie decorator at top of function body syntax ===
 {{{
