@@ -10,13 +10,48 @@ In fact, I realized this week that I have built non-trivial web sites using at l
 
 I will address the architectures in the order in which I used them.  I've been programming for a long time, and in that time I've learned a few things about what kinds of techniques make for workable and maintable programs.  In web programming, in particular, I've learned that it is important to separate processing from presentation: the bulk of the HTML text should not be deeply embedded in the programming code that creates the page.  You'll see that theme repeated in my comments.
 
+One other background note is that I prefer PostgreSQL as a database back-end.  The last time I tried MySQL (which was quite a while ago), it just didn't scale as well as Postgres.
+
 Please note that these are strictly '''my personal opinions'''.
 
 === Python CGI with HTMLgen Templates ===
 
+The first big Python site I did was in plain, ordinary CGI scripts, using HTMLgen to generate the HTML.  This site, http://www.verticalemail.com/, is a database-driven, categorized e-mail redistribution site with 30 or 35 forms.  It currently supports about 3,000 registered users, with a million rows in a back-end database.
+
+The site works extremely well.  The conventional wisdom is that a purely CGI-based site will not work for a production site, because of the penalty of invoking the interpreter each time.  That isn't necessarily true.  Knowing what I know now, I'd love to go back and recreate this with a more deeply embedded solution, but the CGI-only solution is simple, easy to debug, and easy to extend, and it's been running here for three years.  It's also easy to upgrade, since there is no additional software beyond Python itself.
+
+I used HTMLgen because I like the way I could create HTML constructs in an object-oriented way:
+
+ tbl = Table(
+  TR(
+   TD(
+    Link("This is a link", "http://site.com")
+   )
+  ),
+  border=1
+ )
+
+However, as neat as this looks, HTMLgen does not encourage the separation of processing and presentation.  HTMLgen does include a basic templating scheme, which is only a small step above the %(field)s substitution scheme built-in to Python.
+
+=== Webware / WebKit ===
+
+After my CGI experience, I decided I wanted to use a real web framework for my next site.  I investigating the available choices at the time (about 4 years ago), and Webware looked like it was more mature and easier to understand than the others, so I gave it a shot.
+
+Without a doubt, Webware has a higher entry bar than straight CGI programming.  There is a LOT of stuff in Webware (much of which goes unused for most sites), and it requires root access for at least part of the installation process, so you can fire up the persistent server process at boot time.
+
+One of the nice things about Webware, from a programming perspective, is that it uses class inheritance as a fundamental part of its operation.  Your basic \SitePage, which contains the basic layout rules for your site, derives from the basic Page class in \WebKit (or one of its useful subclasses).  If you have several different areas in your web site, you can derive subclasses for each area.  You can derive a subclass to use as a base for the parts that need login.  Finally, you derive leaf classes for each page.  This encourages re-use and good programming practice.
+
 === Webware with PSP Templates ===
 
-=== Webware with Cheetah Templates ===
+After playing with Webware for a while, I got jealeous of the kind of inline symbol substitutions that the .ASP programmers were doing over on Microsoft.  Thus, I started playing with the PSP (Python Server Pages) capability included with Webware.  (Note that there are at least 2 completely different technologies calling themselves PSP; I'm talking specifically about the one built-in to Webware.)
+
+The Webware PSP module allows you to write pages and modules in a manner very similar to ASP.  Unlike straight Webware, where you have Python scripts with the ocasional HTML chunk, a PSP script is a web page with special tags containing Python code and symbols to be substituted.  The fun thing about PSP and WebKit is that the PSP pages get compiled into Python code, so they can participate fully in the inheritance structure: you can put the guts of your processing in a Python module, and derive a PSP from it containing all of the presentation.  Plus, the PSP files are sufficiently standard HTML that you can use an HTML editor, should that be your cup of tea.
+
+Webware, by default, doesn't care about the extension on your files.  So, if you have a file that starts out as a .psp but later needs to migrate to a .py, you don't have to change any of the references, and your users' saved bookmarks will still work.
+
+=== WebWare with Cheetah Templates ===
+
+While I was writing my Webware/PSP site, I started doing some reading about other Python templating systems.
 
 === CherryPy ===
 
@@ -28,4 +63,4 @@ Please note that these are strictly '''my personal opinions'''.
 
 I welcome your comments, disagreements, and your own experiences.  That's the fun of a wiki.
 
--- TimRoberts [[Date]]
+-- TimRoberts [[DateTime]]
