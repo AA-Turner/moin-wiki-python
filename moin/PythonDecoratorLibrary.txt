@@ -43,7 +43,7 @@ print add1(2)
 
 == Controllable DIY debug ==
 
-(Other hooks could be similarly added. Exceptions are left out for simplicity
+(Other hooks could be similarly added. Docstrings and exceptions are left out for simplicity
 of demonstration.)
 
 {{{
@@ -67,6 +67,7 @@ class deBug:
                 f_result = f(*args, **kwds)
                 print >> sys.stderr, f.func_name, "returned", f_result
                 return f_result
+            newf.__doc__ = f.__doc__
             return newf
         else:
             return f
