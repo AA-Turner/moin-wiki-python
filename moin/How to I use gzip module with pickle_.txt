@@ -1,0 +1,23 @@
+== How to use the gzip module with the pickle module ==
+I have a python program which creates a list of prime numbers [2L,3L,5L,7L,13L]. This program save the list to a file on the hard disk.
+
+=== example of my code ===
+{{{
+  fp=open('primes.data','r')
+  # ListOfPrimes=[2L,3L,5L,7L]
+  ListOfPrimes=cPickle.load(fp)
+  fp.close()
+
+  generate_more_primes()
+
+  fp=open('primes.data','w')
+  cPickle.dump(ListOfPrimes,fp)
+  fp.close()
+}}}
+=== What I want ===
+My problem is that the primes.data file is now 9 megabytes in size
+and I wanted to reduce the size taken by the file by first compressing
+the data with the gzip module before saving it. Hence I would also need 
+to decompress the data after I read it from the file.
+
+Any idea how I can do this?
