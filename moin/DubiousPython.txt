@@ -118,3 +118,27 @@ Using a lambda when a function is already named incurs the extra overhead of one
 dict(a=str,
      b=some_dict.get)}}}
 
+
+== Counting Items without Enumerate ==
+It is often useful to keep track of the index of an item in an iterable, for example, for reporting the line number of a string in a file.  As of Python 2.3 the preferred way to do this is using the builtin enumerate instead of a manually updated count variable.
+
+=== Dubious Way ===
+{{{#!python
+count = 0
+for item in iterable:
+    try:
+        do_something(item)
+    except Exception:
+        raise Exception('error on item %r' % count)
+    count += 1}}}
+
+=== The Problem ===
+While timings are comparable, manual update is more verbose and has a greater risk of programming error if the programmer forgets to update the count variable.
+
+=== Preferred Alternatives ===
+{{{#!python
+for count, item in enumerate(iterable):
+    try:
+        do_something(item)
+    except Exception:
+        raise Exception('error on item %r' % count)}}}
