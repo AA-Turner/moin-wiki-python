@@ -14,108 +14,202 @@ This code is lacking a zillion essential features (but interpoint distance can n
 
 {{{
 #!python
-# Code is Public Domain.
+"""Point and Rectangle classes.
 
-import math # required because of 'sqrt' in 'distanceTo' function 
-            # also tan and atan for rotations.
+This code is in the public domain.
 
-def normalize(x1, y1, x2, y2):
-    '''I am not sure what this is for, care to comment?'''
-    return min(x1,x2), min(y1,y2), max(x1,x2), max(y1,y2)
+Point  -- point with (x,y) coordinates
+Rect  -- two points, forming a rectangle
+"""
+
+import math
+
 
 class Point:
+
+    """A point identified by (x,y) coordinates.
+
+    supports: +, -, *, /, str, repr
+
+    as_tuple  -- construct tuple (x,y)
+    clone  -- construct a duplicate
+    integerize  -- convert x & y to integers
+    floatize  -- convert x & y to floats
+    distance_to  -- calculate distance between points
+    move_to  -- reset x & y
+    slide  -- move to +dx, +dy
+    rotate  -- rotate around the origin
+    rotate_about  -- rotate around another point
+    """
+
     def __init__(self, x, y):
         self.x = x
         self.y = y
+
     def __add__(self, other):
+        """Point(x1+x2, y1+y2)"""
         return Point(self.x+other.x, self.y+other.y)
+
     def __sub__(self, other):
+        """Point(x1-x2, y1-y2)"""
         return Point(self.x-other.x, self.y-other.y)
+
     def __mul__( self, scalar ):
+        """Point(x1*x2, y1*y2)"""
         return Point(self.x*scalar, self.y*scalar)
+
     def __div__(self, scalar):
+        """Point(x1/x2, y1/y2)"""
         return Point(self.x/scalar, self.y/scalar)
+
     def __str__(self):
         return "(%s, %s)" % (self.x, self.y)
+
     def __repr__(self):
         return "%s(%r, %r)" % (self.__class__.__name__, self.x, self.y)
-    def XY(self):
-        '''Returns a tuple (x,y).'''
-        return self.x,self.y
-    def Clone(self):
-        '''Returns a full copy of this point.''' 
+
+    def as_tuple(self):
+        """(x, y)"""
+        return (self.x, self.y)
+
+    def clone(self):
+        """Return a full copy of this point."""
         return Point(self.x, self.y)
-    def Integerize(self):
-        '''Rounds co-ordinate values to integers.'''
+
+    def integerize(self):
+        """Convert co-ordinate values to integers."""
         self.x = int(self.x)
         self.y = int(self.y)
-    def Floatize(self):
-        '''Converts co-ordinate values to floating point (is this necessary?)'''
+
+    def floatize(self):
+        """Convert co-ordinate values to floats."""
         self.x = float(self.x)
         self.y = float(self.y)
-    def DistanceTo(self,pt):
-        '''Distance between 2 points.'''
-        dy = self.y - pt.y
-        dx = self.x - pt.x
+
+    def distance_to(self, pt):
+        """Calculate the distance between two points."""
+        dy = float(self.y - pt.y)
+        dx = float(self.x - pt.x)
         return sqrt(dy*dy + dx*dx)
-    def Move(newx,newy):
-        '''Changes coordinates to those given.'''
-        self.x = newx
-        self.y = newy
-    def MoveDelta(dx,dy):
-        '''Move to new (x+dx,y+dy)'''
+
+    def move_to(self, x, y):
+        """Reset x & y coordinates."""
+        self.x = x
+        self.y = y
+
+    def slide(self, dx, dy):
+        '''Move to new (x+dx,y+dy).
+
+        Can anyone think up a better name for this function?
+        slide? shift? delta? move_by?
+        '''
         self.x = self.x + dx
         self.y = self.y + dy
-    def Rotate(self,theta):
-        '''Clockwise rotation about origin, theta in Degrees.  Returns the new position as Point()'''
-        # Err..this math is not exactly readable.  
-        # It is elementary though, involving only Pythogoras and basic trig.
-        r2 = sqr(self.x)+sqr(self.y)
+
+    def rotate(self, theta):
+        """Rotate clockwise by theta degrees.
+
+        Rotate the point clockwise, around the origin.
+        The new position is returned as a new Point.
+
+        WARNING: UNTESTED CODE.
+        """
+        r2 = math.sqrt(self.x)+math.sqrt(self.y)
         tmp = math.tan(theta*math.pi/90 + math.atan(self.x/self.y))
-        ret = Point()
-        ret.x = math.sqrt(r2/(1+tmp*tmp))
-        ret.y = ret.x * tmp
-        return ret
-    def RotateAbout(self,OtherPoint,theta):
-        '''Clockwise rotation about another point.  Returns a Point() at new position'''
-        tmpx = OtherPoint.x
-        tmpy = OtherPoint.y
-        self.MoveDelta(-tmpx,-tmpy)
-        tmpPoint = self.Rotate(theta)
-        tmpPoint.MoveDelta(tmpx,tmpy)
-        return tmpPoint
+        return Point(math.sqrt(r2/(1+tmp*tmp)),
+                     ret.x * tmp)
+
+    def rotate_about(self, pt, theta):
+        """Rotate clockwise around a point, by theta degrees.
+
+        Rotate the point clockwise, around another point.
+        The new position is returned as a new Point.
+
+        WARNING: UNTESTED CODE.
+        """
+        result = self.clone()
+        result.slide(-pt.x, -pt.y)
+        result.rotate(theta)
+        result.slide(pt.x, pt.y)
+        return result
 
 
 class Rect:
+
+    """A rectangle identified by two points.
+
+    The rectangle stores left, top, right, and bottom values.
+
+    Coordinates are based on screen coordinates.
+
+    origin                               top
+       +-----> x increases                |
+       |                           left  -+-  right
+       v                                  |
+    y increases                         bottom
+
+    set_points  -- reset rectangle coordinates
+    contains  -- is a point inside?
+    overlaps  -- does a rectangle overlap?
+    top_left  -- get top-left corner
+    bottom_right  -- get bottom-right corner
+    expanded_by  -- grow (or shrink)
+    """
+
     def __init__(self, pt1, pt2):
-        self.Set(pt1, pt2)
-    def Contains(self, pt):
-        x,y = pt.XY()
-        return self.left <= x <= self.right and self.top <= y <= self.bottom
-    def Set( self, pt1, pt2 ):
-        extrema = normalize(pt1.x, pt1.y, pt2.x, pt2.y)
-        self.left, self.top, self.right, self.bottom = extrema
-    def Overlaps(self, other):
-        return (self.right > other.left and self.left < other.right
-                and self.top < other.bottom and self.bottom > other.top)
-    def GetTL(self):
+        """Initialize a rectangle from two points."""
+        self.set_points(pt1, pt2)
+
+    def set_points(self, pt1, pt2):
+        """Reset the rectangle coordinates."""
+        (x1, y1) = pt1.as_tuple()
+        (x2, y2) = pt2.as_tuple()
+        self.left = min(x1, x2)
+        self.top = min(y1, y2)
+        self.right = max(x1, x2)
+        self.bottom = max(y1, y2)
+
+    def contains(self, pt):
+        """Return true if a point is inside the rectangle."""
+        x,y = pt.as_tuple()
+        return (self.left <= x <= self.right and
+                self.top <= y <= self.bottom)
+
+    def overlaps(self, other):
+        """Return true if a rectangle overlaps this rectangle."""
+        return (self.right > other.left and self.left < other.right and
+                self.top < other.bottom and self.bottom > other.top)
+    
+    def top_left(self):
+        """Return the top-left corner as a Point."""
         return Point(self.left, self.top)
-    def GetBR(self):
+    
+    def bottom_right(self):
+        """Return the bottom-right corner as a Point."""
         return Point(self.right, self.bottom)
-    def ExpandedBy(self, n):
-        p1 = Point(self.left-n, self.top+n)
+    
+    def expanded_by(self, n):
+        """Return a rectangle with extended borders.
+
+        Create a new rectangle that is wider and taller than the
+        immediate one. All sides are extended by "n" points.
+        """
+        p1 = Point(self.left-n, self.top-n)
         p2 = Point(self.right+n, self.bottom+n)
         return Rect(p1, p2)
-    def TransformedByFunction(self, foo):
-        p1 = Point(self.left,  self.top)
-        p2 = Point(self.right, self.bottom)
-        return Rect(foo(p1), foo(p2))
+    
     def __str__( self ):
         return "<Rect (%s,%s)-(%s,%s)>" % (self.left,self.top,
                                            self.right,self.bottom)
+    
     def __repr__(self):
         return "%s(%r, %r)" % (self.__class__.__name__,
                                Point(self.left, self.top),
                                Point(self.right, self.bottom))
 
 }}}
+
+== See Also ==
+
+ * [http://en.wikipedia.org/wiki/Cartesian_coordinate_system Wikipedia:Cartesian coordinate system]
+ * [http://en.wikipedia.org/wiki/Vector_%28spatial%29 Wikipedia:Vector]
