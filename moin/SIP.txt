@@ -1,21 +1,24 @@
 = sip =
 
-Sip is a tool for quickly writing Python modules that interface with C++ libraries. It's home page is at [http://riverbankcomputing.co.uk/sip/]. It was written by Phil Thompson who is still actively maintaining it.
+Sip is a tool for quickly writing Python modules that interface with C++ and C libraries. It's home page is at [http://riverbankcomputing.co.uk/sip/]. It was written by Phil Thompson who is still actively maintaining it.
 
-There isn't much information on the 'net about sip -- see below for some hints on where you can find documentation. Your best bet is to read PyQt and PyKDE and ask Phil Thompson and Jim Bublitz for help.
+Full documentation can be found at [http://www.river-bank.demon.co.uk/docs/sip/sipref.html].
 
 Sip is used principally to support PyQt and ["PyKDE"]. Without it, it would be near impossible to manage the vast APIs these libraries provide.
 
-Sip can be used to interface with C libraries. A simple wrapper written in C++ is usually necessary, although sip may become more C-friendly in the future. A proof of concept can be found with Jonathan Gardner's ["sipPQ"], a python module that interfaces directly with libpq, which is the C library used to interface with PostgreSQL. You can find this at [http://sourceforge.net/project/showfiles.php?group_id=61057].
+Since v4.0 Sip can be used to interface with C libraries.
+
+For earlier version of Sip, a simple wrapper written in C++ was usually necessary. A proof of concept can be found with Jonathan Gardner's ["sipPQ"], a python module that interfaces directly with libpq, which is the C library used to interface with PostgreSQL. You can find this at [http://sourceforge.net/project/showfiles.php?group_id=61057].
 
 ----
 == More Details ==
 
-Sip is really the combination of three components.
+Sip is really the combination of four components.
 
- 1. A scripting language that roughly resembles C++ that describes how the Python library will interface with the C++ library.
- 1. A tool to convert the script into C++ code and Python modules, to be compiled into shared libraries.
- 1. A library to support the resulting libraries.
+ 1. A scripting language that roughly resembles C++ that describes how the Python module will interface with the C++ library.
+ 1. A tool to convert the script into C++ code and Python modules.
+ 1. A module to support the resulting Python modules and allow the programmer access to some of the Sip internals for special cases.
+ 1. A pure Python build system that support dozens of platform/compiler combinations.
 
 ----
 ''Excerpt from [http://pegasus.rutgers.edu/~elflord/unix/siptute/ Programming With Sip]:''
@@ -42,5 +45,5 @@ Jonathan Gardner has written an incomplete sip syntax script. You can use it whe
 Googling the web on SIP tutorials brought up 
 
  * [http://www.controlvideo.de/sip/]
- * [http://www.river-bank.demon.co.uk/docs/sip/sipref.html Origial Documentation]
+ * [http://www.river-bank.demon.co.uk/docs/sip/sipref.html Official Documentation]
  * [http://www.pegasus.rutgers.edu/~elflord/unix/siptute/]
