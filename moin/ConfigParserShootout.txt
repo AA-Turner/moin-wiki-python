@@ -1,0 +1,76 @@
+There has been some recent debate about
+[http://python.org/doc/current/lib/module-ConfigParser.html ConfigParser]
+on the Python mailing lists.  For more, see these
+threads:
+
+ * [http://mail.python.org/pipermail/python-dev/2004-October/049167.html ConfigParser patches]
+ * [http://groups.google.com/groups?hl=en&lr=&c2coff=1&selm=mailman.5093.1098051158.5135.python-list%40python.org ConfigParser shootout, preliminary entry; comp.lang.python]
+ * [http://mail.python.org/pipermail/python-dev/2004-October/049454.html ConfigParser shootout, preliminary entry; python-dev]
+ * [http://mail.python.org/pipermail/python-dev/2004-October/049527.html What are the goals for ConfigParser 3000?]
+
+This page serves as a place to record alternatives, and discuss (in a
+semi-permanent way) the features such a library might have.  A new
+configuration parsing library could go into the Python standard
+library, probably in addition to the current ConfigParser module
+(perhaps with that module being deprecated).
+
+= Implementations =
+
+Please list interesting implementations of config parsers here.
+
+= Features =
+
+This is a list of features that should be taken into account.
+Certainly not all these features are required; maybe some aren't even
+desired.
+
+ * Uses a human-editable source file format.  Everyone seems fairly
+ happy with INI files as a basis, but
+ [http://cvs.zope.org/Zope3/doc/zcml/ ZCML] is an example of a
+ different syntax.
+
+ * Has a simple API, especially for the simplest case (read a bunch of
+ key-value string pairs from a file).
+
+ * Can be round-tripped, i.e. a program can modify the configuration,
+ then write the new configuration out.
+
+   * Bonus if you can keep comments intact when writing the file.  Or at
+   least keep track of the comments in some way, so it can be extended
+   by someone else later (throwing away comments entirely puts up
+   brick walls).
+
+   * Keeps track of the order of items in the configuration file.
+
+   * Is intelligent about default values; writes out a minimal config
+   file.
+
+ * Supports some notion of a config schema.  You might define a
+ certain key as being an integer, and it would be automatically
+ converted when the file was loaded.  This becomes a bit more
+ difficult when you have more complex structures, multiple sections,
+ etc.  Defaults fit in here as well.
+
+ * Supports repeating values in some fashion.  Maybe a key can appear
+ multiple times in the file.  Maybe nested structures are allowed
+ otherwise.  Repeating values are common.
+
+ * Allows multiple config files to be combined, e.g., a site config,
+ user config, custom config.  Consideration should be given to
+ repeating values; sometimes a user config file may want to add to a
+ site config without repeating all items in the site config.
+
+ * Allows dynamic nesting.  E.g., some configuration values may be
+ modified only in a small context, or for a single request in a
+ long-running server.  The nesting needs to be undone later.  Maybe
+ this simply requires the config to be easily copiable (i.e., copy the
+ config, modify that copy, throw it away when you are done); maybe
+ something more sophisticated is possible.
+
+ * Supports multiple syntaxes; e.g., an XML plist syntax, an INI
+ syntax, a ZCML syntax.
+
+= Discussion =
+
+Discuss.  Please sign your name.
+
