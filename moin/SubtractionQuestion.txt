@@ -1,4 +1,3 @@
-
 I discovered this when my students were creating a fraction class.
 7/4 = 1
 however
@@ -8,3 +7,15 @@ It appears it is using the floor function but it isn't what my students wanted n
 Anyone know why?
 Thanks for any help
 Terry S - tscott@fisher.unco.edu
+
+----
+
+Yeah this is one of the big stumbling blocks for novices.  What you're seeing is a side-effect of C's int division.  7/4 is 1.75, but 1.75 is a float, not an int.  ints can only be whole numbers.
+
+Fortunately, the developers of python recognized this problem, but they couldn't simply change it right away because it might break existing python programs.  So, to enable "real-world" division where 7/4 = 1.75, add this line to the top of your python script and everything will magically work:
+{{{
+from __future__ import division
+}}}
+
+See also this for more info about this and other stumbling blocks:
+http://developers.coedit.net/BeginnerErrorsWithPythonProgramming
