@@ -39,7 +39,42 @@ Approach 2 offers the best integration options.  Jython is primarily an implemen
 
 
 === Discussion ===
-ClarkUpdike Mar 2 2005 [[BR]]
+----
+ClarkUpdike Mar 2 2005 PM [[BR]]
+Reflecting further on Py``Array, we may want to consider not having it implement `List`.  When I read the docs on the jarray and array modules at the respective jython and python websites, I find the following:
+
+ *jython's jarray moduleis primarily for interaction with java 
+  *as the jython object type to hold java arrays returned by java methods
+  *for java methods that require java arrays as parameters
+  *ref: http://www.jython.org/docs/jarray.html
+ *python's array module is primarly for performance/efficiency
+  *ref: http://docs.python.org/lib/module-array.html
+
+Performance might not have been a concern at all for jarray.  But I know I have used jarray on occasion for that very reason.  In any event, I'll presume the two reasons for their existence are, in descending priority:
+
+ *java array integration
+ *performance
+
+I've been assuming that since Py``Array is a sequence, it should also implement `List`.  But the reasons not do this are:
+ *The use case for treating arrays as `List`s seems weak. Java uses the `Array.asList(Object[] a)` method to get a `List` from an array, and that is all I think is really required from a collection interoperability standpoint.  Python offers the `tolist()` method, and Py``Array should offer the same thing.  Remember, `list` ''will'' implement `List`, so your only 9 keystrokes away :)
+ *Python arrays are list-like: append, extend, slice, etc.  I think we can make Py``Array do the same tricks.
+ *You can't make Py``Array implement `List` and still retain the performance benefits, especially for primitives.  You would have to choose from one of the following:
+  *Element data stays as-is in Py``Array (including primitive arrays, but all access through collection methods converts to and from the wrapper classes on-the-fly.  This would retain the performance in jython, but would be lousy in java.  If you iterated over the same list 10 times you'd create 10x the wrapper objects (they are not stored, only the primitive values).  In some cases, it would really thrash the jvm.  Any kind of caching scheme would greatly increase the memory needed.
+  *Element data is a java array, but primitive types are stored in object arrays (`Integer[]`, not `int[]`).  This would allow the simplest integration with `List`, but performance would suffer.
+  *Element data is a `List`.  Wouldn't make any sense (but I'm listing it for completeness), Py``Array would just exist to provide a java array when needed.
+
+Anyway, that's why I think Py``Array should not implement list, but should just grow the python 2.2 array behavior, and provide an easy bridge to a `List`, via `tolist()`.  As always, maybe I'm missing something obvious...
+
+Here's what this design would look like:
+
+{{{
+PySequence <--+-- PSequenceList <---- (PyList, PyTuple)
+              |
+              +-- (PyArray, PyString, PyXRange)
+}}}
+
+----
+ClarkUpdike Mar 2 2005 AM [[BR]]
 This is in response to <waiting for post to show up on sourceforge>.  It is a work in progress--but feel free to comment.  I've concentrated on the impact of implementing the `List` interface:
  
  `List`:: `java.util.List`
@@ -60,9 +95,9 @@ I've been thinking on how to accomplish the "Approach 2" design, which is basica
 My current thinking is that we should add a new branch to Py``Sequence--let's call it Py``Sequence``List.  Py``Sequence would remain as is, and Py``Sequence``List would subclass Py``Sequence and implement the java.util.List interface.  Py``String and Py``XRange would subclass Py``Sequence and Py``Array, Py``List, Py``Tuple would subclass Py``Sequence``List.  This seems appropriate because, although Py``X``Range and Py``String technically fall under the description of `List`, the practicality of them as a `List` is nil.  Am I missing something obvious here?  Would anyone ever use Py``X``Range in java?  And Py``String is auto-converted to a `java.lang.String`.
 
 {{{
-Py``Sequence <--+-- Py``Sequence`List <---- (Py``Array, Py``List, Py``Tuple)
-                |
-                +-- (Py``String, Py``X``Range)
+PySequence <--+-- PySequenceList <---- (PyArray, PyList, PyTuple)
+              |
+              +-- (PyString, PyXRange)
 }}}
 
 Not sure about Py``List and Py``Tuple sharing an additional base class with a predefined element data field.  Could do it that way, or could use delegation on a specialized element data class, or could leave it as-is (with copied code for certain methods--although the amount of copied code will increase.
