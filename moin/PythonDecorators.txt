@@ -52,22 +52,25 @@ def bar(low,high):
 }}}
  * + Implementation already exists (and is in Python 2.4a2)
  * + Java-like, so not completely unknown to everyone.
- * + Makes the syntax obvious visually   
+ * + Makes the syntax obvious visually (i.e., obviously not a normal statement)
  * + Will not be silently ignored 
  * + Compile-time 
  * + One decorator per line
  * + Separate from the def syntax (desired by some for making decoration stand out and keeping def the same)
  * + Currently not used in Python so @decorators can be inserted anywhere, such as after parameters or inside expressions.
+ * + The @ special character will make syntax highlighting easier than it would be for normal statements in "magic" locations.
  * - Separate from the def syntax (undesired by some for simple decorators like classmethod/staticmethod)
  * - Ugly?
  * - Introduces a new character in the language
  * - The @ special character is used in IPython and Leo
- * - Punctuation-based syntax raises Perlfears.
- * - Because of no indentation, looks confusing when definitions are not separated by empty lines.
- * - That's the first case in Python where a line following another one with the same identation has a meaning
+ * - Punctuation-based syntax raises Perlfears. But no "obvious" keyword or expression has been suggested.
+ * - Because of no indentation, looks confusing when definitions are not separated by empty lines. But adding empty lines makes it hard to determine where the function definition truly starts.
+ * - That's the first case in Python where a line following another one with the same identation has a meaning.
  * - Breaks in interactive shell
- * - Comes before the def keyword.  Supercedes the function declaration itself.
+ * - Comes before the def keyword.  Supercedes the function declaration itself, thus applying modifications implicitly to something not yet defined.
  * - @staticmethod may look like staticmethod is not a defined variable, but a compile time option
+ * - Requires the programmer to scan an arbitrary distance from the def in *both* directions to see everything of interest (arg, decs, etc.).
+ * - Cannot be "folded" by editors as easily, as an arbitrary number of prefix lines should be folded with the body (otherwise, folding becomes less useful).
  * 0 The @ character is often used (in other languages) to mean "attribute".  For annotations, this is good.  For more active decorators, it may not be so good.
 
 FWIW, here is Guido's jumble example in this syntax.
@@ -531,8 +534,17 @@ Same pros and cons as @decorator, but additionally:
  * + It doesn't break Leo, IPython, or any other tool that uses @ as a special character.
  * + The association with pipes makes some sense: "take this thing and pass it through that thing to get a modified thing".
  * - Most characters (including pipe) already have a meaning.  Ending an expression at the linebreak will probably keep these from becoming ambiguous, but ... that gets fragile.
+----- /!\ Edit conflict! Other version: -----
  * - Misleading to Unix hackers, since the order of evaluation is "backwards".
  * - For some fonts, "|" looks similar to "I" or "l" or "1"  Some think that code highlighting would remove this problem, but with normal-sized fonts, there are not many pixels in it to show a color clearly.  "@" has a big blob of pixels, and is very distinct.
+----- /!\ Edit conflict! Your version: -----
+----- /!\ End of edit conflict -----
+----- /!\ Edit conflict! Other version: -----
+----- /!\ Edit conflict! Your version: -----
+ * + The association with pipes makes some sense: "take this thing and pass it through that thing to get a modified thing".
+ * - Most characters (including pipe) already have a meaning.  Ending an expression at the linebreak will probably keep these from becoming ambiguous, but ... that gets fragile.
+ * - For some fonts, "|" looks similar to "I" or "l"; but code highlighting would remove this problem.
+----- /!\ End of edit conflict -----
  * - The key with "|" on it is often in an awkward location on laptop keyboards
  * - When using just one bar, it isn't noticable enough.  It seems more a part of the actual decorator function name than something demarking the function. 
  * - When using multiple decorators, the pattern formed by the vertical bars draws the eyes too much and makes it hard to focus on the signature.
