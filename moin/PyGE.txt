@@ -33,3 +33,62 @@ I think those 3 tools should:
  * automagically do conversion when needed
 
 Doing this a "start, click and read" experience would be possible, also enabling wider use in education.
+
+'''The following comments are from the author of PyGE:'''
+
+The reason there is a separate utility for acquiring Gutenberg titles instead of having
+everything integrated into a single application has a lot to do with the lack of a
+good computer-readable index source from Project Gutenberg. The primary source of info
+about available Gutenberg e-texts is provided by a text file which is not easily parsed
+to provide accurate and complete information on individual e-texts. In order to work
+around the limitations of the official text index, I chose to implement a utility which
+essentially searches the Gutenberg web site for web pages which give more complete info,
+grabs the data, and stores the results into an XML data file. Because there are now over
+10,000 e-texts available from Project Gutenberg, the search process can take several
+hours to complete. Because it takes so long to perform a full search, and the search
+process is not very friendly to the Gutenberg site in terms of bandwidth usage, it is
+not intended to be performed very frequently.
+
+I think a better solution for PyGE users would be for me (or other interested users) to
+perform a database update on the Gutenberg site at regular intervals (such as 1 or 2
+updates per month) and post the latest updates on the SourceForge site for download.
+Then the PyGETS application could be used to download the latest e-texts without the
+average user ever having to invoke the lengthy acquire function.
+
+Integrating the conversion into the zTxt format used by PyGERS with the download step
+would have one undesireable result. One of the features of the zTxt format is that it allows
+for creation of named bookmarks, and one convenient use of bookmarks is to mark where
+natural divisions such as chapters occur within an e-text. It's nice to open up an
+e-text and see a clickable list of chapter headings. These allow you to easily navigate
+back and forth if you're just scanning the work to see if you might be interested in
+spending the time to read the whole thing. But creating the correct headings for a given
+e-text requires some humun intervention to get it right every time. This is because the
+default Gutenberg e-text is plain text with no markup included to indicate where the
+book, chapter, section, act, scene, etc. breaks occur. The conversion utility has some
+default patterns it can look for (such as "Chapter x."), but sometimes needs some human
+input to know exactly what to look for. The conversion process is thus not completely
+automatic if you want the useful bookmarks included, and so cannot be activated with
+just a simple press of a button.
+
+Again, the preferred solution may be to reduce the frequency that users are required to
+use the separate conversion tool, and to provide a repository of e-texts already converted
+to the zTxt format with the proper bookmarks inserted. These converted e-texts could even
+be resubmitted to Project Gutenberg so that they would be available directly for download
+using any available download method, including PyGETS.
+
+In summary, the separate tools provided were not designed to provide a single integrated
+experience for performing all possible operations on Gutenberg e-texts. For the casual
+user, the PyGERS e-text reader application is the one they are most likely to be using
+on a day to day basis. The remaining two applications, the browser/downloader and the
+conversion tool, are intended to provide necessary tools to make Gutenberg e-texts more
+accessible, but are not necessarily intended to be used by everybody on a regular basis.
+The ideal solution would involve more infrastructure support for searching available e-texts
+and acquiring e-texts in a preferred format, either on the Project Gutenberg site itself,
+or from a third-party site. These are all things I intend to address at some time in the
+future. Feedback from users or other interested parties on where efforts should be applied
+is always appreciated.
+
+The one complaint about the main PyGERS application was that the default font produced
+an unreadable result. If this is true, it is a bug, but one which I was not aware of until
+now. As you pointed out, it is an easily correctable problem using the built-in configuration
+options.
