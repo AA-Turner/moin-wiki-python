@@ -1,0 +1,51 @@
+= ConfigParser NG Goals: Competing Concepts =
+
+== Keep It Simple And Useful ==
+
+In this target, the existing ConfigParser interface is cleaned up and modernised. Features such as string interpolation should be separated out from the base ConfigParser class, in order to lower the entry level for usage and the overall simplicity of the base class.
+
+Attribute and mapping-like access should not be included, as it teaches the Python beginner a bad habit early on in their programming life. Both are essentially syntactic hacks, attribute access also places unnecessary restrictions on the key item - it must be matched by [a-zA-Z_][a-zA-Z0-9_]+ (ie. Python identifer).
+
+
+=== Comments ===
+
+There is no single standard library module that I swear at more often than ConfigParser. It is beyond disgusting, yet it's core functionality is infinitely useful in nearly every small application I write. In none of these applications would a more complex configuration system be used, so adding a "ConfigParser2" in the style of urllib2 (needless complexity) would not benefit me at all. I suspect this is the case for most current users of the ConfigParser module. -- DavidWilson.
+
+
+
+=== Pros ===
+
+ * Beginners: a Python beginner will have an easier time moving from defining his program configuration inline, to having a user-editable external configuration. The simplicity of the implementation would also make a good reference for simple, clean Python.
+
+ * This is similar to how the old ConfigParser worked, only better.
+
+ * Involves no wheel reinvention, only natural improvement that won't ruffle existing users' feathers. No major extension of the existing ConfigParser concept is involved.
+
+ * Functionality: without sacrificing simplicity, we cover 90% or more of the common use cases for the module.
+
+
+=== Cons ===
+
+ * Only very simple data storage is supported, although this is sufficient for many common cases.
+
+ * Most data validation is left to the end user of the module.
+
+ * Multiple data formats are not supported, although this could be seen as a Pro, depending on your point of view.
+
+
+=== Implementations ===
+
+Please add your simple ConfigParser-NG implementation hyperlinks here.
+
+
+
+== Rich, Complex Data Storage ==
+
+This section lacks a description. Could a proponent of this scheme please add pros and cons as you see fit. :)
+
+
+=== Cons ===
+
+ * Rich, complex data storage is *already* accomplished in a popular, industrial standard called XML, including schema validation (DTDs). Why, really, reinvent the wheel?
+
+ * Should this not be provided by a different module that supports complex data storage?
