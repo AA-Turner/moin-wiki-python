@@ -422,6 +422,7 @@ def bar(low,high):
  * 0 Perhaps decorators should be allowed before or after the docstring.  If you have to choose, I'd choose making it before the docstring.
  * - No implementation currently exists.
  * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [http://mail.python.org/pipermail/python-dev/2004-August/047279.html]
+ * - [http://mail.python.org/pipermail/python-dev/2004-August/047289.html Guido rejects], because the function body should reflect what the function does; decorators are "outside" the function, for its callers.
 
 === D2. 'dot'decorators at top of function body syntax ===
 {{{
@@ -483,6 +484,10 @@ def func():
 
  * + Could use {{{.doc()}}} or {{{.doc =}}} or {{{.__doc__ =}}}  as a docstring alternative
 
+ * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [http://mail.python.org/pipermail/python-dev/2004-August/047279.html]
+
+ * - [http://mail.python.org/pipermail/python-dev/2004-August/047289.html Guido rejects], because the function body should reflect what the function does; decorators are "outside" the function, for its callers.
+
 
 === E1. pie decorator at top of function body syntax ===
 {{{
@@ -499,6 +504,7 @@ def bar(low,high):
  * Could use @doc too as a docstring alternative
  * - No implementation currently exists.
  * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [http://mail.python.org/pipermail/python-dev/2004-August/047279.html]
+ * - [http://mail.python.org/pipermail/python-dev/2004-August/047289.html Guido rejects], because the function body should reflect what the function does; decorators are "outside" the function, for its callers.
 
 === E2. vbar decorator at top of function body syntax ===
 {{{
@@ -545,6 +551,7 @@ def longMethodNameForEffect(longArgumentOne=None,
  * - When using just one bar, it isn't noticable enough.  It seems more a part of the actual decorator function name than something demarking the function. 
  * - When using multiple decorators, the pattern formed by the vertical bars draws the eyes too much and makes it hard to focus on the signature.
  * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [http://mail.python.org/pipermail/python-dev/2004-August/047279.html]
+ * - [http://mail.python.org/pipermail/python-dev/2004-August/047289.html Guido rejects], because the function body should reflect what the function does; decorators are "outside" the function, for its callers.
 
 Restyled version:
 {{{
@@ -609,6 +616,8 @@ Basically it has the same characteristic than E2, with the following slight diff
  * - More difficult to parse? The end-of-statement rules in Python mandate the colon be on the same line as the close of the argument list (less any line continuations); this syntax breaks that rule. Either the rule would have to be changed (yikes!), or line continuations would have to be used.
  * - New syntax having no equivalent in other part of python (but all @ / | propositions suffer from that )
  * - No implementation currently exists.
+ * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [http://mail.python.org/pipermail/python-dev/2004-August/047279.html]
+ * - [http://mail.python.org/pipermail/python-dev/2004-August/047289.html Guido rejects], because the function body should reflect what the function does; decorators are "outside" the function, for its callers.
 
 === E4. keyword decorator at top of function body syntax ===
 {{{
@@ -1072,6 +1081,8 @@ Proposals also differ on exactly where the decorator declaration should be made.
   * + Won't break simplistic code analyzers or grep for function def
   * 0 Consistent with docstring location
   * - Decorators may look like part of the function's code, not its declaration.  (That is, they look like they're evaluated when the function is called, not when it is parsed.)  This is a problem for decorations that change the signature, like staticmethod.
+ * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [http://mail.python.org/pipermail/python-dev/2004-August/047279.html]
+ * - [http://mail.python.org/pipermail/python-dev/2004-August/047289.html Guido rejects], because the function body should reflect what the function does; decorators are "outside" the function, for its callers.
   * ''Some post-def options'':
    * Before docstring
    * After docstring
