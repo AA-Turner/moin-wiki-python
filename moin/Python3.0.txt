@@ -6,6 +6,7 @@ and is actively maintained. [[#e 5]]
 incorporates items that GvR has never talked about.)
 
  ''Non-GvR sanctioned comments added below by JimD and StevenBethard''
+    ''I can't help but wonder if there's a better place on this wiki for these comments. --JimD''
 
 == Core Language Changes ==
 
@@ -28,6 +29,8 @@ except (E1, E2, E3), e:
 except (E1,), e:
    ...
 }}} This seems overly complicated to me, especially for the more common case of catching a single exception. -- StevenBethard''
+   ''I meant that the `except` statement would accept either an exception or a sequence of exceptions as its first argument and an identifier as its second argument.  It could basically do the equivalent of `if issubclass( arg1, Exception) or isinstance( arg1, Exception): ... else if len(arg1): ...` (excepting, obviously, that this is implemented at a lower level in the C core). --JimD''
+
  * Add a `with` statement: [[#j 10]] {{{
 #!python
 with self:
@@ -78,6 +81,8 @@ try:
     True, False
 except:
     True, False = 0 == 0, 0 == 1}}}  If True and False were keywords, this would cause a syntax error. -- StevenBethard''
+
+      ''Unless I'm drastically mistaken this code would remain unbroken (though it should specifically catch `NameError`) because the assignment will not be attempted in any version of Python that already supports `True` and `False` -- JimD''
  * Make true division default.
  * Raise an exception when making comparisons between two incongruent types (other than equality and inequality.)
    * Reason: such comparisons do not make sense and are especially confusing to new users of Python.
@@ -99,6 +104,10 @@ if expression:
 >>> f(*itertools.count())
 ... 0 1 'count(2)'
 }}}  Currently, this code causes an infinite loop because Python's argument parsing mechanism fully expands an iterator into a tuple when used in a *args context as above.  When iterators are the standard, I would hope that instead of fully expanding the iterator, only the elements from the iterator necessary to fill positional arguments would be extracted. -- StevenBethard''
+    ''Dare I even suggest that a `***args` form could be used in some bizarre way?  Personally I think the idea is unspeakably ugly and can't see any real world use for this.''
+
+   ''On the other hand I've often wished for something like: {{{(a, b, *c) = foo.parse(filedescriptor.readline())}}} which would unpack the first arg into `a`, the next into `b`, and the rest into `c`.  This desire is probably the result of years of shell scripting where I routinely use code like {{{ps fax | while read pid x x x cmd args; do ...}}} and don't care if args is empty or contains an interminately long list of items.  I'm still not sure I'd seriously recommend it to Python. --JimD''
+
 
 == Built-In Changes ==
 
@@ -134,6 +143,7 @@ if expression:
    * Instead: use string methods. 
    [[BR]]''(I like having the members like `string.letters` and `string.digits` even if the methods have all been integrated into the strings type -- JimD)''
    [[BR]]''(Would `str.letters` and `str.digits` be sufficient for your purposes if they existed?  Or is it necessary that there's a separate module for `letters` and `digits`? -- StevenBethard)''
+      ''I'm just saying that there are things in the `string` module that I think belong there.  I don't think that all the string manipulations that we might include with the standard libraries need to be in the core interpreter (any more than I would condone putting the regular expression engine into the core). --JimD''
  * Remove `types` module.
    * Instead: use the types in `__builtins__`.
  * Remove other deprecated modules. [[#c 3]]
