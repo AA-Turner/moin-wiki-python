@@ -86,3 +86,36 @@ At this point, you should be able to build the project using Eclipse's `Java Bui
   *Unselect the `Use global properties as specified...` check box
   *Click the `Add External` button and navigate to and select `<yourProjectName>/ant.properties`
   *Select `Apply` and `Run`
+
+A successful build should output something like the following:
+{{{
+Buildfile: c:\workspace\JythonTip\jython\build.xml
+init:
+     [echo] --- Build environment for jython ---
+     [echo] --- Flags (Note: If the {property name} is displayed,
+     [echo] --- then the component is not present)
+     [echo] --- Optional Libraries ---
+     [echo] java2 coll  = true
+     [echo] servlet     = ${servlet.present}
+     [echo] readline    = ${readline.present}
+     [echo] oracle      = ${oracle.present}
+     [echo] informix    = ${informix.present}
+     [echo] mysql       = ${mysql.present}
+     [echo] postgresql  = ${postgresql.present}
+     [echo] jndi        = true
+     [echo] jdbc        = true
+     [echo] jdbc3.0     = true
+dist-prepare:
+prepare:
+parser:
+compile:
+jar:
+   [delete] Deleting: C:\workspace\JythonTip\jython\build\mainClass.mf
+copy-xml:
+copy-dist:
+BUILD SUCCESSFUL
+Total time: 2 seconds
+}}}
+Note that this sample was actually a re-build, so it didn't do that much (you'll see more output on the first build) and ran pretty fast (2 seconds).  Also, note that I did not link in the optional "user-supply-able" jars.  To do so, just add those entries to your ant.properties (look for the placeholders).
+
+And here is a [wiki:Self:/JythonDeveloperGuide#sampleBatch sample batch file (windows)] that runs the eclipse-built jython.jar
