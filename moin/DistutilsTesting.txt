@@ -1,9 +1,11 @@
-One problem with developing the Distutils is that there's no test suite, so
-figuring out if a change broke something is a scatter-shot process.  You
+One problem with developing the Distutils is that there's no functional test
+suite, so figuring out if a change broke something is a scatter-shot process.
+(There are no unit tests either, but we're talking about functional tests 
+here.)  You
 might try building a few packages such as mxBase or PyXML, but you have no
 idea if everything was exercised.  I'd really like to have a testing
 mechanism before beginning to make significant changes; without one we might
-have lots and lots of inadvertent breakages.
+have lots of inadvertent breakage.
 
 Testing the Distutils is difficult for two reasons:
 
@@ -31,7 +33,7 @@ Here's a vague straw-man proposal:
  and the rest of the file is the expected error message.
 
  If the test case is expected to succeed, the first line of the file is "#valid".
- The rest of the file is Python code that will be executed to check various things.  It might be doctest code, with some predefined testing methods.  Imaginary example:
+ The rest of the file is Python code that will be executed to check various things.  It might be doctest code, with some pre-defined testing methods.  Imaginary example:
  {{{
     >>> import example     # You should be able to import the package ...
     >>> from example import subpackage   # ... and a subpackage.
