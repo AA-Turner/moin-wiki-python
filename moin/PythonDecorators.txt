@@ -50,6 +50,7 @@ def foo(arg1,arg2):
 def bar(low,high):
     ...
 }}}
+ * + Implementation already exists (and is in Python 2.4a2)
  * + Java-like, so not completely unknown to everyone.
  * + Makes the syntax obvious visually   
  * + Will not be silently ignored 
@@ -117,6 +118,7 @@ def foo(arg1,arg2):
 def bar(low,high):
     ...
 }}}
+ * + Implementation already exists
  * + C# like
  * + Can be made backwards compatible-ish, with a "hack"
  * + Doesn't cause breakage in existing code-searching tools
@@ -137,6 +139,7 @@ def foo(arg1,arg2) [classmethod]:
 def bar(low,high) [accepts(int,int), returns(float)]:
     ...
 }}}
+ * + Implementation already exists
  * + Also somewhat C#-like
  * + Was a "community favorite" at one time
  * + Clearly a part of function declaration
@@ -229,6 +232,7 @@ of either, so I will only list those that are unique to the combination.
  * - Some proponents objected to adding a keyword, because of more typing.  
  * 0 Makes the decoration look like a second-class or optional part of the definition.  This is true, but may have caused some emotional objection.
  * - There was very little agreement on which word should be used.
+ * - No implementation currently exists (it ''may'' be a simple variation of the implementation of C1).
 
 FWIW, here is Guido's jumble example in this syntax.
 {{{
@@ -303,6 +307,7 @@ Very similar to C2, but with those slight differences
  * + Nicer for one-line decoration when using multiple decorators.
  * - The hanging comma feel strange for 1-element tuple, and will probably often been forgotten.
  * - Decorator and arguments looks (too?) similar for multiline case.
+ * - No implementation currently exists.
 
 The 1st drawback could be removed if one allows both tuple and single-element after the pseudo-keyword,
 trading consistency for readability and convenience. 
@@ -328,6 +333,7 @@ def bar(low,high):
  * - Adds 'magic' behavior to a normal python expression (lists). Not exactly true: there is nothing magic in string when it's used in docstring - it's a normal string in the "magic" place.
  * - Compatibility issue: program that is working under 2.4 will not work properly under earlier versions without any explanation (old syntax compatible decorators will not blow in your face)
  * 0 Perhaps decorators should be allowed before or after the docstring.  If you have to choose, I'd choose making it before the docstring.
+ * - No implementation currently exists.
 
 '''E1. pie decorator at top of function body syntax'''
 {{{
@@ -342,6 +348,7 @@ def bar(low,high):
 }}}
  * Same as above but with pie syntax.
  * Could use @doc too as a docstring alternative
+ * - No implementation currently exists.
 
 '''E2. vbar decorator at top of function body syntax'''
 {{{
@@ -381,6 +388,7 @@ def longMethodNameForEffect(longArgumentOne=None,
  * - For some fonts, "|" looks similar to "I" or "l"; but code highlighting would remove this problem.
  * - The key with "|" on it is often in an awkward location on laptop keyboards
  * 0 Perhaps decorators should be allowed before or after the docstring.  If you have to choose, I'd choose making it before the docstring.
+ * - No implementation currently exists.
 
 '''E3. vbar decorator after arg'''
 {{{
@@ -415,6 +423,7 @@ Basically it has the same characteristic than E2, with the following slight diff
  * + Possible 1-line version as readable as the inline syntax (see F.) for short function/decoration
  * - More difficult to parse?
  * - New syntax having no equivalent in other part of python (but all @ / | propositions suffer from that )
+ * - No implementation currently exists.
 
 '''F. inline syntax'''
 {{{
@@ -431,6 +440,7 @@ def classmethod foo(arg1,arg2):
  * - Complicates things like colorization and other functions of helper tools
  * - Many people don't like the idea of having something between 'def' and the function name
  * - Breaks etags (couldn't it be fixed?)
+ * - No implementation currently exists.
  
 '''G. as decorator'''
 {{{
@@ -443,6 +453,7 @@ def foo(arg1,arg2):
  * + Non-punctuation based
  * + Does not use an existing mechanism with 'magic' behavior
  * - Guido specifically vetos: "as" means "rename" in too many logical, common places that are
+ * - No implementation currently exists.
 
 '''H. pie decorator using a different character'''
 
@@ -461,6 +472,7 @@ def bar(low,high):
 
 Same pros and cons as @decorator, but additionally:
 
+ * + Likely to be a trivial change to what is already in 2.4a2.
  * + It doesn't break Leo, IPython, or any other tool that uses @ as a special character.
  * + The association with pipes makes some sense: "take this thing and pass it through that thing to get a modified thing".
  * - Most characters (including pipe) already have a meaning.  Ending an expression at the linebreak will probably keep these from becoming ambiguous, but ... that gets fragile.
@@ -481,6 +493,7 @@ def bar(low,high):
  * + Doesn't need a new character
  * - Angle brackets are "unpaired" characters
  * - Parsing of greater-than and less-than becomes more fragile.
+ * - No implementation currently exists.
 
 '''J1. new keyword decorator syntax'''
 {{{
@@ -499,6 +512,7 @@ decorate accepts(int,int), returns(float):
  * - Increases minimum ident level on decorated functions
  * - Inconsistent identation level between methods with/without decorators
  * - way to much indenting if there are multiple decorators.
+ * - No implementation currently exists.
 
 '''J2. expand the def suite'''
 {{{
@@ -520,6 +534,7 @@ def bar(low,high):
  * - Overkill for the simple case like classmethod.
  * - Many people felt it was wrong use of an identation suite.
  * - Technical problems with the current grammar parser if a suite *starts* with an optional part.  (Ending with an optional part, such as "else:" is OK, but starting with one is not.
+ * - No implementation currently exists.
 
 '''K. partitioned syntax syntax'''
 
@@ -546,6 +561,7 @@ def classmethod foo(arg1,arg2):
 
      Other syntaxes will need to be colorized too and will thus complicate colorization.
  * - Since both methods are legal, it has all the downsides of either syntax, in terms of what it does to the rest of the language or newbie confusion.
+ * - No implementation currently exists.
 
 '''L. Keyword other than as and with before def'''
 {{{
@@ -563,6 +579,7 @@ def bar(low,high):
  * + No special character
  * - New keyword
  * - A lot of the drawback of @decorators
+ * - No implementation currently exists.
 
 == Thinking ahead to Python 3 ? ==
 
