@@ -1,0 +1,37 @@
+[[TableOfContents]]
+
+= The Problem =
+Python is sorely missing an if statement that:
+ * computes and takes the value of A if and only if the predicate is true
+ * computes and takes the value of B if and only if the predicate is false
+
+In C and its derivitives, 
+{{{
+predicate ? A : B 
+}}}
+
+This is extremely useful in programming and helps avoid copy and paste assignments.  This is an example of poor code, because the assignment logic "x=" is copied and pasted, violating the software maintainbility and readability principle of OnceAndOnlyOnce:
+
+{{{
+if test:
+   x=sin(cos(x))
+else:
+   x=cos(sin(x))
+}}}
+
+
+= Current Python Idioms =
+
+There are a few ways in Python do achieve the evaluation only of the statement used when the predicate is true:
+
+
+
+= Proposed Solutions =
+
+= If always returns a value =
+{{{
+x = if test:
+    A()
+ else:
+     B()
+}}}
