@@ -1,8 +1,14 @@
+#pragma section-numbers off
+
+= About Me =
+
 Hello! I'm Leonard. This is my first conference talk. I'll keep this
 page updated with information as I scramble to get the talk and the
 corresponding software written in time. :)
 
 If you're interested in me personally, you can visit [http://www.crummy.com/ my homepage].
+
+= About the Talk =
 
 The purpose of my talk is to get more of the world's configuration
 data out of configuration files and into web interfaces. Web
@@ -13,9 +19,40 @@ also useful for doing a user preferences engine.
 The framework I'm using in my talk is based on the one I wrote for [http://newsbruiser.tigris.org/ NewsBruiser].
 [http://newsbruiser.tigris.org/source/browse/newsbruiser/nb/Options.py Here it is in CVS.] 
 
-
 My talk is currently [http://www.python.org/pycon/pycon-schedule.html scheduled]
 for 11:30-12:00 on Thursday, March 27, in the Elliot room, wherever
 that is. I assume there will be signs.
+
+= To do =
+
+* Write the slides!
+
+* Make Options.py fully generic, prove this by moving it into lib/ dir of NewsBruiser.
+
+* Write 3 simple example apps to do the same thing (or one app which can get its variable in any of 3 ways):
+
+  * Hard-coded variable
+  * Configuration file variable
+  * Variable changable from configuration interface
+
+* Write more complex app that sets global options (context == None)
+
+* Write example app that sets per-user options (context == username)
+
+= Questions For You =
+
+First, does what I'm talking about here even make sense?
+
+Second, what kind of apps should I write? I'd like them to be extremely simple, with only one screen apart from the configuration screen (if there is one). I'd like the "complex app" mentioned above to be configurable by at least a boolean, a text box, a drop-down selection, and something with extra semantics (like a fractional value or a year).
+
+An example of the simple app would be something that prints out a string some configurable number of times. An example of the more complex app might be a silly text generator that reads a web page and does something to it (what it does being controlled by the configuration interface). 
+
+= Work Log =
+
+02/19: Yesterday I worked on cleaning up Options.py: moving out NewsBruiserisms, adding comments and PyDoc. 
+I tell myself that this is useful work for the talk and not just a heavily disguised method of procrastination.
+Today: more of the same. Also set up this wiki page.
+
+
 ----
 CategoryPyConSpeakerPage
