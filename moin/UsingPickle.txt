@@ -29,6 +29,21 @@ favorite_color = pickle.load( open( "save.p" ) )
 
 For a more complex example, see [http://www.python.org/doc/current/lib/pickle-example.html the official Pickle example,] and for API details, see the [http://www.python.org/doc/current/lib/node64.html official Pickle use documentation.]
 
+== cPickle: MUCH faster ==
+
+You can speed up your pickle access with ''cPickle.''
+
+The only difference is that you write...
+
+{{{
+#!python
+import cPickle as pickle
+}}}
+
+...at the top of your file, and now all your pickle calls are ''much'' faster. ("...up to 1000 times faster," [http://www.python.org/doc/current/lib/module-cPickle.html says the manual.)
+
+Why would you ever use native Pickle, rather than cPickle? I don't know.
+
 == Flying Pickle Alert! ==
 
 Pickle files can be hacked. If you receive a raw pickle file over the network, ''don't trust it!'' It could have malicious code in it, that would run arbitrary python when you try to de-pickle it.
