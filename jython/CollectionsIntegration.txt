@@ -6,15 +6,15 @@ The integration of Collections into Jython happens through the CollectionProxy a
 
 Going the other way fails.  Take for example:
 
-    {{{
-    >>> from java.util import ArrayList
-    >>> a = ArrayList([1,2,3])
-    Traceback (innermost last):
-      File "<console>", line 1, in ?
-    TypeError: java.util.ArrayList(): 1st arg can't be coerced to java.util.Collection or int
-    }}}
+{{{
+  >>> from java.util import ArrayList
+  >>> a = ArrayList([1,2,3])
+  Traceback (innermost last):
+    File "<console>", line 1, in ?
+  TypeError: java.util.ArrayList(): 1st arg can't be coerced to java.util.Collection or int
+}}}
 
-In this example the Array````List constructor is expecting a java.util.Collection instance but since the Py````List does not implement this interface the Type````Error is thrown.  Since the Collection framework is fundamental to Java since 1.2 the JythonDevelopmentTeam will address this issue.  The work is currently being managed by ClarkUpdike.
+In this example the Array````List constructor is expecting a java.util.Collection instance but since the Py````List does not implement this interface the Type````Error is thrown.  Since the Collection framework is fundamental to Java since 1.2 the JythonDevelopmentTeam will address this issue.  The implementation is currently being written by ClarkUpdike.
 
 === Design ===
 
@@ -25,7 +25,7 @@ There are two different approaches:
 
 Approach 2 offers the best integration options.  Jython is primarily an implementation of Python so implementing the data structures as they are in Python takes priority over the Java implementations.  In addition, the keyword and index arguments for method calls are already done.  The implementation of the interfaces will need only delegate to the appropriate PyObject instance's method for the same functionality.
 
-||Jython Class||Extends||Implements||
+||'''Jython Class'''||'''Extends'''||'''Implements'''||
 ||Py````Sequence||Py````Object||List (Collection)||
 ||Py````Array||Py````Sequence||||
 ||Py````List||Py````Sequence||||
@@ -39,3 +39,44 @@ Approach 2 offers the best integration options.  Jython is primarily an implemen
 === Discussion ===
  ClarkUpdike Feb 12 2005
   [http://java.sun.com/j2se/1.3/docs/api/java/util/Collections.html java.util.Collections]: Is there a need to provide a jython version of this class (especially the synchronized and unmodifiable wrapper methods)?  If it is not implemented and the java.util.Collections wrappers are used on new collection objects, the returned objects will only proxy for the java.util interface and will be broken in jython.  There is also a Py``Immutable``Set in BrianZimmer's SetsModule, but I don't think there is an immutable dictionary equivalent.
+
+ BrianZimmer Feb 13 2005
+  I'm inclinded to say ''no''.  Consider this code:
+
+  {{{
+    List a = new ArrayList();
+    a.add(1);
+    a.add(2);
+    List b = Collection.unmodifiableList(a);
+    try {
+      b.add(3);
+    } catch (UnsupportedOperationException e) {
+      e.printStackTrace();
+    }
+    a.add(3);
+  }}}
+
+  Without making a copy of the collection it is always possible to mutate the delegate.  The Collections methods only wrap and delegate; they do not instruct the source to be immutable.
+
+  In Python, this is handled through the use of two different classes: list and tuple.  Consider this code:
+
+  {{{
+    a = [1,2,3,4]
+    b = tuple(a)
+    a.append(5)
+    print a, b
+  }}}
+
+  Since the tuple makes a copy of the list and does not delegate, the immutability is preserved.
+
+  If an immutable Collection is really desired, copy it and make it immutable (this is really the true way in Java as well).  This relieves Jython collections from concerning themselves with immutability because they will gladly offer up their contents through the standard Collection interface for the creation of a new, all Java Collection which can be used as the source.
+
+  In the case of Py``Immutable``Set, it's part of the Python module, so it must be implemented.  The relationship for mutable and immutable collections in Jython:
+
+  ||'''Mutable'''||'''Immutable'''||
+  ||Py``List||Py``Tuple||
+  ||Py``Set||Py``Immutable``Set||
+  ||Py``Dict||none||
+
+  Synchronization should follow the same approach.
+ 
