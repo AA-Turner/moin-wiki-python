@@ -279,17 +279,8 @@ class MyClassWrap : public MyClass
 
 And in the module definition : {{{
 class_<MyClass, auto_ptr<MyClassWrap> >("MyClass");
-implicitly_convertible<auto_ptr<MyClassWrap>, auto_ptr<ClassWrap> >();
-}}}
-
-----
-Just a note, shouldn't that be like this? {{{
 implicitly_convertible<auto_ptr<MyClassWrap>, auto_ptr<MyClass> >();
 }}}
---Timo Mihaljov
-----
-
-
 And you still write the thin wrapper as described above.
 
 
