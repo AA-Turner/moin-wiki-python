@@ -6,6 +6,14 @@ Add a basic URL type.
 
 Import hook for importing from URLs (e.g. http://stdlib.python.org/2.3.4/pickle)
 
+----------
+
+Importing a URL is a very bad idea.  First, there are security issues, as you are executing code over which you don't have control.  Also, you don't generally want libraries to be upgraded behind your back.  The standard library gets upgraded, but a lot of work goes into keep that backward compatible -- in other libraries, this isn't the case.  You want to make upgrades explicit in that case.  Languages that have the ability to import URLs -- like PHP -- almost never use it.
+
+A URL literal doesn't seem particularly useful.  It would provide an alternative to, say, {{{url('http://something.com/whatever')}}} (e.g., {{{<http://something.com/whatever>}}}), but since URLs tend to be dynamic or configurable, a literal doesn't add significant value.  However, a good URL class would be excellent, maybe a class that has an API similar to the [http://www.jorendorff.com/articles/python/path/ path] module.  It would be great if both modules were builtins (or at least in the standard library).
+
+-- IanBicking
+
 What else?
 
 = References =
