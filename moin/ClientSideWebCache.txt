@@ -28,3 +28,128 @@ Some info for would-be cachers:
  * [http://www.python.org/doc/current/lib/module-urllib.html urllib.urlretrieve] - performs some of what we want, though you have to do a lot of maintenance yourself
 
 -- LionKimbro [[DateTime(2005-03-29T06:45:28Z)]]
+
+== Primitive Example ==
+
+Here's a very simple example:
+
+{{{
+#!python
+#!/usr/bin/python
+"""Retrieve and cache web pages.
+
+webcache retrieves and caches web pages. If the webpage has been
+retrieved before, the cached version is used.
+
+The module is primitive; it DOES NOT respect HTTP cache headers. Cached
+pages are stored in a BSD database.
+
+WebCache --  cache for web pages
+"""
+
+import time
+import urllib
+import optparse
+import bsddb
+
+
+class WebCache:
+
+    """BSD DB cache for web pages.
+
+    get_page --  retrieve a page from cache or web
+    dump_page --  dump a cache entry
+    clean --  vet expired cache entries
+    """
+
+    def __init__(self, page_db_filename, time_db_filename, cache_ttl):
+        """Initialize web cache.
+
+        Berkeley databases are created if they don't already exist. The
+        page database stores the contents of web pages. The time
+        database stores the times that the pages were loaded.
+
+        Times are stored in seconds since the epoch.
+
+        page_db_filename --  filename of page database
+        time_db_filename --  filename of load timestamp database
+        cache_ttl --  cache time to live in seconds
+        """
+        self._page_db = bsddb.hashopen(page_db_filename)
+        self._time_db = bsddb.hashopen(time_db_filename)
+        self.cache_ttl = cache_ttl
+
+    def get_page(self, url):
+        """Retrieve a page from the web or the cache.
+
+        get_page returns the page contents retrieved by urllib.urlopen.
+
+        url --  URL of web page to retrieve
+        """
+
+        now = time.time()
+        if url in self._time_db:
+            last_read = float(self._time_db[url])
+            if now < last_read + self.cache_ttl:
+                return self._page_db[url]
+
+        contents = urllib.urlopen(url).read()
+
+        self._page_db[url] = contents
+        self._time_db[url] = str(now)
+        self._page_db.sync()
+        self._time_db.sync()
+
+        return contents
+
+    def dump_page(self, url):
+        """Force a cache entry to expire."""
+
+        del self._time_db[url]
+        del self._page_db[url]
+        self._time_db.sync()
+        self._page_db.sync()
+
+    def clean(self):
+        """Vet cache of expired entries.
+
+        Note that the BSD database file may not actually get smaller.
+        (Rather, older data will be overwritten by new data.)
+        """
+
+        now = time.time()
+        for (url, last_read) in self._time_db.items():
+            last_read = float(last_read)
+            if now >= last_read + self.cache_ttl:
+                del self._time_db[url]
+                del self._page_db[url]
+        self._time_db.sync()
+        self._page_db.sync()
+
+
+if __name__ == "__main__":
+    parser = optparse.OptionParser("usage: %prog [options]\n"
+                                   "cleans the cache if no URL is"
+                                   " supplied")
+    parser.add_option("-p", "--pages", dest="page_db_filename",
+                      default="pages.db", type="string",
+                      help="pages BSD database filename")
+    parser.add_option("-t", "--times", dest="time_db_filename",
+                      default="times.db", type="string",
+                      help="timestamps BSD database filename")
+    parser.add_option("-T", "--ttl", dest="ttl", default=60*60,
+                      type="int", help="time to live (in seconds)")
+    parser.add_option("-u", "--url", dest="url", type="string",
+                      help="url of page to retrieve and display")
+
+    (options, args) = parser.parse_args()
+    if len(args) > 0:
+        parser.error("incorrect number of arguments")
+
+    cache = WebCache(options.page_db_filename, options.time_db_filename,
+                     options.ttl)
+    if options.url is None:
+        cache.clean()
+    else:
+        print cache.get_page(args[0])
+}}}
