@@ -8,15 +8,16 @@ nitty-gritty details of ZODB.
 
 There are many things we could work on, including:
 
- * Documentation
  * Adding interfaces (what exactly are the public APIs?  it's become muddy)  PROGRESS:  Christian Theune made a good start at this; more is needed.
+ * Database iteration (e.g., iterate over all the objects of class Foo; there's no efficient way to do this now, especially when using ZEO).  PROGRESS:  A FileStorage iterator was implemented.  Still needed:  other storages; ZEO; more usable API on Connections.
+ * Multi-database support, http://zope.org/Wikis/ZODB/MultiDatabases.  PROGRESS:  A simpler of version of this proposal was implemented.  Still needed:  work on Zope to use this, and to stop monkey-patching ZODB internals.
+ * Deprecate get_tranasaction() officially.
+ * Documentation
  * Bug fixes
  * Code cleanup
  * Saner tests
- * Multi-database support, http://zope.org/Wikis/ZODB/MultiDatabases.  PROGRESS:  A simpler of version of this proposal was implemented.
  * Savepoints
  * Getting rid of versions
- * Database iteration (e.g., iterate over all the objects of class Foo; there's no efficient way to do this now, especially when using ZEO)
  * Conflict resolution redesign.  Possiblities:  make it optional, make it pluggable, use a registry of class->resolution code instead of methods, get it off the ZEO server?
 
 Note that to be able to make code contributions, you must be a Zope contributor: http://dev.zope.org/Subversion
