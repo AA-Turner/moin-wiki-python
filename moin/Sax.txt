@@ -1,0 +1,28 @@
+"Sax" is an XML parser that operates element by element, line by line.
+
+MiniDom sucks up an entire XML file, holds it in memory, and lets you work with it.
+Sax, on the other hand, emits events as it goes step by step through the file.
+
+== Example ==
+
+{{{
+#!python
+import xml.sax
+
+class InkscapeSvgHandler(xml.sax.ContentHandler):
+    def startElement(self, name, attrs):
+        if name == "svg":
+            for (k,v) in attrs.items():
+                print k + " " + v
+
+parser = xml.sax.make_parser()
+parser.setContentHandler(InkscapeSvgHandler())
+parser.parse(open("svg.xml","r"))
+}}}
+
+== Links ==
+ * [http://www.rexx.com/~dkuhlman/pyxmlfaq.html Python XML FAQ and How-to] -- describes sax & MiniDom
+ * [http://www.devchannel.org/webserviceschannel/04/05/25/1414203.shtml SAX processing in Python] -- helpful diagrams
+ * [http://pyxml.sourceforge.net/topics/howto/section-SAX.html SAX: The Simple API for XML] -- wordy tutorial
+ * [http://www-106.ibm.com/developerworks/linux/library/l-pxml.html Charming Python:Revisiting XML tools for Python] -- kind of old
+ * [http://www.xml.com/pub/a/2003/03/12/py-xml.html Usings SAX for Proper XML Output]
