@@ -1,27 +1,27 @@
 This page follows a [http://groups.google.ca/groups?hl=en&lr=&selm=mailman.8378.1103832808.5135.python-list%40python.org&prev=/groups%3Fq%3Ddubious%2BFernando%26hl%3Den%26lr%3D%26group%3Dcomp.lang.python.*%26selm%3Dmailman.8378.1103832808.5135.python-list%2540python.org%26rnum%3D2  suggestion] of FernadoPerez on comp.lang.python. His suggestion was that there should somewhere be a collection of bad python practices together with an explanation of the badness and a preferred alternative. This seems a good job for a wiki-page, so ... 
 
-== Concern Over Efficiency ==
-Effort expended on "execution inefficiency" when it is not a requirement of the end product being produced.  
-=== Dubious Way ===
-Taking extra time or making code harder to read by writing  code that is fast from the start, rather than getting the simplest, most readible thing working.
+== Premature Optimization ==
+Premature Optimization is spending effort on execution efficiency before determining which parts of the code are actually significant to the program efficiency.
 
-example to join a bunch of strings together:
-{{{
->>> print '%s%s%s%s%s' %tuple(string_list)
-onebigstringinpieces}}}
-}}}
+=== Dubious Way ===
+This occurs in a variety of contexts, all of which involve spending extra time making code run faster before first writing a simple, concise implementation that produces the correct results.
+
+Example of over-optimizing attribute accesses:
+{{{#!python
+app = lst.append
+for item in iterable:
+    app(func(item))}}}
+
+=== The Problem ===
+While a correctly applied optimization can indeed speed up code, optimizing code that is only seldom used can waste significant development time, and can make code harder to read.  Optimizations should only be sought when a programmer has isolated (using a profiler, etc.) a significant bottleneck in program efficiency.  Write correct code first, then make it fast (if necessary).
 
 === Preferred Way ===
-Dead simple readible.
+Don't optimize until necessary.
 
+Example of non-optimized but more readable attribute access:
 {{{#!python
->>> string_list = ['one', 'big', 'string', 'in', 'pieces']
->>> new_string = "" 
->>> for s in string_list: 
-        new_string = new_string + s
->>> print new_string 
-onebigstringinpieces 
->>>}}} 
+for item in iterable:
+    lst.append(func(item))}}}
 
 == String Concatenation ==
 String concatenation is building up a relatively lengthy string from a collection of strings.
