@@ -32,3 +32,46 @@ def foo (arg1, arg2):
 == Related Resources ==
 
 See also: MixIns, MetaClasses
+
+== Current Decorator Proposals ==
+
+After the @decorator syntax was "accepted", lots of people threw up alarms and a huge series of threads started exploding on Python-dev. Here are the current alternatives that I could find that are being argued, with pros and cons:
+
+'''@decorator  "pie decorator syntax"'''
+ * + Java-like, so not completely unknown to everyone.
+ * + Makes the syntax obvious visually   
+ * + Will not be silently ignored 
+ * + Compile-time 
+ * - Ugly?
+ * - Seperate from the def syntax (undesired by some for simple decorators like classmethod/staticmethod)
+ * - The @ special character is used in IPython (...)
+ * - Punctuation-based syntax raises Perlfears.
+ * - Does not nessecarily 
+    
+'''[decorator] "list syntax"'''
+ * + C# like
+ * + Can be made backwards compatible-ish, with a "hack"
+ * + Doesn't cause breakage in existing code-searching tools
+ * - Doesn't cause breakage in existing code-searching tools
+ * - EuroPython didn't like it ( why? )
+ * - The backwards compatability wouldn't be portable to Jython
+ * - Looks like a normal expression, but has "magic" behavior of altering a function object
+    
+'''def decorator function() "inline? syntax?"'''
+ * + Simple
+ * + Obviousely attached to the function
+ * - Does not allow for arguments to the decorator inline.
+ * - The natural place where everyone looks for the function name now is a possible container for other information
+ * - Complicates things like colorization and other functions of helper tools
+    
+'''as decorator'''
+ * + Non-punctuation based
+ * + Does not use an existing mechanism with 'magic' behavior
+ * - Guido specifically vetos: "as" means "rename" in too many logical, common places that are in-use, and decorators do not rename.
+    
+'''with decorator'''
+ * + The benefits of "as" without the renaming oddity.
+ * + Reads as, "with decorator define function", which seems accurate. Such as, "with staticmethod define foobar(baz)". 
+ * - Adds a new keyword?    
+
+    
