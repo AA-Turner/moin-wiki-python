@@ -8,13 +8,16 @@ Surprisingly, I haven't been able to find a single Python module providing such 
 
 WxPython supports wxPoint and wxRect, but it lacks many basic functions (such as, say, adding two points together to produce a third point..!)
 
-This code is lacking a zillion essential features (such as "Length"). I only put in the ones I needed immediately. Please add, refactor, optimize, rename stuff to be more standard, etc., as you see fit..!
+This code is lacking a zillion essential features (but interpoint distance can now be calculated). I only put in the ones I needed immediately. Please add, refactor, optimize, rename stuff to be more standard, etc., as you see fit..!
 
 ''If there's an actual, accessible, easy-to-include Python module, not tied to a graphics library, that does this stuff already, please write about it here! No sense in reinventing the wheel. I've looked, but haven't found one. Hence this.''
 
 {{{
 #!python
 # Code is Public Domain.
+
+import math # required because of 'sqrt' in 'distanceTo' function.
+
 def normalize(x1, y1, x2, y2):
     return min(x1,x2), min(y1,y2), max(x1,x2), max(y1,y2)
 
@@ -44,6 +47,11 @@ class Point:
     def Floatize(self):
         self.x = float(self.x)
         self.y = float(self.y)
+    def distanceTo(self,pt):
+        '''Distance between 2 points.'''
+        dy = self.y - pt.y
+        dx = self.x - pt.x
+        return sqrt(dy*dy + dx*dx)
 
 class Rect:
     def __init__(self, pt1, pt2):
