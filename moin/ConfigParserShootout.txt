@@ -49,7 +49,8 @@ desired.
  certain key as being an integer, and it would be automatically
  converted when the file was loaded.  This becomes a bit more
  difficult when you have more complex structures, multiple sections,
- etc.  Defaults fit in here as well.
+ etc.  Defaults fit in here as well.  Obviously the types available
+ should not be fixed.
 
  * Supports repeating values in some fashion.  Maybe a key can appear
  multiple times in the file.  Maybe nested structures are allowed
@@ -69,6 +70,15 @@ desired.
 
  * Supports multiple syntaxes; e.g., an XML plist syntax, an INI
  syntax, a ZCML syntax.
+
+ * Gives good error messages.  Error messages should include file and
+ line number.  If we define types in a schema, invalid values should give
+ good errors.
+
+ * Supports (maybe through utility functions or otherwise) more advanced
+ configuration directives, like including other files or string 
+ interpolation.  But a lot of people don't like ConfigParser's current string
+ interpolation.
 
 = Discussion =
 
