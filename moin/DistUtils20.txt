@@ -68,3 +68,13 @@ Maybe some traditional package concepts:
 for my taste.--amk]
 
   -- MichaelHudson
+
+ * Python packages should have a canonical way of having C/C++ headers, executable scripts, dynamic libraries (For Win32, OS X), documentation, examples, and other arbitrary data (like fonts, icons, etc.) associated with them in the same or folder (or a closely related folder with identical permissions) as the package itself.  We could use something like Apple's bundles for this purpose (sans versioning, most likely).  If a package wants to put things in places such as /usr/local/bin, they should be symlinks to what is in this new structure.
+
+ * Multi-module installs (more than one importabl ething that goes into site-packages) should be deprecated.  If they want this behavior they should install a package and use a pth file.
+
+ * Add the following fields to PEP-241 (PKG-INFO):  Package-Name (the actual python-importable name of what was just installed), Depends (a list of other packages, by Package-Name, that this package depends on), Recommends (a list of other packages, by Package-Name, that enhance the functionality of this package when present).  These headers make the REQUIRES and PROVIDES (how was PROVIDES useful anyways?) files from PEP-262 obsolete.
+
+ * Perhaps a better way of finding C/C++ libraries/headers that an extension depends on, include support for OS X frameworks.  Make linking to frameworks less hackish.
+  
+  -- BobIppolito
