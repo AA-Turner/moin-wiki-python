@@ -1,52 +1,5 @@
 This page follows a [http://groups.google.ca/groups?hl=en&lr=&selm=mailman.8378.1103832808.5135.python-list%40python.org&prev=/groups%3Fq%3Ddubious%2BFernando%26hl%3Den%26lr%3D%26group%3Dcomp.lang.python.*%26selm%3Dmailman.8378.1103832808.5135.python-list%2540python.org%26rnum%3D2  suggestion] of FernadoPerez on comp.lang.python. His suggestion was that there should somewhere be a collection of bad python practices together with an explanation of the badness and a preferred alternative. This seems a good job for a wiki-page, so ... 
 
-== Premature Optimization ==
-Premature Optimization is spending effort on execution efficiency before determining which parts of the code are actually significant to the program efficiency.
-
-''Should premature optimization should really be on
-this page at all because it's not really a python-specific problem? ''
-
-=== Dubious Way ===
-This occurs in a variety of contexts, all of which involve spending extra time making code run faster before first writing a simple, concise implementation that produces the correct results.
-
-Example of over-optimizing attribute accesses:
-{{{#!python
-app = lst.append
-for item in iterable:
-    app(func(item))}}}
-
-=== The Problem ===
-While a correctly applied optimization can indeed speed up code, optimizing code that is only seldom used can waste significant development time, and can make code harder to read.  Optimizations should only be sought when a programmer has isolated (using a profiler, etc.) a significant bottleneck in program efficiency.  Write correct code first, then make it fast (if necessary).
-
-=== Preferred Way ===
-Don't optimize until necessary.
-
-Example of non-optimized but more readable attribute access:
-{{{#!python
-for item in iterable:
-    lst.append(func(item))}}}
-
-''The above examles look equally readable to me.  In fact, the binding of a function to an
-object 
-{{{
-app = lst.append
-}}}
-
-enhances readiblity and maintainability if used more than once:
-
-{{{
-app("a")
-app("b")
-}}}
-
-is preferred over 
-{{{
-lst.append("a")
-lst.append("b")
-}}}
-since the binding of lst and append happens twice - copy and paste.''
-
-
 == String Concatenation ==
 String concatenation is building up a relatively lengthy string from a collection of strings.
 
@@ -216,3 +169,50 @@ Note that in pre-2.3 Pythons 'in' only worked with single character strings.  In
 
 {{{#!python
 words = s.split()}}}
+
+
+== Premature Optimization ==
+''Note that this is at the bottom not because it is less significant than any of the other problems but because, unlike the above idioms, is not a problem specific to Python, but a general programming problem.''
+
+Premature Optimization is spending effort on execution efficiency before determining which parts of the code are actually significant to the program efficiency.
+
+=== Dubious Way ===
+This occurs in a variety of contexts, all of which involve spending extra time making code run faster before first writing a simple, concise implementation that produces the correct results.
+
+Example of over-optimizing attribute accesses:
+{{{#!python
+app = lst.append
+for item in iterable:
+    app(func(item))}}}
+
+=== The Problem ===
+While a correctly applied optimization can indeed speed up code, optimizing code that is only seldom used can waste significant development time, and can make code harder to read.  Optimizations should only be sought when a programmer has isolated (using a profiler, etc.) a significant bottleneck in program efficiency.  Write correct code first, then make it fast (if necessary).
+
+=== Preferred Way ===
+Don't optimize until necessary.
+
+Example of non-optimized but more readable attribute access:
+{{{#!python
+for item in iterable:
+    lst.append(func(item))}}}
+
+''The above examles look equally readable to me.  In fact, the binding of a function to an
+object 
+{{{
+app = lst.append
+}}}
+
+enhances readiblity and maintainability if used more than once:
+
+{{{
+app("a")
+app("b")
+}}}
+
+is preferred over 
+{{{
+lst.append("a")
+lst.append("b")
+}}}
+since the binding of lst and append happens twice - copy and paste.''
+
