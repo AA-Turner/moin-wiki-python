@@ -77,22 +77,21 @@ struct std_item
         if( i>=0 && i<x.size() ) x.erase(i);
         else IndexError();
     }
+    static void add(T const& x, V const& v)
+    {
+        x.push_back(v);
+    }
 };
-void IndexError() { PyErr_; }
+void IndexError() { PyErr_SetString(PyExc_IndexError, "Index out of range"); }
 }}}
 which allows us to have nice pythonic negative indexes and easy to read ''def''initions.
-
-+ Or, rather, 
-{{{void IndexError() {Pyerr_SetString(PyExc_IndexError, "Index out of range"); }
-}}}
-?
 
 Then in BOOST_PYTHON_MODULE we use it:
 {{{
 class_<Geometry>("Geometry");
   .def("__len__", &Geometry::size)
   .def("clear", &Geometry::clear)
-  .def("append", &Geometry::push_back
+  .def("append", &std_item<Geometry>::add,
         with_custodian_and_ward<1,2>()) // to let container keep value
   .def("__getitem__", &std_item<Geometry>::get,
         return_value_policy<copy_non_const_reference>())
@@ -102,9 +101,6 @@ class_<Geometry>("Geometry");
   ;
 }}}
 
-+ Note that  ``push_back`` seems better to be wrapped as in 
-`` http://mail.python.org/pipermail/c++-sig/2002-December/002831.html ``.
-(at least for boost.python 1.31.0).
 
 === map ===
 And the same approach for '''map'''.
