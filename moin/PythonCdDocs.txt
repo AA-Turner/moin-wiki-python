@@ -48,7 +48,7 @@ def suckwiki(pagelist, #url to plain text list of wiki pages
     listresponse = opener.open(listrequest)
     sleep(sleeptime)
     for pagename in listresponse:
-        pagename=pagename.strip()
+        pagename=pagename.strip().replace(' ','_20')
         print pagename
         fullpagename = rawpage % {'pagename':pagename}
         pagerequest = urllib2.Request(fullpagename)
