@@ -248,13 +248,23 @@ I think it is reasonable to ask the setting code to create the object (possibly 
 
 A marriage of the two would make a lot of sense to me.  My thought is for the user (script) to instantiate a parser and add options to it much like optparse does today.  When the parser processes the command line args (or args passed to it) it should also look at the configuration file (possibly using the long setting name) for the option settings.  Its first priority would be command line args.
 
+  I (VinaySajip) don't believe that a configuration module should need to interface directly to command line options. Rather, an application should inspect command line arguments, select one or more configuration files to load, and then examine the configuration data together with command line options to determine behaviour. My [http://www.red-dove.com/python_config.html#integrating-with-command-line-options config module documentation] shows one way to easily interface with optparse.
+
 A hierarchical key or namespace scheme should exist so that multiple settings may be stored in the user configuration file.  I would propose a standard -k, key option always present in the parser so the user can pass a list of keys to control the group of settings to use (Id also like some of the other ways to control keys that I use in my config.py module).  In addition Id propose a -c, config option that specifies a configuration file to use instead of the users default configuration file.
+
+  I (VinaySajip) agree that a hierarchical namespace is essential. I'm not sure I agree with removing "-k" and "-c" from the command line namespace for all applications by reserving these for use by particular library modules.
 
 My last proposal for today is to change the options interface a bit from optparse.  Instead of returning a static object of options it should be an object with a get() method so that additional keys can be used to get at settings in the configuration on the fly.  One application where this is important is in test frameworks.  Test specification input files may have additional keys to be used and arent known when the parser is instantiated.
 
+  Please take a look at [http://www.red-dove.com/python_config.html this config module] and let me know how you think it fails to meet the particular use case you have in mind. I don't see any need to change optparse to work well with a configuration module  -- VinaySajip
+
 One benefit of this marriage is that the help messages available from the command line would also apply to what can be set in the configuration file.  Also there is a lot of flexibility for the user with this scheme.  For options they always use they can hard code them in their default configuration as settings.  If they want to temporarily override them they can use command line options.  For groups of settings that are always used together, they can be used by simply passing in a key with the -k option to select the group.
 
+  There are other ways in which help messages for configuration can be implemented. For example, with full hierarchical name support for configuration items, you could locate help for a configuration item in the configuration item itself - e.g. help on "a.config.item" might be found at "help.a.config.item". This approach can be used to store other meta-information, not just help text. -- VinaySajip
+
 The part that isnt addressed here that bothers me yet is how to weave in the ability to pass in real python objects as settings.  It would be good to have both a secure (restricted to strings and simple settings) and a second less than secure parser for those applications that need the flexibility of python.  Id like to see the APIs of the same for both the parser and the configuration file.  -- dan.gass@gmail.com
+
+  I (VinaySajip) believe that I have covered this in [http://www.red-dove.com/python_config.html this config module] - if you feel something fundamental is missing, please let me know.
 
 == Complexity killed the cat! ==
 
