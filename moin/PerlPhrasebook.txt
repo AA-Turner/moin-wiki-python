@@ -44,6 +44,9 @@ and Eric Daniel for helpful comments.
 
 #//TODO: Fix sorting - should be using DSU and/or sorted() where appropriate
 
+== The obvious ==
+
+Python don't need no steenking semicolons. 
 
 == Simple types ==
 
@@ -93,8 +96,9 @@ $s3 = 'a "quoted" string';
 $s4 = "a 'quoted' string";
 $s5 = qq/a string with '" both kinds of quotes/;
 $s6 = "another string with '\" both kinds of quotes";
+$s7 = "someone help me with a Perl equivalent for s7 below?"; 
 
-for $i ($s1, $s2, $s3, $s4, $s5, $s6)
+for $i ($s1, $s2, $s3, $s4, $s5, $s6, $s7)
 {
   print ("$i\n");
 }
@@ -109,22 +113,28 @@ s3 = 'a "quoted" string'
 s4 = "a 'quoted' string"
 s5 = '''a string with '" both kinds of quotes'''
 s6 = "another string with '\" both kinds of quotes"
+s7 = r"a stri\ng that au\tomatically escapes backslashes"
 
-for i in (s1, s2, s3, s4, s5, s6):
+for i in (s1, s2, s3, s4, s5, s6, s7):
   print i
 
 }}}
 
 
 In both languages, strings can be single-quoted or double-quoted.  In
-Python, there is no difference between the two, whereas in Perl,
-double-quoted strings have control characters and variables interpolated
-inside them (see below) and single-quoted strings do not.  
+Python, there is no difference between the two except that in single-
+quoted strings double-quotes need not be escaped by doubling them, and 
+vice versa. In Perl, double-quoted strings have control characters and 
+variables interpolated inside them (see below) and single-quoted 
+strings do not.  
 
 Both languages provide other quoting mechanisms; Python uses triple
 quotes (single or double, makes no difference) for multi-line strings;
-perl has very elaborate (and very useful) quoting mechanisms; see the
-operators q, qq, qw, qx, etc. in the Perl manual. 
+Python has the {{{r}}} prefix ({{{r""}}} or {{{r''}}} or {{{r""""""}}} 
+or {{{r''''''}}}) to indicate strings in which backslash is automatically 
+escaped -- highly useful for regular expressions. Perl has very elaborate 
+(and very useful) quoting mechanisms; see the operators {{{q}}}, {{{qq}}}, 
+{{{qw}}}, {{{qx}}}, etc. in the PerlManual. 
 
 Quoting is definitely one of the areas where Perl excels.
 
