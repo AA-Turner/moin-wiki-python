@@ -14,7 +14,7 @@ lambda *a, **k: x.bar(*a, **k)
 
 === Args Before Expression ===
 
-Nick Coghlan: def-to syntax [1]
+Nick Coghlan: def-to syntax [[#a 1]]
 {{{#!python
 (def (a, b, c) to f(a) + o(b) - o(c))
 (def (x) to x * x)
@@ -23,7 +23,7 @@ Nick Coghlan: def-to syntax [1]
 ((def (x=x, a=a, k=k) to x(*a, **k)) for x, a, k in funcs_and_args_list)
 }}}
 
-Nick Coghlan: def-arrow syntax [1]
+Nick Coghlan: def-arrow syntax [[#a 1]]
 {{{#!python
 (def (a, b, c) -> f(a) + o(b) - o(c))
 (def (x) -> x * x)
@@ -32,7 +32,7 @@ Nick Coghlan: def-arrow syntax [1]
 ((def (x=x, a=a, k=k) -> x(*a, **k)) for x, a, k in funcs_and_args_list)
 }}}
 
-Alex Martelli: def-as syntax [2]
+Alex Martelli: def-as syntax [[#b 2]]
 {{{#!python
 (def (a, b, c) as f(a) + o(b) - o(c))
 (def (x) as x * x)
@@ -41,7 +41,7 @@ Alex Martelli: def-as syntax [2]
 ((def (x=x, a=a, k=k) as x(*a, **k)) for x, a, k in funcs_and_args_list)
 }}}
 
-Dave Benjamin: fun syntax [7]
+Dave Benjamin: fun syntax [[#g 7]]
 {{{#!python
 (fun(a, b, c): f(a) + o(b) - o(c))
 (fun(x): x * x)
@@ -50,9 +50,18 @@ Dave Benjamin: fun syntax [7]
 ((fun(x=x, a=a, k=k): x(*a, **k)) for x, a, k in funcs_and_args_list)
 }}}
 
+Roman Suzi: quote-colon syntax [[#i 9]]
+{{{#!python
+` a, b, c:f(a) + o(b) - o(c)
+` x: x * x
+` : x
+` *a, **k: x.bar(*a, **k)
+((` x=x, a=a, k=k: x(*a, **k)) for x, a, k in funcs_and_args_list)
+}}}
+
 === Expression Before Args ===
 
-Nick Coghlan: for syntax [6]
+Nick Coghlan: for syntax [[#f 6]]
 {{{#!python
 (f(a) + o(b) - o(c) for (a, b, c))
 (x * x for (x))
@@ -61,7 +70,7 @@ Nick Coghlan: for syntax [6]
 ((x(*a, **k) for (x=x, a=a, k=k)) for x, a, k in funcs_and_args_list)
 }}}
 
-Robert Brewer: for (no-parens) syntax [3]
+Robert Brewer: for (no-parens) syntax [[#c 3]]
 {{{#!python
 (f(a) + o(b) - o(c) for a, b, c)
 (x * x for x)
@@ -70,7 +79,7 @@ Robert Brewer: for (no-parens) syntax [3]
 ((x(*a, **k) for (x=x, a=a, k=k)) for x, a, k in funcs_and_args_list)
 }}}
 
-Nick Coghlan: def-from syntax [4]
+Nick Coghlan: def-from syntax [[#d 4]]
 {{{#!python
 (def f(a) + o(b) - o(c) from (a, b, c))
 (def x * x from (x))
@@ -79,7 +88,7 @@ Nick Coghlan: def-from syntax [4]
 ((def x(*a, **k) from (x=x, a=a, k=k)) for x, a, k in funcs_and_args_list)
 }}}
 
-Michael Spencer: from-args syntax [5]
+Michael Spencer: from-args syntax [[#e 5]]
 {{{#!python
 (f(a) + o(b) - o(c) from args(a, b, c))
 (x * x from args(x))
@@ -88,7 +97,7 @@ Michael Spencer: from-args syntax [5]
 ((x(*a, **k) from args(x=x, a=a, k=k)) for x, a, k in funcs_and_args_list)
 }}}
 
-Michael Spencer: for-args syntax [5]
+Michael Spencer: for-args syntax [[#e 5]]
 {{{#!python
 (f(a) + o(b) - o(c) for args(a, b, c))
 (x * x for args(x))
@@ -97,7 +106,7 @@ Michael Spencer: for-args syntax [5]
 ((x(*a, **k) for args()) for x, a, k in funcs_and_args_list)
 }}}
 
-Bengt Richter: colon-function-application syntax [9]
+Bengt Richter: colon-function-application syntax [[#h 8]]
 {{{#!python
 (:f(a) + o(b) - o(c))(a, b, c)
 (:x*x)(X)
@@ -114,5 +123,6 @@ Bengt Richter: colon-function-application syntax [9]
  * [[Anchor(e)]] [5] http://mail.python.org/pipermail/python-list/2004-December/257893.html
  * [[Anchor(f)]] [6] http://mail.python.org/pipermail/python-list/2004-December/257977.html
  * [[Anchor(g)]] [7] http://mail.python.org/pipermail/python-list/2005-January/258441.html
- * [[Anchor(h)]] [8] http://mail.python.org/pipermail/python-list/2005-January/258238.html
- * [[Anchor(i)]] [9] http://mail.python.org/pipermail/python-list/2005-January/258578.html 
+ * [[Anchor(h)]] [8] http://mail.python.org/pipermail/python-list/2005-January/258578.html
+ * [[Anchor(i)]] [9] http://mail.python.org/pipermail/python-list/2005-January/258581.html
+ 
