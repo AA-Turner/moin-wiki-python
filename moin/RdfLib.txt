@@ -1,0 +1,97 @@
+With RdfLib, you can do something like this:
+
+{{{
+#!python
+import rdflib
+from rdflib.TripleStore import TripleStore
+
+store = TripleStore()
+
+store.load( "foaf.rdf" )
+}}}
+
+That loads a particulare FOAF file.
+
+Now, you can print out all the subject-predicate-object triples:
+
+{{{
+#!python
+for s,p,o in store:
+  print s,p,o
+}}}
+
+...which isn't terribly enlightening, but at least it's something.
+
+Let's suppose you want to find someone with a particular name. And let's further suppose that we don't want to look up the URL that identifies a "name" in FOAF. We'll search for it manually:
+
+{{{
+#!python
+for s,p,o in store:
+  print p
+}}}
+
+We'll see a bunch of data, like so...:
+
+{{{
+  ...
+http://xmlns.com/foaf/0.1/family_name
+http://xmlns.com/foaf/0.1/phone
+http://xmlns.com/foaf/0.1/schoolHomepage
+http://www.w3.org/2003/01/geo/wgs84_pos#lat
+http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+http://www.w3.org/2003/01/geo/wgs84_pos#long
+http://xmlns.com/foaf/0.1/name
+  ...
+}}}
+
+So, we can pick out the {{{http://xmlns.com/foaf/0.1/name}}} as the one we're looking for:
+
+{{{
+name="http://xmlns.com/foaf/0.1/name"
+}}}
+
+...and then find the names:
+{{{
+#!python
+for s,p,o in store:
+  if p == name:
+    print s,o
+}}}
+
+We get back something like:
+{{{
+_:XzWBAuNC1 Lion Kimbro
+_:XzWBAuNC3 Alex Trabeck
+_:XzWBAuNC4 Bayle Capp
+_:XzWBAuNC6 Mantis Man
+}}}
+
+(names shielded to protect the guilty)
+
+Now, it's sort of ugly looking at the bNode ("blank node") identifiers for subjects like {{{_:XzWBAuNC1}}}; It would be much easier to see it with a name.
+
+{{{
+#!python
+bnode_to_name = {}
+for s,p,o in store:
+  if p == name:
+    bnode_to_name[s] = o
+}}}
+
+Then we can look at things a little more nicely:
+{{{
+#!python
+for s,p,o in store:
+  if s in bnode_to_name.keys():
+    print bnode_to_name[s], p, o
+}}}
+
+You could also make a nice mapping from predicates to human readable names, and use those.
+
+I am surprised that there isn't already an automatic (by RDF, even) way to turn predicates into human readable string names. I imagine that there is, and that I just don't know about it.
+
+I feel I would want to make it so you could make objects and classes out of the RDF graph, and connect them to each other by predicates, which would then be properties of the objects linking out to the other objects.
+
+Alright; Here's something to explore from. :)
+
+-- LionKimbro [[DateTime(2004-06-06T06:31:25Z)]]
