@@ -33,7 +33,7 @@ Take a look at it; There's a lot of data there.
 
 Of particular interest: 
 
-|| {{{feed[ "bozo" ]}}} || {{{1}}} if the feed data can't be read. ||
+|| {{{feed[ "bozo" ]}}} || {{{1}}} if the feed data isn't well-formed XML. ||
 || {{{feed[ "url" ]}}} || URL of the feed's RSS feed ||
 || {{{feed[ "version" ]}}} || version of the RSS feed ||
 || {{{feed[ "channel" ][ "title" ] }}} || {{{"PythonInfo Wiki"}}} - Title of the Feed. ||
@@ -75,7 +75,7 @@ Now that you have your feeds, extract all the entries.
 {{{
 #!python
 entries = []
-for feed in filter( lambda x:x["bozo"]==0, feeds ):
+for feed in feeds:
     entries.extend( feed[ "items" ] )
 }}}
 
