@@ -16,7 +16,7 @@ class Worker(threading.Thread):
   def shutdown(self):
     self.stopFlag = 1
 
-  def start(self):
+  def run(self):
     self.stopFlag = 0
     while not self.stopFlag:
       event = self.eventChannel.waitEvent() # blocking call
@@ -42,11 +42,7 @@ The problem here is that {{{EventChannel.waitEvent()}}} is a blocking operation.
     self.eventChannel.push_event(NullEvent())
 }}}
 
- * ''any other ideas?''
-
- * The example obove shows broken code. It is wrong to override {{{start()}}} and do the work there, it's the {{{run()}}} method that has to be overriden.
-
- * Use a Queue to pass data. Handle errors in the handler (e.g. print them to the console), keep the thread alive. 
+ * Or use a Queue to pass data. Handle errors in the handler (e.g. print them to the console), keep the thread alive. 
 
 {{{
 #!python
