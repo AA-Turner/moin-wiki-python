@@ -25,7 +25,7 @@ Suggested syntaxes:
 
 == Improved default value logic for Dictionaries ==
 
- * The setdefault() method is badly named and poorly designed.  In a typical call, d.setdefault.(k, []).append(v), the list may be unnecessarily instantiated and discarded on every call.  At a minimum, default value should be a new empty list instead of None:  {{{ d.setdefault(k).append(v) }}}.
+ * The setdefault() method is badly named and poorly designed.  In a typical call, {{{d.setdefault.(k, []).append(v)}}}, the list may be unnecessarily instantiated and discarded on every call.  At a minimum, default value should be a new empty list instead of None:  {{{ d.setdefault(k).append(v) }}}.
 
  * A more versatile idea is to realize that defaults generalize to the whole dictionary instead of an individual lookup.  A call to setdefault would then change the whole dictionary's behavior when a key is not found:
 
