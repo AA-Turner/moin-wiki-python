@@ -2,57 +2,44 @@
 
 [[TableOfContents]]
 
-TODO: break up into multiple smaller pages; use modern Python idioms; use modern Perl idioms; 
-add more points of comparison.
+== Introduction ==
 
-TODO: Use sorted() where appropriate once 2.4 has been out a while
+This phrasebook contains a collection of idioms, various ways of accomplishing common tasks, tricks and useful things to know, in Perl and Python side-by-side.  I hope this will be useful for people switching from Perl to Python, and for people deciding which to choose. The first part of the phrasebook is based on Tom Christiansen's [http://www.perl.com/perl/pdsc/ Perl Data Structures Cookbook].
 
-TODO: Get rid of map() where possible.
+I have only been working on this for a short time, so many of the translations could probably be improved, and the format could be greatly cleaned up.
 
-QUESTION: Should function and data structure names for python code be in
-python_style (and more appropriate/informative)?
+I will get the data-structures cookbook translated first and then go back to clean up the code.
+Also, since I have been using Python for far less time than Perl, there are certainly idioms I don't know or that I will misuse.  Please feel free to fix and update.
 
+--
 
-Other references: [http://pleac.sourceforge.net/ PLEAC]
+Other references: [http://pleac.sourceforge.net/ PLEAC].
 
-This phrasebook contains a collection of idioms, various ways of
-accomplishing common tasks, tricks and useful things to know, in Perl
-and Python side-by-side.  I hope this will be useful for people
-switching from Perl to Python, and for people deciding which to choose.
-The first part of the phrasebook is based on Tom Christiansen's 
-[http://www.perl.com/perl/pdsc/ Perl Data Structures Cookbook].
+--
 
+Thanks to David Ascher, Guido van Rossum, Tom Christiansen, Larry Wall and Eric Daniel for helpful comments.
 
-I have only been working on this for a short time, so many of the
-translations could probably be improved, and the format could be greatly
-cleaned up.  
+--
 
-
-I will get the data-structures
-cookbook translated first and then go back to clean up the code.  Please
-feel free to fix and update.  
-
-
-Also, since I have been using Python for far less time than Perl, there
-are certainly idioms I don't know or that I will misuse.  If you see any
-such cases, please send me mail.
-
-
-
-Things I would like to add to this phrasebook are:
+TODO:
+ * break up into multiple smaller pages
+ * use modern Python idioms
+ * use modern Perl idioms
+ * add more points of comparison
+ * Use sorted() where appropriate once 2.4 has been out a while.
+ * Get rid of map() where possible.
  * Simple types (strings, lists, dictionaries, etc.)
  * Common tasks (reading from a file, exception handling, splitting strings, regular expression manipulation, etc.)
  * Sections 4 and 5 of the Perl Data Structures Cookbook.
+ * Vertical whitespace needs fixing.
 
-
-Thanks to David Ascher, Guido van Rossum, Tom Christiansen, Larry Wall
-and Eric Daniel for helpful comments.
-
-
+QUESTIONS:
+ * Should function and data structure names for python code be in python_style (and more appropriate/informative)?
 
 == The obvious ==
 
-Python don't need no steenking semicolons. 
+Python don't need no steenking semicolons.
+
 
 == Simple types ==
 
@@ -71,20 +58,12 @@ $s = 'a string';
 s = 'a string'
 }}}
 
-Note that string variables in Perl are specified with a dollar sign;
-in Python you just specify the name of the variable.
+Note that string variables in Perl are specified with a dollar sign; in Python you just specify the name of the variable.
 
 Larry Wall points out:
-    This is rather oversimplifying what is going on in both
-    Perl and Python.  The `$` in Perl indicates a scalar variable,
-    which may hold a string, a number, or a reference.  There's
-    no such thing as a string variable in Python, where
-    variables may ''only'' hold references.
+    This is rather oversimplifying what is going on in both Perl and Python.  The `$` in Perl indicates a scalar variable, which may hold a string, a number, or a reference.  There's no such thing as a string variable in Python, where variables may ''only'' hold references.
 
-    You can program in a Pythonesque subset of Perl by
-    restricting yourself to scalar variables and references.
-    The main difference is that Perl doesn't do implicit
-    dereferencing like Python does.
+    You can program in a Pythonesque subset of Perl by restricting yourself to scalar variables and references.  The main difference is that Perl doesn't do implicit  dereferencing like Python does.
 
 ==== Quoting ====
 
@@ -96,7 +75,7 @@ $s3 = 'a "quoted" string';
 $s4 = "a 'quoted' string";
 $s5 = qq/a string with '" both kinds of quotes/;
 $s6 = "another string with '\" both kinds of quotes";
-$s7 = "someone help me with a Perl equivalent for s7 below?"; 
+$s7 = "someone help me with a Perl equivalent for s7 below?";
 
 for $i ($s1, $s2, $s3, $s4, $s5, $s6, $s7)
 {
@@ -120,21 +99,21 @@ for i in (s1, s2, s3, s4, s5, s6, s7):
 
 In both languages, strings can be single-quoted or double-quoted.  In
 Python, there is no difference between the two except that in single-
-quoted strings double-quotes need not be escaped by doubling them, and 
-vice versa. In Perl, double-quoted strings have control characters and 
-variables interpolated inside them (see below) and single-quoted 
-strings do not.  
+quoted strings double-quotes need not be escaped by doubling them, and
+vice versa. In Perl, double-quoted strings have control characters and
+variables interpolated inside them (see below) and single-quoted
+strings do not.
+
 
 Both languages provide other quoting mechanisms; Python uses triple
 quotes (single or double, makes no difference) for multi-line strings;
-Python has the {{{r}}} prefix ({{{r""}}} or {{{r''}}} or {{{r""""""}}} 
-or {{{r''''''}}}) to indicate strings in which backslash is automatically 
-escaped -- highly useful for regular expressions. Perl has very elaborate 
-(and very useful) quoting mechanisms; see the operators {{{q}}}, {{{qq}}}, 
-{{{qw}}}, {{{qx}}}, etc. in the PerlManual. 
+Python has the {{{r}}} prefix ({{{r""}}} or {{{r''}}} or {{{r""""""}}}
+or {{{r''''''}}}) to indicate strings in which backslash is automatically
+escaped -- highly useful for regular expressions. Perl has very elaborate
+(and very useful) quoting mechanisms; see the operators {{{q}}}, {{{qq}}},
+{{{qw}}}, {{{qx}}}, etc. in the PerlManual.
 
 Quoting is definitely one of the areas where Perl excels.
-
 
 
 ==== Interpolation ====
@@ -209,7 +188,7 @@ on the right-hand side; its value is formatted according to the
 specifier following the parentheses.  Some useful dictionaries are
 `locals()` (the local symbol table), `globals()`
 (the global symbol table), and `vars()` (what exactly is
-this?) 
+this?)
 
 
 
@@ -239,7 +218,7 @@ print s2
 In Perl, strings are mutable; the third assignment modifies
 `s2`.  In Python, strings are immutable, so you have to do
 this operation a little differently, by slicing the string into the
-appropriate pieces.  
+appropriate pieces.
 
 
 A Python string is just an array of characters, so
@@ -319,7 +298,7 @@ filename = "cooktest1.1-1"
 try:
   f = open(filename)
 except IOError:
-  sys.stderr.write("can't open %s: %s %s\n" % 
+  sys.stderr.write("can't open %s: %s %s\n" %
                                    (filename, sys.exc_type, sys.exc_value))
 lines = f.readlines()
 }}}
@@ -329,7 +308,7 @@ In Perl, variables are always preceded by a symbol that indicates their
 type.  A `$` indicates a simple type (number, string or
 reference), an `@` indicates an array, a `%`
 indicates a hash (dictionary), and an `&` indicates a
-function. 
+function.
 
 
 In Python, objects must be initialized before they are used, and the
@@ -345,14 +324,14 @@ This section is under construction; for the moment I am just putting
 random notes here.  I will organize them later.
 
 
- *Perl's regular expressions are much more powerful than those of Python.
- *Perl's quoting mechanisms are more powerful than those of Python.
- *I find Python's syntax much cleaner than Perl's
- *I find Perl's syntax too flexible, leading to silent errors.  The -w flag and `use strict` helps quite a bit, but still not as much as Python. 
- *I like Python's small core with a large number of standard libraries.  Perl has a much larger core, and though many libraries are available, since they are not standard, it is often best to avoid them for portability. 
- *Python's object model is very uniform, allowing you, for example, to define types that can be used wherever a standard file object can be used.
- *Python allows you to define operators for user-defined types.
- 
+ * Perl's regular expressions are much more powerful than those of Python.
+ * Perl's quoting mechanisms are more powerful than those of Python.
+ * I find Python's syntax much cleaner than Perl's
+ * I find Perl's syntax too flexible, leading to silent errors.  The -w flag and `use strict` helps quite a bit, but still not as much as Python.
+ * I like Python's small core with a large number of standard libraries.  Perl has a much larger core, and though many libraries are available, since they are not standard, it is often best to avoid them for portability.
+ * Python's object model is very uniform, allowing you, for example, to define types that can be used wherever a standard file object can be used.
+ * Python allows you to define operators for user-defined types.
+
 
 
 
@@ -385,7 +364,7 @@ sub printLoL
   printSep();
 }
 
-# return numeric (or other) converted to string 
+# return numeric (or other) converted to string
 sub somefunc {  my ($i) = shift;  "$i";  }
 }}}
 
@@ -416,7 +395,7 @@ def somefunc(i):
 {{{
 import sys
 }}}
-Perl's `use` is roughly equivalent to Python's `import`.  
+Perl's `use` is roughly equivalent to Python's `import`.
 
 Perl has much more built in, so nothing here requires importing.
 
@@ -431,14 +410,14 @@ import the `re` module.
 === Declaration of a list of lists ===
 
 {{{
-@LoL = ( 
+@LoL = (
        [ "fred", "barney" ],
        [ "george", "jane", "elroy" ],
        [ "homer", "marge", "bart" ],
      );
 @LoLsave = @LoL; # for later
 
-printLoL ('Families:', \@LoL); 
+printLoL ('Families:', \@LoL);
 }}}
 
 {{{
@@ -490,7 +469,7 @@ import copy
 a = [[1, 2, 3], [4, 5, 6]]
 b = copy.deepcopy(a)
 b[0][0] = 999
-print a[0][0]   # prints 1    
+print a[0][0]   # prints 1
 }}}
 
 
@@ -658,7 +637,7 @@ or
 {{{
 @LoL = @LoLsave;  # start afresh
 push @{ $LoL[0] }, "wilma", "betty";
-printLoL ('after appending to first element:', \@LoL); 
+printLoL ('after appending to first element:', \@LoL);
 }}}
 
 {{{
@@ -720,7 +699,7 @@ printSep()
 
 Perl's regexp matching and substitution is enormously powerful; see
 especially the new syntax for comments and whitespace inside regular
-expressions. 
+expressions.
 
 In python, string methods are often used where perl would use a regex.  Among
 these string methods are `title()` and `capitalize()`.  In the context of
@@ -850,7 +829,7 @@ fixed.
 Associative arrays are containers that hold pairs of elements.  The
 first element of a pair is the ''key'', the second is the
 ''value''.  In Python, the key may be of almost any type [(link to
-explanation of why lists can't be keys)]; I am not what the 
+explanation of why lists can't be keys)]; I am not what the
 limitations are in Perl.
 
 Associative arrays are sometimes called maps, dictionaries (Python,
@@ -869,7 +848,7 @@ sub printHoL
   print ("$s\n");
   for $k (sort keys (%$hol))
   {
-    my ($v) = $hol->{$k};  
+    my ($v) = $hol->{$k};
     print ("$k : ", join (" ", @$v), "\n")
   }
   printSep();
@@ -920,7 +899,7 @@ pairs in the list are unpacked and used.
 
 
 {{{
-%HoL = ( 
+%HoL = (
        flintstones        => [ "fred", "barney" ],
        jetsons            => [ "george", "jane", "elroy" ],
        simpsons           => [ "homer", "marge", "bart" ],
@@ -942,7 +921,7 @@ In python, the print statement has very good default semantics --- most
 of the time, it does exactly what you want, putting a space between the
 arguments, and a newline at the end.  If you want more control over the
 formatting, use the `%` operator [link to % operator]: rather
-than 
+than
 {{{
 print k, ':', " ".join(v)
 }}}
@@ -978,7 +957,7 @@ printHoL (\'names\', $HoL);
 
 
 Note that since `$HoL` is already a ref, the `\\`
-is no longer necessary.  
+is no longer necessary.
 
 
 
@@ -1010,7 +989,7 @@ printHoL ('read from file cookTest.2', \%HoL);
 HoL = {}
 for line in open('cookTest.2'):
     try:
-        surname, people = line.split(":", 1)    
+        surname, people = line.split(":", 1)
     except ValueError:             # can't split on ":" so no ":" in the line
         continue
     HoL[surname] = people.split()
@@ -1086,13 +1065,13 @@ printHoL ('filled by get_family', HoL)
 The python section could [but should NOT] have been written:
 {{{
 HoL={}
-def set(group, hol=HoL): 
+def set(group, hol=HoL):
     hol[group] = get_family(group)
 map(set, ("simpsons", "jetsons", "flintstones" ))
 
 printHoL ('filled by get_family', HoL)
 }}}
- 
+
 
 The perl section could have been written:
 
@@ -1109,7 +1088,7 @@ map { $HoL{$_} = [ get_family($_) ] } "simpsons", "jetsons", "flintstones";
 
 For each key of the hash, we call a function that creates a list, and
 associate the key with this list.  The list is assigned to a local
-variable (where it could be modified, for example). 
+variable (where it could be modified, for example).
 
 
 {{{
@@ -1171,7 +1150,7 @@ $HoL{'flintstones'} = [ @{ $HoL{'flintstones'} }, "wilma", "betty" ];
 ==== Access a single element ====
 
 Assign to the first element of the list indexed by
-`flintstones`. 
+`flintstones`.
 
 
 {{{
@@ -1188,7 +1167,7 @@ printSep()
 
 
 Tom Christiansen explains when you don't need quotes around strings in
-perl: 
+perl:
 
 	It's whenever you have a bareword (identifier token) in braces.
         Thus
@@ -1218,7 +1197,7 @@ printHoL ('after modifying an element', \%HoL);
 }}}
 
 {{{
-HoL['simpsons'][1] = HoL['simpsons'][1].title()   
+HoL['simpsons'][1] = HoL['simpsons'][1].title()
 
 printHoL ('after modifying an element', HoL)
 }}}
@@ -1247,7 +1226,7 @@ printSep();
 
 
 {{{
-families = HoL.items(); 
+families = HoL.items();
 families.sort()
 for surname, members in families:
     print '%s: %s' % (surname, " ".join(members))
@@ -1269,7 +1248,7 @@ printSep();
 }}}
 
 {{{
-k = HoL.keys(); 
+k = HoL.keys();
 k.sort()
 for surname in k:
     print 'surname: ',
@@ -1418,10 +1397,10 @@ in Python.
 
 
 {{{
-@LoH = ( 
-       { 
-          Lead      => "fred", 
-          Friend    => "barney", 
+@LoH = (
+       {
+          Lead      => "fred",
+          Friend    => "barney",
        },
        {
            Lead     => "george",
@@ -1440,7 +1419,7 @@ printLoH ('initial value', \@LoH);
 
 {{{
 LoH = [
-       {  "Lead"      : "fred", 
+       {  "Lead"      : "fred",
           "Friend"    : "barney"
        },
        {
@@ -1534,7 +1513,7 @@ printLoH ('direct read from file', LoH)
 
 If you really want no temporaries at all, you could (but shouldn't) use the one line list comprehension (line breaks for legibility):
 {{{
-LoH = [dict([field.split("=", 1) 
+LoH = [dict([field.split("=", 1)
              for field in line.split()])
                  for line in open("cooktest.4")]
 
@@ -1582,7 +1561,7 @@ return split (/[= ]/, $line);
 }}}
 
 {{{
-  
+
 _getnextpairsetcounter = 0
 _getnextpairsetdata =\
   [ {"lead" : "fred", "daughter" : "pebbles"},
@@ -1867,7 +1846,7 @@ top = Tk()
 def buttonFunction () :
     print 'Hello, world'
     sys.exit (-1)
-  
+
 hello = Button(top, {'text' : 'Hello, world', 'command' : buttonFunction})
 hello.pack()
 top.mainloop()
