@@ -1,29 +1,34 @@
 = Building Extensions with boost.python =
 
 == Using bjam ==
-bjam is a standard tool for building boost library itself. Thus it is preferable way to build python extensions based on boost.python with bjam. Basic example listed in [http://www.boost.org/libs/python/doc/tutorial/doc/building_hello_world.html tutorial].
+bjam is a standard tool for building boost library itself. Thus it is preferable way to build python extensions based on boost.python with bjam. 
+Basic example listed in [http://www.boost.org/libs/python/doc/tutorial/doc/building_hello_world.html tutorial].
 
 However if you want to add external libraries in your extension (that is why you use boost.python, isn't it?), you must add them to dependency section:
 {{{
+# NOTE: Change [[VARIABLES]] according to your system
+
 # Specify our location in the boost project hierarchy
 subproject libs/python/MyExtension ; ##################### if you put your dir in boost hierarchy
 
 # Include definitions needed for Python modules
 SEARCH on python.jam = $(BOOST_BUILD_PATH) ;
+
 include python.jam ;
 
 # Declare a Python extension
 extension Example
 :  # sources
    Example.cpp
+   # dependencies
    <dll>../build/boost_python
   
-:  # dependencies
-   <include>FULL_PATH_INCLUDE_DIR
-   <include>RELATIVE_PATH_INCLUDE_DIR
-   <library-file>FULL_PATH.lib
-   <library-path>PATH_TO_LIB
-   <library-file>LIBNAME.lib
+:  # requirements
+   <include>[[FULL_PATH_INCLUDE_DIR]]
+   <include>[[RELATIVE_PATH_INCLUDE_DIR]]
+   <library-file>[[FULL_PATH_AND_LIBNAME]].lib # lib for Win32
+   <library-path>[[PATH_TO_LIB]]
+   <library-file>[[LIBNAME]].lib # lib for Win32
   ;
 
 # Declare a test for the extension module
@@ -33,17 +38,22 @@ boost-python-runtest test1
     # extension modules to use
     <pyd>Example ;
 }}}
-Keeping your projects under boost hierarchy is often inconvenient. You may adjust Jamfile to build your extension from any place by 
-  * specifying BOOST_BUILD_PATH environment variable pointing to the build/tools of your boost tree '''or'''
-  * copying boost-build.jam file to the root of your project tree
-and changing the line {{{subproject}}} to the {{{
+Keeping your projects under boost hierarchy is often inconvenient. You may adjust Jamfile to build your extension from any place by:
+
+ * changing the line {{{subproject}}} in the Jamfile to the {{{
 project-root ;
 }}}
-in the Jamfile.
+and
+ * copying {{{boost-build.jam}}} file to the root of your project tree and changing the following line inside it: {{{
+boost-build [[PATH_TO_BOOST]]/tools/build ;
+}}}
+
 
 == Using make ==
 
 == Using Windows IDE ==
+
+ * Make sure you keep {{{"Use Managed Extension" == No}}} if you are using Visual Studio.NET.
 
 
 == Tips and tricks ==
@@ -51,10 +61,23 @@ in the Jamfile.
 To keep up with bjam rules you might want to have a ''dry'' run without actually building anything:
 {{{bjam -na
 }}}
-----
+------
 To copy resulting executable to desired directory take a look at the '''stage''' rule.
+------
+To specify library in a platform-independent way you could do something like:
+{{{
+    local libname
+    if $(NT)
+    {
+       libname = foo.lib
+    }
+    else
+    {
+       libname = libfoo.a
+    }
 
+        ...
 
-=== MS Windows ===
-
- * Make sure you keep {{{"Use Managed Extension" == No}}} if you are using Visual Studio.NET.
+    <library-file>$(libname)
+}}}
+in the Jamfile.
