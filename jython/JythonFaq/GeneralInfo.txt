@@ -1,0 +1,69 @@
+
+= General Information =
+
+----
+
+'''What is JPython'''
+
+JPython is a new implementation of the Python programming language which is designed to run on the Java(tm) Platform. It consists of a compiler to compile Python source code down to Java bytecodes which can run directly on a JVM, a set of support libraries which are used by the compiled Java bytecodes, and extra support to make it trivial to use Java packages from within JPython. JPython has been renamed and supersesed by Jython.
+
+----
+
+'''What is Jython?'''
+
+Jython is the successor to JPython. The Jython project was created in accordance with the CNRI JPython 1.1.x license, in order to ensure the continued existence and development of this important piece of Python software. The intent is to manage this project with the same open policies that are serving CPython so well.
+
+Mailing lists, CVS and all current information on the Jython project is available at SourceForge, at http://sourceforge.net/projects/jython
+
+The name had to be changed to something other than JPython, because of paragraph 4 in the JPython-1.1 license:
+
+{{{
+ 4. Licensee may not use CNRI trademarks or trade name, including 
+    JPython [...] to endorse or promote products [...]
+}}}    
+----
+
+'''Is Jython the same language as Python?'''
+
+We will always strive to ensure that Jython remains as compatible with CPython as possible. Nevertheless, there are a number of differences between the two implementations that are unlikely to go away. These range from the trivial - Jython's code objects don't have a co_code attribute because they don't have any Python bytecodes; to the significant - Jython uses Java's true garbage collection rather than Python's reference counting scheme.
+
+  http://jython.sourceforge.net/docs/differences.html
+
+Python has never really had much of a language definition beyond it's C-based implementation. The existence of Jython changed that for the first time and will hopefully lead to a much clearer sense of what Python the language is; independent of any specific implementation.
+
+We will be preparing a version of Python's regression test that would be appropriate for new implementations of the language. This is a good first step towards defining what parts of Python are essential and which are incidental 
+
+----
+
+'''What is the current status of JPython?'''
+
+JPython 1.1 was released on 28-Jan-2000. Since then, there have been no further developments on JPython.
+
+
+----
+
+'''What is the current status of Jython?'''
+
+The Jython project was announced on 19-oct-2000. The first alpha release occured on 26-nov-2000.
+
+The final release of Jython-2.0 occured on 17-jan-2001. The final release of Jython-2.1 occured on 31-dec-2001.
+
+Current work include improvements to java integration and implementing the lastest features from CPython 2.2/3. 
+
+
+----
+'''How fast is Jython?'''
+
+The startup time and runtime performance for Jython are largely determined by the JVM.
+
+Current status is that CPython 2.3 on Windows2000 is about twice as fast as Jython 2.1 on JDK1.4 on Windows2000. However, because of Java's slow startup time, Jython starts much more slowly (2.4 s) than CPython (80 ms). This means you don't want to do standard CGI in Jython, but long-running processes are fine.
+
+The following notes are retained for historical interest.
+
+At IPC-6 JimH reported speeds equal to CPython 1.4 on the pystone benchmark. When Guido released CPython 1.5 he succeeded in making it about 2x faster than the 1.4 release. The current release of CPython is 1.5.2 which might be only slightly faster than 1.5. JimH re-ran his benchmark tests against CPython 1.5 and his then current release of Jython, finding that Jython was about 2.5x slower than CPython 1.5. I have recently run a few informal benchmarks and found some interesting numbers: using Sun's JDK 1.2.1 with JIT on a Solaris 2.6 Sparc Ultra 2, I found Jython 1.1beta3 to produce pystone numbers equal to (or very slightly better than) CPython 1.5.2+.
+
+The problem, of course, is that JITs are still not reliable enough for Jython. Turning off the JIT on the above platform, can slow Jython down by a factor of 10.
+
+The speed of Jython is tied very tightly to the speed of the underlying JVM. The benchmark results that JimH reported were all using Microsoft's JVM from Internet Explorer 4.0. The next fastest JVM that he used was almost a factor of 2 slower than this. Since the performance of JVMs changes nearly every day, at some point I'll need to collect a set of scores comparing pystone performance on a wider variety of JVM's.
+
+Finally, pystone is not the last word in benchmarking. At the moment I'm more concerned with making Jython complete and correct than with performance. We will continually be revisiting performance issues both to examine better benchmark's for comparing Jython and CPython (as well as other scripting languages for the JVM) and work at optimizing Jython's performance. 
