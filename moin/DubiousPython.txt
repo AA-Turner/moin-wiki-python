@@ -79,3 +79,19 @@ def count_tester(count):
     return count > 10}}}
 
     
+== Overuse of lambda ==
+Lambda forms allow anonymous functions to be created and used as part of an expression.  However, when a function is already named, wrapping this function in a lambda can decrease readability and affect program efficiency.
+
+=== Dubious Way ===
+{{{#!python
+dict(a=lambda x: str(x),
+     b=lambda x: some_dict.get(x))}}}
+
+=== The Problem ===
+Using a lambda when a function is already named incurs the extra overhead of one function call, which is generally undesirable as function calls are relatively expensive in Python.  Even setting execution efficiency aside, the lambda-less versions are preferred because they are generally more concise and easier to read.
+
+=== Preferred Alternatives ===
+{{{#!python
+dict(a=str,
+     b=some_dict.get)}}}
+
