@@ -56,7 +56,6 @@ HTML generation and user input validation and requesting the user to correct err
 
 Fields also exist for the common Python objects such integers, string, datetime objects etc as well as email and URL fields. These fields convert the value chosen by the user in the form directly to the appropriate Python type so no conversion is required. A DateTime field returns a datetime.datetime object, an Integer field returns an integer. a StringSelect field allows the user to choose one string from a choice and an EmailCheckBoxGroup allows the choice of one or more Email addresses.
 
-
 === Database Support ===
 
 A major part of the project are the database modules. 
@@ -79,6 +78,22 @@ More information is available in the module reference at http://www.pythonweb.or
 
 === Presentation Support ===
 
+The modules support a number of presentation options including Dreamweaver MX, XYAPTU and simple '%(value)' style replacements. The preferred method of producing output is perhaps using Cheetah.
+
+All templating using the parse() function. One example is:
+
+import web.template
+
+html = web.template.parse(type='cheetah', file='test.tmpl', dict={'title':'Web Modules'})
+
+=== Documentation ===
+
+Full documentation on the latest version of the software is availble at http://www.pythonweb.org/doc/0.4.1/
+
+=== Other Features ===
+
+Other features which make these modules stand out are plain and HTML email support, simple graph creation, full error handling and datetime compatibity classes for Python 2.2.
+
 === Deployment Platforms ===
 
 The Web Modules were written because although there are quite a few web application frameworks available they are either too simplistic, or require adminster rights to install and so cannot be used with most shared hosting accounts.
@@ -95,19 +110,23 @@ If you prefer some help though the examples in the documentation assume for simp
 
 The examples are listed at http://www.pythonweb.org/doc/0.4.1/web/examples.html
 
+
+
 === InTheirOwnWords ===
 
+Although much of the functionality of these modules is replicated elsewhere, I believe this is the most complete set of modules available that doesn't tie you into using a particular architecture. In each component I have tried to go one stage further than other sofware available.
 
+I would appreciate feedback, encouragement or comments if you have any to author <at> pythonweb.org.
 
 === Future ===
 
 Future releases will also conform to the WSGI being discussed on the WEB-SIG mailing list at the moment. [http://www.pythonweb.org/project/plan.html Read the project plan].
 
-
 === Hosting ===
 
+Most UNIX hosts which support Python 2.2 or above and include a web.database supported driver such as MySQLdb will be an ideal platform for using these modules.
 
-=== Comments ===
+I use and would reccomend http://www.gradwell.com
 
+If you are after cheap hosting to have a play with that might break at any moment try http://www.web-mania.com
 
-More to come soon!
