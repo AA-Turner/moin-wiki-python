@@ -50,4 +50,4 @@ I have a C module that does database queries. Those queries go off to an SQL ser
 to be processed. I would like to use my query function within threads and to have it work
 like {{{time.sleep()}}}, that is, block the current thread until it finishes but allow other threads to continue operation. I haven't seen this issue addressed in any of the books I have.
  
-* ''Any suggestions, anyone?''
+  ''This can't be handled in Python code. The author of the database module should use Py_BEGIN_ALLOW_THREADS and Py_END_ALLOW_THREADS around blocking calls to permit other threads to run. ''
