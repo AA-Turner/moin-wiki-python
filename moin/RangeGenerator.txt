@@ -1,10 +1,12 @@
-Below is a little little range generator, irange, which is compatible with range.  More specifically, [i for irange in (*args)] == range(*args)].  This will let us iterator over large spans of numbers without resorting to ["xrange"], which is a lazy list as opposed to  a generator.  
+Below is a little little range generator, irange, which is compatible with range.  More specifically, [i for irange in (*args)] == range(*args)].  This will let us iterator over large spans of numbers without resorting to ["xrange"], which is a lazy list as opposed to  a generator.
 
 Would a function of similar semantics likely be accepted into the standard library within itertools?
 
 ["lwickjr"]: I like the idea. Anyone else?
 
-The author doesn't have the time/energy to write/push a ["PEP"] for the PythonEnhancementProcess.  If you think this generator is a good idea, please submit a ["PEP"]. 
+The author doesn't have the time/energy to write/push a ["PEP"] for the PythonEnhancementProcess.  If you think this generator is a good idea, please submit a ["PEP"].
+
+["lwickjr"]: Neither do I. Anyone else?
 
 = Test Suite =
 Here is the test:
@@ -17,18 +19,18 @@ class TestIter(unittest.TestCase):
     def testIrangeValues(self):
         testArguments = ( [10],[0],[7,70], [-10], [10,700,17], [10,1000,-3],[10,-99,-7] )
         l = lambda *x: list(irange(*x))
-        
+
         for args  in testArguments:
             list1 = l(*args)
             list2 = range(*args)
             self.assertEqual(list1,list2)
-        
+
     def testIrangeArguments(self):
          self.assertRaises(ValueError,irange,0,99,0) #0 step
         #self.assertRaises(irange(1,2,3,4)) #too many arguments
-        
-    
-        
+
+
+
 if __name__ == '__main__':
     unittest.main()
 }}}
@@ -44,7 +46,7 @@ of an iterator over the list range(...)
 
 from itertools import count,takewhile
 """private generator over the unchecked arguments start, stop, step
-   [i for i in __irange3(start,stop,step)] produces range(start,stop,step) 
+   [i for i in __irange3(start,stop,step)] produces range(start,stop,step)
 """
 def __irange3__(start,stop,step):
     #the stop condition changes depending on the sign of step
@@ -56,13 +58,13 @@ def __irange3__(start,stop,step):
 
 """ generator to produce the same output as an iterator over
 range(args).  The advantage of this over range() or xrange() is a list
-is not created in order to provide the generator.  
+is not created in order to provide the generator.
 [i for i in irange(args) ] == [range(args)]
 """
 def irange(*args):
     if len(args) not in (1,2,3):
         raise TypeError, "expected 1,2, or 3 arguments to irange"
-    
+
     #the stop value will be the 1st argument when 1 argument supplied, it
     #will the the second argument otherwise. The index is one less than the
     #argument
@@ -74,7 +76,7 @@ def irange(*args):
         if step == 0:
             raise ValueError()
         return __irange3__(args[0],stop,step)
-    
+
     #for the cases with no step (1 or two args) its easy to
     #use the built in count() generator and filter
     predicate = lambda x : x < stop
