@@ -14,3 +14,15 @@ More information:
 I really wanted to use ReStructuredText for a blogging program. It would take a string of ReStructuredText, and then turn that into an HTML fragment. However, reST seems ''extremely'' resistant to giving you anything but a full HTML document. It's probably possible to get a fragment, but it'd take longer to figure out how than to make my own miniature "structured text"-like language.
 
 -- LionKimbro
+
+Of course, it's very easy to take a full HTML document and extract the body.  It may feel wrong, but it works, and works reliably.  PyDS uses reST successfully for blogging (though I don't know the specifics of its integration).  Here's a little recipe:
+
+{{{
+#!python
+html = docutils.core.publish_string(
+           source=text,
+           writer_name='html')
+html = html[html.find('<body>')+6:html.find('</body>')].strip()
+}}}
+
+-- IanBicking
