@@ -11,7 +11,6 @@ This will eventually be consolidated into PEP 3000. [[#e 5]]
  * Replace all old-style classes. [[#a 4]]
  * Make the `exec` statement a function (again.) [[#a 1]]
  * Make the `print` statement a function. (`write(x,y,z), writeln(x,y,z)`) [[#a 1]]
- * Perhaps have optional declarations for static typing.
  * Do something so you can catch multiple exceptions using `except E1, E2, E3:`. Perhaps use `except E1, E2, E3 as err:` if you want the error variable.  (Added by GvR, suggested by Bram Cohen.)
  * Add a `with` statement: {{{
 with self:
@@ -29,6 +28,14 @@ with self:
    Reasoning: `lambda` supports only one statement.
  * Remove support for string exceptions. [[#a 1]]
    Alternatively: use a class.
+ * Perhaps have optional declarations for static typing.
+  * One suggestion is to [http://mail.python.org/pipermail/python-dev/2004-February/042795.html use an "as" keyword for this] and for adaptation ([http://www.python.org/peps/pep-0246.html PEP 246]): {{{
+"x as y" means: adapt x to the y protocol
+
+def foo (a as int, b as float) as float:
+    a2 = a as float # same as: adapt(a,float)
+    ...
+}}}
 
 == Built-In Changes ==
 
