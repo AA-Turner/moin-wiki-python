@@ -1,0 +1,59 @@
+An '''iterator''' is an object that implements {{{__iter__}}} and and {{{next}}}.
+
+You can use them in for loops, and you can use them to construct lists.
+
+== Example Iterator ==
+
+Here is an iterator that returns a random number of 1's:
+
+{{{
+#!python
+import random
+
+class RandomIterator:
+    def __iter__(self):
+        return self
+    def next(self):
+        if random.choice(["go", "go", "stop"]) == "stop":
+            raise StopIteration  # signals "the end"
+        return 1
+}}}
+
+'''Q:''' Why is {{{__iter__}}} there, if it just returns self?
+
+'''A:''' This is so that the iterator can be used in a for...in loop.
+
+{{{
+#!python
+for eggs in RandomIterator():
+    print eggs
+}}}
+
+You can also use it in list construction:
+
+{{{
+#!python
+>>> list(RandomIterator())
+[1]
+>>> list(RandomIterator())
+[]
+>>> list(RandomIterator())
+[1, 1, 1, 1, 1]
+>>> list(RandomIterator())
+[1]
+}}}
+
+...both of these uses require {{{__iter__}}}.
+
+An object isn't an iterator unless it provides ''both'' methods. If it ''does'' provide these methods, then it's an iterator.
+
+== Links ==
+
+ * [http://www.python.org/peps/pep-0234.html PEP-234: Iterators]
+ * [http://www-106.ibm.com/developerworks/library/l-pycon.html?n-l-9271 Iterators & Simple Generators]
+
+See also: ["Generators"]
+
+= Discussion =
+
+  (none yet!)
