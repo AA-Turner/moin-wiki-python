@@ -3,6 +3,10 @@ There are various fixes and improvements that should form part of a 2.0 version 
 The ultimate goal:
  * '''Must be backwards-compatible with existing setup.py scripts.'''
 
+Quick things from PyCon:
+ * Some people want to run a build command (or whatever) programmatically; the only way to do this is to poke the right arguments into sys.argv.
+ * building tar archives could use the 2.3 tarfile module instead of requiring the platform have a tar command.
+
 Other ideas:
  * Some methods may trigger PendingDeprecationWarning``s
  * Move various utility methods out of command implementations and onto the Distribution class.
@@ -11,7 +15,7 @@ Other ideas:
  * Finish bdist_dpkg.py
  * Use optparse instead of fancy_getopt.py, and deprecate fancy_getopt.py.
  * sdist: Include scripts, data automatically in the source distribution.
- * Drop Python 1.5.2 compatibility. Keep Python 2.0 compatiblity.
+ * Drop Python 1.5.2 compatibility. Keep Python 2.0 compatiblity.  (2.3, 2.4 compatibility?)
  * Improve test coverage.  (See the DistutilsTesting page for ideas.)
  * Finish the documentation! (AnthonyBaxter has worked on a reference guide; his text is currently in [http://cvs.sourceforge.net/viewcvs.py/python/python/nondist/sandbox/distutilsref/ the CVS sandbox])
  * Package installation from PyPI (probably driven by the pythonmac-sig)
