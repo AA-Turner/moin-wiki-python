@@ -101,6 +101,14 @@ If you find that a particular piece of Python code runs too slow, you should con
 build an extension module in C or C++ for that piece of code. It's not too hard, Python's
 C API is very rich and there are various tools to make it even easier: Pyrex, Boost, distutils.
 
+== Premature optimization ==
+
+.... I agree that replacing a single function with c and give an increase in speed and that there are classes of things that we have libraries for which give large increases in speed however the point is that all of those things can be called from python easily. So why write an entire program in a lower level language like c,c++, java, c# etc when you can write it in python in far less time?
+'''Once the python version is done you can profile it, fix speed problems, debug it etc using far less resources.''' Once you have done all of that you can first use libraries if they exist to speed up  your program if still needed, code parts in a lower level language now that  you know exactly where the speed issues are or use something like psyco. Overall your programs will be far shorter, easier to read, easier to maintain, easier to debug, and just as fast if not faster.
+In my view just about anything other then a kernel or a device driver is premature optimization to write in a low level language barring other contraints.  -- ''(Kosh)''
+
+.... Also, I probably have an obligation to remind readers that an opposition such as "C or Python?" is false in at least one more way:  we need to think, as Kosh hints, not whether to use one or the other, but how much of each.  In commercial practice and academe, decision-makers will push you to settle on one language. This is a mistake they make.  Be prepared for it, and understand how to respond.  Even without heroic polyglotticism, you're
+realistically likely to be more successful in your development when you're ready to combine at least a couple of distinct languages judiciously.  -- ''(Cameron Laird)''
 
 -------
 
