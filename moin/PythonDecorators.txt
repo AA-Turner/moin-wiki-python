@@ -606,6 +606,36 @@ Basically it has the same characteristic than E2, with the following slight diff
  * - New syntax having no equivalent in other part of python (but all @ / | propositions suffer from that )
  * - No implementation currently exists.
 
+=== E4. keyword decorator at top of function body syntax ===
+{{{
+def foo(arg1,arg2):
+    using classmethod
+    ...
+
+def bar(low,high):
+    using accepts(int,int)
+    using returns(float)
+    ...
+
+def longMethodNameForEffect(longArgumentOne=None,
+                            longArgumentTwo=42):
+    using staticmethod
+    using funcattrs(grammar="'@' dotted_name [ '(' [arglist] ')' ]",
+               status="experimental", author="BDFL")
+    """This method blah, blah.
+
+    It supports the following arguments:
+    - longArgumentOne -- a string giving ...
+    - longArgumentTwo -- a number giving ...
+
+    blah, blah.
+
+    """
+
+}}}
+
+Similar to E1 and E2 but with keyword
+
 === F. inline syntax ===
 {{{
 def classmethod foo(arg1,arg2):
