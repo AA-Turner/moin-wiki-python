@@ -1,4 +1,4 @@
-=== &#1057;++ Iterators ===
+=== C++ Iterators ===
 Python iterator support a highly flexible interface allowing:
 
  * Direct exposure of a class' begin() and end() functions:
@@ -26,7 +26,7 @@ Python iterator support a highly flexible interface allowing:
                &my_sequence<heavy>::begin
              , &my_sequence<heavy>::end))
 }}}
-=== &#1057;ustom Iterators ===
+=== Custom Iterators ===
 Suppose we have custom iterator class providing next() member function.
 To expose it let's take an approach from scitbx package:
 {{{
@@ -56,5 +56,10 @@ struct iterator_wrappers
       ;
     }
   };
+
+BOOST_PYTHON_MODULE(iter)
+{
+  ...
+  iterator_wrappers<const MyClass,MyIter>().wrap("Iterator");
+}
 }}}
-... (to be continued)
