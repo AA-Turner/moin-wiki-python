@@ -375,11 +375,15 @@ One benefit of this marriage is that the help messages available from the comman
 
   It's my preference to have the application control the help like optparse does.  IMO its better to have that information close to where the parser is being set up and not have to have or go to another file for that information. -- dan.gass@gmail.com
 
+  Well, you're not being *forced* to use any particular idiom. Want to hardcode the information in the program? No problem. Want to have it in the file? That's fine, too. Want to use gettext for internationalization? That's also quite easy. -- VinaySajip
+
 The part that isnt addressed here that bothers me yet is how to weave in the ability to pass in real python objects as settings.  It would be good to have both a secure (restricted to strings and simple settings) and a second less than secure parser for those applications that need the flexibility of python.  Id like to see the APIs of the same for both the parser and the configuration file.  -- dan.gass@gmail.com
 
   I (VinaySajip) believe that I have covered this in [http://www.red-dove.com/python_config.html this config module] - if you feel something fundamental is missing, please let me know.
 
   When I use python to set up objects to pass in as settings I often use multiple lines of code to do it.  Sometimes I need to import modules so that I can instantiate a class.  Other times I'm using the os module to figure out where the configuration file is located because I need the path information to figure out the absolute paths of other things that are located relative to it.  Don't change yours on my account I'm holding tight with mine until a new and improved standard is available (so long as it works for me).   Who is concerned about the security hole of executing Python and what restrictions do they want? -- dan.gass@gmail.com
+
+  Well, I do have this concern - not so much for a security hole in the sense of bad guys in black hats, but the possibility of end users editing configuration files with executable code isn't in my view a recipe for robust software which behaves predictably. I don't fancy those support headaches , thanks. -- VinaySajip
 
 == My Dramatic Plea ==
 
@@ -404,6 +408,8 @@ The part that isnt addressed here that bothers me yet is how to weave in the a
   For portable schema-based expression of data, see XML. For non-portable, time-tested concise and beautiful syntax we all adore, see Python itself. For that in-between, see ConfigParser.
 
   Again I must apologise for such a large post, but I can't see how this opinion fits in well with that of others, and as such, I felt I needed to dump it in one large, opaque lump.  -- DavidWilson (wondering if people will think he's self-important for opening his own sub-heading ;))
+
+  A Wiki is not an email - you *can* undo impetuous comments by editing the Wiki. Or didn't you know? -- VinaySajip
 
 == Complexity killed the cat! ==
 
