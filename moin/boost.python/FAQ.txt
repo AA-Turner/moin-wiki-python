@@ -69,17 +69,18 @@ to make sure the lifetime of the C++ object being referenced by the pointer
 extends past the lifetime of all Python references to the object or your
 program will crash.
 
-=== How to I expose static class data members? ===
+=== How can I check returning Python value for None? ===
 {{{
-object x_class
-    = class_<X>("X")
-         .def( ... )
-         ...
-         ;
-
-x_class.attr("fu") = X::fu;
-x_class.attr("bar") = X::bar;
-...
+    object result = call_method<object>( <whatever> );
+    if (result.ptr() == object.ptr())
+    {
+        // handle None case
+    }
+    else
+    {
+        X x = extract<X>(result);
+        ...
+    }
 }}}
 
 === Why operators.hpp imports certain functions (such as 'str') into the global namespace, instead of the namespace boost::python. That looks like an error... ===
