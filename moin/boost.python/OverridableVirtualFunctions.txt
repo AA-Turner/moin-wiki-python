@@ -49,7 +49,7 @@ Finally, we add hello_callback to the `class_<>` declaration in our module initi
 // Create the Python type object for our extension class
 class_<hello,hello_callback> ("hello")
     // Add a virtual member function
-    .def("greet", &hello::greet, &hello_callback::default_greet);
+    .def("greet", &hello_callback::default_greet);
 }}}
 Now our Python subclass of `hello` behaves as expected:
 {{{
