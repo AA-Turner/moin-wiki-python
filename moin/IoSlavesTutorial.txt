@@ -1,26 +1,32 @@
 = IOSlaves Tutorial =
 
+Note: This is a work in progress.
+
 == Abstract ==
 
-A small library was written to allow IOSlaves, the
-protocol handlers for the [http://www.kde.org/ K Desktop Environment], to be written in Python
-using the PyQt and PyKDE modules. An example IOSlave was created for the purpose of examining
-multiple images contained in single files (Acorn Spritefiles) using this library and a simple
-Python class. Since Python works well as a "glue" language, it is hoped that the creation of IOSlaves
-will be made more accessible to a wider range of users, leading to a richer, more transparent user
-experience on the desktop.
+A small library was written to allow IOSlaves, the protocol handlers for the
+[http://www.kde.org/ K Desktop Environment], to be written in Python using the
+PyQt and PyKDE modules. An example IOSlave was created for the purpose of
+examining multiple images contained in single files (Acorn Spritefiles) using
+this library and a simple Python class. Since Python works well as a "glue"
+language, it is hoped that the creation of IOSlaves will be made more
+accessible to a wider range of users, leading to a richer, more transparent
+user experience on the desktop.
+
+Note: the installation procedure for IOSlaves in forthcoming versions of PyKDE will probably be different to that described below.
 
 == Introduction ==
 
-In KDE's infrastructure, IOSlaves handle the transfer of data between applications and
-remote servers using common protocols such as ''http'' and ''ftp'', but also for more
-mundane protocols like the ''file'' protocol for local files. Many of the mainstream protocols
-provided in the standard KDE distribution are implemented in C++, although some, like the
-''finger'' IOSlave, rely on support scripts to handle various aspects of communication with
-remote servers. Since PyKDE provides Python implementations (or ''wrappers'') for the
-relevant classes in the `kio` library, it is possible to write IOSlaves almost
-completely in Python; a simple C++ handling function is only required for
-dynamic linking purposes and to set up the interpreter.
+In KDE's infrastructure, IOSlaves handle the transfer of data between
+applications and remote servers using common protocols such as ''http'' and
+''ftp'', but also for more mundane protocols like the ''file'' protocol for
+local files. Many of the mainstream protocols provided in the standard KDE
+distribution are implemented in C++, although some, like the ''finger''
+IOSlave, rely on support scripts to handle various aspects of communication
+with remote servers. Since PyKDE provides Python implementations (or
+''wrappers'') for the relevant classes in the `kio` library, it is possible to
+write IOSlaves almost completely in Python; a simple C++ handling function is
+only required for dynamic linking purposes and to set up the interpreter.
 
 Much of the documentation describing the creation of IOSlaves is,
 naturally, written to assist the C++ programmer by providing examples of the
@@ -43,52 +49,59 @@ to their use.
 
 === Modules and the slave class ===
 
-We begin by importing the necessary modules. Some of these are needed for general interoperability
-with the KDE IOSlave infrastructure:
+We begin by importing the necessary modules. Some of these are needed for
+general interoperability with the KDE IOSlave infrastructure:
 {{{
 from qt import QString, QByteArray, QDataStream, IO_ReadOnly
 from kio import KIO
 from kdecore import KURL
 }}}
 
-Other familiar Python modules are used when performing tasks specific to this IOSlave:
+Other familiar Python modules are used when performing tasks specific to this
+IOSlave:
 {{{
-import os, time, types, urllib2
-
-import Image, spritefile
+import os, time
 }}}
 
-Additionally, we need to use the StringIO class and would prefer to use the C implementation:
+Additionally, we are going to use the XML module from the Qt libraries:
 {{{
-try:
-
-    from cStringIO import StringIO
-
-except ImportError:
-
-    from StringIO import StringIO
+import qtxml
 }}}
 
-We define a class which will be instantiated when the ''sprites'' protocol is used. This is a subclass of `KIO.SlaveBase` and relies on the facilities of this base class for communication with applications.
-At this point, it is useful to declare the MIME type and image format of the images we will be returning
-to applications in response to their requests; this is specific to this IOSlave but may be generally useful.
+We define a class which will be instantiated when the ''bookmarks'' protocol is
+used. This is a subclass of `KIO.SlaveBase` and relies on the facilities of
+this base class for communication with applications. At this point, it is
+useful to describe how the bookmark information will be encapsulated in the
+form of files. We will be representing each bookmark as a Desktop file, so
+we declare a template to be filled in for each bookmark and the MIME type for
+these files:
 {{{
 class SlaveClass(KIO.SlaveBase):
+    desktop_template = \
 
-    image_mimetype = "image/png"
-    image_format = "png"
+u"""[Desktop Entry]
+Encoding=%(encoding)s
+Icon=%(icon)s
+Type=Link
+URL=%(href)s
+"""
+
+    bookmark_mimetype = "application/x-desktop"
 }}}
 
-The `__init__` method for this class simply calls the corresponding method of the base class and
-initialises some variables for later use. The `__del__` method currently does nothing.
+The `__init__` method for this class simply calls the corresponding method of
+the base class and initialises some variables for later use. The `__del__`
+method currently does nothing.
 {{{
     def __init__(self, pool, app):
     
-        KIO.SlaveBase.__init__(self, "sprites", pool, app)
+        KIO.SlaveBase.__init__(self, "bookmarks", pool, app)
+        
+        self.dcopClient().attach()
         
         self.host = ""
-        self.spritefile = None
-        self.url = None
+        self.document = None
+        self.file = None
     
     def __del__(self):
     
@@ -97,66 +110,159 @@ initialises some variables for later use. The `__del__` method currently does no
 
 === General operations ===
 
-Although the actions performed by an IOSlave will typically be closely related to its purpose, we will
-define the methods required by many IOSlaves and only later defined the methods which are specific
-to the ''sprites'' protocol.
+Although the actions performed by an IOSlave will typically be closely related
+to its purpose, we will define the methods required by many IOSlaves and only
+later define the methods which are specific to the ''bookmarks'' protocol.
 
-The `get` method is called when an application requests an object, represented by the URL given, using
-the relevant protocol; in this case the ''sprites'' protocol.
+==== setHost ====
+
+The `setHost` method is called when the bookmarks IOSlave is asked to perform an
+operation in which a host is specified. Since we will only be looking at the user's
+local bookmarks, the host name is both not required and not wanted. When a host name
+is given, we indicate that an error has occurred using the base class's `error` method:
+{{{
+    def setHost(self, host, port, user, passwd):
+    
+        if unicode(host) != u"":
+        
+            self.closeConnection()
+            self.error(KIO.ERR_MALFORMED_URL, host)
+            return
+}}}
+
+==== openConnection and closeConnection ====
+
+The `openConnection` method is called before an application tries to perform operations
+on the file system presented by an IOSlave. For the bookmarks protocol, we take this
+opportunity to read the user's bookmarks file from the appropriate place in their home
+directory.
+{{{
+    def openConnection(self):
+    
+        # Don't call self.finished() in this method.
+        
+}}}
+We find the user's home directory from a shell variable and look for a "bookmarks.xml" file in
+a subdirectory beneath the ".kde" subdirectory.
+{{{
+        self.home = os.getenv("HOME")
+        
+        path = os.path.join(
+            self.home, ".kde", "share", "apps", "konqueror",
+            "bookmarks" + os.extsep + "xml"
+            )
+}}}
+For convenience, we record the path used to obtain the bookmarks before trying to open the
+file specified by that path.
+{{{
+        self.file = path
+        
+        try:
+        
+            b = open(self.file, "r").read()
+}}}
+If the bookmarks file was not found at the expected location then an error is returned to the
+application. This may be passed on to the user.
+{{{
+        except IOError:
+        
+            self.error(KIO.ERR_CANNOT_OPEN_FOR_READING, self.file)
+            return
+}}}
+The XML contained in the file is converted to a DOM representation of the document which
+is stored in an instance variable.
+{{{
+        self.document = qtxml.QDomDocument()
+        
+        result, errorMsg, errorLine, errorColumn = self.document.setContent(b)
+}}}
+If the XML in the bookmarks file could not be interpreted then an error is returned.
+{{{
+        if result == 0:
+        
+            self.error(KIO.ERR_CANNOT_OPEN_FOR_READING, self.file)
+            self.document = None
+            return
+}}}
+For this IOSlave, the `closeConnection` method simply writes any bookmark information
+to the user's bookmarks file and indicates that the document will need to be read again
+before subsequent operations can be performed. Other IOSlaves may need to perform more
+complicated operations at this point.
+{{{
+    def closeConnection(self):
+    
+        # Don't call self.finished() in this method.
+        
+        self._flush()
+        
+        self.document = None
+}}}
+
+==== get ====
+
+The `get` method is called when an application requests an object, represented
+by the URL given, using the relevant protocol; in this case the ''bookmarks''
+protocol. When the calling application requests a bookmark, represented as a
+file by the IOSlave, the contents of this file are generated using a template
+and returned to the application.
 {{{
     def get(self, url):
+    
+        self.openConnection()
 }}}
-The URL must be examined and the relevant object found. To do this, we call the `parse_url` method which
-is specific to this IOSlave. For this IOSlave, it returns the possible name of a sprite within a Spritefile.
+The URL must be examined and the relevant node found from the document
+describing the user's bookmarks. To do this, we call a
+method which is specific to this IOSlave. If the URL refers to a valid object
+then the path to the object, the name of the object and a DOM node are
+returned to this method; otherwise, the name and object return values are
+set to `None`.
 {{{
-        name = self.parse_url(url)
-}}}
-If no appropriate sprite was found then we inform the calling application by using the `error` method
-which is inherited from the base class:
-{{{
-        if name is None:
+        # Parse the URL using the URL's methods.
+        path, name, obj = self.find_object_from_url(url)
         
-            self.error(KIO.ERR_DOES_NOT_EXIST, url.path())
+        if obj is None:
+        
+            self.error(KIO.ERR_DOES_NOT_EXIST, path)
             return
 }}}
-If, on the other hand, a sprite was found then we can check whether it exists within the current Spritefile
-being examined, notifying the calling application if it was not found:
+If, on the other hand, an object was found then we can check whether it is a
+bookmark or some other object. Objects such as folders cannot be fetched using
+the get method.
 {{{
-        # Find the sprite within the file.
-        if not self.spritefile.sprites.has_key(name):
+        # The obj variable is a document node. Check whether it is a
+        # folder node and return an error if so.
+        if unicode(obj.nodeName()) != u"bookmark":
         
-            self.error(KIO.ERR_DOES_NOT_EXIST, name)
+            self.error(KIO.ERR_IS_DIRECTORY, path)
             return
 }}}
 
-With the name of the sprite determined, we can retrieve an object from the Spritefile.
+With the object representing a bookmark determined, we can return the details
+to the calling application in the form of a file with a MIME type as defined
+earlier. We declare the MIME type before we send the file data.
 {{{
-        sprite = self.spritefile.sprites[name]
-}}}
-We will be converting the sprite data into a PNG image before it is delivered to the application.
-The MIME type of the image is reported to the application using the `mimeType` method, inherited from
-the base class:
-{{{
-        self.mimeType(self.image_mimetype)
+        self.mimeType(self.bookmark_mimetype)
 }}}
 
-Using the Python Imaging Library, we create an Image object from the sprite and "save" the image in
-a suitable format (defined above) to a string.
+The contents of the file to be returned are created using a template combined
+with information from the DOM node found earlier.
 {{{
-        image = self.sprite_to_image(sprite)
+        # Decode the title string so that it is presented in a more
+        # conventional manner.
+        details = self.read_bookmark_details(obj)
         
-        file = StringIO()
-        image.save(file, self.image_format)
-        file.seek(0, 0)
+        # Decode the title string so that it is presented in a more
+        # conventional manner.
+        details[u"title"] = self.decode_name(details[u"title"])
         
-        output = file.read()
-        file.close()
+        text = self.desktop_template % details
+        output = text.encode(details[u"encoding"])
 }}}
-The image data is sent to the application through the use of the base class's `data` method. Note the use
-of the `QByteArray` for this purpose.
+The constructed file is sent to the application through the use of the base class's `data` method.
+Note the use of the `QByteArray` class for this purpose.
 {{{
         self.data(QByteArray(output))
-}}}
+}}}        
 To report the end of the data, we must send the application an empty byte array:
 {{{
         self.data(QByteArray())
@@ -166,5 +272,31 @@ We must also report that we have finished the operation by calling the base clas
         self.finished()
 }}}
 
-
-To be continued...
+{{{
+    def _flush(self):
+    
+        # Internal function for synchronising the filesystem with the
+        # bookmarks file.
+        if self.document is None:
+        
+            return
+        
+        try:
+        
+            b = open(self.file, "w")
+        
+        except IOError:
+        
+            self.error(KIO.ERR_CANNOT_OPEN_FOR_WRITING, self.file)
+            return
+        
+        # Write the XML to the bookmarks file.
+        b.write(str(self.document.toString()))
+        
+        b.close()
+        
+        # Unset the document attribute to force the bookmarks file to be
+        # re-read.
+        self.document = None
+    
+}}}
