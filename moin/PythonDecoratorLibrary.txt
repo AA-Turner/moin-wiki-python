@@ -43,15 +43,20 @@ print add1(2)
 
 == Controllable DIY debug ==
 
-(Other hooks could be similarly added)
+(Other hooks could be similarly added. Exceptions are left out for simplicity
+of demonstration.)
 
 {{{
 #!python
 import sys, sets
 
-WHAT_TO_DEBUG = sets.Set(['io', 'core'])
+WHAT_TO_DEBUG = sets.Set(['io', 'core'])  # change to what you need
 
 class deBug:
+    """ Decorator which help to control what aspects to debug.
+    Aspects are provided as list of arguments. It DOESN'T 
+    slowdown functions which aren't supposed to be debugged.
+    """
     def __init__(self, aspects=None):
         self.aspects = sets.Set(aspects)
 
