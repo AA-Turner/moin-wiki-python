@@ -62,7 +62,7 @@ See also [LanguageComparisons].
 
 == Using both Python & Haskell with ctypes (-; ==
 
-Since, Python is the ultimate glue language, these Python vs. XLang should be replaced with Python "and" XLang.
+Since, Python is the ultimate glue language, these Python vs. XLang should be replaced with Python "and" XLang. This technique works for windows and ghc:
 
 First a test haskell program (mylib.hs):
 
@@ -101,7 +101,34 @@ foreign export stdcall hello :: CString -> IO CString
 foreign export stdcall mystring :: IO CString
 }}}
 
-compile it as so by running this batch file (build.bat):
+create file dllMain.c as entry point for the dll:
+
+{{{
+#include <windows.h>
+#include <Rts.h>
+
+EXTFUN (__stginit_Mylib);
+
+static char *args[] = { "ghcDll", NULL };
+
+/* N.B. argv arrays must end with NULL */
+BOOL STDCALL DllMain (HANDLE hModule, DWORD reason, void *reserved)
+{
+  if (reason == DLL_PROCESS_ATTACH)
+    {
+/* By now, the RTS DLL should have been hoisted in, but we need to start it up. */
+      startupHaskell (1, args, __stginit_Mylib);
+
+      return TRUE;
+    }
+  return TRUE;
+}
+
+}}}
+
+
+compile everything as so by running this batch file (build.bat):
+
 {{{
 REM test making dll
 ghc -c mylib.hs -fglasgow-exts
