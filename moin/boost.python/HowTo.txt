@@ -207,3 +207,22 @@ In that case use "make_function":
 {{{ .add_property("a",
       make_function(&C::getA, return_value_policy<...>()),
       make_function(&C::setA, with_custodian_and_ward<...>())}}}
+
+== How to get... ==
+
+=== C++ object from Python ===
+
+If you have a reference, use `handle`:
+{{{
+handle<> x(whatever);   // new reference
+handle<> x(borrowed(whatever));  // borrowed reference
+
+object(x); // now we have an object.
+}}}
+
+Than you can try to `extract` a value:
+{{{
+Type v = extract<Type>(x);
+}}}
+
+See ["../extract"]
