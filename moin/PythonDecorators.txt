@@ -62,6 +62,7 @@ def bar(low,high):
  * - Because of no indentation, looks confusing when definitions are not separated by empty lines.
  * - Breaks in interactive shell
  * - Comes before the def keyword.  Supercedes the function declaration itself.
+ * 0 The @ character is often used (in other languages) to mean "attribute".  For annotations, this is good.  For more active decorators, it may not be so good.
 
 '''B. list-before-def syntax'''
 {{{
@@ -100,7 +101,8 @@ def bar(low,high) [accepts(int,int), returns(float)]:
  * - Long lists of decorators/arguments cause ugly line wraps
  * - Little to distinguish it visually from argument list
  * - or 0 For long argument list, decorators are very far from def. ''I see being too close to def as a minus.''
- * - Guido didn't like (maybe because of line wrap issue?) 
+ * - Guido didn't like (maybe because of line wrap issue?)
+ * - Creates another meaning for [].  Since it does so inside the function definition, it will be a distraction for beginners. 
 
 I don't see why longs lists of decorators are an issue with this syntax.  Consider the following example:
 {{{
@@ -143,7 +145,7 @@ def bar(low,high):
     ...
 }}}
  * Same as above but with pie syntax.
- * Could use @doc to as a docstring alternative
+ * Could use @doc too as a docstring alternative
 
 '''F. inline syntax'''
 {{{
@@ -189,6 +191,7 @@ Same pros and cons as @decorator, but additionally:
 
  * + It doesn't break Leo, IPython, or any other tool that uses @ as a special character.
  * + The association with pipes makes some sense: "take this thing and pass it through that thing to get a modified thing".
+ * - Most characters (including pipe) already have a meaning.  Ending an expression at the linebreak will probably keep these from becoming ambiguous, but ... that gets fragile.
 
 
 == Thinking ahead to Python 3 ? ==
