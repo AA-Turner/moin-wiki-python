@@ -37,7 +37,8 @@ See also: MixIns, MetaClasses
 
 After the @decorator syntax was "accepted", lots of people threw up alarms and a huge series of threads started exploding on Python-dev. Here are the current alternatives that I could find that are being argued, with pros and cons:
 
-'''@decorator  "pie decorator syntax"'''
+'''@decorator  "pie decorator syntax"''' ''(Before def)''
+
  * + Java-like, so not completely unknown to everyone.
  * + Makes the syntax obvious visually   
  * + Will not be silently ignored 
@@ -48,7 +49,8 @@ After the @decorator syntax was "accepted", lots of people threw up alarms and a
  * - Punctuation-based syntax raises Perlfears.
  * - Does not nessecarily 
     
-'''[decorator] "list-before-def syntax"'''
+'''[decorator] "list-before-def syntax"''' ''(Before def)''
+
  * + C# like
  * + Can be made backwards compatible-ish, with a "hack"
  * + Doesn't cause breakage in existing code-searching tools
@@ -57,7 +59,7 @@ After the @decorator syntax was "accepted", lots of people threw up alarms and a
  * - The backwards compatability wouldn't be portable to Jython
  * - Looks like a normal expression, but has "magic" behavior of altering a function object
 
-'''def function() [decorator]: "list-after-def syntax"'''
+'''def function(arguments) [decorator]: "list-after-def syntax"'''
  * + Also somewhat C#-like
  * + Was a "community favorite" at one time
  * + Clearly a part of function declaration
@@ -66,19 +68,22 @@ After the @decorator syntax was "accepted", lots of people threw up alarms and a
  * - Long lists of decorators/arguments cause ugly line wraps
  * - Guido didn't like (maybe because of line wrap issue?) 
     
-'''def decorator function() "inline? syntax?"'''
+'''def decorator function(arguments) "inline? syntax?"'''
+
  * + Simple
  * + Obviousely attached to the function
  * - Does not allow for arguments to the decorator inline.
  * - The natural place where everyone looks for the function name now is a possible container for other information
  * - Complicates things like colorization and other functions of helper tools
     
-'''as decorator'''
+'''as decorator''' ''(Before def)''
+
  * + Non-punctuation based
  * + Does not use an existing mechanism with 'magic' behavior
  * - Guido specifically vetos: "as" means "rename" in too many logical, common places that are in-use, and decorators do not rename.
     
-'''with decorator'''
+'''with decorator''' ''(Before def)''
+
  * + The benefits of "as" without the renaming oddity.
  * + Reads as, "with decorator define function", which seems accurate. Such as, "with staticmethod define foobar(baz)". 
  * - Adds a new keyword?    
