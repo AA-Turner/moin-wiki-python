@@ -1,0 +1,38 @@
+If the class had no
+`def_init(...)` calls, you now must pass `python::no_init` instead. On the
+upside, you never need to call `def_init()` with no arguments, since that's
+the default. So:
+{{{
+class_<A>("A")
+    .def_init(args<int, int>())
+    .def(...)
+    ;
+
+class_<B>("B", args<int, int>())
+    .def(...)
+    ;
+
+class_<C>("C", "C's docstring", args<int, int>())
+    .def(...)
+    ;
+
+class_<D>("D", "D's docstring", args<int, int>(), "__init__ doc")
+    .def(...) 
+    ;
+
+
+class_<E>("E")
+    .def(...)
+    ;
+
+class_<F>("F", no_init)
+    .def(...)
+    ;
+
+class_<G>("G", "G's docstring", no_init)
+    .def(...) 
+    ;
+
+class_<H>("H", "H's docstring")
+    .def(...) 
+    ;
