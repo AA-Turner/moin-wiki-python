@@ -1,4 +1,34 @@
-BundleBuilder is a script that lets you create applets, or more importantly, standalone Python application bundles on Mac. To create a standalone application bundle on Mac, you need to create a script which starts bundlebuilder, tells it what files and libraries you want to package, and then lets it do its thing. Here is an example script that showcases most of the important features of bundlebuilder:
+BundleBuilder is a script that lets you create applets, or more importantly, standalone Python application bundles on Mac. To create an application bundle on Mac, you need to create a script which starts bundlebuilder, tells it what files and libraries you want to package, and then lets it do its thing. Here is an minimal bundlebuilder script for a fictional PyObjC application:
+{{{
+#!python
+from bundlebuilder import buildapp
+
+buildapp(
+	name = "MyApp",
+	mainprogram = "MyAppMain.py",
+	resources = ["MainMenu.nib"],
+	nibname = "MainMenu",
+)
+}}}
+
+Bundlebuilder scripts are typically called "buildapp.py", and can be invoked from the command line in several ways. By default, bundlebuilder will create a folder named "build" in the current directory; the application will be built there.
+
+Build an applet (depends on a Python installation):
+  % python buildapp.py build
+
+However, the next invocation is much more useful during development, as instead of copying files to the bundle, it creates symbolic links to the original files, meaning you don't have to rebuild the applet after each change:
+  % python buildapp.py --link build
+
+To create a standalone application, it is typically invoked like this:
+  % python buildapp.py --standalone --strip build
+
+The --standalone option will cause almost everything that's needed (and nothing more!) to be included in the .app bundle. It analyzes which modules are (potentially) used. Sometimes this does not include enough (it may miss modules that are imported dynamically through the __import__ hook), sometimes it includes too much (it follows every potential dependency, even if there on a brach of the code which will never be executed. To tweak what's included, use the --include, --package and --exclude bundlebuilder options.
+
+The --strip option will strip all executable files inside the application bundle of their debugging info, which will have a huge impact on the size of the final bundle.
+
+Try --help for a list of options.
+
+Here is a more elaborate example script that showcases more features of bundlebuilder, yet will only build a standalone application:
 
 {{{
 #!python
@@ -37,4 +67,4 @@ myapp.build()
 
 In the future, BundleBuilder will be able to detect and incorporate shared libraries as well, meaning you will only need to worry about adding your own files to the bundle. 
 
-Todo: Troubleshooting bundlebuilder problems section?
+Todo: Troubleshooting bundlebuilder problems section? Yes, especially the encodings problem; it's a FAQ in the py2exe world. The quick fix is to add --package=encodings to bundlebuilder's command line options. However, this includes all of the encodings package, which for many applications means unnecessary bloat.
