@@ -492,6 +492,67 @@ comm_path = path_C1              # same as comm_path['grpC']['dev1'] = 'path_C1'
 
 I've been tinkering with a "cooperation" between optparse and a new configuration parser to get the benefits described earlier without the design, implementation, and documentation headaches.  More on this later after I get more sleep and do more research. -- dan.gass@gmail.com
 
+== API Proposal, optparse Model With Partnership Support ==
+
+I'm proposing here an application interface to a configuration file parser (cfgparse) that is very similar to optparse. Making the interfaces similar should make it easier to learn and remember.  It also helps in allowing them to be "partnered".  I've put together a hypothetical application script that partners the existing optparse option parser with a new configuration parser.  If you don't like this concept of partnership feel free to express any new thoughts but also make sure you comment on how useful this API choice is for a nonpartnered application.  There is very little needed in the API to support partnerships!! -- dan.gass@gmail.com
+
+{{{
+# Make an instance of each.  Logic to partner them together is after options are added.
+import optparse # existing
+import cfgparse # shootout (collaboration?) winner
+optpar = optparse.OptionParser()
+cfgpar = cfgparse.ConfigParser('somefile.cfg')
+
+# Here the command line -t, -f options are partnered with configuration file controlflag 
+# option because they share the same destination.  Note, when partnering, the option added
+# to the option parser should not have a default!
+desc = 'Flag description.'
+optpar.add_option('-t',dest='flag',action='store_const',const=1,help=desc + ' (sets to 1)')
+optpar.add_option('-f',dest='flag',action='store_const',const=0,help=desc + ' (sets to 0)')
+cfgpar.add_option('controlflag',dest='flag',default=True,type='int',help=desc + '(must be integer)')
+
+# Both option and configuration parser make good guesses what the destination name should be if
+# it isn't explicitly specified.  Since these share the same destination they will be partnered.
+# Note, if option added to cfgpar doesn't specify type, help or metavar, those attributes
+# should be picked up automatically from the partnered option in optpar??  I lean yes.
+optpar.add_option('-s','--sandbox',type='string',metavar='PATH',help='scratch area')
+cfgpar.add_option('sandbox',default='/home/me/sandbox')
+
+# Both support option groups (for organizing help) independently and the interface is identical
+optgrp_a = optpar.add_option_group('UNPARTNERED OPTIONS')
+cfggrp_a = cfgpar.add_option_group('UNPARTNERED OPTIONS')
+
+# OptionParser options do not need to be partnered
+optgrp_a.add_option('-o',action='store_true',default=False,help='Look Mom, no partner!')
+
+# ConfigParser options do not need to be partnered either
+cfggrp_a.add_option('somesetting',help='No default, exception raised when no option in config')
+
+# This is how the partnership is formed.  The cfgpar is asked to parse the command line
+# arguments (with the help of optpar).  Internally before the arguments are parsed,
+# cfgpar options are paired up with optpar options.  Option attributes such as help, type, 
+# and metavar are inherited by the cfgpar option from the optpar option if nothing was 
+# specified when the option was added.  cfgpar option help strings are automatically 
+# updated with command line switch information to help identify interactions (maybe vice 
+# versa too?).  By default cfgpar will modify the optpar help screen to include 
+# configuration file help at the bottom.  This can be turned off using the optional
+# combinehelp keyword argument.  Options and args are passed back as they would from
+# optpar.  
+options, args = cfgpar.parse_args(optparser=optpar,combinehelp=False)
+
+# args are what you would expect
+print "args=",args
+
+# Options should be used to access only unpartnered optpar options.
+print "o option=",options.o
+
+# Partnered options should be accessed through cfgpar so that if they aren't found
+# in the command line options they can be obtained from a configuration file option.
+print "sandbox option",cfgpar.sandbox.get('optional,key,list')
+print "flag option",cfgpar.flag.get() # no optional keys
+}}}
+
+
 == Complexity killed the cat! ==
 
 Look at what happened to urllib2 - the entry level for new users was greatly enhanced, but the added functionality was really little more than what you could already do more simply with urllib. With that in mind, I think the new ConfigParser should in it's simplest form act very closely like the original ConfigParser.
