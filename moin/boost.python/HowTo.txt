@@ -14,6 +14,7 @@ x_class.attr("bar") = X::bar;
 }}}
 
 === module level objects ===
+==== at module creation time ====
 First, create those objects like
 {{{
 object class_X = class_<X>("X");
@@ -24,4 +25,38 @@ Second, expose them:
 scope().attr("x") = x; // injects x into current scope
 }}}
 By default current scope is module.
+==== at run-time ====
+Use a function:
+{{{
+template <class T>
+void set(const std::string& name, const T& value) {
+  interpreter()->mainmodule()[name] = value;
+}
+}}}
 
+=== mutable C++ object ===
+Perhaps you'd like the resulting Python object to contain a raw
+pointer to the argument?  In that case, the caveat is that if the
+lifetime of the C++ object ends before that of the Python object, that
+pointer will dangle and using the Python object may cause a crash.
+
+There is a way to do that, but it's more convoluted than it should be:
+{{{
+  template <class T>
+  T& identity(T& x)
+  {
+      return x;
+  }
+
+  template <class T>
+  object get_object_reference(T& x)
+  {
+      // build a function object around identity
+      object f
+          = make_function(
+                  &identity<T>, return_value_policy<reference_existing_object>());
+
+      // and call
+      return f(x);
+  }
+}}}
