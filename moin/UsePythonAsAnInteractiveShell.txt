@@ -6,7 +6,7 @@ Basically some of the most common code ideas are welcomed here. you probably wan
 for all your code,
 == lack of symbol for command execution ==
 Solution: write short method names:
-<code>
+{{{
 def S(arg):
   """returns string of executed command arg"""
   return os.popen(arg).read()
@@ -23,14 +23,14 @@ def SNP(arg):
   """prints with lines list executed command arg"""
   for i in SN():
     print i
-</code>
+}}}
 
 == dirname comprables ==
 you might not know that you have improved functionality.
 os.path.split replaces dirname and basename returning a tuple containing both.
 os.path.splitext splits on the extension returning a tuple
 To complete the set you might want to split the path at the root, use:
-<code>
+{{{
 import re
 def splitroot(s):
   if string.find(s,"/") == -1:
@@ -39,7 +39,7 @@ def splitroot(s):
     s = s[1:]
   m = re.match("(.*?)/(.*)$",s)
   return m.groups()
-</code>
+}}}
 
 == awk comprables ==
 simply use re. its a fuller set of regular expressions. create a wrapper function 
