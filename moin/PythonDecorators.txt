@@ -574,7 +574,7 @@ decorate accepts(int,int), returns(float):
  * - Inconsistent identation level between methods with/without decorators (see following question)
  * - way to much indenting if there are multiple decorators. (see following question)
  * - Determining which decorators apply to a function requires scanning an arbitrarily large amount of code (with real functions and nesting, the decorator can be literally hundreds of lines away from the def).
- * - In practice, functions are likely to each require slightly different decorator sets, which means that we either do not group them (in which case, the new indent level doesn't gain us anything), or functions will be heavily and unevenly nested. (See below for an example.)
+ * - In practice, functions are likely to each require slightly different decorator sets (''other may argue that most users would only use staticmethod and don't care grouping them''), which means that we either do not group them (in which case, the new indent level doesn't gain us anything), or functions will be heavily and unevenly nested. (See below for an example.)
  * - No implementation currently exists.
 
 Wouldn't be possible to allow both syntaxes?:
@@ -619,7 +619,7 @@ def bar(low,high):
  * + Doesn't need extra characters with special meaning
  * + Allows many decorated functions to be declared with a single statement
  * - New keyword
- * - Overkill for the simple case like classmethod.
+ * - Overkill for the simple case like classmethod (''no that muich, since "@" is replaced by "decorate:" without new line'').
  * - Many people felt it was wrong use of an identation suite.
  * - Has the same problem as 5.A, in that the decorate block implicitly affects the following def. This does not occur elsewhere in Python.
  * - Technical problems with the current grammar parser if a suite *starts* with an optional part.  (Ending with an optional part, such as "else:" is OK, but starting with one is not.)
