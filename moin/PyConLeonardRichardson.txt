@@ -12,6 +12,9 @@ corresponding software written in time. :)
 
 If you're interested in me personally, you can visit [http://www.crummy.com/ my homepage].
 
+The code in this talk is almost all code I wrote for [http://newsbruiser.tigris.org/ NewsBruiser],
+a weblogging application which you might be interested in independently of the subject of this talk.
+
 = Talk Synopsis =
 
 Oftentimes, a very small or very new web application will keep all of
@@ -61,36 +64,37 @@ are easier to use, can enforce configuration semantics, and don't require
 shell access to the hosting machine. The framework I'll describe is
 also useful for doing a user preferences engine.
 
-The framework I'm using in my talk is based on the one I wrote for [http://newsbruiser.tigris.org/ NewsBruiser].
-[http://newsbruiser.tigris.org/source/browse/newsbruiser/nb/lib/IWantOptions.py Here it is in CVS.] 
-
 My talk is currently [http://www.python.org/pycon/pycon-schedule.html scheduled]
 for 11:30-12:00 on Thursday, March 27, in the Elliot room, wherever
 that is. I assume there will be signs.
+
+= Included Code =
+
+* A full-featured configuration interface library called I Want Options (as used in NewsBruiser; you can [http://newsbruiser.tigris.org/source/browse/newsbruiser/nb/lib/IWantOptions.py view it in CVS])
+
+* Three implementations of a silly text generation program, illustrating the "three ages of App" mentioned above.
+
+  * An implementation which uses inline variable settings for its configuration
+  * An implementation which reads its configuration from a file
+  * An implementation which reads its configuration from a file, and provides a web interface to that same file through I Want Options.
+
+* An implementation of a slightly less silly program (yet to be written) which uses I Want Options for user preferences.
 
 = To do =
 
 * Write the slides!
 
-* Write 3 simple example apps to do the same thing (or one app which can get its variable in any of 3 ways):
-
-  * Hard-coded variable
-  * Configuration file variable
-  * Variable changable from configuration interface
-
-* Write more complex app that sets global options (context == None)
+* Clean up example app #3
 
 * Write example app that sets per-user options (context == username)
 
 = Questions For You =
 
-First, does what I'm talking about here even make sense?
-
-Second, what kind of apps should I write? I'd like them to be extremely simple, with only one screen apart from the configuration screen (if there is one). I'd like the "complex app" mentioned above to be configurable by at least a boolean, a text box, a drop-down selection, and something with extra semantics (like a fractional value or a year).
-
-An example of the simple app would be something that prints out a string some configurable number of times. An example of the more complex app might be a silly text generator that reads a web page and does something to it (what it does being controlled by the configuration interface). 
+What kind of app should I write for the user preferences demonstration? I'd like at least a boolean, a selection box, and something with extra semantics (such as a date).
 
 = Work Log =
+
+02/27: Just wrote the same app three times. The last time was the most interesting, as I'd never before implemented a context or a configuration CGI within the framework of I Want Options. For the initial implementation (which was NewsBruiser-specific) I wrote a big blob of code, and only started splitting it out once I had to give this talk. I've now got ideas about more things I can move into IWO (an example context implementation, and some more configuration CGI logic). The other two implementations also gave me some ideas; if I changed it so that the user pass the context into the OptionConfig constructor, instead of passing it in to all the methods (which seems reasonable), I could turn getOptionValue into a __getitem__ implementation, which would be cool.
 
 02/21: Got all the NewsBruiser-specific code out of Options.py. To celebrate, moved it out of NewsBruiser proper and into the lib/
 directory. It's now a reusable library called [http://newsbruiser.tigris.org/source/browse/newsbruiser/nb/lib/IWantOptions.py I Want Options].
