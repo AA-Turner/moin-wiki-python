@@ -40,3 +40,40 @@ add1 = add(1)
 print add1(2)
 
 }}}
+
+== Controllable DIY debug ==
+
+(Other hooks could be similarly added)
+
+{{{
+#!python
+import sys, sets
+
+WHAT_TO_DEBUG = sets.Set(['io', 'core'])
+
+class deBug:
+    def __init__(self, aspects=None):
+        self.aspects = sets.Set(aspects)
+
+    def __call__(self, f):
+        if self.aspects & WHAT_TO_DEBUG:
+            def newf(*args, **kwds):
+                print >> sys.stderr, f.func_name, args, kwds
+                f_result = f(*args, **kwds)
+                print >> sys.stderr, f.func_name, "returned", f_result
+                return f_result
+            return newf
+        else:
+            return f
+
+@deBug(['io'])
+def prn(x):
+    print x
+
+@deBug(['core'])
+def mult(x, y):
+    return x * y
+
+prn(mult(2,2))
+
+}}}
