@@ -19,6 +19,30 @@ BOOST_PYTHON_MODULE(example1)
 }}}
 If you want to forbid creating class instancies from python, you now must pass `no_init` to class_<> definition. Default, as in python, will be init with no arguments. There is no limit to number of init<>'s in the boost.python.
 
+'''C++ object storage'''
+
+Boost.Python allows you to specify how Python objects will hold the
+C++ objects they wrap. You can specify that they be held by
+''shared_ptr<T>'' (or any other smart pointer), in which case the
+library will generate converters to/from Python for
+''shared_ptr<T>''. The ''to_python converters'' will simply build a new
+Python object around the ''shared_ptr<>''. You can specify that your C++ object is held by
+''shared_ptr<U>''. That allows you to hold
+a U object for dispatching, yet still pass shared_ptrs around in your C++ code.
+
+If you have virtual functions you want to ''override in Python'',
+you actually have to hold the T object with a derived class U which
+overrides the virtual functions to dispatch back to Python. In this
+case, class U naturally has to have access to the Python object
+
+
+There are several problems with the above arrangement, but the most
+important one is that if you keep the shared_ptr<U> alive longer than
+its corresponding Python object, calls to the Python-overridable
+virtual functions will crash, because they'll try to call through an
+invalid pointer.
+
+
 '''Synopsis:'''
 {{{
 class_<A>("A")
