@@ -247,3 +247,24 @@ void caller(auto_ptr<MyClass> obj)
 Wrap {{{caller}}} under the {{{new_owner_function}}} Python name.
 
 See also http://www.boost.org/libs/python/doc/v2/faq.html#ownership
+
+=== ownership of C++ object extended in Python ===
+The method defined upper does not work if part of your object is written in Python. The PyObject* associated to the object may still be delete by Python. If you want to ensure the lifetime of the object, you have to increase manually the reference couting in the C++ Wrapper AND use the above method. With this, you'll be sure the PyObject* is not destroyed while the C++ still exists.
+
+So, write the MyClassWrap as : {{{
+class MyClassWrap : public MyClass
+{
+  MyClassWrap( PyObject* self_) : self(self_) { PyINCREF(self); }
+  MyClassWrap( PyObject* self_, const MyClass& copy ) : MyClass(copy), self(self_) { PyINCREF(self); }
+  ~MyClassWrap() { PyDECREF(self); }
+  ...
+  PyObject *self;
+};
+}}}
+
+And in the module definition : {{{
+class_<MyClass, auto_ptr<MyClassWrap> >("MyClass");
+implicitly_convertible<auto_ptr<MyClassWrap>, auto_ptr<ClassWrap> >();
+}}}
+
+And you still write the thin wrapper as described above.
