@@ -1,4 +1,4 @@
-Now let's expose a C++ class to Python: 
+Now let's expose a C++ class to Python:
 {{{
 #include <iostream>
 #include <string>
@@ -21,7 +21,7 @@ namespace { // Avoid cluttering the global namespace.
   }
 }
 }}}
-To expose the class, we use a ''class_'' builder. Class member functions are exposed by using the ''def()'' member: 
+To expose the class, we use a ''class_'' builder. Class member functions are exposed by using the ''def()'' member:
 {{{
 #include <boost/python/module.hpp>
 #include <boost/python/class.hpp>
@@ -35,11 +35,11 @@ BOOST_PYTHON_MODULE_INIT(getting_started2)
         .def("greet", &hello::greet)  // Add a regular member function.
         .def("invite", invite)  // Add invite() as a regular function to the module.
     ;
-    
+
     def("invite", invite); // Even better, invite() can also be made a member of module!!!
 }
 }}}
-Now we can use the class normally from Python: 
+Now we can use the class normally from Python:
 {{{
 >>> from getting_started2 import *
 >>> hi = hello('California')
@@ -51,12 +51,28 @@ Now we can use the class normally from Python:
 'Hello from California! Please come soon!'
 }}}
 Notes:
- * We expose the class' constructor by calling ''def()'' on the ''class_'' builder with an argument whose type is ''constructor<params>'', where ''params'' matches the list of constructor argument types; 
- * Regular member functions are defined by calling ''def()'' with a member function pointer and its Python name; 
- * Any function added to a class whose initial argument matches the class (or any base) will act like a member function in Python. 
- * To define a nested class, just '''???'''. 
+ * We expose the class' constructor by calling ''def()'' on the ''class_'' builder with an argument whose type is ''constructor<params>'', where ''params'' matches the list of constructor argument types;
+ * Regular member functions are defined by calling ''def()'' with a member function pointer and its Python name;
+ * Any function added to a class whose initial argument matches the class (or any base) will act like a member function in Python.
+ * To define a nested class, just place class_<> builder inside another class `scope`: {{{
+BOOST_PYTHON_MODULE_INIT(nested_ext)
+{
+    using namespace boost::python;
 
-We can even make a subclass of hello.world: 
+    // Establish X as the current scope.
+    scope x_class(
+        class_<X>("X", init<int>())
+           .def(str(self))
+        );
+
+    // Y will now be defined in the current scope
+    class_<Y>("Y", init<int>())
+        .def(str(self))
+        ;
+}
+}}}
+
+We can even make a subclass of hello.world:
 {{{
 >>> class wordy(hello):
 ...     def greet(self):
@@ -68,7 +84,7 @@ We can even make a subclass of hello.world:
 >>> invite(hi2)
 'Hello from Florida! Please come soon!'
 }}}
-Pretty cool! You can't do that with an ordinary Python extension type! Of course, you may now have a slightly empty feeling in the pit of your little pythonic stomach. Perhaps you wanted to see the following ''wordy'' invitation: 
+Pretty cool! You can't do that with an ordinary Python extension type! Of course, you may now have a slightly empty feeling in the pit of your little pythonic stomach. Perhaps you wanted to see the following ''wordy'' invitation:
 {{{
 'Hello from Florida, where the weather is fine! Please come soon!'
 }}}
