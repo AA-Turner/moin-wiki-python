@@ -217,10 +217,6 @@ desired.
    * Is intelligent about default values; writes out a minimal config
    file.
 
- How important is this feature?  Is there anyone pushing for it
- and for what use?  Is it worth the complexity and the constraints
- it would put on the design?  -- dan.gass@gmail.com
-
  * Supports some notion of a config schema.  You might define a
  certain key as being an integer, and it would be automatically
  converted when the file was loaded.  This becomes a bit more
@@ -282,7 +278,7 @@ Discuss.  Please sign your name.
 
 What exactly is the goal? A new API to access configuration info? Or a specific file format itself? Or both? I don't have much problem with the current ConfigParser but ideally I would like use a 'simpler' API. This would allow attribute access (a.b.c) to values, provide default values, convert some types, and do some constraint checking (xyz is required) etc. It's very possible to get this functionality through a wrapper on top of ConfigParser. IMO that is the best approach, as long as there is a way to map the same API over a different underlying file format, such as XML. I think the 'dynamic nesting' point above is outside the scope of the config access API. -- Shalabh
 
-Three features I want in a config parser are 1) keyed settings 2) pulling in settings from multiple configurition files, and 3) ability for user to pass in real python objects through the settings.  The "keyed" settings can be thought of as namespaces and I need an arbitrary number of key nestings.  For certain applications I EXPECT the user to pass in python objects that meet a specified API.  This allows the user to customize a certain operation however they would like with the full power and flexibility of python.  I then don't need my tool to be tailered with a switch statement having custom solutions for each user type.  This would require the configuration file (or parts of it) to be able to be executed as a python script and I realize this is a security hole that would be unacceptable to many.  What I would propose is the config parser module support two methodologies, both sharing the same API and configuration file syntax.  One would parse the config file and prevent security issues, the other would either execute the whole config file or be a combination parse/execute but would support attaching real python objects to configuration settings.  These features have been implemented in a configuration parser https://sourceforge.net/projects/config-py/ (needs python 2.3 unless the dict pops are reimplemented) and is available for experimentation/use. -- dan.gass@gmail.com  28oct04
+Three features I want in a config parser are 1) keyed settings 2) pulling in settings from multiple configurition files, and 3) ability for user to pass in real python objects through the settings.  The "keyed" settings can be thought of as namespaces and I need an arbitrary number of key nestings.  For certain applications I EXPECT the user to pass in python objects that meet a specified API.  This allows the user to customize a certain operation however they would like with the full power and flexibility of python.  I then don't need my tool to be tailered with a switch statement having custom solutions for each user type.  This would require the configuration file (or parts of it) to be able to be executed as a python script and I realize this is a security hole that would be unacceptable to many.  What I would propose is the config parser module support two methodologies, both sharing the same API and configuration file syntax.  One would parse the config file and prevent security issues, the other would either execute the whole config file or be a combination parse/execute but would support attaching real python objects to configuration settings.  These features have been implemented in a configuration parser https://sourceforge.net/projects/cfgparse/ (needs python 2.3 unless the use of the textwrap module is removed) and is available for experimentation/use. -- dan.gass@gmail.com
 
 I think it is reasonable to ask the setting code to create the object (possibly by running a random string); the config system just needs to accept objects that have already been made.  A round-trip is useful, but I'm not sure source code is the best way to do that; editing will probably require an external tool anyhow.  Maybe just use pickle to save arbitrary objects?  (And avoid storing them *within* the config, as much as possible.) -- Jim J Jewett
 
@@ -462,173 +458,21 @@ The part that isnt addressed here that bothers me yet is how to weave in the a
 
   I don't see where my discussion is at odds with this stated aim, which I presume was entered by the page creator (not by me). And I only made the comment about "impetuous" because you "apologized" for your "strong words". I'd rather not pursue further discussion in the same vein, but you have my thanks for your contribution, all the same. -- VinaySajip
 
+== cfgparse cooperation with optparse ==
+
+I seemed to hit a hot button when I proposed a marriage between the two.  It lead to good debate which did impact how I went ahead and implemented more of a cooperation between the two.  I'm hoping to inspire those that were involved in the discussion (and new voices too) to look at the documentation (http://cfgparse.sourceforge.net/) and see if what I did makes sense.  I don't believe I went too far with it, yet if you don't want them cooperating it is totally optional.  My latest proposal satisfies alot of the feature desires and a full accounting can be seen in my section above.  If it makes sense lets continue the "cooperation" discussion here and maybe we can clean out the above two sections if those issues are behind us.  As you can tell from my cleanup below, I don't like clutter :-) -- dan.gass@gmail.com
+
 == Syntax Proposal, Tweak ConfigParser .ini Syntax To Allow Arbitrary Nesting Levels ==
 
-Please take a look at this sample configuration file and comment.  It is extremely similar to the .ini syntax of ConfigParser but allows arbitrarily deep nesting.  I also figured out a way to have my cake and eat it too as far as being able to use execfile to bring in settings (strictly an option for us insane types).
-{{{
-# just like ConfigParser 
-#   : and = are interchangeable and are used for assigning values to options
-#   # and ; are interchangeable and are used for comments
-#   %(option)s still works the same
-#
-# [ ] means more.  When used alone it still defines a section.  It also
-# defines a list of keys to use to place option into a dictionary.
-#
-# options surrounded by < > are special
-#   <keys> defines a comma separated list of default keys to use when 
-#          traversing an option dicationary when retrieving an option.
-#          Note, these keys will optionally be supplemented with keys 
-#          from the command line.
-#
-#   <read> defines a comma separated list of additional configuration files 
-#          to read.  By default, it expects the configuration file to have 
-#          this syntax style.  If application optionally selects allowing 
-#          python files to execute (done during parser instantiation?) and the 
-#          file has a .py extension then execfile is used to read the options 
-#          from the file and merge them into the options dictionaries.
-#
-# For example:
-
-                                 # start of section [] is assumed
-<keys> : grpA,dev0,sb1           # by default use these keys to get options
-<read> : more.cfg;evenmore.cfg   # opt=val for opt,val in cfg.py
-comm_driver = standard           # same as comm_driver = 'standard'
-comm_path[grpA.dev0] = path_A0   # same as comm_path['grpA']['dev0'] = 'path_A0'
-comm_path[grpA.dev1] = path_A1   # same as comm_path['grpA']['dev1'] = 'path_A1'
-
-[sb1]                            # starts a new section
-sandbox = /home/dmgass/build_v1  # inserts this value under sandbox['sb1']
-<read> = %(sandbox)s/cfg.py      # [ opt['sb1']=val for opt,val in cfg.py ] :-)
-
-[sb2]                            # starts a new section
-sandbox = /home/dmgass/build_v2  # inserts this value under sandbox['sb2']
-<read> = %(sandbox)s/cfg.py       # [ opt['sb1']=val for opt,val in cfg.py ] :-)
-
-[grpB]                           # starts a new section
-comm_path[dev0] = path_B0        # same as comm_path['grpB']['dev0'] = 'path_B0'
-comm_path[dev1] = path_B1        # same as comm_path['grpB']['dev1'] = 'path_B1'
-
-[grpC.dev0]                      # starts a new section
-comm_path = path_C0              # same as comm_path['grpC']['dev0'] = 'path_C0'
-
-[grpC.dev1]                      # starts a new section
-comm_path = path_C1              # same as comm_path['grpC']['dev1'] = 'path_C1'
-
-# Ian wants ability to retain characters we normally split on.  I think use of single
-# or double quotes would work best to clue the parser not to split within them:
-# ['node1.node2','key1'] or ["node1.node2","key1"]
-
-# User could override default keys specified in this file from the command line to 
-# communicate with device 1 of group C (assuming application supported this):
-#   application.py --keys=dev1,grpC
-}}}
--- dan.gass@gmail.com
+This section has been removed as the original post of it (by me) had no responses and now my newly proposed configuration parser has this capability and the documentation for it (http://cfgparse.sourceforge.net/) has examples that demonstrate it.  I will be removing this section in the near future.  -- dan.gass@gmail.com
 
 == API Proposal, optparse Model With Partnership Support ==
 
-I'm proposing here an application interface to a configuration file parser (cfgparse) that is very similar to optparse. Making the interfaces similar should make it easier to learn and remember.  It also helps in allowing them to be "partnered".  I've put together a hypothetical application script that partners the existing optparse option parser with a new configuration parser.  If you don't like this concept of partnership feel free to express any new thoughts but also make sure you comment on how useful this API choice is for a nonpartnered application.  There is very little needed in the API to support partnerships!! -- dan.gass@gmail.com
-
-{{{
-# Make an instance of each.  Logic to partner them together is after options are added.
-import optparse # existing
-import cfgparse # shootout (collaboration?) winner
-optpar = optparse.OptionParser()
-cfgpar = cfgparse.ConfigParser('somefile.cfg')
-
-# Here the command line -t, -f options are partnered with configuration file controlflag 
-# option because they share the same destination.  Note, when partnering, the option added
-# to the option parser should not have a default!
-desc = 'Flag description.'
-optpar.add_option('-t',dest='flag',action='store_const',const=1,help=desc + ' (sets to 1)')
-optpar.add_option('-f',dest='flag',action='store_const',const=0,help=desc + ' (sets to 0)')
-cfgpar.add_option('controlflag',dest='flag',default=True,type='int',help=desc + '(must be integer)')
-
-# Both option and configuration parser make good guesses what the destination name should be if
-# it isn't explicitly specified.  Since these share the same destination they will be partnered.
-# Note, if option added to cfgpar doesn't specify type, help or metavar, those attributes
-# should be picked up automatically from the partnered option in optpar??  I lean yes.
-optpar.add_option('-s','--sandbox',type='string',metavar='PATH',help='scratch area')
-cfgpar.add_option('sandbox',default='/home/me/sandbox')
-
-# Both support option groups (for organizing help) independently and the interface is identical
-optgrp_a = optpar.add_option_group('UNPARTNERED OPTIONS')
-cfggrp_a = cfgpar.add_option_group('UNPARTNERED OPTIONS')
-
-# OptionParser options do not need to be partnered
-optgrp_a.add_option('-o',action='store_true',default=False,help='Look Mom, no partner!')
-
-# ConfigParser options do not need to be partnered either
-cfggrp_a.add_option('somesetting',help='No default, exception raised when no option in config')
-
-# This is how the partnership is formed.  The cfgpar is asked to parse the command line
-# arguments (with the help of optpar).  Internally before the arguments are parsed,
-# cfgpar options are paired up with optpar options.  Option attributes such as help, type, 
-# and metavar are inherited by the cfgpar option from the optpar option if nothing was 
-# specified when the option was added.  cfgpar option help strings are automatically 
-# updated with command line switch information to help identify interactions (maybe vice 
-# versa too?).  
-options, args = cfgpar.parse_args(optparser=optpar,combinehelp=False)
-
-# args are what you would expect
-print "args=",args
-
-# options object is what is returned from the optparser but is updated with partnered (only
-# if command line switch wasn't present) and unpartnered options from the configuration.
-print "o option=",options.o
-
-# Partnered options should be accessed through cfgpar so that if they aren't found
-# in the command line options they can be obtained from a configuration file option.
-print "sandbox option",cfgpar.sandbox.get('optional,key,list')
-print "flag option",cfgpar.flag.get() # no optional keys
-}}}
+This section has been removed as the original post of it (by me) had no responses and now my newly proposed configuration parser has this capability and the documentation for it (http://cfgparse.sourceforge.net/) has examples that demonstrate it.  I will be removing this section in the near future.  -- dan.gass@gmail.com
 
 == Round trip with section reorganization, remark retention, and help insertion ==
 
-This is a proposal that is an extension of the improved INI syntax I proposed earlier.  I think it would be pretty easy to provide round trip functionality if I was allowed to order the sections in alphabetical order.  I'd like to propose adding a special <remark> psuedo-option for making section comments.  I would think it best to merge subsections into their parent section if they don't have remarks in them (see example below).  Also, my proposals to date suggest an interface similar to optparse in that options are added to the parser, usually with help text (useful because the configuration parser should be able to dump help to the screen similar to optparse).  As long as this help is available it might as well be inserted into the configuration file on a round trip.  So here is an example:
-
-{{{
-[DEFAULT]
-# this type of comment cannot be round tripped
-<remark> : Comment for default section (this will round trip though)
-
-[SECTION1]
-<remark> : Comment for Section 1
-option1 : value1
-
-[SECTION1.SUBSECTA]
-# notice no <remark> so contents of this section will get merged into 
-# section above with extended section syntax
-option1 : value1a
-
-[SECTION2]
-option2 : value2 
-
-[SECTION2.SUBSECTA]
-# since this section has a remark it will not be merged into Section 2
-<remark> : Comment for Section 2, Subsection A
-}}}
-
-Would round trip to:
-
-{{{
-[DEFAULT]
-<remark> : Comment for default section (this will round trip though)
-
-[SECTION1]
-<remark> : Comment for Section 1
-# Help text will automatically be placed here (like this) for option 1.
-option1 : value1
-option1[SUBSECTA] : value1a
-
-[SECTION2]
-# Help text will automatically be placed here (like this) for option 2.
-option2 : value2 
-
-[SECTION2.SUBSECTA]
-<remark> : Comment for Section 2, Subsection A
-}}}
-
-Feedback is appreciated.  -- Dan.Gass@gmail.com
+This section has been removed as the original post of it (by me) had no responses and now my newly proposed configuration parser has this capability and the documentation for it (http://cfgparse.sourceforge.net/) has examples that demonstrate it.  I will be removing this section in the near future.  -- dan.gass@gmail.com
 
 == Complexity killed the cat! ==
 
