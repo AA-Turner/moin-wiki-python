@@ -2,16 +2,15 @@
 
 I (LionKimbro) don't know much about writing exception classes; Here's hoping someone rewrites this better.
 
-Derive Exception classes from Exception:
+Exception classes are not special, you just derive them from Exception:
 
 {{{
 #!python
 class HostNotFound(Exception):
     def __init__( self, host ):
         self.host = host
+        Exception.__init__(self)
 }}}
-
-  ''Do we call {{{Exception.__init__( self )}}}..?'' -- LionKimbro [[DateTime(2003-09-06T19:51:18Z)]]
 
 You may later write:
 
@@ -48,7 +47,17 @@ except HostNotFound, X:
 
 I don't know if this is a good idea or not.
 
+''In this instance, there's no need to overload {{{__str__}}}, as the standard Exception already has a {{{__str__}}} method:''
+
+{{{
+#!python
+class HostNotFound(Exception):
+    def __init__(self, host):
+        self.host = host
+        Exception.__init__(self, 'Host Not Found exception: missing %s' % host)
+}}}
+
 == Questions ==
 
-  * How do you relay the traceback information?
+  * How do you relay the traceback information? ''Relay the traceback information? Moving it higher up the call-stack? Could you try to explain your question?''
   * What better exception-foo is out there?
