@@ -67,6 +67,14 @@ This command will print out to stdout the generated python file that comes from 
 $ pyuic at.ui > at_auto.py
 }}}
 
+''Petr Vanek (subzero AT py DOT cz)'' '''BEWARE:''' using pyuic this way ''may'' be wrong. Pyuic writes some important informations on standard output but they aren't '''python code!'''
+Use it this way:
+
+  {{{
+$pyuic at.ui -o at_auto.py
+}}}
+
+
 We dump it into at_auto.py. Everytime we change the ui file, we need to regenerate the at_auto.py file. Let's add this command to a makefile.
 
 /!\Tabs are important!
