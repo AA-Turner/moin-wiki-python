@@ -20,6 +20,60 @@ Possibilities
  * one parameter style for all drivers
  * multiple parameter styles per driver, switchable per Connection, Cursor or .execute ()
 
+== Pros ==
+
+ * Programs can be written more portable as they don't have to distinguish between
+  * different placeholders
+  * different calling conventions (sequence vs. mapping)
+
+== Cons ==
+
+ * possible loss of functionality (qmark, numeric, format can't support call with mapping)
+ * loss of performance, because the SQL would have to be tokenized unless the driver/database supports the style natively
+ * subtle errors, because tokenizing SQL is hard and error prone
+
+== Possible Compromises ==
+
+ * multiple parameter styles per driver
+  * the native style: fast and secure
+  * the standard style: possible slow, possible tokenizing bugs
+ * a standard module for SQL tokenizing
+ * using pyformat, with strings of the form %(identifier)s explicitly forbidden in SQL literals. ''Easy to implement and the error situations are clearly defined, in contrast to a real tokenizer, where the error situations are more subtle''
+
+== Ease of Implementation ==
+
+Driver authors should list with each style how easy they could be implemented. 'Native' means that the SQL can be passed directly to the database, 'tokenize' means that the driver would have to tokenize the SQL. 'tokenize, already implemented' if the current driver tokenizes the SQL already in the current implementation.
+
+Because it's mostly a feature of the database where some style is native, this should list the database name. If it a driver specic decision, then the driver name should be listed.
+
+=== qmark: WHERE a = ? ===
+
+ native:: mxODBC, JDBC, SAP DB
+ tokenize:: 
+
+=== numeric: WHERE a = :1 ===
+
+Is this useful at all? If Oracle uses them simply as an indicator of 'pass by position' without regard to the actual numbers, then this style is confusing at best.
+
+ native:: SAP DB
+ tokenize:: mxODBC, JDBC
+
+=== named: WHERE a = :value ===
+
+ native:: Oracle?, SAP DB (positional args, support for mappings could be implemented in the kernel)
+ tokenize:: mxODBC, JDBC
+
+=== format: WHERE a = %s ===
+ 
+ native::
+ tokenize:: mxODBC, JDBC, SAP DB
+
+=== pyformat: WHERE a = %(value)s ===
+
+ native::
+ tokenize:: mxODBC, JDBC, SAP DB
+
+
 = Additional Driver Objects =
 
 Prepared statements in addition to Connection and Cursor. Related is the idea of statement caching:
