@@ -1,0 +1,34 @@
+= Escaping HTML =
+
+The {{{cgi}}} module that comes with Python has an {{{escape}}} function:
+
+{{{
+#!python
+import cgi
+
+s = cgi.escape( """& < >""" )   # s = "&amp; &lt; &gt;"
+}}}
+
+However, it doesn't escape anything beyond {{{&}}}, {{{<}}}, and {{{>}}}.
+
+Here's a small snippet that will let you escape those as well:
+
+{{{
+#!python
+html_escape_table = {
+    "&": "&amp;",
+    '"': "&quot;",
+    "'": "&apos;",
+    ">": "&gt;",
+    "<": "&lt;" }
+
+def html_escape( text ):
+    l=[]
+    for c in text:
+        l.append( html_escape_table.get(c,c) )
+    return "".join(l)
+}}}
+
+== Discussion ==
+
+  (none yet)
