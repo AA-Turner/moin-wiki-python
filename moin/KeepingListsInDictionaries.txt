@@ -1,0 +1,43 @@
+#pragma section-numbers off
+
+= Keeping Lists in Dictionaries =
+
+Here's a cute technique I saw, for keeping lists inside dictionaries.
+
+If you have a dictionary with list values, you can run into a
+problem when you need to add an item to a list value- ''does
+the list already exist?''
+
+Usually, we write it out like so:
+{{{
+#!python
+def add_value_to_keys_list( dict_, key, value ):
+    if dict_.has_key( key ):
+        dict_[ key ] = [ value ] # construct list
+    else:
+        dict_[ key ].append( value ) # append to list
+}}}
+
+This is okay, but we can do even better!
+
+{{{
+#!python
+def add_value_to_keys_list( dict_, key, value ):
+    dict_.setdefault( key, [] ).append( value )
+}}}
+
+How does it work?
+
+{{{.setdefault}}} works like {{{.get}}}, except that
+when the item isn't found, the default isn't only
+''returned,'' but they key is ''set'' to the
+default as well.
+
+So, in effect, the line means, "Look in the dictionary
+for the key. If it's ''there,'' return it's associate.
+If it's ''not there,'' set it's associate to {{{[]}}},
+and ''then'' return it's new associate. The associate
+is (surprise, surprise) - a ''list.'' Now, append
+the value to the list."
+
+Cute!
