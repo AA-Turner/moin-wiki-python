@@ -1,0 +1,89 @@
+= State Programming =
+
+=== Why, When ===
+
+Very often, the response of a function will depend on the state of this object. With this pattern, It's easy to do such a thing ! You just have to write several sub-classes, each per state, inherit the State class and call the setState when the object need to change state.
+
+=== Code ===
+{{{
+#!python
+# Code is Public Domain.
+class State:
+    
+    def setState(self,stateClass):
+        #print stateClass.__dict__
+        for (name,attr) in stateClass.__dict__.iteritems():
+            if not name.startswith('_') and callable(attr):
+                f = getattr(stateClass,name)
+                l = f.__get__(self,self.__class__)
+                setattr(self,name,l)
+}}}
+
+=== Example ===
+{{{
+#!python
+# Code is Public Domain.
+class test(State):
+    def __init__(self,a):
+        self.a = a
+    
+    def showMe(self):
+        print self.a
+
+    def showYou(self,other):
+        print self.a,other
+
+    def changeToOne(self):
+        self.setState(StateOne)
+
+    def changeToTwo(self):
+        self.setState(StateTwo)
+
+class StateOne(test):
+
+    def showMe(self):
+        print self.a,'State One'
+
+    def showYou(self,other):
+        print self.a,'State One',other
+
+class StateTwo(test):
+
+    def showMe(self):
+        print self.a,'State Two'
+
+    def showYou(self,other):
+        print self.a,'State Two',other
+        
+
+t1 = test('t1')
+t2 = test('t2')
+t1.showMe()
+t2.showMe()
+t1.showYou("you")
+t1.changeToOne()
+t1.showMe()
+t2.changeToTwo()
+t2.showMe()
+t1.showYou("you")
+t1.changeToTwo()
+t2.changeToOne()
+t1.showMe()
+t2.showMe()
+t1.showYou("you")
+t2.showYou('you')
+}}}
+
+Output is
+{{{  
+t1
+t2
+t1 you
+t1 State One
+t2 State Two
+t1 State One you
+t1 State Two
+t2 State One
+t1 State Two you
+t2 State One you
+}}}
