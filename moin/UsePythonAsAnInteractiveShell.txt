@@ -1,12 +1,7 @@
-Basically some of the most common code ideas are welcomed here. you probably want python as a shell. Here's some tips:
-[[TableOfContents]]
-NOTE: very good idea coming....(i just wrote the below today. lemme sleep! update to come in max 6 fort-hours
-= Hacks =
+The idea: using the Python interpreter as an InteractiveShell.
 
-== general ideas ==
-for all your code,
-== lack of symbol for command execution ==
-Solution: write short method names:
+= Command execution =
+Use short method names:
 {{{
 #!python
 def S(arg):
@@ -27,11 +22,30 @@ def SNP(arg):
     print i
 }}}
 
-== dirname comprables ==
-you might not know that you have improved functionality.
-os.path.split replaces dirname and basename returning a tuple containing both.
-os.path.splitext splits on the extension returning a tuple
-To complete the set you might want to split the path at the root, use:
+Command execution is the one thing an InteractiveShell has to be good at. 
+Typing S("<command>") is too much overhead for command execution. Still, a mixture of
+bash style command execution and shell programming with Python would be great.
+
+I'd want the simple style of command execution from bash available:
+{{{
+cd /foo/bar
+}}}
+
+But also the Python style for more complex commands:
+{{{
+os.setcwd('/foo/bar')
+}}}
+
+Some ways to execute the bash-style command:
+  * Use os.popen(<command>).
+  * Map all commands to Python functions: cd(), less(), all taking a list of strings as arguments.
+  * Completely separate bash-style commands from Python commands, executing it with bash.
+
+-- JohannesGijsbers [[DateTime(2002-12-07T03:34:05)]]
+
+= Path manipulation =
+The os.path module provides a good set of functions for path manipulation, 
+but you might also want to split the path at the root:
 {{{
 #!python
 import re
@@ -44,11 +58,11 @@ def splitroot(s):
   return m.groups()
 }}}
 
-== awk comprables ==
-simply use re. its a fuller set of regular expressions. create a wrapper function 
+= awk comparables =
+Simply use the re module. It's a fuller set of regular expressions. Create a wrapper function 
 for a utility for this if you want call it inlinegrep.
 
-
-
-== Limitations ==
-  killall functionality as seen in bash was reject by guido himself (BS explantion) "talk to maintainers of posix"
+= Limitations =
+The killall function was rejected by the ["BDFL"]. As far as I can see from the 
+previous version of this page, Guido rejected it because it isn't in POSIX. 
+I couldn't find any references on this in the mailing list archives. Anyone?
