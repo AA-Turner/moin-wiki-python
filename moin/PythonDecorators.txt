@@ -697,7 +697,7 @@ def bar(low,high):
  * - New keyword
  * - Overkill for the simple case like classmethod (''no that much, since "@" is replaced by "decorate:" without new line'').  (Two extra lines still feels like overkill to me; a line with an internal colon is less overkill, but has its own style problems.)
  * - Many people felt it was wrong use of an identation suite. (''Someone please explain.  It looks just like any other pair of blocks in Python, such as if/else or try/finally.'')  In current python, an indent either adds a new namespace (this doesn't, it modifies the parent namespace where the def itself appears) or changes flow control.  I do think it changes flow control as much as an if or a loop, but others felt strongly that it wasn't the same, and that the equivalence of decorators within a decorate block was different from the equivalence of statements in a function block.  For a sample of the response, search the python-dev archives around March 2004.  Private email was more adamant.
- * - Has the same problem as 5.A, in that the decorate block implicitly affects the following def. This does not occur elsewhere in Python.
+ * - Has the same problem as option A, in that the decorate block implicitly affects the following def. This does not occur elsewhere in Python. -- Or more precisely, it doesn't occur with an indented block syntax; parentheses can affect execution order.  The proposed with: block would do the same thing. 
 
 Older downsides included this comment:
  * - Technical problems with the current grammar parser if a suite *starts* with an optional part.  (Ending with an optional part, such as "else:" is OK, but starting with one is not.)  (''Michael Sparks has experimented with the grammar and based on his results it appears *not* an issue.'')
@@ -787,6 +787,28 @@ def bar(low,high):
  * - A lot of the drawback of @decorators
  * - New keyword
  * - No implementation currently exists (''very similar to A1 implementation, no?'').
+
+'''M. Making def an expression / letting it return a value'''
+{{{
+deco1(deco2(deco3(
+    def func(arg1, arg2):
+        pass
+)))
+
+    deco1(
+
+    def method(self, arg):
+        pass
+    )
+}}}
+
+ * + Puts everything in the right place.
+ * + Because of the (), the function definition can be (but does not need to be) indented an extra level, depending on what makes sense.
+ * + Familiar from other functions-as-first-class-objects languages, such as LISP.
+ * - The delayed close-paren is better than the current format, but still not desirable.
+ * - Guido does not want to blur the distinction between statements and expressions.
+ * 0 The name would be temporarily bound to the unwrapped function, which changes semantics for some types of wrappers, such as generics and properties.
+
 
 == Thinking ahead to Python 3 ? ==
 
