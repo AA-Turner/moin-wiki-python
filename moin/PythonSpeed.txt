@@ -1,0 +1,107 @@
+= Python speed =
+
+'''But Python is slow! C or C++ (or even Java) perform much better. '''
+
+An often-heard statement about the raw execution speed of Python.
+Sometimes people have actually tried Python, and have written a "benchmark" program
+in Python to see how fast it would run. Sometimes they just conclude
+"hey, it's an interpreted scripting language, those all run very slow!"
+
+Python's raw execution speed is not spectacular, I agree. But is that really 
+an important fact? Let's talk about a few aspects of this issue.
+
+== Why is raw speed important? Or isn't it? ==
+
+Some people are inappropriately obsessed with speed and think that just
+because C can provide better performance for certain types of problem,
+it must therefore be a better language for all purposes.  Other people
+think that ''speed of development'' is far more important, and choose
+Python even for those applications where it will run slower.  Often, perhaps
+surprisingly, they find it can run at quite acceptable speeds, and
+in some cases even faster than what they could get from C/C++ with a
+similar amount of development time invested. 
+
+Usually it is not the absolute speed that is important, you should think about what 
+would be an ''acceptable'' speed of execution. Optimisations beyond achieving this 
+acceptable speed are wasteful of resources (usually: your time. And thus: money.). 
+
+Scenario A: A person chooses to do a project in pure C or C++ because C is faster.
+However, they didn't have a very thorough understanding of C, and as a result their
+algorithm implementations are sub-optimal. The time taken to design and program
+a correct system can be quite substantial because of the low-level nature of
+the programming language. The same counts for Java (to somewhat lesser extent).
+
+Scenario B: A person chooses Python for a project. They realized the Python
+implementation of their project may run slower than a C/C++ implementation,
+but since their algorithm implementations will be much clearer in a
+high-level language, they ended up having an easier time optimizing
+and actually ended up with better performance results.
+
+While speed is important and C implementations will usually be faster, we
+need to remember that there are many other factors to consider. 
+Things like programmer productivity and simplicity of
+implementation are usually more valuable than raw runtime performance. 
+
+And there lies Python greatest strength: there are not many languages that
+can match Python in terms of programmer productivity and simplicity.
+
+== Improving execution speed ==
+'''Optimize the design and algorithms in your code'''
+
+As you probably were taught as part of your programmer training, good design and right choice and 
+implementation of algorithms are key to performance and scalability of your programs.
+Do not use a list if you have to do a lot of searching: use a dict instead.
+Do not use a dict if you do mostly sequential access.
+Do ''not'' create your own sorting algorithms: don't think that you can match the built-in one written in higly optimized C.
+Bottom line: know your data structures. Know your algorithms.  Using a O(n*n) algorithm when there's also a O(n*log(n)) one
+possible, and then complaining that things run slowly, deserves a punishment ;-)
+
+Know the value of the Python profiler: the {{{hotshot}}} module. It can help you find those
+10% of your code that eats 90% of your run time. Usually it's only practical and necessary
+to optimize that 10% of the code. The biggest gains can be found there.
+
+'''Avoid common pitfalls.'''
+
+There are various common pitfalls when it comes to performance in Python.
+ * ''string concatenation.''
+   Bad: using regular string concatenation for large amounts of strings. Good: append them to a list, and when you're done, use {{{"".join(stringList)}}}. Why: saves a lot of memory allocation/deallocation because Python doesn't need to create a lot of temporary string objects anymore.
+ * ''function calls.''
+   Avoid function calls in tight loops. Python function calls are notoriously slow, if you can inline the required code in the loop or do it some other way, you will see a big difference.
+ * ''sorting with custom sort order.''
+   Sometimes bad: using a custom comparison function to the {{{sort}}} method. It causes a lot of relatively slow function calls during the sorting. It's often better (but not always - try it first!) to use the [http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/52234 Decorate-Sort-Undecorate] pattern (create a temporary list with all sort keys in the correct place, call builtin sort, extract sorted data from the resulting list). Note that Python 2.4 will include the DSU pattern in the list.sort method already, to optimize this common case.
+
+'''Psyco JIT-compiler'''
+
+For a quick win, use [http://psyco.sourceforge.net/ Psyco]. It's a Just-in-time compiler for Python, that will
+compile parts of your code to highly efficient native machine code that executes
+at maximum speed. Expect moderate (2x) to high (10x) performance increase! But be aware that it can consume large
+amounts of memory.
+
+Because Psyco performs dynamic, run-time analysis of the code, it's even possible
+that your Python+Psyco program runs ''faster'' than hand-crafted C code!
+How that is possible: Psyco can optimize away the most often seen patterns. For
+instance when you call a complex calculation 1000 times, and 900 times the input
+is the integer 100 and the output is the integer 99887, Psyco can insert a piece
+of machine code that checks if the input is 100, and then returns 99887 directly,
+if it's not 100, only then do the calculation.
+
+'''Use the correct tools for the job.'''
+
+Investigate what tools are best suited to do the job. 
+Python comes with a lot of highly optimized modules for a wide range of tasks.
+A lot of them are actually not written in Python, but in C/C++!
+Examples of such modules: array, struct, cPickle, md5, zlib, cStringIO, regular expressions, XML parsers (expat).
+
+Also Python's built-in types such as Long, dictionaries and lists are implemented in highly optimized C code.
+When you use these types in your Python code, it will execute at very high speed because the underlying
+implementation is compiled C code. Long multiplication, list sorting, and so on are all executed
+at maximum speed.
+
+If you find that a particular piece of Python code runs too slow, you should consider to
+build an extension module in C or C++ for that piece of code. It's not too hard, Python's
+C API is very rich and there are various tools to make it even easier: Pyrex, Boost, distutils.
+
+
+-------
+
+IrmenDeJong
