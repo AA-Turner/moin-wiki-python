@@ -37,4 +37,23 @@ EscapingHtml, WorkingWithTime
 
 = Discussion =
 
-  (none yet!)
+You may find it tricky to print out a feed of numbers (as output from within a loop) on one line, without being separated by a space.  An example could be output such as
+{{{
+Processing...
+[1][2][3][4][5][6]
+Completed.
+}}}
+
+The standard print statement automatically inserts newlines.  This can be overcome with
+{{{
+for i in range(10):
+    print '['+str(i)+']',  # NOTE the trialing comma
+}}}
+but a space will get inserted between successive prints.  The way to get around this is using sys.stdout:
+{{{
+import sys
+for i in range(10):
+    sys.stdout.write('['+str(i)+'[')
+}}}
+which will work properly.
+
