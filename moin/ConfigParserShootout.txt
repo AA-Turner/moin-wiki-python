@@ -252,11 +252,17 @@ A marriage of the two would make a lot of sense to me.  My thought is for the us
 
   An easy way, maybe, but it doesn't seem very useful to me. What's the advantage of fetching a command-line option from cfg.cmdline_values.verbose instead of options.verbose? Also, we need to specify every option twice, once for optparse and once in the configuration file itself. For docutils, this would mean every config file would have 40(!) lines which are, essentially, implementation details.
 
+  -- JohannesGijsbers
+
+  It was only an example, and I accept it may not be the best example to showcase the functionality. Consider this, though: you can use a ConfigList to cascade configurations. If one of these is a set of options picked up from the command line, and another is from configuration files, then you can easily in your application just get e.g. 'cfglist.verbosity' which is picked from a command line option (if defined) or from the configuration file (otherwise). There's no need to define things twice, other than to define what happens when command line options are not provided. I'll work with you, if you like, to see how docutils configuration can be achieved using the module.  -- VinaySajip
+
   These are probably fixable, but I think they exist because you're not solving the interesting part of optparse integration: every application still has to merge the command-line options with the options from the configuration file manually. I just grepped through my 'src' directory and found shtoom, docutils, roundup, logilab-common and spambayes all have modules which allow them to specify options only once. IPython, offlineimap, and trac are still merging without the aid of such a module.
 
   Given that this is a problem which is being solved again and again, maybe the Python library should be providing mechanism *and* policy here. I don't think it would be too hard to draw up a reasonable default.
 
   -- JohannesGijsbers
+
+  The work required to merge can be as simple as setting up a ConfigList with a command-line-based configuration object first in the list, followed by one or more configurations read from files. Thereafter, the application resolves configuration data by asking the ConfigList. If a configuration item has been referenced in the command line, that value is returned; otherwise, a value defined in a configuration file is returned. You could even have e.g. project, user and application level configuration files, though there is no need for such complexity in most cases, and the API remains IMO fairly lean. -- VinaySajip
 
 A hierarchical key or namespace scheme should exist so that multiple settings may be stored in the user configuration file.  I would propose a standard -k, key option always present in the parser so the user can pass a list of keys to control the group of settings to use (Id also like some of the other ways to control keys that I use in my config.py module).  In addition Id propose a -c, config option that specifies a configuration file to use instead of the users default configuration file.
 
