@@ -14,7 +14,9 @@ x_class.attr("bar") = X::bar;
 }}}
 
 === static class functions ===
-You should do something which mirrors pure Python:
+It's likely to be in 1.30 release.
+
+Meanwhile you should do something which mirrors pure Python:
 {{{
 class foo(object):
     def f(x,y):
@@ -32,8 +34,10 @@ Where the marked line would be implemented something like this:
 {{{
    self& staticmethod(char const* name)
    {
+        dict d(handle<>(borrowed(downcast<PyTypeObject>(this->ptr())->tp_dict))); 
+        object method = (object)(d[name]); 
         this->attr(name) = object(handle<>(
-             PyStaticMethod_New(this->attr(name).ptr())
+             PyStaticMethod_New( callable_check(method.ptr()) ) 
             ));
    }
 }}}
