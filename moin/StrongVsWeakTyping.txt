@@ -1,9 +1,9 @@
 The following text is a summary by clips from posts in a thread on
 comp.lang.python, which was initiated by the following post:
 
-	From: Gabriel Zachmann <zach@cs.uni-bonn.de>
-	Newsgroups: comp.lang.python
-	Subject: strong/weak typing and pointers
+	From: Gabriel Zachmann <zach@cs.uni-bonn.de>[[BR]]
+	Newsgroups: comp.lang.python[[BR]]
+	Subject: strong/weak typing and pointers[[BR]]
 	Date: 28 Oct 2004 16:17:15 GMT
 
 	Is it correct to say that strong/weak typing does not make a difference
@@ -14,26 +14,15 @@ comp.lang.python, which was initiated by the following post:
 	which would have a different result in Python and in C++?
 
 
-****************************************************************************
-                          0. Definitions
-****************************************************************************
+= Definitions =
 
 GZ:
 
 There seem to be two major lines along which strong/weak typing is defined:
 
-1. The more type coercions (implicit conversions) for built-in operators
-   the language offers, the weaker the typing.
-   (This could also be viewed as more built-in overloading of built-in
-   operators.)
+ 1. The more type coercions (implicit conversions) for built-in operators the language offers, the weaker the typing. (This could also be viewed as more built-in overloading of built-in operators.)
 
-2. The easier it is in a language, or the more ways a language offers,
-   to reinterpret a memory block (associated with a data value)
-   as a different type, the weaker the typing.
-
-Languages that are strongly typed according to (1) tend to be also strongly
-typed according to (2).
-
+ 2. The easier it is in a language, or the more ways a language offers, to reinterpret a memory block (associated with a data value) as a different type, the weaker the typing.
 
 In the following, I've cut-and-pasted several clips from the many responses
 (thanks to you all!), organized by the above two categories.
@@ -43,18 +32,15 @@ In the following, I've cut-and-pasted several clips from the many responses
 
 From: Steven Bethard <steven.bethard@gmail.com>
 
-(1)  A language is "weakly-typed" if it allows code to take a block of memory
-that was originally defined as one type and reinterpret the bits of this block
-as another type.
-  
-(2) A language is "weakly-typed" if it has a large number of implicit coercions.
-  
-(3) A language is "weakly-typed" if it often treats objects of one type as other
-types.
-  
-  
+ I  A language is "weakly-typed" if it allows code to take a block of memory that was originally defined as one type and reinterpret the bits of this block as another type.
+
+ II A language is "weakly-typed" if it has a large number of implicit coercions.
+
+ III A language is "weakly-typed" if it often treats objects of one type as other types.
+
+
 Some points and problems addressed with each of these definitions:
-  
+
 Definition 1 is the definition most commonly used in Programming Languages
 literature, and allows a language to be called "weakly-typed" based only on the
 language definition.  However, for all intents and purposes, it is only
@@ -81,9 +67,8 @@ bit-reinterpretation, but has a large number of implicit coercions?)
 
 
 
-****************************************************************************
-              1. Definition based on number of type coercions
-****************************************************************************
+= Definition based on number of type coercions =
+
 
 
 From: Andrea Griffini <agriff@tin.it>
@@ -94,49 +79,39 @@ You didn't mention C++. Try this ...
    s += 3.141592654; // Perfectly valid
    s = 3.141592654;  // Also valid
 }}}
-Andrea
 
 ----------------------------------------------------------------------------
 
 From: Grant Edwards <grante@visi.com>
 
-> a = "1" + 2
->
-> as "1" is a string and 2 an integer.
+ '' a = "1" + 2 [[BR]]
+ as "1" is a string and 2 an integer.''
 
 "1" is a pointer to a char.
 
-> And even though C is statically typed, it won't complain
+ '' And even though C is statically typed, it won't complain''
 
 That's because <pointer> + <integer> has a well-defined meaning
 in C -- just like <float> + <integer> does in Python (and in C).
 
-> - you just end up with an unexpected result.
-   
+ '' - you just end up with an unexpected result.''
+
 Only people who don't know how C pointer arithmatic works will
-get unexpected results. 
+get unexpected results.
 
 ----------------------------------------------------------------------------
 
 From: mwilson@the-wire.com (Mel Wilson)
 
-   One effect of weak typing is to put more reliance on
+One effect of weak typing is to put more reliance on
 operators.  In Perl, for instance the string operator `lt`
 does a string compare to find that "10" is less than 2
 (lexically) and the numeric operator `<` finds that "10" is
 not less than 2 (numerically).  Nothing to do with pointers
 at all.
 
-        Regards.        Mel.
 
-
-----------------------------------------------------------------------------
-
-
-
-****************************************************************************
-                 2. Definition based on reinterpretation
-****************************************************************************
+= Definition based on reinterpretation =
 
 
 
@@ -151,18 +126,13 @@ pretty strongly typed for pointers.
 
 From: Steven Bethard <steven.bethard@gmail.com>
 
-> Strong/weak typing is about how much you care of types at all - in php, its
-> perfectly legal to add strings to numbers - the string simply gets
-> converted to a number beforehand, that conversion yielding 0 when there is
-> nothing useful and numberlike can be extracted from the string. So typing
-> is weak, as it doesn't constrain the possible operations on variables with
-> certain values.
-    
-By this definition, Python is also weakly typed:
+ '' Strong/weak typing is about how much you care of types at all - in php, its perfectly legal to add strings to numbers - the string simply gets converted to a number beforehand, that conversion yielding 0 when there is nothing useful and numberlike can be extracted from the string. So typing is weak, as it doesn't constrain the possible operations on variables with certain values.''
 
+By this definition, Python is also weakly typed:
+{{{
 >>> 2.0 + 1
 3.0
-
+}}}
 Your defintion above calls PHP weakly typed because it performs implicit
 string->number conversions.  The Python code above performs an implicit
 int->float conversion.
@@ -172,7 +142,7 @@ When
 I use strongly-typed, I mean that a block of memory associated with an object
 cannot be reinterpreted as a different type of object.  For example, in a
 weakly-typed language like C, we can do:
-
+{{{
 struct A {
         char c;
         int i;
@@ -186,7 +156,7 @@ int main(int argc, char* argv) {
         struct B* b = (struct B*)&a;
         printf("'%c' %d %f '%c'\n", a.c, a.i, b->f, b->c);
 }
-
+}}}
 The point here is that I consider C weakly typed because, with no error of any
 sort, it allows me to reinterpret a block of memory in as many ways as I like.
 A strongly typed language like Python does not allow this.  Even in my Python
@@ -205,10 +175,10 @@ You'll find a lack of consensus here on what's meant by "strong/weak
 typing".  In Python there's no way to re-interpret the bits of a value
 as if they were a different type.  For example, code like this is
 impossible in Python:
-
+{{{
   float x = 2.5;
   printf("%d\n", *(int*)&x);
-
+}}}
 ----------------------------------------------------------------------------
 
 
@@ -217,7 +187,7 @@ From: Duncan Booth <duncan.booth@invalid.invalid>
 Here's a trivial example that is almost identical in Python and C/C++ but
 gives totally different results. In a weakly typed language such as C or
 C++:
-
+{{{
 #include <stdio.h>
 
 int main(int argc, char**argv)
@@ -225,17 +195,17 @@ int main(int argc, char**argv)
     float f = 3;
     printf("value is %d", f);
 }
-
+}}}
 I get the output (you may get different results):
-
+{{{
 value is 0
-
+}}}
 In a fairly strongly typed language such as Python:
-
+{{{
 >>> f = 3.0
 >>> print "value is %d" % f
 value is 3
-
+}}}
 In a really strongly typed language I would expect an exception to
 be thrown.
 
@@ -256,17 +226,16 @@ Python is more weakly typed than Smalltalk for user-defined types.
 
 From: Steven Bethard <steven.bethard@gmail.com>
 
-> If you do this:
->
-> "a" + 10
->
-> you end with 10 - if the string doesn't contain something as number
+ '' If you do this:''
+{{{
+ "a" + 10
+}}}
+ '' you end with 10 - if the string doesn't contain something as number''
 
 I would still call this coercion with an overloaded
 operator.  A horrible language decision, certainly, but not a mark of weak
-typing -- note that Python can give you exactly the same behavior if you want
-  it:
-
+typing -- note that Python can give you exactly the same behavior if you want it:
+{{{
 >>> class phpint(int):
 ...     def __add__(self, other):
 ...             try:
@@ -283,7 +252,7 @@ typing -- note that Python can give you exactly the same behavior if you want
 15
 >>> "a" + i
 10
-
+}}}
 This doesn't mean that Python has suddenly become a weakly-typed language.  It
 just means that I've implemented some poor coercion choices in the language.
 
@@ -292,9 +261,9 @@ the more weakly typed it is.  This diverges from the common use of the terms
 strong and weak typing in the PL literature, which is why I was confused.
 
 
-****************************************************************************
-                   3. Justification for weak typing
-****************************************************************************
+= Justification for weak typing =
+
+
 
 From: Mike Meyer <mwm@mired.org>
 
@@ -320,11 +289,11 @@ different definitions of 'weakly typed'.  Both can be described as
 treating an object as if it were of some type other than what it
 really is. In one case, you abuse the raw bits, and in the other you
 coerce the object to a different type. Both amount to the same thing:
-
+{{{
        a = "10"
        b = 5
        c = a + b
-
+}}}
 
 ----------------------------------------------------------------------------
 
@@ -373,22 +342,17 @@ base; perform sign or other symmetry inversions as previously recorded.
 
 
 
-****************************************************************************
-                        4. Comparisons
-****************************************************************************
+= Comparisons =
+
 
 
 From: Steven Bethard <steven.bethard@gmail.com>
 
-> >  (1) Weakly-typed languages allow you to take a block of memory that was
-> >  originally defined as one type and reinterpret the bits of this block as
-> >  another type[1]. (This is the definition usually used in Programming
-> >  Languages literature.)
-> >  
-> >  (2) Weakly-typed languages have more implicit coercions than strongly-typed
-> >  languages.  (This seems to be the favored definition on this newsgroup.)
->
-> Is either of them a subset of the other, generally speaking?
+  ''  (1) Weakly-typed languages allow you to take a block of memory that was originally defined as one type and reinterpret the bits of this block as another type[1]. (This is the definition usually used in Programming Languages literature.)
+
+  (2) Weakly-typed languages have more implicit coercions than strongly-typed languages.  (This seems to be the favored definition on this newsgroup.)''
+
+ ''Is either of them a subset of the other, generally speaking?''
 
 Not really -- they're pretty much orthogonal.
 
@@ -404,14 +368,14 @@ coercions (e.g. int->float with the + operator).
 
 ML is strongly-typed (PL theory definition) and has *very* few (perhaps none?)
 implicit coercions, e.g.:
-
+{{{
   # 1 + 1.0;;
 
   Characters 4-7:
     1 + 1.0;;
         ^^^
   This expression has type float but is here used with type int
-
+}}}
 not even the int->float conversion common to C, Java, Python, etc. is supported.
 
 [...]
@@ -420,7 +384,7 @@ Examples in this thread suggest that both Perl and PHP have large
 numbers of implicit coercions.
 
 
->From weakly-typed to strongly-typed (PL theory definition):
+ ''From weakly-typed to strongly-typed (PL theory definition):''
 
 C < Java, Python, ML
 
@@ -428,6 +392,6 @@ Basically, there's no hierarchy, just weakly-typed and strongly-typed.  You
 might get a hierarchy if you had some languages that allowed only some (but not
 all) objects to be reinterpreted.
 
->From many implicit coercions to few implicit coercions:
+ ''From many implicit coercions to few implicit coercions:''
 
 C, Java, Python < ML
