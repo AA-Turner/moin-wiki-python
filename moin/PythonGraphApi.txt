@@ -1,0 +1,146 @@
+= A Python Graph API? =
+
+This wiki is a temporary resource for some brainstorming around the possibility of a Python Graph API in the
+form of an informational PEP, similar to [http://www.python.org/peps/pep-0249.html PEP 249, the Python DB API].
+The goal would be, in other words,
+to define how a graph (or various kinds of graphs) would be expected to perform (possibly from different
+perspectives) in order to increase interoperability among graph algorithms.
+
+A comp.lang.python thread discussing this (with some useful ideas) may be found
+[http://groups.google.com/groups?th=ebb061898263c0d here].
+
+This is not about plotting; for a definition of the kind of graph we're talking about, see [http://mathworld.wolfram.com/Graph.html here].
+
+If you have interest in this, please feel free to add your ideas here. If you'd like to be named as a contributor
+in the case that some "standard" should emerge, please add your name to the list of contributors. (You might
+also want to create a user name and log in when doing changes, or possibly just state your name when you
+edit stuff, so one can see who did what.)
+
+=== A simple use-case ===
+
+Just to illustrate the point of this discussion, here is a simple example:
+
+Let's say I have some special hardware that is able to search efficiently for complex patterns in byte sequences.
+I somehow use this to find various relationships between the genomes of different organisms, or between different
+genes in a given genome. This implicitly defines a graph, but I cannot put the graph explicitly in the form
+of a data structure that Python can manipulate, and, hence, I cannot use a ready-made graph library. So, I instead
+write an API to my system so that it can be probed and manipulated by other code ''as if it were'' a graph
+data structure.
+
+Now, someone else might have written some nice graph code for, say, an approximated bipartite clique partition
+(or whatever) and I want to use that. In an ideal world, the clique partition code would be written using only
+an abstract notion of what a graph is (i.e. a ''protocol'' or ''interface''/''API'') and I have implemented
+my hardware-based graph using the same graph notion/protocol. In this case I can simply write a small program that
+drops my hardware-based graph right into the clique partition code and it will work.
+
+This ideal world scenario would only be possible, though, if some abstract graph notion or protocol is defined,
+so that both graph implementors and graph algorithm implementors can use it. The goal of this little project
+is, of course, to define such a protocol/API.
+
+Note that the goal is ''not'' to implement a specific graph representation or a set of graph algorithms. The goal
+is only to mediate between developers of the two.
+
+== Preliminary ideas ==
+
+=== General thoughts ===
+
+Ideas so far include basing the API on the standard notion of using adjacency maps (such as dicts of neighbor lists),
+as described in [http://www.python.org/doc/essays/graphs.html Guido's well-known essay] and used
+in [http://www.ics.uci.edu/~eppstein/PADS these examples by David Eppstein], and using object adaptation
+(through the adapt() function, as described in [http://www.python.org/peps/pep-0246.html PEP 246] and as used
+in [http://peak.telecommunity.com/PyProtocols.html PyProtocols]) to allow access to graphs through
+various perspectives (such as adjacency maps,
+incidence maps, adjacency arrays, edge lists...). This would also allow graphs implementations with completely different
+interfaces to be adapted to a standard interface, and thus be used by generic graph algorithms.
+
+An example of an existing graph library for Python, written by István Albert,
+may be found [http://www.personal.psu.edu/staff/i/u/iua1/python/graphlib/html here].
+('''Note''': this project has not been released yet - should be considered alpha quality)
+
+One possible underlying technology for graphs would be adjacency matrices using [http://www.stsci.edu/resources/software_hardware/numarray numarray].
+
+''Add your ideas here (Go wild, folks...)''
+
+I think that the graph representation should be a redundant one, that
+allows the fast traversals, quick node, edge and neighbour lookups 
+as well as fast iterations over all nodes or all edges. This will of course 
+come at the expense of storage and/or graph initialization efficieny. 
+For example in the python graph representation mentioned above (modeled 
+after LEDA) the nodes and the edges 
+are stored in a separate dictionaries. Each edge_id maps to a tuple of the head_id and the tail_id  
+(the nodes) that form the edge. (Edge_ids are automatically created as they are added.)
+At the same time each node_id maps to a tuple of two lists corresponding 
+to incoming and outgoing edges.  (Istvan)
+
+IMO, one of the points of a standard interface is to let people choose their own
+representations. (Magnus). 
+
+I believe that just as most people don't care how lists 
+and dictionaries work behind the scenes they won't care (or want to have to deal with) 
+picking a graph representation. The two representation that are listed in just about every computer science book,
+the adjacency matrix and the adjecency list representations are just about useless 
+in the real world. These are what I would call a '''node''' centric view of the 
+graph. It turns out in many probelms edges have far more utility.Graphs are a very rich methaphor and one rarely uses them in the stripped 
+down version. What we need is a representation that is simple, fast and efficient enough 
+in every case. (Istvan)
+
+This is not about giving people a graph library, but letting people who write graph representations and people
+who write graph algorithms interoperate more easily, by giving them a common interface. If people want
+to use a ready-made library, that's fine. The point is that people (like me) might want to represent graphs
+completely differently from the "textbook" version (in fact, compact graph representations is what
+my current research is about). It's the same with the DB API; by fixing a standard API, people can write
+programs that use databases without having to worry about which database or database library they use.
+I've added a use-case above to clear this up a bit.
+(Magnus)
+
+To write '''any''' graph algorithm, you need a set of standard methods. As far as I know, there are only two ways of getting this - either agree on a fixed interface which implementations ''must'' follow (the DB API approach) or define an interface and require that implementations ''can'' be adapted to it (the adaptation approach). I don't like Andrew Dalke's suggestion of code-generating template systems, it seems to me that this would make writing algorithms far too hard, and where multiple graph representations are in use, result in code explosion (a well-known problem with C++ templates). My preference is for adaptation. It's ideal for this sort of thing, the only downside is that it isn't standard. But getting PEP 246 accepted would be easier with more use cases - avoiding its use is self-defeating. Better to lobby for its use, on the basis that we need it for this type of situation. (PaulMoore)
+
+I share your view here. One possibility is to specify how a graph can be adapted to the (or one of) the standard
+interface(s) as part of the (hypothetical) Graph PEP, using adapter/factory functions. This can then be the
+same mechanism used by adapt(), but we don't have to require its use. (Or we could use it, of course...)
+
+On the other hand, it isn't really necessary for us (if we go down this road) to specify how such adaptation should
+be done. We could define the graph interface, and graph libraries could supply their own adapter functions or
+wrappers. (Magnus)
+
+=== Specifics ===
+
+''Put potential specifics here, that is, what functionality an API must cover. For now, it is completely
+permissible to have mutually exclusive items here, as nothing is anywhere near fixed yet.''
+
+Static graphs:
+
+  * Node membership: Is a node part of the graph?
+  * Node iteration: Iterate over all the nodes.
+  * Edge membership: Is an edge part of the graph?
+  * Edge iteration: Iterate over all the edges.
+  * Adjacency iteration: Iterate over all the neighbors of a node. 
+  * Incidence iteration: Iterate over all the edges incident to a node (out- and in-edges 
+  separately?)
+  * Node decoration: labels, weights, colors, capacities (can be done with external maps)
+  * Edge decoration: labels, weights, colors, capacities
+
+Dynamic graphs:
+
+  * Node addition
+  * Node deletion
+  * Edge addition
+  * Edge deletion
+  * Node decoration modification
+  * Edge decoration modification
+
+Should there be separate functionality for directed and undirected graphs? Should all graphs be chain graphs
+(which allow both directed and undirected edges)? Should two-way directed edge be treated as an undirected
+edge (and vice versa)?
+
+How do we handle the proliferation of other graph classes (such as multigraphs, pseudographs, ...), all of which
+are only minor tweaks of the basic structure? How about more radical departures such as hypergraphs (which allow
+an arbitrary number of nodes per edge)?
+
+== Contributors ==
+
+(''Add your name to this list if you contribute.'')
+
+  * Magnus Lie Hetland
+  * Istvan Albert
+  * Paul Moore
