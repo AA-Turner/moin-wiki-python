@@ -77,26 +77,11 @@ pointer to the argument?  In that case, the caveat is that if the
 lifetime of the C++ object ends before that of the Python object, that
 pointer will dangle and using the Python object may cause a crash.
 
-There is a way to do that, but it's more convoluted than it should be:
+Here's how to expose mutable C++ object during module initialisation:
 {{{
-  template <class T>
-  T& identity(T& x)
-  {
-      return x;
-  }
-
-  template <class T>
-  object get_object_reference(T& x)
-  {
-      // build a function object around identity
-      object f
-          = make_function(
-                  &identity<T>, return_value_policy<reference_existing_object>());
-
-      // and call
-      return f(x);
-  }
+  scope().attr("a") = object(ptr(&class_instance));
 }}}
+
 
 === std::C++ container ===
 You can always wrap the container with class_ directive.
