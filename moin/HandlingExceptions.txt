@@ -35,18 +35,6 @@ In situations like these, you may want to code something like this:
 
 {{{
 #!python
-try:
-  untrusted.execute()
-except Exception, e:
-  write_to_page( "<p>Error: %s</p>" % str(e) )
-}}}
-
-MoinMoin software is a good example of where this is done. If you write Moin``Moin extension macros, and trigger an error, Moin``Moin will give you a detailed report of your error and the chain of events leading up to it.
-
-''umm.  that snippet doesn't actually catch all exceptions, though...  here a more robust solution:''
-
-{{{
-#!python
 import sys
 try:
   untrusted.execute()
@@ -54,6 +42,8 @@ except: # catch *all* exceptions
   e = sys.exc_info()[1]
   write_to_page( "<p>Error: %s</p>" % e )
 }}}
+
+MoinMoin software is a good example of where general error catching is good. If you write Moin``Moin extension macros, and trigger an error, Moin``Moin will give you a detailed report of your error and the chain of events leading up to it. Python software needs to be able to catch ''all'' errors, and deliver them to the recipient of the web page.
 
 == Finding Specific Exception Names ==
 
@@ -78,4 +68,32 @@ For general (non-Python specific) ideas about exceptions, consult Wiki:Exception
 
 = Questions =
 
-(none)
+== General Error Handling ==
+
+In the "general error handling" section above, it says to catch all exceptions, you use the following code:
+
+{{{
+#!python
+import sys
+try:
+  untrusted.execute()
+except: # catch *all* exceptions
+  e = sys.exc_info()[1]
+  write_to_page( "<p>Error: %s</p>" % e )
+}}}
+
+However, it originally was:
+
+{{{
+#!python
+try:
+  untrusted.execute()
+except Exception, e:
+  write_to_page( "<p>Error: %s</p>" % str(e) )
+}}}
+
+Someone pointed out that "except" catches more than just "except Exception, e."
+
+Why is that the case? What is the difference?
+
+-- LionKimbro
