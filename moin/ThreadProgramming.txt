@@ -16,7 +16,7 @@ class Worker(threading.Thread):
   def shutdown(self):
     self.stopFlag = 1
 
-  def run(self):
+  def start(self):
     self.stopFlag = 0
     while not self.stopFlag:
       event = self.eventChannel.waitEvent() # blocking call
