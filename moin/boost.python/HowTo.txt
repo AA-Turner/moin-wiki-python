@@ -193,3 +193,14 @@ class_<foo>("foo")
     .def("bar",bar);
 }}}
 because function_object is a function, not a class.
+
+=== getter and setter methods as a property ===
+Suppose you have class "C" with methods "getA" and "setA" and 
+you want to expose them as a property "a".
+It's not a problem with
+{{{ .add_property("a", &C::getA, &C::setA)}}}
+unless you need to assign ../CallPolicy to them.
+In that case use "make_function":
+{{{ .add_property("a",
+      make_function(&C::getA, return_value_policy<...>()),
+      make_function(&C::setA, with_custodian_and_ward<...>())}}}
