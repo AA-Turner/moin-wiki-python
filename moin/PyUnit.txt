@@ -9,38 +9,43 @@ Here's a basic example, making use of standard PyUnit conventions.
 {{{
 #!python
 import unittest
-
 from foobarbaz import Foo # code from module you're testing
 
+
 class SimpleTestCase(unittest.TestCase):
-    def setUp(s):
-        """
-        Called before every single test case.
-        """
-        s.foo = Foo()
-        s.file = open( "blah", "r" )
-    def tearDown(s):
-        """
-        Called after every single test case.
-        """
-        s.file.close()
-    def testA(s):
-        """test case A; note that all test method names must begin with 'test.'"""
+
+    def setUp(self):
+        """Call before every test case."""
+        self.foo = Foo()
+        self.file = open( "blah", "r" )
+
+    def tearDown(self):
+        """Call after every test case."""
+        self.file.close()
+
+    def testA(self):
+        """Test case A. note that all test method names must begin with 'test.'"""
         assert foo.bar() == 543, "bar() not calculating values correctly"
-    def testB(s):
+
+    def testB(self):
         """test case B"""
         assert foo+foo == 34, "can't add Foo instances"
-    def testC(s):
+
+    def testC(self):
         """test case C"""
         assert foo.baz() == "blah", "baz() not returning blah correctly"
 
 class OtherTestCase(unittest.TestCase):
-    def setUp(s):
+
+    def setUp(self):
         blah_blah_blah()
-    def tearDown(s):
+
+    def tearDown(self):
         blah_blah_blah()
-    def testBlah(s):
-        assert s.blahblah == "blah", "blah isn't blahing blahing correctly"
+
+    def testBlah(self):
+        assert self.blahblah == "blah", "blah isn't blahing blahing correctly"
+
 
 if __name__ == "__main__":
     unittest.main() # run all tests
