@@ -222,7 +222,7 @@ def dumpArgs(func):
     fname = func.func_name
     def echoFunc(*args,**kwargs):
         print fname,":", zip(argnames,args)
-        func(*args,**kwargs)
+        return func(*args,**kwargs)
     return echoFunc
     
 @dumpArgs
