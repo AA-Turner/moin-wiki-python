@@ -18,7 +18,7 @@ mundane protocols like the ''file'' protocol for local files. Many of the mainst
 provided in the standard KDE distribution are implemented in C++, although some, like the
 ''finger'' IOSlave, rely on support scripts to handle various aspects of communication with
 remote servers. Since PyKDE provides Python implementations (or ''wrappers'') for the
-relevant classes in the {{{kio}}} library, it is possible to write IOSlaves almost
+relevant classes in the `kio` library, it is possible to write IOSlaves almost
 completely in Python; a simple C++ handling function is only required for
 dynamic linking purposes and to set up the interpreter.
 
@@ -41,9 +41,10 @@ to their use.
 
 == Implementation ==
 
+=== Modules and the slave class ===
+
 We begin by importing the necessary modules. Some of these are needed for general interoperability
 with the KDE IOSlave infrastructure:
-
 {{{
 from qt import QString, QByteArray, QDataStream, IO_ReadOnly
 from kio import KIO
@@ -51,15 +52,13 @@ from kdecore import KURL
 }}}
 
 Other familiar Python modules are used when performing tasks specific to this IOSlave:
-
 {{{
 import os, time, types, urllib2
 
 import Image, spritefile
 }}}
 
-Additionally, we need to use the StringIO class and would prefer the C implementation:
-
+Additionally, we need to use the StringIO class and would prefer to use the C implementation:
 {{{
 try:
 
@@ -69,5 +68,103 @@ except ImportError:
 
     from StringIO import StringIO
 }}}
+
+We define a class which will be instantiated when the ''sprites'' protocol is used. This is a subclass of `KIO.SlaveBase` and relies on the facilities of this base class for communication with applications.
+At this point, it is useful to declare the MIME type and image format of the images we will be returning
+to applications in response to their requests; this is specific to this IOSlave but may be generally useful.
+{{{
+class SlaveClass(KIO.SlaveBase):
+
+    image_mimetype = "image/png"
+    image_format = "png"
+}}}
+
+The `__init__` method for this class simply calls the corresponding method of the base class and
+initialises some variables for later use. The `__del__` method currently does nothing.
+{{{
+    def __init__(self, pool, app):
+    
+        KIO.SlaveBase.__init__(self, "sprites", pool, app)
+        
+        self.host = ""
+        self.spritefile = None
+        self.url = None
+    
+    def __del__(self):
+    
+        pass
+}}}
+
+=== General operations ===
+
+Although the actions performed by an IOSlave will typically be closely related to its purpose, we will
+define the methods required by many IOSlaves and only later defined the methods which are specific
+to the ''sprites'' protocol.
+
+The `get` method is called when an application requests an object, represented by the URL given, using
+the relevant protocol; in this case the ''sprites'' protocol.
+{{{
+    def get(self, url):
+}}}
+The URL must be examined and the relevant object found. To do this, we call the `parse_url` method which
+is specific to this IOSlave. For this IOSlave, it returns the possible name of a sprite within a Spritefile.
+{{{
+        name = self.parse_url(url)
+}}}
+If no appropriate sprite was found then we inform the calling application by using the `error` method
+which is inherited from the base class:
+{{{
+        if name is None:
+        
+            self.error(KIO.ERR_DOES_NOT_EXIST, url.path())
+            return
+}}}
+If, on the other hand, a sprite was found then we can check whether it exists within the current Spritefile
+being examined, notifying the calling application if it was not found:
+{{{
+        # Find the sprite within the file.
+        if not self.spritefile.sprites.has_key(name):
+        
+            self.error(KIO.ERR_DOES_NOT_EXIST, name)
+            return
+}}}
+
+With the name of the sprite determined, we can retrieve an object from the Spritefile.
+{{{
+        sprite = self.spritefile.sprites[name]
+}}}
+We will be converting the sprite data into a PNG image before it is delivered to the application.
+The MIME type of the image is reported to the application using the `mimeType` method, inherited from
+the base class:
+{{{
+        self.mimeType(self.image_mimetype)
+}}}
+
+Using the Python Imaging Library, we create an Image object from the sprite and "save" the image in
+a suitable format (defined above) to a string.
+{{{
+        image = self.sprite_to_image(sprite)
+        
+        file = StringIO()
+        image.save(file, self.image_format)
+        file.seek(0, 0)
+        
+        output = file.read()
+        file.close()
+}}}
+The image data is sent to the application through the use of the base class's `data` method. Note the use
+of the `QByteArray` for this purpose.
+{{{
+        self.data(QByteArray(output))
+}}}
+To report the end of the data, we must send the application an empty byte array:
+{{{
+        self.data(QByteArray())
+}}}
+We must also report that we have finished the operation by calling the base class's `finished` method:
+{{{
+        self.finished()
+}}}
+
 
 To be continued...
