@@ -1,0 +1,62 @@
+   Scientific applications are known for their ability to generate huge amounts of
+   data which are sometimes hard to manage. This page lists some of the tools which
+   have been made available for interfacing with standard scientific file formats,
+   as well as Python-specific tools for manipulating arrays and text files.
+
+Interfaces to Standard Formats
+
+     * NetCDF Interfaces
+       Interface to [http://www.unidata.ucar.edu/packages/netcdf/ Unidata NetCDF] array-oriented data interface files.
+
+     The netCDF datafile format stores large, uniform, data arrays efficiently and
+     avoids byte-order problems when moving binary data between different machines.
+     It is well-documented and looks like a good compromise between simplicity and
+     generality.
+          + [http://starship.python.net/crew/hinsen/scientific.html NetCDF interface] - NetCDF interface that makes array variables look like
+            NumPy arrays. (Konrad Hinsen)
+          + [http://snow.cit.cornell.edu/noon/ncmodule.html NetCDF interface] - Interface to NetCDF portable data files (William
+            Noon)
+          + [http://www.geog.ubc.ca/~kschalmNetCDF interface] - A Numeric-Python aware NetCDF portable data file
+            interface (Kyle Schalm)
+     * PyPDB is an interface to the PDB Portable Data Format library which is part
+       of the PACT system (by the LLNL crew). It is available as part of the
+       LLNLPython distribution.
+
+Python-specific Tools
+
+     * [http://php.iupui.edu/~mmiller3/python/#TableIO TableIO] by Mike Miller.
+       "When I first started using Python, I wanted to read lots of numbers into
+       NumPy arrays. This can be done with the standard Python file reading methods,
+       but I found that to be prohibitively slow for largish data sets. So I wrote
+       TableIO (_tableio.c and TableIO.py), which lets me start with a file
+       containing a rectangular array of ASCII data (a `table') and read it into
+       Python so I can manipulate it. For example, if I have a file containing an
+       table in a file with 10 columns and 50 rows, I can use {{{
+  >>> d = TableIO.readTableAsArray(file)
+}}}       to get an array with shape (50,10). If I only want to read a couple of columns,
+       say the first and ninth and tenth, I can use {{{
+  >>> [x, y, dy] = TableIO.readColumns(file, [0, 8, 9])
+}}}       to read the first column in to the 1D array x and the eigth and ninth into y
+       and dy."
+     * [http://starship.python.net/crew/hinsen/scientific.html FortranFormat.py] by Konrad Hinsen.
+       "This module provides two classes that aid in reading and writing
+       Fortran-formatted text files. Only a subset of formatting options is
+       supported: A, D, E, F, G, I, and X formats, plus string constants for output.
+       Repetition (e.g. 4I5 or 3(1X,A4)) is supported. Complex numbers are not
+       supported; you have to treat real and imaginary parts separately."
+     * [http://starship.python.net/~da/Travis/numpyio/ numpyio] by Travis Oliphant.
+       "Once compiled, numpyio is a loadable module that can be used in python for
+       reading and writing arbitrary binary data to and from Numerical Python
+       arrays. I work in Medical Imaging and often have large data sets to
+       manipulate. I do much of my interactive data analysis with MATLAB, however,
+       only having doubles to work with really puts a crimp on the sizes of the data
+       sets I can manipulate. The fact that Numerical Python has more data types
+       defined than doubles encouraged me to try it out. I have been very impressed
+       with its speed and utility, but I needed some way to read large data sets
+       from an arbitrary binary file into Numerical Python arrays. I didn't see any
+       obvious way to do this so I wrote an extension module. Although there is not
+       much documentation, having the sources available is ultimately better than
+       documentation. But, as this is my first extension module, my style may not be
+       elegant as I may not be using the correct APIs. Feel free to send me
+       corrections."
+
