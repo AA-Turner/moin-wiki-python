@@ -1,1 +1,49 @@
-Describe CoreSprint here.
+== PyConDC 2004 Core Sprint plan ==
+
+Some ideas:
+
+
+ * Complete the implementation of Generator Expressions
+
+ * Add a module of statistical and reduction functions:  stddev, average,
+ nlargest, nsmallest, product, etc.
+
+ * Examine two optimizations proposed by Neal Norwitz:
+
+   + Add gotos from opcodes that set "why" since their jump target is
+   known in advance
+
+   + Add 2 custom op-codes for CALL_FUNCTION where the number of
+   arguments is known in advance
+
+ * Add 'diff3' and 'patch' to difflib
+
+ * Unify doctest's two approaches to finding test cases.
+
+ * Documentation sprint
+
+    + People liked the examples in the docs for unittest, sets, and
+    itertools.  Apply that model to other parts of the docs.  For
+    instance, the email and logging packages would be a lot easier to use
+    if there were a semi-comprehensive example section in the docs.
+
+ * Python bug fixing sprint
+
+ * PythonASTSprint -- finish the new compiler on the ast-branch -- this
+ should be a top priority because the project has been open for so long.
+
+ * Reduce python's start-up time.
+
+ * Improve the byte code optimizer.  Several new transformations can be
+ added after checking for basic blocks  and if the jump targets can be
+ fixed up when the total number of bytes changes.  Also, the line
+ numbering has to be kept intact during the transformations.
+
+ * Speed up list comprehensions by pre-allocating blocks of 100 list
+ elements, writing using `PyList_SET_ITEM`, and adjusting the total size
+ at the end of the comprehension.
+
+ * Update, pare-down, and clean-up Demo and Tools/Scripts
+
+
+Back to SprintPlan2004
