@@ -775,3 +775,148 @@ Here it is with the @ symbol:
 
       return a+b*c
 }}}
+
+== Decorator Syntax Breakdown ==
+Here's a breakdown of some of the different decisions that have to be made in deciding on a decorator syntax.  This is an attempt to consolidate some of the common points from the various examples above.
+
+=== Indicator ===
+Proposals differ on how some sort of indicator of "decoratorhood" is use.  These include:
+
+ * Keyword
+  * + Makes it clear that this is not a normal statement
+  * + Will not be silently ignored
+  * + Makes syntax highlighting easy
+  * - New keywords can break existing code
+  * ''Some keyword options'':
+   * '''decorate '''
+    * + Not confusable with any current Python keyword
+    * + Intuitively associated with decorator semantics
+   * '''predef'''
+    * + Not confusable with any current Python keyword
+    * + Intuitively associated with function definition semantics
+    * 0 Somewhat intuitively associated with decorator semantics
+   * '''using'''
+    * + Not confusable with any current Python keyword
+    * 0 Somewhat intuitively associated with decorator semantics
+   * '''with'''
+    * + Not confusable with any current Python keyword
+    * - 'with'-blocks, as proposed, already want this keyword.
+   * '''as'''
+    * - 'as' usually means 'rename'
+
+ * Symbol
+  * + Makes it clear that this is not a normal statement
+  * + Will not be silently ignored
+  * + Saves keystrokes
+  * 0 Introduces a new character in the language
+  * ''Some symbol options'':
+   * '''@'''
+    * + Java-like, so not completely unknown.
+    * + Not confusable with any current Python symbol
+    * + Makes syntax highlighting easy
+    * 0 Used in other languages to mean "attribute"
+    * - Already used as a special character in IPython and Leo
+    * - Not intuitively associated with the decorator semantics
+   * '''|'''
+    * + Vertical bars visually "attach" the decorators to the name (with a vertical ASCII art line).
+    * 0 Reminiscent of Unix "pipe" operations (though order may be "backwards")
+    * - Not intuitively associated with the decorator semantics
+    * - Gives substantially new meaning to '|', may be confusing for beginners
+    * - For some fonts, "|" looks similar to "I" or "l" or "1".
+    * - The key with "|" on it is often in an awkward location on laptop keyboards
+    * - Narrow character, may not be obvious enough
+   * '''%'''
+    * + Already associated in Python with some sort of "application" type semantics.
+    * - Not intuitively associated with the decorator semantics
+
+ * Function
+  * + Does not require a syntax change
+  * - Changes semantics of function calls.  (A function call followed by a function definition is not usually assumed to be affecting that definition.)
+
+ * None
+  * + With list syntax, C# like, so not completely unknown.
+  * - In pre-def and post-def locations, looks like a normal statement, but does not behave like one.
+  * - In pre-def and post-def locations, may be silently ignored
+  * - In pre-def and post-def locations, may be hard to highlight in an editor.
+  * - In pre-def locations, would not work in interactive mode (list would be interpreted right away)
+  * - In within-def locations, does not make clear the break between decorators and the rest of the function declaration
+
+=== Location ===
+Proposals also differ on exactly where the decorator declaration should be made.  These include:
+
+ * Pre-def
+  * + Decorators are easy to find
+  * + Won't break simplistic code analyzers or grep for function def
+  * 0 Not consistent with docstring location
+  * - Decorators are not as clearly a part of the function declaration
+  * - Following empty lines or comments may separate decorators from function declaration.
+  * - May require extra mental "stack space" to process decorators before seeing function name
+
+ * Within-def
+  * + Decorators are clearly part of the function declaration
+  * 0 Not consistent with docstring location
+  * - Long lists of decorators/arguments cause ugly line wraps
+  * - More cumbersome to copy decorator lists because they are in the middle
+  * ''Some within-def options'':
+   * Between def and function name
+    * - Long lists of decorators hide function names
+    * - May break simplistic code analyzers or grep for function def
+    * - May require extra mental "stack space" to process decorators before seeing function name
+   * Between function name and argument list
+    * + Should not require extra mental "stack space" to process decorators (function name has already been seen)
+    * - May break simplistic code analyzers or grep for function def
+    * - Easy to miss the transition between a long argument list and a long decorator list
+   * Between argument list and colon
+    * + Should not require extra mental "stack space" to process decorators (function name has already been seen)
+    * + Won't break simplistic code analyzers or grep for function def
+    * - Easy to miss the transition between a long argument list and a long decorator list
+ * Post-def
+  * + Should not require extra mental "stack space" to process decorators (function name has already been seen)
+  * + Won't break simplistic code analyzers or grep for function def
+  * 0 Consistent with docstring location
+  * - Decorators may look like part of the function's code, not its declaration.  (That is, they look like they're evaluated when the function is called, not when it is parsed.)
+  * ''Some post-def options'':
+   * Before docstring
+   * After docstring
+    * - Docstring separates decorators from function declaration.
+
+
+=== List Notation ===
+Decorator syntax, as described in the PEP, must support the application of multiple decorators.  Some proposals on how to support this include:
+
+ * One per line
+  * + Easy to add/remove/reorder decorators
+  * - Decorators consume more vertical space
+ * Commas only
+  * + Decorators do not consume much vertical space
+  * - Difficult to break across lines
+ * As list
+  * + Decorators do not have to consume much vertical space
+  * + Easy to break across lines
+  * - Hard to copy/paste
+ * As tuple
+  * + Decorators do not have to consume much vertical space
+  * + Easy to break across lines
+  * 0 Allows short one-liners using X, tuple syntax
+  * - May look too much like argument list
+  * - Hard to copy/paste
+ * Angle brackets
+  * + Cannot be confused with any other syntax
+  * - Angle brackets are "unpaired" characters
+  * - Parsing of greater-than and less-than becomes more fragile.
+
+=== Indentation ===
+Proposals also differ on whether or not decorators should introduce a
+new block.  These include:
+
+ * Indent decorators and def
+  * + Allows many decorated functions to be declared with a single statement
+  * - Increases minimum ident level on decorated functions
+  * - Inconsistent identation level between methods with/without decorators
+  * - Can lead to "runaway" nesting
+ * Indent decorators only
+  * + Makes locating the function definition easy
+  * 0 Different semantics from that of other paired, nested blocks (e.g. if/elif/else, try/except, try/finally)
+  * - Technical problems if a block *starts* with an optional part?
+ * No indent
+  * - Uncommon in Python that one line following another one with the same identation has a meaning like this.
