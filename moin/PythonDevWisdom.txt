@@ -18,6 +18,8 @@ Reason:  if p is `PyObject*`, and &p is passed to `PyArg_ParseTuple`, p either r
 
 Refcounts are much easier to keep straight if you use forward gotos for error exits.  Initialize your `PyObject*` locals to NULL, and write a sequence of matching `Py_XDECREF` calls following the error label.  This is essentially compiling a `try/except` block by hand.
 
+== Other snippets ==
+
 === Python changes line endings for you ===
 
 I've seen this documented in a book (Martelli) but can't find any mention of it online. 
