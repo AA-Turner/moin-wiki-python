@@ -1,0 +1,56 @@
+''The page contents below were copied with permission of author (BrianDorsey) from [http://www.seapig.org/DocXMLRPCServer SeaPig:DocXMLRPCServer]. I'd like to rework the page to fit the form of WorkingWithTime, RssLibraries, etc.,. See also: XmlRpc'' -- LionKimbro [[DateTime(2004-04-28T05:58:27Z)]]
+
+
+Here is a simple server which implements the above ''message'' procedure as well as a ''wait'' procedure. This server is based on the DocXMLRPCServer included with Python2.3; In Python2.2, use {{{SimpleXMLRPCServer}}} instead, and don't call {{{server.register_introspection_functions()}}}.
+
+{{{
+#!python
+# ExampleServer.py
+import time
+import socket
+from DocXMLRPCServer import DocXMLRPCServer
+
+class SimpleShareServer:
+    def message(self, msg):
+        """message('Print me!') => True 
+        
+        Log everything passed to this function"""
+        print time.asctime(), msg
+        return True
+
+    def wait(self, seconds):
+        """wait(5) => 5 
+        
+        Wait for a certain number of seconds before returning.
+        Returns the same number passed in."""
+        print time.asctime(), "Waiting %s seconds" % seconds
+        time.sleep(seconds)
+        print time.asctime(), "Finished waiting %s seconds" % seconds
+        return seconds
+
+    
+if __name__ == '__main__':
+    server = DocXMLRPCServer(("", 8000), logRequests=0)
+    server.register_introspection_functions()
+    server.register_instance(SimpleShareServer())
+
+    print time.asctime(), 'Application Starting.'
+    server.serve_forever()
+    print time.asctime(), 'Application Finishing.'
+}}}
+
+The benefit of using DocXMLRPCServer is that it automatically creates documentation for your XML-RPC server, just open a browser and head to http://localhost:8000 after starting the server.
+
+
+Writing a client to call the wait function is left as an exercise for the reader. :)
+
+
+== Resources ==
+
+ * http://www.xml-rpc.com/
+ * [http://www.python.org/doc/current/lib/module-xmlrpclib.html xmlrpclib documentation]
+ * [http://www.python.org/doc/current/lib/module-SimpleXMLRPCServer.html SimpleXMLRPCServer documentation]
+ * [http://www.python.org/doc/current/lib/module-DocXMLRPCServer.html DocXMLRPCServer documentation]
+ * Also read the comments in both SimpleXMLRPCServer.py, and DocXMLRPCServer.py - they contain many examples of how to use the modules. 
+ * [http://sourceforge.net/projects/py-xmlrpc/ Fast C implementation of xmlrpc for python] (only for python version up to 2.2)
+ * [http://xmlrpc-c.sourceforge.net/xmlrpc-howto/xmlrpc-howto.html Detailed XML-RPC how-to with examples in many languages ]
