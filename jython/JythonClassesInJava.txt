@@ -1,0 +1,48 @@
+{{{
+public class JythonClass extends PyObject implements ClassDictInit {
+
+  /** Field __class__ */
+  public static PyClass __class__;
+
+  /** Field __methods__ */
+  protected static PyList __methods__;
+
+  /** Field __members__ */
+  protected static PyList __members__;
+
+  /** Field exposedtojython */
+  protected long exposedtojython
+
+  /** Field hiddenFromJython */
+  protected long hiddenFromJython
+
+  static {
+    PyObject[] m = new PyObject[1];
+
+    m[0] = Py.newString("amethod");
+
+    __methods__ = new PyList(m);
+    m = new PyObject[1];
+    m[0] = Py.newString("amember");
+
+    __members__ = new PyList(m);
+  }
+
+  /**
+   * Initializes the object's namespace.
+   *
+   * @param dict
+   */
+  static public void classDictInit(PyObject dict) {
+
+    dict.__setitem__("ticks", new DateTimeFunc("ticks", 1, 1, 2, true, "ticks"));
+    dict.__setitem__("gmtoffset", new DateTimeFunc("gmtoffset", 2, 0, 0, true, "gmtoffset"));
+
+    // hide from python
+    dict.__setitem__("classDictInit", null);
+    dict.__setitem__("getPyClass", null);
+    dict.__setitem__("hideFromJython", null);
+    dict.__setitem__("otherHiddenMethod", null);
+  }
+
+}}}
