@@ -45,10 +45,21 @@ Keeping your projects under boost hierarchy is often inconvenient. You may build
  * changing the line {{{subproject}}} in the '''Jamfile''' to the {{{
 project-root ;
 }}}
-and
- * creating '''boost-build.jam''' file in the root of your project tree like that: {{{
-boost-build [[PATH_TO_BOOST]]/tools/build ;
+ * remove <dll> line and add to the requirements: {{{
+     # link to the appropriate library for the build variant.
+    <release><find-library>boost_python
+    <debug><find-library>boost_python_debug
+    <debug-python><find-library>boost_python_pydebug
+  
+  # library path required for linking to boost_python shared lib. You
+  # may need to edit this for your installation
+    <library-path>$(BOOST_ROOT)/libs/python/build/VisualStudio/bin
 }}}
+ * creating '''boost-build.jam''' file in the root of your project tree like that: {{{
+BOOST_ROOT=[[PATH_TO_BOOST]] ;
+boost-build $(BOOST_ROOT)/tools/build ;
+}}}
+ * to silence warning create empty '''Jamrules''' file.
 
 
 == Using make ==
