@@ -93,6 +93,14 @@ if __name__ == '__main__':
     print time.asctime(), "Server Stops - %s:%s" % (HOST_NAME, PORT_NUMBER)
 }}}
 
+== Parameterizing ==
+
+When you want to make your server respect some parameters, it's easiest to do so via the ''server,'' rather than the ''handler.''
+
+That is, make a subclass of the server, that accepts some additional parameters. Have the server record those parameters.
+
+Then, in the handler, use {{{s.server}}} to get to the server, and access the parameters through it.
+
 == See Also ==
 
  * DocXmlRpcServer -- self-documenting XML-RPC servers
