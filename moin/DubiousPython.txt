@@ -44,9 +44,6 @@ lst.append("b")
 since the binding of lst and append happens twice - copy and paste.''
 
 
-
-
-
 == String Concatenation ==
 String concatenation is building up a relatively lengthy string from a collection of strings.
 
@@ -73,10 +70,10 @@ This is slow and resource heavy. Each time through the {{{for}}} loop, a new str
 For short cases where the number of strings to be joined is known, you can use string formatting as follows:
 
 {{{#!python
->>> print '%s%s%s%s%s' %tuple(string_list)
+>>> print '%s%s%s%s%s' % tuple(string_list)
 onebigstringinpieces}}}
 
-This is much more efficient, but is also rather more limited in the range of circumstances to which it applies. It could be made more general by constructing the formatting string as a function of `len(string_list)`, but this would be a bit dubious, too, when we have.  Its also less readible, less maintainible.  What value does it provide to the end user?
+This is much more efficient, but is also rather more limited in the range of circumstances to which it applies. It could be made more general by constructing the formatting string as a function of `len(string_list)`, but this would be a bit dubious, too, when we have.  Its also less readible, less maintainible.
 
 ==== The join method of strings ====
 The join method of the string type lets you perform the concatenation as follows:
@@ -94,6 +91,18 @@ The major thing to puzzle the newcomer here is why `"".join(some_list)` rather t
 oneJOINTbigJOINTstringJOINTinJOINTpieces}}}
 
 That said, some do consider this aspect of the join method of strings odd enough to count as a PythonWart.
+
+If the `''.join(some_list)` syntax really bothers you, one option is to bind the method to a different name, e.g.
+
+{{{#!python
+>>> join = ''.join
+>>> print join(string_list)
+onebigstringinpieces
+>>> 
+>>> underscore_join = '_'.join
+>>> print underscore_join(string_list)
+one_big_string_in_pieces}}}
+
 
 == Boolean Redundancy ==
 (Please name me better!)
