@@ -85,6 +85,9 @@ sock.sendto("robot", ("239.192.0.100", 1000))
 
 At this point, I'm beginning to think: "Python multicast simply ''does not work.''"
 
+  Are you running on Windows 2000/XP (pre-SP2)/Server 2003 with more than one network adapter? If so, the problem is Windows, not Python. The original code works for me on Windows 2000 (1 network adapter), but fails under XP Pro (pre-SP2, 3 adapters though 2 are disabled). Microsoft has a [http://support.microsoft.com/default.aspx?scid=kb;en-us;827536 support page] on the issue. The problem appears to be in the receiver: with both machines running the receiver, the Win2K machine sees packets sent from both machines, while the receiver on XP sees nothing. This, despite specifying the local IP address in the second part of the mreq structure in the IP_ADD_MEMBERSHIP call. -- VinaySajip
+
+
 It's too bad we don't have anything as simple as this:
 
 {{{
