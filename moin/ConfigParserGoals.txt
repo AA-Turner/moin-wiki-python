@@ -1,6 +1,6 @@
 There has been some confusion between "In memory storage of configuration data" and "Simple persistent storage of configuration data".  Part of the problem is that almost every configuration storage system (including ConfigParser, optparse, and getopt) comes with its own in-memory API.  In memory needs a good programmer API.  Persistent needs a good user API, and may not need to reflect the full power of the in-memory.  How should we separate these?
 
-  I (VinaySajip) think these concerns are to some extent orthogonal. Access to values should be powerful but easy, whether the data comes from a persistent store or not. I presume that's what you mean by 'programmer API'. If by 'Persistent needs a good user API' you mean 'The file format should be easy to use', I agree. Or is there some other aspect of 'user API', other than the file format, which I'm missing?
+I (VinaySajip) think these concerns are to some extent orthogonal. Access to values should be powerful but easy, whether the data comes from a persistent store or not. I presume that's what you mean by 'programmer API'. If by 'Persistent needs a good user API' you mean 'The file format should be easy to use', I agree. Or is there some other aspect of 'user API', other than the file format, which I'm missing?
 
 Yes.  They are orthogonal.  But an API that is good for programmers (needed in-memory) is different from one that is good for users (needed for the persistent storage).  Part of the problem is that most configuration solutions have tried to do both at once -- anything that could be represented by the program had to be represented by the text file (and often in exactly the same way), so either the text format got unwieldy, or the configuration options were too limited.  -- JimJJewett
 
@@ -65,6 +65,7 @@ I've posted a more detailed proposal on the HierConfig page.
  * Rich, complex data storage is *already* accomplished in a popular, industrial standard called XML, including schema validation (DTDs). Why, really, reinvent the wheel?
   Not really a con, since XML is overly verbose for many scenarios. -- VinaySajip
    ''This is a massive con; XML, despite its verbosity is simple and well understood.  ConfigParser ads yet another thing to learn and makes computers harder to use '' DougRansom
-
+    I'm not ''against'' the use of XML - I just don't think it should be ''mandatory''. -- VinaySajip
+   
  * Should this not be provided by a different module that supports complex data storage?
   That's what I've suggested - see the HierConfig page. -- VinaySajip
