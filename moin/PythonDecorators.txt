@@ -170,6 +170,26 @@ def foo(arg1,arg2):
  * + Does not use an existing mechanism with 'magic' behavior
  * - Guido specifically vetos: "as" means "rename" in too many logical, common places that are
 
+'''H. pie decorator using a different character'''
+
+For example, using the '|' character:
+
+{{{
+|classmethod
+def foo(arg1,arg2):
+    ...
+
+|accepts(int,int)
+|returns(float)
+def bar(low,high):
+    ...
+}}}
+
+Same pros and cons as @decorator, but additionally:
+
+ * + It doesn't break Leo, IPython, or any other tool that uses @ as a special character.
+ * + The association with pipes makes some sense: "take this thing and pass it through that thing to get a modified thing".
+
 
 == Thinking ahead to Python 3 ? ==
 
