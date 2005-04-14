@@ -1,0 +1,24 @@
+These are just some notes about working with processes in Python.
+
+The module of interest is {{{os}}}. [http://www.python.org/doc/current/lib/module-os.html (os module documentation)]
+
+Environment variables are accessed through a dictionary, {{{os.environ}}}.
+
+Processes are created with {{{os.popen}}}, [http://www.python.org/doc/current/lib/os-newstreams.html#os-newstreams described in os 6.1.2.]
+
+{{{
+#!python
+import os
+
+# Export an environment variable
+os.environ["FOO"] = "BAR"
+
+# Make sure environment variable set for child processes
+for line in os.popen("bash -c 'env'").readlines():
+    if line.startswith("FOO="):
+        print line
+
+# Since environment variable "FOO" is exported, and since child
+# processes inherit environment variables from their parents, this
+# works.
+}}}
