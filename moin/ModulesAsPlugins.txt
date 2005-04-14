@@ -1,0 +1,44 @@
+I frequently want to find all the modules in some directory, with some property, and do something with them.
+
+If you know how, please inform me. Here are some things I'm researching.
+
+== Finding the Things Inside a Module ==
+
+{{{
+#!python
+module.__dict__
+}}}
+
+== Identifying Functions ==
+
+{{{
+#!python
+import types
+
+def is_it_a_function(obj):
+    return isinstance(obj, types.FunctionType)
+}}}
+
+== Finding Functions Within a Module ==
+
+So, putting them together,...
+
+{{{
+#!python
+def functions_in_module(module)
+    functions = []
+    for obj in module.__dict__.values():
+        if isinstance(obj, types.FunctionType):
+            functions.append(obj)
+    return functions
+}}}
+
+== Finding Modules in a Directory ==
+
+Is there a better way than just listing the contents of the directory, and taking those tiles that end with ".pyc" or ".py"..?
+
+== Importing the Modules ==
+
+How do you do it dynamically, just given a filename?
+
+Once you've imported it, how do you get a handle on it? (That is, how do you get it's __dict__?)
