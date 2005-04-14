@@ -80,3 +80,77 @@ I'll probably end up making this myself, and posting it here. It's not terribly 
 The only part I don't know well is the ModulesAsPlugins part-- automatically detecting modules, loading them, and looping through them.
 
 -- LionKimbro [[DateTime(2005-04-14T20:45:05Z)]]
+
+Here's the frame. If someone knows how to fill in the guts, I'd be much obliged.
+
+{{{
+#!python
+"""Serve specially marked modules by XML-RPC.
+
+  -Hhostname   host name, default ""
+  -Pportnum    port number, default 8000
+
+This script starts an XML-RPC server, and publishes auto-detected
+modules from the working directory.
+
+Functions within Modules that define the name "XMLRPC_namespace" are
+published. Function names that begin with an underscore (ex: _eggs) are
+not published. Functions are published within the XML-RPC namespace
+designated by the XMLRPC_namespace value, or the base namespace if the
+value is None.
+"""
+
+import time
+
+import optparse
+import DocXMLRPCServer
+
+
+def find_modules():
+    """Find modules that define XMLRPC_namespace.
+
+    Modules are searched for in the current working directory.
+
+    Modules can define the XMLRPC_namespace to be None, in which case,
+    it's functions are placed in the XML-RPC server's base namespace.
+    """
+    return []  # How do I do this?
+
+
+def functions_in_module(module):
+    """Find all functions in a module."""
+    return []  # How do I do this?
+
+
+if __name__ == "__main__":
+    parser = optparse.OptionParser("usage: %prog [options]\n" + __doc__)
+    parser.add_option("-H", "--host", dest="hostname",
+                      default="127.0.0.1", type="string",
+                      help="specify hostname to run on")
+    parser.add_option("-p", "--port", dest="portnum", default=8000,
+                      type="int", help="port number to run on")
+
+    (options, args) = parser.parse_args()
+    if len(args) != 0:
+        parser.error("incorrect number of arguments")
+
+    ServerClass = DocXMLRPCServer.DocXMLRPCServer
+    server = ServerClass((options.hostname, options.portnum),
+                         logRequests=0)
+
+    for module in find_modules():
+        for func in functions_in_module(module):
+            full_name = func.__name__
+            if module.XMLRPC_namespace is not None:
+                full_name = full_name + ".%s" % module.XMLRPC_namespace
+            server.register_function(func, full_name)
+
+    server.set_server_title("xrserver")
+    server.register_introspection_functions()
+
+    print time.asctime(), 'Application Starting.'
+    server.serve_forever()
+    print time.asctime(), 'Application Finishing.'
+}}}
+
+-- LionKimbro [[DateTime(2005-04-14T21:27:45Z)]]
