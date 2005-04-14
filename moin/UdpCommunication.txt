@@ -55,6 +55,8 @@ It would seem easy to extend this to a simple means to open a file on the sender
 
 I've been googling for some time now, and ''still'' have yet to find a ''working'' example of Python multicast listening.
 
+(The example below has been updated to work -- Steven Spencer [[DateTime(2005-04-14T13:19:00Z)]])
+
 Here's my own, non-functioning, effort:
 {{{
 #!python
@@ -64,11 +66,12 @@ import struct
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
 #sock.bind(('127.0.0.1', 1000))
 sock.bind(('', 1000))
-grpaddr = 0
-for byte in "239.192.0.100".split("."):
-    grpaddr = (grpaddr << 8) | int(byte)
-mreq = struct.pack('ll', socket.htonl(grpaddr),
-                   socket.htonl(socket.INADDR_ANY))
+#grpaddr = 0
+#for byte in "239.192.0.100".split("."):
+#    grpaddr = (grpaddr << 8) | int(byte)
+#mreq = struct.pack('ll', socket.htonl(grpaddr),
+#                   socket.htonl(socket.INADDR_ANY))
+mreq = struct.pack("sl", socket.inet_aton("239.192.0.100"), socket.INADDR_ANY)
 sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 print sock.recvfrom(100)
 }}}
