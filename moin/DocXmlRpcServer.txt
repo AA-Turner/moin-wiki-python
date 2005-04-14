@@ -53,3 +53,30 @@ Writing a client to call the wait function is left as an exercise for the reader
  * [http://www.python.org/doc/current/lib/module-DocXMLRPCServer.html DocXMLRPCServer documentation]
  * {{{SimpleXMLRPCServer.py}}}, and {{{DocXMLRPCServer.py}}} - comments includ many examples of use
  * [http://sourceforge.net/projects/py-xmlrpc/ Fast C implementation of XML-RPC for python] (only for python version up to 2.2) [http://www.xmlrpc.com/discuss/msgReader$1573 (more notes on it- apparently 20-100x faster!)]
+
+= Discussion =
+
+I'd like a Python script where:
+
+ * You stick the script in a directory and run it to start a DocXmlRpcServer.
+   * command line options (OptParse) for host, port,...
+ * Scans all modules in the directory for "XMLRPC_namespace='eggs'"
+ * Publishes the functions in the modules that name their XML-RPC namespace.
+ * Functions that start with an underscore, don't get published.
+
+This way, you can just write:
+
+{{{
+#!python
+XMLRPC_namespace = "eggs"
+
+def spam():
+    return ["eggs", "and", "spam"]
+}}}
+
+..., and, given the script, you have everything you need to make your service callable remotely.
+
+I'll probably end up making this myself, and posting it here. It's not terribly complicated.
+The only part I don't know well is the ModulesAsPlugins part-- automatically detecting modules, loading them, and looping through them.
+
+-- LionKimbro [[DateTime(2005-04-14T20:45:05Z)]]
