@@ -119,7 +119,11 @@ def find_modules():
 
 def functions_in_module(module):
     """Find all functions in a module."""
-    return []  # How do I do this?
+    functions = []
+    for obj in module.__dict__.values():
+        if isinstance(obj, types.FunctionType):
+            functions.append(obj)
+    return functions
 
 
 if __name__ == "__main__":
