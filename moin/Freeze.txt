@@ -488,3 +488,25 @@ Quite a difference... The sizes of the resulting binaries are:
 ||maximum||<)>4666109||<)>1076264||
 
 -- MarcChr [[DateTime(2005-02-03T16:42:03Z)]]
+
+I have errors trying to freeze a wxPython script:
+
+{{{
+ricardo@yuggoth:~/Python$ ./hello2
+Traceback (most recent call last):
+  File "hello2.py", line 1, in ?
+    from wxPython.wx import *
+  File "/usr/lib/python2.4/site-packages/wx-2.5.3-gtk2-unicode/wxPython/__init__.py", line 10, in ?
+    import _wx
+  File "/usr/lib/python2.4/site-packages/wx-2.5.3-gtk2-unicode/wxPython/_wx.py", line 3, in ?
+    from _core import *
+  File "/usr/lib/python2.4/site-packages/wx-2.5.3-gtk2-unicode/wxPython/_core.py", line 15, in ?
+    import wx._core
+  File "/usr/lib/python2.4/site-packages/wx-2.5.3-gtk2-unicode/wx/__init__.py", line 42, in ?
+    from wx._core import *
+  File "/usr/lib/python2.4/site-packages/wx-2.5.3-gtk2-unicode/wx/_core.py", line 4, in ?
+    import _core_
+ImportError: No module named _core_
+}}}
+
+Anyone knows why?
