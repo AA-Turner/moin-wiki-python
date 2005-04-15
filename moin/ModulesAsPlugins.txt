@@ -44,3 +44,62 @@ How do you do it dynamically, just given a filename?
 Once you've imported it, how do you get a handle on it? (That is, how do you get it's __dict__?)
 
 There seems to be [http://www.python.org/doc/current/lib/module-imp.html a module imp] that can be used to dynamically load a named module.
+
+== Playing with imp Module ==
+
+Make a file "eraseme.py":
+
+{{{
+#!python
+print "Successfully imported!"
+}}}
+
+Then, at the python shell,
+
+{{{
+#!python
+>>> import imp
+>>> returned = imp.find_module("eraseme", ["."])
+>>> returned
+(<open file 'eraseme.py', mode 'U' at 0xb7f62220>, 'eraseme.py', ('.py', 'U', 1))
+>>>
+}}}
+
+The {{{find_module}}} line searches for "eraseme" in the current working directory (".").
+
+The first two returned items are self-explanatory, but what about that tuple- {{{('.py', 'U', 1)}}} ..?
+
+The first (".py") is obviously the extension.
+
+'U' means, "I opened the file in UniversalNewline mode." Basically, universal newline mode is like read ("r"), except that it interprets all newline forms the same way.
+
+Finally, the 1 is a code that matches against imp.PY_SOURCE (1), imp.PY_COMPILED (2), or imp.C_EXTENSION (3). Basically, it's telling us that the .py file is a source file.
+
+Once you have this stuff, it's easy to load:
+
+{{{
+#!python
+>>> eraseme = imp.load_module("eraseme", returned[0], returned[1], returned[2])
+successfully imported!
+>>> eraseme
+<module 'eraseme' from './eraseme.py'
+}}}
+
+Note that, you don't have to play by the rules. If you wanted to, you could have said:
+
+{{{
+#!python
+>>> module = imp.load_module("eggs", returned[0], "spam.py", returned[2])
+successfully imported!
+>>> module
+<module 'eggs' from 'spam.py'>
+>>> dir(module)
+['__builtins__', '__doc__', '__file__', '__name__']
+>>> module.__name__
+'eggs'
+>>> module.__file__
+'spam.py'
+>>>
+}}}
+
+...even though the file's ''real'' name is "eggs.py".
