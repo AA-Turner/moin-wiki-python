@@ -1,23 +1,6 @@
-I frequently want to find all the modules in some directory, with some property, and do something with them.
+Here's how to find all the modules in some directory, and import them.
 
-If you know how, please inform me. Here are some things I'm researching.
-
-== Finding the Things Inside a Module ==
-
-{{{
-#!python
-module.__dict__
-}}}
-
-== Identifying Functions ==
-
-{{{
-#!python
-import types
-
-def is_it_a_function(obj):
-    return isinstance(obj, types.FunctionType)
-}}}
+[[TableOfContents()]]
 
 == Finding Functions Within a Module ==
 
@@ -37,69 +20,78 @@ def functions_in_module(module)
 
 Is there a better way than just listing the contents of the directory, and taking those tiles that end with ".pyc" or ".py"..?
 
+But perhaps there isn't.
+
+{{{
+#!python
+import os
+import sets
+
+def find_modules(path="."):
+    """Return names of modules in a directory.
+
+    Returns module names in a list. Filenames that end in ".py" or
+    ".pyc" are considered to be modules. The extension is not included
+    in the returned list.
+    """
+    modules = sets.Set()
+    for filename in os.listdir(path):
+        module = None
+        if filename.endswith(".py"):
+            module = filename[:-3]
+        elif filename.endswith(".pyc"):
+            module = filename[:-4]
+        if module is not None:
+            s.add(module)
+    return list(modules)
+}}}
+
 == Importing the Modules ==
 
-How do you do it dynamically, just given a filename?
+How do you import a module, once you have it's name?
 
-Once you've imported it, how do you get a handle on it? (That is, how do you get it's __dict__?)
-
-There seems to be [http://www.python.org/doc/current/lib/module-imp.html a module imp] that can be used to dynamically load a named module.
-
-== Playing with imp Module ==
-
-Make a file "eraseme.py":
+With the [http://www.python.org/doc/current/lib/module-imp.html the imp module!] It dynamically loads named modules.
 
 {{{
 #!python
-print "Successfully imported!"
+import imp
+
+def load_module(name, path=["."]):
+    """Return a named module found in a given path."""
+    (file, pathname, description) = imp.find_module(name, path)
+    return imp.load_module(name, file, pathname, description)
+
+modules = [load_module(name) for name in find_modules()]
 }}}
 
-Then, at the python shell,
+== Finding the Things Inside a Module ==
+
+Once you have your module, you can look inside it, with {{{.__dict__}}}.
 
 {{{
 #!python
->>> import imp
->>> returned = imp.find_module("eraseme", ["."])
->>> returned
-(<open file 'eraseme.py', mode 'U' at 0xb7f62220>, 'eraseme.py', ('.py', 'U', 1))
->>>
+module.__dict__
 }}}
 
-The {{{find_module}}} line searches for "eraseme" in the current working directory (".").
+== Identifying Functions ==
 
-The first two returned items are self-explanatory, but what about that tuple- {{{('.py', 'U', 1)}}} ..?
-
-The first (".py") is obviously the extension.
-
-'U' means, "I opened the file in UniversalNewline mode." Basically, universal newline mode is like read ("r"), except that it interprets all newline forms the same way.
-
-Finally, the 1 is a code that matches against imp.PY_SOURCE (1), imp.PY_COMPILED (2), or imp.C_EXTENSION (3). Basically, it's telling us that the .py file is a source file.
-
-Once you have this stuff, it's easy to load:
+If you want to identify, say, functions within the module, you can write code similar to so:
 
 {{{
 #!python
->>> eraseme = imp.load_module("eraseme", returned[0], returned[1], returned[2])
-successfully imported!
->>> eraseme
-<module 'eraseme' from './eraseme.py'
+import types
+
+def is_it_a_function(obj):
+    return isinstance(obj, types.FunctionType)
+
+def functions_in_module(module):
+    functions = []
+    for obj in module.__dict__.values():
+        if is_it_a_function(obj):
+            functions.append(obj)
+    return functions
 }}}
 
-Note that, you don't have to play by the rules. If you wanted to, you could have said:
+= Discussion =
 
-{{{
-#!python
->>> module = imp.load_module("eggs", returned[0], "spam.py", returned[2])
-successfully imported!
->>> module
-<module 'eggs' from 'spam.py'>
->>> dir(module)
-['__builtins__', '__doc__', '__file__', '__name__']
->>> module.__name__
-'eggs'
->>> module.__file__
-'spam.py'
->>>
-}}}
-
-...even though the file's ''real'' name is "eggs.py".
+  (none yet!)
