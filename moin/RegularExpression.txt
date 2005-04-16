@@ -27,8 +27,8 @@ For example:
 {{{
 #!python
 import re
-split_up = re.split( r"(\(\([^)]+\)\))",
-                     "This is a ((test)) of the ((emergency broadcasting station.))" )
+split_up = re.split(r"(\(\([^)]+\)\))",
+                    "This is a ((test)) of the ((emergency broadcasting station.))")
 }}}
 
 ...which produces:
@@ -46,7 +46,7 @@ Consider:
 {{{
 #!python
 import re
-match_obj=re.match( "<(.*?)>(.*?)</(.*?)>", "<h1>robot</h1>" )
+match_obj=re.match("<(.*?)>(.*?)</(.*?)>", "<h1>robot</h1>")
 print mo.groups()
 }}}
 
@@ -57,8 +57,8 @@ If you were going to do that match a lot, you could compile it, like so:
 {{{
 #!python
 import re
-match_re=re.compile( "<(.*?)>(.*?)</(.*?)>" )
-match_obj=match_re.match( "<h1>robot</h1>" )
+match_re=re.compile("<(.*?)>(.*?)</(.*?)>")
+match_obj=match_re.match("<h1>robot</h1>")
 print match_obj.groups()
 }}}
 
