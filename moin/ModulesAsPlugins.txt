@@ -2,20 +2,6 @@ Here's how to find all the modules in some directory, and import them.
 
 [[TableOfContents()]]
 
-== Finding Functions Within a Module ==
-
-So, putting them together,...
-
-{{{
-#!python
-def functions_in_module(module)
-    functions = []
-    for obj in module.__dict__.values():
-        if isinstance(obj, types.FunctionType):
-            functions.append(obj)
-    return functions
-}}}
-
 == Finding Modules in a Directory ==
 
 Is there a better way than just listing the contents of the directory, and taking those tiles that end with ".pyc" or ".py"..?
@@ -50,7 +36,7 @@ def find_modules(path="."):
 
 How do you import a module, once you have it's name?
 
-With the [http://www.python.org/doc/current/lib/module-imp.html the imp module!] It dynamically loads named modules.
+With the ImpModule! It dynamically loads named modules.
 
 {{{
 #!python
@@ -73,24 +59,23 @@ Once you have your module, you can look inside it, with {{{.__dict__}}}.
 module.__dict__
 }}}
 
-== Identifying Functions ==
+== Finding Functions Within a Module ==
 
-If you want to identify, say, functions within the module, you can write code similar to so:
+We just look for dictionary values that are of type types.FunctionType.
 
 {{{
 #!python
-import types
-
-def is_it_a_function(obj):
-    return isinstance(obj, types.FunctionType)
-
-def functions_in_module(module):
+def functions_in_module(module)
     functions = []
     for obj in module.__dict__.values():
-        if is_it_a_function(obj):
+        if isinstance(obj, types.FunctionType):
             functions.append(obj)
     return functions
 }}}
+
+== See Also ==
+
+The DocXmlRpcServer page includes code demonstrating the use of these techniques.
 
 = Discussion =
 
