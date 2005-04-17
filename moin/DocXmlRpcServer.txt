@@ -1,28 +1,33 @@
-''The page contents below were copied with permission of author (BrianDorsey) from [http://www.seapig.org/DocXMLRPCServer SeaPig:DocXMLRPCServer]. I'd like to rework the page to fit the form of WorkingWithTime, RssLibraries, etc.,. See also: XmlRpc'' -- LionKimbro [[DateTime(2004-04-28T05:58:27Z)]]
-
-
-Here is a simple server which implements the above ''message'' procedure as well as a ''wait'' procedure. This server is based on the DocXMLRPCServer included with Python2.3; In Python2.2, use {{{SimpleXMLRPCServer}}} instead, and don't call {{{server.register_introspection_functions()}}}.
+The DocXmlRpcServer is a ''very'' simple XmlRpc server that is also simultaneously a self-documenting web server.
 
 {{{
 #!python
-# ExampleServer.py
+"""Demonstration of the Python 2.3 DocXMLRPCServer.
+
+The demonstration publishes two functions, "message" and "wait."
+"""
+
 import time
 import socket
+
 from DocXMLRPCServer import DocXMLRPCServer
+
 
 class SimpleShareServer:
     def message(self, msg):
-        """message('Print me!') => True 
-        
-        Log everything passed to this function"""
+        """Print message and return True.
+
+        Log everything passed to this function.
+        """
         print time.asctime(), msg
         return True
 
     def wait(self, seconds):
-        """wait(5) => 5 
-        
+        """Wait a number of seconds, and return the number.
+
         Wait for a certain number of seconds before returning.
-        Returns the same number passed in."""
+        Returns the same number passed in.
+        """
         print time.asctime(), "Waiting %s seconds" % seconds
         time.sleep(seconds)
         print time.asctime(), "Finished waiting %s seconds" % seconds
@@ -41,9 +46,7 @@ if __name__ == '__main__':
 
 The benefit of using DocXMLRPCServer is that it automatically creates documentation for your XML-RPC server, just open a browser and head to http://localhost:8000 after starting the server.
 
-
 Writing a client to call the wait function is left as an exercise for the reader. :)
-
 
 == Resources ==
 
@@ -54,107 +57,13 @@ Writing a client to call the wait function is left as an exercise for the reader
  * {{{SimpleXMLRPCServer.py}}}, and {{{DocXMLRPCServer.py}}} - comments includ many examples of use
  * [http://sourceforge.net/projects/py-xmlrpc/ Fast C implementation of XML-RPC for python] (only for python version up to 2.2) [http://www.xmlrpc.com/discuss/msgReader$1573 (more notes on it- apparently 20-100x faster!)]
 
+Also:
+ * AutoXmlRpcServer -- automatically serve modules in local directory with DocXmlRpcServer
+
+== Notes ==
+
+This page was based on [http://www.seapig.org/DocXMLRPCServer SeaPig:DocXMLRPCServer,] with BrianDorsey's permission.
+
 = Discussion =
 
-I'd like a Python script where:
-
- * You stick the script in a directory and run it to start a DocXmlRpcServer.
-   * command line options (OptParse) for host, port,...
- * Scans all modules in the directory for "XMLRPC_namespace='eggs'"
- * Publishes the functions in the modules that name their XML-RPC namespace.
- * Functions that start with an underscore, don't get published.
-
-This way, you can just write:
-
-{{{
-#!python
-XMLRPC_namespace = "eggs"
-
-def spam():
-    return ["eggs", "and", "spam"]
-}}}
-
-..., and, given the script, you have everything you need to make your service callable remotely.
-
-I'll probably end up making this myself, and posting it here. It's not terribly complicated.
-The only part I don't know well is the ModulesAsPlugins part-- automatically detecting modules, loading them, and looping through them.
-
--- LionKimbro [[DateTime(2005-04-14T20:45:05Z)]]
-
-Here's the frame. If someone knows how to fill in the guts, I'd be much obliged.
-
-{{{
-#!python
-"""Serve specially marked modules by XML-RPC.
-
-  -Hhostname   host name, default ""
-  -Pportnum    port number, default 8000
-
-This script starts an XML-RPC server, and publishes auto-detected
-modules from the working directory.
-
-Functions within Modules that define the name "XMLRPC_namespace" are
-published. Function names that begin with an underscore (ex: _eggs) are
-not published. Functions are published within the XML-RPC namespace
-designated by the XMLRPC_namespace value, or the base namespace if the
-value is None.
-"""
-
-import time
-
-import optparse
-import DocXMLRPCServer
-
-
-def find_modules():
-    """Find modules that define XMLRPC_namespace.
-
-    Modules are searched for in the current working directory.
-
-    Modules can define the XMLRPC_namespace to be None, in which case,
-    it's functions are placed in the XML-RPC server's base namespace.
-    """
-    return []  # How do I do this?
-
-
-def functions_in_module(module):
-    """Find all functions in a module."""
-    functions = []
-    for obj in module.__dict__.values():
-        if isinstance(obj, types.FunctionType):
-            functions.append(obj)
-    return functions
-
-
-if __name__ == "__main__":
-    parser = optparse.OptionParser("usage: %prog [options]\n" + __doc__)
-    parser.add_option("-H", "--host", dest="hostname",
-                      default="127.0.0.1", type="string",
-                      help="specify hostname to run on")
-    parser.add_option("-p", "--port", dest="portnum", default=8000,
-                      type="int", help="port number to run on")
-
-    (options, args) = parser.parse_args()
-    if len(args) != 0:
-        parser.error("incorrect number of arguments")
-
-    ServerClass = DocXMLRPCServer.DocXMLRPCServer
-    server = ServerClass((options.hostname, options.portnum),
-                         logRequests=0)
-
-    for module in find_modules():
-        for func in functions_in_module(module):
-            full_name = func.__name__
-            if module.XMLRPC_namespace is not None:
-                full_name = full_name + ".%s" % module.XMLRPC_namespace
-            server.register_function(func, full_name)
-
-    server.set_server_title("xrserver")
-    server.register_introspection_functions()
-
-    print time.asctime(), 'Application Starting.'
-    server.serve_forever()
-    print time.asctime(), 'Application Finishing.'
-}}}
-
--- LionKimbro [[DateTime(2005-04-14T21:27:45Z)]]
+(none yet!)
