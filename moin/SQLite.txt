@@ -9,40 +9,47 @@
 
 == DB API 2.0 Drivers ==
 
-=== PySQLite ===
+=== pysqlite ===
 
   URL:: http://pysqlite.org/
   SourceForge:: http://sourceforge.net/projects/pysqlite
   licence:: zlib/libpng License
   platforms:: Windows 95/98/2000/XP, POSIX, MacOS X
-  Python versions:: 2.1 - 2.4 (1.x branch)/2.3 - 2.4 (2.0 branch)
+  Python versions:: 2.1 or later (1.x branch)/2.3 or later (2.0 branch)
 
 ==== Extensions to DB API ====
 
-  * Support for Unicode conversion
-  * Due to SQLite being an embedded database, it's possible to write SQL functions and aggregates in Python
-  * autocommit mode
+  * Extensible type conversion
+  * Factories for connection and cursor objects
+  * row converter factory to easily and efficiently switch to a nonstandard type for rows (e. g. dicts)
+  * User-defined functions and aggregates
 
 ==== Comments ====
 
 == Other Drivers ==
 
-=== driver name ===
+=== APSW ===
 
-  URL::
-  licence::
-  platforms::
-  Python versions::
+  URL:: http://www.rogerbinns.com/apsw.html
+  licence:: zlib/libpng license
+  platforms:: Windows, POSIX
+  Python versions:: ?
 
 ==== Programming Model ====
+
+APSW is a SQLite 3 wrapper that provides a thin layer over SQLite 3. Although APSW looks vaguely similar to the DBAPI, it is not compliant with that API and instead mirrors the way SQLite 3 works.
 
 ==== Comments ====
 
 == Supported Python Applications ==
 
- * Roundup
- * PyPI
- * Trac
+ * Thuban (GIS application)
+ * Roundup (issue tracker)
+ * PyPI (Python Package Index)
+ * Trac (issue tracker, wiki, Subversion web frontend)
+ * Cloud Wiki (wiki)
+ * Supybot (IRC bot framework)
+ * PyAddbook (Address Book)
 
 == Pros ==
 
@@ -56,4 +63,5 @@ I think SQLite may be a good replacement for gadfly, because:
 
 == Cons ==
 
- * Untyped! (this is also a feature)
+ * SQLite only supports the basic types NULL, INTEGER, FLOAT, TEXT and BLOB
+ * If you want to use other types like DATE and TIME in pysqlite, you need to use its "pysqlite types mode", where things can get a little nastier.
