@@ -9,7 +9,7 @@ import cgi
 s = cgi.escape( """& < >""" )   # s = "&amp; &lt; &gt;"
 }}}
 
-However, it doesn't escape entities beyond {{{&}}}, {{{<}}}, and {{{>}}}.
+However, it doesn't escape characters beyond {{{&}}}, {{{<}}}, and {{{>}}}.
 
 Here's a small snippet that will let you escape those as well:
 
@@ -22,7 +22,8 @@ html_escape_table = {
     ">": "&gt;",
     "<": "&lt;" }
 
-def html_escape( text ):
+def html_escape(text):
+    """Produce entities within text."""
     l=[]
     for c in text:
         l.append( html_escape_table.get(c,c) )
