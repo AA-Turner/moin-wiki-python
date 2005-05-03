@@ -24,23 +24,6 @@ except E1, e:
    ...
 }}} The `except` code would then basically do the equivalent of `if issubclass(arg1, Exception) or isinstance(arg1, Exception): ... else if len(arg1): ...` (excepting, obviously, that this is implemented at a lower level in the C core). --JimD''
 
- * Add a `with` statement: [[#j 10]] {{{
-#!python
-with self:
-    .foo = [1, 2, 3]
-    .bar(4, .foo)
-}}}
-
-  ''(I like this, but is the following too ugly for use until then?
-   {{{
-   #!python
-    _ = self
-    _.foo = [1, 2, 3]
-    _.bar(4, _.foo)
-    }}}
-  ... seems quirky, but it does serve to remove most of the visual cluster of `self.`this and `self.`that which seems to be the primary benefit of the `with` statement. 
-   -- JimD)''
-
  * Remove {{{`x`}}}. [[#a 1]]
    * Instead: use `repr(x)`.
    * Reason: backticks are hard to read in many fonts and can be mangled by typesetting software.
@@ -153,6 +136,12 @@ if expression:
  * Should list comprehensions be equivalent to passing a generator expression to `list()`?
    * Reason: they are essentially the same and it would remove edge-case differences between them.
  * With a new string substitution scheme [[#n 14]], will old-style (`%(var)s`) substitutions be removed?
+ * Should a `with` statement be added? [[#j 10]] [[#s 19]] {{{
+#!python
+with self:
+    .foo = [1, 2, 3]
+    .bar(4, .foo)
+}}}
 
 
 == References ==
@@ -177,3 +166,4 @@ if expression:
  * [[Anchor(p)]] [16] PEP 246 -- Object Adaption: http://www.python.org/peps/pep-0246.html
  * [[Anchor(q)]] [17] Python-Dev -- Decorators: vertical bar syntax: http://mail.python.org/pipermail/python-dev/2004-August/047424.html
  * [[Anchor(r)]] [18] Python-Dev -- anonymous blocks: http://mail.python.org/pipermail/python-dev/2005-April/053060.html
+ * [[Anchor(s)]] [19] PEP 340 -- loose ends: http://mail.python.org/pipermail/python-dev/2005-May/053252.html
