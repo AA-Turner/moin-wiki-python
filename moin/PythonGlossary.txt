@@ -15,7 +15,7 @@ are notified of changes to this page.
 
  * '''byte code''' - The internal representation of a Python program in the interpreter. The byte code is also cached in .pyc and .pyo files so that executing the same file is faster the second time (the step of compilation from source to byte code can be saved).  This "intermediate language" is said to run on a "virtual machine" that calls the subroutines corresponding to each bytecode.
 
- * '''class''' - ???
+ * '''class''' - A template for creating user-defined objects.  Class definitions normally contain method definitions that operate on instances of the class.
 
  * '''coercion''' -  The implicit conversion of an instance of one type to another during an operation which involves two arguments of the same type.  For example, `int(3.15)` converts the floating point number to the integer, 3, but in `3 + 4.5`, each argument is of a different type (one int, one float), and both must be converted to the same type before they can be added or it will raise a TypeError.  Coercion between two operands can be implicitly invoked with the coerce builtin function; thus, `3 + 4.5` is equivalent to `operator.add(*coerce(3, 4.5)`) and results in `operator.add(3.0, 4.5)` which is of course 7.5.  Without coercion, all arguments of even compatible types would have to be normalized to the same value by the programmer, e.g., `float(3) + 4.5` rather than just `3 + 4.5`.
 
@@ -23,7 +23,7 @@ are notified of changes to this page.
 
  * '''conversion''' - The invocation of a well-defined mechanism from of transforming an instance of one type of object to an instance of another; for example, `int('3')` will convert a string ('3') to an int (3).
 
- * '''decorator''' - ???
+ * '''decorator''' - A function that modifies another function or method.  Its return value is typically a callable object, possibly the original function, but most often another function that modifies the original function's behavior in some fashion.
 
  * '''descriptor''' - Any object that defines the methods __get__(), __set__(), or __delete__().  When a class attribute is a descriptor, its special binding behavior is triggered upon attribute lookup.  Normally, writing `a.b` looks up the object `b` in the class dictionary for `a`, but if `b` is a descriptor, the defined method gets called.  Understanding descriptors is a key to a deep understanding of Python because they are the basis for many features including functions, methods,properties, class methods, static methods, and reference to super classes.
 
