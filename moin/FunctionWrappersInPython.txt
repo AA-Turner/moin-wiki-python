@@ -10,7 +10,7 @@ but otherwise it should be ''fully'' compatible with the wrapped function, so it
 
 As of Python 2.1 and the introduction of nested scopes, wrapping a function is easy:
 
-{{{#python
+{{{#!python
 def wrap(func, pre, post):
    def call(*args, **kwargs):
       pre(func, *args, **kwargs)
@@ -22,7 +22,7 @@ def wrap(func, pre, post):
 
 Now, let's wrap something up:
 
-{{{#python
+{{{#!python
 def trace_in(func, *args, **kwargs):
    print "Entering function",  func.__name__
 
@@ -35,7 +35,7 @@ def calc(x, y):
 
 The wrapping effect is:
 
-{{{
+{{{#!python
 >>> f = wrap(calc, trace_in, trace_out)
 >>> print calc(1, 2)
 3
