@@ -344,6 +344,13 @@ one of the first two approaches was faster. It seems that all three
 approaches now exhibit similar performance (within about 10% of each
 other), more or less independent of the properties of the list of words.
 
+Also, if the value stored in the dictionary is an object or a (mutable) list, 
+you could also use the {{{dict.setdefault}}} method, e.g.
+{{{
+...
+    wdict.setdefault(key, []).append(new_element)
+}}}
+This avoids having to lookup the key twice.
 
 [[Anchor(import)]]
 == Import Statement Overhead ==
