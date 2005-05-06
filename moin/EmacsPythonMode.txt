@@ -1,38 +1,5 @@
-Python Mode is a major editing mode for the EmacsEditor.
+Python Mode is a major editing mode for the EmacsEditor.  It is part of the source distribution of Python (as the file Misc/python-mode.el).
+
+The EmacsWiki page for EmacsWiki:PythonMode has information on how to install, configure and add shortcuts keys to python-mode.
 
 The [http://www.python.org/emacs/python-mode/python-mode.el current release] is version 4.6 (~123KB). The list of changes since the last released version [http://www.python.org/emacs/python-mode/changes-406.html are given in detail], as well as some [http://www.python.org/emacs/python-mode/installation.html installation notes.] If you're having problems with font-lock in python-mode, read the [http://www.python.org/emacs/python-mode/faq.html FAQ.]
-
-Python Mode is part of the source distribution of Python (as the file Misc/python-mode.el) and a more recent version than the above release may be available through CVS.
-
-See EmacsWiki:PythonMode for information on how to install, configure and add shortcuts keys to python-mode.
-
-== Python Mode FAQ ==
-
-=== How can I run Uncomment Region? ===
-
-The handy Uncomment Region command does not have a shortcut key. Actually, you can not run it from the command line at all! If you look into the python-mode description (C-h m), you will find that there is no such command.  
-
-There are (at least) three solutions:
-
- 1. Prefix the Comment Region command with C-u, like this: C-u C-c #
- 2. If you really want to save this extra C-u and have a shortcut like C-c 3, put this elisp code into your .emacs file:
-
-{{{
-;; The missing key shortcuts for Uncomment Region
-  (add-hook 'python-mode-hook (lambda () 
-    (define-key py-mode-map "\C-c3" 
-      (lambda (beg end) (interactive "r")
-        (py-comment-region beg end '(4))))))
-}}}
- 
- III. Rectangles.  Place point and mark at opposing corners of a comment region.  C-x r d   will kill the offending # signs.  C-x r o   can be used against a region to usher code back into ranks.  C-h a "rectangle" and [http://www.emacswiki.org] are your friends.
-
-----
-
-''Let's just delete this page, and have a big pointer from here to [http://www.emacswiki.org/cgi-bin/wiki/PythonMode EmacsWiki:PythonMode].''
-
-..no?
-
-(I mean, since we're copying and pasting from there ''anyways.'')
-
--- LionKimbro [[DateTime(2005-02-26T01:46:43Z)]]
