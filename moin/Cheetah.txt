@@ -8,6 +8,18 @@ A templating framework for WebProgramming.
    platforms::
    Python versions::
 
+=== Sample ===
+
+{{{
+<table>
+#for $client in $clients
+<tr>
+<td>$client.surname, $client.firstname</td>
+<td><a href="mailto:$client.email">$client.email</a></td>
+</tr>
+#end for
+</table>
+}}}
 === Deployment Platforms ===
 
 Templates are compiled to Python modules, with a Pythonic interface.  The generated template module can also be used as a stand-alone program (which prints the text of the generated page), useful for instance to create a static HTML site.  Templates are true Python objects, supporting inheritence and user-defined methods.
