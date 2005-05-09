@@ -57,23 +57,22 @@ I've been googling for some time now, and ''still'' have yet to find a ''working
 
 (The example below has been updated to work -- Steven Spencer [[DateTime(2005-04-14T13:19:00Z)]])
 
-Here's my own, non-functioning, effort:
+(I've replaced it with one that works. -- Asgeir S. Nilsen
+[[DateTime(2005-05-09T19:25:00Z)]])
+
 {{{
 #!python
 import socket
 import struct
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-#sock.bind(('127.0.0.1', 1000))
-sock.bind(('', 1000))
-#grpaddr = 0
-#for byte in "239.192.0.100".split("."):
-#    grpaddr = (grpaddr << 8) | int(byte)
-#mreq = struct.pack('ll', socket.htonl(grpaddr),
-#                   socket.htonl(socket.INADDR_ANY))
-mreq = struct.pack("sl", socket.inet_aton("239.192.0.100"), socket.INADDR_ANY)
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+sock.bind(('', 4242))
+mreq = struct.pack("sl", socket.inet_aton("224.51.105.104"), socket.INADDR_ANY)
 sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
-print sock.recvfrom(100)
+
+while True:
+  print sock.recv(10240)
 }}}
 
 The mreq packing is based on [http://www.senux.com/linux/network/multicast/ some code that I found,] ''that does not work.'' On my computer, at least.
@@ -87,6 +86,7 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
 sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
 sock.sendto("robot", ("239.192.0.100", 1000))
 }}}
+(You might want to reconsider the IP_MULTICAST_TTL setting here -- the recommended value for local-network multicasts is < 32, whilst a value > 32 indicates multicasts which should traverse onto the Internet -- Asgeir S. Nilsen)
 
 At this point, I'm beginning to think: "Python multicast simply ''does not work.''"
 
@@ -95,6 +95,8 @@ At this point, I'm beginning to think: "Python multicast simply ''does not work.
   ''Hm, that's interesting. No, I'm not running on Windows; I'm running on FC3. That said, I hadn't considered the machine as a possible problem. What I'll do is this: I'll run this on my ''home'' FC3 computer, and on my ''home'' Redhat 9 computer, and see if I can get it to work on one of them.'' -- LionKimbro [[DateTime(2005-01-20T02:07:18Z)]]
 
   ''The new version still doesn't work for me. I mean, it ''does'' work for local traffic: the host talking with itself. But as soon as I get to another link-local computer, and do the same over again, it doesn't work. I've replaced 127.0.0.1 with the actual IP address of the computer, and I've shut down the firewall (service iptables stop). No dice. This is all on my FC3 host, again.'' -- LionKimbro [[DateTime(2005-04-14T17:27:42Z)]]
+
+  ''When implementing multicast, it's important to understand the requirements of [ftp://ftp.rfc-editor.org/in-notes/rfc3376.txt IGMP], especially when working in a switched network.  IGMP describes how routers should exchange membership information, but does not describe how layer 2 switches should handle this.  Many switches have a feature called IGMP snooping, where the switch snoops for IGMP traffic, thereby gaining knowledge of which switch ports belong to a multicast group.  Cheap switches typically either does not handle this or handles it wrongly.'' -- Asgeir S. Nilsen [[DateTime(2005-05-09T19:39:00Z)]]
 
 
 It's too bad we don't have anything as simple as this:
