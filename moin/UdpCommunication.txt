@@ -121,3 +121,8 @@ UDP.send("Hello, world!", "239.192.0.100", 1000)
 ...or something like that.
 
 -- LionKimbro [[DateTime(2005-01-19T19:54:19Z)]]
+
+
+I was able to get the above example to work fine on a linux platform, with one small change.  I had to put a "4sl" in the pack statement for creating mreq.  It seems as if when I didn't have a 4, the pack statement was just using the first octet (somehow dropping the other octets), so I could only create the multi-cast "listener" on a 234.0.0.0 ip.  After some debugging, I put the 4 in front of the "s", which forced it to get all 4 octets from the inet_aton, and everything worked fine.  Hope this helps.
+
+-- JIRWIN
