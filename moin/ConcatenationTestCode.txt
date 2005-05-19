@@ -1,0 +1,29 @@
+
+Counter to the performance guide on python 2.4 the following string concatenation is almost twice as fast:
+{{{
+#!python
+# Code is Public Domain.
+from time import time
+t = time()
+
+s = 'lksdajflakjdsflku09uweoir'
+for x in range(40):
+    s += s[len(s)/2:]
+    
+print 'duration:', time()-t
+}}}
+
+as:
+
+{{{
+#!python
+# Code is Public Domain.
+from time import time
+t = time()
+
+s = 'lksdajflakjdsflku09uweoir'
+for x in range(40):
+    s = "".join((s, s[len(s)/2:]))
+    
+print 'duration:', time()-t
+}}}
