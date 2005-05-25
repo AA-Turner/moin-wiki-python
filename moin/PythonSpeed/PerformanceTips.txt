@@ -435,6 +435,30 @@ Here's the proof from {{{timeit}}}:
 The above example is obviously a bit contrived, but the general
 principle holds.
 
+Note that putting an import in a function can speed up the initial loading
+of the module, especially if the imported module might not be required.  This
+is generally a case of a "lazy" optimization -- avoiding work (importing a module,
+which can be very expensive) until you are sure it is required.
+
+This is only a significant saving in cases where the module wouldn't have been imported
+at all (from any module) -- if the module is already loaded (as will be the case for many standard
+modules, like {{{string}}} or {{{re}}}), avoiding an import doesn't save you anything.  
+To see what modules are loaded in the system look in {{{sys.modules}}}.
+
+A good way to do lazy imports is:
+
+{{{
+email = None
+
+def parse_email():
+    global email
+    if email is None:
+        import email
+    ...
+}}}
+
+This way the {{{email}}} module will only be imported once, on the first
+invocation of {{{parse_email()}}}.
 
 [[Anchor(aggregate)]]
 == Data Aggregation ==
