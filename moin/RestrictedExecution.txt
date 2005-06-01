@@ -1,9 +1,11 @@
 Restricted execution was at one time implemented in the Python [http://www.python.org/doc/1.5.2p2/lib/restricted.html rexec] module.  This module wasn't secure, so it was removed.  It would be nice to have it back, in some form.  
 
-Obviously this is a hard task, so a more intermediate task might be preferred.  Note that Zope 2 includes a kind of restricted execution environment with a very different design; extraction of that would be one technique to achieve restricted execution.
+Obviously this is a hard task, so it should be approached in such a way that incremental successes can be achieved.
 
 === Possible Techniques ===
 
 One of the toughest things to deal with is probably going to be that if you have a reference to one object in Python, you can acquire a reference to every object it references, they reference, etc. So it becomes very hard to be sure "If I let the restricted code have this object, what else does it have in turn?". This could be allieviated with a class that can create versions of objects which are immutable, have unreadable attributes (or maybe you can read the attribute but not its attributes?), etc.
 
 This would be a lot like the Bastion module, but much more flexible.
+
+Zope 2 includes a kind of restricted execution environment with a similar design, but with explicit annotation (unannotated objects are always restricted) and everything gets wrapped with security proxies.  Extraction of that system would be one technique to achieve restricted execution.
