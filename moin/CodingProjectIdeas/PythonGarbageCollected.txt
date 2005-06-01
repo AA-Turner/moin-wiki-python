@@ -1,2 +1,5 @@
 It would be nice to see the reference implementation of Python dump reference counting as a memory management scheme altogether and only use garbage collection.  The should improve runtime performance in both CPU and locality of reference.
 
+---
+
+I actually got a semi-working python running with boehm GC, but did not complete the conversion, and have not yet posted it anywhere. If you're interested, let me know, and I can resurrect and post the patch-so-far on my website. However, it's unlikely to actually run faster, because you can't use tricks like keeping free lists, and the Boehm GC is conservative, so it can't move objects, so allocating memory is just as expensive as usual, only we'd be doing way more of it. With CPython I believe it is essentially impossible to use a copying GC because of its heavy integration with and dependance upon C code, so unless you're planning on making something other than CPython the reference implementation, this is very unlikely to be successful. --[http://fuhm.net James Y Knight]
