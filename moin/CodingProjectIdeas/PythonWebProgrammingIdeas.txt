@@ -16,6 +16,7 @@ See also ../WebServiceStack
  * WSGI scheme for Python's urllib(2), so WSGI applications can be accessed like remote sites.
  * A library/framework/WSGI application for a WebDAV server.
  * Code that records and plays back WSGI interactions, so you can record a test session and replay it against an application.
+ * A WSGI application for progress-tracking uploads.  Most frameworks don't give control to user code until after the entire request has been parsed; to track progress in uploading you have to have a special request parser that can write progress reports while it's processing the upload.
 
 == Spyce ==
 [http://spyce.sourceforge.net Spyce] is a web application environment similar to [http://asp.net ASP.NET] or [http://jakarta.apache.org/tapestry/ Tapestry], in that all these frameworks allow you to create reusable components containing model, view, and controller.  Spyce provides the convenience of [http://spyce.sourceforge.net/docs/doc-lang_handlers.html active handlers] without imposing a leaky event model on your application.  Spyce could use help with
@@ -24,10 +25,20 @@ See also ../WebServiceStack
  * Validation tags, similar to [http://www.w3schools.com/aspnet/aspnet_refvalidationcontrols.asp ASP.NET's]
  * More demos and/or tutorials
 
+== Paste ==
+
+Anything related to WSGI will benefit [http://pythonpaste.org Paste], but there are some tasks that would apply specifically to Paste:
+
+ * Logging support.  The standard logging module provides a kind of framework, but it would be very useful to make that configurable through Paste, and make it easy for applications to use.  Also, lots of stuff internal to Paste should be converted to using logging instead of print statements.
+
 == Other ideas ==
+
  * Fixing/improving the Python-XPCOM bindings for Mozilla (that allow you to script Mozilla in Python).  The code is there, but maybe needs some loving.
  * A generic Python library for doing things with Google Maps. (For the record, there's the beginning of libgmaps.py here: [http://cvs.sourceforge.net/viewcvs.py/libgmail/gmaps/].) -- turns out [http://groups-beta.google.com/group/summer-discuss/browse_thread/thread/21789da7c473e478 Google can't sponsor this one] 
  * A system to comment on pages; specifically one that is applicable to the Python standard reference.  Simple commenting (PHP.net-style) would be a start; annotation would be even better.  Another Ajax opportunity; though of course the server-side implementation should be in Python.
+ * Help make [http://nevow.com Nevow's] stan a fully separate package, documented.  Stan is a DOM-like representation of markup, and could potentially be used by many projects outside of Nevow.
+ * Separate out Nevow's LivePage code.
+ * Add client-side Javascript validation to [http://formencode.org FormEncode].
 
 == Advisors ==
 
