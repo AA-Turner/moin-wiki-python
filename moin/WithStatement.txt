@@ -33,6 +33,15 @@ A few immediate comments:
 
  1. Is g.throw(...) supposed to let you raise exceptions in other threads (by having g catch the exception you throw it, then raise its own exception for its caller)?  The PEP should be clear about this.  It would be great if the answer is yes and if that's the case, objects like queues and sockets should be turned into generators to permit cross-thread signalling using generator exceptions.  But I had the impression that this would be difficult in CPython.
 
+     This is not the intention at all.  I don't see how it could work
+     (you'd need some way to get the other thread's attention).  ["GvR"]
+
  1. I thought some of the original motivation of PEP 310 was to lessen the pain of giving up the idiom of expecting files to be closed when their last reference goes away.  So if 343 no longer guarantees that the exit method will be run when the "with" statement finishes, it's lost some of its main motivating functionality.  I  wonder if having a more serious treatment of block scope, so that destructors are guaranteed to be called when a scope exits (by falling through or via an exception), would also take care of this issue.
+
+    Where did you read that the exit method isn't guaranteed to be
+    called upon exit from the with statement?  The translation explicitly
+    calls it!  Read again.  
+    You may be confused with g.close().  That's only relevant when you
+    use a for-loop without an explicit with-statement. ["GvR"]
 
 There was some good discussion on clpy a while ago that I'll try to locate, and add some more comments during the weekend.   --Paul Rubin (phr)  
