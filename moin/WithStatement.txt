@@ -25,3 +25,14 @@ next_throw() is easier to grep with next(). ''Niki Spahiev''
 ----
 
 I've tuned out the recent conversation on these PEPs quite religiously, because I never thought they would result in anything even vaguely useful.  Fortunately, I was dead wrong.  PEP-343 is simple, elegant, and feels very Pythonic to me.  I need to catch up now and think through the implications and corner-cases, but I can give a provisional +1 to the concept.  Thanks to all those that didn't tune out and worked to get us to this point.  -- ''Kevin Jacobs''
+
+
+----
+
+A few immediate comments:  
+
+ 1. Is g.throw(...) supposed to let you raise exceptions in other threads (by having g catch the exception you throw it, then raise its own exception for its caller)?  The PEP should be clear about this.  It would be great if the answer is yes and if that's the case, objects like queues and sockets should be turned into generators to permit cross-thread signalling using generator exceptions.  But I had the impression that this would be difficult in CPython.
+
+ 1. I thought some of the original motivation of PEP 310 was to lessen the pain of giving up the idiom of expecting files to be closed when their last reference goes away.  So if 343 no longer guarantees that the exit method will be run when the "with" statement finishes, it's lost some of its main motivating functionality.  I  wonder if having a more serious treatment of block scope, so that destructors are guaranteed to be called when a scope exits (by falling through or via an exception), would also take care of this issue.
+
+There was some good discussion on clpy a while ago that I'll try to locate, and add some more comments during the weekend.   --Paul Rubin (phr)  
