@@ -100,3 +100,12 @@ Thomas Leonard
     confusing to the reader which applies to which -- does the except clause
     catch exceptions in the __exit__ method, or does the __exit__ method see
     exceptions raised in the except clause?  ["GvR"]
+
+
+----
+
+I can't tell from the PEP whether or not it is recommended that objects themselves expose {{{__enter__}}} and {{{__exit__}}} (like locks and files).  It mentions the possability, but all the examples do otherwise.  Greg Ewing was the only person I remember disliking the idea, but then changed his mind (to a tepid +0.6).  
+
+I do understand the reluctance to pick the one-and-only way an object can be used in a {{{with}}} statement, but I suspect that most classes are factored well enough that the default {{{with}}} behavior is obvious (and more obvious than using a helper function like {{{opening}}} or {{{locking}}}).  And any object that may have more than one {{{with}}} behavior can have 0 or 1 inherent behaviors and 1 or more helpers, but I seriously doubt there would be any cases like that in the standard library.
+
+-- BenjiYork
