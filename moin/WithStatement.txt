@@ -113,3 +113,11 @@ I do understand the reluctance to pick the one-and-only way an object can be use
     like opening() and locking() first, and add {{{__enter__}}} and {{{__exit__}}} methods to some objects later.  ["GvR"]
 
 ----
+
+Personally I find the half-hearted approach to adding features rather frustrating.  I liked new style classes a lot, and I like classmethod and company.  But it was frustrating that decorator syntax didn't come along until a couple releases after we needed them (putting aside how absurdly difficult a decision that turned out to be).  I think it led to a very gradual and vague adoption of new class functionality.  And maybe that's not bad, but as someone who likes the features it was frustrating.  At the time, I felt like I was being punished for using new features because the syntax wasn't keeping up with other parts of the language.  And the punishment continues, because I don't feel like I can use decorators for another year because I still have to support Python 2.3.
+
+It also means much more tracking of versions.  Now will I have to know that, in Python 2.4 I use {{{try:finally:}}}, in Python 2.5 {{{with opening()}}}, in Python 2.6 {{{with open()}}}, etc.?  Can't we have a little faith in our imaginations and add a few {{{__enter__}}} and {{{__exit__}}} methods that seem so obviously useful, like to files and threading.Lock objects?
+
+Adding features is always a problem, but adding them gradually just makes it that much worse.  I think the reception of this feature is positive enough (+1 from me, BTW) that it shows people understand why it matters and understand where we should start using it right away.  -- IanBicking
+
+----
