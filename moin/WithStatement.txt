@@ -51,6 +51,8 @@ A few immediate comments:
 
                 Well, throw() didn't exist when generators were invented, so throw hasn't always been like anything ;-).  If throw is supposed to resume execution in the throwing thread rather than the thread where the generator was last suspended, the PEP should clearly specify that.  --phr 
 
+                    It already says that throw() is just like next().  ["GvR"]
+
  1. I thought some of the original motivation of PEP 310 was to lessen the pain of giving up the idiom of expecting files to be closed when their last reference goes away.  So if 343 no longer guarantees that the exit method will be run when the "with" statement finishes, it's lost some of its main motivating functionality.  I  wonder if having a more serious treatment of block scope, so that destructors are guaranteed to be called when a scope exits (by falling through or via an exception), would also take care of this issue.
 
     Where did you read that the {{{__exit__}}} method isn't guaranteed to be
