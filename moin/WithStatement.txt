@@ -148,13 +148,37 @@ Is the door open for an optional-indentation syntax (not necessarily now)?  It h
 
 Nicolas Fleury
 
+    My first reaction is that your proposal is not very Pythonic in nature.
+    The "drop the colon" version is different from any Python syntax so far;
+    everything else either always has a colon or never has one.  This makes it easy
+    to spot mistakes where a colon is forgotten (or accidentally added).
+    If you frequently find yourself allocating multiple resources
+    (which I kind of doubt -- Python is not C++ and what you see there doesn't
+    necessarily translate) I think a better solution is the proposal that looks like
+        {{{
+        with combined(EXPR1, EXPR2, EXPR3, ...) as VAR1, VAR2, VAR3, ...:
+            BLOCK
+        }}}
+    We can talk later (post-PEP-343) about making this implicit when writing
+        {{{
+        with EXPR1, EXPR2, EXPR3, ... as VAR1, VAR2, VAR3, ...:
+            BLOCK
+        }}}
+    ["GvR"]
+
 ----
 
 Will 'as' be a true keyword or will it continue to be
 the semi-keyword it is now, where "as" is allowed as a
 variable name and in the import statement? -- Andrew Dalke
 
+    A real keyword.  (The PEP says this.)  ["GvR"]
+
 ----
+
+(This comment is rather long; please move to a separate page.
+I think you should bring this up in the OpenGl community;
+if the with-statement supports the usage I don't see why not. ["GvR"])
 
 OpenGL programmers have complained about using Python
 because the code indentation doesn't follow the display
@@ -216,7 +240,7 @@ programmer's intent clearer and prevents problems balancing
 glBegin and glEnd - even in the face of code errors in
 the actual code block! -- Andrew Dalke
 
----
+----
 
 Brought up on c.l.py, is there need for a syntax like
 
@@ -257,13 +281,16 @@ We have no idea if this will occur often enough to be
 useful.
 
 Ahh, Andrew Dalke again here.  Timothy Delaney responded
-to this on c.l.py
-{{{
- It wasn't explicitly rejected, but the
-feeling seemed to be that it was an unnecessary complication as far as
-PEP 343 is concerned. There's nothing stopping another PEP proposing
-this as an extension to PEP 343, and there's nothing stopping that being
-in Python 2.5 if it's accepted.
-}}}
+to this on c.l.py:
 
----
+   It wasn't explicitly rejected, but the
+   feeling seemed to be that it was an unnecessary complication as far as
+   PEP 343 is concerned. There's nothing stopping another PEP proposing
+   this as an extension to PEP 343, and there's nothing stopping that being
+   in Python 2.5 if it's accepted.
+
+
+      That's my feeling too -- let's explore one idea at a time
+      (despite IanBicking's complaint about fractional progress).  ["GvR"]
+
+----
