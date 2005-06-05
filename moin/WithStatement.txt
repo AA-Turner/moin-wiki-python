@@ -130,4 +130,12 @@ Adding features is always a problem, but adding them gradually just makes it tha
 
     ["GvR"]
 
+        So you don't think we should detect {{{with open(X)}}} as a special language construct?!?  Sorry, just trying to think about how Perl would approach this... ;)
+
+        I'm certainly not set on any particular example, I haven't thought it through too much.  I think I understand why it's wrong for files -- release implies acquisition, and files can't be acquired in a with statement (they were already acquired when they were opened).  Lock objects can be acquired.  The equivalent for files might be if there was a path object; acquiring the path object could mean opening it.  Wait... no, that's not right.  Even putting aside the different ways you can acquire a path (reading and writing), you don't acquire it globally.  I guess it makes more sense to me why, for most cases, the objects we have now won't need to grow these methods -- instead we'll be adding methods and functions that will build the new kinds of objects that have {{{__enter__}}} and {{{__exit__}}} functions.
+
+        Though it's hard.  How do you explain the difference between {{{open()}}} and {{{opening()}}}?  It seems like it will be a strange and seemingly arbitrary idiomatic difference if you don't understand the underlying implementation -- and I think the underlying implementation of {{{with}}} (with all the special methods) is not something you'd want to expose to a beginner, though obviously you do want to expose file objects.  I don't have any constructive suggestion there, though.  Just *please* lets make {{{opening}}} a builtin!  We shouldn't pay too much attention to the irrational fear of adding new builtins that some people possess.
+
+        But I digress.  It seems like 2.5 (where I assume this will be added) isn't just around the corner, and there's time enough to collect use cases that can go into the standard library along with the new language feature.  This will also give people who weren't tracking development a chance to see how this stuff should be used (assuming the additions are implemented wisely).  -- IanBicking
+
 ----
