@@ -1,0 +1,123 @@
+(I think you should bring this up in the OpenGl community;
+if the with-statement supports the usage I don't see why not. ["GvR"])
+
+OpenGL programmers have complained about using Python
+because the code indentation doesn't follow the display
+tree.  For an example pulled from one of my (Andrew Dalke)
+projects
+{{{
+        glBegin(GL_QUAD_STRIP)
+        glColor3f(1.0,1.0,1.0) #corner 1
+        glNormal3f(0.57735027, 0.57735027, 0.57735027)
+        glVertex3f(0.5, 0.5, 0.5)
+        glColor3f(1.0,0.0,1.0) #corner 2
+        glNormal3f(0.57735027, -0.57735027, 0.57735027)
+        glVertex3f(0.5, -0.5, 0.5)
+        ...
+        glEnd()
+}}}
+Some people write this as some variant of
+{{{
+        glBegin(GL_QUAD_STRIP)
+        if 1:
+          glColor3f(1.0,1.0,1.0) #corner 1
+          glNormal3f(0.57735027, 0.57735027, 0.57735027)
+          glVertex3f(0.5, 0.5, 0.5)
+          glColor3f(1.0,0.0,1.0) #corner 2
+          glNormal3f(0.57735027, -0.57735027, 0.57735027)
+          glVertex3f(0.5, -0.5, 0.5)
+          ...
+        glEnd()
+}}}
+
+and sometimes using try/finally so that errors don't cause
+the gl state to become corrupted.
+
+Would an appropriate use of this proposal be to allow
+{{{
+  with QUAD_STRIP:
+      glColor3f(1.0,1.0,1.0) #corner 1
+      glNormal3f(0.57735027, 0.57735027, 0.57735027)
+      glVertex3f(0.5, 0.5, 0.5)
+      glColor3f(1.0,0.0,1.0) #corner 2
+      glNormal3f(0.57735027, -0.57735027, 0.57735027)
+      glVertex3f(0.5, -0.5, 0.5)
+      ....
+}}}
+where there are a bunch of small classes for each of the
+possible glBegins, such as
+{{{
+class QUAD_STRIP:
+  @staticmethod
+  def __enter__():
+    glBegin(GL_QUAD_STRIP)
+  @staticmethod
+  def __exit__(*args):
+    glEnd()
+}}}
+
+If so, I rather like that ability as it makes the graphics
+programmer's intent clearer and prevents problems balancing
+glBegin and glEnd - even in the face of code errors in
+the actual code block! -- Andrew Dalke
+
+----
+
+Brought up on c.l.py, is there need for a syntax like
+
+{{{
+  with EXPR1 [as VAR1][, EXPR2 [as VAR2] [, ...]]:
+    CODE
+}}}
+
+which is exactly equivalent to
+
+{{{
+  with EXPR1 [as VAR1]:
+    with EXPR2 [as VAR2]:
+      ...
+        CODE
+}}}
+
+The idea was that if multiple with statements were common
+then this would reduce the visual depth of indentation.
+For example,
+
+{{{
+  with db1.lock():
+    with db2.lock() as L2:
+      print "db2 lock expires", L2.exiry()
+      transfer(db1, db2)
+}}}
+
+could be turned into
+
+{{{
+  with db1.lock(), db2.lock() as L2:
+    print "db2 lock expires", L2.exiry()
+        transfer(db1, db2)
+}}}
+
+We have no idea if this will occur often enough to be
+useful.
+
+Ahh, Andrew Dalke again here.  Timothy Delaney responded
+to this on c.l.py:
+
+   "It wasn't explicitly rejected, but the
+   feeling seemed to be that it was an unnecessary complication as far as
+   PEP 343 is concerned. There's nothing stopping another PEP proposing
+   this as an extension to PEP 343, and there's nothing stopping that being
+   in Python 2.5 if it's accepted."
+
+
+      That's my feeling too -- let's explore one idea at a time
+      (despite IanBicking's complaint about fractional progress).
+      One comment: VAR, if present, should have as many pieces
+      as there are EXPRs on the left; the above example would have
+      to be {{{as dummyl, L2}}}. ["GvR"]
+
+         Isn't it better to mimic the import-as syntax?  If not,
+         we would end up with things like 
+         {{{locking(lock), opening(file) as _, file}}}.
+         Nicolas Fleury
