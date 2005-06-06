@@ -18,6 +18,25 @@ The optional extension mentioned would not need to lead to mistakes if the {{{__
 
   Please explain.  ["GvR"]
 
+
+    The example shows {{{
+f = open(filename)
+with f:
+    BLOCK1
+with f:
+    BLOCK2}}}
+    which fails due to the proposed {{{__exit__}}} method of file objects.
+    Now if {{{
+with EXPR:
+    BLOCK1}}}
+    would result in an {{{__exit__}}} call that can be distinguished from
+    the call to {{{__exit__}}} by {{{
+with EXPR as VAR:
+    BLOCK1}}}
+    then {{{__exit__}}} could close the file in the latter case, while
+    leaving it open in the former. A simple boolean added to the call
+    might do the trick. -- ''Eric Nieuwland''
+
 ----
 
 next_throw() is easier to grep with next(). ''Niki Spahiev''
