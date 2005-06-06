@@ -1,6 +1,8 @@
 (I think you should bring this up in the OpenGl community;
 if the with-statement supports the usage I don't see why not. ["GvR"])
 
+(Doing so.  -- Andrew Dalke)
+
 OpenGL programmers have complained about using Python
 because the code indentation doesn't follow the display
 tree.  For an example pulled from one of my (Andrew Dalke)
@@ -62,3 +64,66 @@ glBegin and glEnd - even in the face of code errors in
 the actual code block! -- Andrew Dalke
 
 ----
+
+I'm (Andrew Dalke) often one to resist change to Python.
+The WithStatement is a counter-example.  I really like how
+it cleans up some OpenGL programming.  Consider this example
+from OpenGLContext's indexlineset.py
+
+{{{
+           dl = displaylist.DisplayList()
+           ...
+           # compile the color-friendly ILS
+           dl.start()
+           try:
+               glEnable( GL_COLOR_MATERIAL )
+               for index in range(len(indices)):
+                   polyline = indices[index]
+                   color = colorIndices[index]
+                   if type(color) == int:
+                       glColor3d( *colors[color] )
+                       glBegin( GL_LINE_STRIP )
+                       try:
+                           for i in polyline:
+                               glVertex3f(*points[i])
+                       finally:
+                           glEnd()
+                    else:
+                       glBegin( GL_LINE_STRIP )
+                       try:
+                           for i,c in map(None, polyline, color):
+                               glColor3d( *colors[c] )
+                               glVertex3f(*points[i])
+                       finally:
+                            glEnd()
+               glDisable( GL_COLOR_MATERIAL )
+           finally:
+               dl.end()
+}}}
+
+Assuming a few minor helper classes and a couple of
+new {{{__enter__/__exit__}}} methods and it can be rewritten
+using 'with' statements like this:
+
+{{{
+           dl = displaylist.DisplayList()
+           ...
+           with dl:
+               with GLEnable( GL_COLOR_MATERIAL ):
+                   for index in range(len(indices)):
+                       polyline = indices[index]
+                       color = colorIndices[index]
+                       if type(color) == int:
+                           glColor3d( *colors[color] )
+                       with GLGeometry( GL_LINE_STRIP ):
+                           for i in polyline:
+                               glVertex3f(*points[i])
+                    else:
+                       with GLBegin( GL_LINE_STRIP ):
+                           for i,c in map(None, polyline, color):
+                               glColor3d( *colors[c] )
+                               glVertex3f(*points[i])
+}}}
+
+Shorter, cleaner, less error-prone, easier to read and
+maintain.  +1 from me! -- Andrew Dalke
