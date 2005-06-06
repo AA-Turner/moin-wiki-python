@@ -107,7 +107,7 @@ Thomas Leonard
 
 I can't tell from the PEP whether or not it is recommended that objects themselves expose {{{__enter__}}} and {{{__exit__}}} (like locks and files).  It mentions the possability, but all the examples do otherwise.  Greg Ewing was the only person I remember disliking the idea, but then changed his mind (to a tepid +0.6).  
 
-I do understand the reluctance to pick the one-and-only way an object can be used in a {{{with}}} statement, but I suspect that most classes are factored well enough that the default {{{with}}} behavior is obvious (and more obvious than using a helper function like {{{opening}}} or {{{locking}}}).  And any object that may have more than one {{{with}}} behavior can have 0 or 1 inherent behaviors and 1 or more helpers, but I seriously doubt there would be any cases like that in the standard library.
+I do understand the reluctance to pick the one-and-only way an object can be used in a {{{with}}} statement, but I suspect that most classes are factored well enough that the default {{{with}}} behavior is obvious (and more obvious than using a helper function like {{{opening}}} or {{{locking}}}).  And any object that may have  more than one {{{with}}} behavior can have 0 or 1 inherent behaviors and 1 or more helpers, but I seriously doubt there would be any cases like that in the standard library.
 
 -- BenjiYork
 
@@ -174,11 +174,22 @@ variable name and in the import statement? -- Andrew Dalke
 
     A real keyword.  (The PEP says this.)  ["GvR"]
 
+        I read that in the PEP but I wondered if the logic from PEP 221
+        ("Import As") to allow 'import ... as ...' would apply here
+        as well, to allow old code to still run.  For example, code
+        that uses "as" already (pehaps to store the number of 'a's in
+        a string) will break.  Looking at 221 again says it works only
+        because the terms in an import statement are not expressions,
+        but they are expressions here.  Hence there's no way to allow
+        this PEP and have 'as' as a variable.  Understood now. -- Andrew Dalke
 ----
 
 (This comment is rather long; please move to a separate page.
 I think you should bring this up in the OpenGl community;
 if the with-statement supports the usage I don't see why not. ["GvR"])
+
+(In theory - not really a Wiki user - this should work.  WithStatementAndOpenGL.
+If so, I'll reedit.)
 
 OpenGL programmers have complained about using Python
 because the code indentation doesn't follow the display
