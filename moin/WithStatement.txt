@@ -286,3 +286,11 @@ to this on c.l.py:
          Nicolas Fleury
 
             Tuple-unpacking can occur, so {{{with foo() as a, b}}} will unpack into two variables; if you allow "EXPR1 as VAR, EXPR2 as VAR" then this wouldn't be possible without some extra parens (e.g., {{{with foo() as (a, b)}}}) -- IanBicking
+
+----
+
+Looks like Guido has already found the WMD (=most controversial propsal of the year) to discuss at PyCon 2006.  How will this be explained to the rank-and-file Pythoneers who don't have a math degree and already have trouble grokking decorators with arguments?  The only advantage to us peons seems to be opening(), locking() and synchronize() -- not insignificant, but do they justify major surgery to/abuse of generators,  an unexpected meaning for 'with', and significant code bloat and complex exception-handling rules?  Are exceptions in generators so broken they require emergency treatment?  Not knocking this entirely -- the BDFL has always been proven wise (except when he rejected the ternary operator :) -- but it does give some of us worrying visions of Python turning into the huge kludgey mess it has so far avoided.
+
+The PEP and discussion starts with the syntax and delves mostly into borderline cases, with only passing references to the motivations behind this change.  Perhaps somebody knowledgeable could write an intro to the proposal and link to it in the PEP, something that starts with the users' needs and how widespread they are, then shows how each change meets those needs, starting with a normal @locking in Python 4.0 and ending with a with+generator+throw example.
+
+Generators are the most popular addition to Python since 1.5.2.  Most people think of them as a "lazy sequence".  [temprary save, still writing...]
