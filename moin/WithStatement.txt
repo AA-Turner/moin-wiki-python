@@ -49,16 +49,20 @@ with EXPR as VAR:
                 the wiki -- it only serves to confuse people. ["GvR"]
 
 The solution to this problem recommended in PEP 346 is to throw an explicit exception in {{{__enter__}}} when a non-reusable template is reused. PEP 343 uses this approach for the generator-based templates, and I would expect an {{{__enter__}}} method on file objects to do the same thing. -- ''Nick Coghlan''
+
 ----
 
 next_throw() is easier to grep with next(). ''Niki Spahiev''
 
+    Given that 99% of uses of both are implicit, I don't see how that matters. ["GvR"]
+
 I don't want to teach beginners why python uses 'raise' sometimes and 'throw' other times. I predict: they're going to be coming from other languages, they're going to accidentally use 'throw' as the statement, and they're going to get mad at "all of python's weird quirks, like how it has both raise and throw". ''Drew Perttula''
+
+    I'm not so worried.  Your tolerance for language quirks seems rather low. :-) ["GvR"]
 
 ----
 
 I've tuned out the recent conversation on these PEPs quite religiously, because I never thought they would result in anything even vaguely useful.  Fortunately, I was dead wrong.  PEP-343 is simple, elegant, and feels very Pythonic to me.  I need to catch up now and think through the implications and corner-cases, but I can give a provisional +1 to the concept.  Thanks to all those that didn't tune out and worked to get us to this point.  -- ''Kevin Jacobs''
-
 
 ----
 
@@ -144,10 +148,12 @@ I do understand the reluctance to pick the one-and-only way an object can be use
 
 -- BenjiYork
 
-
-    Time will tell.  The with-statement doesn't force you either way.  The PEP doesn't strongly recommend either way because we don't have
-    the experience with this yet to know which pattern is better.  Personally I'd like to be cautious -- use explicit wrapper methods
-    like opening() and locking() first, and add {{{__enter__}}} and {{{__exit__}}} methods to some objects later.  ["GvR"]
+    Time will tell.  The with-statement doesn't force you either way.
+    The PEP doesn't strongly recommend either way because we don't have
+    the experience with this yet to know which pattern is better.
+    Personally I'd like to be cautious -- use explicit wrapper methods
+    like opening() and locking() first, and add {{{__enter__}}} and
+    {{{__exit__}}} methods to some objects later.  ["GvR"]
 
 ----
 
@@ -162,7 +168,8 @@ Adding features is always a problem, but adding them gradually just makes it tha
     because you have to accommodate existing traffic while the work is going on.
     But the alternative is Perl 6...
 
-    In this particular case, I actually believe that adding {{{__enter__}}} and {{{__exit__}}} to file objects is ''wrong'',
+    In this particular case, I actually believe that adding {{{__enter__}}}
+    and {{{__exit__}}} to file objects is ''wrong'',
     but for lock objects it is ''right''.  Does that help?
 
     ["GvR"]
@@ -176,6 +183,8 @@ Adding features is always a problem, but adding them gradually just makes it tha
         But I digress.  It seems like 2.5 (where I assume this will be added) isn't just around the corner, and there's time enough to collect use cases that can go into the standard library along with the new language feature.  This will also give people who weren't tracking development a chance to see how this stuff should be used (assuming the additions are implemented wisely).  -- IanBicking
 
 ----
+
+(Maybe more this proposal to a separate page?  It's also discussed below. ["GvR"])
 
 Is the door open for an optional-indentation syntax (not necessarily now)?  It has been discussed in length on comp.lang.python.  Basically, I expect most the time with-statements to end at the end of the current block, resulting most of the time in over-indentation.  Optional-indentation would create a precedent in Python and can be added later, but I was wondering what was the feeling about it.  One thing I don't like when I do a try/finally for a file read/close in Python is not only the part that PEP343 is fixing, but also that it indents my code uselessly.
 
@@ -226,6 +235,8 @@ variable name and in the import statement? -- Andrew Dalke
 See WithStatementAndOpenGl
 
 ----
+
+(Maybe more this proposal to a separate page?  It's also discussed above. ["GvR"])
 
 Brought up on c.l.py, is there need for a syntax like
 
@@ -310,6 +321,7 @@ means {{{print obj.foo}}}.  This has been proposed for Python too.  I'm not advo
     explanation why C# doesn't have it
     ([http://msdn.microsoft.com/vcsharp/programming/language/ask/withstatement/ here]),
     I'm glad to see it relegated to oblivion.  ["GvR"]
+
         Anyway, if some people like so much the other with (which I find
         totally useless in Python, using = does the job), they can do the
         following:
