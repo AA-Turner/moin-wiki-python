@@ -35,16 +35,7 @@ except E1, e:
  * Remove support for string exceptions. [[#a 1]]
    * Instead: use a class.
  * Perhaps have optional declarations for static typing.
-   * One suggestion is to use an "as" keyword for this [[#o 15]] and for adaptation [[#p 16]]: {{{
-#!python
-# "x as y" means: adapt x to the y protocol
-
-def foo (a as int, b as float) as float:
-    a2 = a as float  # Same as: adapt(a, float)
-    ...
-}}}
-    ''If PEP 343 is approved, "as" might not be usable for this.''
-   * GvR suggested the syntax [[#q 17]]: {{{
+   * GvR suggested the syntax [[#q 17]]: (but NOT for static typing - for declaring type information that would be checked at runtime, not compile time) {{{
 #!python
 def bar(low: int, high: int) -> float:
     ...
@@ -66,7 +57,7 @@ def qux(x -> list, y => file):
  * Make `as` a true keyword. [[#g 7]]
  * Make `True` and `False` keywords. [[#f 6]]
    * Reason: make assignment to them impossible. 
- * Make true division default.
+ * Make real division default.
  * Raise an exception when making comparisons between two incongruent types (other than equality and inequality.)
    * Reason: such comparisons do not make sense and are especially confusing to new users of Python.
  * Require that all exceptions inherit a common base classs. [[#i 9]]
@@ -170,7 +161,6 @@ with self:
  * [[Anchor(l)]] [12] PythonThreeDotOh
  * [[Anchor(m)]] [13] PEP 332 -- Byte vectors and String/Unicode Unification: http://python.org/peps/pep-0332.html
  * [[Anchor(n)]] [14] PEP 292 -- Simpler String Substitutions: http://python.org/peps/pep-0292.html
- * [[Anchor(o)]] [15] Python-Dev -- other uses for "as": http://mail.python.org/pipermail/python-dev/2004-February/042795.html
  * [[Anchor(p)]] [16] PEP 246 -- Object Adaption: http://www.python.org/peps/pep-0246.html
  * [[Anchor(q)]] [17] Python-Dev -- Decorators: vertical bar syntax: http://mail.python.org/pipermail/python-dev/2004-August/047424.html
  * [[Anchor(r)]] [18] Python-Dev -- anonymous blocks: http://mail.python.org/pipermail/python-dev/2005-April/053060.html
