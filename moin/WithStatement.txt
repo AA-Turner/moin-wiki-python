@@ -300,6 +300,17 @@ to this on c.l.py:
          Nicolas Fleury
 
             Tuple-unpacking can occur, so {{{with foo() as a, b}}} will unpack into two variables; if you allow "EXPR1 as VAR, EXPR2 as VAR" then this wouldn't be possible without some extra parens (e.g., {{{with foo() as (a, b)}}}) -- IanBicking
+               Ok, so that means that mimicking import-as would not be backward-compatible.  It means in a sense that we are already deciding if we prefer
+               {{{
+               with foo1(), foo2(), foo3() as _, x, (y, z): ...}}}
+               or
+               {{{
+               with foo1(), foo2(), foo3() as x, y, z: ...}}}
+               to
+               {{{
+               with foo1(), foo2() as x, foo3() as (y, z): ...}}}
+               That's right?
+               Nicolas Fleury
 
 ----
 
