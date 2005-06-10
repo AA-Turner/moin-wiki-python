@@ -1,0 +1,69 @@
+= Escaping XML =
+
+The Python standard library contains a couple of simple functions for escaping strings
+of text as XML character data.  These routines are not actually very powerful, but are
+sufficient for many applications.
+
+The {{{xml.sax.saxutils}}} module contains the functions {{{escape()}}} and
+{{{quoteattr()}}}.  The {{{escape()}}} function is used to convert the {{{<}}}, {{{&}}},
+and {{{>}}} characters to the corresponding entity references:
+
+{{{
+#!python
+>>> from xml.sax.saxutils import escape
+>>>
+>>> escape("< & >")
+'&lt; &amp; &gt;'
+}}}
+
+This function does not generate either the {{{&apos;}}} or {{{&quot;}}} entity references;
+these are not needed in parsed character data in an XML document.  They may be needed in
+character data in attribute values, however.  For attribute values, {{{quoteattr()}}}
+function provides a more useful service than {{{escape()}}}.  {{{quoteattr()}}} will determine
+whether single or double quotation marks are more appropriate for an attribute value and
+quote the value appropriately; values which include both kinds of quotation marks in the value
+cause {{{&quot;}}} to be used as needed.  The return value includes the quotation marks which
+are needed to ensure the value is properly quoted:
+
+{{{
+#!python
+>>> from xml.sax.saxutils import quoteattr
+>>>
+>>> quoteattr("some value ' containing an apostrophe")
+'"some value \' containing an apostrophe"'
+>>> quoteattr('some value containing " a double-quote')
+'\'some value containing " a double-quote\''
+>>> quoteattr('value containing " a double-quote \' and an apostrophe')
+'"value containing &quot; a double-quote \' and an apostrophe"'
+}}}
+
+== Unescaping XML ==
+
+The {{{xml.sax.saxutils}}} module provides an {{{unescape()}}} function as well.  This
+function converts the {{{&amp;}}}, {{{&gt;}}}, and {{{&lt;}}} entity references back to
+the corresponding characters:
+
+{{{
+#!python
+>>> from xml.sax.saxutils import unescape
+>>>
+>>> unescape("&lt; &amp; &gt;")
+'< & >'
+}}}
+
+Note that the predefined entities {{{&apos;}}} and {{{&quot;}}} are not supported by default.
+Like the {{{escape()}}} function, {{{unescape()}}} can be provided with an additional mapping
+of replacements that should be performed.  This can be used to add support for the additional
+predefined entities:
+
+{{{
+#!python
+>>> unescape("&apos; &quot;", {"&apos;": "'", "&quot;": '"'})
+'\' "'
+}}}
+
+This can also be used to perform replacements for longer strings.
+
+== See Also ==
+
+ * EscapingHtml
