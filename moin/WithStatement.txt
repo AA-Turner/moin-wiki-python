@@ -146,6 +146,14 @@ Thomas Leonard
         (make them mutually exclusive) then there's no problem. You still get a more readable syntax and
         one less keyword.
         Thomas Leonard
+
+            Doesn't help.
+            When combining except & finally, the answer is explicit: control moves only forward.
+            (At the very least you can use this to remember the rule.)
+            But when combining with & except (or finally), the handler for with is implicit,
+            so there is no parallel heuristic to decide which one handles which.
+            ["GvR"]
+
 ----
 
 I can't tell from the PEP whether or not it is recommended that objects themselves expose {{{__enter__}}} and {{{__exit__}}} (like locks and files).  It mentions the possability, but all the examples do otherwise.  Greg Ewing was the only person I remember disliking the idea, but then changed his mind (to a tepid +0.6).  
