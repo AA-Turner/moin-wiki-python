@@ -39,6 +39,20 @@ are needed to ensure the value is properly quoted:
 '"value containing &quot; a double-quote \' and an apostrophe"'
 }}}
 
+Both of these functions can be provided with a mapping of additional replacements that should be
+made; the same mapping can generally be used for both.  This can be used to add additional entities
+specific to the DTD of the document being generated, or to cause particular characters to be encoded
+as character references:
+
+{{{
+#!python
+>>> escape("abc", {"b": "&#98;"})
+'a&#98;c'
+>>> escape("My product, PyThingaMaJiggie, is really cool.",
+...        {"PyThingaMaJiggie": "&productName;"})
+'My product, &productName;, is really cool.'
+}}}
+
 == Unescaping XML ==
 
 The {{{xml.sax.saxutils}}} module provides an {{{unescape()}}} function as well.  This
