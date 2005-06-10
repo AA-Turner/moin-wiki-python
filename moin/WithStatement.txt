@@ -127,11 +127,11 @@ Patrick Ellis
 
 What happened to Fredrik Lundh's proposal (14/5/2005) to use the existing 'try' keyword instead of 'with', eg:
 
+{{{
 try opening(file) as f: ...
-
 try locking(mutex): ...
-
 try atomic_transaction(connection): ...
+}}}
 
 Try already has the idea of doing cleanup at block exit. I saw only reply in support of the idea on the list, but no other comments.
 
@@ -142,6 +142,10 @@ Thomas Leonard
     catch exceptions in the {{{__exit__}}} method, or does the {{{__exit__}}} method see
     exceptions raised in the except clause?  ["GvR"]
 
+        Python already has this problem when combining except and finally. If we take the same solution
+        (make them mutually exclusive) then there's no problem. You still get a more readable syntax and
+        one less keyword.
+        Thomas Leonard
 ----
 
 I can't tell from the PEP whether or not it is recommended that objects themselves expose {{{__enter__}}} and {{{__exit__}}} (like locks and files).  It mentions the possability, but all the examples do otherwise.  Greg Ewing was the only person I remember disliking the idea, but then changed his mind (to a tepid +0.6).  
