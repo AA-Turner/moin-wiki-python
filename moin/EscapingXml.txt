@@ -2,7 +2,9 @@
 
 The Python standard library contains a couple of simple functions for escaping strings
 of text as XML character data.  These routines are not actually very powerful, but are
-sufficient for many applications.
+sufficient for many applications.  They should generally be applied to Unicode text that
+will later be encoded appropriately, or to already-encoded text using an ASCII-superset
+encoding, since most characters are left alone.
 
 The {{{xml.sax.saxutils}}} module contains the functions {{{escape()}}} and
 {{{quoteattr()}}}.  The {{{escape()}}} function is used to convert the {{{<}}}, {{{&}}},
@@ -52,9 +54,9 @@ the corresponding characters:
 }}}
 
 Note that the predefined entities {{{&apos;}}} and {{{&quot;}}} are not supported by default.
-Like the {{{escape()}}} function, {{{unescape()}}} can be provided with an additional mapping
-of replacements that should be performed.  This can be used to add support for the additional
-predefined entities:
+Like the {{{escape()}}} and {{{quoteattr()}}} functions, {{{unescape()}}} can be provided with
+an additional mapping of replacements that should be performed.  This can be used to add
+support for the additional predefined entities:
 
 {{{
 #!python
