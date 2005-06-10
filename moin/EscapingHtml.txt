@@ -1,6 +1,6 @@
 = Escaping HTML =
 
-The {{{cgi}}} module that comes with Python has an {{{escape}}} function:
+The {{{cgi}}} module that comes with Python has an {{{escape()}}} function:
 
 {{{
 #!python
@@ -31,6 +31,52 @@ def html_escape(text):
     return "".join(L)
 }}}
 
+== Unescaping HTML ==
+
+Undoing the escaping performed by {{{cgi.escape()}}} isn't directly supported by the library.  This can
+be accomplished using a fairly simple function, however:
+
+{{{
+#!python
+def unescape(s):
+    s = s.replace("&lt;", "<")
+    s = s.replace("&gt;", ">")
+    # this has to be last:
+    s = s.replace("&amp;", "&")
+    return s
+}}}
+
+Note that this will undo exactly what {{{cgi.escape()}}} does; it's easy to extend this to undo what
+the {{{html_escape()}}} function above does.  Note the comment that converting the {{{&amp;}}} must be last;
+this avoids getting strings like {{{"&amp;lt;"}}} wrong.
+
+This approach is simple and fairly efficient, but is limited to supporting the entities given in the list.
+A more thorough approach would be to perform the same processing as an HTML parser.  Using the HTML parser from the standard library is a little more expensive, but many more entity replacements are supported
+"out of the box."  The table of entities which are supported can be found in the {{{htmlentitydefs}}}
+module from the library; this is not normally used directly, but the {{{htmllib}}} module uses it to
+support most common entities.  It can be used very easily:
+
+{{{
+#!python
+import htmllib
+
+def unescape(s):
+    p = htmllib.HTMLParser(None)
+    p.save_bgn()
+    p.feed(s)
+    return p.save_end()
+}}}
+
+This version has the additional advantage that it supports character references (things like {{{&#65;}}})
+as well as entity references.
+
+A more efficient implementation would simply parse the string for entity and character references directly
+(and would be a good candidate for the library, if there's really a need for it outside of HTML data).
+
 == Discussion ==
 
-LionKimbro: Is there anything in the standard library for going the other way? Is there something where you can give it "&amp;" and get back "&"? Perhaps in the XML libraries? I looked, but did not see anything. DOM, SAX- wouldn't be there. Not exactly XML-RPC either.  Anyone know?  (Answer needed for XML; HTML would be nice as well.)  [[Date(2005-06-10T16:35:16Z)]]
+LionKimbro: Is there anything in the standard library for going the other way? Is there something where you can give it "&amp;" and get back "&"? Perhaps in the XML libraries? I looked, but did not see anything. DOM, SAX- wouldn't be there. Not exactly XML-RPC either.  Anyone know?  (Answer needed for XML.)  [[Date(2005-06-10T16:35:16Z)]]
+
+FredDrake:  Well, the HTML answer is easy.  :-)  The XML isn't hard, but there's certainly more overhead in
+making it more than a trivial replacement for a handful of entity references (at least if we involve SAX).
+I'll write up how to do this efficiently for XML while I put the kids to bed.
