@@ -15,21 +15,21 @@ Here's a small snippet that will let you escape those as well:
 
 {{{
 #!python
-html_escape_table = {
-    "&": "&amp;",
-    '"': "&quot;",
-    "'": "&apos;",
-    ">": "&gt;",
-    "<": "&lt;" }
+html_escape_table = \
+    {"&": "&amp;",
+     '"': "&quot;",
+     "'": "&apos;",
+     ">": "&gt;",
+     "<": "&lt;"}
 
 def html_escape(text):
     """Produce entities within text."""
-    l=[]
+    L=[]
     for c in text:
-        l.append( html_escape_table.get(c,c) )
-    return "".join(l)
+        L.append(html_escape_table.get(c,c))
+    return "".join(L)
 }}}
 
 == Discussion ==
 
-  (none yet)
+LionKimbro: Is there anything in the standard library for going the other way? Is there something where you can give it "&amp;" and get back "&"? Perhaps in the XML libraries? I looked, but did not see anything. DOM, SAX- wouldn't be there. Not exactly XML-RPC either. Anyone know? [[Date(2005-06-10T16:35:16Z)]]
