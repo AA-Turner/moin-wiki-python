@@ -80,6 +80,75 @@ support for the additional predefined entities:
 
 This can also be used to perform replacements for longer strings.
 
+Note that the {{{unescape()}}} function does not deal with arbitrary character references.  This
+could be accomplished by passing in a really large mapping as the second argument, but that's
+pretty silly given the size of the mapping that's required to support both decimal and hexadecimal
+character references (and the hexadecimal references containing A-F would need to be accounted for
+in all permutations of upper and lower case, and leading zeros would need to be considered).  If we
+want character references to be considered, we can use the Expat XML parser included with all recent
+versions of Python.  This function will do the trick:
+
+{{{
+#!python
+import xml.parsers.expat
+
+def unescape(s):
+    want_unicode = False
+    if isinstance(s, unicode):
+        s = s.encode("utf-8")
+        want_unicode = True
+
+    # the rest of this assumes that `s` is UTF-8
+    list = []
+
+    # create and initialize a parser object
+    p = xml.parsers.expat.ParserCreate("utf-8")
+    p.buffer_text = True
+    p.returns_unicode = want_unicode
+    p.CharacterDataHandler = list.append
+
+    # parse the data wrapped in a dummy element
+    # (needed so the "document" is well-formed)
+    p.Parse("<e>", 0)
+    p.Parse(s, 0)
+    p.Parse("</e>", 1)
+
+    # join the extracted strings and return
+    es = ""
+    if want_unicode:
+        es = u""
+    return es.join(list)
+}}}
+
+Note the extra work we have to go to so that the result has the same type as the input;
+this came for free with the {{{.replace()}}}-based approaches.
+
+Using this {{{unescape()}}} function provides support for character references and the
+predefined entities, but does not let us extend the mapping with additional entity
+definitions (a more elaborate function could make that possible, though).  Assuming
+we've imported this from whatever module we stored it in, we get:
+
+{{{
+#!python
+>>> unescape("abc")
+'abc'
+>>> unescape(u"abc")
+u'abc'
+>>> unescape("&#x61;&#98;&#x63;")
+'abc'
+}}}
+
+We also get support for constructs that we might not want in some contexts, though these
+are probably acceptable since we're looking at XML data:
+
+{{{
+#!python
+>>> unescape("a<![CDATA[b]]>c")
+'abc'
+>>> unescape("a<!--wow!-->bc<!--this is really long-->")
+'abc'
+}}}
+
 == See Also ==
 
  * EscapingHtml
