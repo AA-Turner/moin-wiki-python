@@ -393,4 +393,10 @@ The second observation related to this is that it would nice if it was possible 
 
 To permit this style would require that asynchronous exceptions be 'blocked' before evaluation of EXPR, and only reenabled once the try/finally block has been entered (i.e. after the assignment to VAR), or an exception is raised prior to reaching that point. -- ''Nick Coghlan''
 
-  To somewhat answer my own question, based on previous discussions with Guido, the 'no asynchronous exception guarantee' would most cleanly apply just to the evaluation of the call to {{{__enter__}}}, rather than to the initial evaluation of EXPR. If this was the guarantee made in the definition of the statement semantics, then RAII would become emphatically '''''bad''''' style for {{{with}}} statements, as the guarantee of correct behaviour in the face of asynchronous exceptions would be lost.
+  If the 'no asynchronous exception guarantee' applied just to the evaluation of the call to {{{__enter__}}}, rather than to the initial evaluation of EXPR, then RAII would become emphatically '''''bad''''' style for {{{with}}} statements, as the guarantee of correct behaviour in the face of asynchronous exceptions would be lost when using that style. The major downside is that 'guaranteed method call' templates, like {{{closing()}}} in PEP 343, become 'bad style' under this regime (as there is a gap where an async exception may be called, and the resource doesn't get closed.
+
+
+  If no explicit guarantee is made, then both approaches (acquisition on enter, acquisition on creation) suffer from the asynchronous exception problem, so there is no specific reason to favour either approach.
+
+
+  The situation is similar if the 'no async exceptions guarantee' is extended to cover evaluation of EXPR as well the call to {{{__enter__}}}. However, in this case, the generic {{{closing()}}} template in PEP 343 is guaranteed to work correctly. -- ''Nick Coghlan''
