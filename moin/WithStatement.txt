@@ -14,43 +14,14 @@ I feel like PEP 343 and PEP 342 work together in some important way, but it's no
 
 ----
 
-The optional extension mentioned would not need to lead to mistakes if the {{{__exit__}}} call would distinguish between 'with X' and 'with X as Y'. -- ''Eric Nieuwland''
-
-  Please explain.  ["GvR"]
-
-
-    The example shows {{{
-f = open(filename)
-with f:
-    BLOCK1
-with f:
-    BLOCK2}}}
-    which fails due to the proposed {{{__exit__}}} method of file objects.
-    Now if {{{
-with EXPR:
-    BLOCK1}}}
-    would result in an {{{__exit__}}} call that can be distinguished from
-    the call to {{{__exit__}}} by {{{
-with EXPR as VAR:
-    BLOCK1}}}
-    then {{{__exit__}}} could close the file in the latter case, while
-    leaving it open in the former. A simple boolean added to the call
-    might do the trick. -- ''Eric Nieuwland''
-
-        But how will {{{__exit__}}} know it's the last with-statement?
-        Looks like you've just introduced a different kind of bug...
-        ["GvR"]
-
-            If you use {{{with EXPR as VAR:}}} the translation creates the object so the clean-up can be done in closing the {{{with}}} block. If you use {{{with VAR}}} the object already existed and you should clean-up yourself. -- ''Eric Nieuwland''
-
-                This is getting too silly.  That would defeat the whole purpose of 'with var' -- you
-                might as well leave it out and it wouldn't make a difference.  Send email if you
-                still disagree.  If you "get" it, feel free to delete this whole exchange from
-                the wiki -- it only serves to confuse people. ["GvR"]
+To assist in avoiding the mistake pointed out in the optional extension, the documentation of the standard library should include a description on how to use (or: how not to use) objects that support the {{{__enter__}}}/{{{__exit__}}} protocol.  
+E.g.
+  Do not use objects of this class as a parameter to {{{with}}}.
+or
+  Objects of this class may be used as a parameter to {{{with}}}. However, they will become invalid after the {{{with}}} block.
+-- ''Eric Nieuwland''
 
 The solution to this problem recommended in PEP 346 is to throw an explicit exception in {{{__enter__}}} when a non-reusable template is reused. PEP 343 uses this approach for the generator-based templates, and I would expect an {{{__enter__}}} method on file objects to do the same thing. -- ''Nick Coghlan''
-
-    Yes, that would solve it the other way around. My sillyness and and Guido's worries resolved, I guess.  -- ''Eric Nieuwland''
 
 ----
 
