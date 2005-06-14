@@ -361,14 +361,7 @@ with [VAR from] EXPR:
   'from' as a keyword.  Also, IMO it doesn't read as well.  ["GvR"]
 
 ----
-
-During the original python-dev discussion of PEP 343, there was a mention of 'C magic' to ensure {{{__exit__}}} was still called appropriately when asynchronous exceptions occurred after completion of the call to {{{__enter__}}}. The suggestion was that using a single opcode to set up the {{{with}}} statement could resolve the problem. Is this suggestion actually reasonable, given that the call to {{{__enter__}}} may result in the processing of arbitrary Python code?
-
-The second observation related to this is that it would nice if it was possible to use {{{with}}} statements in a RAII style - in such a style, the resource would actually be acquired in the {{{__init__}}} method, and the {{{__enter__}}} method would simply return the already acquired resource. For example, this is the style that would apply if files were to become directly manageable resources (rather than being managed through a wrapper such as {{{opening()}}} as described in PEP 343).
-
-To permit this style would require that asynchronous exceptions be 'blocked' before evaluation of EXPR, and only reenabled once the try/finally block has been entered (i.e. after the assignment to VAR), or an exception is raised prior to reaching that point. -- ''Nick Coghlan''
-
-  Trying to explain this on python-dev gave me a clearer idea of how I would like to see it work, and why. My desired semantics are summed up in a single sentence: "Resource acquisition in a with statement should be an atomic operation". Such semantics would make the {{{closing()}}} example in the PEP work perfectly (i.e. immediately closing the file), even if a {{{KeyboardInterrupt}}} was detected after a successful call to {{{open()}}} but before the actual creation of the {{{closing()}}} template, or before the subsequent call to {{{___enter___}}}, or before the {{{__enter__}}} method returned. These semantics are easy to explain, too: it simply means that the resource acquisition line of the with statement (i.e. the bit between '{{{with}}}' and '{{{:}}}') cannot be interrupted by asynchronous events, or an automatic context switch. -- ''Nick Coghlan''
+Safely coping with asynchronous exceptions would require that they be 'blocked' before evaluation of EXPR, and only reenabled once the try/finally block has been entered (i.e. after the assignment to VAR), or an exception is raised prior to reaching that point. -- ''Nick Coghlan''
 
     I didn't want to push for these semantics without some idea of how they could be implemented. It appears to me that a new field in the frame object structure would do the trick. This flag (let's call it {{{allow_async_events}}}) would be set to true by default. A new opcode (call it {{{BLOCK_ASYNC}}}) would be emitted prior to evaluation of the resource acquisition line, and would clear the new flag. A second new opcode (call it {{{ALLOW_ASYNC}}}) to set the flag again would be emitted immediately prior to the {{{SETUP_FINALLY}}} opcode preceding the contained suite of the {{{with}}} statement. Finally, the error handling code immediately after the main opcode evaluation in {{{ceval.c}}} would also take care of setting the flag again, so that asynchronous events don't remain blocked if execution of the resource acquisition line fails. With this mechanism in place, the addition of a simple additional check of the new flag at the point where {{{_Py_Ticker}}} is currently queried would permit asynchronous events to be blocked temporarily. -- ''Nick Coghlan''
 
@@ -382,3 +375,22 @@ To permit this style would require that asynchronous exceptions be 'blocked' bef
         That works for me - the main situation I wanted to avoid was the partial
         solution, where only '{{{__enter__}}} written in C' was protected from async
         exceptions. -- ''Nick Coghlan''
+
+  Discussion on python-dev, in addition to leading to Guido's conclusion above, also led to this suggestion for
+  dealing with cases where the 'asynchronous exception' problem is of genuine concern:
+
+  {{{
+    with async_exceptions_blocked(): # [1]
+        with resource_that_needs_protection() as rsrc: # [2]
+            with async_exceptions_unblocked(): # [3]
+                # Do the work that requires 'rsrc'
+  }}}
+
+  [1] needs to be a 'with' statement so async exceptions are still unblocked if acquiring the resource throws an exception.
+
+  [2] this resource acquisition is protected from async exceptions, so cleanup is guaranteed after successful acquisition
+
+  [3] this doesn't need to be a 'with' statement, so long as the outermost with statement can cope with async exceptions being reenabled prior to execution of the outermost {{{__exit__}}} method
+
+  Moving this pattern into a template doesn't really work correctly, since the use of that template may then suffer
+  from problems with asynchronous exceptions, defeating the principle motivation for using the pattern. -- ''Nick Coghlan''
