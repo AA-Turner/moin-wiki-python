@@ -442,3 +442,11 @@ opening(opening_body, filename, "w")
 }}}
 
 Is there an example where using wrapped, enhanced generators as block templates is more flexible?[[BR]]-- ''Lenard Lindstrom''
+
+  Notice that in your own example, you have to write the code "inside out", in order to nest the operations correctly. Using PEP 343, it can be written in the order of execution:{{{
+with opened(filename, "w") as f:
+    with stdout_redirected_to(f):
+        print "Hello world"
+}}}
+
+  This is clearer and easier to read (not to mention significantly shorter). The other benefit of PEP 343 is that the contained block is able to manipulate the current namespace, rather than being executed in a new, nested, namespace, as is required in the functional style. -- ''Nick Coghlan''
