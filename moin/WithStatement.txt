@@ -399,3 +399,46 @@ Safely coping with asynchronous exceptions would require that they be 'blocked' 
 
   Moving this pattern into a template doesn't really work correctly, since the use of that template may then suffer
   from problems with asynchronous exceptions, defeating the principle motivation for using the pattern. -- ''Nick Coghlan''
+
+----
+Turning tour methods inside out as iterators adds a new level of functionality. What is gained by turning a simple one-time callback into a "with" statement?
+
+Here is PEP 343 Example 5 rewritten in a more functional style:{{{
+# Redirect stdout temporarily:
+
+# opening and redirect_stdout are block templates that take a callback.
+
+def opening(do, filename, mode="r"):
+    """Call function 'do' with open file as argument.
+
+       Close file after 'do' returns or raises an exception."""
+    # A template block as a function with a callback
+    #
+    f = open(filename, mode)
+    try:
+        return do(f)
+    finally:
+        f.close()
+
+def redirected_stdout(do, new_stdout):
+    """Call function 'do' with stdout redirected to 'new_stdout'.
+
+       Restore stdout after 'do' returns or raises an exception."""
+    save_stdout = sys.stdout
+    sys.stdout = new_stdout
+    try:
+        return do()
+    finally:
+        sys.stdout = save_stdout
+}}}
+
+used as follows:{{{
+def body():
+    print "Hello world"
+
+def opening_body(f):
+    redirected_stdout(body, f)
+opening(opening_body, filename, "w")
+}}}
+
+Is there an example where using wrapped, enhanced generators as block templates is more flexible?[[BR]]-- ''Lenard Lindstrom''
