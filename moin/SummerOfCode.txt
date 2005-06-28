@@ -110,12 +110,16 @@ by its translation tools.
 
 Mentors: Samuele Pedroni, Armin Rigo
 
-= Python to C++ translator =
+= Efficiently Analysing Data Polymorphism and Deducing Generics in Shedskin =
 
 (Mark Dufour)
 
-As part of my Master's Thesis, I am working on a
-Python-to-C++ compilation system.
+As part of my Master's Thesis, I am working on a Python-to-C++ compilation system, called Shedskin. Currently, it performs static type inference based on two techniques. The Cartesian Product Algorithm is used to handle parametric polymorphism (calling functions with different combinations of argument types); single-level class duplication, or 1CFA, is employed to handle data polymorphism (mostly polymorphic containers, such as list; in 1CFA, each allocation site gets its own class type, so we can analyze these (somewhat) precisely.) Run-time checks such as 'isinstance' are considered during inference. Further, short tuples are analyzed internally, which of course is especially important in case of Python. 
+
+Based on the statically determined type information, the compiler currently performs stack- and static pre-allocation (using a simple escape analysis, and the static call graph respectively) and unboxing. Further, it generates polymorphic inline caches or virtual calls when a singleton type set cannot be deduced.
+ 
+Single-level class duplication is imprecise, because it only duplicates class types once for each allocation site, and allocation sites may be duplicated during analysis (as CPA possibly creates many templates for each function.) Extending it to N levels, or NCFA, would make the analysis terribly exponential and still not precise for deep polymorphism. For the summer of code, my main goal will be to efficiently and precisely handle data polymorphism up to arbitrary depths. I am currently looking into an iterative technique developed by John Plevyak. (Tiejun & Wang's technique is incomprehensible, and I don't see how the method used in Starkiller would work.) My other large goal will be to generate generics of appreciable complexity, based on the inferred types, i.e. to determine whether types may be uniformly parameterized, and to generate class and function templates. Finally, I will integrate an existing C++ garbage collector into the run-time system in order to clean up objects that could not be stack- or statically pre-allocated. 
+
 
 Mentors: Jeremy Hylton, Brett Cannon
 
