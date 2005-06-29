@@ -456,5 +456,8 @@ with opened(filename, "w") as f:
 
     Okay, I take back the part about no new capabilities. If the {{{break}}}, {{{continue}}}, and {{{return}}} statements within a {{{with}}} statement block behave the same as in the {{{try}}} part of a {{{try-finally}}} statement, as suggested by the pep, then {{{with}}} statements can branch directly, something impossible with callbacks. -- ''len l''
 
+      The more commonly noted new capability is the fact that assignments inside the {{{with}}} block
+      affect the containing scope, something else which is not possible with callbacks. -- ''Nick Coghlan''
+
 ----
 PEP 342 introduces a way to feed values back into an iterator without side effect via an argument to {{{next()}}}. For generators this argument is the return value of a {{{yield}}} expression.  Loops set the argument with an optional expression to {{{continue}}}. But the {{{with}}} statement has no similar way to return a value to a block template. {{{__exit__}}} takes no argument. Instead one would likely modify a mutable object returned by the block template. The {{{yield}}} expression is unsupported in a generator block template. Is it the intension to have two preferred ways to pass a value back into a generator, one for loops, one for {{{with}}} statements? -- ''Lenard Lindstrom''
