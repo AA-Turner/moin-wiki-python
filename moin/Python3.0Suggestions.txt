@@ -93,6 +93,7 @@ The current implementation will call {{{__iadd__()}}}, allowing it to do the in-
 
 Having the distinction provides a tiny benefit but incurs a large cost in terms of implementation complexity and increasing the learning curve for descriptors.  Using the presence or absence of a setter to distinquish the two is somewhat hackish and confuses the heck out of anyone first trying to master descriptors.   Even after using descriptors for a while, that nuance remains an annoying distraction.
 
+
 == Reconsider the inclusion of __slots__ or re-evaluate its implementation ==
 
 Guido has expressed that this is a highly popular, but badly misunderstood tool that is often used incorrectly.
@@ -123,3 +124,6 @@ The operators {{{/}}}, {{{*}}} and {{{%}}} could also be used to split and stitc
 
 == Move rarely-used builtins to the library ==
 pow() to the math module!
+
+== Don't remove callable() ==
+Please don't. There are times where you want to know if an object is callable without calling it... 
