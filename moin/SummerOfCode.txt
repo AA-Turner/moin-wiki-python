@@ -186,21 +186,19 @@ I would like to create a port of the standard library modules "_sre" and "array"
 
 Mentors: Armin Rigo, Samuele Pedroni
 
-= Python Profile Replacement Project =
+= Profile Replacement =
 
 (Floris Bruynooghe)
 
-Idea from ProfileReplacementProject page.
+[Original idea from ProfileReplacementProject page.]
 
-The current profiler is not free according to the DFSG (Debian Free
-Software Guidelines) and has been taken out of the main Debian
-distribution (bug #293932, http://bugs.debian.org/293932).  This
-affects many users as the profiler is integrated into ipython for
-example[1].  Patches for these programs to run without the profiler
-have been incorporated, but this is only patchwork and ipython or one
-lost previously standard functionality.
+The current profiler is not free according to the Debian Free Software Guidelines (http://bugs.debian.org/293932) and has been taken out of the main Debian distribution.  This affects many users as the profiler is integrated into other programs such as ipython who lose functionality withouth the profiling available.
 
-Mentors: Brett Cannon
+The aim is to rewrite the profiler module using a free licence and taking the complaints about speed, accuracy and API (http://www.python.org/sf/1212837) into account.  A high priority is to keep it backwards compatible so it can act as a drop in replacement for the current profiler.
+
+The current idea is to write the new profile module in C so it can be fast enough.  The drop in replacement will be provided by a wrapper with the correct API.
+
+Mentor: Brett Cannon
 
 = Wax =
 
