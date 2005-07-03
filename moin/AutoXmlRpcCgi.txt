@@ -1,0 +1,148 @@
+This is a CGI version of the "automatic DocXmlRpcServer."
+
+[[TableOfContents()]]
+
+== Tutorial ==
+
+Suppose you have a Python module:
+
+{{{
+#!python
+def spam():
+    return "spam"
+}}}
+
+How can we quickly share this functionality?
+
+Mark it like this:
+{{{
+#!python
+XMLRPC_namespace = "eggs"
+
+def spam():
+    return "spam"
+}}}
+
+Now, put that script, and the AutoXmlRpcCgi script, into a CGI directory. You're done!
+
+You can use that function via XML-RPC on the CGI.
+
+Your friends can now call your function!
+
+{{{
+#!python
+import xmlrpclib
+
+server = xmlrpclib.ServerProxy("http://example.net/xrcgi.py")
+print server.eggs.spam()
+}}}
+
+There it is!
+
+== Notes ==
+
+ * If you set XMLRPC_namespace to None, then namespaces aren't used.
+ * This code demonstrates ModulesAsPlugins, CgiScripts, DocXmlRpcServer, and (hopefully) PythonStyle.
+ * If you define a function "uli" ({{{def uli(msg):}}}), you can call it in IRC with [http://onebigsoup.wiki.taoriver.net/moin.cgi/UliBot UliBot!]
+
+== Code: xrcgi.py ==
+
+{{{
+#!python
+#!/usr/bin/env python2.4
+"""CGI between XML-RPC web requests, and specially marked modules.
+
+This script is a gateway (CGI) between web XML-RPC requests, and
+Python modules that define "XMLRPC_namespace".
+
+Functions within Modules that define the name "XMLRPC_namespace" are
+accessible by XML-RPC. Function names that begin with an underscore (ex:
+_eggs) are not published. Functions are published within the XML-RPC
+namespace designated by the XMLRPC_namespace value, or the base
+namespace if the value is None.
+"""
+
+import time
+import os
+import sets
+import imp
+import types
+
+import DocXMLRPCServer
+
+
+def find_modules(path="."):
+    """Return names of modules in a directory.
+
+    Returns module names in a list. Filenames that end in ".py" or
+    ".pyc" are considered to be modules. The extension is not included
+    in the returned list.
+    """
+    modules = sets.Set()
+    for filename in os.listdir(path):
+        module = None
+        if filename.endswith(".py"):
+            module = filename[:-3]
+        elif filename.endswith(".pyc"):
+            module = filename[:-4]
+        if module is not None:
+            modules.add(module)
+    return list(modules)
+
+
+def load_module(name, path=["."]):
+    """Return a named module found in a given path."""
+    (file, pathname, description) = imp.find_module(name, path)
+    return imp.load_module(name, file, pathname, description)
+
+
+def find_xmlrpc_modules():
+    """Find modules that define XMLRPC_namespace.
+
+    Loads all modules in the current working directory. Returns a list
+    of modules, the modules that define XMLRPC_namespace.
+    """
+    modules = [load_module(m) for m in find_modules()]
+    xmlrpc_modules = []
+    for m in modules:
+        if m.__dict__.has_key("XMLRPC_namespace"):
+            xmlrpc_modules.append(m)
+    return xmlrpc_modules
+
+
+def functions_in_module(module):
+    """Find all functions in a module."""
+    functions = []
+    for obj in module.__dict__.values():
+        if isinstance(obj, types.FunctionType):
+            functions.append(obj)
+    return functions
+
+
+if __name__ == "__main__":
+    handler = DocXMLRPCServer.DocCGIXMLRPCRequestHandler()
+
+    for module in find_xmlrpc_modules():
+        for func in functions_in_module(module):
+            full_name = func.__name__
+            if module.XMLRPC_namespace is not None:
+                full_name = "%s.%s" % (module.XMLRPC_namespace,
+                                       full_name)
+            handler.register_function(func, full_name)
+
+    handler.set_server_title("xrserver")
+    handler.register_introspection_functions()
+    handler.register_multicall_functions()
+    handler.handle_request()
+}}}
+
+= Discussion =
+
+This could be improved. Some ideas:
+
+ * What if there's an exception while loading a module? What then?
+ * Log modules successfully loaded.
+    * If you're either brave or insane, make use of the LoggingModule.
+ * Perhaps perform some sort of caching, to speed up invocation.
+
+-- LionKimbro [[DateTime(2005-04-17T05:51:41Z)]]
