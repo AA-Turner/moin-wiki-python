@@ -148,6 +148,8 @@ if __name__ == "__main__":
 
     for module in find_xmlrpc_modules():
         for func in functions_in_module(module):
+            if func.__name__.startswith("_"):
+                continue
             full_name = func.__name__
             if module.XMLRPC_namespace is not None:
                 full_name = "%s.%s" % (module.XMLRPC_namespace,
