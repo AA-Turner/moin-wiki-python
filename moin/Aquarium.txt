@@ -5,12 +5,12 @@ A framework for WebProgramming.
    URL::  http://aquarium.sourceforge.net
    version:: 2.2.1 (''[[Date(2005-04-21T00:00:00)]]'')
    licence::  Aquarium is open source software available under a BSD-style license.
-   platforms:: Unix and probably Windows too
-   Python versions::
+   platforms:: Unix and Windows
+   Python versions:: 2.3 or higher
 
 === Deployment Platforms ===
 
-CGI, ModPython and custom python-based web servers are supported via Web Server Adaptor classes, as is its own Web server, Glass.
+CGI, ModPython, FastCGI and custom python-based web servers are supported via Web Server Adaptor classes, as is its own Web server, Glass. WSGI support is currently in CVS.
 
 === Suitability ===
 
@@ -20,7 +20,8 @@ CGI, ModPython and custom python-based web servers are supported via Web Server 
 
 === Session, Identification and Authentication ===
 
-Classes for session management are provided
+Classes for session management are provided, sessions can be stored in memory, in the database, or a custom session container can be written easily.
+
 
 === Persistence Support ===
 
@@ -28,7 +29,7 @@ Provides a [http://aquarium.sourceforge.net/api/public/aquarium.database.Databas
 
 === Presentation Support ===
 
-Uses and tightly integrates [http://www.cheetahtemplate.org Cheetah] templating engine
+Uses and tightly integrates [http://www.cheetahtemplate.org Cheetah] templating engine.  The Aquarium project leader is also now a co-developer of Cheetah, so the integration of Cheetah can only improve from an already high level. 
 
 === InTheirOwnWords ===
 
@@ -42,6 +43,8 @@ Aquarium is based around these ideas:
     * The main request flow of an application involves a controller that does work and produces data. That data is passed off to a view that displays that data. See aquarium.screen.ScreenAPI for more on this.
     * A view's superclass should take care of layout details automatically. In fact, a view should not need to do anything other than declare who it is subclassing (who you subclass and how many layers there are in the class hiearchy should not require you to change the name of your main method). See aquarium.layout.LayoutAPI for more on this.
 
+Aquarium is now used world wide.  I.e. there are people in at least the following countries using it:  US, England, the Netherlands, the Ukraine, and Australia.
+
 === Comments ===
 
 As an MVC-based web framework, Aquarium bears at least a superficial resemblance to the [http://actionpack.rubyonrails.org/show/HomePage Action Pack] part of the [http://www.rubyonrails.org/show/HomePage Rails] framework.  Aquarium's Screens correspond to Rails' Action Controllers and Aquarium has Cheetah templates where Rails' has Action Views.
@@ -51,7 +54,5 @@ Aquarium doesn't possess the equivalent of [http://activerecord.rubyonrails.org/
 The Aquarium/SQLObject combo seems to be comparable to Rails but has had neither the same level of documentation, integration and publicity as its Ruby-based rival.  Aquarium is little known in the Python web programming world, it has always had a low profile and a 2 year hiatus prior to development restarting last year didn't help.  Also it has been overshadowed by Zope and to a lesser degree, other web frameworks.
 
 On the upside, there have been 5 releases in 2004, including improved documentation and a switch to using Cheetah for templating instead of a homegrown template engine. There have been 4 releases in 2005 thus far including the addition of the Glass web server.  The fruit of this activity has been a growing user community in 2005 and expansion of the Aquarium development team.  
-
-The Aquarium project leader is also now a co-developer of Cheetah, so the integration of Cheetah can only improve from an already high level. 
 
 === Hosting ===
