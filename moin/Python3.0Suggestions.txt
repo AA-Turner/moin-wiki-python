@@ -127,7 +127,11 @@ The operators {{{/}}}, {{{*}}} and {{{%}}} could also be used to split and stitc
 pow() to the math module!
 
 == Don't remove callable() ==
-Please don't. There are times where you want to know if an object is callable without calling it... 
+Please don't. There are times where you want to know if an object is callable 
+without calling it. For instance if you create a metaclass and need to wrap 
+defined methods passed to {{{__new__}}}, and don't want to wrap class variables.
+In addition, using exceptions for normal control flow is not good code style.
+
 
 == Make API of set, list, dict more consistent ==
 No need for copy function.  A clear function for all of them.
