@@ -95,6 +95,19 @@ This will assert that whatever subclass of mydict is created and not some other 
  * Require that all exceptions subclass from ''Exception''.
  * Have ''Exception'' be a new-style class
 
+Include docstrings when printing user-defined exceptions such as implemented by 
+http://soiland.no/software/doc_exception.py:
+
+{{{
+>>> class IdiotError(Exception):
+...    """Some idiot occured"""
+...
+>>> raise IdiotError
+Traceback (most recent call last):
+  File "<stdin>", line 1, in ?
+__main__.IdiotError: Some idiot occured
+}}}
+
 == Fix implementation of in-place operators ==
 
 The current implementation will call {{{__iadd__()}}}, allowing it to do the in-place change, but then require that the method return the new value and then store it again.  Ideally, all the responsibility for the update should lie with the {{{__iadd__()}}} method and it should return None.  This simplifies the bytecode and eliminates some annoying behavior (such as {{{a[0]+=1}}} succeeding '''and''' raising an error when {{{a=([0],)}}}.
