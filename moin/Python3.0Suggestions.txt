@@ -77,6 +77,16 @@ suggests that it is doing something that it isn't:
 {'a'=1}.fromkeys('poof') # what happened to 'a'? 
 }}}
 
+I disagree to this. Although calling class methods on the instance from the outside will usually be rubbish, it will very often be useful and intended behavour inside instances. For example:
+{{{
+class mydict(dict):
+  def key_copy(self):
+    return self.fromkeys(self)    
+}}}
+
+This will assert that whatever subclass of mydict is created and not some other class. One could argue though that this could be achieved by the more cluttersome {{{self.__class__.fromkeys()}}}.
+
+
 
 == Simplify the syntax for raising exceptions ==
 
