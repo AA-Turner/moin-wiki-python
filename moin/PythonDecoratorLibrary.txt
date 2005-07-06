@@ -87,6 +87,7 @@ class Example(object):
 Yet another property decorator:
 
 {{{
+#!python
 def Property(function):
     keys = 'fget', 'fset', 'fdel'
     func_locals = {'doc':function.__doc__}
@@ -117,7 +118,6 @@ class Angle(object):
             if isinstance(angle,Angle): angle = angle.rad
             self._rad = float(angle)
 
-
     @Property
     def deg():
         '''The angle in degrees'''
@@ -125,10 +125,8 @@ class Angle(object):
             return degrees(self._rad)
         def fset(self,angle):
             if isinstance(angle,Angle): angle = angle.deg
-                self._rad = radians(angle)
-
+            self._rad = radians(angle)
 }}}
-
 
 == Memoize ==
 
