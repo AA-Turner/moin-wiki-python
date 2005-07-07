@@ -101,6 +101,23 @@ to x
 ((x=x, a=a, k=k) to x(*a, **k) for x, a, k in funcs_and_args_list)
 }}}
 
+Tom Anderson: anonymous def syntax, normal form [[#j 12]]
+{{{#!python
+def (a, b, c): return f(a) + o(b) - o(c)
+def (x): return x * x
+def (): return x
+def (*a, **k): return x.bar(*a, **k)
+((def (x=x, a=a, k=k): return x(*a, **k)) for x, a, k in funcs_and_args_list)
+}}}
+
+Tom Anderson: anonymous def syntax, shorthand form [[12]]
+{{{#!python
+def (a, b, c) = f(a) + o(b) - o(c)
+def (x) = x * x
+def () = x
+def (*a, **k) = x.bar(*a, **k)
+((def (x=x, a=a, k=k) = x(*a, **k)) for x, a, k in funcs_and_args_list)
+}}}
 
 === Expression Before Args ===
 
@@ -199,6 +216,7 @@ foo.addCallback(def (result, myExtra, args):
                 , extra, args=here)
 }}}
 
+Tom Anderson's syntax (which is subtly different - it still wants a return in single-line anonymous defs) could also be used for multi-line closures in this way.
 
 == References ==
  * [[Anchor(a)]] [1] http://mail.python.org/pipermail/python-list/2004-December/256859.html
@@ -212,3 +230,4 @@ foo.addCallback(def (result, myExtra, args):
  * [[Anchor(i)]] [9] http://mail.python.org/pipermail/python-list/2005-January/258581.html
  * [[Anchor(i)]] [10] http://mail.python.org/pipermail/python-list/2005-January/258113.html
  * [[Anchor(i)]] [11] http://boo.codehaus.org/Closures
+ * [[Anchor(j)]] [12] http://mail.python.org/pipermail/python-list/2005-June/287966.html
