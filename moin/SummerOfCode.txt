@@ -194,9 +194,9 @@ Mentors: Armin Rigo, Samuele Pedroni
 
 The current profiler is not free according to the Debian Free Software Guidelines (http://bugs.debian.org/293932) and has been taken out of the main Debian distribution.  This affects many users as the profiler is integrated into other programs such as ipython who lose functionality withouth the profiling available.
 
-The aim is to rewrite the profiler module using a free licence and taking the complaints about speed, accuracy and API (http://www.python.org/sf/1212837) into account.  A high priority is to keep it backwards compatible so it can act as a drop in replacement for the current profiler.
+The aim is to write a wrapper for hotshot that will act as a drop in replacement for the profile module.  hotshot was chosen as base since it is much better tested then any newly written code would be.  Secondly an independed stats module will be written for hotshot so that loading of the data will be much faster.  This module will then also have a 100% pstats compatible wrapper.
 
-The current idea is to write the new profile module in C so it can be fast enough.  The drop in replacement will be provided by a wrapper with the correct API.
+When this all gets completed and time is left over one of the things to investigate is weather it is possible to make hotshot thread aware.
 
 Mentor: Brett Cannon
 
