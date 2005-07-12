@@ -45,6 +45,29 @@ except: # catch *all* exceptions
 
 MoinMoin software is a good example of where general error catching is good. If you write Moin``Moin extension macros, and trigger an error, Moin``Moin will give you a detailed report of your error and the chain of events leading up to it. Python software needs to be able to catch ''all'' errors, and deliver them to the recipient of the web page.
 
+Another case is when you want to do something when code fails:
+
+{{{
+#!python
+try;
+  do_some_stuff()
+except:
+  rollback()
+  raise 
+else:
+  commit()
+}}}
+
+By using {{{raise}}} with no arguments, you will re-raise the last exception.  A common place to use this would be to roll back a transaction, or undo operations.  If it's a matter of cleanup that should be run regardless of success or failure, then you would do:
+
+{{{
+#!python
+try:
+  do_some_stuff()
+finally:
+  cleanup_stuff()
+}}}
+
 == Finding Specific Exception Names ==
 
 Standard exceptions that can be raised are detailed at:
@@ -99,7 +122,7 @@ Someone pointed out that "except" catches more than just "except Exception, e."
 
 ''Why is that the case? What is the difference?''-- LionKimbro
 
-For now (version 2.3) exception doesn't have to be inherited from Exception. Thus plain 'except:' catches all exceptions, not only system. -- MikeRovner [[DateTime(2004-01-19T05:49:19Z)]]
+For now (version 2.3) exception doesn't have to be inherited from Exception. Thus plain 'except:' catches all exceptions, not only system.  String exceptions are one example of an exception that doesn't inherit from Exception. -- MikeRovner [[DateTime(2004-01-19T05:49:19Z)]]
 
 == Getting Useful Information from an Exception ==
 
@@ -113,12 +136,28 @@ So, I've got something like:
 ...and Python spits back:
 
 {{{
+#!python
 ValueError: unpack list of wrong size
 }}}
 
 ...and so, you naturally wonder, "Well, what ''was'' in {{{d}}}?"
 
 You know- you can put a {{{print d}}} in there, and that works. But is there a better, more interesting way to get at that information that people know of?
+
+You can do something like:
+
+{{{
+#!python
+try:
+  a, b, c = d
+except Exception, e:
+  e.args += (d,)
+  raise
+}}}
+
+The {{{.args}}} attribute of exceptions is a tuple of all the arguments that were passed in (typically the one and only argument is the error message).  This way you can modify the arguments and re-raise, and the extra information will be displayed.  You could also put a print statement or logging in the {{{except}}} block.
+
+Note that not all exceptions subclass Exception (though almost all do), so this might not catch some exceptions; also, exceptions aren't required to have an {{{.args}}} attribute (though it will if the exception subclasses Exception and doesn't override {{{__init__}}} without calling its superclass), so the code as written might fail  But in practice it almost never does (and if it does, you should fix the non-conformant exception!)
 
 == Isn't it better to prevent then to remediate? ==
 
@@ -139,8 +178,10 @@ I don't quiet get this argument. In a random piece of source code, there
 is no way to tell whether or not it will fail just by inspection. If you
 look at:
 
+{{{
 x = 1
 result = myfunction(x)
+}}}
 
 you can't tell whether or not myfunction will fail at runtime just by
 inspection, so why should it matter whether it fails by crashing at
@@ -169,6 +210,7 @@ idea regardless of whether you use exceptions or not.
 Joel's concern about multiple exit points is good advice, but it can be
 taken too far. Consider the following code snippet:
 
+{{{
 def myfunc(x=None):
    result = ""
    if x is None:
@@ -180,6 +222,7 @@ def myfunc(x=None):
    else:
        result = "x is more than 3"
    return result
+}}}
 
 There is no benefit in deferring returning value as myfunc does, just
 for the sake of having a single exit point. "Have a single exit point"
@@ -205,6 +248,7 @@ Maybe that holds true for C++. I don't know the language, and wouldn't
 like to guess. But it doesn't hold true for Python. This is how Joel might
 write a function as a C programmer:
 
+{{{
 def joels_function(args):
    error_result = 0
    good_result = None
@@ -223,10 +267,11 @@ def joels_function(args):
        return (False, error_result)
    else:
        return (True, good_result)
-
+}}}
 
 and then call it with:
 
+{{{
 status, msg = joels_function(args)
 if status == False:
    print msg
@@ -234,10 +279,11 @@ if status == False:
 else:
    print msg
    # and now continue...
-
+}}}
 
 This is how I would write it in Python:
 
+{{{
 def my_function(args):
    process(args)
    if error_condition():
@@ -249,9 +295,11 @@ def my_function(args):
        raise SomeError("Another error occurred")
    do_more_work()
    return "Success!"
+}}}
 
 and call it with:
 
+{{{
 try:
    result = my_function(args)
    print "Success!!!"
@@ -259,7 +307,7 @@ except SomeError, msg:
    print msg
    # and fail...
 # and now continue safely here...
-
+}}}
 
 In the case of Python, calling a function that may raise an exception is
 no more difficult or unsafe than calling a function that returns a status
