@@ -124,3 +124,37 @@ try change /ZI (Program database for edit and continue) to /Zi (Program database
 
 ------
 If you are getting error '''error C1076: compiler limit - internal heap limit reached''' try add /ZmNNN (with NNN=300..800)
+
+__________________________________________________________________________________________________________
+You can use a setup.py file if u are careful
+
+from distutils.core import setup
+from distutils.extension import Extension
+import os.path
+import sys
+if sys.platform == "win32" :
+    include_dirs = ["C:/Boost/include/boost-1_32","."]
+    libraries=["boost_python-mgw"]
+    library_dirs=['C:/Boost/lib']
+else :
+    include_dirs = ["/usr/include/boost-1_32","."]
+    libraries=["boost_python-gcc"]
+    library_dirs=['/usr/local/lib']
+
+files = ["test.cpp","itest.cpp"]
+
+setup(name="test",    
+      ext_modules=[
+                    Extension("test",files,
+                    library_dirs=library_dirs,
+                    libraries=libraries,
+                    include_dirs=include_dirs,
+                    depends=[]),
+                    ]
+     )
+
+For the above I compile and install boost using bjam
+then you set the appropriate paths to your boost header and libs
+It works on linux and windows with mingw
+
+That way u have nice cross platform build :)
