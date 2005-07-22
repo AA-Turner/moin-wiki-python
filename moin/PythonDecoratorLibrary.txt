@@ -205,17 +205,20 @@ of demonstration.)
 
 {{{
 #!python
-import sys, sets
+import sys
 
-WHAT_TO_DEBUG = sets.Set(['io', 'core'])  # change to what you need
+try: set
+except NameError: from sets import Set as set
 
-class deBug:
+WHAT_TO_DEBUG = set(['io', 'core'])  # change to what you need
+
+class debug:
     """ Decorator which helps to control what aspects of a program to debug
     on per-function basis. Aspects are provided as list of arguments. 
     It DOESN'T slowdown functions which aren't supposed to be debugged.
     """
     def __init__(self, aspects=None):
-        self.aspects = sets.Set(aspects)
+        self.aspects = set(aspects)
 
     def __call__(self, f):
         if self.aspects & WHAT_TO_DEBUG:
@@ -229,11 +232,11 @@ class deBug:
         else:
             return f
 
-@deBug(['io'])
+@debug(['io'])
 def prn(x):
     print x
 
-@deBug(['core'])
+@debug(['core'])
 def mult(x, y):
     return x * y
 
@@ -305,7 +308,7 @@ import warnings
 
 def deprecated(func):
     """This is a decorator which can be used to mark functions
-    as deprecated. It will result in a warning being emmitted
+    as deprecated. It will result in a warning being emitted
     when the function is used."""
     def newFunc(*args, **kwargs):
         warnings.warn("Call to deprecated function %s." % func.__name__,
@@ -374,8 +377,8 @@ def double(x):
     "Doubles a number"
     return 2*x
 
-assert(double.__name__ == 'double')
-assert(double.__doc__ == 'Doubles a number')
+assert double.__name__ == 'double'
+assert double.__doc__ == 'Doubles a number'
 print double(155)
 }}}
 
@@ -402,7 +405,8 @@ enabled = unchanged
 
 globalEnableFlag = int(True)
 
-@(disabled, enabled)[globalEnableFlag]
+state = (disabled, enabled)[globalEnableFlag]
+@state
 def specialFunctionFoo():
     print "function was enabled"
 }}}
@@ -417,16 +421,16 @@ def dumpArgs(func):
     argnames = func.func_code.co_varnames[:func.func_code.co_argcount]
     fname = func.func_name
     def echoFunc(*args,**kwargs):
-        print fname,":", ', '.join('%s=%r' % entry 
-                                   for entry in zip(argnames,args) + kwargs.items())
+        print fname, ":", ', '.join('%s=%r' % entry 
+                                    for entry in zip(argnames,args) + kwargs.items())
         return func(*args, **kwargs)
     return echoFunc
     
 @dumpArgs
 def f1(a,b,c):
-    print a+b+c
+    print a + b + c
     
-f1(1,2,3)
+f1(1, 2, 3)
 }}}
 
 
