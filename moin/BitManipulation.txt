@@ -98,6 +98,8 @@ Integers to Strings:
 
 We are still left without a technique for producing binary strings, and decyphering hex strings.
 
+== Hex String to Integer ==
+
 One approach to decyphering "0xdecafbad" style hex strings, is to use eval:
 
 {{{
@@ -107,6 +109,35 @@ One approach to decyphering "0xdecafbad" style hex strings, is to use eval:
 }}}
 
 However, this could be dangerous, depending on where you're getting your data from.
+
+Here's a function that is safer:
+
+{{{
+#!python
+def hex_to_integer(h):
+    """Convert a hex string to an integer.
+
+    The hex string can be any length. It can start with an 0x, or not.
+    Unrecognized characters will raise a ValueError.
+
+    This function released into the public domain by it's author, Lion
+    Kimbro.
+    """
+    num = 0  # Resulting integer
+    h = h.lower()  # Hex string
+    if h[:2] == "0x":
+        h = h[2:]
+    for c in h:  # Hex character
+        num = num * 16
+        if "0" <= c <= "9":
+            num = num + (ord(c) - ord("0"))
+        elif "a" <= c <= "f":
+            num = num + (ord(c) - ord("a"))
+            num = num + 10
+        else:
+            raise ValueError(c)
+    return num
+}}}
 
 == Research Links ==
 
