@@ -82,6 +82,32 @@ Individual bits.
 128
 }}}
 
+== Transformations Summary ==
+
+Strings to Integers:
+* {{{"1011101101"}}}: {{{int(str, 2)}}}
+* {{{"m"}}}: {{{ord(str)}}}
+* {{{"0xdecafbad"}}}: '''unknown technique'''
+* {{{"decafbad"}}}: '''unknown technique'''
+
+Integers to Strings:
+* {{{"1011101101"}}}: '''unknown technique'''
+* {{{"m"}}}: {{{chr(str)}}}
+* {{{"0xdecafbad"}}}: {{{hex(val)}}}
+* {{{"decafbad"}}}: {{{"%x" % val}}}
+
+We are still left without a technique for producing binary strings, and decyphering hex strings.
+
+One approach to decyphering "0xdecafbad" style hex strings, is to use eval:
+
+{{{
+#!python
+>>> eval("0xdecafbad")
+3737844653L
+}}}
+
+However, this could be dangerous, depending on where you're getting your data from.
+
 == Research Links ==
 
 this is the sort of thing we're looking for:
@@ -92,3 +118,5 @@ related modules:
  * [http://www.python.org/doc/current/lib/module-struct.html struct module] -- (issued with Python)
  * [http://www.python.org/doc/current/lib/module-binascii.html binascii module] -- (issued with Python)
  * [http://pyserial.sourceforge.net/ pySerial module] -- access the serial port
+
+see also: BitwiseOperators
