@@ -1,0 +1,15 @@
+= Path class Pre-Pre-PEP =
+
+== Implementation(s) ==
+
+Reinhold has modified Jason Orendorff's original path.py to fit discussions in python-dev and comp.lang.python and has placed it in Python CVS under nondist/sandbox/path.
+
+Other implementations to look at include the original, py.path and some things that others have mentioned on c.l.p. and python-dev
+
+== Design Principles ==
+
+1. A Path should be a drop-in replacement for a str or unicode as much as possible.
+
+2. Properties are the interface for immutable attributes of a Path. For example, a Path's basename will be the same regardless of data on the local filesystem.
+
+3. Methods are the interface for mutable attributes, for example, the last-modified-time.
