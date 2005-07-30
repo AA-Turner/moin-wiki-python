@@ -1,4 +1,17 @@
-<a href='http://www.bjicp.org' target=_blank>代办icp</a><br>
-<a href='http://www.bjicp.org' target=_blank>代办sp</a><br>
-<a href='http://www.bjicp.org' target=_blank>代办isp</a><br>
-<a href='http://www.bjicp.org' target=_blank>代办idc</a><br>
+= Path class Pre-Pre-PEP =
+
+== Implementation(s) ==
+
+Reinhold has modified Jason Orendorff's original path.py to fit discussions in python-dev and comp.lang.python and has placed it in Python CVS under nondist/sandbox/path.
+
+Other implementations to look at include the original, path.py and some things that others have mentioned on c.l.p. and python-dev.
+
+== Design Principles ==
+
+1. A Path should be a drop-in replacement for a str or unicode as much as possible.
+
+2. Properties are the interface for actual attributes of a Path. For example, a Path's basename will be the same regardless of data on the local filesystem. Accessing a Path property will never result in an IOError.
+
+3. Methods are the interface for attributes of whatever the Path represents, for example, the last-modified-time or contents of a file. Calling a Path method may result in an IOError if the method accesses the actual filesystem and finds a problem (e.g. the Path refers to a nonexistent file).
+
+4. Should be subclassable so third parties can offer richer subclasses.  Use {{{self.__class__()}}} instead of {{{Path()}}} in method bodies.  Alternate constructors like {{{Path.cwd()}}} should be a class methods rather than static methods.  (MikeOrr)
