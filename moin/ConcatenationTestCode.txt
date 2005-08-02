@@ -31,3 +31,24 @@ On the win32 Python 2.4 I'm seeing the join sample above complete in less than h
  -db
 
 Usually the join() is located ''outside'' the loop, that code makes this extremely hard though (becuase of the self-referencing of the generated string). But that situation is not the norm. -- JürgenHermann [[DateTime(2005-08-01T06:07:51Z)]]
+
+Are you guys kidding? The whole page is contrieved.
+Correct implementation of "join" is:
+{{{
+from time import time
+t = time()
+
+s = 'lksdajflakjdsflku09uweoir'
+r = [s]
+for x in range(40):
+    r.append(s[len(s)/2:])
+s = "".join(r)
+
+print 'duration:', time()-t
+}}}
+which gives on PythonWin 2.4 (#60, Nov 30 2004, 09:34:21) [MSC v.1310 32 bit (Intel)] on win32 execution times:
+{{{
+1st  duration: 54.4060001373
+Last duration: 0.0160000324249
+}}}
+-- -- MikeRovner [[DateTime(2005-08-02T10:19:06Z)]]
