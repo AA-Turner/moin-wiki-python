@@ -145,3 +145,16 @@ You'll need to delete the 'from __future__ import division' line from javaos.py 
 Alternatively, you could use java.lang.Runtime.exec() directly, but the os functions handle a lot of complexity for you.
 
 ----
+
+== How can I manipulate a java.util.Date object in Jython? ==
+
+{{{java.util.Date.getTime()}}} gives the milliseconds since the epoch while Jython (just like CPython) gives seconds since the epoch.  So you need to divide the values given from {{{java.util.Date}}} by 1000.  
+
+Example:
+{{{#!python
+>>> from java.util import Date
+>>> import time
+>>> times=(float(Date().time)/1000,time.time())
+>>> times[0]-times[1]
+0.0
+}}}
