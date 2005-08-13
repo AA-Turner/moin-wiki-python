@@ -168,3 +168,8 @@ Even if it looks TMTOWTDI, it makes implementing comparison so easy that it must
    def __cmp__(self, other):
       return cmp(self.member1, other.member1) or cmp(self.member2, other.member2)
 }}}
+Are rich comparisons really that much more complex?
+{{{#!python
+   def __lt__(self, other):
+      return (self.member1, other.member1) < (self.member2, other.member2)
+}}}
