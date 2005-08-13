@@ -158,3 +158,13 @@ In addition, using exceptions for normal control flow is not good code style.
 
 == Make API of set, list, dict more consistent ==
 No need for copy function.  A clear function for all of them.
+
+== Make copy and deepcopy built-ins, replace copy methods by __copy__ ==
+It would clarify how copy should be done.
+
+== Don't remove cmp() and __cmp__ ==
+Even if it looks TMTOWTDI, it makes implementing comparison so easy that it must be kept.  It TOOWTDI is important, maybe only keep __cmp__?
+{{{#!python
+   def __cmp__(self, other):
+      return cmp(self.member1, other.member1) or cmp(self.member2, other.member2)
+}}}
