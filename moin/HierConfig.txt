@@ -242,3 +242,48 @@ virtual_hosts :
 }}}
 
 You might use the dict to access a specific host, and the sequence for iterating over the hosts in a pre-determined order. -- VinaySajip
+
+----------
+I (MichaelFoord) have improved ConfigObj to handle nested sections. The config file syntax is based on the 'INI' format - so it will read files created for ConfigParser (with a few exceptions).
+
+It uses 'dictionary' access - which maintains a proper separation of the attribtues/methods of the object and the members of the config file.
+
+Nested sections are indicated by additional square brackets around the sections headers. It allows comma separated lists. It also allows single values to be multiple lines with triple quotes.
+
+See the [ http://www.voidspace.org.uk/python/configobj.html ConfigObj Homepage].
+
+{{{
+[virtual hosts]
+
+    [[host 1]]
+    domain = 'host1.my-company.com'
+    root = '/var/www/domains/host1.my-company.com/docs'
+
+    [[host 2]]
+    domain = 'host2.my-company.com'
+    root = '/var/www/domains/host2.my-company.com/docs'
+}}}
+
+You would then access this through :
+{{{
+# filename can also be a list of lines
+# or a StringIO instance
+config = ConfigObj(filename)
+#
+hosts = config['virtual hosts']
+host1 = hosts['host 1']
+host2 = hosts['host 2']
+domain1 = host1['domain']
+root1 = host1['root']
+#
+# or alternatively
+root1 = config['virutal hosts']['host 1']['root']
+}}}
+
+You can also set members and use the ``write`` method to write out the amended data.
+
+A nice added feature is the integrated validation system. This defines a a *simple* and easily extendible system for validating config files. The validating process can also do type conversion of the values.
+
+The system includes 'repeated sections' which are an easy way of saying 'teh following specification applies to *all* subsections in this section'. For the above example we could define a 'configspec' for all hosts. Every host we added would then be validated using that spec.
+
+For details of this see the [http://www.voidspace.org.uk/python/validate.html Validate Homepage].
