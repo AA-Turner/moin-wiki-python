@@ -151,3 +151,19 @@ kinds of developers, it is still considered beta.  Your feedback is greatly
 appreciated!
 
 [http://elmer.sourceforge.net]
+
+= Windows Build Mods =
+
+Needed to make a couple of changes to get it to build using Microsoft VS.Net 2003:
+
+{{{libTarget = buildEnv.StaticLibrary( target="elmer",
+                    source=ELMER_C_SRCS )
+}}}
+
+instead of:
+
+{{{libTarget = buildEnv.StaticLibrary( target="elmer",
+                    source=ELMER_C_SRCS + ELMER_H_FILES )
+}}}
+
+Also with MS.Net you need to specify CPPFLAGS=/TP on the commandline in order to compile a .c file as C++ (otherwise defaults to C compiler and fails).
