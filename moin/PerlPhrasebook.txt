@@ -366,6 +366,18 @@ sub printLoL
   printSep();
 }
 
+# which is longhand for:
+sub printLoL {
+        print $_[0] . "\n";
+        print join(" ", @$_) . "\n" foreach (@{$_[1]});
+        printSep();
+}
+
+# or even:
+sub printLoL {
+        print $_[0] . "\n", map(join(" ", @$_) . "\n" , @{$_[1]}), "=" x 60 . "\n";
+}
+
 # return numeric (or other) converted to string
 sub somefunc {  my ($i) = shift;  "$i";  }
 }}}
