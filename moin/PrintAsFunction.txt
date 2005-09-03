@@ -1,118 +1,115 @@
-This page discusses the benefits of replacing the current `print` statement with an equivalent builtin. The `println` function presented below does everything the `print` statement does without requiring any hacking of the grammar, and also makes a number of things significantly easier.
+This page discusses the benefits of replacing the current `print` statement with an equivalent builtin. The `write` and `writeln` functions presented below do everything the `print` statement does without requiring any hacking of the grammar, and also make a number of things significantly easier.
+
+Guido has made it clear he wants to get rid of the `print` statement in ["Python 3.0"]. This page considers why we want to go that way, and how we can actually get there. It will probably be turned into a PEP at some point.
 
 === Benefits of using a function instead of a statement ===
  * Extended call syntax provides better interaction with sequences
- * Keyword argument `sep` allows separator to be changed easily and obviously
- * Keyword argument `lnterm` allows line terminator to be changed easily and obviously
+ * Keyword argument `sep` allows item separator to be changed easily and obviously
+ * Keyword argument `linesep` could optionally allow line separator to be changed easily and obviously
  * Keyword argument `stream` allows easy and obvious redirection
  * The builtin can be replaced for application wide customisation (e.g. per-thread logging)
- * Interacts well with PEP 309's partial function application
+ * Interacts well with PEP 309's partial function application, and the rest of Python's ability to handle functions
 
 === Getting there from here ===
-The example implementation below shows that creating a function with the desired behaviour is quite straightforward. A problem only arises if we decide we want the builtin to have the name `print`. This seriously complicates transition, because `print` is a reserved word in Python 2.x. Since the `print` statement will be around until Py3K allows us to break backwards compatibility, devising a transition plan that lets programmers 'get ready early' for the Py3K transition becomes a significant challenge.
+The example implementation below shows that creating a function with the desired behaviour is quite straightforward. However, calling the builtin `print` is a problem due to the fact that `print` is a reserved word in Python 2.x. Since the `print` statement will be around until Py3K allows us to break backwards compatibility, devising a transition plan that lets programmers 'get ready early' for the Py3K transition becomes a significant challenge.
 
-If, on the other hand, the builtin had a different name (such as `println`), it would be quite feasible to introduce it during the 2.x series, with the only change in Py3K being the final removal of the `print` statement.
+If, on the other hand, the builtin has a different name, it is quite feasible to introduce it during the 2.x series. In [http://www.python.org/peps/pep-3000.htm PEP 3000], it is suggested that the `print` statement be replaced by two builtins: `write` and `writeln`. These names are used in the example below. By using alternative names, and providing the builtins in the 2.x series, it is possible to 'future-proof' code against the removal of the `print` statement in Py3k.
 
-Some names which have been suggested are:
+This technique of having two printing operations is not uncommon - Java has both `print` and `println` methods, and C# has `Write` and `WriteLine`.
+
+Some other names for the builtins which have been suggested are:
  * `print` - excellent name, but causes severe transition problems as described above
  * `println` - avoids the transition problems, reflects default behaviour of adding a line, matches Java method name
  * `printline` - similar to `println`, but avoids the somewhat cryptic abbreviation
+ * `writeline` - similar to `writeln`, but avoids the somewhat cryptic abbreviation
  * `out` - not a verb, and converting to it may be problematic due to shadowing by variable names
  * `output` - nice symmetry with input, but using the term as a verb is not typical
 
-An alternative transition strategy would be to add `println` during the Python 2.x series, then, in Py3k, remove the `print` statement and replace it with a `print` builtin which did not append a trailing line separator, and did not support the `lnterm` keyword. The use of `println` with `lnterm = ''` would then simply be a transition strategy - normal Py3k usage would be to use `print` if you didn't want the newline added, and `println` if you did. The `lnterm` argument to `println` would typically only be used to get a different line separator, rather than to eliminate the line separator entirely.
-
-This technique of having two methods is not uncommon - Java has both `print` and `println` methods, and C# has `Write` and `WriteLine`.
-
 === Sample implementation ===
-This is a Python 2.4 compatible sample implementation, which is why it uses the name `println` rather than `print`.
+This is a Python 2.4 compatible sample implementation. This version of `writeln` doesn't provide a `linesep` keyword argument in order to keep things simple.
 
 {{{#!python
-def println(*args, **kwds):
+def write(*args, **kwds):
     """Functional replacement for the print statement
 
-    >>> println(1, 2, 3)
-    1 2 3
-    >>> println(1, 2, 3, sep='')
-    123
-    >>> println(1, 2, 3, sep=', ')
-    1, 2, 3
-    >>> println(1, 2, 3, lnterm='Alternate line terminator\n')
-    1 2 3Alternate line terminator
-    >>> import sys
-    >>> println(1, 2, 3, stream=sys.stderr)
-    1 2 3
-    >>> println(*range(10))
-    0 1 2 3 4 5 6 7 8 9
-    >>> println(*(x*x for x in range(10)))
-    0 1 4 9 16 25 36 49 64 81
+    This function does NOT automatically append a line separator (use writeln for that)
     """
+    # Nothing to do if no positional arguments
+    if not args:
+        return
     # Parse the keyword-only optional arguments
-    defaults = {
+    kwd_values = {
         "sep": " ",
-        "lnterm": "\n",
         "stream": sys.stdout,
     }
-    for name, default in defaults.items():
-        item = None
+    for name, default in kwd_values.items():
         try:
             item = kwds[name]
         except KeyError:
-            pass
-        if item is None:
-            kwds[name] = default
-    sep, lnterm, stream = kwds["sep"], kwds["lnterm"], kwds["stream"]
+            continue
+        del kwds[name]
+        if item is not None:
+            kwd_values[name] = item
+    if kwds:
+        raise TypeError("%s is an invalid keyword argument for this function" % kwds.keys()[0])
+    sep, stream = kwd_values["sep"], kwd_values["stream"]
     # Perform the print operation without building the whole string
-    for arg in args[:1]:
-        stream.write(str(arg))
+    stream.write(str(args[0]))
     for arg in args[1:]:
         stream.write(sep)
         stream.write(str(arg))
-    stream.write(lnterm)
+
+def writeln(*args, **kwds):
+    """Functional replacement for the print statement
+
+    >>> writeln(1, 2, 3)
+    1 2 3
+    >>> writeln(1, 2, 3, sep='')
+    123
+    >>> writeln(1, 2, 3, sep=', ')
+    1, 2, 3
+    >>> import sys
+    >>> writeln(1, 2, 3, stream=sys.stderr)
+    1 2 3
+    >>> writeln(*range(10))
+    0 1 2 3 4 5 6 7 8 9
+    >>> writeln(*(x*x for x in range(10)))
+    0 1 4 9 16 25 36 49 64 81
+    """
+    # Perform the print operation without building the whole string
+    write(*args, **kwds)
+    write("\n", **kwds)
 }}}
 
 === Code comparisons ===
-These are some comparisons of current print statements with the equivalent code using the builtin.
+These are some comparisons of current `print` statements with the equivalent code using the builtins `write` and `writeln`.
 
-'''Standard printing:'''
 {{{#!python
+# Standard printing
 print 1, 2, 3
-println(1, 2, 3)
-}}}
+writeln(1, 2, 3)
 
-'''Printing without any spaces:'''
-{{{#!python
+# Printing without any spaces
 print "%d%d%d" % (1, 2, 3)
-println(1, 2, 3, sep='')
-}}}
+writeln(1, 2, 3, sep='')
 
-'''Print as comma separated list:'''
-{{{#!python
-print "%d, %d%, d" % (1, 2, 3)
-println(1, 2, 3, sep=', ')
-}}}
+# Print as comma separated list
+print "%d, %d, %d" % (1, 2, 3)
+writeln(1, 2, 3, sep=', ')
 
-'''Print without a trailing newline:'''
-{{{#!python
+# Print without a trailing newline
 print 1, 2, 3,
-println(1, 2, 3, lnterm='')
-print(1, 2, 3) # If Py3k gains a print builtin to replace the print statement
-}}}
+write(1, 2, 3)
 
-'''Print to a different stream:'''
-{{{#!python
+# Print to a different stream
 print >> sys.stderr, 1, 2, 3
-println(1, 2, 3, stream=sys.stderr)
-}}}
+writeln(1, 2, 3, stream=sys.stderr)
 
-'''Print a simple sequence:'''
-{{{#!python
+# Print a simple sequence
 print " ".join(map(str, range(10)))
-println(*range(10))
-}}}
+writeln(*range(10))
 
-'''Print a generator expression:'''
-{{{#!python
+# Print a generator expression
 print " ".join(str(x*x) for x in range(10))
-println(*(x*x for x in range(10)))
+writeln(*(x*x for x in range(10)))
 }}}
