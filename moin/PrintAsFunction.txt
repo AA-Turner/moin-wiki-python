@@ -13,6 +13,17 @@ The example implementation below shows that creating a function with the desired
 
 If, on the other hand, the builtin had a different name (such as `println`), it would be quite feasible to introduce it during the 2.x series, with the only change in Py3K being the final removal of the `print` statement.
 
+Some names which have been suggested are:
+ * `print` - excellent name, but causes severe transition problems as described above
+ * `println` - avoids the transition problems, reflects default behaviour of adding a line, matches Java method name
+ * `printline` - similar to `println`, but avoids the somewhat cryptic abbreviation
+ * `out` - not a verb, and converting to it may be problematic due to shadowing by variable names
+ * `output` - nice symmetry with input, but using the term as a verb is not typical
+
+An alternative transition strategy would be to add `println` during the Python 2.x series, then, in Py3k, remove the `print` statement and replace it with a `print` builtin which did not append a trailing line separator, and did not support the `lnterm` keyword. The use of `println` with `lnterm = ''` would then simply be a transition strategy - normal Py3k usage would be to use `print` if you didn't want the newline added, and `println` if you did. The `lnterm` argument to `println` would typically only be used to get a different line separator, rather than to eliminate the line separator entirely.
+
+This technique of having two methods is not uncommon - Java has both `print` and `println` methods, and C# has `Write` and `WriteLine`.
+
 === Sample implementation ===
 This is a Python 2.4 compatible sample implementation, which is why it uses the name `println` rather than `print`.
 
