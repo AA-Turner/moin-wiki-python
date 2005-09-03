@@ -1,6 +1,6 @@
 This page discusses the benefits of replacing the current `print` statement with an equivalent builtin. The `write` and `writeln` functions presented below do everything the `print` statement does without requiring any hacking of the grammar, and also make a number of things significantly easier.
 
-Guido has made it clear he wants to get rid of the `print` statement in ["Python 3.0"]. This page considers why we want to go that way, and how we can actually get there. It will probably be turned into a PEP at some point.
+Guido has made it clear he wants to get rid of the `print` statement in Python3.0. This page considers why we want to go that way, and how we can actually get there. It will probably be turned into a PEP at some point.
 
 === Benefits of using a function instead of a statement ===
  * Extended call syntax provides better interaction with sequences
@@ -15,13 +15,13 @@ The example implementation below shows that creating a function with the desired
 
 If, on the other hand, the builtin has a different name, it is quite feasible to introduce it during the 2.x series. In [http://www.python.org/peps/pep-3000.htm PEP 3000], it is suggested that the `print` statement be replaced by two builtins: `write` and `writeln`. These names are used in the example below. By using alternative names, and providing the builtins in the 2.x series, it is possible to 'future-proof' code against the removal of the `print` statement in Py3k.
 
-This technique of having two printing operations is not uncommon - Java has both `print` and `println` methods, and C# has `Write` and `WriteLine`.
+This technique of having two printing operations is not uncommon - Java has both `print` and `println` methods, and C# has `Write` and `WriteLine`. The main problem with the approach is that the `writeln` form will actually be more commonly used, but has the longer, less obvious name of the two proposed functions. This perception of relative use in based on a comparison of relative usage levels of the two current forms of the `print` statement (i.e., with and without the trailing comma).
 
 Some other names for the builtins which have been suggested are:
- * `print` - excellent name, but causes severe transition problems as described above
+ * `print` - excellent name, but causes transition problems as described above
  * `println` - avoids the transition problems, reflects default behaviour of adding a line, matches Java method name
- * `printline` - similar to `println`, but avoids the somewhat cryptic abbreviation
- * `writeline` - similar to `writeln`, but avoids the somewhat cryptic abbreviation
+ * `printline` - alternative to `println`, that avoids the somewhat cryptic abbreviation
+ * `writeline` - alternative to `writeln` that avoids the somewhat cryptic abbreviation
  * `out` - not a verb, and converting to it may be problematic due to shadowing by variable names
  * `output` - nice symmetry with input, but using the term as a verb is not typical
 
