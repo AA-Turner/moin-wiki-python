@@ -46,7 +46,13 @@ d.setdefault(function=list, [0]) }}} {{{#!python
 d.setdefault(function=dict, a=0, b=1)
 }}} The problem with this though is that then the function passed to setdefault can't take keyword parameters named either 'function' or 'value'.  I wonder if it wouldn't be better to replace setdefault with two functions, setdefaultvalue and setdefaultfunction... -- StevenBethard''
 
+Don't give in to the temptation to add *args and **kwds arguments everywhere that a function is passed in - PEP 309 allows this problem to be solved the 'right way':
 
+{{{#!python
+from functional import partial
+d.setdefault(function=partial(list, [0]))
+d.setdefault(function=partial(dict, a=0, b=1))
+}}}
 
 == Better boolean logic ==
 
