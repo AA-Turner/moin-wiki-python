@@ -1,4 +1,4 @@
-This page discusses the benefits of replacing the current print statement with an equivalent builtin. The output function presented below does everything the print statement does without requiring any hacking of the grammar, and also makes a number of things significantly easier.
+This page discusses the benefits of replacing the current `print` statement with an equivalent builtin. The `println` function presented below does everything the `print` statement does without requiring any hacking of the grammar, and also makes a number of things significantly easier.
 
 === Benefits of using a function instead of a statement ===
  * Extended call syntax provides better interaction with sequences
@@ -8,27 +8,32 @@ This page discusses the benefits of replacing the current print statement with a
  * The builtin can be replaced for application wide customisation (e.g. per-thread logging)
  * Interacts well with PEP 309's partial function application
 
+=== Getting there from here ===
+The example implementation below shows that creating a function with the desired behaviour is quite straightforward. A problem only arises if we decide we want the builtin to have the name `print`. This seriously complicates transition, because `print` is a reserved word in Python 2.x. Since the `print` statement will be around until Py3K allows us to break backwards compatibility, devising a transition plan that lets programmers 'get ready early' for the Py3K transition becomes a significant challenge.
+
+If, on the other hand, the builtin had a different name (such as `println`), it would be quite feasible to introduce it during the 2.x series, with the only change in Py3K being the final removal of the `print` statement.
+
 === Sample implementation ===
-This is a Python 2.4 compatible sample implementation, which is why it uses the name `output` rather than `print`. Try not to get too hung up on names at this stage :)
+This is a Python 2.4 compatible sample implementation, which is why it uses the name `println` rather than `print`. Try not to get too hung up on names at this stage :)
 
 {{{#!python
-def output(*args, **kwds):
+def println(*args, **kwds):
     """Functional replacement for the print statement
 
-    >>> output(1, 2, 3)
+    >>> println(1, 2, 3)
     1 2 3
-    >>> output(1, 2, 3, sep='')
+    >>> println(1, 2, 3, sep='')
     123
-    >>> output(1, 2, 3, sep=', ')
+    >>> println(1, 2, 3, sep=', ')
     1, 2, 3
-    >>> output(1, 2, 3, term='Alternate line terminator')
+    >>> println(1, 2, 3, term='Alternate line terminator')
     1 2 3Alternate line terminator
     >>> import sys
-    >>> output(1, 2, 3, stream=sys.stderr)
+    >>> println(1, 2, 3, stream=sys.stderr)
     1 2 3
-    >>> output(*range(10))
+    >>> println(*range(10))
     0 1 2 3 4 5 6 7 8 9
-    >>> output(*(x*x for x in range(10)))
+    >>> println(*(x*x for x in range(10)))
     0 1 4 9 16 25 36 49 64 81
     """
     # Parse the keyword-only optional arguments
@@ -61,41 +66,41 @@ These are some comparisons of current print statements with the equivalent code 
 '''Standard printing:'''
 {{{#!python
 print 1, 2, 3
-output(1, 2, 3)
+println(1, 2, 3)
 }}}
 
 '''Printing without any spaces:'''
 {{{#!python
 print "%d%d%d" % (1, 2, 3)
-output(1, 2, 3, sep='')
+println(1, 2, 3, sep='')
 }}}
 
 '''Print as comma separated list:'''
 {{{#!python
 print "%d, %d%, d" % (1, 2, 3)
-output(1, 2, 3, sep=', ')
+println(1, 2, 3, sep=', ')
 }}}
 
 '''Print without a trailing newline:'''
 {{{#!python
 print 1, 2, 3,
-output(1, 2, 3, term='')
+println(1, 2, 3, term='')
 }}}
 
 '''Print to a different stream:'''
 {{{#!python
 print >> sys.stderr, 1, 2, 3
-output(1, 2, 3, stream=sys.stderr)
+println(1, 2, 3, stream=sys.stderr)
 }}}
 
 '''Print a simple sequence:'''
 {{{#!python
 print " ".join(map(str, range(10)))
-output(*range(10))
+println(*range(10))
 }}}
 
 '''Print a generator expression:'''
 {{{#!python
 print " ".join(str(x*x) for x in range(10))
-output(*(x*x for x in range(10)))
+println(*(x*x for x in range(10)))
 }}}
