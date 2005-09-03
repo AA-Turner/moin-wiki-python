@@ -42,16 +42,9 @@ def write(*args, **kwds):
         "sep": " ",
         "stream": sys.stdout,
     }
-    for name, default in kwd_values.items():
-        try:
-            item = kwds[name]
-        except KeyError:
-            continue
-        del kwds[name]
-        if item is not None:
-            kwd_values[name] = item
-    if kwds:
-        raise TypeError("%s is an invalid keyword argument for this function" % kwds.keys()[0])
+    kwd_values.update(kwds)
+    if len(kwd_values) is not 2:
+        raise TypeError("write() and writeln() only accept sep and stream as keyword arguments")
     sep, stream = kwd_values["sep"], kwd_values["stream"]
     # Perform the print operation without building the whole string
     stream.write(str(args[0]))
