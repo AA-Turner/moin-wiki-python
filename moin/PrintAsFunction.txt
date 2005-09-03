@@ -34,33 +34,21 @@ def write(*args, **kwds):
 
     This function does NOT automatically append a line separator (use writeln for that)
     """
+
+    def parse_kwds(sep=" ", stream=sys.stdout):
+        """ Helper function to parse keyword arguments """
+        return sep, stream
+        
     # Nothing to do if no positional arguments
     if not args:
         return
-    # Parse the keyword-only optional arguments
-    kwd_values = {
-        "sep": " ",
-        "stream": sys.stdout,
-    }
-    # This code can't use dict.update directly, since it needs
-    # to ignore the keyword arg if the value is set to None
-    for name, default in kwd_values.items():
-        try:
-            value = kwds[name]
-        except KeyError:
-            continue
-        del kwds[name]
-        if item is not None:
-            kwd_values[name] = value
-    if kwds:
-        raise TypeError("write() and writeln() only accept sep and stream as keyword arguments")
-    sep, stream = kwd_values["sep"], kwd_values["stream"]
+    sep, stream = parse_kwds(**kwds)
     # Perform the print operation without building the whole string
     stream.write(str(args[0]))
     for arg in args[1:]:
         stream.write(sep)
         stream.write(str(arg))
-
+        
 def writeln(*args, **kwds):
     """Functional replacement for the print statement
 
