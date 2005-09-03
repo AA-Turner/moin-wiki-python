@@ -45,12 +45,7 @@ Other syntax ideas and feature ideas for ["Python3.0"] .
                  index[word].append(line)
 }}}
 
-    ''I definitely agree that this is the right way to go with setdefault.  Probably when the 'function' keyword argument is supplied, setdefault should take *args and **kwds parameters so that the following would also be valid: {{{#!python
-d.setdefault(function=list, [0]) }}} {{{#!python
-d.setdefault(function=dict, a=0, b=1)
-}}} The problem with this though is that then the function passed to setdefault can't take keyword parameters named either 'function' or 'value'.  I wonder if it wouldn't be better to replace setdefault with two functions, setdefaultvalue and setdefaultfunction... -- StevenBethard''
-
-Don't give in to the temptation to add *args and **kwds arguments everywhere that a function is passed in - PEP 309 allows this problem to be solved the 'right way':
+Note that it's not really necessary that setdefault() take *args and **kwargs arguments to be passed to the function; PEP 309 allows a reasonable solution to this problem:
 
 {{{#!python
 from functional import partial
@@ -163,8 +158,10 @@ pow() to the math module!
 Please don't. There are times where you want to know if an object is callable 
 without calling it. For instance if you create a metaclass and need to wrap 
 defined methods passed to {{{__new__}}}, and don't want to wrap class variables.
-In addition, using exceptions for normal control flow is not good code style.
 
+  ''Why use callable() then?  Isn't this what inspect.ismethod(), .isfunction() etc. are for? --StevenBethard''
+
+In addition, using exceptions for normal control flow is not good code style.
 
 == Make API of set, list, dict more consistent ==
 No need for copy function.  A clear function for all of them.
