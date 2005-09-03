@@ -42,8 +42,17 @@ def write(*args, **kwds):
         "sep": " ",
         "stream": sys.stdout,
     }
-    kwd_values.update(kwds)
-    if len(kwd_values) is not 2:
+    # This code can't use dict.update directly, since it needs
+    # to ignore the keyword arg if the value is set to None
+    for name, default in kwd_values.items():
+        try:
+            value = kwds[name]
+        except KeyError:
+            continue
+        del kwds[name]
+        if item is not None:
+            kwd_values[name] = value
+    if kwds:
         raise TypeError("write() and writeln() only accept sep and stream as keyword arguments")
     sep, stream = kwd_values["sep"], kwd_values["stream"]
     # Perform the print operation without building the whole string
