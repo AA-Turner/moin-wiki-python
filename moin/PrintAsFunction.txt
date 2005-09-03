@@ -119,3 +119,19 @@ writeln(1, 2, 3, '')
 }}}
 
 The default case should be to insert a newline.
+
+
+=== Iterating Iterables ===
+
+Another potentially interesting improvement could be for the function to iterate all iterables, in order to be able to use generator expressions without having to use the star syntax and to avoid the creation of a temporary sequence.  This would allow:
+
+{{{#!python
+# Print a generator expression
+print " ".join(str(x*x) for x in range(10))
+writeln(x*x for x in range(10))
+# Or optionally
+writeln((x*x for x in range(10)), iter=1)
+}}}
+
+This behaviour could be optionally triggered by a keyword argument "iter".
+Another possibility would be to always do the iteration and to force the caller to str() the generator if he wants to print it without iteration (happens rarely).
