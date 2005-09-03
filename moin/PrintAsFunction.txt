@@ -35,14 +35,15 @@ def write(*args, **kwds):
     This function does NOT automatically append a line separator (use writeln for that)
     """
 
-    def parse_kwds(sep=" ", stream=sys.stdout):
-        """ Helper function to parse keyword arguments """
-        return sep, stream
-        
     # Nothing to do if no positional arguments
     if not args:
         return
+
+    def parse_kwds(sep=" ", stream=sys.stdout):
+        """ Helper function to parse keyword arguments """
+        return sep, stream
     sep, stream = parse_kwds(**kwds)
+
     # Perform the print operation without building the whole string
     stream.write(str(args[0]))
     for arg in args[1:]:
