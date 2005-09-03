@@ -1,1 +1,45 @@
 This page discusses the benefits of replacing the current print statement with an equivalent builtin. The output function presented below does everything the print statement does without requiring an hacking of the grammar, and also makes a number of things significantly easier.
+
+{{{#!python
+def output(*args, **kwds):
+    """Functional replacement for the print statement
+
+    >>> output(1, 2, 3)
+    1 2 3
+    >>> output(1, 2, 3, sep='')
+    123
+    >>> output(1, 2, 3, sep=', ')
+    1, 2, 3
+    >>> output(1, 2, 3, end='Alternate line ending')
+    1 2 3Alternate line ending
+    >>> import sys
+    >>> output(1, 2, 3, stream=sys.stderr)
+    1 2 3
+    >>> output(*range(10))
+    0 1 2 3 4 5 6 7 8 9
+    >>> output(*(x*x for x in range(10)))
+    0 1 4 9 16 25 36 49 64 81
+    """
+    # Parse the keyword-only optional arguments
+    defaults = {
+        "sep": " ",
+        "end": "\n",
+        "stream": sys.stdout,
+    }
+    for name, default in defaults.items():
+        item = None
+        try:
+            item = kwds[name]
+        except KeyError:
+            pass
+        if item is None:
+            kwds[name] = default
+    sep, end, stream = kwds["sep"], kwds["end"], kwds["stream"]
+    # Perform the print operation without building the whole string
+    for arg in args[:1]:
+        stream.write(str(arg))
+    for arg in args[1:]:
+        stream.write(sep)
+        stream.write(str(arg))
+    stream.write(end)
+}}}
