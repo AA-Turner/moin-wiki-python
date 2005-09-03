@@ -144,3 +144,5 @@ writeln((x*x for x in range(10)), iter=1)
 
 This behaviour could be optionally triggered by a keyword argument "iter".
 Another possibility would be to always do the iteration and to force the caller to str() the generator if he wants to print it without iteration (happens rarely).
+
+  Nailing down this kind of behaviour is trickier than one might think. The python-dev discussion of the Python 2.5 candidate library function [http://mail.python.org/pipermail/python-dev/2005-March/052215.html itertools.walk] goes over some of the potential problems. We've survived without fancy iterator handling in the print statement - let's avoid adding anything we don't have a demonstrated need for (the extended call syntax stuff comes 'for free' with the conversion to using a function). - ''Nick Coghlan''
