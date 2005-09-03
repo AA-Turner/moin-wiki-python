@@ -54,3 +54,47 @@ def output(*args, **kwds):
         stream.write(str(arg))
     stream.write(term)
 }}}
+
+=== Code comparisons ===
+These are some comparisons of current print statements with the equivalent code using the builtin (again, don't get too hung up on names here).
+
+Standard printing:
+{{{#!python
+print 1, 2, 3
+output(1, 2, 3)
+}}}
+
+Printing without any spaces:
+{{{#!python
+print "%d%d%d" % (1, 2, 3)
+output(1, 2, 3, sep='')
+}}}
+
+Print as comma separated list:
+{{{#!python
+print "%d, %d%, d" % (1, 2, 3)
+output(1, 2, 3, sep=', ')
+}}}
+
+Print without a trailing newline:
+{{{#!python
+print 1, 2, 3
+output(1, 2, 3, term='')
+}}}
+
+Print to a different stream:
+{{{#!python
+print >> sys.stderr, 1, 2, 3
+output(1, 2, 3, stream=sys.stderr)
+}}}
+
+Print a simple sequence:
+{{{#!python
+print " ".join(map(str, range(10)))
+output(*range(10))
+}}}
+
+{{{#!python
+print " ".join(str(x*x) for x in range(10))
+output(*(x*x for x in range(10)))
+}}}
