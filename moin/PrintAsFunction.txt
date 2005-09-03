@@ -106,3 +106,16 @@ writeln(*range(10))
 print " ".join(str(x*x) for x in range(10))
 writeln(*(x*x for x in range(10)))
 }}}
+
+=== Newline / No-newline ===
+Another possibility to deal with the newline / no-newline cases would be to have a single function which would take an extra keyword argument "linesep" or "end" (or perhaps some slight magic: an empty string as the last argument), so to print without newline, you would do
+
+{{{#!python
+# Print without a trailing newline
+print 1, 2, 3,
+writeln(1, 2, 3, end='')
+# or (shorthand)
+writeln(1, 2, 3, '')
+}}}
+
+The default case should be to insert a newline.
