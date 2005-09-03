@@ -3,7 +3,7 @@ This page discusses the benefits of replacing the current `print` statement with
 === Benefits of using a function instead of a statement ===
  * Extended call syntax provides better interaction with sequences
  * Keyword argument `sep` allows separator to be changed easily and obviously
- * Keyword argument `term` allows line terminator to be changed easily and obviously
+ * Keyword argument `lnterm` allows line terminator to be changed easily and obviously
  * Keyword argument `stream` allows easy and obvious redirection
  * The builtin can be replaced for application wide customisation (e.g. per-thread logging)
  * Interacts well with PEP 309's partial function application
@@ -14,7 +14,7 @@ The example implementation below shows that creating a function with the desired
 If, on the other hand, the builtin had a different name (such as `println`), it would be quite feasible to introduce it during the 2.x series, with the only change in Py3K being the final removal of the `print` statement.
 
 === Sample implementation ===
-This is a Python 2.4 compatible sample implementation, which is why it uses the name `println` rather than `print`. Try not to get too hung up on names at this stage :)
+This is a Python 2.4 compatible sample implementation, which is why it uses the name `println` rather than `print`.
 
 {{{#!python
 def println(*args, **kwds):
@@ -26,7 +26,7 @@ def println(*args, **kwds):
     123
     >>> println(1, 2, 3, sep=', ')
     1, 2, 3
-    >>> println(1, 2, 3, term='Alternate line terminator')
+    >>> println(1, 2, 3, lnterm='Alternate line terminator\n')
     1 2 3Alternate line terminator
     >>> import sys
     >>> println(1, 2, 3, stream=sys.stderr)
@@ -39,7 +39,7 @@ def println(*args, **kwds):
     # Parse the keyword-only optional arguments
     defaults = {
         "sep": " ",
-        "term": "\n",
+        "lnterm": "\n",
         "stream": sys.stdout,
     }
     for name, default in defaults.items():
@@ -50,14 +50,14 @@ def println(*args, **kwds):
             pass
         if item is None:
             kwds[name] = default
-    sep, term, stream = kwds["sep"], kwds["term"], kwds["stream"]
+    sep, lnterm, stream = kwds["sep"], kwds["lnterm"], kwds["stream"]
     # Perform the print operation without building the whole string
     for arg in args[:1]:
         stream.write(str(arg))
     for arg in args[1:]:
         stream.write(sep)
         stream.write(str(arg))
-    stream.write(term)
+    stream.write(lnterm)
 }}}
 
 === Code comparisons ===
@@ -84,7 +84,7 @@ println(1, 2, 3, sep=', ')
 '''Print without a trailing newline:'''
 {{{#!python
 print 1, 2, 3,
-println(1, 2, 3, term='')
+println(1, 2, 3, lnterm='')
 }}}
 
 '''Print to a different stream:'''
