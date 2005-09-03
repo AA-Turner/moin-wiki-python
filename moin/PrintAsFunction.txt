@@ -147,3 +147,102 @@ This behaviour could be optionally triggered by a keyword argument "iter".
 Another possibility would be to always do the iteration and to force the caller to str() the generator if he wants to print it without iteration (happens rarely).
 
   Nailing down this kind of behaviour is trickier than one might think. The python-dev discussion of the Python 2.5 candidate library function [http://mail.python.org/pipermail/python-dev/2005-March/052215.html itertools.walk] goes over some of the potential problems. We've survived without fancy iterator handling in the print statement - let's avoid adding anything we don't have a demonstrated need for (the extended call syntax stuff comes 'for free' with the conversion to using a function). - ''Nick Coghlan''
+
+=== Another Strawman ===
+Here's my own strawman implementation of {{{write()}}} and {{{writef()}}} using semantics I think are pretty useful.  I'll post to python-dev about the details. - ''Barry Warsaw''
+
+{{{#!python
+import sys
+from string import Template
+
+class Separator:
+    def __init__(self, sep):
+        self.sep = sep
+
+SPACE = Separator(' ')
+EMPTY = Separator('')
+
+
+def writef(fmt, *args, **kws):
+    if 'to' in kws:
+        to = kws.get('to')
+        del kws['to']
+    else:
+        to = sys.stdout
+    if 'nl' in kws:
+        nl = kws.get('nl')
+        del kws['nl']
+        if nl is True:
+            nl = '\n'
+        elif nl is False:
+            nl = ''
+    else:
+        nl = '\n'
+    if isinstance(fmt, Template):
+        if args:
+            raise TypeError('invalid positional arguments')
+        s = fmt.substitute(kws)
+    else:
+        if kws:
+            raise TypeError('invalid keyword arguments')
+        s = fmt % args
+    to.write(s)
+    to.write(nl)
+
+
+def write(*args, **kws):
+    if 'to' in kws:
+        to = kws.get('to')
+        del kws['to']
+    else:
+        to = sys.stdout
+    if 'nl' in kws:
+        nl = kws.get('nl')
+        del kws['nl']
+        if nl is True:
+            nl = '\n'
+        elif nl is False:
+            nl = ''
+    else:
+        nl = '\n'
+    if 'sep' in kws:
+        sep = kws.get('sep')
+        del kws['sep']
+    else:
+        sep = ' '
+    if kws:
+        raise TypeError('invalid keyword arguments')
+    it = iter(args)
+    # Suppress leading separator, but consume all Separator instances
+    for s in it:
+        if isinstance(s, Separator):
+            sep = args[0].sep
+        else:
+            # Don't write a leading separator
+            to.write(str(s))
+            break
+    for s in it:
+        if isinstance(s, Separator):
+            sep = s.sep
+        else:
+            to.write(sep)
+            to.write(str(s))
+    to.write(nl)
+
+
+obj = object()
+refs = sys.getrefcount(obj)
+
+write('obj:', obj, 'refs:', refs)
+write(Separator(': '), 'obj', obj,
+      Separator(', '), 'refs',
+      Separator(': '), refs,
+      nl=False)
+write()
+
+writef('obj: %s, refs: %s', obj, refs)
+writef(Template('obj: $obj, refs: $refs, obj: $obj'),
+       obj=obj, refs=refs,
+       to=sys.stderr,
+       nl=False)
+write()}}}
