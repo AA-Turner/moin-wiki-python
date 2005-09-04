@@ -1,6 +1,6 @@
 This page discusses the benefits of replacing the current `print` statement with an equivalent builtin. The `write` and `writeln` functions presented below do everything the `print` statement does without requiring any hacking of the grammar, and also make a number of things significantly easier.
 
-Guido has made it clear he wants to get rid of the `print` statement in ["Python3.0"]. This page considers why we would want to go that way, and how we can actually get there. It will probably be turned into a PEP at some point.
+Guido has made it clear he wants to get rid of the `print` statement in ["Python3.0"]. This page considers why we would want to go that way, and how we can actually get there. It should be turned into a PEP eventually.
 
 === Benefits of using a function instead of a statement ===
  * Extended call syntax provides better interaction with sequences
@@ -236,4 +236,72 @@ writef(Template('obj: $obj, refs: $refs, obj: $obj'),
        nl=False)
 write()}}}
 
-  For the code comparisons shown earlier, simply put `write` where `writeln` is currently used, and add the keyword argument `nl=False` for the no trailing newline case. I quite like this approach. - ``Nick Coghlan``
+  For the code comparisons shown earlier, simply put `write` where `writeln` is currently used, and add the keyword argument `nl=False` for the no trailing newline case. I quite like this approach. - ''Nick Coghlan''
+
+=== Another variant - `format` builtin ===
+Barry's `writef` builtin cuts down a little on the typing, but is somewhat inflexible in that it only supports `string %` or `string.Template` formatting when printing directly to a stream. It also causes problems by preventing the use of `to` or `nl` as keywords in the format string. A separate `format` builtin would deal with both of those problems, at the expense of some extra typing when using it. Such a builtin would also help with avoiding some of the tuple related quirks of the string mod operator, as well as making it easy to write code that supports both types of string formatting. The version below is based on Barry's, but eliminates the `Separator` concept, and replaces `writef` with `format` - ''Nick Coghlan''
+
+{{{#!python
+import sys
+from string import Template
+
+# Real implementation would avoid blocking use of 'fmt'
+# as an element of the formatting string
+def format(fmt, *args, **kws):
+    if isinstance(fmt, Template):
+        if args:
+            raise TypeError('invalid positional arguments')
+        s = fmt.substitute(kws)
+    else:
+        if kws:
+            s = fmt % kws
+        else:
+            s = fmt % args
+    return s
+
+
+def write(*args, **kws):
+    if 'to' in kws:
+        to = kws.get('to')
+        del kws['to']
+    else:
+        to = sys.stdout
+    if 'nl' in kws:
+        nl = kws.get('nl')
+        del kws['nl']
+        if nl is True:
+            nl = '\n'
+        elif nl is False:
+            nl = ''
+    else:
+        nl = '\n'
+    if 'sep' in kws:
+        sep = kws.get('sep')
+        del kws['sep']
+    else:
+        sep = ' '
+    if kws:
+        raise TypeError('invalid keyword arguments')
+    for s in args[:1]:
+        to.write(str(s))
+    for s in args[1:]:
+        to.write(sep)
+        to.write(str(s))
+    to.write(nl)
+
+
+obj = object()
+refs = sys.getrefcount(obj)
+
+write('obj:', obj, 'refs:', refs)
+write('obj:', obj, 'refs:', refs, sep=', ', nl=False)
+write()
+
+write(format('obj: %s, refs: %s', obj, refs))
+write(format('obj: %(obj)s, refs: %(refs)s', obj=obj, refs=refs))
+write(format(Template('obj: $obj, refs: $refs, obj: $obj'),
+              obj=obj, refs=refs),
+       to=sys.stderr,
+       nl=False)
+write()
+}}}
