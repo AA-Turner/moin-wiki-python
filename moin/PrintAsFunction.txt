@@ -205,7 +205,7 @@ def write(*args, **kws):
     # Suppress leading separator, but consume all Separator instances
     for s in it:
         if isinstance(s, Separator):
-            sep = args[0].sep
+            sep = args[0].sep # Should this be s.sep?
         else:
             # Don't write a leading separator
             to.write(str(s))
@@ -235,3 +235,5 @@ writef(Template('obj: $obj, refs: $refs, obj: $obj'),
        to=sys.stderr,
        nl=False)
 write()}}}
+
+  For the code comparisons shown earlier, simply put `write` where `writeln` is currently used, and add the keyword argument `nl=False` for the no trailing newline case. I quite like this approach. - ``Nick Coghlan``
