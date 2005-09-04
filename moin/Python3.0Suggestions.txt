@@ -198,3 +198,7 @@ Extended function call syntax currently does not play well with iterators becaus
 If the extended function call syntax was able to avoid forcing the creation of the tuple, then the choice would be easy - always use the positional argument support.
 
   There are some serious compatibility problems with this idea, and Guido has said "Never gonna happen" on [http://mail.python.org/pipermail/python-dev/2005-September/056113.html python-dev]
+
+== Require __iter__() for UserDict instead of keys() ==
+
+Currently, UserDict.DictMixin requires the methods {{{__getitem__()}}}, {{{__setitem__()}}}, {{{__delitem__()}}}, and {{{keys()}}} to supply the appropriate other methods of the dict interface.  I would prefer that it require {{{__iter__()}}} instead of {{{keys()}}}.  [http://mail.python.org/pipermail/python-list/2005-January/258569.html As I understand it], the fact that it uses {{{keys()}}} instead of {{{__iter__()}}} is mainly due to the order of introduction of {{{keys()}}} and {{{__iter__()}}}.  Since {{{keys()}}} can easily be defined in terms of {{{__iter__()}}}, in Python 3.0, I'd like to see {{{__iter__()}}} be the required method instead. -- StevenBethard
