@@ -196,3 +196,5 @@ Make a set literal:
 Extended function call syntax currently does not play well with iterators because it produces a tuple to be passed in to the function. This means API developers face a tough choice - either accept an iterator and make the function clumsier for use with a short sequence of specific variables (as the user of the API has to create a throwaway list or tuple), or use positional arguments and make the API iterator unfriendly (as an iterator passed via extended function call syntax gets unraveled and stuffed into a tuple).
 
 If the extended function call syntax was able to avoid forcing the creation of the tuple, then the choice would be easy - always use the positional argument support.
+
+  There are some serious compatibility problems with this idea, and Guido has said "Never gonna happen" on [http://mail.python.org/pipermail/python-dev/2005-September/056113.html python-dev]
