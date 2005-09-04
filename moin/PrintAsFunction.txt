@@ -309,3 +309,14 @@ write()
 === Displaying iterators ===
 I'm looking into an approach which adds explicit support for displaying iterators into the string mod operator. The intent is that `"%''j" % (my_seq,)` will become roughly equivalent to `''.join(map(str, my_seq))`. - ''Nick Coghlan''
  
+[http://sourceforge.net/tracker/?func=detail&aid=1281573&group_id=5470&atid=305470 SF Patch #1281573] for anyone who wants to play with it. Only strings are supported so far (no Unicode), but it illustrates the concept quite well.
+
+{{{#!python
+# Print a simple sequence
+print " ".join(map(str, range(10)))
+print "%' 'j" % range(10)
+
+# Print a generator expression
+print " ".join(str(x*x) for x in range(10))
+print "%' 'j" % (x*x for x in range(10))
+}}}
