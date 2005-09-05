@@ -16,6 +16,74 @@ Guido has made it clear he wants to get rid of the `print` statement in ["Python
        * add to benefits: easier transition to other function/method calls
        * if it were me, I'd use 'to=' or 'file=' rather than 'stream=' (too long)
 
+=== Guido's own arguments ===
+
+There is a theoretical argument: print is the only application-level
+functionality that has a statement dedicated to it. Within Python's
+world, syntax is generally used as a last resort, when something
+''can't'' be done without help from the compiler. Print doesn't qualify
+for such an exception (quite the opposite actually).
+
+But more important to me are my own experiences exploring the
+boundaries of print.
+
+ * I quite often come to a point in the evolution of a program where I
+ need to change all print statements into logging calls, or calls into
+ some other I/O or UI library. If print were a function, this would be
+ a straightforward string replacement; as it is, finding where to add
+ the parentheses is often a pain (the end isn't always on the same line
+ as the start). It's even worse if there are already ">>stream" options
+ present. Trailing commas also make this more complicated than it needs
+ to be.
+
+ * Having special syntax puts up a much larger barrier for evolution of
+ a feature. For examle, adding printf (or changing print to printf) is
+ a much bigger deal now that print is a statement than if it had been a
+ built-in function: trial implementations are much more work, there are
+ only a few people who know how to modify Python's bytecode compiler,
+ etc. (Having printf() be a function and print remain a statement is of
+ course a possibility, but only adds more confusion and makes printf()
+ a second-class citizen, thereby proving my point.)
+
+ * There is a distinct non-linearity in print's ease of use once you
+ decide that you don't want to have spaces between items; you either
+ have to switch to using sys.stdout.write(), or you have to collect all
+ items in a string. This is not a simple transformation, consider what
+ it takes to get rid of the spaces before the commas in this simple
+ example:
+ 
+     {{{print "x =", x, ", y =", y, ", z =", z}}}
+
+ If it was a built-in function, having a built-in companion function
+ that did a similar thing without inserting spaces and adding a newline
+ would be the logical thing to do (or adding keyword parameters to
+ control that behavior; but I prefer a second function); but with only
+ print as it currently stands, you'd have to switch to something like
+
+     {{{print "x = " + str(x) + ", y = " + str(x) + ", z = " + str(z)}}}
+
+ or
+
+     {{{print "x = %s, y = %s, z = %s" % (x, y, z)}}}
+
+ neither of which is very attractive. (And don't tell me that the
+ spaces are no big deal -- they aren't in ''this'' example, but they are
+ in other situations.)
+
+ * If it were a function, it would be much easier to replace it within
+ one module (just {{{def print(*args):...}}}) or even throughout a program
+ (e.g. by putting a different function in {{{__builtin__.print}}}). As it is,
+ you can do this by writing a class with a write() method and
+ assigning that to sys.stdout -- that's not bad, but definitely a much
+ larger conceptual leap, and it works at a different level than print.
+
+Summarizing, my main problems with print as a statement are the
+transformations -- when print doesn't cut it, you have to switch to
+something entirely different. If it were a function the switch would
+feel much smoother. I find that important: things that are
+conceptually related should be syntactically related (within the realm
+of common sense, as always).
+
 === Getting there from here ===
 The example implementation below shows that creating a function with the desired behaviour is quite straightforward. However, calling the builtin `print` is a problem due to the fact that `print` is a reserved word in Python 2.x. Since the `print` statement will be around until Py3K allows us to break backwards compatibility, devising a transition plan that lets programmers 'get ready early' for the Py3K transition becomes a significant challenge.
 
@@ -257,7 +325,7 @@ write()}}}
     ''BDFL comments:'' I like the write/writef parallel; would like it even more if it was print/printf.
     But please drop the Separator thing.  The use case isn't common enough to burden people with
     the possibility.  Also, we need to spend more time researching the formatting language.
-    (See a post in python-dev by Steven Bethard: "string formatting options and removing basestring.__mod__".
+    (See a post in python-dev by Steven Bethard: "string formatting options and removing {{{basestring.__mod__}}}".
 
 === Another variant - `format` builtin ===
 Barry's `writef` builtin cuts down a little on the typing, but is somewhat inflexible in that it only supports `string %` or `string.Template` formatting when printing directly to a stream. It also causes problems by preventing the use of `to` or `nl` as keywords in the format string. A separate `format` builtin would deal with both of those problems, at the expense of some extra typing when using it. Such a builtin would also help with avoiding some of the tuple related quirks of the string mod operator, as well as making it easy to write code that supports both types of string formatting. The version below is based on Barry's, but eliminates the `Separator` concept, and replaces `writef` with `format` - ''Nick Coghlan''
