@@ -130,6 +130,8 @@ The default case should be to insert a newline.
 
     ''BDFL comments:'' I definitely am not keen on the single function with keyword args.  IMO all you need is a companion
     function that inserts no separator and no newline; the desired separators are then easily given explicitly.
+    Oh, and you will never get away with using the final empty string to mean "no newline". This would be very confusing
+    for someone who printed a variable like so: {{{print("The value is:", x)}}} when the variable happens to be empty.
 
 === Iterating Iterables ===
 
