@@ -10,6 +10,12 @@ Guido has made it clear he wants to get rid of the `print` statement in ["Python
  * The builtin can be replaced for application wide customisation (e.g. per-thread logging)
  * Interacts well with PEP 309's partial function application, and the rest of Python's ability to handle functions
 
+     ''BDFL comments:''
+       * don't waste your time on sequence printing
+       * I'm not excited about sep and linesep keyword args
+       * add to benefits: easier transition to other function/method calls
+       * if it were me, I'd use 'to=' or 'file=' rather than 'stream=' (too long)
+
 === Getting there from here ===
 The example implementation below shows that creating a function with the desired behaviour is quite straightforward. However, calling the builtin `print` is a problem due to the fact that `print` is a reserved word in Python 2.x. Since the `print` statement will be around until Py3K allows us to break backwards compatibility, devising a transition plan that lets programmers 'get ready early' for the Py3K transition becomes a significant challenge.
 
@@ -24,6 +30,8 @@ Some other names for the builtins which have been suggested are:
  * `writeline` - alternative to `writeln` that avoids the somewhat cryptic abbreviation
  * `out` - not a verb, and converting to it may be problematic due to shadowing by variable names
  * `output` - nice symmetry with input, but using the term as a verb is not typical
+ * `prnt` - easily edited into `print` later on
+ * `write` - decent name, but confusing when compared to write() method
 
 === Sample implementation ===
 This is a Python 2.4 compatible sample implementation of the approach currently in [http://www.python.org/peps/pep-3000.html PEP 3000]. This version of `writeln` doesn't provide a `linesep` keyword argument in order to keep things simple. Some other variations are covered further down this Wiki page.
@@ -120,6 +128,9 @@ The default case should be to insert a newline.
 
   I quite like the single function idea (early versions of this Wiki page used only a single function), but giving it a good name is challenging. The version without the keyword argument is a definite non-starter, though, as there is far too much risk of quirky behaviour when printing a string variable which just happens to contain the empty string. - ''Nick Coghlan''
 
+    ''BDFL comments:'' I definitely am not keen on the single function with keyword args.  IMO all you need is a companion
+    function that inserts no separator and no newline; the desired separators are then easily given explicitly.
+
 === Iterating Iterables ===
 
 Another potentially interesting improvement could be for the function to iterate all iterables, in order to be able to use generator expressions without having to use the star syntax and to avoid the creation of a temporary sequence.  This would allow:
@@ -136,6 +147,9 @@ This behaviour could be optionally triggered by a keyword argument "iter".
 Another possibility would be to always do the iteration and to force the caller to str() the generator if he wants to print it without iteration (happens rarely).
 
   Nailing down this kind of behaviour is trickier than one might think. The python-dev discussion of the Python 2.5 candidate library function [http://mail.python.org/pipermail/python-dev/2005-March/052215.html itertools.walk] goes over some of the potential problems. We've survived without fancy iterator handling in the print statement - let's avoid adding anything we don't have a demonstrated need for (the extended call syntax stuff comes 'for free' with the conversion to using a function). - ''Nick Coghlan''
+
+    ''BDFL comments:'' bah. implicitly exhausting iterables has side effects, which is a bad idea for a print function.
+    It would not be a good idea if commenting out a print() call changes the behavior of the program.
 
 === Another Strawman ===
 Here's my own strawman implementation of {{{write()}}} and {{{writef()}}} using semantics I think are pretty useful.  I'll post to python-dev about the details. - ''Barry Warsaw''
@@ -238,6 +252,11 @@ write()}}}
 
   For the code comparisons shown earlier, simply put `write` where `writeln` is currently used, and add the keyword argument `nl=False` for the no trailing newline case. I quite like this approach. - ''Nick Coghlan''
 
+    ''BDFL comments:'' I like the write/writef parallel; would like it even more if it was print/printf.
+    But please drop the Separator thing.  The use case isn't common enough to burden people with
+    the possibility.  Also, we need to spend more time researching the formatting language.
+    (See a post in python-dev by Steven Bethard: "string formatting options and removing basestring.__mod__".
+
 === Another variant - `format` builtin ===
 Barry's `writef` builtin cuts down a little on the typing, but is somewhat inflexible in that it only supports `string %` or `string.Template` formatting when printing directly to a stream. It also causes problems by preventing the use of `to` or `nl` as keywords in the format string. A separate `format` builtin would deal with both of those problems, at the expense of some extra typing when using it. Such a builtin would also help with avoiding some of the tuple related quirks of the string mod operator, as well as making it easy to write code that supports both types of string formatting. The version below is based on Barry's, but eliminates the `Separator` concept, and replaces `writef` with `format` - ''Nick Coghlan''
 
@@ -320,3 +339,5 @@ print "%' 'j" % range(10)
 print " ".join(str(x*x) for x in range(10))
 print "%' 'j" % (x*x for x in range(10))
 }}}
+
+    ''BDFL comments:'' again, please don't do this.
