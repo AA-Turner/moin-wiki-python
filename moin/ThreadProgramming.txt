@@ -42,14 +42,14 @@ Il costrutto o funzione {{{EventChannel.waitEvent()}}} è un blocco operativo. C
 
  * Make the {{{shutdown()}}} method put some harmless event on the event channel:
  * Realiziamo il metodo  {{{shutdown()}}}  e spingiamo un innocuo evento  nel channel event:
- 
+
 {{{
   def shutdown(self):
     self.stopFlag = 1
     self.eventChannel.push_event(NullEvent())
 }}}
 
- * Or use a Queue to pass data. Handle errors in the handler (e.g. print them to the console), keep the thread alive. 
+ * Or use a Queue to pass data. Handle errors in the handler (e.g. print them to the console), keep the thread alive.
  * Oppure usiamo una coda per passare i dati. Manovrare gli errori con il manipolatore( es. stampa da console),mantiene vivo il processo.
 
 {{{
@@ -58,7 +58,7 @@ import Queue, threading, traceback
 
 class StopMarker:
     """This is used as an individual stopper item."""
-    
+
 class Worker(threading.Thread):
     """Get items from a queue and call the handler with the item.
     Errors in the handler are printed to stderr, the thread
@@ -66,7 +66,7 @@ class Worker(threading.Thread):
     An individual stop marker is used, so you can pass everyting
     as item (including None).
     """
-    
+
     def __init__(self, handler):
         """Initialize Thread object and worker."""
         threading.Thread.__init__(self)
@@ -74,7 +74,7 @@ class Worker(threading.Thread):
         self.handler = handler
         self.queue   = Queue.Queue()
         self.stopper = StopMarker()
-    
+
     def run(self):
         """Worker loop. Errors in the handler are printed to
         stderr and the thread continues with the next item."""
@@ -87,7 +87,7 @@ class Worker(threading.Thread):
                     self.handler(item)
             except:
                 traceback.print_exc()
-    
+
     def stop(self):
         """Stop the worker thread and wait until it terminates.
         (Waits until last item is processed)"""
@@ -101,7 +101,7 @@ class Worker(threading.Thread):
 if __name__ == '__main__':
     def printer(item):
         print "printer(%r)" % item
-    
+
     w = Worker(printer)
     w.start()
     for i in range(10):
@@ -119,7 +119,7 @@ Ho un modulo C che pone delle interrogazioni ad un Databases. Queste queries pon
 {{{time.sleep()}}}, se stesse in pausa, blocco il corrente processo finchè questo non ha finito, ma permetto ad altri processi di continuare le loro operazioni. Non vedo questa asserzione pubblicata in nessuno dei libri che possiedo.
 
   ''This can't be handled in Python code. The author of the database module should use Py_BEGIN_ALLOW_THREADS and Py_END_ALLOW_THREADS around blocking calls to permit other threads to run. ''
-" Ciò può essere attuato con il codice python. L'autore del D.B. 
+" Ciò può essere attuato con il codice python. L'autore del D.B.
 
 
 = Resources =
@@ -127,3 +127,17 @@ Ho un modulo C che pone delle interrogazioni ad un Databases. Queste queries pon
  * [http://starship.python.net/crew/aahz/OSCON2001/index.html Aahz OSCON 2001 presentation
 
  * Italian version of this page: Processo Programma
+
+
+ == this is my text ==
+
+[http://latina.click.hn.org/index.htm | latina]
+[http://latina.click.hn.org/latinas/ | latinas]
+[http://latina.click.hn.org/hot-latinas/ | hot latinas]
+[http://latina.click.hn.org/8th-street-latina/ | 8th street latina]
+[http://latina.click.hn.org/latina-sex/ | latina sex]
+[http://latina.click.hn.org/latina-girls/ | latina girls]
+[http://latina.click.hn.org/latina-ass/ | latina ass]
+[http://latina.click.hn.org/latina-pussy/ | latina pussy]
+[http://latina.click.hn.org/latina-porn/ | latina porn]
+[http://latina.click.hn.org/latinas-in-thongs/ | latinas in thongs]
