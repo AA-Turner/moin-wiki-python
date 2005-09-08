@@ -185,15 +185,33 @@ Library releases available from: http://developer.berlios.de/project/showfiles.p
 Mentor: Mark Hammond
 
 
-= Interactive Python Notebook =
+= Interactive Python Notebooks =
 
-(Toni Alatalo, http://an.org/programming/) 
+Students: 
+  * Toni Alatalo, [http://an.org/programming], Documnet transformation functionality.
+  * Tzanko Matev, graphical user interface.
 
-http://www.scipy.org/wikis/featurerequests/NoteBook
+Further details:
+[http://www.scipy.org/wikis/featurerequests/NoteBook]
 
 Original proposal: [http://ipython.scipy.org/google_soc/ipnb_google_soc.pdf].
 
-Mentor: Fernando Perez
+Mentors: Fernando Perez and Robert Kern
+
+'''Outcome after the official work period'''
+
+The students have successfully implemented a prototype of a GUI and the underlying machinery for document transformation.  Currently the WXPython-based GUI accepts normal python code and the extended set of ipython commands, normal text (not #comments, but regular text processed as a separate entity) and embedded figures.  The document transformation infrastructure (XML based) can render these files into LaTeX, HTML or PDF, including mathematical notation.
+
+The code is still considered alpha quality, but the basics are in place.  We are in the process (as of 9/8/05) of cleaning things up to allow early testers to download it and play with it.  Those willing to test out of the raw Subversion repository can do so by  checking out the nbshell component:
+
+svn co http://ipython.scipy.org/svn/ipython/nbshell/trunk nbshell
+
+which includes instructions on the other pieces needed.
+
+Those interested in the following the development can do so either on the ipython-dev maling list, or by browsing the Trac pages for IPython at:
+
+http://projects.scipy.org/ipython/ipython
+
 
 = Porting _sre.c and arraymodule.c to Python =
 
@@ -251,16 +269,6 @@ organizational firewalls and web admins.
 
 Mentors: Ian Bicking
 
-
-= A Mathematica-like Notebook GUI for IPython =
-
-(Tzanko Matev)
-
-I propose to write a GUI for IPython resembling the
-interfaces of the computer algebra applications Mathematica
-and Maple.
-
-Mentor: Fernando Perez
 
 = PythonModulePackaging =
 (Vincenzo Di Massa)
