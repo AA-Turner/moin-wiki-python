@@ -49,10 +49,11 @@ And for some strange reason, Python only comes with "utf-8" and "utf-16" as vali
 You can:
 
 {{{
- >>> bytes = "H\x00i\x00\n\x00"
- >>> unistring = bytes.decode('utf-16')
- >>> print unistring
- u'Hi\n'
+#!python
+>>> bytes = "H\x00i\x00\n\x00"
+>>> unistring = bytes.decode('utf-16')
+>>> print unistring
+u'Hi\n'
 }}}
 
 You can do that for either "utf-8" or "utf-16." But for some reason, I can't say "utf-32" or "utf-32LE" (LE=little endian). I have no idea why. I also don't know how it is that my Python programs are producing UTF-32 for you..!
@@ -62,19 +63,20 @@ I've been wanting to diagram how Python unicode works, like how I diagrammed it'
 Basically, "encode" is meant to be called ''from'' unicode data, and "decode" is meant to be called ''from'' bytes data. Continuing from above:
 
 {{{
- >>> bytes
- 'H\x00i\x00\n\x00'
- >>> unistring = bytes.decode('utf-16')
- >>> unistring
- u'Hi\n'
- >>> unistring.encode('utf-8')
- 'Hi\n'
- >>> unistring.encode('utf-16')
- '\xff\xfeH\x00i\x00\n\x00'
- >>> unistring.encode('utf-32')
- Traceback (most recent call last):
-   File "<stdin>", line 1, in ?
- LookupError: unknown encoding: utf-32
+#!python
+>>> bytes
+'H\x00i\x00\n\x00'
+>>> unistring = bytes.decode('utf-16')
+>>> unistring
+u'Hi\n'
+>>> unistring.encode('utf-8')
+'Hi\n'
+>>> unistring.encode('utf-16')
+'\xff\xfeH\x00i\x00\n\x00'
+>>> unistring.encode('utf-32')
+Traceback (most recent call last):
+  File "<stdin>", line 1, in ?
+LookupError: unknown encoding: utf-32
 }}}
 
 I'm guessing that the "\xff" at the beginning of the utf-16 encoding is a byte-order marker, saying "this is little endian."
