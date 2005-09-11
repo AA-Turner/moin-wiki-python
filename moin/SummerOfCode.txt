@@ -1,5 +1,3 @@
-Note: if a project is listed as having two mentors, the first mentor listed is the ''primary'' mentor, and the second one is the ''back-up'' mentor.
-
 = Python Implementation of the Data Access Protocol =
 
 (Roberto Antonio Ferreira De Almeida)
@@ -122,6 +120,8 @@ Based on the statically determined type information, the compiler currently perf
 Single-level class duplication is imprecise, because it only duplicates class types once for each allocation site, and allocation sites may be duplicated during analysis (as CPA possibly creates many templates for each function.) Extending it to N levels, or NCFA, would make the analysis terribly exponential and still not precise for deep polymorphism. For the summer of code, my main goal will be to efficiently and precisely handle data polymorphism up to arbitrary depths. I am currently looking into an iterative technique developed by John Plevyak. (Tiejun & Wang's technique is incomprehensible, and I don't see how the method used in Starkiller would work.) My other large goal will be to generate generics of appreciable complexity, based on the inferred types, i.e. to determine whether types may be uniformly parameterized, and to generate class and function templates. Finally, I will integrate an existing C++ garbage collector into the run-time system in order to clean up objects that could not be stack- or statically pre-allocated. 
 
 '''Result:''' Plevyak's method has been implemented. Function and class templates of arbitrary complexity are generated. The Boehm garbage collector has been integrated. In total about 2000 lines have been added during the SoC. 123 (all) unit tests compile correctly, among which 6 larger non-trivial programs of between 100 and 200 lines. These are analyzed in a few seconds on a fast cpu, and become 10-50 times faster after compilation. Mission accomplished! :)
+
+([http://mail.python.org/pipermail/summerofcode/2005-September/000179.html Announcement of first release])
 
 Mentors: Jeremy Hylton, Brett Cannon
 
@@ -287,3 +287,5 @@ Create a mechanism for fully automated packaging of python modules based on an u
 
 Mentor:  
 Matthias Klose
+
+Note: if a project is listed as having two mentors, the first mentor listed is the ''primary'' mentor, and the second one is the ''back-up'' mentor.
