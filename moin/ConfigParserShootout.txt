@@ -212,7 +212,7 @@ If someone could show me a way to meet the above desires whilst using Python syn
 
 == ZConfig ==
 
-[http://www.zope.org/Members/fdrake/zconfig/ ZConfig] - This Python package is a bit larger than some of the others, but provides for schema-based development of configuration structures.  The schema language uses XML, but the configuration language is more like Apache's.  Sections are typed and completely nestable.
+[http://www.zope.org/Members/fdrake/zconfig/ ZConfig] - This Python package is a bit larger than some of the others, but provides for schema-based development of configuration structures.  The schema language uses XML, but the configuration language is more like Apache's.  Sections are typed and completely nestable.  The basic implementation does have some limitations that are tedious to work around if you run into them.  One that can bite quickly is that names in the configuration language are case-insensitive by default; for versions before 2.3.1 this was terribly difficult to work around without copying lots of code, and even with 2.3.1 it takes more than it should.
 
 
 == tconfpy ==
@@ -496,7 +496,7 @@ The part that isnt addressed here that bothers me yet is how to weave in the a
 
 == Complexity killed the cat! ==
 
-Look at what happened to urllib2 - the entry level for new users was greatly enhanced, but the added functionality was really little more than what you could already do more simply with urllib. With that in mind, I think the new ConfigParser should in it's simplest form act very closely like the original ConfigParser.
+Look at what happened to `urllib2` - the entry level for new users was greatly enhanced, but the added functionality was really little more than what you could already do more simply with `urllib`. With that in mind, I think the new `ConfigParser` should in it's simplest form act very closely like the original `ConfigParser`.
 
     -- DavidWilson
 
@@ -509,6 +509,6 @@ My implementation (http://cfgparse.sourceforge.net/) could be useful for impleme
 
 == Status of Shootout ==
 
-So where are we? The wiki hasn't seen much activity since January. Are any of these on track for 2.5? As strictly a user, most of these seem over-engineered for the standard library (to me anyway). cfgparse (dan gass) seemed the most approachable to me. XML, or some new configuration
+So where are we? The wiki hasn't seen much activity since January. Are any of these on track for 2.5? As strictly a user, most of these seem over-engineered for the standard library (to me anyway). `cfgparse` (dan gass) seemed the most approachable to me. XML, or some new configuration
 'language' in the file is way too much. Keeping to a similar (or even matching) API to optparse is important to me.
 But where are we? -- HunterMatthews (showing up as 82 in the edit log)
