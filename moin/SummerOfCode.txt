@@ -62,6 +62,178 @@ Mentor: David Ascher.
 David says: The project successfully animates several Python program through instrumentation of the low-level hooks inside standard Python interpreters.  The demonstration program works, and a screencast is avalable off of the project's home page for people who don't have access to a Linux machine with the required dependencies installed.  The project needs more work before it can be useful in an educational context, and there are probably features & bug fixes needed, but the foundational bits seem good!
 
 
+= Wax =
+
+(Jason Gedge)
+
+This project consists of updating the Wax library for Python. Code
+will be updated, or even added, to further develop the Wax
+library. Also, a primary focus will be that of documentation, which
+Wax currently lacks.
+
+Mentors: Hans Nowak
+
+Result: many additions to Wax were released in these two months, including WaxRF (a system to load forms from XML, much like wxPython's XRC), a documentation viewing/generating tool, and a number of new controls. Some existing issues were also fixed (OverlaySizer, Wizard). More information at http://zephyrfalcon.org/weblog2/arch_e10_00810.html#e817.
+
+= Data Serving/Collection Framework in Python/WSGI =
+
+Ho Chun Wei, blog: http://cwho.blogspot.com/
+
+A framework based on bulk data serving/collection via the
+internet. Bulk data are in the form of files that could easily be
+several hundred MB (not surveys or simple POST data).
+
+The client has a file repository that it wishes to sync to the server
+(a WSGI application). This server should be able to facilitate
+transfer via a number of protocols, including HTTP file transfer, HTTP
+form upload, FTP, Email.
+
+This project is aimed not at yet another ad-hoc file transfer or p2p
+file-sharing program but as a persistent production setup for
+transferring data from data collection sites/areas to a server,
+possibly via internet through different methods to get through strict
+organizational firewalls and web admins.
+
+Mentors: Ian Bicking
+
+== Outcome ==
+
+I'd consider the code a 
+solid beta.  There's probably packaging and documentation work to be 
+done, but that's the kind of thing that only user experience feedback 
+will really accomplish well, IMHO.  Also it's something where there's No 
+One Right Way (yet!) to distribute web applications, so it'll evolve in 
+time.
+
+We changed projects at the start from his original proposal to something 
+we both found more interesting/useful, a WebDAV server.  There were good 
+generic WebDAV tests already written (acceptance only, but picky 
+acceptance tests).
+
+= Python Bayesian Network Toolbox =
+
+(Elliot Cohen)
+
+Understanding about Bayesian Belief Networks and use of them is
+becoming more and more widespread.  As understanding develops and
+spreads out of the research community, there is greater and greater
+need for a simple to use efficient open source Bayesian Network
+Toolbox.  Bayesian Networks have been used to study a wide array of
+different areas including, ecological systems, medical diagnoses and
+financial modeling, among others.  Currently, tools to define and use
+Bayesian Networks are limited to expensive closed source libraries or
+open source libraries designed for too specific a domain.  One package
+that does support many varieties of Bayesian Networks is Kevin
+Murphy's Full BNT, which supports both discrete and continuous
+probability distributions in static and dynamic Bayesian Networks.
+
+For (almost) daily updates please see http://elliotpbnt.blogspot.com.
+
+Mentor: James Tauber
+
+== Outcome ==
+
+Elliot Cohen has done a great job with the Python Bayes Network  
+Toolbox. He will undoubtedly continue working on pbnt after the SoC but I've  
+encouraged him to get it ready for an initial release to get it out  
+to a wider audience.
+
+I have high hopes that this package will be useful to people wanting  
+to do real work on Bayesian Network based inference and learning and  
+I'm excited that the existence of pbnt means Python becomes a natural  
+choice for this sort of work.
+
+= Efficiently Analysing Data Polymorphism and Deducing Generics in Shedskin =
+
+(Mark Dufour)
+
+As part of my Master's Thesis, I am working on a Python-to-C++ compilation system, called Shedskin. Currently, it performs static type inference based on two techniques. The Cartesian Product Algorithm is used to handle parametric polymorphism (calling functions with different combinations of argument types); single-level class duplication, or 1CFA, is employed to handle data polymorphism (mostly polymorphic containers, such as list; in 1CFA, each allocation site gets its own class type, so we can analyze these (somewhat) precisely.) Run-time checks such as 'isinstance' are considered during inference. Further, short tuples are analyzed internally, which of course is especially important in case of Python. 
+
+Based on the statically determined type information, the compiler currently performs stack- and static pre-allocation (using a simple escape analysis, and the static call graph respectively) and unboxing. Further, it generates polymorphic inline caches or virtual calls when a singleton type set cannot be deduced.
+ 
+Single-level class duplication is imprecise, because it only duplicates class types once for each allocation site, and allocation sites may be duplicated during analysis (as CPA possibly creates many templates for each function.) Extending it to N levels, or NCFA, would make the analysis terribly exponential and still not precise for deep polymorphism. For the summer of code, my main goal will be to efficiently and precisely handle data polymorphism up to arbitrary depths. I am currently looking into an iterative technique developed by John Plevyak. (Tiejun & Wang's technique is incomprehensible, and I don't see how the method used in Starkiller would work.) My other large goal will be to generate generics of appreciable complexity, based on the inferred types, i.e. to determine whether types may be uniformly parameterized, and to generate class and function templates. Finally, I will integrate an existing C++ garbage collector into the run-time system in order to clean up objects that could not be stack- or statically pre-allocated. 
+
+'''Result:''' Plevyak's method has been implemented. Function and class templates of arbitrary complexity are generated. The Boehm garbage collector has been integrated. In total about 2000 lines have been added during the SoC. 123 (all) unit tests compile correctly, among which 6 larger non-trivial programs of between 100 and 200 lines. These are analyzed in a few seconds on a fast cpu, and become 10-50 times faster after compilation. Mission accomplished! :)
+
+([http://mail.python.org/pipermail/summerofcode/2005-September/000179.html Announcement of first release])
+
+Mentors: Jeremy Hylton, Brett Cannon
+
+= Mailbox modification =
+
+(Gregory K. Johnson)
+
+Web page: http://gkj.freeshell.org/soc
+
+I intend to rewrite the Python library's mailbox module to support
+mailbox modification. I will extend the module's API (e.g., mailboxes
+will sport dictionary-like mapping) and enhance certain existing
+functionality (e.g., message objects will maintain
+mailbox-format-specific attributes). Full backward compatibility will
+be maintained.
+
+'''Result:''' The modified version of the mailbox module is in the nondist/ tree 
+of Python CVS (nondist/sandbox/mailbox).  I think it's acceptable for inclusion in the standard library, and is now waiting for a second opinion from some other Python developer, to see if there's any disagreement.  I expect this code will get into Python 2.5.
+
+Mentor: Andrew Kuchling
+
+= Interactive Python Notebooks =
+
+Students: 
+  * Toni Alatalo, [http://an.org/programming], Documnet transformation functionality.
+  * Tzanko Matev, graphical user interface.
+
+Further details:
+[http://www.scipy.org/wikis/featurerequests/NoteBook]
+
+Original proposal: [http://ipython.scipy.org/google_soc/ipnb_google_soc.pdf].
+
+Mentors: Fernando Perez and Robert Kern
+
+== Outcome after the official work period ==
+
+The students have successfully implemented a prototype of a GUI and the underlying machinery for document transformation.  Currently the WXPython-based GUI accepts normal python code and the extended set of ipython commands, normal text (not #comments, but regular text processed as a separate entity) and embedded figures.  The document transformation infrastructure (XML based) can render these files into LaTeX, HTML or PDF, including mathematical notation.
+
+The code is still considered alpha quality, but the basics are in place.  We are in the process (as of 9/8/05) of cleaning things up to allow early testers to download it and play with it.  Those willing to test out of the raw Subversion repository can do so by  checking out the nbshell component:
+
+svn co http://ipython.scipy.org/svn/ipython/nbshell/trunk nbshell
+
+which includes instructions on the other pieces needed.
+
+Those interested in the following the development can do so either on the ipython-dev maling list, or by browsing the Trac pages for IPython at:
+
+http://projects.scipy.org/ipython/ipython
+
+
+= Porting _sre.c and arraymodule.c to Python =
+
+(Niklaus Haldimann, Blog: http://ubique.ch/soc)
+
+I would like to create a port of the standard library modules "_sre" and "array" to pure Python. This will benefit alternative Python implementations like PyPy, Jython and IronPython. These projects all have to provide their own implementations of standard library modules written in C if they're not available in pure Python.
+
+Mentors: Armin Rigo, Samuele Pedroni
+
+== Outcome ==
+
+Niklaus Haldimann has done everything planned and more on writing a pure
+Python implementation of the _sre (core of regular expressions) and
+array modules (http://codespeak.net/svn/user/nik).  In addition to the
+base work, he made regular releases of the _sre module (three so far).
+This is a drop-in replacement for the equivalent C modules; for example,
+_sre.py could be used in projects that need to run on top of Python 2.3
+or earlier, while using regexps that require the recursion-less approach
+introduced in 2.4 and supported by _sre.py.
+
+He has also integrated the modules with PyPy (he was present at two PyPy
+sprints); in the case of the _sre module, he ported it to
+"interpreter-level", which means that in addition to integration, he
+made sure that the code is static enough to be automatically
+translatable to good C code, like the rest of PyPy.  This should give an
+excellent write-once, translate-to-anything regular expression engine
+that might also be used as the basis for a Jython or IronPython module
+(or even back to a C extension module for CPython).
+
+
 = Object-Oriented File System Virtualisation =
 
 (Adam Kerz)
@@ -121,39 +293,6 @@ by its translation tools.
 
 Mentors: Samuele Pedroni, Armin Rigo
 
-= Efficiently Analysing Data Polymorphism and Deducing Generics in Shedskin =
-
-(Mark Dufour)
-
-As part of my Master's Thesis, I am working on a Python-to-C++ compilation system, called Shedskin. Currently, it performs static type inference based on two techniques. The Cartesian Product Algorithm is used to handle parametric polymorphism (calling functions with different combinations of argument types); single-level class duplication, or 1CFA, is employed to handle data polymorphism (mostly polymorphic containers, such as list; in 1CFA, each allocation site gets its own class type, so we can analyze these (somewhat) precisely.) Run-time checks such as 'isinstance' are considered during inference. Further, short tuples are analyzed internally, which of course is especially important in case of Python. 
-
-Based on the statically determined type information, the compiler currently performs stack- and static pre-allocation (using a simple escape analysis, and the static call graph respectively) and unboxing. Further, it generates polymorphic inline caches or virtual calls when a singleton type set cannot be deduced.
- 
-Single-level class duplication is imprecise, because it only duplicates class types once for each allocation site, and allocation sites may be duplicated during analysis (as CPA possibly creates many templates for each function.) Extending it to N levels, or NCFA, would make the analysis terribly exponential and still not precise for deep polymorphism. For the summer of code, my main goal will be to efficiently and precisely handle data polymorphism up to arbitrary depths. I am currently looking into an iterative technique developed by John Plevyak. (Tiejun & Wang's technique is incomprehensible, and I don't see how the method used in Starkiller would work.) My other large goal will be to generate generics of appreciable complexity, based on the inferred types, i.e. to determine whether types may be uniformly parameterized, and to generate class and function templates. Finally, I will integrate an existing C++ garbage collector into the run-time system in order to clean up objects that could not be stack- or statically pre-allocated. 
-
-'''Result:''' Plevyak's method has been implemented. Function and class templates of arbitrary complexity are generated. The Boehm garbage collector has been integrated. In total about 2000 lines have been added during the SoC. 123 (all) unit tests compile correctly, among which 6 larger non-trivial programs of between 100 and 200 lines. These are analyzed in a few seconds on a fast cpu, and become 10-50 times faster after compilation. Mission accomplished! :)
-
-([http://mail.python.org/pipermail/summerofcode/2005-September/000179.html Announcement of first release])
-
-Mentors: Jeremy Hylton, Brett Cannon
-
-= Mailbox modification =
-
-(Gregory K. Johnson)
-
-Web page: http://gkj.freeshell.org/soc
-
-I intend to rewrite the Python library's mailbox module to support
-mailbox modification. I will extend the module's API (e.g., mailboxes
-will sport dictionary-like mapping) and enhance certain existing
-functionality (e.g., message objects will maintain
-mailbox-format-specific attributes). Full backward compatibility will
-be maintained.
-
-'''Result:''' The modified version of the mailbox module is in the nondist/ tree 
-of Python CVS (nondist/sandbox/mailbox).  I think it's acceptable for inclusion in the standard library, and is now waiting for a second opinion from some other Python developer, to see if there's any disagreement.  I expect this code will get into Python 2.5.
-
-Mentor: Andrew Kuchling
 
 = Memory Profiler =
 
@@ -168,39 +307,6 @@ calculating the size of each object it finds.
 
 Mentors: Michael Hudson, Jeremy Hylton
 
-= Python Bayesian Network Toolbox =
-
-(Elliot Cohen)
-
-Understanding about Bayesian Belief Networks and use of them is
-becoming more and more widespread.  As understanding develops and
-spreads out of the research community, there is greater and greater
-need for a simple to use efficient open source Bayesian Network
-Toolbox.  Bayesian Networks have been used to study a wide array of
-different areas including, ecological systems, medical diagnoses and
-financial modeling, among others.  Currently, tools to define and use
-Bayesian Networks are limited to expensive closed source libraries or
-open source libraries designed for too specific a domain.  One package
-that does support many varieties of Bayesian Networks is Kevin
-Murphy's Full BNT, which supports both discrete and continuous
-probability distributions in static and dynamic Bayesian Networks.
-
-For (almost) daily updates please see http://elliotpbnt.blogspot.com.
-
-Mentor: James Tauber
-
-== Outcome ==
-
-Elliot Cohen has done a great job with the Python Bayes Network  
-Toolbox. He will undoubtedly continue working on pbnt after the SoC but I've  
-encouraged him to get it ready for an initial release to get it out  
-to a wider audience.
-
-I have high hopes that this package will be useful to people wanting  
-to do real work on Bayesian Network based inference and learning and  
-I'm excited that the existence of pbnt means Python becomes a natural  
-choice for this sort of work.
-
 
 = asyncIO =
 
@@ -214,62 +320,6 @@ Library releases available from: http://developer.berlios.de/project/showfiles.p
 
 Mentor: Mark Hammond
 
-
-= Interactive Python Notebooks =
-
-Students: 
-  * Toni Alatalo, [http://an.org/programming], Documnet transformation functionality.
-  * Tzanko Matev, graphical user interface.
-
-Further details:
-[http://www.scipy.org/wikis/featurerequests/NoteBook]
-
-Original proposal: [http://ipython.scipy.org/google_soc/ipnb_google_soc.pdf].
-
-Mentors: Fernando Perez and Robert Kern
-
-== Outcome after the official work period ==
-
-The students have successfully implemented a prototype of a GUI and the underlying machinery for document transformation.  Currently the WXPython-based GUI accepts normal python code and the extended set of ipython commands, normal text (not #comments, but regular text processed as a separate entity) and embedded figures.  The document transformation infrastructure (XML based) can render these files into LaTeX, HTML or PDF, including mathematical notation.
-
-The code is still considered alpha quality, but the basics are in place.  We are in the process (as of 9/8/05) of cleaning things up to allow early testers to download it and play with it.  Those willing to test out of the raw Subversion repository can do so by  checking out the nbshell component:
-
-svn co http://ipython.scipy.org/svn/ipython/nbshell/trunk nbshell
-
-which includes instructions on the other pieces needed.
-
-Those interested in the following the development can do so either on the ipython-dev maling list, or by browsing the Trac pages for IPython at:
-
-http://projects.scipy.org/ipython/ipython
-
-
-= Porting _sre.c and arraymodule.c to Python =
-
-(Niklaus Haldimann, Blog: http://ubique.ch/soc)
-
-I would like to create a port of the standard library modules "_sre" and "array" to pure Python. This will benefit alternative Python implementations like PyPy, Jython and IronPython. These projects all have to provide their own implementations of standard library modules written in C if they're not available in pure Python.
-
-Mentors: Armin Rigo, Samuele Pedroni
-
-== Outcome ==
-
-Niklaus Haldimann has done everything planned and more on writing a pure
-Python implementation of the _sre (core of regular expressions) and
-array modules (http://codespeak.net/svn/user/nik).  In addition to the
-base work, he made regular releases of the _sre module (three so far).
-This is a drop-in replacement for the equivalent C modules; for example,
-_sre.py could be used in projects that need to run on top of Python 2.3
-or earlier, while using regexps that require the recursion-less approach
-introduced in 2.4 and supported by _sre.py.
-
-He has also integrated the modules with PyPy (he was present at two PyPy
-sprints); in the case of the _sre module, he ported it to
-"interpreter-level", which means that in addition to integration, he
-made sure that the code is static enough to be automatically
-translatable to good C code, like the rest of PyPy.  This should give an
-excellent write-once, translate-to-anything regular expression engine
-that might also be used as the basis for a Jython or IronPython module
-(or even back to a C extension module for CPython).
 
 = Profile Replacement =
 
@@ -286,54 +336,6 @@ When this all gets completed and time is left over one of the things to investig
 The project is registered as pyprof on savannah.nongnu.org: http://savannah.nongnu.org/projects/pyprof
 
 Mentor: Brett Cannon
-
-= Wax =
-
-(Jason Gedge)
-
-This project consists of updating the Wax library for Python. Code
-will be updated, or even added, to further develop the Wax
-library. Also, a primary focus will be that of documentation, which
-Wax currently lacks.
-
-Mentors: Hans Nowak
-
-Result: many additions to Wax were released in these two months, including WaxRF (a system to load forms from XML, much like wxPython's XRC), a documentation viewing/generating tool, and a number of new controls. Some existing issues were also fixed (OverlaySizer, Wizard). More information at http://zephyrfalcon.org/weblog2/arch_e10_00810.html#e817.
-
-= Data Serving/Collection Framework in Python/WSGI =
-
-Ho Chun Wei, blog: http://cwho.blogspot.com/
-
-A framework based on bulk data serving/collection via the
-internet. Bulk data are in the form of files that could easily be
-several hundred MB (not surveys or simple POST data).
-
-The client has a file repository that it wishes to sync to the server
-(a WSGI application). This server should be able to facilitate
-transfer via a number of protocols, including HTTP file transfer, HTTP
-form upload, FTP, Email.
-
-This project is aimed not at yet another ad-hoc file transfer or p2p
-file-sharing program but as a persistent production setup for
-transferring data from data collection sites/areas to a server,
-possibly via internet through different methods to get through strict
-organizational firewalls and web admins.
-
-Mentors: Ian Bicking
-
-== Outcome ==
-
-I'd consider the code a 
-solid beta.  There's probably packaging and documentation work to be 
-done, but that's the kind of thing that only user experience feedback 
-will really accomplish well, IMHO.  Also it's something where there's No 
-One Right Way (yet!) to distribute web applications, so it'll evolve in 
-time.
-
-We changed projects at the start from his original proposal to something 
-we both found more interesting/useful, a WebDAV server.  There were good 
-generic WebDAV tests already written (acceptance only, but picky 
-acceptance tests).
 
 = PythonModulePackaging =
 (Vincenzo Di Massa)
