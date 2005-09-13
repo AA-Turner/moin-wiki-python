@@ -1,6 +1,14 @@
+These are the Google "Summer of Code" projects involving Python.
+
+Note: if a project is listed as having two mentors, the first mentor listed is the ''primary'' mentor, and the second one is the ''back-up'' mentor.
+
 = Python Implementation of the Data Access Protocol =
 
-(Roberto Antonio Ferreira De Almeida)
+Student: Roberto Antonio Ferreira De Almeida
+
+Mentor: Paul DuBois.
+
+== Proposal ==
 
 The Data Access Protocol (DAP) is a data transmission protocol
 designed specifically for science data. The protocol relies on the
@@ -21,28 +29,30 @@ used by the scientific community, including NetCDF and Matlab files.
 
 The proposal was completed as stated, and is already in use by some scientists. It can be used together with the Python-based CDAT tool or alone. 
 
-Mentor: Paul DuBois.
-
-
 = Bitten: A Python framework for collecting software metrics from automated builds =
 
-(Christopher Lenz)
-
-The goal of this work is to design and implement a distributed system for automated builds and continuous integration that allows the central collection and storage of software metrics generated during the build. The information collected this way needs to be structured and available in a machine-readable format, so that it can be analyzed, aggregated/correlated and presented after the build itself has completed.
+Student: Christopher Lenz
 
 Mentors: Greg Wilson, Trent Mick.
 
+== Proposal ==
+
+The goal of this work is to design and implement a distributed system for automated builds and continuous integration that allows the central collection and storage of software metrics generated during the build. The information collected this way needs to be structured and available in a machine-readable format, so that it can be analyzed, aggregated/correlated and presented after the build itself has completed.
+
 == Outcome ==
 
-Lots of
-good code, very good time management and prioritization, and he's
+Lots of good code, very good time management and prioritization, and he's
 delivered a working system.  (Lots still to be done, of course, but it's
 up and running.)  See http://bitten.cmlenz.net for details.
 
 
 = OpenExVis - A Program Visualization Tool =
 
-(Tero Kuusela)
+Student: Tero Kuusela
+
+Mentor: David Ascher.
+
+== Proposal ==
 
 The goal is to write, in Python, a functional program visualization
 tool that can visualize Python code.  With the visualization tool, one
@@ -54,9 +64,6 @@ The project website, where you can also find the original proposal sent to
 Google, is at http://openexvis.sourceforge.net/ and the progress during
 Summer of Code is tracked in Tero's blog at http://www.teroajk.net/blog/ .
 
-Mentor: David Ascher.
-
-
 == Outcome ==
 
 David says: The project successfully animates several Python program through instrumentation of the low-level hooks inside standard Python interpreters.  The demonstration program works, and a screencast is avalable off of the project's home page for people who don't have access to a Linux machine with the required dependencies installed.  The project needs more work before it can be useful in an educational context, and there are probably features & bug fixes needed, but the foundational bits seem good!
@@ -64,20 +71,30 @@ David says: The project successfully animates several Python program through ins
 
 = Wax =
 
-(Jason Gedge)
+Student: Jason Gedge
+
+Mentors: Hans Nowak
+
+== Proposal ==
 
 This project consists of updating the Wax library for Python. Code
 will be updated, or even added, to further develop the Wax
 library. Also, a primary focus will be that of documentation, which
 Wax currently lacks.
 
-Mentors: Hans Nowak
+== Outcome ==
 
-Result: many additions to Wax were released in these two months, including WaxRF (a system to load forms from XML, much like wxPython's XRC), a documentation viewing/generating tool, and a number of new controls. Some existing issues were also fixed (OverlaySizer, Wizard). More information at http://zephyrfalcon.org/weblog2/arch_e10_00810.html#e817.
+Many additions to Wax were released in these two months, including WaxRF (a system to load forms from XML, much like wxPython's XRC), a documentation viewing/generating tool, and a number of new controls. Some existing issues were also fixed (OverlaySizer, Wizard). More information at http://zephyrfalcon.org/weblog2/arch_e10_00810.html#e817.
 
 = Data Serving/Collection Framework in Python/WSGI =
 
-Ho Chun Wei, blog: http://cwho.blogspot.com/
+Student: Ho Chun Wei
+
+Weblog: http://cwho.blogspot.com/
+
+Mentors: Ian Bicking
+
+== Proposal ==
 
 A framework based on bulk data serving/collection via the
 internet. Bulk data are in the form of files that could easily be
@@ -93,8 +110,6 @@ file-sharing program but as a persistent production setup for
 transferring data from data collection sites/areas to a server,
 possibly via internet through different methods to get through strict
 organizational firewalls and web admins.
-
-Mentors: Ian Bicking
 
 == Outcome ==
 
@@ -112,7 +127,11 @@ acceptance tests).
 
 = Python Bayesian Network Toolbox =
 
-(Elliot Cohen)
+Student: Elliot Cohen
+
+Mentor: James Tauber
+
+== Proposal ==
 
 Understanding about Bayesian Belief Networks and use of them is
 becoming more and more widespread.  As understanding develops and
@@ -129,8 +148,6 @@ probability distributions in static and dynamic Bayesian Networks.
 
 For (almost) daily updates please see http://elliotpbnt.blogspot.com.
 
-Mentor: James Tauber
-
 == Outcome ==
 
 Elliot Cohen has done a great job with the Python Bayes Network  
@@ -145,7 +162,11 @@ choice for this sort of work.
 
 = Efficiently Analysing Data Polymorphism and Deducing Generics in Shedskin =
 
-(Mark Dufour)
+Student: Mark Dufour
+
+Mentors: Jeremy Hylton, Brett Cannon
+
+== Proposal ==
 
 As part of my Master's Thesis, I am working on a Python-to-C++ compilation system, called Shedskin. Currently, it performs static type inference based on two techniques. The Cartesian Product Algorithm is used to handle parametric polymorphism (calling functions with different combinations of argument types); single-level class duplication, or 1CFA, is employed to handle data polymorphism (mostly polymorphic containers, such as list; in 1CFA, each allocation site gets its own class type, so we can analyze these (somewhat) precisely.) Run-time checks such as 'isinstance' are considered during inference. Further, short tuples are analyzed internally, which of course is especially important in case of Python. 
 
@@ -153,17 +174,21 @@ Based on the statically determined type information, the compiler currently perf
  
 Single-level class duplication is imprecise, because it only duplicates class types once for each allocation site, and allocation sites may be duplicated during analysis (as CPA possibly creates many templates for each function.) Extending it to N levels, or NCFA, would make the analysis terribly exponential and still not precise for deep polymorphism. For the summer of code, my main goal will be to efficiently and precisely handle data polymorphism up to arbitrary depths. I am currently looking into an iterative technique developed by John Plevyak. (Tiejun & Wang's technique is incomprehensible, and I don't see how the method used in Starkiller would work.) My other large goal will be to generate generics of appreciable complexity, based on the inferred types, i.e. to determine whether types may be uniformly parameterized, and to generate class and function templates. Finally, I will integrate an existing C++ garbage collector into the run-time system in order to clean up objects that could not be stack- or statically pre-allocated. 
 
-'''Result:''' Plevyak's method has been implemented. Function and class templates of arbitrary complexity are generated. The Boehm garbage collector has been integrated. In total about 2000 lines have been added during the SoC. 123 (all) unit tests compile correctly, among which 6 larger non-trivial programs of between 100 and 200 lines. These are analyzed in a few seconds on a fast cpu, and become 10-50 times faster after compilation. Mission accomplished! :)
+== Outcome ==
+
+Plevyak's method has been implemented. Function and class templates of arbitrary complexity are generated. The Boehm garbage collector has been integrated. In total about 2000 lines have been added during the SoC. 123 (all) unit tests compile correctly, among which 6 larger non-trivial programs of between 100 and 200 lines. These are analyzed in a few seconds on a fast cpu, and become 10-50 times faster after compilation. Mission accomplished! :)
 
 ([http://mail.python.org/pipermail/summerofcode/2005-September/000179.html Announcement of first release])
 
-Mentors: Jeremy Hylton, Brett Cannon
-
 = Mailbox modification =
 
-(Gregory K. Johnson)
+Student: Gregory K. Johnson
 
 Web page: http://gkj.freeshell.org/soc
+
+Mentor: Andrew Kuchling
+
+== Proposal ==
 
 I intend to rewrite the Python library's mailbox module to support
 mailbox modification. I will extend the module's API (e.g., mailboxes
@@ -172,10 +197,10 @@ functionality (e.g., message objects will maintain
 mailbox-format-specific attributes). Full backward compatibility will
 be maintained.
 
-'''Result:''' The modified version of the mailbox module is in the nondist/ tree 
-of Python CVS (nondist/sandbox/mailbox).  I think it's acceptable for inclusion in the standard library, and is now waiting for a second opinion from some other Python developer, to see if there's any disagreement.  I expect this code will get into Python 2.5.
+== Outcome ==
 
-Mentor: Andrew Kuchling
+The modified version of the mailbox module is in the nondist/ tree 
+of Python CVS (nondist/sandbox/mailbox).  I think it's acceptable for inclusion in the standard library, and is now waiting for a second opinion from some other Python developer, to see if there's any disagreement.  I expect this code will get into Python 2.5.
 
 = Interactive Python Notebooks =
 
@@ -183,14 +208,16 @@ Students:
   * Toni Alatalo, [http://an.org/programming], Documnet transformation functionality.
   * Tzanko Matev, graphical user interface.
 
-Further details:
-[http://www.scipy.org/wikis/featurerequests/NoteBook]
+Mentors: Fernando Perez and Robert Kern
+
+== Proposal ==
 
 Original proposal: [http://ipython.scipy.org/google_soc/ipnb_google_soc.pdf].
 
-Mentors: Fernando Perez and Robert Kern
+Further details:
+[http://www.scipy.org/wikis/featurerequests/NoteBook]
 
-== Outcome after the official work period ==
+== Outcome ==
 
 The students have successfully implemented a prototype of a GUI and the underlying machinery for document transformation.  Currently the WXPython-based GUI accepts normal python code and the extended set of ipython commands, normal text (not #comments, but regular text processed as a separate entity) and embedded figures.  The document transformation infrastructure (XML based) can render these files into LaTeX, HTML or PDF, including mathematical notation.
 
@@ -207,11 +234,15 @@ http://projects.scipy.org/ipython/ipython
 
 = Porting _sre.c and arraymodule.c to Python =
 
-(Niklaus Haldimann, Blog: http://ubique.ch/soc)
+Student: Niklaus Haldimann
 
-I would like to create a port of the standard library modules "_sre" and "array" to pure Python. This will benefit alternative Python implementations like PyPy, Jython and IronPython. These projects all have to provide their own implementations of standard library modules written in C if they're not available in pure Python.
+Weblog: http://ubique.ch/soc
 
 Mentors: Armin Rigo, Samuele Pedroni
+
+== Proposal ==
+
+I would like to create a port of the standard library modules "_sre" and "array" to pure Python. This will benefit alternative Python implementations like PyPy, Jython and IronPython. These projects all have to provide their own implementations of standard library modules written in C if they're not available in pure Python.
 
 == Outcome ==
 
@@ -236,16 +267,21 @@ that might also be used as the basis for a Jython or IronPython module
 
 = Object-Oriented File System Virtualisation =
 
-(Adam Kerz)
-
-Create an object oriented model of a file system in Python that can be used to interface many different resource types (with appropriate implementations).
+Student: Adam Kerz
 
 Mentor: Trent Mick.
 
+== Proposal ==
+
+Create an object oriented model of a file system in Python that can be used to interface many different resource types (with appropriate implementations).
+
 = Wax GUI for Python =
 
-(Abhishek Reddy)
+Student: Abhishek Reddy
 
+Mentor: Hans Nowak
+
+== Proposal ==
 
 Wax requires work on four broad fronts. Firstly, support for several
 basic controls need to be added, some of which are listed
@@ -255,13 +291,17 @@ teething problems with passing data between Wax and wxPython that must
 be looked at. Fourthly, documentation, presently lacking, needs to be
 written.
 
-Mentor: Hans Nowak
+== Outcome ==
 
-Result: In spite of the promising proposal, no work (code or documentation) was delivered. After the first initial contact, I have not heard from this student, for reasons still unknown. (Mentor list and Chris DiBona were notified.)
+In spite of the promising proposal, no work (code or documentation) was delivered. After the first initial contact, I have not heard from this student, for reasons still unknown. (Mentor list and Chris DiBona were notified.)
 
 = PyTrails =
 
-(Jennifer Dozar)
+Student: Jennifer Dozar
+
+Mentors: Cameron Laird, Andrew Kuchling
+
+== Proposal ==
 
 I'm working on an extensible opensource engine for implementing
 trail-style games such as [http://www.gamespot.com/gamespot/features/all/greatestgames/p-34.html Oregon Trail] or Amazon Trail. The primary
@@ -274,11 +314,13 @@ shopping and fording rivers may be available at special points. Each
 of these activities will be replacable in other trail games as to
 allow for maximum flexibility.
 
-Mentors: Cameron Laird, Andrew Kuchling
-
 = mmpy -- A garbage collection tool kit in Python =
 
-(Carl Friedrich Bolz)
+Student: Carl Friedrich Bolz
+
+Mentors: Samuele Pedroni, Armin Rigo
+
+== Proposal ==
 
 The project aims at producing a framework for writing and
 evaluating garbage collectors in Python. The interfaces to
@@ -291,12 +333,15 @@ being directly useful for the PyPy project and translatable
 by its translation tools.
 
 
-Mentors: Samuele Pedroni, Armin Rigo
-
-
 = Memory Profiler =
 
-(Nick Smallbone, blog: http://starship.python.net/crew/mwh/blog/nb.cgi/portal/nickblog)
+Student: Nick Smallbone
+
+Weblog: http://starship.python.net/crew/mwh/blog/nb.cgi/portal/nickblog
+
+Mentors: Michael Hudson, Jeremy Hylton
+
+== Proposal ==
 
 I would like to apply to work over the summer on a Python memory
 profiler, as listed at CodingProjectIdeas.
@@ -305,12 +350,14 @@ To see how much work is involved in this, I've put together a
 prototype, which tries to enumerate all objects from a root,
 calculating the size of each object it finds.
 
-Mentors: Michael Hudson, Jeremy Hylton
-
 
 = asyncIO =
 
-(Vladimir Sukhoy)
+Student: Vladimir Sukhoy
+
+Mentor: Mark Hammond
+
+== Proposal ==
 
 The proposed goal is to bring cross-platform proactive I/O
 capabilities to Python. That will enable whole new style of
@@ -318,12 +365,16 @@ application development with Python in cases when I/O is a bottleneck.
 
 Library releases available from: http://developer.berlios.de/project/showfiles.php?group_id=4124
 
-Mentor: Mark Hammond
-
 
 = Profile Replacement =
 
-(Floris Bruynooghe http://bruynooghe.blogspot.com)
+Student: Floris Bruynooghe
+
+Weblog: http://bruynooghe.blogspot.com/
+
+Mentor: Brett Cannon
+
+== Proposal ==
 
 [Original idea from ProfileReplacementProject page.]
 
@@ -335,21 +386,20 @@ When this all gets completed and time is left over one of the things to investig
 
 The project is registered as pyprof on savannah.nongnu.org: http://savannah.nongnu.org/projects/pyprof
 
-Mentor: Brett Cannon
-
 == Outcome ==
 
 Floris seems to have met all the goals.  While I (Brett) have not had a chance to do a thorough testing, Floris has a nice set of tests that seem to prove that he was successful.
 
 = PythonModulePackaging =
-(Vincenzo Di Massa)
+
+Student: Vincenzo Di Massa
+
+URL: http://udu.wiki.ubuntu.com/PythonModulePackaging
+
+Mentor: Matthias Klose
+
+== Proposal ==
+
 '''(an ubuntu python SoC project)'''
 
-See: http://udu.wiki.ubuntu.com/PythonModulePackaging
-
 Create a mechanism for fully automated packaging of python modules based on an upstream release. Support different Python implementations and different versions of CPython (needed, when not all software can run with the latest/default python version when an Ubuntu release is going to happen).
-
-Mentor:  
-Matthias Klose
-
-Note: if a project is listed as having two mentors, the first mentor listed is the ''primary'' mentor, and the second one is the ''back-up'' mentor.
