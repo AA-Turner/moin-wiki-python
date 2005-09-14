@@ -14,6 +14,7 @@ Getting Apache's permissions just right can be annoying, and is sadly beyond thi
 #!/usr/bin/env python
 
 import cgi
+import cgitb; cgitb.enable()  # for troubleshooting
 
 print "Content-type: text/html"
 print
@@ -29,10 +30,7 @@ print """
 """
 
 form = cgi.FieldStorage()
-if form.has_key( "message" ):
-    message = form["message"].value
-else:
-    message = "(no message)"
+message = form.getvalue("message", "(no message)")
 
 print """
 
@@ -50,12 +48,6 @@ print """
 """ % message
 }}}
 
-== Notes ==
-
-Instead of checking if key exists and then using `form[key].value`, you can just use shortcut
-`form.getvalue(key, default)`
-
-For troubleshooting, you should include lines `import cgitb; cgitb.enable` to head of you CGI script.
 == See Also ==
 
  * [http://www.python.org/doc/current/lib/module-cgi.html cgi module documentation]
