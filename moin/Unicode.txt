@@ -5,6 +5,7 @@ Resources to help you learn how to handle Unicode in your Python programs:
 == General Unicode Resources ==
 
  * [http://www.joelonsoftware.com/articles/Unicode.html The Absolute Minimum Every Software Developer Must Know about Unicode] - short intro to Unicode
+ * WikiPedia:Unicode -- Wikipedia unicode entry
 
 == Python-Specific Resources ==
 
@@ -37,6 +38,28 @@ Search the Python reference for:
  * ["UnicodeEncodeError"]
  * ["DefaultEncoding"]
  * [http://docs.python.org/lib/standard-encodings.html The standard encodings list] is for the current version of python. [http://en.wikipedia.org/wiki/GB2312 GB2312] (PRC Chinese,) for example, is in Python2.4, but [http://www.xahlee.org/perl-python/charset_encoding.html not in Python2.2, nor Python2.3.]
+
+=== Supported Encodings ===
+
+There is a [http://docs.python.org/lib/standard-encodings.html list of standard encodings in the Python documentation.]
+
+Encodings can be registered at runtime, as well, with the codecs module.
+
+Python2.4 supports many codecs that 2.2 and 2.3 do not, including Chinese bg2312.
+
+Encodings are specified in files found in a directory called "encodings"; one way to find the encodings with your Python distribution is to check the contents of this directory:
+
+{{{#! python
+>>> import encodings, os
+>>> [n for n in os.listdir(os.path.dirname(encodings.__file__))
+...     if n[0] != '_' and n.endswith('.py')]
+['aliases.py', 'ascii.py', 'base64_codec.py', 'charmap.py', 'cp037.py', ...]
+>>> from encodings import aliases
+>>> aliases.aliases
+{'base64': 'base64_codec', 'us_ascii': 'ascii', ...}
+}}}
+
+Contributors: LionKimbro, FredDrake, JürgenHermann.
 
 == Discussion ==
 
@@ -106,35 +129,3 @@ That said, if I'm actually serving UTF-32 to you somehow,... ...then there's pro
 On side-notes, I think the diagrams I've posted for WorkingWithTime and RegularExpressions were eaten up in the transition to MoinMoin 1.3; I'll repost them soon, after I get [http://wiki.taoriver.net/ my own wiki] upgraded to 1.3.
 
 -- LionKimbro [[DateTime(2005-02-06T02:56:28Z)]]
-
-=== Registry ===
-
-Is there any way to get a listing of the encodings registered? I don't see anything in [http://www.python.org/doc/current/lib/module-codecs.html codecs].
-
--- LionKimbro [[DateTime(2005-09-09T23:04:29Z)]]
-
-Sure you do:  it's one of the subsections linked from that page:
-[http://docs.python.org/lib/standard-encodings.html Standard Encodings].
-
--- FredDrake [[DateTime(2005-09-10T01:13:02Z)]]
-
-No: Dynamically. Python2.4 supports codecs that 2.2 does not.
-
-Users can also register encodings with the codecs module.
-
-The run-time list of registered encodings, both user-created and that come with Python, is what I'm looking for.
-
--- 216.254.10.144 [[DateTime(2005-09-11T18:18:08Z)]]
-
-Builtin stuff:
-{{{#! python
->>> import encodings, os
->>> [n for n in os.listdir(os.path.dirname(encodings.__file__))
-...     if n[0] != '_' and n.endswith('.py')]
-['aliases.py', 'ascii.py', 'base64_codec.py', 'charmap.py', 'cp037.py', ...]
->>> from encodings import aliases
->>> aliases.aliases
-{'base64': 'base64_codec', 'us_ascii': 'ascii', ...}
-}}}
-
--- JürgenHermann [[DateTime(2005-09-14T18:07:29Z)]]
