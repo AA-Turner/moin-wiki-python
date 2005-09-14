@@ -54,6 +54,12 @@ Encodings are specified in files found in a directory called "encodings"; one wa
 >>> [n for n in os.listdir(os.path.dirname(encodings.__file__))
 ...     if n[0] != '_' and n.endswith('.py')]
 ['aliases.py', 'ascii.py', 'base64_codec.py', 'charmap.py', 'cp037.py', ...]
+}}}
+
+Another is to list aliases from the encodings module.
+
+{{{#! python
+>>> import encodings
 >>> from encodings import aliases
 >>> aliases.aliases
 {'base64': 'base64_codec', 'us_ascii': 'ascii', ...}
