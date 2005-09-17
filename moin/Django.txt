@@ -5,8 +5,8 @@ A framework for WebProgramming.
    URL::  http://www.djangoproject.com/
    version:: Still not officially launched, but SVN access to development version available now
    licence::  Django is open source software available under a BSD license.
-   platforms:: Unix and probably Windows too
-   Python versions::
+   platforms:: Unix, Windows, Mac
+   Python versions:: >= 2.3
 
 === Deployment Platforms ===
 
@@ -14,22 +14,33 @@ ModPython is supported, WSGI support has recently been added and there is also a
 
 === Suitability ===
 
-Django currently powers lawrence.com, ljworld.com and chicagocrime.org, along with a bunch of smaller sites such as visitlawrence.com and kkcscountry.com.
+Django currently powers lawrence.com, ljworld.com and chicagocrime.org, along with a bunch of smaller sites such as visitlawrence.com and kkcscountry.com. It seems to have been developed and mainly used for content management, but its rich features - templating, and automatic generation of database, database access layer, and admin interface generation from a model description given in straight python code - will be useful in other kinds of web applications, too.
 
-=== Development Interfaces ===
+=== URL dispatching ===
+
+URLs are mapped to request handler functions using regular expressions. A regex may capture parts of the URL, which are then passed to the function as arguments. 
 
 === Environment Access ===
 
+Django creates an ``HttpRequest`` object that contains metadata about the request. This is automatically passed to the 
+function that the URL is mapped to and gets to create the response.
+
 === Session, Identification and Authentication ===
 
+Sessions are propagated using cookies, the session data stored in a dictionary within the request object. Identification / Authentication: For each application, a pretty sophisticated admin interface is generated that knows about superusers, groups, users and privileges. It seems that support for normal users registering themselves would have to be added manually. 
 
 === Persistence Support ===
 
-Django's object-relational mapper provides the core of the framework, currently supports PostgreSQL, MySQL and SQLite3.  Django can also generate CRUD interfaces from the ORM.
+Django's object-relational mapper provides the core of the framework, currently supports PostgreSQL, MySQL and SQLite3.  Django can also generate CRUD interfaces from the ORM. The automatic creation of database tables and database abstraction layer from pythonic model definition is really quite elegant and probably Django's most distinctive feature. A very nice feature is that you can still embed SQL in an unobtrusive way within your model's methods if you have to, e.g. for complex queries with joins over multiple tables. Thus, the mapper can handle the 90% of the cases that are simple, yet will step aside elegantly where it should.
 
 === Presentation Support ===
 
-Django has a Smarty-like template language
+Django has a Smarty-like template language. Good: It supports inheritance. 
+Bad: Syntax quite hard on the eyes {% block title %}{{ section.title }}{% endblock %} That's even uglier than PHP
+
+=== Documentation ===
+
+Growing, not quite complete yet but well written and already far more usable and detailed than with your average Python framework's haphazard wiki. 
 
 === InTheirOwnWords ===
 
@@ -43,10 +54,5 @@ Ruby on Rails is similar to it, but Django is written in Python and has a few mo
 
 Read the [http://www.djangoproject.com/overview/ Django overview]
 
-=== Comments ===
-
-This framework is a potential competitor for Rails.  It can claim one high profile site so far, chicagocrime.org though the same was true of Rails when the hype started.  If [http://www.holovaty.com/ Adrian Holovaty] and [http://simon.incutio.com/ Simon Willison] blog about it and evangelize it in the same way that DHH did for Rails and the meme manages to propagate across the blogosphere, Django may achieve a similar profile.  A big win for Rails was the accompanying documentation, the very active wiki and the screencasts.  This made it much more approachable for  interested web developers to get started.
-
-It appears from [http://www.postneo.com/2005/07/17/django-python-on-rails#comment-6331 this blog comment] that the Django crew intend to pursue the approach outlined in the previous comment.  Meanwhile, [http://www.loudthinking.com/arc/000484.html DHH has recently written about how he has grown an open source ecosystem around Rails].
 
 === Hosting ===
