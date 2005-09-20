@@ -1,31 +1,33 @@
 There are various fixes and improvements that should form part of a 2.0 version of Distutils.
 
+Note: many of these features are being implemented in [http://peak.telecommunity.com/DevCenter/setuptools setuptools], which is where most distutils-related development is happening at this time (Sept 2005).  I've noted features that setuptools supports below -- IanBicking
+
 The ultimate goal:
  * '''Must be backwards-compatible with existing setup.py scripts.'''
 
 Quick things from PyCon:
  * Some people want to run a build command (or whatever) programmatically; the only way to do this is to poke the right arguments into sys.argv.  (Not true!  Use `setup(script_args=[...])`!  --PJE)
  * building tar archives could use the 2.3 tarfile module instead of requiring the platform have a tar command.
- * bdist_py2exe, bdist_msi, other executable installers.
+ * bdist_py2exe, bdist_msi, other executable installers.  ''(setuptools allows external packages to add new setup.py commands, so commands like bdist_py2exe can be applied globally to all setup.py files)''
 
 Other ideas:
  * Some methods may trigger PendingDeprecationWarning``s
  * Move various utility methods out of command implementations and onto the Distribution class.
  * Implement the package database described by PEP PEP:0262.
- * Consider always regenerating the MANIFEST from MANIFEST.in.
- * Finish bdist_dpkg.py
+ * Consider always regenerating the MANIFEST from MANIFEST.in. ''(setuptools can generate MANIFEST files more automatically, and triest to keep MANIFEST in proper shape)''
+ * Finish bdist_dpkg.py ``([http://easy-deb.sourceforge.net/ easy-deb] is doing deb generation)''
  * Use optparse instead of fancy_getopt.py, and deprecate fancy_getopt.py.
  * sdist: Include scripts, data automatically in the source distribution.
- * Drop Python 1.5.2 compatibility. Keep Python 2.0 compatiblity.  (2.3, 2.4 compatibility?)
+ * Drop Python 1.5.2 compatibility. Keep Python 2.0 compatiblity.  (2.3, 2.4 compatibility?) ''(setuptools is currently only 2.3+ compatible; feature accomplished! ;)''
  * Improve test coverage.  (See the DistutilsTesting page for ideas.)
  * Finish the documentation! (AnthonyBaxter has worked on a reference guide; his text is currently in [http://cvs.sourceforge.net/viewcvs.py/python/python/nondist/sandbox/distutilsref/ the CVS sandbox])
- * Package installation from PyPI (probably driven by the pythonmac-sig)
+ * Package installation from PyPI (probably driven by the pythonmac-sig) ''(EasyInstall, included with setuptools, handles this)''
  * Add more autoconf-like tests to the config command
  * Make the design more extensible w.r.t. 'foreign' module compilation, specifically:
    * Allow the integration of autoconf/make based build systems for C/C++ extensions
    * Allow 'Extension' to be composed of components, each with their own build rules
    * Provide a means for scripts / modules to access installation parameters such as datafile directories
- * Define more default commands to build documentation, run (unit) tests, etc.
+ * Define more default commands to build documentation, run (unit) tests, etc. '' (setuptools adds a test command, and can be extended easily with more commands; [http://buildutils.lesscode.org/ buildutils] adds some more development-related commands) ''
  * Look at setuptools by Phillip J. Eby and buildutils (on PyPI) for further improvements.
 
   -- StefanSeefeld
@@ -34,8 +36,8 @@ Wouldn't it be a good idea to look into [http://scons.sf.net scons] and try to l
 
 Maybe some traditional package concepts:
 
- * Uninstallation.  Also getting rid of obsolete files when upgrading.
- * Dependencies.  A simple implementation might simply check to see if another library is installed and warn the user if not (and maybe install from PyPI if that feature exists).  Declaring (or worse, resolving) version dependencies or alternatives seems like overkill for now.
+ * Uninstallation.  Also getting rid of obsolete files when upgrading. ''(PythonEggs -- part of setuptools -- can be uninstalled more easily than a traditional package; however, tools still don't exist to properly automate this)''
+ * Dependencies.  A simple implementation might simply check to see if another library is installed and warn the user if not (and maybe install from PyPI if that feature exists).  Declaring (or worse, resolving) version dependencies or alternatives seems like overkill for now. ''(setuptools handles dependencies)''
 
   -- IanBicking
 
@@ -126,7 +128,7 @@ Maybe some traditional package concepts:
 
   --- Hartmut Goebel
 
- * Zope Corporation is looking at having some better packaging tools, including support for dependencies and automated package composition.  There's a start of a [http://dev.zope.org/Zope3/Zope3PackagingProposal discussion document] in the [http://dev.zope.org/Zope3/ Zope 3 wiki].
+ * Zope Corporation is looking at having some better packaging tools, including support for dependencies and automated package composition.  There's a start of a [http://dev.zope.org/Zope3/Zope3PackagingProposal discussion document] in the [http://dev.zope.org/Zope3/ Zope 3 wiki]. ''(Note: now see [http://www.zope.org/Members/fdrake/zpkgtools/ zpkg])''
 
   --- FredDrake
 
