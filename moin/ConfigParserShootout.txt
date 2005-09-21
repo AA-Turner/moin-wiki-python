@@ -83,12 +83,11 @@ and might reasonably be in a separate module for each format supported.
 
 == .ini file parser and schema ==
 
-Contains several modules.  iniparser is a reusable ini-file parser, with almost no information loss or associated semantics, suitable for reuse.  lazyloader can load config files, retain line information and ordering, non-destructively nest configuration files (e.g., you can add and remove config files from the config layering), runtime validation with error messages that specify filename and line number, nested configuration values (using dotted key and section names), and you can compose the configuration files in several ways, for instance superimposing a section onto the main configuration to override configuration based on runtime values.
+Contains several modules.  iniparser is a reusable ini-file parser, with almost no information loss or associated semantics, suitable for reuse.  lazyiniparser records information in a structure so the ini file can be recreated, and error messages can refer to source locations.  configwrapper is a very simple config system based on plain iniparser.  inischema is a flat system validated against a schema.  lazyloader is a fancier (and rather complicated) module that  can load config files, retain line information and ordering, non-destructively nest configuration files (e.g., you can add and remove config files from the config layering), runtime validation with error messages that specify filename and line number, nested configuration values (using dotted key and section names), and you can compose the configuration files in several ways, for instance superimposing a section onto the main configuration to override configuration based on runtime values.
 
 Available at:
 
- * svn://colorstudy.com/trunk/WSGIKit/wsgikit/config/
- * http://svn.colorstudy.com/trunk/WSGIKit/wsgikit/config/
+ * http://svn.pythonpaste.org/home/ianb/wsgikit_old_config/
 
 == Skip's Idea ==
 
