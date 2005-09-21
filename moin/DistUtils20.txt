@@ -66,6 +66,7 @@ Maybe some traditional package concepts:
 
   -- Phil Rittenhouse
 
+ Benji York at [http://www.zope.com/ Zope Corporation] has done some work on this; hopefully he'll be able to finish and release it at some point.
 
  * bdist_wininst currently runs the 'install' command to a temporary directory, then zips up this directory, and then creates a program which will unpack the archive on the target system. It should become much smarter. Maybe only running 'build_ext' on the source system, and running the full 'install' on the target system.
 
@@ -75,7 +76,7 @@ Maybe some traditional package concepts:
 
  * Python packages should have a canonical way of having C/C++ headers, executable scripts, dynamic libraries (For Win32, OS X), documentation, examples, and other arbitrary data (like fonts, icons, etc.) associated with them in the same folder (or a closely related folder with identical permissions) as the package itself.  We could use something like Apple's bundles for this purpose (sans versioning, most likely).  If a package wants to put things in places such as /usr/local/bin, they should be symlinks to what is in this new structure.
 
- * Multi-module installs (more than one importable thing that goes into site-packages) should be deprecated.  If they want this behavior they should install a package and use a pth file.  (Counterpoint: There is strong demand for installing both packages '''and''' modules with a single ``setup.py``, in contrast to the current limitation of either "only packages" or "only modules" --PJE)
+ * Multi-module installs (more than one importable thing that goes into site-packages) should be deprecated.  If they want this behavior they should install a package and use a pth file.  (Counterpoint 1: There is strong demand for installing both packages '''and''' modules with a single ``setup.py``. --PJE)  (Counterpoint 2: This would prevent creating distributions that provide dependencies in addition to some top-level application. --FredDrake)
 
  * Add the following fields to PEP PEP:0241 (PKG-INFO):  Package-Name (the actual python-importable name of what was just installed), Depends (a list of other packages, by Package-Name, that this package depends on), Recommends (a list of other packages, by Package-Name, that enhance the functionality of this package when present).  These headers make the REQUIRES and PROVIDES (how was PROVIDES useful anyways?) files from PEP PEP:0262 obsolete.
 
