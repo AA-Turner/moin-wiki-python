@@ -14,7 +14,7 @@ import os
 os.environ["FOO"] = "BAR"
 
 # Make sure environment variable set for child processes
-for line in os.popen("bash -c 'env'").readlines():
+for line in os.popen("bash -c 'env'").read().splitlines():
     if line.startswith("FOO="):
         print line
 
