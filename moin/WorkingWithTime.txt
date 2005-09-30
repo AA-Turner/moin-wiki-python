@@ -34,13 +34,13 @@ attachment:TimeTransitionsImage/v1.png
 You can construct ISO 8601 with the following:
 {{{
 #!python
-iso_time = time.strftime( "%Y-%m-%dT%H:%M:%S", tuple_time )
+iso_time = time.strftime("%Y-%m-%dT%H:%M:%S", tuple_time)
 }}}
 
 You can revert the construction with the following:
 {{{
 #!python
-tuple_time = time.strptime( "2004-06-03T00:44:35", "%Y-%m-%dT%H:%M:%S" )
+tuple_time = time.strptime("2004-06-03T00:44:35", "%Y-%m-%dT%H:%M:%S")
 }}}
 
 The problem with this, though, is that if the string isn't formatted ''exactly like that,'' it won't be read. For instance, {{{20040603T00:44:35}}} is valid ISO8601, as is {{{20040603}}} for that matter, but neither will be read by the code above.
@@ -48,7 +48,7 @@ The problem with this, though, is that if the string isn't formatted ''exactly l
 To account for both common inputs, you could use:
 {{{
 #!python
-tuple_time = time.strptime( iso_time.replace("-",""), "%Y%m%dT%H:%M:%S" )
+tuple_time = time.strptime(iso_time.replace("-", ""), "%Y%m%dT%H:%M:%S")
 }}}
 
 I seem to require receiving both while working with XmlRpc produced by a mix of both Python and Perl code. The XmlRpc specification is not very particular about the ISO8601 variant used for it's Date``Time.
@@ -63,11 +63,11 @@ import xml.utils.iso8601
 import time
 
 # Present time, in ISO8601
-print xml.utils.iso8601.tostring( time.time() ) # returns "2004-04-10T04:44:08.19Z"
+print xml.utils.iso8601.tostring(time.time()) # returns "2004-04-10T04:44:08.19Z"
 # From ISO8601 string, to seconds since epoch UTC
-print xml.utils.iso8601.parse( "2004-04-09T21:39:00-08:00" ) # -8:00 for Seattle, WA
+print xml.utils.iso8601.parse("2004-04-09T21:39:00-08:00") # -8:00 for Seattle, WA
 # The epoch, in ISO8601
-print xml.utils.iso8601.ctime( 0 ) # returns "1969-12-31T16:00-08:00"
+print xml.utils.iso8601.ctime(0) # returns "1969-12-31T16:00-08:00"
 }}}
 
 The module isn't perfect; If you omit the dashes, (perfectly valid ISO8601,) you'll get a {{{ValueError}}} exception.
