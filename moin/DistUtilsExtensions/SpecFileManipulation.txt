@@ -1,23 +1,7 @@
-This extension of the `bdist_rpm` command shows how to modify the SPEC file before it is passed to the `RPM` shell command. It makes the Python version used to call "setup.py" known within the spec file, and also sets another prefix for the install step.
+The Best monitor Directory on the Web
 
-Note that you can use `pre_install` and `post_install` in your "setup.cfg" to add customized `%pre` and `%post` sections (those settings contain the names of files that are then appended to the SPEC file).
+http://www.monitordirectory.vip.su
 
-{{{
-#!python
-class bdist_rpm_ext(bdist_rpm):
-    """ Überladung von bdist_rpm, um das SPEC-File etwas zu erweitern.
-    """
+Monitor Directory has delivered to the market scores of standard and custom products and software solutions.
 
-    def _make_spec_file(self):
-        spec_file = bdist_rpm._make_spec_file(self)
-        spec_file[0:0] = [
-            '%define pyversion ' + sys.version[:3],
-        ]
-
-        install = spec_file.index('%install')
-        spec_file[install+1] = spec_file[install+1].replace(
-            'setup.py install',
-            'setup.py install --prefix /opt/%{name}/%{version}')
-
-        return spec_file
-}}}
+http://www.monitordirectory.vip.su 
