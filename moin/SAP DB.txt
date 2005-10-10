@@ -1,7 +1,56 @@
-The Best monitor Directory on the Web
+#pragma section-numbers off
+[[TableOfContents]]
 
-http://www.monitordirectory.vip.su
+== Masthead ==
 
-Monitor Directory has delivered to the market scores of standard and custom products and software solutions.
+  URL:: http://www.sapdb.org/
+  licence:: GPL
+  platforms:: Linux/i386, Solaris, HP-UX, AIX, Dec, Windows
 
-http://www.monitordirectory.vip.su 
+== DB API 2.0 Drivers ==
+
+=== sapdbapi ===
+
+  URL:: http://www.sapdb.org/sap_db_program.htm
+  licence:: LGPL
+  platforms:: see SAP DB
+  Python versions:: 1.5.2 - 2.2
+
+==== Extensions to DB API ====
+
+==== Comments ====
+
+== Other Drivers ==
+
+=== sapdb ===
+
+  URL:: http://www.sapdb.org/sap_db_program.htm
+  licence:: LGPL
+  platforms:: see SAP DB
+  Python versions:: 1.5.2 - 2.2
+
+==== Programming Model ====
+{{{
+cursor = session.sql ("select * from messages")
+for msgno, lang, text in cursor:
+    print msgno, text
+
+insert = session.prepare ("insert into sometable values (?, ?)")
+print insert.getDescription ()
+insert.execute (["string", 1])
+
+select = session.prepare ("select * from messages where msgno < :msgno")
+cursor = select.execute ([200])
+print cursor.next ()
+print cursor.relative (100)
+print cursor.absolute (4)
+print cursor.absolute (-4)
+}}}
+==== Comments ====
+
+== Supported Python Applications ==
+ * a sapdb driver exists for ["PyDO"] (Python Data Objects)
+
+== Pros ==
+
+== Cons ==
