@@ -121,6 +121,17 @@ def (*a, **k) = x.bar(*a, **k)
 
 === Expression Before Args ===
 
+Nick Coghlan: post-def syntax
+This is based on the "normally nested expression before statement keyword" idiom used
+with generator expressions, list comprehensions and PEP 308 conditional expressions.
+{{{#!python
+(f(a) + o(b) - o(c) def (a, b, c))
+(x * x def (x))
+(x def ())
+(x.bar(*a, **k) def (*a, **k))
+((x(*a, **k) def (x=x, a=a, k=k)) for x, a, k in funcs_and_args_list)
+}}}
+
 Nick Coghlan: for syntax [[#f 6]]
 {{{#!python
 (f(a) + o(b) - o(c) for (a, b, c))
