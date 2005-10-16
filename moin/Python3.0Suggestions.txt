@@ -210,3 +210,9 @@ underlying POSIX namesakes.  This can lead to some surprises.  For
 example, {{{os.rename}}} won't rename a file across partitions.  It
 may not (I don't know for sure) work on Windows if another program has
 the file open. -- SkipMontanaro
+
+== Parameterize functions that hardcode stdout or stderr ==
+
+Some modules assume that their output should necessarily to to stdout or
+stderr.  One example is the dis module.  The functions/methods in such
+modules should be updated to accept an optional stream argument. -- SkipMontanaro
