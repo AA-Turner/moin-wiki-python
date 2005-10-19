@@ -88,4 +88,57 @@ def irange(*args):
 
 = Alternate Implementation =
 
-Perhaps a simple implementation can be constructed using *count* and *islice* from intertools?.
+Perhaps a simple implementation can be constructed using *count* and *islice* from intertools?. -- Anon
+
+I think it's way too much code, and also it does not accept named parameters. How about this? -- JürgenHermann [[DateTime(2005-10-19T20:06:52Z)]]
+
+ {{{#! python
+def irange(start, stop=None, step=1):
+    """ Generator for a list containing an arithmetic progression of integers.
+        range(i, j) returns [i, i+1, i+2, ..., j-1]; start (!) defaults to 0.
+        When step is given, it specifies the increment (or decrement).
+        For example, range(4) returns [0, 1, 2, 3].  The end point is omitted!
+        These are exactly the valid indices for a list of 4 elements.
+    """
+    if step == 0:
+        raise ValueError("irange() step argument must not be zero")
+
+    if stop is None:
+        stop = start
+        start = 0
+    continue_cmp = (step < 0) * 2 - 1
+
+    while cmp(start, stop) == continue_cmp:
+        yield start
+        start += step
+
+if __name__ == "__main__":
+    cases = [
+        (0,),
+        (1,),
+        (2,),
+
+        (1, 0),
+        (1, 1),
+        (1, 2),
+        (1, 4),
+
+        (1, 4, 1),
+        (1, 4, 2),
+        (1, 4, 3),
+        (1, 4, -1),
+        (1, 4, -2),
+        (1, 4, -3),
+
+        (4, 1, 1),
+        (4, 1, 2),
+        (4, 1, 3),
+        (4, 1, -1),
+        (4, 1, -2),
+        (4, 1, -3),
+    ]
+    for case in cases:
+        assert range(*case) == [i for i in irange(*case)]
+
+    print "All %d tests passed!" % len(cases)
+}}}
