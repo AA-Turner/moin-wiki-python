@@ -411,3 +411,20 @@ print "%' 'j" % (x*x for x in range(10))
 }}}
 
     ''BDFL comments:'' again, please don't do this.
+
+=== Scrap C-Style Formatting ===
+What's one more strawman, right? :)  My approach is tailor-made for gettext (although I'm no expert in gettext usage).  Keywords become the default and positionals disappear completely.
+
+{{{>>> print('x = {x}, y = {y}, z = {z}', x=x, y=y, z=z)}}}
+
+There's some redundancy in the the keyword arguments (unfortunately), but it helps insulate the format string from the code that uses it.  It removes the problems of separator vs no separator  It allows it to be self-documenting for the gettext translators, with no problems in reordering or reformatting.  You could even give extra arguments that aren't always used (but they wouldn't be self-documenting I suppose).
+
+Further options are using locals():
+
+{{{>>> print('x = {x}, y = {y}, z = {z}', **locals())}}}
+
+but only if you don't mind exposing them (debatable).  If you need something besides %s (the default) then go as follows:
+
+{{{>>> print('x = {r:x}, y = {f9.8:y}, z = {i:z}', x=x, y=y, z=z)}}}
+
+Or maybe even something that allows arbitrary arguments to be passed to the formatter. - ''Adam Olsen''
