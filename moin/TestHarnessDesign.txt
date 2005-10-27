@@ -1,11 +1,3 @@
-= Test Harness Design =
-
-I've been assigned the job of creating a test harness for a voice over IP (VOIP) company's product line.  I've been asked to focus just on the SIP/RTP (ethernet connected) phones first.
-
-They have several models of SIP phone.  All of them that I'll be testing have serial port headers inside, which I use by opening them up, running a ribbon cable out to a small interface port which then leads to a standard RS-232 DB-9 serial connector.  These phones are embedded systems (some PowerPC, some MIPS) running Linux and some proprietary code.  Through the serial port I can simulate key presses (dial numbers, put calls on hold, transfer them, access the menus, etc.) and I can read the LCD screen's contents.  I have a few other features (set some LEDs, set some debugging options, even access a BusyBox shell.
-
-Now the brute force approach would be to simply code up scripts that send sequences of keys and read back screens.  I was able to pull up the Python interpreter in the first minutes after I had my workstation set up with my serial ports plugged into a couple of these phones; and send keys.  Reading was a little more difficult (I had to get [http://pyserial.sourceforge.net/ PySerial], which took all of five minutes to locate, download and install).  So, within
-ten minutes of my first day on the job I had a scriptable interface working.
 
 Over the next couple of hours a wrote a crude shell (in Python) for sending commands and key sequences to the phone, and reading back raw serial responses and screens back.  While crude this shell does offer command editing and history (via [http://docs.python.org/lib/module-readline.html readline]) with automatically persistent history, it saves logs of all output to the phone (seperate logs for raw serial commands and for the key sequences which are embedded therein) and all input read back from the phone (again in separate streams, for raw characters read from the device and for each screenshot I take), and it allows me to insert comments into the history and log files (so I can take notes in the shell that I can correlate to specific entries in the logs).  
 
