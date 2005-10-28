@@ -1,4 +1,3 @@
-
 Over the next couple of hours a wrote a crude shell (in Python) for sending commands and key sequences to the phone, and reading back raw serial responses and screens back.  While crude this shell does offer command editing and history (via [http://docs.python.org/lib/module-readline.html readline]) with automatically persistent history, it saves logs of all output to the phone (seperate logs for raw serial commands and for the key sequences which are embedded therein) and all input read back from the phone (again in separate streams, for raw characters read from the device and for each screenshot I take), and it allows me to insert comments into the history and log files (so I can take notes in the shell that I can correlate to specific entries in the logs).  
 
 Also my crude interactive shell uses the [http://docs.python.org/lib/module-optparse.html optparse] module to initialize my serial connection (different phones have different speeds and are connected to different ports --- I have an 8-port Moxa board installed on the Linux desktop workstation).  I also played a littled with [http://docs.python.org/lib/module-ConfigParser.html ConfigParser] so I could store most of the connection details and log file names in an .ini file and just call my script with a label representing which phone/port I want to play with.
@@ -149,7 +148,7 @@ Unfortunately none of what I'm coding here can be released to open source (grump
 I'm hoping others will chew on these notions and spit on them mercilessly.  Of course I'm also hoping for some pointers to similar code; tools, or just a really good guide to test case/harness/framework design.
 
 ''I see you've looked at the [http://docs.python.org/lib/module-unittest.html unittest] module that comes with
-the standard Python distribution.  In what ways is that lacking?  Have you looked at Ian Bicking's
+the standard Python distribution.  In what ways is that lacking?  Have you looked at Holger Krekel's
 [http://codespeak.net/py/current/doc/test.html py.test] library?''
 
 In any event, unless there's an outcry against my verbosity, I'll update this page as I work on the problem (and as I incorporate any good suggestioins).
