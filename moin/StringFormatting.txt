@@ -69,3 +69,10 @@ for i in range(10):
     print '\b%d' % i,
 # Prints: 0123456789
 }}}
+
+== Variable name substitution using format and eval ==
+I want to print out all member of "sys", what I need is 
+{{{
+for member in dir(sys):
+    print "sys.", member, "->", eval("sys.%s" % member)
+}}}
