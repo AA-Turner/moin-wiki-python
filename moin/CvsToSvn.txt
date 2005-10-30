@@ -54,6 +54,13 @@ to that new branch; this leaves your local change alone, which is key.
 {{{svn commit}}} -- you're done!  There's now a branch on the server
 matching your fiddled local state.
 
+{{{
+svn cp -m "Create new branch from rev xxx." svn+ssh://pythondev@svn.python.org/python/trunk \
+    svn+ssh://pythondev@svn.python.org/python/branches/my-branch
+svn switch svn+ssh://pythondev@svn.python.org/python/branches/my-branch
+svn ci -m "Commit first modifications on my branch."
+}}}
+
 Making a branch or tag goes very fast under SVN.  Because branches and tags
 are just conventionally-named directories, you can delete them (like any
 other directory) when you're done with them.  These conspire to make simple
