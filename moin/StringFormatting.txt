@@ -40,13 +40,13 @@ Processing...
 Completed.
 }}}
 
-The standard print statement automatically inserts newlines.  This can be overcome with
+The standard `print` statement automatically inserts newlines.  This can be overcome with
 {{{
 #!python
 for i in range(10):
     print '['+str(i)+']',  # NOTE the trailing comma
 }}}
-but a space will get inserted between successive prints.  One way to get around this is using sys.stdout:
+but a space will get inserted between successive prints.  One way to get around this is using `sys.stdout`:
 {{{
 #!python
 import sys
@@ -62,17 +62,22 @@ EscapingHtml, WorkingWithTime
 
 = Discussion =
 
-You can also print a backspace ('\b') to swallow the extra space.
+You can also print a backspace (`'\b'`) to swallow the extra space.
 eg:
 {{{
+#!python
 for i in range(10):
     print '\b%d' % i,
 # Prints: 0123456789
 }}}
 
+Unfortunately, this produces a mess if output is being directed to a file;
+it's best to avoid printing the space if you don't want it.
+
 == Variable name substitution using format and eval ==
-I want to print out all member of "sys", what I need is 
+I want to print out all member of `sys`, then what I need is 
 {{{
+#!python
 for member in dir(sys):
-    print "sys.", member, "->", eval("sys.%s" % member)
+    print "sys." + member, "->", repr(getattr(sys, member))
 }}}
