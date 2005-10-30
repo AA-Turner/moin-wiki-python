@@ -9,7 +9,7 @@ My point in posting all this is to solicit advice on a robust design for a real 
 
 I've been looking at packages like [http://pexpect.sourceforge.net/ PExpect] (''Expect'' for Python), and at the [http://docs.python.org/lib/module-doctest.html doctest] and [http://docs.python.org/lib/module-unittest.html unittest] standard libraries, as well as some of the discussions around [http://c2.com/cgi/wiki?TestingFramework c2.com:TestingFrameWork] for inspiration.
 
-One think I've started doing is writing some psuedo-Python-code. These show what I might like my tests to look to a colleague who was charged with writing more of them.  At first I thought of something that wasn't code at all but something like:
+One thing I've started doing is writing some psuedo-Python-code. These show what I might like my tests to look to a colleague who was charged with writing more of them.  At first I thought of something that wasn't code at all but something like:
 
 {{{
 >> 1234 Menu Down Down Enter 12*Down Enter Enter Esc
@@ -38,7 +38,7 @@ if not tst.screen("# some screen substring or regex"):
 # ...
 }}}
 
-This a bit better.  I can also implement methods like '''`setFactoryDefaults()`''' and '''`selectMenu()`''' and I can have the PhoneTest class instantiate and contain a Phone object which abstracts some things (like the fact that accessing the menus on some models takes two keys rather than one key, and that the "Enter" key symbol is called "OK" on it, etc).  (My function to send key sequences parses abstract common key notation into a dictionary of dictionaries keyed by each phone model and returning the real key symbols and sequences, it has to do things like press 2 three times for a letter "c" and detect if the next letter/digit is on the same button to pause for a full second to make the phone "take" that letter).
+This is a bit better.  I can also implement methods like '''`setFactoryDefaults()`''' and '''`selectMenu()`''' and I can have the PhoneTest class instantiate and contain a Phone object which abstracts some things (like the fact that accessing the menus on some models takes two keys rather than one key, and that the "Enter" key symbol is called "OK" on it, etc).  (My function to send key sequences parses abstract common key notation into a dictionary of dictionaries keyed by each phone model and returning the real key symbols and sequences, it has to do things like press 2 three times for a letter "c" and detect if the next letter/digit is on the same button to pause for a full second to make the phone "take" that letter).
 
 Obviously this exposes our responses and screen captures to Python's own conditional handling.
 
@@ -58,7 +58,7 @@ for i in range(99):
 
 However, it's still not very good.  Obviously I have to report all my results (text output for now, later posting to a MySQL database).  I'll also need  options for debugging and logging (shades of AspectOrientedProgramming?).  I suppose the PhoneTest object can also contain a reporting object to handle that abstractly.
 
-My main objection to this interface is that '''all''' the conditional logic is exposed.  It seems silly to repeatedly type: `tst.key(...); if tst.screen(...) ...` and it clutters the flow of the test case.  It's hot data driven at all. Of course I can hide `tst.fail()`, and `tst.expect()` inside `tst.screen()` 
+My main objection to this interface is that '''all''' the conditional logic is exposed.  It seems silly to repeatedly type: `tst.key(...); if tst.screen(...) ...` and it clutters the flow of the test case.  It's not data driven at all. Of course I can hide `tst.fail()`, and `tst.expect()` inside `tst.screen()` 
 
 Then I'm back to something more linear like:
 
@@ -122,7 +122,7 @@ tst2 + RegressBug999()  # settings pulled from INI file or database?
 # ...
 }}}
 
-I don't see it.  This isn't data driven at all.  Where to I maintain the list of available tests and the sequencing?
+I don't see it.  This isn't data driven at all.  Where do I maintain the list of available tests and the sequencing?
 
 I've also thought of something like:
 
