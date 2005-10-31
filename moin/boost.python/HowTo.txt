@@ -249,9 +249,9 @@ Wrap {{{caller}}} under the {{{new_owner_function}}} Python name.
 See also http://www.boost.org/libs/python/doc/v2/faq.html#ownership
 
 === ownership of C++ object extended in Python ===
-The method defined upper does not work if part of your object is written in Python. The PyObject* associated to the object may still be delete by Python. If you want to ensure the lifetime of the object, you have to increase manually the reference couting in the C++ Wrapper AND use the above method. With this, you'll be sure the PyObject* is not destroyed while the C++ still exists.
+The method defined upper does not work if part of your object is written in Python. The !PyObject* associated to the object may still be delete by Python. If you want to ensure the lifetime of the object, you have to increase manually the reference couting in the C++ Wrapper ''and'' use the above method. With this, you'll be sure the !PyObject* is not destroyed while the C++ still exists.
 
-So, write the MyClassWrap as : {{{
+So, write the !MyClassWrap as : {{{
 class MyClassWrap : public MyClass
 {
   MyClassWrap( PyObject* self_) : self(self_) { PyINCREF(self); }
@@ -278,7 +278,7 @@ void MyFct( MyClass* my_obj )
 }
 }}}
 
-The problem is, if the dynamic type of my_obj is not MyClass but a class derived from MyClass, you won't have, in Python, the interface of the derived class. If you want to create the object with the interface of the real dynamic type you have to use the ResultConverter created by Boost : {{{
+The problem is, if the dynamic type of my_obj is not !MyClass but a class derived from !MyClass, you won't have, in Python, the interface of the derived class. If you want to create the object with the interface of the real dynamic type you have to use the !ResultConverter created by Boost : {{{
 void MyFct( MyClass* my_obj )
 {
   reference_existing_object::apply<MyClass*>::type converter;
@@ -290,7 +290,7 @@ void MyFct( MyClass* my_obj )
 
 The python object must not be keep outside the execution of {{{python_fct}}}. If you do, then you have to take extra care about the lifetime of the Python object and the underlying C++ object for there are no lifetime guards possible (the original object being a C++ one, you have no automatic way to tie the lifetime of this object with the lifetime of the Python wrapper).
 
-Now, if you can copy the object and use the copy instead of a reference, you can change the ResultConverter and use {{{return_by_value}}} instead of {{{reference_existing_object}}}.
+Now, if you can copy the object and use the copy instead of a reference, you can change the !ResultConverter and use {{{return_by_value}}} instead of {{{reference_existing_object}}}.
 
 === python object from extended C++ object ===
 We still want the previous behaviour, but now the C++ class may be extended in Python. We so have a class wrapper :{{{
@@ -311,7 +311,7 @@ bool my_fct(MyClass* my_obj)
   bool result = extract<bool>( python_function(my_obj) );
 }
 }}}
-Boost will create a new MyClass wrapper and you won't have access to the Python methods. To access the Python object you have to explicitly send the Python wrapper boost gave you at the object creation :{{{
+Boost will create a new !MyClass wrapper and you won't have access to the Python methods. To access the Python object you have to explicitly send the Python wrapper boost gave you at the object creation :{{{
 bool my_fct(MyClass* my_obj)
 {
   MyClassWrap *wrap_obj = dynamic_cast<MyClassWrap*>(my_obj);
@@ -328,7 +328,7 @@ bool my_fct(MyClass* my_obj)
 }
 }}}
 
-Of course, if you also have  C++ classes derived from MyClass, you'll have to implement the function as :{{{
+Of course, if you also have  C++ classes derived from !MyClass, you'll have to implement the function as :{{{
 bool my_fct(MyClass* my_obj)
 {
   MyClassWrap *wrap_obj = dynamic_cast<MyClassWrap*>(my_obj);
@@ -367,15 +367,15 @@ and later:{{{
 
 == Howto debug your extensions.. ==
 
-=== [NOTE] Problems using M$ Visual C++ Debugger ===
+=== [NOTE] Problems using MS Visual C++ Debugger ===
 
-If you want to debug your extensions using the M$ Visual C++ debugger you need to remember to compile all libraries and extensions with the '''/MDd''' flag.
+If you want to debug your extensions using the MS Visual C++ debugger you need to remember to compile all libraries and extensions with the '''/MDd''' flag.
 
 If you forget this compiler flag, it's likely that your debugger will halt on a breakpoint with an error something like this:
 
-''HEAP[python.exe]: Invalid Address specified to RtlValidateHeap( 00E30000, 00D48FA8 )''
+{{{HEAP[python.exe]: Invalid Address specified to RtlValidateHeap( 00E30000, 00D48FA8 )}}}
 
 The actual statement which halts your debugger is executed in the NTDLL and therefor is not debuggable.
 While this seems to apply to all of the boost libraries, it can be annoying and it's hard to actually find the problem.
 
-AFAIK, the actual problem is, if you've not compiled all your libs/extensions with ''/MDd'', that you have objects on different heaps and the debugger stops with an assert because the extensions tries to access objects from the wrong heap.
+As far as I know, the actual problem is, if you've not compiled all your libs/extensions with ''/MDd'', that you have objects on different heaps and the debugger stops with an assert because the extensions tries to access objects from the wrong heap.
