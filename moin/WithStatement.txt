@@ -184,3 +184,16 @@ Adding features is always a problem, but adding them gradually just makes it tha
         I'm certainly not set on any particular example, I haven't 
 
 I would prefer that {{{__enter__}}} and {{{__exit__}}} be added to {{{Lock}}} and {{{RLock}}} objects, since it's really, REALLY obvious what {{{with lock:}}} does.  Hey, and nice work on unifying the synchronize keyword, database transactions, etc into the (consistent and intuitive) PEP 343.  I see why IanBicking thinks PEP 342 and 343 are related: they both do black magic with generators, look weird at first, but end up making a lot of sense and looking Pythonic.  I didn't think coroutines could be expressed so cleanly in Python, either.  It's impressive, really. -- ConnellyBarnes
+
+== Using ".something" syntax ==
+
+I think many Python programmers hate endless {{{ self.XXX }}} in, for example, {{{ __init__(self) }}}. Maybe it could be replaced with {{{ .XXX }}}:
+
+{{{
+class A(object):
+    def __init__(self):
+        .state = "OK"
+        .value = 1
+}}}
+
+I think it may be useful because WITH statement would be often used like {{{ with self: }}}        
