@@ -11,14 +11,18 @@ but otherwise it should be ''fully'' compatible with the wrapped function, so it
 As of Python 2.1 and the introduction of nested scopes, wrapping a function is easy:
 
 {{{#!python
-def wrap(func, pre, post):
-   def call(*args, **kwargs):
-      pre(func, *args, **kwargs)
-      result = func(*args, **kwargs)
-      post(func, *args, **kwargs)
-      return result
-   return call
+def wrap(pre, post):
+    def decorate(func):
+        def call(*args, **kwargs):
+            pre(func, *args, **kwargs)
+            result = func(*args, **kwargs)
+            post(func, *args, **kwargs)
+           return result
+        return call
+   return decorate
 }}}
+
+The additional decorate function is needed to work with the Python 2.4 decorator syntax.
 
 Now, let's wrap something up:
 
@@ -29,6 +33,7 @@ def trace_in(func, *args, **kwargs):
 def trace_out(func, *args, **kwargs):
    print "Leaving function", func.__name__
 
+@wrap(trace_in, trace_out)
 def calc(x, y):
    return x + y
 }}}
@@ -36,10 +41,7 @@ def calc(x, y):
 The wrapping effect is:
 
 {{{#!python
->>> f = wrap(calc, trace_in, trace_out)
 >>> print calc(1, 2)
-3
->>> print f(1, 2)
 Entering function calc
 Leaving function calc
 3
