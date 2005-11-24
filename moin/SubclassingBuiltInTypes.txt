@@ -23,9 +23,27 @@ Because I read all these things saying, "Don't use {{{type}}}!" "Don't use {{{is
 
 -- LionKimbro [[DateTime(2004-09-12T17:10:47Z)]]
 
+---
+[lwickjr]: I like to use {{{issubclass}}}. I suppose one could define a module in the Standard Library consisting entirely of empty classes with appropriate names, and inherit from them:
+
+Module interfaces:{{{
+...
+class dictLike: pass
+...
+}}}
+User {{{
 For instance, on the {{{int}}} class, there are some gazillion methods:
 
 {{{
+import interfaces
+...
+class Shelf(interfaces.dictLike,...):
+...
+}}}
+Then other users could write {{{isinstance(Thing, interfaces.dictLike)}}}, and be assured that anything that passes the test /promises/ to be "like a dictionary".
+
+Comments?
+---
 #!python
 >>> dir( 42 )
 ['__abs__', '__add__', '__and__', '__class__', '__cmp__', '__coerce__', '__delattr__',
