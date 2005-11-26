@@ -3,44 +3,44 @@ A framework for WebProgramming.
 === Masthead ===
 
    URL::  http://www.djangoproject.com/
-   version:: Still not officially launched, but SVN access to development version available now
-   licence::  Django is open source software available under a BSD license.
+   version:: 0.90
+   licence::  BSD
    platforms:: Unix, Windows, Mac
    Python versions:: >= 2.3
 
 === Deployment Platforms ===
 
-ModPython is supported, WSGI support has recently been added and there is also a standalone web server for development purposes.
+mod_python is preferred, but it has full WSGI support, so it can run with FCGI, etc. It also comes with a standalone Web server for development purposes.
 
 === Suitability ===
 
-Django currently powers lawrence.com, ljworld.com and chicagocrime.org, along with a bunch of smaller sites such as visitlawrence.com and kkcscountry.com. It seems to have been developed and mainly used for content management, but its rich features - templating, and automatic generation of database, database access layer, and admin interface generation from a model description given in straight python code - will be useful in other kinds of web applications, too.
+Django currently powers lawrence.com, ljworld.com and chicagocrime.org, along with a bunch of smaller sites such as visitlawrence.com and kkcscountry.com. It seems to have been developed and mainly used for content management, but its rich features -- templating, and automatic generation of database, database access layer, and admin interface generation from a model description given in straight python code -- is useful in other kinds of web applications, too.
 
 === URL dispatching ===
 
-URLs are mapped to request handler functions using regular expressions. A regex may capture parts of the URL, which are then passed to the function as arguments. 
+URLs are mapped to request handler functions using simple regular expressions. A regex may capture parts of the URL, which are then passed to the function as arguments. 
 
 === Environment Access ===
 
-Django creates an ``HttpRequest`` object that contains metadata about the request. This is automatically passed to the 
-function that the URL is mapped to and gets to create the response.
+Django creates an ``HttpRequest`` object that contains metadata about the request. This is automatically passed to the function that the URL is mapped to, and gets to create the response.
 
 === Session, Identification and Authentication ===
 
-Sessions are propagated using cookies, the session data stored in a dictionary within the request object. Identification / Authentication: For each application, a pretty sophisticated admin interface is generated that knows about superusers, groups, users and privileges. It seems that support for normal users registering themselves would have to be added manually. 
+Sessions are propagated using cookies, the session data stored in a dictionary within the request object. Identification / Authentication: For each application, a pretty sophisticated admin interface is generated that knows about superusers, groups, users and privileges. Support for normal users registering themselves exists but isn't yet documented.
 
 === Persistence Support ===
 
-Django's object-relational mapper provides the core of the framework, currently supports PostgreSQL, MySQL and SQLite3.  Django can also generate CRUD interfaces from the ORM. The automatic creation of database tables and database abstraction layer from pythonic model definition is really quite elegant and probably Django's most distinctive feature. A very nice feature is that you can still embed SQL in an unobtrusive way within your model's methods if you have to, e.g. for complex queries with joins over multiple tables. Thus, the mapper can handle the 90% of the cases that are simple, yet will step aside elegantly where it should.
+Django's object-relational mapper provides the core of the framework, currently supports PostgreSQL, MySQL and SQLite3. Django generates production-ready CRUD interfaces from the ORM. The automatic creation of database tables and database abstraction layer from Pythonic model definition is really quite elegant and probably Django's most distinctive feature. A very nice feature is that you can still embed SQL in an unobtrusive way within your model's methods if you have to, e.g. for complex queries with joins over multiple tables. Thus, the mapper can handle the 90% of the cases that are simple, yet will step aside elegantly where it should.
 
 === Presentation Support ===
 
-Django has a Smarty-like template language. Good: It supports inheritance. 
-Bad: Syntax quite hard on the eyes {% block title %}{{ section.title }}{% endblock %} That's even uglier than PHP
+Django has a Smarty-like template language. It looks like this:
+
+{% block title %}{{ section.title }}{% endblock %}
 
 === Documentation ===
 
-Growing, not quite complete yet but well written and already far more usable and detailed than with your average Python framework's haphazard wiki. 
+Not 100% complete yet, but what's there is phenomenally good. It's no coincidence that one of Django's lead developers is a professional journalist.
 
 === InTheirOwnWords ===
 
@@ -56,3 +56,5 @@ Read the [http://www.djangoproject.com/overview/ Django overview]
 
 
 === Hosting ===
+
+See http://code.djangoproject.com/wiki/DjangoFriendlyWebHosts
