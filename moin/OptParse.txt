@@ -30,3 +30,23 @@ For example, {{{options.portnum}}} would contain the integer {{{80}}}, in the ex
 == References ==
 
  * [http://docs.python.org/lib/module-optparse.html Official Python optparse Documentation]
+
+
+== Discussion ==
+
+* Impossible to verify the amount of options passed.
+
+I have had to create a function to verify in certain circumstances if we have at least one option set:
+
+(takes an OptParse Values instances returned by parser.parse_args() as argument)
+{{{
+#!python
+def is_empty(options):                                                                                                                                                   
+    """
+    Returns True or False if an option is set or not.
+    """
+    values = options.__dict__.values()                                                                                                                                   
+    return (values == [None] * len(values))
+}}}
+
+Is my need for this is due to a bad design in my option parsing?
