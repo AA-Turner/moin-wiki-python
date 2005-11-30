@@ -101,8 +101,29 @@ every comparison, so the most efficient solution is to do the forward sort first
 
 == Sorting by keys ==
 
-The
-Here's a case-insensitive string comparison using a {{{lambda}}} function:
+Python 2.4's {{{key}}} parameter lets you derive a sorting key for each element of the list, and then sort using the key. 
+
+For example, here's a case-insensitive string comparison:
+{{{
+>>> a = "This is a test string from Andrew".split()
+>>> a.sort(key=str.lower)
+>>> a
+['a', 'Andrew', 'from', 'is', 'string', 'test', 'This']
+}}}
+
+The value of the {{{key}}} parameter should be a function 
+that takes a single argument and returns a key to use for sorting purposes.  
+
+Often there's a built-in that will match your needs, such as {{{string.lower()}}}.  The {{{operator}}} module contains a number of functions useful for this purpose.  
+For example, you can sort objects based
+on an attribute value using {{{operator.attrgetter()}}}:
+
+{{{XXX write example
+}}}
+
+Versions of Python before 2.4 don't have the convenient
+{{{key}}} parameter, so you have to write a 
+comparison function that embodies the key-generating logic:
 
 {{{
 >>> a = "This is a test string from Andrew".split()
@@ -112,14 +133,17 @@ Here's a case-insensitive string comparison using a {{{lambda}}} function:
 }}}
 
 This goes through the overhead of converting a word to lower case
-every time it must be compared.  At times it may be faster to compute
-these once and use those values, and the following example shows how.
+every time it must be compared, roughly O(n lg n) times.  
+Python 2.4's {{{key}}} parameter is called once for each item in the list, which is O(n) and therefore more efficient.
+You can manually perform the same optimization by
+computing the keys once
+and using those values. The following example shows how.
 
 {{{
->>> words = string.split("This is a test string from Andrew.")
+>>> words = "This is a test string from Andrew.".split()
 >>> offsets = []
 >>> for i in range(len(words)):
->>>     offsets.append( (string.lower(words[i]), i) )
+>>>     offsets.append( (words[i].lower(), i) )
 >>> 
 >>> offsets.sort()
 >>> new_words = []
@@ -145,10 +169,10 @@ Another way to implement this is to store the original data as the
 second term in the {{{offsets}}} list, as in:
 
 {{{
->>> words = string.split("This is a test string from Andrew.")
+>>> words = "This is a test string from Andrew.".split()
 >>> offsets = []
 >>> for word in words:
->>>     offsets.append( (string.lower(word), word) )
+>>>     offsets.append( (word.lower(), word) )
 >>> 
 >>> offsets.sort()
 >>> new_words = []
