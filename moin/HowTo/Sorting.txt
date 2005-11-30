@@ -115,10 +115,18 @@ The value of the {{{key}}} parameter should be a function
 that takes a single argument and returns a key to use for sorting purposes.  
 
 Often there's a built-in that will match your needs, such as {{{string.lower()}}}.  The {{{operator}}} module contains a number of functions useful for this purpose.  
-For example, you can sort objects based
-on an attribute value using {{{operator.attrgetter()}}}:
+For example, you can sort tuples  
+based on their second element
+using {{{operator.itemgetter()}}}:
 
-{{{XXX write example
+{{{>>> import operator
+>>> L = [('c', 2), ('d', 1), ('a', 4), ('b', 3)]
+>>> map(operator.itemgetter(0), L)
+['c', 'd', 'a', 'b']
+>>> map(operator.itemgetter(1), L)
+[2, 1, 4, 3]
+>>> sorted(L, key=operator.itemgetter(1))
+[('d', 1), ('c', 2), ('b', 3), ('a', 4)]
 }}}
 
 Versions of Python before 2.4 don't have the convenient
@@ -226,7 +234,22 @@ as in:
 Sometimes you may want to sort by a specific attribute of a class.  If
 appropriate you should just define the {{{__cmp__}}} method to compare
 those values, but you cannot do this if you want to compare between
-different attributes at different times.  Instead, you'll need to go
+different attributes at different times.  
+
+Python 2.4 has an {{{operator.attrgetter()}}} function
+that makes this easy:
+{{{
+>>> import operator
+>>> a = [Spam(1, 4), Spam(9, 3), Spam(4,6)]
+>>> a.sort(key=operator.attrgetter('eggs'))
+>>> for spam in a:
+>>>   print spam.eggs, str(spam)
+3 12
+4 5
+6 10
+}}}
+
+Again, earlier Python version require you to go
 back to passing a comparison function to sort, as in:
 
 {{{
