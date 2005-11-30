@@ -2,10 +2,6 @@
 
 '''Original version by Andrew Dalke'''
 
-This document is a little tutorial
-showing a half dozen ways to sort a list with the built-in
-{{{sort()}}} method.  
-
 Python lists have a built-in {{{sort()}}} method.  There are many
 ways to use it to sort a list and there doesn't appear to be a single,
 central place in the various manuals describing them, so I'll do so
@@ -32,7 +28,7 @@ comparisons.  The default sort routine is equivalent to:
 [1, 2, 3, 4, 5]
 }}}
 
-where {{{cmp}}} is the built-in function which compares two objects,
+where {{{cmp()}}} is the built-in function that compares two objects,
 {{{x}}} and {{{y}}}, and returns -1, 0 or 1 depending on whether
 x<y, x==y, or x>y.  During the course of the sort the
 relationships must stay the same for the final list to make sense.
@@ -50,7 +46,7 @@ integers (and numbers in general) we can do:
 [1, 2, 3, 4, 5]
 }}}
 
-By the way, this function won't work if result of the subtraction
+By the way, this function won't work if the result of the subtraction
 is out of range, as in {{{sys.maxint - (-1)}}}.
 
 Or, if you don't want to define a new named function you can create an
@@ -63,32 +59,49 @@ anonymous one using {{{lambda}}}, as in:
 [1, 2, 3, 4, 5]
 }}}
 
-If you want the numbers sorted in reverse you can do
+Python 2.4 adds three keyword arguments to {{{sort()}}} that
+simplify many common usages: {{{cmp}}}, {{{key}}}, and {{{reverse}}}.  The {{{cmp}}} keyword is for providing a sorting function; the previous examples could be written as:
+{{{
+>>> a.sort(cmp=numeric_compare)
+>>> a.sort(cmp=lambda x,y: x-y)
+}}}
+ 
+The {{{reverse}}} parameter is a Boolean value; if it's true, the list is sorted into reverse order.
+{{{
+>>> a = [5, 2, 3, 1, 4]
+>>> a.sort(reverse=True)
+>>> a
+[5, 4, 3, 2, 1]
+}}}
 
+For Python versions before 2.4, you can reverse the sense
+of the comparison function:
 {{{
 >>> a = [5, 2, 3, 1, 4]
 >>> def reverse_numeric(x, y):
 >>>     return y-x
 >>> 
 >>> a.sort(reverse_numeric)
->>> print a
+>>> a
 [5, 4, 3, 2, 1]
 }}}
 
 (a more general implementation could return {{{cmp(y,x)}}} or {{{-cmp(x,y)}}}).
 
 However, it's faster if Python doesn't have to call a function for
-every comparison, so if you want a reverse-sorted list of basic data
-types, do the forward sort first, then use the {{{reverse()}}} method.
+every comparison, so the most efficient solution is to do the forward sort first, then use the {{{reverse()}}} method.
 
 {{{
 >>> a = [5, 2, 3, 1, 4]
 >>> a.sort()
 >>> a.reverse()
->>> print a
+>>> a
 [5, 4, 3, 2, 1]
 }}}
 
+== Sorting by keys ==
+
+The
 Here's a case-insensitive string comparison using a {{{lambda}}} function:
 
 {{{
