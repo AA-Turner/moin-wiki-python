@@ -131,7 +131,7 @@ using {{{operator.itemgetter()}}}:
 }}}
 
 Versions of Python before 2.4 don't have the convenient
-{{{key}}} parameter, so you have to write a 
+{{{key}}} parameter of {{{sort()}}}, so you have to write a 
 comparison function that embodies the key-generating logic:
 
 {{{
@@ -150,16 +150,16 @@ and using those values. The following example shows how.
 
 {{{
 >>> words = "This is a test string from Andrew.".split()
->>> offsets = []
->>> for i in range(len(words)):
->>>     offsets.append( (words[i].lower(), i) )
->>> 
+>>> offsets = [(words[i].lower(), i) for i in range(len(words))]
+>>> offsets
+[('this', 0), ('is', 1), ('a', 2), ('test', 3), ('string', 4), ('from', 5), ('andrew.', 6)]
 >>> offsets.sort()
 >>> new_words = []
 >>> for dontcare, i in offsets:
 >>>      new_words.append(words[i])
 >>> 
 >>> print new_words
+['a', 'Andrew.', 'from', 'is', 'string', 'test', 'This']
 }}}
 
 The {{{offsets}}} list is initialized to a tuple of the lower-case
@@ -179,16 +179,16 @@ second term in the {{{offsets}}} list, as in:
 
 {{{
 >>> words = "This is a test string from Andrew.".split()
->>> offsets = []
->>> for word in words:
->>>     offsets.append( (word.lower(), word) )
->>> 
+>>> offsets = [(word.lower(), word) for word in words]
+>>> offsets
+[('this', 'This'), ('is', 'is'), ('a', 'a'), ('test', 'test'), ('string', 'string'), ('from', 'from'), ('andrew.', 'Andrew.')]
 >>> offsets.sort()
 >>> new_words = []
->>> for word in offsets:
->>>     new_words.append(word[1])
->>> 
+>>> for t in offsets:
+>>>     new_words.append(t[1])
+...
 >>> print new_words
+['a', 'Andrew.', 'from', 'is', 'string', 'test', 'This']
 }}}
 
 This isn't always appropriate because the second terms in the list
