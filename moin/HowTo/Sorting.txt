@@ -146,64 +146,33 @@ every time it must be compared, roughly O(n lg n) times.
 Python 2.4's {{{key}}} parameter is called once for each item in the list, which is O(n) and therefore more efficient.
 You can manually perform the same optimization by
 computing the keys once
-and using those values. The following example shows how.
+and using those values to control the sort order:
 
 {{{
 >>> words = "This is a test string from Andrew.".split()
->>> offsets = [(words[i].lower(), i) for i in range(len(words))]
->>> offsets
-[('this', 0), ('is', 1), ('a', 2), ('test', 3), ('string', 4), ('from', 5), ('andrew.', 6)]
->>> offsets.sort()
->>> new_words = []
->>> for dontcare, i in offsets:
->>>      new_words.append(words[i])
->>> 
+>>> deco = [ (word.lower(), i, word) for i, word in enumerate(words) ]
+>>> deco.sort()
+>>> new_words = [ word for _, _, word in deco ]
 >>> print new_words
 ['a', 'Andrew.', 'from', 'is', 'string', 'test', 'This']
 }}}
 
-The {{{offsets}}} list is initialized to a tuple of the lower-case
-string and its position in the {{{words}}} list.  It is then sorted.
-Python's sort method sorts tuples by comparing terms; given {{{x}}}
-and {{{y}}}, compare {{{x[0]}}} to {{{y[0]}}}, then {{{x[1]}}} to
-{{{y[1]}}}, etc. until there is a difference.
+This idiom is called Decorate-Sort-Undecorate after its three steps:
+  * First, the initial list is decorated with new values that control the sort order.
+  * Second, the decorated list is sorted.
+  * Finally, the decorations are removed, creating a list that contains only the initial values in the new order.
 
-The result is that the {{{offsets}}} list is ordered by its first
-term, and the second term can be used to figure out where the original
-data was stored.  (The {{{for}}} loop assigns {{{dontcare}}} and
-{{{i}}} to the two fields of each term in the list, but we only need
-the index value.)
+This idiom works because tuples are compared lexicographically; the first items are compared; if they are the same then the second items are compared, and so on.
 
-Another way to implement this is to store the original data as the
-second term in the {{{offsets}}} list, as in:
+It is not strictly necessary in all cases to include the index {{{i}}} in the decorated list. Including it gives two benefits:
+  * The sort is stable - if two items have the same key, their order will be preserved in the sorted list.
+  * The original items do not have to be comparable because the ordering of the decorated tuples will be determined by at most the first two items. So for example the original list could contain {{{complex}}} numbers which cannot be sorted directly.
 
-{{{
->>> words = "This is a test string from Andrew.".split()
->>> offsets = [(word.lower(), word) for word in words]
->>> offsets
-[('this', 'This'), ('is', 'is'), ('a', 'a'), ('test', 'test'), ('string', 'string'), ('from', 'from'), ('andrew.', 'Andrew.')]
->>> offsets.sort()
->>> new_words = []
->>> for t in offsets:
->>>     new_words.append(t[1])
-...
->>> print new_words
-['a', 'Andrew.', 'from', 'is', 'string', 'test', 'This']
-}}}
+Another name for this idiom is [http://en.wikipedia.org/wiki/Schwartzian_transform Schwartzian transform], after Randal L. Schwartz, who popularized it among Perl programmers.
 
-This isn't always appropriate because the second terms in the list
-(the word, in this example) will be compared when the first terms are
-the same.  If this happens many times, then there will be the unneeded
-performance hit of comparing the two objects.  This can be a large
-cost if most terms are the same and the objects define their own
-{{{__cmp__}}} method, but there will still be some overhead to determine if
-{{{__cmp__}}} is defined.
-
-Still, for large lists, or for lists where the comparison information
-is expensive to calculate, the last two examples are likely to be the
-fastest way to sort a list.  It will not work on weakly sorted data,
-like complex numbers, but if you don't know what that means, you
-probably don't need to worry about it.
+For large lists and lists where the comparison information
+is expensive to calculate, and Python versions < 2.4, DSU is likely to be the
+fastest way to sort the list.
 
 == Comparing classes ==
 
