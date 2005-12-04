@@ -34,13 +34,13 @@ where {{{cmp()}}} is the built-in function that compares two objects,
 x<y, x==y, or x>y.  During the course of the sort the
 relationships must stay the same for the final list to make sense.
 
-If you want, you can define your own function for the comparison.  For 
+If you want, you can define your own function for the comparison.  For
 integers (and numbers in general) we can do:
 
 {{{
 >>> def numeric_compare(x, y):
 >>>    return x-y
->>> 
+>>>
 >>> a = [5, 2, 3, 1, 4]
 >>> a.sort(numeric_compare)
 >>> print a
@@ -66,7 +66,7 @@ simplify many common usages: {{{cmp}}}, {{{key}}}, and {{{reverse}}}.  The {{{cm
 >>> a.sort(cmp=numeric_compare)
 >>> a.sort(cmp=lambda x,y: x-y)
 }}}
- 
+
 The {{{reverse}}} parameter is a Boolean value; if it's true, the list is sorted into reverse order.
 {{{
 >>> a = [5, 2, 3, 1, 4]
@@ -81,7 +81,7 @@ of the comparison function:
 >>> a = [5, 2, 3, 1, 4]
 >>> def reverse_numeric(x, y):
 >>>     return y-x
->>> 
+>>>
 >>> a.sort(reverse_numeric)
 >>> a
 [5, 4, 3, 2, 1]
@@ -102,7 +102,7 @@ every comparison, so the most efficient solution is to do the forward sort first
 
 == Sorting by keys ==
 
-Python 2.4's {{{key}}} parameter lets you derive a sorting key for each element of the list, and then sort using the key. 
+Python 2.4's {{{key}}} parameter lets you derive a sorting key for each element of the list, and then sort using the key.
 
 For example, here's a case-insensitive string comparison:
 {{{
@@ -112,11 +112,11 @@ For example, here's a case-insensitive string comparison:
 ['a', 'Andrew', 'from', 'is', 'string', 'test', 'This']
 }}}
 
-The value of the {{{key}}} parameter should be a function 
-that takes a single argument and returns a key to use for sorting purposes.  
+The value of the {{{key}}} parameter should be a function
+that takes a single argument and returns a key to use for sorting purposes.
 
-Often there's a built-in that will match your needs, such as {{{string.lower()}}}.  The {{{operator}}} module contains a number of functions useful for this purpose.  
-For example, you can sort tuples  
+Often there's a built-in that will match your needs, such as {{{string.lower()}}}.  The {{{operator}}} module contains a number of functions useful for this purpose.
+For example, you can sort tuples
 based on their second element
 using {{{operator.itemgetter()}}}:
 
@@ -131,7 +131,7 @@ using {{{operator.itemgetter()}}}:
 }}}
 
 Versions of Python before 2.4 don't have the convenient
-{{{key}}} parameter of {{{sort()}}}, so you have to write a 
+{{{key}}} parameter of {{{sort()}}}, so you have to write a
 comparison function that embodies the key-generating logic:
 
 {{{
@@ -142,7 +142,7 @@ comparison function that embodies the key-generating logic:
 }}}
 
 This goes through the overhead of converting a word to lower case
-every time it must be compared, roughly O(n lg n) times.  
+every time it must be compared, roughly O(n lg n) times.
 Python 2.4's {{{key}}} parameter is called once for each item in the list, which is O(n) and therefore more efficient.
 You can manually perform the same optimization by
 computing the keys once
@@ -191,8 +191,8 @@ as in:
 >>>         return cmp(self.spam+self.eggs, other.spam+other.eggs)
 >>>     def __str__(self):
 >>>         return str(self.spam + self.eggs)
->>> 
->>> a = [Spam(1, 4), Spam(9, 3), Spam(4,6)]
+>>>
+>>> a = [Spam(1, 4), Spam(9, 3), Spam(4, 6)]
 >>> a.sort()
 >>> for spam in a:
 >>>   print str(spam)
@@ -204,14 +204,26 @@ as in:
 Sometimes you may want to sort by a specific attribute of a class.  If
 appropriate you should just define the {{{__cmp__}}} method to compare
 those values, but you cannot do this if you want to compare between
-different attributes at different times.  
+different attributes at different times.
 
 Python 2.4 has an {{{operator.attrgetter()}}} function
 that makes this easy:
 {{{
 >>> import operator
->>> a = [Spam(1, 4), Spam(9, 3), Spam(4,6)]
+>>> a = [Spam(1, 4), Spam(9, 3), Spam(4, 6)]
 >>> a.sort(key=operator.attrgetter('eggs'))
+>>> for spam in a:
+>>>   print spam.eggs, str(spam)
+3 12
+4 5
+6 10
+}}}
+
+In Python 2.4 if you don't want to import the operator module you can:
+{{{
+>>> import operator
+>>> a = [Spam(1, 4), Spam(9, 3), Spam(4, 6)]
+>>> a.sort(key=lambda obj:obj.eggs)
 >>> for spam in a:
 >>>   print spam.eggs, str(spam)
 3 12
@@ -223,7 +235,7 @@ Again, earlier Python version require you to go
 back to passing a comparison function to sort, as in:
 
 {{{
->>> a = [Spam(1, 4), Spam(9, 3), Spam(4,6)]
+>>> a = [Spam(1, 4), Spam(9, 3), Spam(4, 6)]
 >>> a.sort(lambda x, y: cmp(x.eggs, y.eggs))
 >>> for spam in a:
 >>>   print spam.eggs, str(spam)
@@ -243,7 +255,7 @@ an function by defining the {{{__call__}}} method, as in:
 >>>         self.attr = attr
 >>>     def __call__(self, x, y):
 >>>         return cmp(getattr(x, self.attr), getattr(y, self.attr))
->>> 
+>>>
 >>> a = [Spam(1, 4), Spam(9, 3), Spam(4,6)]
 >>> a.sort(CmpAttr("spam"))  # sort by the "spam" attribute
 >>> for spam in a:
