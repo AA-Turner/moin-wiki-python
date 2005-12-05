@@ -560,10 +560,10 @@ For those decorators that return local functions, this will copy attributes from
 {{{
 #!python
 import warnings
-def decorating(func, doc=None):
+def decorating(func, doc=''):
     def provideatts(newFunc, ):
         newFunc.__name__ = func.__name__
-        newFunc.__doc__ = (func.__doc__ or '') + '\n' + (doc or '')
+        newFunc.__doc__ = (func.__doc__ or '') + '\n' + doc
         newFunc.__dict__.update(func.__dict__)
         return newFunc
     return provideatts
