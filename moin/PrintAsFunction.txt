@@ -432,3 +432,44 @@ but only if you don't mind exposing them (debatable).  If you need something bes
 {{{>>> print('x = {r:x}, y = {f9.8:y}, z = {i:z}', x=x, y=y, z=z)}}}
 
 Or maybe even something that allows arbitrary arguments to be passed to the formatter. - ''Adam Olsen''
+
+=== Another idea ===
+String formatting with %* is a bad idea, imho. Since python is anyway dynamic by nature,
+why not add built-in string evaluation, as in boo [http://boo.codehaus.org]. for example:
+{{{
+x = "lucy"
+write("i love ${x}")
+}}}
+
+or
+{{{
+x = 7
+write("the answer is ${x * 2}")
+}}}
+
+if strings (or a special flavor of string, say one marked with backticks*) allowed 
+evaluation of expressions, code will never look like
+{{{
+print "x = ", x, "y = ", y
+}}}
+
+but rather
+{{{
+write("x = ${x}, y = ${y}")
+}}}
+
+which is much more readable and easier to maintain. imagine working with 20 '%s' in a single
+string! it's a disaster. even using the silly %(name) is bad, since you then have to fill a 
+huge dict after your string. 
+
+(*) backticks: yes, backticks mean repr(), but did anyone ever heard of them? i think they are
+depricated anyway. adding a new builting type, evalstr ("evaluating string"), marked by
+backticks, is very simple and almost completely backwards compatible.
+
+{{{
+write(`hello ${os.getuid()}, the time now is ${time.asctime()}, and you are running on ${os.name}`)
+}}}
+
+true, it doesnt solve the write/writeln "problem", and i must admit that print as a statement 
+is a pretty useful feature (no parenthesis hassle), but adding evalstrings will make long
+format string possible and maintainable. plus, it gets us rid of the ugly writef or printf proposals.
