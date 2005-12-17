@@ -220,3 +220,33 @@ modules should be updated to accept an optional stream argument. -- SkipMontanar
 == Module interface ==
 
  * Modules should support cleaning up after themselves on unloading, just like objects do. This is especially interesting for extension modules.
+
+== Stronger Distinction between Tuples & Lists ==
+
+Guido has often indicated he thinks of tuples as something more akin to
+Pascal records or C structs than to arrays or lists.  Still, people continue
+to treat them as immutable lists.  There has been a fair amount of talk
+recently about creating "frozen" versions of mutable objects.  That would
+allow them to be used as dictionary keys and remove a significant reason to
+treat tuples and lists (nearly) the same.  For example:
+
+{{{
+    d = {}
+    d[freeze([1,2,3])] = "happy"
+}}}
+
+If you no longer need tuples to masquerade as frozen lists, why not consider
+making the two types more distinct?  Get rid of the sequence API for tuples
+({{{len(some_tuple)}}} would raise an exception, no index or slice notation)
+and give them attributes.  How about:
+
+{{{
+    color = (red=255, blue=17, green=0xcc)
+    print color.blue * 3                     # prints 51
+    another_color = tuple(favorite_color, green=0)
+    print another_color == color             # prints False
+    bad = tuple([1,2,3])                     # raises TypeError exception
+}}}
+
+Storagewise they'd be much like current tuples (that is, cheaper than dicts)
+and they'd also be immutable.  Field access would be via attribute.
