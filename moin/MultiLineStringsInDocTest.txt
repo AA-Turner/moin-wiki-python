@@ -1,8 +1,8 @@
 The DocTest module requires special actions / processing for multi-line strings.
 
-= Multi-Line Strings in commands =
-'''*** Solution Needed ***'''
+[[TableOfContents]]
 
+= Multi-Line Strings in commands =
 Consider a function {{{get_html_title}}} designed to extract the title from an HTML page.  Here is some python code to test the function:
 {{{#!python
 >>> html = '''
@@ -31,6 +31,22 @@ Exception raised:
          html = '''
                    ^
      SyntaxError: EOF while scanning triple-quoted string
+}}}
+
+The solution is to add the command continuation characters:
+{{{#!python
+>>> html = '''
+... <html>
+... <head>
+... <title>This is the page title</title>
+... </head>
+... <body>
+... This is the body
+... </body>
+... </html>
+... '''
+>>> title = get_html_title(html)
+>>> assert(title == "This is the page title")
 }}}
 
 = Multi-Line Strings in output =
