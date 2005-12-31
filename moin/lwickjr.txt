@@ -24,7 +24,7 @@ Could someone __please__ write a page on PublishingPythonModules that is underst
 
 == Links  ==
 
-PublishingPythonModules SkipMontanaro
+PublishingPythonModules SkipMontanaro [:/Modules: Some of my more publishable modules]
 
 ----
 
@@ -48,36 +48,7 @@ With a real name I meant the one in your passport, not capitalizing your nick in
   No offense taken; none intended.
  \---
 
-BTW, what do you think of the modules I describe below?
-----
-
-My more-interesting modules [by the way, how do I link to a Wiki page with text that doesn't match the destination page's name?] include "Alias", "Edit", and "UT". I'll add others to this page as I have opportunity [the machine I'm typing this on isn't my home system].
-
-General outlines:
-
- * Alias - attachment:lwickjr.Module.Alias.py
-   * Provides a mechanism whereby arbitrary callables are *effectively* converted to commands in interactive Python, but not in modules. To do this, Alias splits off the first word of the command line, attempts to evaluate it, and iff it is callable, the tail of the command is also evaluated and passed to the callable as an argument tuple. This allows the manual use of "dir", "reload", et al, as statements without requiring that parentheses be typed. Parentheses are still required in module source, however, and in any function calls in the tail of the command line.
-   * Provides a mechanism whereby arbitrary one-word names may be assigned to callable objects for use with the preceding mechanism. This allows one to dispense with the requirement to type fully-qualified long.nested.module.names for selected callables, and is where the module gets its name.
-   * Provides a mechanism for allowing modules to be imported through a bare reference to the module name.
-   * Provides a mechanism whereby modules imported by the preceding mechanism may auto-register aliases of their own choosing. Entering the name of a module that has already been imported does not re-import the module; rather it re-updates whatever auto-alias associations might exist in that module at the time the name is re-entered.
-   * Provides its own list of aliases, available via the preceding mechanism, for managing the alias dictionary.
-   * Does not function under IDLE without disabling the default sub-process. Probably does not function correctly, or even at all, without IDLE.
- * Edit - attachment:lwickjr.Module.Edit.py
-   * Provides an Alias that attempts to open for editing the source for the module where the argument was defined, positioned, if possible, on the line where the definition starts.
-   * Provides a mechanism for recording the current size and position of the active IDLE window such that subsequent attempts to open the window open it with the remembered geometry.
-   * Provides an IDLE menu item to trigger the preceding mechanism.
-   * Functions only under IDLE. Does not function correctly without disabling the default sub-process.
- * UT - attachment:lwickjr.Module.UT.py - last uploaded 2005-11-26. 
-   * Provides several "utility" functions that I've found useful:
-   * A "smart" reload substitute that can automatically re-load other modules in dependancy-order, if the module being reloaded registers its dependancies, with convenience functions for declaring those dependancies.
-   * A convenience wrapper for cPickle that allows [un-]pickling single objects from/to a specified file with a single function call.
-   * ThisLine, a function that returns the name and source line-number of the caller an arbitrary number of callers up the call-stack.
-   * Some old stuff, commented out.
- * GWiz, s *functional* but incomplete GUI editor. More details later.
- * WinReg, a higher-level abstraction around _winreg. Fully functional and complete.
-
-I hereby offer any modules that *I* attach to this page for inclusion in the official Python module library.
-----
+BTW, what do you think of the modules I describe [:/Modules: here]?
 
 I have a hard time understanding what the modules are for; There's a lot of focus on ''how'' these things work, but I have difficulty figuring out what they are for.
 
