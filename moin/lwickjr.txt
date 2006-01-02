@@ -50,8 +50,6 @@ With a real name I meant the one in your passport, not capitalizing your nick in
 ----
 BTW, what do you think of the modules I describe [:/Modules: here]?
 
-It seems to me that Edit is something that makes it so that you can jump straight to where a variable is defined, in IDLE. (Not really sure.) If so, that's awesome! I've often times wished IDLE were more powerful; This is the kind of thing I'd like to see more of. :)
-
 As for publishing modules, it seems to me that we in the Python community are not yet [http://rubyforge.org/softwaremap/trove_list.php as organized as the Ruby community.]
 
 For the most part, people set up their own website, maybe something on SourceForge, get a listing on PyPi or the vaults (of what-I-cant-spell,) and mention it on the python-announce usenet forum.
@@ -61,12 +59,6 @@ It would be a good subject for a new wiki page. I think there's already one that
 -- LionKimbro [[DateTime(2005-04-01T21:16:29Z)]]
 
 ["lwickjr"]: Um, sorry about that. The descriptions are heavy on *what* the modules do, but totally void of either of how they work or why one would want to use them.
-
-Alias is a convenience module for I.D.L.E. PyShell usage, intended to save typing.
-
-UT is a convenience module for miscelaneous support functions that I`ve found useful.
-
-As for Edit, you have the right idea, but variables are too simple for Edit to deal with. When you type "edit thing", "thing" *MUST* evaluate to an object for which one of the standard modules, "inspect", I believe, is capable of locating the information required to open the source module. For the module to open for editing at the line where the object is defined, it is required for perfect positioning that inspect be capable of determining the line number. In the absence of reliable information, Edit makes an educated guess, and positions the editor there. When the educated guess fails, the editor is positioned wherever I.D.L.E. would have positioned it had you opened the file for editing via another method. Basically, Edit is given a class, instance, module, etc., and attempts to display the Python source for the definition. Edit will work, however, for anything that Inspect can retrieve the required information from. Edit also provides a hook for invoking custom editors in place of I.D.L.E.`s built-in editor. This would be useful, for example, for having edit invoke a G.U.I. editor instead when invoked on objects created by the G.U.I. editor.
 
 As for that WIKIPage you mention, [:PublishingPythonModules: How to publish Python modules], I created it in hopes that someone would populate it with useful information. I'm thinking of doing just that. Ok, people, just how big is "small enough"? Does Edit interest you? Don't forget: it *does* require that the default subprocess be turned off, as it REQUIRES interaction between the user dataspace and the I.D.L.E. dataspace, and I don`t [currently] know how to use the IPC [Inter-Process Communication] that I.D.L.E. uses for the purpose. Alias has the same requirement, and for the same reason.
 
