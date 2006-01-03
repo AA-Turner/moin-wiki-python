@@ -250,3 +250,19 @@ and give them attributes.  How about:
 
 Storagewise they'd be much like current tuples (that is, cheaper than dicts)
 and they'd also be immutable.  Field access would be via attribute.
+
+== Unifying generators ==
+
+{{{#!python
+   # A generator:
+   g = (x ** 2 for x in numbers)
+   
+   # A list:
+   list(x ** 2 for x in numbers) == [x ** 2 for x in numbers]
+   
+   # A dict:
+   dict((x, x ** 2) for x in numbers) == {x: x ** 2 for x in numbers}
+   
+   # A set:
+   set(x ** 2 for x in numbers) == <x ** 2 for x in numbers>
+}}}
