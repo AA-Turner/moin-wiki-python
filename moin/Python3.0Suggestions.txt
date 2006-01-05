@@ -266,3 +266,26 @@ and they'd also be immutable.  Field access would be via attribute.
    # A set:
    set(x ** 2 for x in numbers) == <x ** 2 for x in numbers>
 }}}
+
+== Replace Integer Masks with Sets ==
+
+(This idea was mentioned on c.l.py by Bryan Olson.  I'm just recording
+it, though I agree it seems like a good idea.)
+
+In places where Python usage currently uses a bitmask to specify a set
+of options it would be more Pythonic to instead use a set.  For
+example, {{{re.compile()}}} accepts two args, a pattern and an
+optional set flags.  Those flags are specified as integers
+bitwise-or-ed together:
+
+{{{
+    pat = re.compile("some pattern", re.I|re.S|re.X)
+}}}
+
+It seems it would be more Pythonic to use a set:
+
+{{{
+    pat = re.compile("some pattern", set(re.I, re.S, re.X))
+}}}
+
+The elements of the set wouldn't even need to be integers.
