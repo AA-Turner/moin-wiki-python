@@ -4,7 +4,7 @@ Distutils standard install_data doesn't automatically store resource-files in th
 
 To see the effect, try installing a library that specifies data-files while specifying --install_lib=somewhere.  The data-files will still be installed to site-packages while the Python files show up in "somewhere".
 
-= Solution =
+= Solution for Python 2.3 =
 
 Sub-class install_data and tell it to use the install_lib directory as its root install directory.
 
@@ -35,6 +35,12 @@ This code was created by Pete Shinners (of PyGame fame).
 You can see a real-world usage example in the [http://cvs.sourceforge.net/viewcvs.py/pytable/table/setup.py?view=markup PyTable setup script]
 
 Note that in Python 2.4 and newer, you'll be able to use the 'package_data' keyword to the 'setup' function to install data in packages without having to clobber the normal install_data command.
+
+= Solution for Python 2.1 and 2.2 =
+
+For some obscure reason, the solution above does not work with Python 2.2 (or 2.1), even if the distutils code of Python 2.3 is used with Python 2.2.
+
+See http://groups.google.de/groups?as_umsgid=f70e3538.0404141327.6cea58ca@posting.google.com for a solution that will work with every Python version.
 
 = Discussion =
 
