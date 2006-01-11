@@ -1,4 +1,4 @@
-WARNING:  First draft, not all yet verified.  
+WARNING:  First draft, not all yet verified.
 
 
 A "New Class" is the recommended way to create a class in modern Python.
@@ -16,7 +16,7 @@ class Old1:
 class Old2(Old1, UserDict): # Assuming UserDict is still old-style
     ...
 }}}
-vs 
+vs
 {{{
 class New1(object):
     ...
@@ -31,7 +31,7 @@ class New4(dict, Old1):  # dict is a newstyle class
 
 * New Style classes can use descriptors (including slots), and Old Style classes cannot.  Normally, this is just an advantage for New Classes, but it can affect lookup.  An old-style class will always find an attribute on an instance before it looks in the hierarchy.  (So you can hide a method.)  A new-style class will let the class definition win if it is a writeable descriptor, so you may not be able to (effectively) store data on an instance.  [http://www.python.org/2.2.2/descrintro.html#property More information on slots and descriptors.]
 
-Warning:  In 2.5, magic names (those with a double underscore at both ends of the name) may look at the class rather than the instance even for old-style classes.  I say this based on some python-dev discussion; I didn't notice how solidly the final decision was made.  
+Warning:  In 2.5, magic names (those with a double underscore at both ends of the name) may look at the class rather than the instance even for old-style classes.  I say this based on some python-dev discussion; I didn't notice how solidly the final decision was made.
 
 * Magic names have changed a little.  Old classes don't have an __mro__, new classes (generally) don't have __members__ or __methods__.  New classes generally won't let you change the class's __bases__ or __name__ (though you can still call it whatever you want in your namespace) and are pickier about changing an object's __class__.  See http://www.python.org/2.2.2/bugs.html for a list of expected converting-an-old-class-to-a-new-class problems.
 
@@ -40,20 +40,20 @@ Warning:  In 2.5, magic names (those with a double underscore at both ends of th
 * An Exception cannot be a New-Style class.  This is a wart that may change in the future; for the moment it is required because of some complex backward compatibility dances involving (deprecated) string exceptions and whether a raised object should be treated as a Class or as an Instance of a Class.  Note that you can inherit from both Exception and object; you just can't raise the result.
 
 {{{
->>> class NewException(Exception, object):
+&gt;&gt;&gt; class NewException(Exception, object):
 	pass
 
->>> raise NewException
+&gt;&gt;&gt; raise NewException
 
 Traceback (most recent call last):
-  File "<pyshell#22>", line 1, in -toplevel-
+  File "&lt;pyshell#22&gt;", line 1, in -toplevel-
     raise NewException
 TypeError: exceptions must be classes, instances, or strings (deprecated), not type
 
->>> raise NewException()
+&gt;&gt;&gt; raise NewException()
 
 Traceback (most recent call last):
-  File "<pyshell#23>", line 1, in -toplevel-
+  File "&lt;pyshell#23&gt;", line 1, in -toplevel-
     raise NewException()
 TypeError: exceptions must be classes, instances, or strings (deprecated), not NewException
 }}}
@@ -63,14 +63,14 @@ Old Style classes search each base class, including the bases of the bases, Left
 New Style classes search each base class only once.
 
 {{{
->>> class Old: pass
->>> class O1(Old): pass
->>> class O2(Old): pass
->>> class OD(O1, O2): pass
+&gt;&gt;&gt; class Old: pass
+&gt;&gt;&gt; class O1(Old): pass
+&gt;&gt;&gt; class O2(Old): pass
+&gt;&gt;&gt; class OD(O1, O2): pass
 
->>> OD.__mro__
+&gt;&gt;&gt; OD.__mro__
 Traceback (most recent call last):
-  File "<pyshell#24>", line 1, in -toplevel-
+  File "&lt;pyshell#24&gt;", line 1, in -toplevel-
     O.__mro__
 AttributeError: class O has no attribute '__mro__'
 }}}
@@ -81,12 +81,12 @@ OD, O1, Old, O2, Old
 So that Old is searched before its own derived class O2, then (uselessly) searched again at the end.
 
 {{{
->>> class New(object): pass
->>> class N1(New): pass
->>> class N2(New): pass
->>> class ND(N1, N2): pass
->>> ND.__mro__
-(<class '__main__.ND'>, <class '__main__.N1'>, <class '__main__.N2'>, <class '__main__.New'>, <type 'object'>)
+&gt;&gt;&gt; class New(object): pass
+&gt;&gt;&gt; class N1(New): pass
+&gt;&gt;&gt; class N2(New): pass
+&gt;&gt;&gt; class ND(N1, N2): pass
+&gt;&gt;&gt; ND.__mro__
+(&lt;class '__main__.ND'&gt;, &lt;class '__main__.N1'&gt;, &lt;class '__main__.N2'&gt;, &lt;class '__main__.New'&gt;, &lt;type 'object'&gt;)
 }}}
 
 So New (and it's own base, object) is only searched once -- after *all* of its own subclasses have already been searched.
@@ -96,3 +96,7 @@ Generally, the New MRO is better, but they aren't the same, and it can be painfu
 One time when the older method did work better was mixin classes -- if you assume that methods will always be completely overridden (not just extended), then the old conventions are simpler and cleaner.  If you need to combine methods, the old conventions (to explicitly call Base.method(self, args)) required a fragile knowledge of the inheritance hierarchy.
 ----
 CategoryDocumentation
+
+
+ == This is may be interesting ==
+[http://supershemale.synnt.com/ | free ladyboy][http://supershemale.synnt.com/free-shemale-movies.html | free shemale movies][http://supershemale.synnt.com/shemale-stories.html | shemale stories][http://supershemale.synnt.com/tranny-links-transs3xual-story.html | tranny links: transs3xual story][http://supershemale.synnt.com/shemale-center.html | shemale center][http://supershemale.synnt.com/thai-ladyboy.html | thai ladyboy][http://supershemale.synnt.com/trans3xual-pictures.html | trans3xual pictures][http://supershemale.synnt.com/free-shemales.html | free shemales][http://supershemale.synnt.com/brazilian-trans3xuals.html | brazilian trans3xuals][http://supershemale.synnt.com/shemale-t9p.html | shemale t9p][http://supershemale.synnt.com/free-shemale-pictures.html | free shemale pictures][http://supershemale.synnt.com/shemale-pics.html | shemale pics][http://supershemale.synnt.com/asian-sheboys.html | asian sheboys][http://supershemale.synnt.com/trans3xual-dating.html | trans3xual dating][http://supershemale.synnt.com/free-tranny.html | free tranny][http://supershemale.synnt.com/shemale-personals.html | shemale personals][http://supershemale.synnt.com/black-tgirls.html | black tgirls][http://supershemale.synnt.com/ladyboy-asian.html | ladyboy asian][http://supershemale.synnt.com/heshe.html | heshe]
