@@ -37,6 +37,25 @@ Starting with 2.5 the interpreter notices and aborts:
     Abort trap
 }}}
 
+Some modules also do not perform rigorous checking of data they operate 
+on.  The marshal module can cause it to crash the interpreter when given 
+certain strings:
+
+{{{
+    $ python
+    Python 2.4.2 (#2, Sep 30 2005, 21:19:01) 
+    [GCC 4.0.2 20050808 (prerelease) (Ubuntu 4.0.1-4ubuntu8)] on linux2
+    Type "help", "copyright", "credits" or "license" for more information.
+    >>> import os, marshal
+    >>> while 1:
+    ...     try:
+    ...         marshal.loads(os.urandom(16))
+    ...     except:
+    ...         pass
+    ... 
+    Segmentation fault
+}}}
+
 == Exhausting Resources ==
 
 There are a number of areas where resource exhaustion can crash the
@@ -51,6 +70,48 @@ interpreter.  Here's one fairly easy to demonstrate way to do it though:
     >>> sys.setrecursionlimit(1<<30)
     >>> f = lambda f:f(f)
     >>> f(f)
+    Segmentation fault
+}}}
+
+A slightly subtler example involves getting the interpreter to exhaust 
+some resource internally while performing a single operation:
+
+{{{
+    $ python
+    Python 2.4.2 (#2, Sep 30 2005, 21:19:01) 
+    [GCC 4.0.2 20050808 (prerelease) (Ubuntu 4.0.1-4ubuntu8)] on linux2
+    Type "help", "copyright", "credits" or "license" for more information.
+    >>> f = lambda: None
+    >>> for i in xrange(1000000):
+    ...     f = f.__call__
+    ... 
+    >>> del f
+    Segmentation fault
+}}}
+
+== GC/weakref interaction ==
+
+Interaction between these two systems has historically been a sticky point for 
+CPython.  There is still at least one problem in Python 2.4.2:
+
+{{{
+    $ python
+    Python 2.4.2 (#2, Sep 30 2005, 21:19:01) 
+    [GCC 4.0.2 20050808 (prerelease) (Ubuntu 4.0.1-4ubuntu8)] on linux2
+    Type "help", "copyright", "credits" or "license" for more information.
+    >>> import weakref
+    >>> ref = None
+    >>> class Target:
+    ...   def __del__(self):
+    ...       global ref
+    ...       ref = weakref.ref(self)
+    ... 
+    >>> def g():
+    ...   w = Target()
+    ...   w = None
+    ...   print ref()
+    ... 
+    >>> g()
     Segmentation fault
 }}}
 
@@ -72,3 +133,11 @@ themselves in the foot.  Here are a few.
  are performed on the arguments to the functions you call.  Hilarity can
  thus ensue.  (The {{{ctypes}}} module, under consideration for inclusion in
  Python 2.5, provides similar functionality.)
+
+ * The {{{buffer}}} builtin can also be dangerous, since it notionally claims 
+ a reference to a range of memory, but does so without going through a Python 
+ object or using the standard Python refcount system.  This is visible when, 
+ for example, constructing a buffer from an {{{array.array}}}, then resizing 
+ the {{{array}}} such that it internally {{{realloc()}}}s its storage, moving 
+ the memory in the process.  The {{{buffer}}} will now refer to an invalid 
+ pointer.
