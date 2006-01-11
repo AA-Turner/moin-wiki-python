@@ -11,7 +11,7 @@ python-dev mailing list:
 }}}
 
 I thought it might be worthwhile to document some ways the interpreter can
-be crashed so that people can learn where they need to tread lightly.
+be crashed -- although most of these are very unlikely to crop up in real code.
 
 == Bogus Input ==
 
@@ -141,3 +141,6 @@ themselves in the foot.  Here are a few.
  the {{{array}}} such that it internally {{{realloc()}}}s its storage, moving 
  the memory in the process.  The {{{buffer}}} will now refer to an invalid 
  pointer.
+
+ * The {{{gc}}} module can be manipulated to give access to partially constructed
+ object, accessing fields of which can cause crashes.
