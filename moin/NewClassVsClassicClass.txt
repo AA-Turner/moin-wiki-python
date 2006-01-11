@@ -37,7 +37,7 @@ Warning:  In 2.5, magic names (typically those with a double underscore at both 
 
  * When numeric operations (including "*", or "%") are applied to objects of different types, there is a fairly complex chain of logic to decide what should eventually happen.  For old-style classes, there is often an attempt to Coerce the objects to the same type; for new style classes, there is no automatic call to __coerce__.  (Really just an important example of the magic names change.)
 
- * An Exception cannot be a New-Style class.  This is a wart that may change in the future; for the moment it is required because of some complex backward compatibility dances involving (deprecated) string exceptions and whether a raised object should be treated as a Class or as an Instance of a Class.  Note that you can inherit from both Exception and object; you just can't raise the result.
+ * An Exception cannot be a New-Style class.  This is a wart that will probably be removed in 2.5; previously it was required because of some complex backward compatibility dances involving (deprecated) string exceptions and whether a raised object should be treated as a Class or as an Instance of a Class.  Note that you can inherit from both Exception and object; you just can't raise the result.
 
 {{{
 &gt;&gt;&gt; class NewException(Exception, object):
