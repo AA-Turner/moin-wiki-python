@@ -289,8 +289,22 @@ to sort a list:
 == Topics to be covered ==
 
  * Rich comparisons
+   * With custom comparisons, it is possible to create
+   insane combinations, such as {{{((x<y) and (x==y))}}}
+   or {{{((x<y) and not (x<=y))}}}.
+   * The most important comparisons are __eq__ (but be
+   sure to update __hash__ as well), and __lt__ (which
+   is used by the sorting algorithms in practice).
  * Sorting stability
+   * Python sorts are stable.  Guido has indicated that
+   this is a promise of the language.  Therefore, if
+   x == y, sorted ([x, y]) returns [x, y] but 
+   sorted([y, x]) returns [y, x].
  * The sorted() function
+   * It takes any iterable, and returns a sorted version.
+   If the items in the iterable are not sensibly compared,
+   it will still return a canonical ordering, unless 
+   someone went out of their way to prevent one.
 
 == See Also ==
 
