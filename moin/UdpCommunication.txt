@@ -166,6 +166,36 @@ UDP.send("Hello, world!", "239.192.0.100", 1000)
 
 -- LionKimbro [[DateTime(2005-01-19T19:54:19Z)]]
 
+You could do something like this:
+
+{{{
+#!python
+class McastSocket(socket.socket):
+  def __init__(self, local_port, reuse=False):
+    socket.socket.__init__(self, socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+    if(reuse):
+      self.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+      if hasattr(socket, "SO_REUSEPORT"):
+        self.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+    self.bind(('', local_port))
+  def mcast_add(self, addr, iface):
+    sock.setsockopt(
+        socket.IPPROTO_IP,
+        socket.IP_ADD_MEMBERSHIP,
+        socket.inet_aton(mcast_addr) + socket.inet_aton(mcast_iface))
+}}}
+
+Then to listen to multicast events locally:
+
+{{{
+#!python
+sock = McastSocket(local_port=12345, reuse=1)
+sock.mcast_add('239.192.9.9', '127.0.0.1')
+}}}
+
+The perl IO::Socket::Multicast class doesn't look much different from this.
+
+-- PaulBrannan
 
 I was able to get the above example to work fine on a linux platform, with one small change.  I had to put a "4sl" in the pack statement for creating mreq.  It seems as if when I didn't have a 4, the pack statement was just using the first octet (somehow dropping the other octets), so I could only create the multi-cast "listener" on a 234.0.0.0 ip.  After some debugging, I put the 4 in front of the "s", which forced it to get all 4 octets from the inet_aton, and everything worked fine.  Hope this helps.
 
