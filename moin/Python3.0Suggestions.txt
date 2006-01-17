@@ -270,7 +270,7 @@ and they'd also be immutable.  Field access would be via attribute.
 == Replace Integer Masks with Sets ==
 
 (This idea was mentioned on c.l.py by Bryan Olson.  I'm just recording
-it, though I agree it seems like a good idea.)
+it, though I agree it seems like a good idea. -- SkipMontanaro)
 
 In places where Python usage currently uses a bitmask to specify a set
 of options it would be more Pythonic to instead use a set.  For
@@ -295,3 +295,14 @@ Use {{{| |}}} (like in mathematics) to get absolute value in place of the {{{abs
 {{{#!python
    abs(-1) == |-1| == 1
 }}}
+
+== Require Parens for Tuple Definition ==
+
+This is a fairly common mistake:
+
+{{{
+   x = 1,
+}}}
+
+and results in x referring to a one-element tuple.  I think Python 3.0 should require
+parens for all tuple literals. -- SkipMontanaro
