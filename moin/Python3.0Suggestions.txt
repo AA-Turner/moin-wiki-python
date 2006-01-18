@@ -251,6 +251,19 @@ and give them attributes.  How about:
 Storagewise they'd be much like current tuples (that is, cheaper than dicts)
 and they'd also be immutable.  Field access would be via attribute.
 
+What is the point?  As long as you are calling it a structure, you might as well define it, so how is this different from
+
+{{{
+    class color(object):
+        __slots__=("red", "blue", "green")
+        def __init__(self, red=None, blue=None, green=None):
+            self.red=red
+            self.blue=blue
+            self.green=green
+}}}
+
+And yes, I know that __slots__ is not supposed to be used for limiting attributes, but it does work, and is still more flexible than using a tuple.  And yes, I know that __slots__ is awkward, but that is another issue. -- JimJJewett
+
 == Unifying generators ==
 
 {{{#!python
