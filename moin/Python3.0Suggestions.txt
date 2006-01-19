@@ -2,6 +2,14 @@ Other syntax ideas and feature ideas for ["Python3.0"] .
 
 [[TableOfContents()]]
 
+== different regular expressions modules for biytes and unicode text ==
+
+I do not allways understand if {{{re}}} module is designed for text or binary?
+The struct module for interfacing with binary files, or network datagrams might be improved by adding some of the regular expressions facilities, such as split.
+
+The text regular expression should be in some way text/unicode oriented....
+
+
 == New binary operator symbols  ≤ ≥ ≠ ==
 these operators ≤ ≥ ≠ should be added to the language having the following meaning:
    <= >= !=
@@ -98,10 +106,13 @@ else:
 Agreed, only comparison operators ({{{==}}}, {{{>}}}, {{{<}}}) should return True/False, leave and/or as is ''(Note: the comparison operators do *not* return only True/False; they can return any value, as used by Numeric and SQLObject)''
 
 :::     some boolean operators should be added.
-{{{return a() b_or 'b'
+{{{
 
-a + b #should return a logic_or b for boolean
+a + b #should return True, when a and b are true (instead of 2)
 a * b #should return a logic_and b for boolean
+
+a && b #should return a logic_or b for boolean
+a || b #should return a logic_and b for boolean
 
 should return True or False
 
