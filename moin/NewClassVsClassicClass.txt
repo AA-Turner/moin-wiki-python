@@ -40,20 +40,20 @@ Warning:  In 2.5, magic names (typically those with a double underscore at both 
  * An Exception cannot be a New-Style class.  This is a wart that will probably be removed in 2.5; previously it was required because of some complex backward compatibility dances involving (deprecated) string exceptions and whether a raised object should be treated as a Class or as an Instance of a Class.  Note that you can inherit from both Exception and object; you just can't raise the result.
 
 {{{
-&gt;&gt;&gt; class NewException(Exception, object):
+>>> class NewException(Exception, object):
 	pass
 
-&gt;&gt;&gt; raise NewException
+>>> raise NewException
 
 Traceback (most recent call last):
-  File "&lt;pyshell#22&gt;", line 1, in -toplevel-
+  File "<pyshell#22>", line 1, in -toplevel-
     raise NewException
 TypeError: exceptions must be classes, instances, or strings (deprecated), not type
 
-&gt;&gt;&gt; raise NewException()
+>>> raise NewException()
 
 Traceback (most recent call last):
-  File "&lt;pyshell#23&gt;", line 1, in -toplevel-
+  File "<pyshell#23>", line 1, in -toplevel-
     raise NewException()
 TypeError: exceptions must be classes, instances, or strings (deprecated), not NewException
 }}}
@@ -63,14 +63,14 @@ Old Style classes search each base class, including the bases of the bases, Left
 New Style classes search each base class only once.
 
 {{{
-&gt;&gt;&gt; class Old: pass
-&gt;&gt;&gt; class O1(Old): pass
-&gt;&gt;&gt; class O2(Old): pass
-&gt;&gt;&gt; class OD(O1, O2): pass
+>>> class Old: pass
+>>> class O1(Old): pass
+>>> class O2(Old): pass
+>>> class OD(O1, O2): pass
 
-&gt;&gt;&gt; OD.__mro__
+>>> OD.__mro__
 Traceback (most recent call last):
-  File "&lt;pyshell#24&gt;", line 1, in -toplevel-
+  File "<pyshell#24>", line 1, in -toplevel-
     O.__mro__
 AttributeError: class O has no attribute '__mro__'
 }}}
@@ -81,12 +81,12 @@ OD, O1, Old, O2, Old
 So that Old is searched before its own derived class O2, then (uselessly) searched again at the end.
 
 {{{
-&gt;&gt;&gt; class New(object): pass
-&gt;&gt;&gt; class N1(New): pass
-&gt;&gt;&gt; class N2(New): pass
-&gt;&gt;&gt; class ND(N1, N2): pass
-&gt;&gt;&gt; ND.__mro__
-(&lt;class '__main__.ND'&gt;, &lt;class '__main__.N1'&gt;, &lt;class '__main__.N2'&gt;, &lt;class '__main__.New'&gt;, &lt;type 'object'&gt;)
+>>> class New(object): pass
+>>> class N1(New): pass
+>>> class N2(New): pass
+>>> class ND(N1, N2): pass
+>>> ND.__mro__
+(<class '__main__.ND'>, <class '__main__.N1'>, <class '__main__.N2'>, <class '__main__.New'>, <type 'object'>)
 }}}
 
 So New (and it's own base, object) is only searched once -- after *all* of its own subclasses have already been searched.
