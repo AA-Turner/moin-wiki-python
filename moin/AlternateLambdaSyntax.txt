@@ -195,6 +195,31 @@ Bengt Richter: colon-function-application syntax [[#h 8]]
 ((:x(*a, **k))(x=x, a=a, k=k) for x, a, k in funcs_and_args_list)
 }}}
 
+=== functional syntax ===
+["lwickjr"]: How about converting the {{{lambda}}} functionality into a function? For example, in pure can-do-now Python:
+
+{{{#!python
+from types import FunctionType as function
+def anonymous(
+	name=None,
+	filename=None,
+	mode="eval",
+	func_globals=None,
+	func_closure=None,
+	func_argdefs=(),
+	flags=0,
+	dont_inherit=False,
+	source=None,
+	code=None,
+	):
+	"""Create a possibly anonymous function inline"""
+	## Compute suitable default values from stack frame, omitted for brevity.
+	if source: code = compile(soource, filename, mode, flags, dont_inherit=True)
+	return function(code, func_globals, name, func_argdefs, func_closure)
+}}}
+
+If you don't like {{{anynomous}}} for the name, suggest something else! ;)
+
 === Real Closures ===
 
 Real closures subsume the functionality of lambda plus allow for multi-line statements.
