@@ -93,7 +93,9 @@ else:
     return 'b' 
 }}}The latter structure always makes me shudder. I've never encountered a good use for non-boolean output from "and" (in Python. Other languages are a different story.) but using "or" in the first example is both quicker and more intuitive for many people not to mention reducing code complexity.-- StephanSokolow''
 
-Agreed, only comparison operators ({{{==}}}, {{{>}}}, {{{<}}}) should return True/False, leave and/or as is
+''Unnecessary if:else: statements to take the place of the current "or" behavior make my soul hurt.  I use "and" sometimes, typically like {{{bar = foo and foo.get('bar')}}} when {{{foo}}} might be None or a dictionary. -- IanBicking''
+
+Agreed, only comparison operators ({{{==}}}, {{{>}}}, {{{<}}}) should return True/False, leave and/or as is ''(Note: the comparison operators do *not* return only True/False; they can return any value, as used by Numeric and SQLObject)''
 
 :::     some boolean operators should be added.
 {{{return a() b_or 'b'
@@ -144,6 +146,8 @@ Traceback (most recent call last):
 __main__.IdiotError: Some idiot occured
 }}}
 
+This could simply be implemented in {{{Exception.__str__}}} when {{{args}}} is empty.
+
 == Fix implementation of in-place operators ==
 
 The current implementation will call {{{__iadd__()}}}, allowing it to do the in-place change, but then require that the method return the new value and then store it again.  Ideally, all the responsibility for the update should lie with the {{{__iadd__()}}} method and it should return None.  This simplifies the bytecode and eliminates some annoying behavior (such as {{{a[0]+=1}}} succeeding '''and''' raising an error when {{{a=([0],)}}}.
@@ -162,6 +166,8 @@ Guido has expressed that this is a highly popular, but badly misunderstood tool 
  * The purpose of the tool is '''not''' to make it more difficult to assign attributes.
  * {{{__slots__}}} do not inherit.
  * {{{__slots__}}} complicates and slows the implementation of new-style classes.
+
+''I have never see {{{__slots__}}} misused, or used much at all, so maybe in typical real projects misuse isn't much of an issue? -- IanBicking''
 
 == Extra operators for strings and lists ==
 
@@ -194,11 +200,15 @@ defined methods passed to {{{__new__}}}, and don't want to wrap class variables.
 
 In addition, using exceptions for normal control flow is not good code style.
 
+  ''Using exceptions in normal control flow is very typical in Python code, so not everyone agrees -- IanBicking''
+
 == Make API of set, list, dict more consistent ==
 No need for copy function.  A clear function for all of them.
 
 == Make copy and deepcopy built-ins, replace copy methods by __copy__ ==
 It would clarify how copy should be done.
+
+  ''Some people will argue that copy is hard, and deepcopy nearly impossible, to do "right" for a typical program, and so you shouldn't encourage these to be used generally.  For specific data types -- like dictionaries and lists -- there are simple idioms for copies.  -- IanBicking''
 
 == Don't remove cmp() and __cmp__ ==
 Even if it looks TMTOWTDI, it makes implementing comparison so easy that it must be kept.  It TOOWTDI is important, maybe only keep __cmp__?
@@ -233,6 +243,8 @@ If the extended function call syntax was able to avoid forcing the creation of t
 == Require __iter__() for DictMixin instead of keys() ==
 
 Currently, UserDict.DictMixin requires the methods {{{__getitem__()}}}, {{{__setitem__()}}}, {{{__delitem__()}}}, and {{{keys()}}} to supply the appropriate other methods of the dict interface.  I would prefer that it require {{{__iter__()}}} instead of {{{keys()}}}.  [http://mail.python.org/pipermail/python-list/2005-January/258569.html As I understand it], the fact that it uses {{{keys()}}} instead of {{{__iter__()}}} is mainly due to the order of introduction of {{{keys()}}} and {{{__iter__()}}}.  Since {{{keys()}}} can easily be defined in terms of {{{__iter__()}}}, in Python 3.0, I'd like to see {{{__iter__()}}} be the required method instead. -- StevenBethard
+
+  The default {{{__iter__}}} implementation could potentially check if {{{self.keys}}} is also the default implementation, and if not then it calls that method.  {{{keys}}} in turn calls {{{list(self)}}} always.  -- IanBicking
 
 == Raise the level of os module functions ==
 
@@ -350,6 +362,8 @@ This is a fairly common mistake:
 
 and results in x referring to a one-element tuple.  I think Python 3.0 should require
 parens for all tuple literals. -- SkipMontanaro
+
+  Would that disallow {{{a, b == func()}}} ?  That would make me very sad.  -- IanBicking
 
 == Remove [<listcomp>] syntax in favor of list(<genexp>) syntax ==
 
