@@ -28,7 +28,7 @@ expose_meth: :b __nonzero__
 
 So the type_name is 'list'.
 
-{{{
+{{{#!python numbers=disable
 >>> type([])
 <type 'list'>
 }}}
@@ -50,7 +50,7 @@ Opening the file list.txt in your favorite editor you'll see the Java code.  Thi
 
 The problem is Py``List doesn't have any of the methods.  The generated code expected 'list_append' but Py``List has only 'append' so the compiler complains.  This is intended.  Now for the boring part.  For each method exposed, we need to create a new method. For example:
 
-{{{
+{{{#!java numbers=disable
 public void append(PyObject o) {
     list_append(o);
 }
@@ -72,7 +72,7 @@ Finally, make sure the type is registered with {{{__builtin__}}}.
 
 Run some quick tests:
 
-{{{
+{{{#!python numbers=disable
 >>> list()
 []
 >>> list([1,2,3])
