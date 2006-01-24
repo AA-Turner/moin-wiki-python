@@ -250,6 +250,13 @@ Make a set literal:
    s = |'a', 'b', 'c'|
 }}}
 
+    Why not using the mathematical notation?
+{{{#!python
+   # Use "{ }"
+   s = {'a', 'b', 'c'}
+}}}
+
+
 == Make extended function call syntax more iterator friendly ==
 
 Extended function call syntax currently does not play well with iterators because it produces a tuple to be passed in to the function. This means API developers face a tough choice - either accept an iterator and make the function clumsier for use with a short sequence of specific variables (as the user of the API has to create a throwaway list or tuple), or use positional arguments and make the API iterator unfriendly (as an iterator passed via extended function call syntax gets unraveled and stuffed into a tuple).
