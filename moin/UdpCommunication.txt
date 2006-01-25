@@ -60,6 +60,8 @@ I've been googling for some time now, and ''still'' have yet to find a ''working
 (I've replaced it with one that works. -- Asgeir S. Nilsen
 [[DateTime(2005-05-09T19:25:00Z)]])
 
+(I've corrected the mreq according to the comment below -- Sebastian Setzer [[DateTime(2006-01-25T14:28:00Z)]])
+
 {{{
 #!python
 import socket
@@ -68,7 +70,9 @@ import struct
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 sock.bind(('', 4242))
-mreq = struct.pack("sl", socket.inet_aton("224.51.105.104"), socket.INADDR_ANY)
+# wrong: mreq = struct.pack("sl", socket.inet_aton("224.51.105.104"), socket.INADDR_ANY)
+mreq = struct.pack("4sl", socket.inet_aton("224.51.105.104"), socket.INADDR_ANY)
+
 sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 
 while True:
