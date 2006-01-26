@@ -1,0 +1,387 @@
+# -*- coding: iso-8859-1 -*-
+""" test_path.py - Test the path module.
+
+This only runs on Posix and NT right now.  I would like to have more
+tests.  You can help!  Just add appropriate pathnames for your
+platform (os.name) in each place where the p() function is called.
+Then send me the result.  If you can't get the test to run at all on
+your platform, there's probably a bug in path.py -- please let me
+know!
+
+TempDirTestCase.testTouch() takes a while to run.  It sleeps a few
+seconds to allow some time to pass between calls to check the modify
+time on files.
+
+URL:     http://www.jorendorff.com/articles/python/path
+Author:  Jason Orendorff <jason@jorendorff.com>
+Date:    7 Mar 2004
+Modified by Björn Lindqvist <bjourne@gmail.com>, January 2005
+"""
+
+import unittest
+import codecs, os, random, shutil, tempfile, time
+from path import path, __version__ as path_version
+
+# This should match the version of path.py being tested.
+__version__ = '2.0.4'
+
+# Uncomment this to speed up testing. One test will fail.
+#time.sleep = lambda *args: None
+
+def p(**choices):
+    """ Choose a value from several possible values, based on os.name """
+    return choices[os.name]
+
+class BasicTestCase(unittest.TestCase):
+    def testRelpath(self):
+        root = path(p(nt='C:\\', posix='/'))
+        foo = path(root, 'foo')
+        quux = path(foo, 'quux')
+        bar = path(foo, 'bar')
+        boz = path(bar, 'Baz', 'Boz')
+        up = path(os.pardir)
+
+        # basics
+        self.assertEqual(root.relpathto(boz),
+                         path('foo', 'bar', 'Baz', 'Boz'))
+        self.assertEqual(bar.relpathto(boz), path('Baz', 'Boz'))
+        self.assertEqual(quux.relpathto(boz), path(up, 'bar', 'Baz', 'Boz'))
+        self.assertEqual(boz.relpathto(quux), path(up, up, up, 'quux'))
+        self.assertEqual(boz.relpathto(bar), path(up, up))
+
+        # x.relpathto(x) == curdir
+        self.assertEqual(root.relpathto(root), os.curdir)
+        self.assertEqual(boz.relpathto(boz), os.curdir)
+        # Make sure case is properly noted (or ignored)
+        self.assertEqual(boz.relpathto(boz.normcase()), os.curdir)
+
+        # relpath()
+        cwd = path(os.getcwd())
+        self.assertEqual(boz.relpath(), cwd.relpathto(boz))
+
+        if os.name == 'nt':
+            # Check relpath across drives.
+            d = path('D:\\')
+            self.assertEqual(d.relpathto(boz), boz)
+
+    def testStringCompatibility(self):
+        """ Test compatibility with ordinary strings. """
+        x = path('xyzzy')
+        self.assert_(x == 'xyzzy')
+        self.assert_(x == u'xyzzy')
+
+        # sorting
+        items = [path('fhj'),
+                 path('fgh'),
+                 'E',
+                 path('d'),
+                 'A',
+                 path('B'),
+                 'c']
+        items.sort()
+        self.assert_(items == ['A', 'B', 'E', 'c', 'd', 'fgh', 'fhj'])
+
+    def testProperties(self):
+        # Create sample path object.
+        f = p(nt='C:\\Program Files\\Python\\Lib\\xyzzy.py',
+              posix='/usr/local/python/lib/xyzzy.py')
+        f = path(f)
+
+        # .parent
+        self.assertEqual(f.parent, p(nt='C:\\Program Files\\Python\\Lib',
+                                     posix='/usr/local/python/lib'))
+
+        # .name
+        self.assertEqual(f.name, 'xyzzy.py')
+        self.assertEqual(f.parent.name, p(nt='Lib', posix='lib'))
+
+        # .ext
+        self.assertEqual(f.ext, '.py')
+        self.assertEqual(f.parent.ext, '')
+
+        # .drive
+        self.assertEqual(f.drive, p(nt='C:', posix=''))
+
+    def testMethods(self):
+        # .abspath()
+        self.assertEqual(path(os.curdir).abspath(), os.getcwd())
+
+        # .getcwd()
+        cwd = path.cwd()
+        self.assert_(isinstance(cwd, path))
+        self.assertEqual(cwd, os.getcwd())
+
+    def testUNC(self):
+        if hasattr(os.path, 'splitunc'):
+            p = path(r'\\python1\share1\dir1\file1.txt')
+            self.assert_(p.uncshare == r'\\python1\share1')
+            self.assert_(p.splitunc() == os.path.splitunc(str(p)))
+
+    def testDefaultCtor(self):
+        self.assert_(os.getcwd() == path().abspath())
+
+        # On most platforms, current working directory is "."
+        self.assert_(path() == ".")
+
+        # But that is different from os.getcwd()...
+        self.assert_(path() != path().cwd())
+
+    def testSplittingAndStripping(self):
+        p = path("~/python/config.h.in")
+        noext = p.stripext()
+        self.assert_(isinstance(p, path))
+        self.assertEquals(noext, "~/python/config.h")
+
+
+class TempDirTestCase(unittest.TestCase):
+    def setUp(self):
+        # Create a temporary directory.
+        f = tempfile.mktemp()
+        system_tmp_dir = os.path.dirname(f)
+        my_dir = 'testpath_tempdir_' + str(random.random())[2:]
+        self.tempdir = os.path.join(system_tmp_dir, my_dir)
+        os.mkdir(self.tempdir)
+
+    def tearDown(self):
+        shutil.rmtree(self.tempdir)
+
+    def testTouch(self):
+        # NOTE: This test takes a long time to run (~10 seconds).
+        # It sleeps several seconds because on Windows, the resolution
+        # of a file's mtime and ctime is about 2 seconds.
+        #
+        # atime isn't tested because on Windows the resolution of atime
+        # is something like 24 hours.
+
+        d = path(self.tempdir)
+        f = path(d, 'test.txt')
+        t0 = time.time() - 3
+        f.touch()
+        t1 = time.time() + 3
+        try:
+            self.assert_(f.exists())
+            self.assert_(f.isfile())
+            self.assertEqual(f.size, 0)
+            self.assert_(t0 <= f.mtime <= t1)
+            ct = f.ctime
+            self.assert_(t0 <= ct <= t1)
+
+            time.sleep(5)
+            fobj = file(f, 'ab')
+            fobj.write('some bytes')
+            fobj.close()
+
+            time.sleep(5)
+            t2 = time.time() - 3
+            f.touch()
+            t3 = time.time() + 3
+
+            assert t0 <= t1 < t2 <= t3  # sanity check
+
+            self.assert_(f.exists())
+            self.assert_(f.isfile())
+            self.assertEqual(f.size, 10)
+            self.assert_(t2 <= f.mtime <= t3)
+            if hasattr(os.path, 'getctime'):
+                ct2 = f.ctime
+                if os.name == 'nt':
+                    # On Windows, "ctime" is CREATION time
+                    self.assertEqual(ct, ct2)
+                    self.assert_(ct2 < t2)
+                else:
+                    # On other systems, it might be the CHANGE time
+                    # (especially on Unix, time of inode changes)
+                    self.failUnless(ct == ct2 or ct2 == f.mtime)
+        finally:
+            f.remove()
+
+    def testListing(self):
+        d = path(self.tempdir)
+        self.assertEqual(d.listdir(), [])
+
+        f = 'testfile.txt'
+        af = path(d, f)
+        self.assertEqual(af, os.path.join(d, f))
+        af.touch()
+        try:
+            self.assert_(af.exists())
+
+            self.assertEqual(d.listdir(), [af])
+
+            # .glob()
+            self.assertEqual(d.glob('testfile.txt'), [af])
+            self.assertEqual(d.glob('test*.txt'), [af])
+            self.assertEqual(d.glob('*.txt'), [af])
+            self.assertEqual(d.glob('*txt'), [af])
+            self.assertEqual(d.glob('*'), [af])
+            self.assertEqual(d.glob('*.html'), [])
+            self.assertEqual(d.glob('testfile'), [])
+        finally:
+            af.remove()
+
+        # Try a test with 20 files
+        files = [path(d, '%d.txt' % i) for i in range(20)]
+        for f in files:
+            fobj = file(f, 'w')
+            fobj.write('some text\n')
+            fobj.close()
+        try:
+            files2 = d.listdir()
+            files.sort()
+            files2.sort()
+            self.assertEqual(files, files2)
+        finally:
+            for f in files:
+                try:
+                    f.remove()
+                except:
+                    pass
+
+    def testMakeDirs(self):
+        d = path(self.tempdir)
+
+        # Placeholder file so that when removedirs() is called,
+        # it doesn't remove the temporary directory itself.
+        tempf = path(d, 'temp.txt')
+        tempf.touch()
+        try:
+            foo = path(d, 'foo')
+            boz = path(foo, 'bar', 'baz', 'boz')
+            boz.makedirs()
+            try:
+                self.assert_(boz.isdir())
+            finally:
+                boz.removedirs()
+            self.failIf(foo.exists())
+            self.assert_(d.exists())
+
+            foo.mkdir(0750)
+            boz.makedirs(0700)
+            try:
+                self.assert_(boz.isdir())
+            finally:
+                boz.removedirs()
+            self.failIf(foo.exists())
+            self.assert_(d.exists())
+        finally:
+            os.remove(tempf)
+
+    def assertSetsEqual(self, a, b):
+        ad = {}
+        for i in a: ad[i] = None
+        bd = {}
+        for i in b: bd[i] = None
+        self.assertEqual(ad, bd)
+
+    def testShutil(self):
+        # Note: This only tests the methods exist and do roughly what
+        # they should, neglecting the details as they are shutil's
+        # responsibility.
+
+        d = path(self.tempdir)
+        testDir = path(d, 'testdir')
+        testFile = path(testDir, 'testfile.txt')
+        testA = path(testDir, 'A')
+        testCopy = path(testA, 'testcopy.txt')
+        testLink = path(testA, 'testlink.txt')
+        testB = path(testDir, 'B')
+        testC = path(testB, 'C')
+        testCopyOfLink = path(testC, testA.relpathto(testLink))
+
+        # Create test dirs and a file
+        testDir.mkdir()
+        testA.mkdir()
+        testB.mkdir()
+
+        f = open(testFile, 'w')
+        f.write('x' * 10000)
+        f.close()
+
+        # Test simple file copying.
+        testFile.copyfile(testCopy)
+        self.assert_(testCopy.isfile())
+
+        # Test copying into a directory.
+        testCopy2 = path(testA, testFile.name)
+        testFile.copy(testA)
+        self.assert_(testCopy2.isfile())
+
+        # Make a link for the next test to use.
+        if hasattr(os, 'symlink'):
+            testFile.symlink(testLink)
+        else:
+            testFile.copy(testLink)  # fallback
+
+        # Test copying directory tree.
+        testA.copytree(testC)
+        self.assert_(testC.isdir())
+        self.assertSetsEqual(
+            testC.listdir(),
+            [path(testC, testCopy.name),
+             path(testC, testFile.name),
+             testCopyOfLink])
+        self.assert_(not testCopyOfLink.islink())
+
+        # Clean up for another try.
+        testC.rmtree()
+        self.assert_(not testC.exists())
+
+        # Copy again, preserving symlinks.
+        testA.copytree(testC, True)
+        self.assert_(testC.isdir())
+        self.assertSetsEqual(
+            testC.listdir(),
+            [path(testC, testCopy.name),
+             path(testC, testFile.name),
+             testCopyOfLink])
+        if hasattr(os, 'symlink'):
+            self.assert_(testCopyOfLink.islink())
+            self.assert_(testCopyOfLink.readlink() == testFile)
+
+        # Clean up.
+        testDir.rmtree()
+        self.assert_(not testDir.exists())
+        self.assertList(d.listdir(), [])
+
+    def assertList(self, listing, expected):
+        listing = list(listing)
+        listing.sort()
+        expected = list(expected)
+        expected.sort()
+        self.assertEqual(listing, expected)
+
+    def testPatterns(self):
+        d = path(self.tempdir)
+        names = [ 'x.tmp', 'x.xtmp', 'x2g', 'x22', 'x.txt' ]
+        dirs = [d, path(d, 'xdir'), path(d, 'xdir.tmp'),
+                path(d, 'xdir.tmp', 'xsubdir')]
+
+        for e in dirs:
+            if not e.isdir():
+                e.makedirs()
+            for name in names:
+                path(e, name).touch()
+        self.assertList(d.listdir('*.tmp'), [path(d, 'x.tmp'),
+                                             path(d, 'xdir.tmp')])
+        self.assertList(d.files('*.tmp'), [path(d, 'x.tmp')])
+        self.assertList(d.dirs('*.tmp'), [path(d, 'xdir.tmp')])
+        self.assertList(d.walk(),
+                        [e for e in dirs if e != d] +
+                        [path(e, n) for e in dirs for n in names])
+        self.assertList(d.walk('*.tmp'),
+                        [path(e, 'x.tmp') for e in dirs] +
+                        [path(d, 'xdir.tmp')])
+        self.assertList(d.walkfiles('*.tmp'),
+                        [path(e, 'x.tmp') for e in dirs])
+        self.assertList(d.walkdirs('*.tmp'), [path(d, 'xdir.tmp')])
+
+        self.assert_(path("/foobar/file.png").match("*.png"))
+        self.assert_(not path("/foobar/FILE.PNG").matchcase("*.png"))
+
+
+
+if __name__ == '__main__':
+    if __version__ != path_version:
+        print ("Version mismatch:  test_path.py version %s, path version %s" %
+               (__version__, path_version))
+    unittest.main()
