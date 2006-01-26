@@ -12,17 +12,24 @@ I do not allways understand whether {{{re}}} module is designed for text or bina
 The struct module for interfacing with binary files, or network datagrams might be improved by adding some of the regular expressions facilities, such as split.
 
 Two modules like {{{re}}} might be a good thing, one binary oriented, and the other unicode oriented:
-* one for binary data, with some of the {{{re}}} and {{{struct}}} facilities...
-... with stuff like reading a two bytes encoded size, then a buffer from the previous size ...
-* one for unicode/text regular expression should be in some way text/unicode oriented....
-... I mean for example the ability to specify mathematical symbols/ greek letters, ASCII, as a kind of character to be matched within the regular expression.
+* one for binary data, with some of the {{{re}}} and {{{struct}}} facilities adapted to bytes.
+... with eventually stuff like reading a two bytes encoded size, then a buffer from the previous size ...
+* one for unicode/text regular expression should be in some way text/unicode oriented.... like ICU portable one.
 
- * the portable library "International Components for Unicode" might be used.
+For example, the ICU one provide the following patterns:
+ \N{UNICODE CHARACTER NAME}      Correspond au caractère nommé
+ \p{UNICODE PROPERTY NAME}       Correspond au carctère doté de la propriété Unicode spécifiée.
+ \P{UNICODE PROPERTY NAME}       Correspond au carctère non doté de la propriété Unicode spécifiée.
+ \s      Correspond à un caractère séparateur. un séparateur est définit comme [\t\n\f\r\p{Z}].
+ \uhhhh  Correspond à un caractère dont la valeur hexa est hhhh.
+ \Uhhhhhhhh      Correspond à un caractère dont la valeur hexa est  hhhhhhhh. Exactement huit chiffres héxa doivent être fuornis, même si le code point unicode le plus grand est \U0010ffff.
+
+ * the portable library "International Components for Unicode" might be used. It might be largely available as it is existing in debian distribution.
  * ["Unicode"]
 related pep:
- * http://www.python.org/peps/pep-0100.html
- * http://www.python.org/peps/pep-0349.html
- * http://www.python.org/peps/pep-0332.html
+ * [http://www.python.org/peps/pep-0100.html : Python Unicode Integration]
+ * [http://www.python.org/peps/pep-0349.html : Allow str() to return unicode strings]
+ * [http://www.python.org/peps/pep-0332.html : Byte vectors and String/Unicode Unification]
  * [http://www.python.org/peps/pep-0296.html : Adding a bytes Object Type]
 
 
