@@ -141,6 +141,21 @@ def hex_to_integer(h):
     return num
 }}}
 
+== Integer to Bin String ==
+
+It's high time Python supported binary literals (e.g. 0b10011000)and a bin() function!
+
+{{{
+#!python
+>>> def bin(a):
+	s=''
+	t={'0':'000','1':'001','2':'010','3':'011',
+           '4':'100','5':'101','6':'110','7':'111'}
+	for c in oct(a)[1:]:
+		s+=t[c]
+	return s
+}}}
+
 == Research Links ==
 
 this is the sort of thing we're looking for:
