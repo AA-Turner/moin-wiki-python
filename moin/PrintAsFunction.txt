@@ -537,3 +537,27 @@ $foo  # Parse error!  $ is a string prefix, NOT an operator
 Looking this over, the weakest link seems to be in the formatter aspects.  It needs a way to specify an expression that happens after the initial evaluation, but after gettext has had a chance to replace the format string.  Unfortunately I'm out of ideas so I'll leave it be.
 
 - ''Adam Olsen''
+
+=== Extend String.Template? ===
+
+The basic idea would be to incorporate the functionality of the existing {{{string.Template}}} module as a built-in. The format prefix characters are stolen directly from Perl, which makes them both lightweight and familiar.
+
+However, the current API is too cumbersome for "hello world" use. So we need to streamline it a bit.
+
+The first part is getting rid of the need to explictly instantiate the String.Template() object. I suggest a new "string decorator", similar to "r" and "u", which indicates that the string is a template string. Lets assume that the prefix is "t" for "template" for now:
+
+{{{
+print t"Hello, $user!".substitute( user="Tim" )
+}}}
+
+The 't' prefix should be usable in conjunction with the 'r', 'u', triple-quote and other string variations.
+
+However, its still too wordy. We need to get rid of the {{{.substitute()}}}. One thought (which may not be workable) is to detect when the template is being coerced into a string by overloading {{{__str__}}}, which then automagically calls substitude using the local scope as the dictionary. (The hard part is getting the scope - because the coercion to string might be happening inside the print function. Perhaps the string can capture the scope pointer upon construction.)
+
+Ideally, what we would then have is something similar to the Perl syntax:
+
+{{{
+print t"Hello, $user!"
+}}}
+
+- ''Talin''
