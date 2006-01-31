@@ -130,14 +130,29 @@ else:
 
 Agreed, only comparison operators ({{{==}}}, {{{>}}}, {{{<}}}) should return True/False, leave and/or as is ''(Note: the comparison operators do *not* return only True/False; they can return any value, as used by Numeric and SQLObject)''
 
-:::     some boolean operators should be added.
-{{{
+:::  some new true boolean operators should be added.
+The binary/boolean {{{and}}} should be represented by one of the following: {{{+}}}, {{{&&}}}, {{{∧}}}.
+The binary/boolean {{{and}}} should be represented by one of the following: {{{*}}}, {{{||}}}, {{{∨}}}.
 
+The +, * are by mathematical analogy with addition and multiplication, within  mathematical ℕ₂ .
+
+The && and || comes from the ugly c/java notation, I mean languages from an other century...
+
+{{{∧}}}. {{{∨}}}. comes from unicode representation for boolean operations. They might be completed by 
+three others boolean operators, xor, nand and nor: {{{⊻ ⊼⊽}}}
+{{{∧}}}. {{{∨}}} are for boolean what {{{∩∪}}} are for set. (similar notation, similar meaning).
+
+They also have a curly notation: {{{⋎⋏}}}.
+
+{{{
 a + b #should return True, when a and b are true (instead of 2)
 a * b #should return a logic_and b for boolean
 
 a && b #should return a logic_or b for boolean
 a || b #should return a logic_and b for boolean
+
+a ∧ b #should return a logic_or b for boolean
+a ∨ b #should return a logic_or b for boolean
 
 should return True or False
 
