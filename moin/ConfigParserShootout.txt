@@ -223,6 +223,16 @@ OK, I'll Toss My Hat Into The Ring.  I just found this discussion tonight for th
 
 [http://www.gustaebel.de/lars/configparse/ configparse] is an extension that is built on top of the command line parsing library optparse. It provides the same interface and is intended to be uses as a drop-in-replacement for optparse. configparse is very limited in its abilities, there's no support for sections, recursiveness or sophisticated value checking etc. Its advantage is that it takes only a few modifications to existing code to add simple support for config files which can be quite handy sometimes.
 
+== plistlib ==
+
+[http://svn.red-bean.com/pyobjc/branches/branch_1_0/pyobjc/MPCompat/plistlib.py plistlib] plistlib is a small module for generating and parsing Mac OS X .plist files.  It supports:
+
+  * lists
+  * dictionaries
+  * arbitrary nesting
+  * bool, int, float, string and date types
+
+The plist format is a [http://developer.apple.com/documentation/MacOSX/Conceptual/BPRuntimeConfig/Articles/ConfigFiles.html subset of XML], and is used by hundreds of OS X apps.  Graphical editors are available from Apple as part of its free developer tools, as well as from [http://homepage.mac.com/bwebster/plisteditpro.html third party developers]
 
 = Features =
 
@@ -416,7 +426,7 @@ Remember, this is just one way of doing it - not the only way and perhaps not th
 
 -- VinaySajip
 
-A hierarchical key or namespace scheme should exist so that multiple settings may be stored in the user configuration file.  I would propose a standard -k, key option always present in the parser so the user can pass a list of keys to control the group of settings to use (Id also like some of the other ways to control keys that I use in my config.py module).  In addition Id propose a -c, config option that specifies a configuration file to use instead of the users default configuration file.
+A hierarchical “key” or “namespace” scheme should exist so that multiple settings may be stored in the user configuration file.  I would propose a standard -k, –key option always present in the parser so the user can pass a list of keys to control the group of settings to use (I’d also like some of the other ways to control keys that I use in my config.py module).  In addition I’d propose a -c, –config option that specifies a configuration file to use instead of the user’s default configuration file.
 
   I (VinaySajip) agree that a hierarchical namespace is essential. I'm not sure I agree with removing "-k" and "-c" from the command line namespace for all applications by reserving these for use by particular library modules.
 
@@ -424,7 +434,7 @@ A hierarchical key or namespace scheme should exist so that multiple set
 
   I'm not sure about the policy part, because people have different needs and I'm not sure it's good to be too prescriptive here. -- VinaySajip
 
-My last proposal for today is to change the options interface a bit from optparse.  Instead of returning a static object of options it should be an object with a get() method so that additional keys can be used to get at settings in the configuration on the fly.  One application where this is important is in test frameworks.  Test specification input files may have additional keys to be used and arent known when the parser is instantiated.
+My last proposal for today is to change the “options” interface a bit from optparse.  Instead of returning a static object of options it should be an object with a get() method so that additional keys can be used to get at settings in the configuration “on the fly”.  One application where this is important is in test frameworks.  “Test specification” input files may have additional “keys” to be used and aren’t known when the parser is instantiated.
 
   Please take a look at [http://www.red-dove.com/python_config.html this config module] and let me know how you think it fails to meet the particular use case you have in mind. I don't see any need to change optparse to work well with a configuration module  -- VinaySajip
 
@@ -449,7 +459,7 @@ One benefit of this marriage is that the help messages available from the comman
 
   Well, you're not being *forced* to use any particular idiom. Want to hardcode the information in the program? No problem. Want to have it in the file? That's fine, too. Want to use gettext for internationalization? That's also quite easy. -- VinaySajip
 
-The part that isnt addressed here that bothers me yet is how to weave in the ability to pass in real python objects as settings.  It would be good to have both a secure (restricted to strings and simple settings) and a second less than secure parser for those applications that need the flexibility of python.  Id like to see the APIs of the same for both the parser and the configuration file.  -- dan.gass@gmail.com
+The part that isn’t addressed here that bothers me yet is how to weave in the ability to pass in real python objects as settings.  It would be good to have both a secure (restricted to strings and simple settings) and a second less than secure parser for those applications that need the flexibility of python.  I’d like to see the API’s of the same for both the parser and the configuration file.  -- dan.gass@gmail.com
 
   I (VinaySajip) believe that I have covered this in [http://www.red-dove.com/python_config.html this config module] - if you feel something fundamental is missing, please let me know.
 
