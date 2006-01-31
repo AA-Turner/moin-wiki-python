@@ -511,3 +511,18 @@ My implementation (http://cfgparse.sourceforge.net/) could be useful for impleme
 So where are we? The wiki hasn't seen much activity since January. Are any of these on track for 2.5? As strictly a user, most of these seem over-engineered for the standard library (to me anyway). `cfgparse` (dan gass) seemed the most approachable to me. XML, or some new configuration
 'language' in the file is way too much. Keeping to a similar (or even matching) API to optparse is important to me.
 But where are we? -- HunterMatthews (showing up as 82 in the edit log)
+
+GuidoVanRossum has discussed possible changes to ConfigParser in a thread on [http://mail.python.org/pipermail/python-dev/2006-January/060138.html python-dev]. He doesn't see a great deal of need to improve on ConfigParser. He dislikes *most* of the suggestions on this page because he doesn't want to see nested sections in configuration files.
+
+His reason for this is that he wants to discourage developers from mixing configuration options with application data more suited to a data persistence format. For this he reccommends an XML type solution.
+
+I personally think that complex configuration use cases are reasonably common, and that nested sections is a reasonable requirement. Editing/reading XML is not fun, whether it's for configuration *or* data persistence. For this reason ConfigObj is listed as an [http://www.pault.com/xmlalternatives.html XML Alternative].
+
+That aside, it seems like he wouldn't be averse to improvements on ConfigParser in the following ways :
+
+* Round tripping - saving config files in the order they are in the file, possibly preserving comments/whitespace.
+* Mapping protocol access, for more convenient use.
+* Better way of supplying default values.
+* Tracking values from more than one file, and storing which file changes apply to.
+
+-- MichaelFoord
