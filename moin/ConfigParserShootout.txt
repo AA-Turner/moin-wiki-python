@@ -61,9 +61,9 @@ The type specification is kept in a separate schema (which has a simple ``key = 
 This means a ConfigObj is an abstraction of *config data* - not just the config file, at no cost to the *user*. The validation system is simple and extendable.
 
 == M. Chermside's candidate ==
-[http://www.mcherm.com/publish/2004-10-17/config.py code] and [http://www.mcherm.com/publish/2004-10-17/configTest.py test cases].  Currently allows files in either str or unicode, with sensible defaults.  Allows dictionary or dotted-name access (though dotted-name can fail in some cases). Allows subsections of arbitrary length.  For example, 
+[http://www.mcherm.com/publish/2004-10-17/config.py code] and [http://www.mcherm.com/publish/2004-10-17/configTest.py test cases].  Currently allows files in either str or unicode, with sensible defaults.  Allows dictionary or dotted-name access (though dotted-name can fail in some cases). Allows subsections of arbitrary length.  For example,
 {{{
-    x.y = True 
+    x.y = True
     x.y.z = 47
     x.y.a = prime
 }}}
@@ -71,7 +71,7 @@ Would allow x.y to be viewed as either a value ("True") or a section.
 {{{
     x.y == "True"
 }}}
-but also 
+but also
 {{{
     x.y['a'] = 'prime'
     x.y['z'] = '47'
@@ -104,7 +104,7 @@ section1:
 # this is a comment for section1.item1:
     item1 = item 1
           # this is another comment
-    subsection:  
+    subsection:
         item2 = item 2
 section2:
    subsection:
@@ -292,16 +292,16 @@ desired.
  good errors.
 
  * Supports (maybe through utility functions or otherwise) more advanced
- configuration directives, like including other files or string 
+ configuration directives, like including other files or string
  interpolation.  But a lot of people don't like ConfigParser's current string
  interpolation.
 
  * Consider the general case of configuration settings, not just config.ini.
  While round-trip to human readable is important, it is also important that
- the in-memory version play well with other ways of setting parameters -- 
+ the in-memory version play well with other ways of setting parameters --
  including some that set arbitrary python objects.
 
-To be more explicit, it should work well with at least optparse (Optik), 
+To be more explicit, it should work well with at least optparse (Optik),
 .ini files, .xml files, and computed-at-runtime values.  The interface to
 the various storage mechanisms can be different, but developers shouldn't
 have to repeat information across the various formats; adding an option
@@ -313,7 +313,7 @@ once.
  * Implements a true parser that can be subclassed and specialized.  If it only
  has a method that parses the config file into a dictionary, then any attempts
  to extend or specialize the parser won't have access to line information.  The
- parser need not be a high-profile part of the module, so long as it is 
+ parser need not be a high-profile part of the module, so long as it is
  available.
 
 = Discussion =
@@ -513,7 +513,7 @@ Look at what happened to `urllib2` - the entry level for new users was greatly e
 The configuration parsers mentioned so far may handle textual configuration files and maybe extensions into options parsing, but there is a need sometimes to graphically change options . Maybe an amalgamation of the above ideas with the traits package of scipy  http://old.scipy.org/site_content/traits would allow options to be set in all three places - command line, GUI and options file.
 
     -- Donald 'Paddy' McCarthy
- 
+
 My implementation (http://cfgparse.sourceforge.net/) could be useful for implementing a GUI option editor by using the round trip capability.  I'm sure some of the other parsers would as well.  A GUI editor seems so application specific that I don't think we would want a GUI editor built into the standard library.  -- dan.gass@gmail.com
 
 == Status of Shootout ==
@@ -538,3 +538,36 @@ That aside, it seems like he wouldn't be averse to improvements on ConfigParser 
  * Tracking values from more than one file, and storing which file changes apply to.
 
 -- MichaelFoord
+
+
+I think we have to distinguish between configurations primarily intended
+for editing by ''users'' and configurations primarily intended for
+''programmatic'' editing. For example, XML makes a lot of sense as an
+interchangeable language for systems configurations (e.g., SuSE Linux
+AutoYaST). But XML is a horrid format for manual editing. The
+delimiter cruft makes it hard to comprehend for all but the simplest
+cases.
+
+I also do not understand the allergy to nesting, conditionals, and
+hierarchical namespaces. I implemented all three of these in
+[http://www.tundraware.com/Software/tconfpy tconfpy] precisely because
+they make the resultant configuration file ''simpler'' - both to
+understand by the human reader and to subsequently maintain.
+
+I realize there is always the danger of backing into a configuration
+language that becomes Turing-complete in its own right, but there is a
+balance to be struck between utility and simplicity. (One
+[http://www.tundraware.com/Software/tconfpy tconfpy] tester kiddingly
+said I was on my way to a reimplementation of ''m4'' <shudder> ;)
+My general view on this tradeoff is that configuration "languages"
+should be more-or-less entirely about lexical replacement and not carry
+a lot of deep semantics around.  There is, of course, some semantic content
+when you introduce nesting, conditionals, and hierarchical namespaces, but
+even these really serve just a lexical purpose.
+
+ConfigParser is fine for simple day-to-day configurations but I still think
+there is room for a more full-featured configuration "language".  One does
+not preclude the other.
+
+
+-- Tim Daneliuk
