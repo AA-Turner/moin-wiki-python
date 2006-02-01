@@ -16,7 +16,7 @@ time on files.
 URL:     http://www.jorendorff.com/articles/python/path
 Author:  Jason Orendorff <jason@jorendorff.com>
 Date:    7 Mar 2004
-Modified by Björn Lindqvist <bjourne@gmail.com>, January 2005
+Modified by Björn Lindqvist <bjourne@gmail.com>, January 2006
 """
 
 import unittest
@@ -133,6 +133,14 @@ class BasicTestCase(unittest.TestCase):
         self.assert_(isinstance(p, path))
         self.assertEquals(noext, "~/python/config.h")
 
+    def testTimeProperties(self):
+        p = path("tempfile")
+        p.touch()
+        now = int(time.time())
+        self.assertEquals(p.ctime(), now)
+        self.assertEquals(p.mtime(), now)
+        self.assertEquals(p.atime(), now)
+
 
 class TempDirTestCase(unittest.TestCase):
     def setUp(self):
@@ -162,7 +170,7 @@ class TempDirTestCase(unittest.TestCase):
         try:
             self.assert_(f.exists())
             self.assert_(f.isfile())
-            self.assertEqual(f.size, 0)
+            self.assertEqual(f.size(), 0)
             self.assert_(t0 <= f.mtime <= t1)
             ct = f.ctime
             self.assert_(t0 <= ct <= t1)
@@ -181,7 +189,7 @@ class TempDirTestCase(unittest.TestCase):
 
             self.assert_(f.exists())
             self.assert_(f.isfile())
-            self.assertEqual(f.size, 10)
+            self.assertEqual(f.size(), 10)
             self.assert_(t2 <= f.mtime <= t3)
             if hasattr(os.path, 'getctime'):
                 ct2 = f.ctime
@@ -190,7 +198,7 @@ class TempDirTestCase(unittest.TestCase):
                     self.assertEqual(ct, ct2)
                     self.assert_(ct2 < t2)
                 else:
-                    # On other systems, it might be the CHANGE time
+                    # On other systems, it might be the CHANGE time 
                     # (especially on Unix, time of inode changes)
                     self.failUnless(ct == ct2 or ct2 == f.mtime)
         finally:
@@ -199,7 +207,7 @@ class TempDirTestCase(unittest.TestCase):
     def testListing(self):
         d = path(self.tempdir)
         self.assertEqual(d.listdir(), [])
-
+        
         f = 'testfile.txt'
         af = path(d, f)
         self.assertEqual(af, os.path.join(d, f))
@@ -378,7 +386,7 @@ class TempDirTestCase(unittest.TestCase):
 
         self.assert_(path("/foobar/file.png").match("*.png"))
         self.assert_(not path("/foobar/FILE.PNG").matchcase("*.png"))
-
+                     
 
 
 if __name__ == '__main__':
