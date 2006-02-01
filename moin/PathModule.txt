@@ -1,4 +1,5 @@
 #format PYTHON
+
 # -*- coding: iso-8859-1 -*-
 """ path.py - An object representing a path to a file or directory.
 
@@ -74,7 +75,7 @@ class path(_base):
         if len(args) == 1:
             return _base.__new__(typ, *args)
         return typ(os.path.join(*args))
-
+        
     def __repr__(self):
         return '%s(%r)' % (self.__class__.__name__, _base(self))
 
@@ -94,22 +95,22 @@ class path(_base):
 
     def abspath(self):
         return self.__class__(os.path.abspath(self))
-
+    
     def normcase(self):
         return self.__class__(os.path.normcase(self))
-
+    
     def normpath(self):
         return self.__class__(os.path.normpath(self))
-
+    
     def realpath(self):
         return self.__class__(os.path.realpath(self))
-
+    
     def expanduser(self):
         return self.__class__(os.path.expanduser(self))
-
+    
     def expandvars(self):
         return self.__class__(os.path.expandvars(self))
-
+    
     def expand(self):
         """ Clean up a filename by calling expandvars(),
         expanduser(), and normpath() on it.
@@ -133,7 +134,7 @@ class path(_base):
 
     def _get_dirname(self):
         return self.__class__(os.path.dirname(self))
-
+    
     parent = property(
         _get_dirname, None, None,
         """ This path's parent directory, as a new path object.
@@ -301,7 +302,7 @@ class path(_base):
         whose names match the given pattern.  For example,
         d.files('*.pyc').
         """
-
+        
         return [p for p in self.listdir(pattern) if p.isfile()]
 
     def walk(self, pattern=None):
@@ -387,30 +388,29 @@ class path(_base):
     if hasattr(os.path, 'samefile'):
         samefile = os.path.samefile
 
-    getatime = os.path.getatime
-    atime = property(
-        getatime, None, None,
-        """ Last access time of the file. """)
+    def atime(self):
+        """Last access time of the file."""
+        return os.path.getatime(self)
 
-    getmtime = os.path.getmtime
-    mtime = property(
-        getmtime, None, None,
-        """ Last-modified time of the file. """)
+    def mtime(self):
+        """Last-modified time of the file."""
+        return os.path.getmtime(self)
 
-    getctime = os.path.getctime
-    ctime = property(
-        getctime, None, None,
-        """ Return the system's ctime which, on some systems (like
-        Unix) is the time of the last change, and, on others (like
-        Windows), is the creation time for path. The return value is a
-        number giving the number of seconds since the epoch (see the
-        time module). Raise os.error if the file does not exist or is
-        inaccessible.""")
+    def ctime(self):
+        """
+        Return the system's ctime which, on some systems (like Unix)
+        is the time of the last change, and, on others (like Windows),
+        is the creation time for path.
 
-    getsize = os.path.getsize
-    size = property(
-        getsize, None, None,
-        """ Size of the file, in bytes. """)
+        The return value is a number giving the number of seconds
+        since the epoch (see the time module). Raise os.error if the
+        file does not exist or is inaccessible.
+        """
+        return os.path.getctime(self)
+
+    def size(self):
+        """Size of the file, in bytes."""
+        return os.path.getsize(self)
 
     if hasattr(os, 'access'):
         def access(self, mode):
@@ -540,7 +540,3 @@ class path(_base):
     if hasattr(os, 'chroot'):
         def chroot(self):
             os.chroot(self)
-
-    if hasattr(os, 'startfile'):
-        def startfile(self):
-            os.startfile(self)
