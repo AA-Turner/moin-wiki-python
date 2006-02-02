@@ -1,0 +1,33 @@
+Note : This is an experimental page, Python can be learned interactively from a prompt, and learning by
+observations is a good habit, so this page. -- BaijuMuthukadan
+
+(This page is not linked from main pages yet.)
+
+=== __del__ workings ===
+
+{{{
+#!python
+>>> class C:
+... 	def __del__(self):
+... 		print "HI"
+... 
+>>> c=C()
+>>> del(c)
+HI
+>>> c=C()
+>>> c=1
+HI
+>>> c
+1
+>>> c=C()
+>>> type(c)
+<type 'instance'>
+>>> c
+<__main__.C instance at 0x402328cc>
+>>> d=c
+>>> c=4
+>>> d=7
+>>> d
+HI
+7
+}}}
