@@ -519,7 +519,7 @@ class path(_base):
             if p.isabs():
                 return p
             else:
-                return (self.parent / p).abspath()
+                return self.__class__(self.parent, p).abspath()
 
 
     # --- High-level functions from shutil
