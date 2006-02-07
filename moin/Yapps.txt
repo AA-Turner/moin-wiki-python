@@ -10,10 +10,16 @@ For example, this is a popular non-ambiguous grammar for arithmetical expression
 {{{ E -> E '+' T  |  T
 T -> T '*' F  |  F
 F -> '(' E ')'  |  digit }}}
-bison uses LALR so it can handle such grammar. For yapps, you need to rework it like:
+Bison uses LALR so it can handle such grammars. For Yapps, you need to rework it into a right-recursive grammar:
 {{{ E -> T E1
 E1 -> '+' T E1  |  \epsilon
 T -> F T1
 T1 -> '*' F T1  |  \epsilon
 F -> '(' E ')'  |  digit }}}
+However, in Yapps, you would write typically use loops instead of recursion:
+{{{ E -> T ( '+' T )*
+T -> F ( '*' F )*
+F -> '(' E ')' | digit }}}
+where * is used to express repetition of a pattern, just as in regular expressions.
+
 In some cases, a LL(1) grammar is much less readable than a corresponding LALR or LR one. Furthermore, some languages can be expressed by LALR grammars but not by LL(x) grammars. 
