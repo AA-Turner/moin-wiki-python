@@ -122,7 +122,7 @@ Someone pointed out that "except" catches more than just "except Exception, e."
 
 ''Why is that the case? What is the difference?''-- LionKimbro
 
-For now (version 2.3) exception doesn't have to be inherited from Exception. Thus plain 'except:' catches all exceptions, not only system.  String exceptions are one example of an exception that doesn't inherit from Exception. -- MikeRovner [[DateTime(2004-01-19T05:49:19Z)]]
+For now (version <= 2.4) exception doesn't have to be inherited from Exception. Thus plain 'except:' catches all exceptions, not only system.  String exceptions are one example of an exception that doesn't inherit from Exception. -- MikeRovner [[DateTime(2004-01-19T05:49:19Z)]]
 
 == Getting Useful Information from an Exception ==
 
@@ -163,52 +163,36 @@ Note that not all exceptions subclass Exception (though almost all do), so this 
 
 > http://www.joelonsoftware.com/items/2003/10/13.html
 
-Joel Spolsky might be a great C++ programmer, and his advice on user
-interface design is invaluable, but Python is not C++ or Java, and his
-arguments about exceptions do not hold in Python.
+Joel Spolsky might be a great C++ programmer, and his advice on user interface design is invaluable, but Python is not C++ or Java, and his arguments about exceptions do not hold in Python.
 
 Joel argues:
 
-"They are invisible in the source code. Looking at a block of code,
-including functions which may or may not throw exceptions, there is no way
-to see which exceptions might be thrown and from where. This means that
-even careful code inspection doesn't reveal potential bugs."
+"They are invisible in the source code. Looking at a block of code, including functions which may or may not throw exceptions, there is no way to see which exceptions might be thrown and from where. This means that even careful code inspection doesn't reveal potential bugs."
 
-I don't quiet get this argument. In a random piece of source code, there
-is no way to tell whether or not it will fail just by inspection. If you
-look at:
+(Note that this is also the argument behind Java's checked exceptions -- now it is explicit that an exception can be thrown -- except that RuntimeException can still be thrown anywhere. -jJ)
+
+I don't quite get this argument. In a random piece of source code, there is no way to tell whether or not it will fail just by inspection. If you look at:
 
 {{{
 x = 1
 result = myfunction(x)
 }}}
 
-you can't tell whether or not myfunction will fail at runtime just by
-inspection, so why should it matter whether it fails by crashing at
-runtime or fails by raising an exception?
+you can't tell whether or not myfunction will fail at runtime just by inspection, so why should it matter whether it fails by crashing at runtime or fails by raising an exception?
 
-Joel's argument that raising exceptions is just a goto in disguise is
-partly correct. But so are for loops, while loops, functions and methods!
-Like those other constructs, exceptions are gotos tamed and put to work
-for you, instead of wild and dangerous. You can't jump *anywhere*, only
-highly constrained places.
+(Crashing is bad.  By explicitly declaring the exception, you warn people that they may want to handle it.  Java does this awkwardly.  C doesn't have a good way to do it at all, because the error returns are still in-band for regular returns.  In python, passthrough exceptions aren't marked, but error conditions stand out where they are created, and they don't usually mimic valid returns. -jJ)
+
+Joel's argument that raising exceptions is just a goto in disguise is partly correct. But so are for loops, while loops, functions and methods!  Like those other constructs, exceptions are gotos tamed and put to work for you, instead of wild and dangerous. You can't jump *anywhere*, only highly constrained places.
 
 Joel also writes:
 
-"They create too many possible exit points for a function. To write
-correct code, you really have to think about every possible code path
-through your function. Every time you call a function that can raise an
-exception and don't catch it on the spot, you create opportunities for
-surprise bugs caused by functions that terminated abruptly, leaving data
-in an inconsistent state, or other code paths that you didn't think about."
+"They create too many possible exit points for a function. To write correct code, you really have to think about every possible code path through your function. Every time you call a function that can raise an exception and don't catch it on the spot, you create opportunities for surprise bugs caused by functions that terminated abruptly, leaving data in an inconsistent state, or other code paths that you didn't think about."
 
-This is a better argument for *careful* use of exceptions, not an argument
-to avoid them. Or better still, it is an argument for writing code which
-doesn't has side-effects and implements data transactions. That's a good
-idea regardless of whether you use exceptions or not.
+(Even now, a fairly high percentage of the bugs found in CPython's C code are memory leaks caused by premature exits -- exactly what Joel warned about.  It isn't such a problem with python code, because the language is supposed to take care of fixing accounting-type invariants for you. -jJ)
 
-Joel's concern about multiple exit points is good advice, but it can be
-taken too far. Consider the following code snippet:
+This is a better argument for *careful* use of exceptions, not an argument to avoid them. Or better still, it is an argument for writing code which doesn't has side-effects and implements data transactions. That's a good idea regardless of whether you use exceptions or not.  (In python, "transactions" are small enough that it is usually difficult to interrupt an operation inside one without writing C code.  You *can* do it, say, with recursive generators, but it is difficult.)
+
+Joel's concern about multiple exit points is good advice, but it can be taken too far. Consider the following code snippet:
 
 {{{
 def myfunc(x=None):
@@ -224,29 +208,19 @@ def myfunc(x=None):
    return result
 }}}
 
-There is no benefit in deferring returning value as myfunc does, just
-for the sake of having a single exit point. "Have a single exit point"
-is a good heuristic for many functions, but it is pointless make-work for
-this one. (In fact, it increases, not decreases, the chances of a bug. If
-you look carefully, myfunc above has such a bug.
+There is no benefit in deferring returning value as myfunc does, just for the sake of having a single exit point. "Have a single exit point" is a good heuristic for many functions, but it is pointless make-work for this one. (In fact, it increases, not decreases, the chances of a bug. If you look carefully, myfunc above has such a bug in the zero clause.)
 
-Used correctly, exceptions in Python have more advantages than
-disadvantages. They aren't just for errors either: exceptions can be
-triggered for exceptional cases (hence the name) without needing to track
-(and debug) multiple special cases.
+Used correctly, exceptions in Python have more advantages than disadvantages. They aren't just for errors either: exceptions can be triggered for exceptional cases (hence the name) without needing to track (and debug) multiple special cases.
 
 Lastly, let me argue against one of Joel's comments:
 
-"A better alternative is to have your functions return error values when
-things go wrong, and to deal with these explicitly, no matter how verbose
-it might be. It is true that what should be a simple 3 line program often
-blossoms to 48 lines when you put in good error checking, but that's life,
-and papering it over with exceptions does not make your program more
-robust."
+"A better alternative is to have your functions return error values when things go wrong, and to deal with these explicitly, no matter how verbose it might be. It is true that what should be a simple 3 line program often blossoms to 48 lines when you put in good error checking, but that's life, and papering it over with exceptions does not make your program more robust."
 
-Maybe that holds true for C++. I don't know the language, and wouldn't
-like to guess. But it doesn't hold true for Python. This is how Joel might
-write a function as a C programmer:
+Maybe that holds true for C++. I don't know the language, and wouldn't like to guess. But it doesn't hold true for Python. 
+
+(The difference is that Python reduces the chances of an error in the first place, and makes raising an exception the clean way to "return an error value".)
+
+This is how Joel might write a function as a C programmer:
 
 {{{
 def joels_function(args):
@@ -308,15 +282,9 @@ except SomeError, msg:
 # and now continue safely here...
 }}}
 
-In the case of Python, calling a function that may raise an exception is
-no more difficult or unsafe than calling a function that returns a status
-flag and a result, but writing the function itself is much easier, with
-fewer places for the programmer to make a mistake.
+In the case of Python, calling a function that may raise an exception is no more difficult or unsafe than calling a function that returns a status flag and a result, but writing the function itself is much easier, with fewer places for the programmer to make a mistake.  (The one difference is that if you don't handle the error, your program will stop and complain, instead of continuing and corrupting the data.)
 
-In effect, exceptions allow the Python programmer to concentrate on his
-actual program, rather than be responsible for building error-handling
-infrastructure into every function. Python supplies that infrastructure
-for you, in the form of exceptions.
+In effect, exceptions allow the Python programmer to concentrate on his actual program, rather than be responsible for building error-handling infrastructure into every function. Python supplies that infrastructure for you, in the form of exceptions.
 
 ----
 See also: Italian translation at ManutenereLeEccezioni.
