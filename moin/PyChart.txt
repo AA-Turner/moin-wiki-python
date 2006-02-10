@@ -1,11 +1,16 @@
 PyChart is a Python library for creating high quality Encapsulated Postscript, PDF, PNG, or SVG charts. It currently supports line plots, bar plots, range-fill plots, and pie charts.
 
-Here's a quick example for using PyChart in a CGI script to dynamically create and return a plot in png format. Just drop it into your cgi-bin directory and point your browser at it. Please see the official PyChart docs for plenty of nicely-commented examples.
+Here's a quick example for using PyChart in a CGI script to dynamically create and return a plot in png format. Just copy/paste into a file (say, generate_plot.py), set permissions to 755, drop it into your cgi-bin directory, and point your browser at it. (Please see the official PyChart docs for plenty of nicely-commented examples.)
 {{{#!python
 #!/usr/bin/python
 
 import random
 import sys
+
+# Not using the cgi module at the moment.
+#import cgi
+#import cgitb; cgitb.enable()
+
 from pychart import *
 
 print "Content-type: image/png"
@@ -30,5 +35,7 @@ ar.add_plot( plot )
 
 ar.draw()
 }}}
+
+You could place a link to this CGI script directly in your html, like so: `<img src="cgi-bin/generate_plot.py">`. If you used the cgi module in the above script, you could parse URL-encoded values and generate an image based on what the browser asked for: `<img src="cgi-bin/generate_image.py?plot_type=disk_usage">`.
 
 http://home.gna.org/pychart/ (new)
