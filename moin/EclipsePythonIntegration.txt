@@ -10,70 +10,36 @@ Python IDE.  Some of these are stable enough for early use:
 || TruStudio || http://www.xored.com/products.php || 1.0.x / 1.1 || May 18, 2005 || EPL* and commercial || || ||
 || JyDT || http://jydt.sf.net || 1.4.11 || September 12, 2005 || CPL || Jython only || ||
 || EclipseColorer || http://colorer.sf.net/ || 0.7.1 || July 12, 2005 || Mozilla PL / GPL|| yes? || Syntax highlighting only ||
-|| pyeclipse || http://sf.net/projects/pyeclipse/ || 0.0.1  || July 16, 2002 || || || dead? ||
-|| pe4eclipse || http://sf.net/projects/pe4eclipse/ || 0.0.1 || September 17, 2002 || || || dead? ||
+
 
 * Eclipse Public License
 
 To point out the obvious, it would be nice if some of these teams would combine their efforts.
 
-== What these plug-ins actually do ==
+== Some Features ==
 
 ''The next seven sections of documentation, up to and including "Supplying parameters to your jython or python program" are contributed by Andy Bulka abulka@netspace.net.au.''
 ----
-
- * All three plug-ins (at the time of the writing, pyeclipse, pe4eclipse, and pythoneclipse -- more on pydev below) only really give you color highlighting for editing .py python/jython files.  That's all. ''(as of May 2003)''
+ * These plugins provide ''syntax highlighting'' to allow for easy location of code segments with just a glance.
  * Significantly, you can use Eclipse ''bookmarking'' and create ''task'' bookmarks inside the eclipse python editor.  This is way cool.
  * Lines with '''def''' are given little notches in the scroll bar, which you can click on and jump to that python function/method.
  * You can run '''jython''' or python on the current file and get the output appear in the eclipse console window.
-
- * Red Robin/JyDT has been around since late 2003; it became open source in 2005.
-
-Generic Useful Features:
-
  * You can use the Search/Grep feature of Eclipse to search through your python source code modules.
  * You can define a "working set" which is a custom list of python files that you want to have listed in the left hand Navigator window.
  * Instead of importing a folder into eclipse (which copies the files into c:\eclipse\workspace\...) you can instead create a linked folder which means that you can edit files on your regular file system.  To do this, create a new folder, then when prompted, click "Advanced" and select the folder on your file system to link to.  Sometimes you have to 'refresh' the list by r.clicking on the folder and selecting 'refresh'.
 
-'''''Note: The ability to run '''jython''' or '''python''' on the current file needs to be configured manually (see step 2, below) and doesn't require either of these plugins to do.'''''
+== Which plug-in is the best? ==
 
-== Which plug-in is better? ==
+Both PyDev and TruStudio are undergoing active development and both feature and extensive set of useful tools for developing in Eclipse. It's not hard to try either of them out, so you might as well just try them both out and see which you enjoy more.
 
-All three support the SHIFT-TAB de-indent keystroke.
+Going by the popularity on Google, (using a very unscientific method of just searching for the two words  ''python eclipse''  it seems as though PyDev is more popular.
 
- * pyeclipse, 0.0.1 - CAN configure editor syntax colors. Option to converts tabs to spaces.
-
- * pe4eclipse, 0.0.1 - NO configuration of colors.  NO option to converts tabs to spaces.  CAN override default text font and set this specifically.  CAN turn line numbering on.
-
- * pythoneclipse    - NO configuration of colors.  Option to converts tabs to spaces.
-
-The ''pyeclipse'' plug-in provides a '''python' perspective''' which ensures that the console window is visible and hides the 'launch' button (which is only for running java apps).
-
-Note: once you have this perspective installed, you can switch to one of the other python plugins (see how to do this in the next section), and the "perspective view" will remain installed.  In fact you can easily create a python perspective yourself, from within Eclipse (''a perspective is just a configuration of what panels and windows you want open at the one time'').
-
-=== My choice ===
-
-''added by EliasSoong''
-
-When I wrote this, it is the September of 2004. I found PyDev and Tru Studio have been progressed very much. Both of them could be a mature IDE for Python. Especially, I tried the open source version of Tru Studio 1.0M4, I feel it is as good as JDT. Tru Studio could do perfect analysis of the code outline and good code assist.
-
-=== Re: PyDev ===
+=== PyDev ===
 
 ''added by KirbyUrner urnerk@python.org''
 
 I saw a demo of this at OSCON 2004, presented by Dana Moore. Alex Totek has done the majority of the work so far, with help from Fabio Zadrozny.  pydev includes a debugger.  Dana previewed auto-completion but as of this writing it's not in the most recent release (0.5.3).  I also saw the Python shell integrated into Eclipse.  The development language for the plugin itself is Java, not Jython.
 
-== Installing the plug-ins ==
-
-Unzip the plugin and drag the folder into the eclipse/plugins directory, then restart eclipse.
-
-    * pyeclipse is identified by the folder '''org.python.pyeclipse_0.0.1'''
-
-    * pe4eclipse is identified by the folder  '''net.sourceforge.pe4eclipse'''
-
-    * pythoneclipse is identified by the folder  '''org.pythoneclipse.pdt_0.0.3'''
-
-You can switch between the plug-ins by moving one directory ''out'' of the plugins folder and the other ''in'' to the plugins folder.
 
 == Eclipse 3.0 Interim Build Problem ==
 
@@ -96,24 +62,6 @@ then fill in the following values:
  * '''Name''': jython
 
  * '''Tool Location''': E.g. C:\jython-2.1\jython.bat
-
- * '''Working Directory''': -> Browse Variables -> ${container_loc}
-
- * '''Tool Arguments''': -> Browse Variables -> ${resource_name}
-
-== Python ==
-
-Instructions for configuring to run regular python from within Eclipse can be found in the pyeclipse forum http://sourceforge.net/forum/forum.php?thread_id=717580&forum_id=194323
-
-However, I prefer to set my Working Directory to ${container_loc} since this lets you launch python on files that are ''inside folders'' within your project.  More resilient.  Here are my instructions:
-
-Select from the menu: Run -> External Tools -> Configure -> New
-
-then fill in the following values:
-
- * '''Name''': python
-
- * '''Tool Location''': E.g. /usr/bin/python or C:\Python22\python.exe
 
  * '''Working Directory''': -> Browse Variables -> ${container_loc}
 
