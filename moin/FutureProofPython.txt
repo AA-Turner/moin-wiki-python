@@ -3,6 +3,29 @@ and there are some issues to consider when coding Python, if
 you want your code to work with the latest version of Python
 in five five years from now...
 
+= True Division =
+
+Since the beginning, Python has yielded an integer result when
+two integers are divided, e.g. 3/2 => 1. While correct if we
+assume that dividing integers means integers division (the
+remainder is accessible through the modulo operator %) it's
+not always obvious to beginners. This behaviour will change in
+a future Python version, so that a/b with yield a float as a
+result regardless of the types of the numbers a and b, and
+a new floor division operator // will perform integer
+division. See See http://www.python.org/peps/pep-0238.html
+
+    '''Use true and floor division in new code'''
+
+{{{
+from __future__ import division # Enable the new behaviour
+
+f = 3/2 # 1.5
+
+i = 3//2 # 1
+}}}
+
+
 = New style classes =
 
 Currently, there are two kinds of classes in Python. The 'classic'
@@ -12,7 +35,7 @@ work when the default swaps from old style to new style, there are
 some differences in semantics, and the new style classes have some
 extra features. See http://www.python.org/doc/newstyle.html
 
-'''Use new style classes in new code'''
+    '''Use new style classes in new code'''
 
 Don't write
 {{{
