@@ -1,13 +1,15 @@
 Python is a mature language, but it hasn't stopped evolving,
 and there are some issues to consider when coding Python, if
 you want your code to work with the latest version of Python
-in five five years from now...
+in five five years from now... See 
+http://www.python.org/peps/pep-3000.html for more
+information.
 
 = True Division =
 
 Since the beginning, Python has yielded an integer result when
 two integers are divided, e.g. 3/2 => 1. While correct if we
-assume that dividing integers means integers division (the
+assume that dividing integers means integer division (the
 remainder is accessible through the modulo operator %) it's
 not always obvious to beginners. This behaviour will change in
 a future Python version, so that a/b with yield a float as a
@@ -63,3 +65,24 @@ Exception from Python 2.5. See http://www.python.org/peps/pep-0352.html
 class MyException(Excption): pass
 }}}
 
+= Use parenthesis for Exception argument =
+
+The syntax
+{{{
+raise MyException "A nasty error"
+}}}
+will be deprecated. Use
+{{{
+raise MyException("A nasty error")
+}}}
+instead.
+
+= Don't compare uncomparable objects =
+
+In the future, x < y and friends (>, <=, >=) will raise an exception instead
+of an arbitrary result, if type(x) != type(y) unless the types explicitly
+define the behaviour for these comparisions.
+
+= Don't use <> =
+
+It's enough with one inequality operator. Almost everybody uses !=. <> will go away.
