@@ -53,6 +53,8 @@ tuple_time = time.strptime(iso_time.replace("-", ""), "%Y%m%dT%H:%M:%S")
 
 I seem to require receiving both while working with XmlRpc produced by a mix of both Python and Perl code. The XmlRpc specification is not very particular about the ISO8601 variant used for it's Date``Time.
 
+Note that this method does not handle time zones, so trying to parse `2004-06-03T12:34:56-0700` or `2004-06-03T12:34:56Z` will fail.  This is a fundamental limitation of `time.strptime` for which there is no easy workaround.
+
 == ISO 8601 with xml.utils.iso8601 ==
 
 If you have {{{xml.utils.iso8601}}}, you can do the following:
@@ -70,7 +72,7 @@ print xml.utils.iso8601.parse("2004-04-09T21:39:00-08:00") # -8:00 for Seattle, 
 print xml.utils.iso8601.ctime(0) # returns "1969-12-31T16:00-08:00"
 }}}
 
-The module isn't perfect; If you omit the dashes, (perfectly valid ISO8601,) you'll get a {{{ValueError}}} exception.
+The module isn't perfect; If you omit the dashes, (perfectly valid ISO8601,) you'll get a {{{ValueError}}} exception.  However, unlike `time.strptime`, `xml.utils.iso8601.parse` will handle the timezone specification correctly.
 
 == ISO8601 and Python in general ==
 
