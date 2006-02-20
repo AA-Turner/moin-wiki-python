@@ -1,3 +1,5 @@
+== Installation ==
+
 To start the installation, please proceed as follows:
  * download the jython_Release_2_2alpha1.jar file and save it locally
  * double-click the file jython_Release_2_2alpha1.jar, or type: `java -jar jython_Release_2_2alpha1.jar`    
@@ -7,16 +9,16 @@ On true headless systems, the installer will automatically switch to console mod
 You can force console mode using the `-console` switch:
  * `java -jar jython_Release_2_2alpha1.jar -console`
  
-Generation of start scripts
+
+== Generation of start scripts ==
 
 On Windows, the installer creates a `jython.bat` and a `jythonc.bat` file. On all other platforms, it creates a `jython` and `jythonc` file, which are unix like shell scripts.
 If these scripts are not executable, please grant the permission on os system level.
 
 Please let us know if you need different scripts on different platforms.
 
-
  
-Troubleshooting
+== Troubleshooting ==
 
 If one of the GUI steps should appear empty, or with no text visible: Please try to press 'Previous' and then 'Next' again.
 
@@ -27,3 +29,44 @@ The GUI which appears when pressing the "Browse" button in selecting the target 
  * the icon for creation of a new directory is sometimes greyed out, although java would have the rights to create one. If this happens, select the parent directory and then try to type in the name of the new directory in the input field. The installer then will create the new directory, if possible
 
 If all else fails, try using  console mode.
+
+
+== A sample console session ==
+
+This is a transcript from a Windows XP machine, using MKS Korn Shell in Emacs. It doesn't look much different when using cmd.exe:
+{{{
+$ java -jar jython_Release_2_2alpha1.jar -console
+Welcome to Jython !
+You are about to install Jython version 2.1.i.
+(at any time, answer c to cancel the installation)
+For the installation process, the following languages are available: English, German
+Please select your language [e/g] >>> e
+The following installation types are available:
+  1. All (everything, including sources)
+  2. Standard (core, library modules, demos and examples)
+  3. Minimum (core)
+Please select the installation type [1/2/3] >>> 1
+Your operation system version is: Windows XP / 5.1
+Please press Enter to proceed >>> 
+Your java version is: Sun Microsystems Inc. / 1.5.0_06
+Please press Enter to proceed >>> 
+Do you want to read the license agreement now ? [y/n] >>> n
+Do you accept the license agreement ? [y/n] >>> y
+Please enter the target directory >>> c:/temp/jython2.2a1
+Unable to find directory C:\Temp\jython2.2a1, create it ? [y/n] >>> y
+Please confirm copying of files to directory C:\Temp\jython2.2a1 [y/n] >>> y
+ 10 %
+ 20 %
+ 30 %
+ 40 %
+ 50 %
+ 60 %
+ 70 %
+ 80 %
+ 90 %
+Generating start scripts ...
+ 100 %
+Do you want to show the contents of README ? [y/n] >>> n
+Congratulations! You successfully installed Jython Release_2_2alpha1 to directory C:\Temp\jython2.2a1.
+$ 
+}}}
