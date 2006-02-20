@@ -1,9 +1,29 @@
-Open issues
-  * build part (build the .jar that will be downloaded)
-  * integrate into `jython.org`
-  * client part polishing (lower prio)
-    * make the unix start scripts executable by all (`Runtime.exec("chmod...")`)
-    * size of window versus center layout (implies new screen shots in the doc)
-   
+To start the installation, please proceed as follows:
+ * download the jython_Release_2_2alpha1.jar file and save it locally
+ * double-click the file jython_Release_2_2alpha1.jar, or type: `java -jar jython_Release_2_2alpha1.jar`    
+This will bring up the GUI installer.
 
-[http://homepage.sunrise.ch/mysunrise/ohumbel/jython_installer.html Preview download and documentation of the client part]
+On true headless systems, the installer will automatically switch to console mode.
+You can force console mode using the `-console` switch:
+ * `java -jar jython_Release_2_2alpha1.jar -console`
+ 
+Generation of start scripts
+
+On Windows, the installer creates a `jython.bat` and a `jythonc.bat` file. On all other platforms, it creates a `jython` and `jythonc` file, which are unix like shell scripts.
+If these scripts are not executable, please grant the permission on os system level.
+
+Please let us know if you need different scripts on different platforms.
+
+
+ 
+Troubleshooting
+
+If one of the GUI steps should appear empty, or with no text visible: Please try to press 'Previous' and then 'Next' again.
+
+The GUI which appears when pressing the "Browse" button in selecting the target directory might be a bit confusing. Some tips and tricks:
+
+ * it uses the standard javax.swing.JFile``Chooser
+ * opening and selecting of a directory: different look and feel on different platforms - just play a little to get used to it
+ * the icon for creation of a new directory is sometimes greyed out, although java would have the rights to create one. If this happens, select the parent directory and then try to type in the name of the new directory in the input field. The installer then will create the new directory, if possible
+
+If all else fails, try using  console mode.
