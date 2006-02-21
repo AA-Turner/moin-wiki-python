@@ -1,0 +1,127 @@
+#acl MoinPagesEditorGroup:read,write,delete,revert All:read
+## Please edit (or translate) system/help pages on the moinmaster wiki ONLY.
+## For more information, please see MoinMaster:MoinPagesEditorGroup.
+#language en
+== ReadlineSetup ==
+
+Jython can support line editing and history via the [http://java-readline.sourceforge.net/ Java-Readline] library on unix systems. Java-Readline wraps [http://directory.fsf.org/readline.html GNU Readline] with a JNI interface to provide advanced editing support to Java console programs. However, Java-Readline is not bundled with the standard Jython distribution. This note describes how to configure Readline support into an existing Jython install. It is not necessary to rebuild jython from source, but you will need to build/install Java-Readline if a prebuilt version doesn't exist for your platform/OS distribution (which is likely the case).
+
+These instructions were tested on a Fedora linux system, with Jython-2.1, Sun JDK5  (Note GNU GCJ does not work at this time), and GCC. It as assumed that Jython has already been installed.
+
+1. [http://sourceforge.net/project/showfiles.php?group_id=48669 Download Java-Readline] (version 0.8.0 as of this writing) and follow the included build instructions. This will require both java and C compilers. If your JAVA_HOME environment variable is set and the necessary compilers can be found in your path, building should be as simple as:
+
+{{{
+$ tar -zxf libreadline-java-0.8.0-src.tar.gz
+$ cd libreadline-java-0.8.0
+$ make
+}}}
+
+Otherwise edit the Java-Readline Makefile or set the environment variables JAVA_HOME and update your path. The build results in the creation of following two files:
+
+ * libreadline-java.jar
+ * libJavaReadline.so
+
+These can be copied to a convient location, but the rest of these instructions assume they remain in $HOME/libreadline-java-0.8.0.
+
+2. Jython needs to be configured to use the Java-Readline library. Edit the jython [http://www.jython.org/docs/registry.html registry] file, setting the following two lines:
+
+{{{
+python.console=org.python.util.ReadlineConsole
+python.console.readlinelib=GnuReadline
+}}} 
+
+3. Jython also needs to have libreadline-java.jar in its CLASSPATH, and the shared library libJavaReadline.so needs to be available to the OS's dynamic linker when loading Jython. Both of these can be done through setting environment variables as follows:
+
+{{{
+export LD_LIBRARY_PATH=/home/me/tools/libreadline-java-0.8.0
+CLASSPATH=/home/me/tools/libreadline-java-0.8.0:$CLASSPATH
+}}}
+
+You can put these directly into the 'jython' shell script that invokes jython (created by the installer), or into one of your environment's startup scripts.
+
+That's it. You should now be able to invoke jython's interactive console, with readline powered command line editing enabled.
+
+=== What can go wrong ===
+
+Its common to trip up on one of the configuration steps. Here's some of the possible errors that may be encountered and some clues on what they mean and where to look for a fix.
+
+If you see no error's on Jython startup, and when at the interactive console you press cursor up and just see junk like:
+
+{{{
+>>> ^[[A
+}}}
+
+Then readline simply isn't enabled. You should investigate if the setting '''python.console''' is correctly specified in the registry, and ensure the registry file you've edited is somewhere where Jython will find it on startup. You can check the registry Jython is actually using from within the interpreter by executing:
+
+{{{#!python numbers=disable
+import sys
+print sys.registry
+}}}
+
+If Jython throws an exception on startup like:
+
+{{{
+Exception in thread "main" java.lang.UnsatisfiedLinkError: no JavaEditline in java.library.path
+}}}
+
+followed by a backtrace, then a possible cause is that '''python.console''' is set but '''python.console.readlinelib''' is not (it defaults to !JavaEditline). Again check your registry settings.
+
+If Jython throws an exception on startup like:
+
+{{{
+Exception in thread "main" java.lang.NoClassDefFoundError: org/gnu/readline/ReadlineLibrary
+}}}
+
+Then libreadline-java.jar isn't in your classpath. Check that your CLASSPATH environment variable includes this jar file.
+
+If on startup you see:
+
+{{{
+Exception in thread "main" java.lang.UnsatisfiedLinkError: no JavaReadline in java.library.path
+}}}
+
+Then its possible the shared library libJavaReadline.so isn't being found by the linker. Make sure LD_LIBRARY_PATH includes the location of this shared library.
+
+=== Readline Alternatives ===
+
+While these instructions are for Java-Readline compiled against GNU Readline, Java-Readline can also be backed by the BSD licensed !EditLine libary as well as a simple line editor called !GetLine. One or the other may be preferable depending on your platform and license requirements. 
+
+Other alternatives include programs that function as console wrappers and provide history & command-editing without requiring any changes to the Jython other than the way you invoke the application itself. Examples include:
+
+  * [http://utopia.knoware.nl/~hlub/uck/rlwrap/ rlwrap] which also wraps GNU Readline, but can be used by invoking jython with:
+
+{{{
+TODO: Put example here!
+}}} 
+
+
+  * [http://jline.sourceforge.net/ jline] is a java console command editor distributed in the form of a jar file. It can be used as a wrapper by putting the jline jar file in the CLASSPATH, and changing jython invokation to:
+
+{{{
+TODO: Put example here too!
+}}}
+
+Note that jline can also be used programically to provide an alternative jython console, as in [http://thread.gmane.org/gmane.comp.lang.jython.devel/713 JLineConsole].
+
+There are several Jython swing console's in various states of completion that provide command editing features in a cross-platform way. The simplest is the demo console bundled with jython in the [http://cvs.sourceforge.net/viewcvs.py/jython/jython/Demo/swing/Console.py?rev=1.1&view=auto Demo/swing/Console.py] subdir which provides a command history via the cursor-up and cursor-down keys. Others GUI console's include:
+
+  * [http://don.freeshell.org/jython/ Jython Console] is a Jython console featuring code completion.
+  * The interstingly named [http://www-iis.unil.ch/~jiglesia/apps/yatisewobe/doc/html/sec-cons.html YaTiSeWoBe] has a Jython console.  
+  * [http://cvs.sourceforge.net/viewcvs.py/jydle/Jydle/Console/ jydle] is an attempt at an IDLE work-alike for Jython, and includes an interactive console.
+  * [http://webpages.charter.net/edreamleo/front.html jyleo] contains !JythonShell. This appears to be actively developed but requires the alpha jython 2.2 release.
+
+=== References ===
+
+The Java-Readline library includes [http://cvs.sourceforge.net/viewcvs.py/java-readline/java-readline/contrib/jpython/jython-install.txt?rev=1.1&view=markup contributed instructions] on building Jython with Readline support that have been very useful in sorting the process out. Many thanks to the author SteveC.
+
+The Readline wrapper rlwrap was recommended by [http://article.gmane.org/gmane.comp.lang.jython.user/4245 Dave Kuhlman].
+ 
+Using JLine & JLineConsole are due to [http://thread.gmane.org/gmane.comp.lang.jython.devel/713 Robert Andre].
+
+Don Coleman introduced his Jython Console with [http://thread.gmane.org/gmane.comp.lang.jython.user/779 this] post to the jython-user mailing list.
+
+YaTiSeWoBe is due to [http://article.gmane.org/gmane.comp.lang.jython.user/2787 Javier Iglesias].
+
+Jydle owes its development to [http://article.gmane.org/gmane.comp.lang.jython.user/1001 Michel Pelletier].
+
+!JythonShell was introduced [http://thread.gmane.org/gmane.comp.lang.jython.user/4177 introduced] by the enigmatic "Leo User".
