@@ -2,7 +2,7 @@
 
 == Installation ==
 
-To start the installation, please proceed as follows:
+To start the 2.2a1 installation, please proceed as follows:
  * download the jython_Release_2_2alpha1.jar file and save it locally ([http://sourceforge.net/project/showfiles.php?group_id=12867 Download from sourceforge])
  * double-click the file jython_Release_2_2alpha1.jar, or type: `java -jar jython_Release_2_2alpha1.jar`    
 This will bring up the GUI installer ([http://homepage.sunrise.ch/mysunrise/ohumbel/install-22a1.html Screen shots]).
@@ -71,4 +71,48 @@ Generating start scripts ...
 Do you want to show the contents of README ? [y/n] >>> n
 Congratulations! You successfully installed Jython Release_2_2alpha1 to directory C:\Temp\jython2.2a1.
 $ 
+}}}
+
+
+== What will be different on the HEAD version ==
+
+ * enables silent installation, without user interaction
+ * enables selection of a different java runtime for the start scripts
+ * start scripts are made executable by the installer
+ * better help and usage
+
+A preview of the usage:
+{{{
+usage:
+       java -jar jython_HEAD.jar [-s | -c] [-d dir] [-h | -?] [-t type] [-j dir]
+
+the following options are available:
+ -?                     print this help/usage.
+ -c,--console           do a console based installation (with user
+                        interaction).
+ -d,--directory <dir>   target directory to install to;
+                        required if in silent mode;
+                        ignored if not in silent mode.
+ -h,--help              print this help/usage.
+ -j,--jre <dir>         home directory of the runtime jre, or jdk;
+                        executables are assumed in the /bin subdirectory;
+                        ignored if not in silent mode.
+ -s,--silent            do a silent installation (without user interaction).
+ -t,--type <type>       installation type: all, standard or minimum;
+                        ignored if not in silent mode.
+
+no option at all will start the interactive GUI installer.
+
+
+example of a GUI installation:
+	java -jar jython_HEAD.jar
+
+example of a console installation:
+	java -jar jython_HEAD.jar -c
+
+example of a silent installation:
+	java -jar jython_HEAD.jar -s -d targetDirectory
+
+example of a silent installation with more options:
+	java -jar jython_HEAD.jar -s -d targetDirectory -t minimum -j javaHome
 }}}
