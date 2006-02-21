@@ -86,3 +86,19 @@ define the behaviour for these comparisions.
 = Don't use <> =
 
 It's enough with one inequality operator. Almost everybody uses !=. <> will go away.
+
+= More changes in the future? =
+The following little code might be useful to run when you upgrade
+to a new Python version. It shows how some new features in Python
+is getting gradually enabled. (This example is from Python 2.3.)
+{{{
+>>> import __future__
+>>> for x in __future__.all_feature_names:
+...     print x, eval('__future__.'+x)
+... 
+nested_scopes _Feature((2, 1, 0, 'beta', 1), (2, 2, 0, 'alpha', 0), 16)
+generators _Feature((2, 2, 0, 'alpha', 1), (2, 3, 0, 'final', 0), 4096)
+division _Feature((2, 2, 0, 'alpha', 2), (3, 0, 0, 'alpha', 0), 8192)
+}}}
+The second tuple (e.g. (3, 0, 0, 'alpha', 0) for division) shows when a new
+feature will become the default.
