@@ -1,0 +1,91 @@
+This page originated as an essay MichaelTobis posted 
+[http://groups.google.com/group/comp.lang.python/msg/06d6b58b963fa10e]
+on Usenet.
+----
+The established use of Fortran in continuum models such as climate
+models has some benefits, including very high performance and
+flexibility in dealing with regular arrays, backward compatibility with
+the existing code base, and the familiarity with the language among the
+modeling community. Fortran 90 and later versions have taken many of
+the lessons of object oriented programming and adapted them so that
+logical separation of modules is supported, allowing for more effective
+development of large systems. However, there are many purposes to which
+Fortran is ill-suited which are increasingly part of the modeling
+environment.
+
+These include: source and version control and audit trails for runs,
+build system management, test specification, deployment testing (across
+multiple platforms), post-processing analysis, run-time and
+asynchronous visualization, distributed control and ensemble
+management. To achieve these goals, a combination of shell scripts,
+specialized build tools, specialized applications written in several
+object-oriented languages, and various web and network deployment
+strategies have been deployed in an ad hoc manner. Not only has much
+duplication of effort occurred, a great deal of struggling up the
+learning curves of various technologies has been required as one need
+or another has been addressed in various ad hoc ways.
+
+A new need arises as the ambitions of physical modeling increase; this
+is the rapid prototyping and testing of new model components. As the
+number of possible configurations of a model increases, the expense and
+difficulty of both unit testing and integration testing becomes more
+demanding.
+
+Fortunately, there is Python. Python is a very flexible language that
+has captured the enthusiasm of commercial and scientific programmers
+alike. The perception of Python programmers coming from almost any
+other language is that they are suddenly dramatically several times
+more productive than previously, in terms of functionality delivered
+per unit of programmer time.
+
+One slogan of the Python community is that the language "fits your
+brain". Why this might be the case is an interesting question. There
+are no startling computer science breakthroughs original to the
+language, Rather, Python afficionados will claim that the language
+combines the best features of such various languages as Lisp, Perl,
+Java, and Matlab. Eschewing allegiance to a specific theory of how to
+program, Python's design instead offers the best practices from many
+other software cultures.
+
+
+The synergies among these programming modes is in some ways harder  to
+explain than to experience. The Python novice may nevertheless observe
+that a single language can take the place of shell scripts, makefiles,
+desktop computation environments, compiled languages to build GUIs, and
+scripting languages to build web interfaces. In addition,  Python is
+useful as a wrapper for Fortran modules, facilitating the
+implementation of true test-driven design processes in Fortran models.
+
+Another Python advocacy slogan is "batteries included". The point here
+is that (in part because Python is dramatically easier to write than
+other languages) there is a very broad range of very powerful standard
+libraries that make many tasks which are difficult in other languages
+astonishingly easy in Python. For instance, drawing upon the standard
+libraries (no additional download required)  a portable webserver
+(runnable on both Microsoft and Unix-based platforms) can be
+implemented in seven lines of code. (See
+http://effbot.org/librarybook/simplehttpserver.htm ) Installation of
+pure python packages is also very easy, and installation of mixed
+language products with a Python component is generally not
+significantly harder than a comparable product with no Python
+component.
+
+
+Among the Python components and Python bindings of special interest to
+scientists are the elegant and powerful matplotlib plotting package,
+which began by emulating and now surpasses the plotting features of
+Matlab, SWIG, which allows for runtime interoperability with various
+languages, f2py which specifically interoperates with Fortran, NetCDF
+libraries (which cope with NetCDF files with dramatically less fuss
+than the standard C or Fortran bindings), statistics packages including
+bindings to the R language,  linear algebra packages,  various
+platform-specific and portable GUI libraries, genetic algorithms,
+optimization libraries, and bindings for high performance differential
+equation solvers (notably, using the Argonne National Laboratory
+package PetSC). An especially interesting Python trick for runtime
+visualization in models that were not designed to support it, pioneered
+by David Beazley's SWILL, embeds a web server in your model code.
+
+See especially http://starship.python.net/~hinsen/ScientificPython/ and
+http://scipy.org as good starting points to learn about scientific uses
+of Python.
