@@ -60,10 +60,21 @@ Nested Inline Markup
 
 Things that we may need to think about when adding nested inline markup::
 
-    `foo :bar:`/baz`  j`
+    `foo :bar:`/baz` qux`   (inline start-string probably takes priority)  
     ***foo** bar*
     ***foo* bar**
     ******************************foo******************************
+
+The inline parser must determine whether a role contains literal or parsed text before it starts parsing the contents::
+
+    :raw:`This *contains ``uninterpreted `markup`
+
+We probably have to disallow (or at least deprecate) postfix notation for literal (or for all) roles, because of this::
+
+    `contents`:raw:    // This happens to work
+    `This *contains ``uninterpreted `markup`:raw:
+
+In the latter case, the parser cannot know at the time it parses the role contents that they are literal
 
 
 Plugins
