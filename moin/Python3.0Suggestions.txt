@@ -448,3 +448,18 @@ The main reasons to remove it:
  * it looks like list literals, so you may not immediately realize the differences, e.g. that it's iterating over some iterable
 
 I think the arguments for removing the redundant {{{[...]}}} form outweigh the arguments for retaining it. --StevenBethard
+
+
+== Move builtins to be methods on the types they apply to: ==
+
+{{{
+    [1,2,3].len() == 3
+    [1,2,3].max() == 3
+}}}
+Instead of:
+{{{
+    len([1,2,3]) == 3
+    max([1,2,3]) == 3
+}}}
+
+It seems inconsistent to have certain functions (like hex, round, raw_input, pow!?) as builtins when they can't be applied to every type of object.
