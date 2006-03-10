@@ -22,3 +22,9 @@ import pprint;pprint.pprint(zip(('Byte', 'KByte', 'MByte', 'GByte', 'TByte'), [(
 import pprint;pprint.pprint(["%i Byte = %i Bit = largest number: %i" %(j, j*8, 256**j) for j in [2**i for i in xrange(8)]])
 }}}
 Cute, isn't it?
+
+=== Decode a base64 encoded file ===
+
+{{{
+import base64, sys; base64.decode(open(sys.argv[1], "rb"), open(sys.argv[2], "wb"))
+}}}
