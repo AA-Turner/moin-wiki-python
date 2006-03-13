@@ -4,9 +4,28 @@ An '''adapter registry''' is a piece of software that knows how to adapt one int
 
 == Why Do We Care? ==
 
-'''We should collect use cases-''' I'm not good at remembering them off the top of my head.
+Let's say you have the following classes:
+ * {{{Directory}}}
+ * {{{RssFeed}}}
+ * {{{MoinMoinWiki}}}
+ * {{{MoinMoinWikiPage}}}
+ * {{{TextFile}}}
 
-But, basically, it makes it really easy to hook things up together.
+Now, you want to say things like:
+
+{{{Directory("~/foo/").receive(MoinMoinWiki("http://...").page("AdapterRegistry"))}}}
+
+We'd like to teach the {{{Directory}}} how to receive a {{{TextFile}}}, and then how to adapt a {{{MoinMoinWikiPage}}} into a {{{TextFile}}}.
+
+Or, we can create a class called {{{TextFilesCollection}}}, and the {{{Directory }}} could receive them. Then the {{{MoinMoinWiki}}} can say, "I can be interpreted by way of the {{{TextFilesCollection}}} interface."
+
+Then you can write:
+
+{{{Directory("~/foo/").receive(MoinMoinWiki("http://..."))}}}
+
+...and you get a backup of the entire wiki.
+
+== More Examples ==
 
 If you have a Eggs, and you need to plug it into some Spam, then you can have them automatically figure each other out. Or a third party mechanism can help the two figure each other out.
 
