@@ -6,15 +6,13 @@
 
 == Reference Diagrams ==
 
-http://taoriver.net/img/for_pi/regex_characters.png
+http://wiki.python.org/moin/RegularExpression?action=AttachFile&do=get&target=regex_characters.png
 
 flags when compiling:
 
 http://taoriver.net/img/for_pi/regex_flags.png
 
-(All images PD, released by me, author, LionKimbro.)
-
-DavidMertz has also created [http://gnosis.cx/TPiP/regex_patterns.gif a regular expression reference.]
+(All images PD, released by author, LionKimbro.)
 
 == Searching & Matching ==
 
@@ -68,16 +66,23 @@ print match_obj.groups()
 
 I don't know how much faster compiled forms are than non-compiled forms.
 
-= Links =
+== See Also ==
 
  * [http://www.amk.ca/python/howto/regex/ Regular Expression HOWTO] - excellent Python-based regular expression tutorial, by [http://www.amk.ca/ A.M. Kuchling.]
+ * [http://gnosis.cx/TPiP/regex_patterns.gif Summary of Regular Expression Patterns] -- by DavidMertz
+ * [http://pythoncard.sourceforge.net/samples/redemo.html redemo tool] -- ships with Python (C:\\Python24\Tools\Scripts\redemo.py), indispensible when trying out regular expressions; ships with PythonCard as well
+ * [http://www.ozonehouse.com/mark/blog/code/PeriodicTable.pdf periodic table of PERL operators] -- for those who like visualization
+ * SVG source: [http://taoriver.net/img/for_pi/regex_characters.svg 1,] [http://taoriver.net/img/for_pi/regex_flags.svg 2.]
 
-For those interested in visualization, you may also be interested in a [http://www.ozonehouse.com/mark/blog/code/PeriodicTable.pdf periodic table of PERL operators.]
 
-= Missing unicode documentation =
-Any documentation is misisng on how to use re with unicode on python 
-http://www.amk.ca/python/howto/regex/
-= Missing features =
+== Discussion ==
+
+=== Requests ===
+
+ * documentation on using re with ["Unicode"] ..?
+
+=== Problem? ===
+
 The following feature does not seems to work in python:
 
 For example, the ICU regular expression provides the following patterns:
@@ -88,19 +93,11 @@ For example, the ICU regular expression provides the following patterns:
  *  \uhhhh  Correspond à un caractère dont la valeur hexa est hhhh.
  *  \Uhhhhhhhh      Correspond à un caractère dont la valeur hexa est  hhhhhhhh. Exactement huit chiffres héxa doivent être fournis, même si le code point unicode le plus grand est \U0010ffff.
 
+-- anonymous
 
-= Discussion =
+I don't understand the problem. -- LionKimbro [[DateTime(2006-03-25T16:31:35Z)]]
 
-I've made a couple of diagrams, which I've linked at the top of the page here.
-
-I have SVG links as well; [http://taoriver.net/img/for_pi/regex_characters.svg first] and [http://taoriver.net/img/for_pi/regex_flags.svg second.]
-
-Damn the [http://visual.wiki.taoriver.net/moin.cgi/LongImageIncorporationProcess LongImageIncorporationProcess!] Damn it to hell! We'd have a billion pretty pictures here, if tablets were cheap, and we had protocols and implementations for saving and loading straight to and from the wiki.
-
-I have another diagram I'd like to make and place; It's the pattern (RegexObject) and match (MatchObject) API, visualized, and arranged dense. We'll see if I get around to drawing it, but it looks like no. Too much else to do.
-
--- LionKimbro [[DateTime(2004-12-28T08:38:12Z)]]
-
+=== Visualization ===
 
   ''I like the Venn diagram in this image.  However, one part of the image is confusing. Where it refers to python strings, and "regex strings" (which are actually Python "raw" strings) and something called "match strings" ... what are these "match strings. -- JimD [[DateTime(2004-12-30T20:03:54Z)]]''
 
@@ -110,10 +107,13 @@ That said: The "match string" is the final product of either of the two above ex
 
 That said, I appreciate the correction. -- LionKimbro [[DateTime(2005-01-01T00:22:14Z)]]
 
-I should mention: PythonCard comes with "'''redemo'''," which is simply indispensible if you are doing a bunch of regex work.
-
-It lets you type in a regular expression, and highlights matches. You can edit either regex or text, the highlights adjust in realtime. And then, it prints out how the .groups() are identified in code. It's terribly useful.
--- LionKimbro [[DateTime(2005-07-19T23:34:53Z)]]
+=== Image Hosting ===
 
 At the top of this page were two images/scehmes about re. Is it possible to redraw them here somehow? That server is not working, maybe someone has them dowloaded locally. Thanks a lot.
 -- PavelKosina
+
+I've uploaded one as an attachment, still need to upload the other... And, the source...
+
+(Anyone can do this, though, when the computers are online.)
+
+-- LionKimbro [[DateTime(2006-03-25T16:31:35Z)]]
