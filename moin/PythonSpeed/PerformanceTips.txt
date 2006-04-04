@@ -651,7 +651,7 @@ It does, however, save gobs of memory, and unless you store the yielded objects 
 xrange(sys.maxint) # No loop, and no call to .next, so no numbers are instantiated
 }}}
 
-And for this reason, the code runs instantly. If you substitute {{{range}}} there, Python will lock up; it will be too busy allocating {{{sys.maxint}}} (about 2.1 billion on the typical PC) number objects to do anything else. Eventually, it will run out of memory and exit.
+And for this reason, the code runs instantly. If you substitute {{{range}}} there, Python will lock up; it will be too busy allocating {{{sys.maxint}}} number objects (about 2.1 billion on the typical PC) to do anything else. Eventually, it will run out of memory and exit.
 
 In Python versions before 2.2, {{{xrange}}} objects also supported optimizations such as fast membership testing ({{{i in xrange(n)}}}). These features were removed in 2.2 due to lack of use.
 
