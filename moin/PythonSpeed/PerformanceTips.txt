@@ -620,7 +620,7 @@ depends on your experience with the two languages.
 [[Anchor(xrange)]]
 == Use xrange instead of range ==
 
-Python has two ways to get a range of numbers: {{{range}}} and {{{xrange}}}. Most people know about range, because of its obvious name. {{{xrange}}}, being way down near the end of the alphabet, is much less well-known.
+Python has two ways to get a range of numbers: {{{range}}} and {{{xrange}}}. Most people know about {{{range}}}, because of its obvious name. {{{xrange}}}, being way down near the end of the alphabet, is much less well-known.
 
 {{{xrange}}} is a generator object, basically equivalent to the following Python 2.3 code:
 
@@ -645,10 +645,10 @@ Except that it is implemented in pure C.
 
 It does, however, save gobs of memory, and unless you store the yielded objects somewhere, only one yielded object will exist at a time. The difference is thus: When you call {{{range}}}, it creates a {{{list}}} containing so many number ({{{int}}}, {{{long}}}, or {{{float}}}) objects. All of those objects are created at once, and all of them exist at the same time. This can be a pain when the number of numbers is large.
 
-{{{xrange}}}, on the other hand, creates ''no'' numbers immediately - only the range object itself. Number objects are created only when you pull on the generator, e.g. by looping through it. In this code, no numbers are instantiated:
+{{{xrange}}}, on the other hand, creates ''no'' numbers immediately - only the range object itself. Number objects are created only when you pull on the generator, e.g. by looping through it. For example:
 
 {{{
-xrange(sys.maxint) # Note: no loop, no call to .next, so nothing is instantiated
+xrange(sys.maxint) # No loop, and no call to .next, so no numbers are instantiated
 }}}
 
 And for this reason, the code runs instantly. If you substitute {{{range}}} there, Python will lock up; it will be too busy allocating number objects to do anything else. Eventually, it will run out of memory and exit.
