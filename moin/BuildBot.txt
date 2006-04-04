@@ -18,3 +18,26 @@ We need to add more platforms to the BuildBot farm.  If you have one of these ma
    * FreeBSD, NetBSD
 
 It might also be beneficial to run on older versions of operating systems or others not mentioned above.  Feel free to contact us if you would like to offer another type of system.
+
+Installing a buildslave
+-----------------------
+
+You need to fetch the latest [http://buildbot.sf.net buildbot source]. It requires Python and Twisted.
+
+Unpack and install it.
+
+Create a new user "buildbot" (highly recommended)
+
+% su - buildbot
+
+% mkdir buildarea
+
+% buildbot slave `pwd`/buildarea dinsdale.python.org:9020 slavename slavepasswd
+
+You'll need to get someone to create the slavename/slavepasswd on dinsdale.python.org before doing this. Talk to someone like Martin, Anthony or Neal to do this.
+
+Then edit buildarea/info/admin and buildarea/info/host to set them appropriately. 
+
+Finally, start buildbot with:
+
+% buildbot start ~/buildarea
