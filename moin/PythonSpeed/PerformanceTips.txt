@@ -617,6 +617,44 @@ others have pointed out numerous times, Python is slower than Perl for
 some things and faster for others. Relative performance also often
 depends on your experience with the two languages.
 
+[[Anchor(xrange)]]
+== Use xrange instead of range ==
+
+Python has two ways to get a range of numbers: {{{range}}} and {{{xrange}}}. Most people know about range, because of its obvious name. {{{xrange}}}, being way down near the end of the alphabet, is much less well-known.
+
+{{{xrange}}} is a generator object, basically equivalent to the following Python 2.3 code:
+
+{{{
+def xrange(start, stop=None, step=1):
+    if stop is None:
+        stop = start
+        start = 0
+    else:
+        stop = int(stop)
+    start = int(start)
+    step = int(step)
+
+    while start < stop:
+        yield start
+        start += step
+}}}
+
+Except that it is implemented in pure C.
+
+{{{xrange}}} does have limitations. Specifically, it only works with {{{int}}}s; you cannot use {{{long}}}s or {{{float}}}s (they will be converted to {{{int}}}s, as shown above).
+
+It does, however, save gobs of memory, and unless you store the yielded objects somewhere, only one yielded object will exist at a time. The difference is thus: When you call {{{range}}}, it creates a {{{list}}} containing so many number ({{{int}}}, {{{long}}}, or {{{float}}}) objects. All of those objects are created at once, and all of them exist at the same time. This can be a pain when the number of numbers is large.
+
+{{{xrange}}}, on the other hand, creates ''no'' numbers immediately - only the range object itself. Number objects are created only when you pull on the generator, e.g. by looping through it. In this code, no numbers are instantiated:
+
+{{{
+xrange(sys.maxint) # Note: no loop, no call to .next, so nothing is instantiated
+}}}
+
+And for this reason, the code runs instantly. If you substitute {{{range}}} there, Python will lock up; it will be too busy allocating number objects to do anything else. Eventually, it will run out of memory and exit.
+
+In Python versions before 2.2, {{{xrange}}} objects also supported optimizations such as fast membership testing ({{{i in xrange(n)}}}). These features were removed in 2.2 due to lack of use.
+
 [[Anchor(profiling)]]
 == Profiling Code ==
 
