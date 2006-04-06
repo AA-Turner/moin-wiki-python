@@ -28,3 +28,10 @@ Cute, isn't it?
 {{{
 import base64, sys; base64.decode(open(sys.argv[1], "rb"), open(sys.argv[2], "wb"))
 }}}
+
+
+=== Editing a list of files in place ===
+I came up  with this one-liner in response to an [http://linuxgazette.net/issue96/orr.html article] that said it couldn't be done as an One-liner in Python.
+{{{#!python
+import sys,os,re,fileinput;a=[i[2] for i in os.walk('.') if i[2]] [0];[sys.stdout.write(re.sub('at','op',j)) for j in fileinput(a,inplace=1)]
+}}}
