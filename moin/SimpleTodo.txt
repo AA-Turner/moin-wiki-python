@@ -17,3 +17,7 @@ Some modules don't use Py_ssize_t.  They need a code review.  Any module which d
 http://mail.python.org/pipermail/python-dev/2006-March/062848.html
 
 Verify that if PyMem_* APIs are used to (re)allocate memory, that PyMem_* APIs are used to free memory.  Same deal with PyObject_* APIs.   (ie, ensure that PyMem_* and PyObject_* memory APIs aren't mixed.)
+
+== Verify all int/long C APIs are correct ==
+
+With the conversion to use Py_ssize_t, it's important that we didn't miss any APIs.  There are very few APIs which take (or return) a long.  But there are still quite a few that take/return an int.  All of these are believe to be correct, but more reviewers could help.  Any API which returns an int is fine if the value is known to fit in 32 bits (like APIs that return a value between -2 and 2).
