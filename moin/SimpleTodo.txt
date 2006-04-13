@@ -3,3 +3,11 @@ These are straightforward, finite-effort coding projects.
 == Use Py_VISIT ==
 
 The `Py_VISIT()` macro in `objimpl.h` was introduced to make coding of most `tp_traverse` slots straightforward, uniform, and obviously correct.  For example, see `cycle_traverse()` in `itertoolsmodule.c`.  Most older modules that define `tp_traverse` copy/paste/edit the tedious callback dance by hand, and several even define their own work-alike macros.  These should be rewritten to use the standard `Py_VISIT` macro.
+
+== Cleanup compiler warnings with icc ==
+
+There are many 64-bit warnings produced by icc when using the -Wp64 flag.  icc is freely available for a one month trial license.  NealNorwitz has a license and can make the warnings available on the web if anyone is interest in getting rid of these warnings.
+
+== Make modules Py_ssize_t clean ==
+
+Some modules don't use Py_ssize_t.  They need a code review.  Any module which declares an int (rather than a Py_ssize_t) for size and passes its address to PyArgs_ParseTuple(args, "s#", &str, &size) needs to be updated.  An example of a module that has already been updated is Modules/_codecsmodule.c
