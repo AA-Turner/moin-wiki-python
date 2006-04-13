@@ -11,3 +11,9 @@ There are many 64-bit warnings produced by icc when using the -Wp64 flag.  icc i
 == Make modules Py_ssize_t clean ==
 
 Some modules don't use Py_ssize_t.  They need a code review.  Any module which declares an int (rather than a Py_ssize_t) for size and passes its address to PyArgs_ParseTuple(args, "s#", &str, &size) needs to be updated.  An example of a module that has already been updated is Modules/_codecsmodule.c
+
+== Check for consistent memory API usage ==
+
+http://mail.python.org/pipermail/python-dev/2006-March/062848.html
+
+Verify that if PyMem_* APIs are used to (re)allocate memory, that PyMem_* APIs are used to free memory.  Same deal with PyObject_* APIs.   (ie, ensure that PyMem_* and PyObject_* memory APIs aren't mixed.)
