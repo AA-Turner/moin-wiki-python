@@ -1,0 +1,5 @@
+These are straightforward, finite-effort coding projects.
+
+== Use Py_VISIT ==
+
+The `Py_VISIT()` macro in `objimpl.h` was introduced to make coding of most `tp_traverse` slots straightforward, uniform, and obviously correct.  For example, see `cycle_traverse()` in `itertoolsmodule.c`.  Most older modules that define `tp_traverse` copy/paste/edit the tedious callback dance by hand, and several even define their own work-alike macros.  These should be rewritten to use the standard `Py_VISIT` macro.
