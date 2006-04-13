@@ -21,3 +21,36 @@ Verify that if PyMem_* APIs are used to (re)allocate memory, that PyMem_* APIs a
 == Verify all int/long C APIs are correct ==
 
 With the conversion to use Py_ssize_t, it's important that we didn't miss any APIs.  There are very few APIs which take (or return) a long.  But there are still quite a few that take/return an int.  All of these are believe to be correct, but more reviewers could help.  Any API which returns an int is fine if the value is known to fit in 32 bits (like APIs that return a value between -2 and 2).
+
+
+== Update Demo/ directory ==
+
+PEP 356 says "Check the various bits of code in Demo/ all still work, update or remove the ones that don't."
+
+Directories to check: {{{
+cgi
+classes
+comparisons
+curses
+embed
+imputil
+md5test
+metaclasses
+newmetaclasses
+parser
+pdist
+pysvr
+rpc
+scripts
+sockets
+threads
+tix
+tix/bitmaps
+tix/samples
+tkinter
+tkinter/guido
+tkinter/matt
+xml
+xmlrpc
+zlib
+}}}
