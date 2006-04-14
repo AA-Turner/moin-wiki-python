@@ -23,7 +23,7 @@ Verify that if `PyMem_*` APIs are used to (re)allocate memory, that `PyMem_*` AP
 With the conversion to use `Py_ssize_t`, it's important that we didn't miss any APIs.  There are very few APIs which take (or return) a long.  But there are still quite a few that take/return an int.  All of these are believed to be correct, but more reviewers could help.  Any API which returns an int is fine if the value is known to fit in 32 bits (like APIs that return a value between -2 and 2).
 
 
-== Update Demo/ directory ==
+== Update Demo/ and Tools/ directories ==
 
 PEP 356 says "Check the various bits of code in Demo/ all still work, update or remove the ones that don't."
 
@@ -54,3 +54,9 @@ xml
 xmlrpc
 zlib
 }}}
+
+== Create tests for sequences over 2GB ==
+
+It would be great if someone could try to put together some tests for bigmem machines.  The tests should be broken up by those that require 2+ GB of memory, those that take 4+, etc.  Many people won't have boxes with that much memory.  Ultimately, the tests should be incorporated into the test suite with a special designation similar to -u all.  I'm thinking -g # where # is the size of RAM in GB.
+
+The test cases should test all methods (don't forget slicing operations) at boundary points, particularly just before and after 2GB.  Strings are probably the easiest.  There's unicode too.  lists, dicts are good but will take more than 16 GB of RAM, so those can be pushed out some.
