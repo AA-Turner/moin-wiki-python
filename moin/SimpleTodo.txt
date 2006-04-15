@@ -4,6 +4,10 @@ These are straightforward, finite-effort coding projects.
 
 The `Py_VISIT()` macro in `objimpl.h` was introduced to make coding of most `tp_traverse` slots straightforward, uniform, and obviously correct.  For example, see `cycle_traverse()` in `itertoolsmodule.c`.  Most older modules that define `tp_traverse` copy/paste/edit the tedious callback dance by hand, and several even define their own work-alike macros.  These should be rewritten to use the standard `Py_VISIT` macro.
 
+== Use Py_CLEAR ==
+
+The `Py_CLEAR` macro in `object.h` was introduced to make coding of "decref and NULL out a containee pointer" operations safe.  The reasons for why this is important but tricky to achieve are explained in a comment block before that macro in current trunk source.  `tp_clear` and even `tp_dealloc` slot implementations should generally use `Py_CLEAR` now.
+
 == Cleanup compiler warnings with icc ==
 
 There are many 64-bit warnings produced by icc when using the -Wp64 flag.  icc is freely available for a one month trial license.  NealNorwitz has a license and can make the warnings available on the web if anyone is interest in getting rid of these warnings.
