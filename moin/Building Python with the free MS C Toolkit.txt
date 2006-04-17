@@ -2,6 +2,11 @@
 
 These instructions are largely based on a Usenet posting by David Murmann, to whom most of the credit should go.
 
+'''Update''': These instructions have now been incorporated into the Python sources, as part of file `PCBuild/readme.txt`. Read that version for more up to date details. Some particular changes:
+ * The nant `python.build` file is now included in the PCBuild directory.
+ * The build command is slightly modified as a result: `nant -buildfile:python.build all`.
+ * There are instructions for building bsddb included.
+
 == What You Need ==
 
 To start with, you have to download a number of pieces of software from Microsoft:
@@ -26,9 +31,11 @@ You'll need subversion, or another way of getting a copy of the Python sources.
 
 You'll also need [http://nant.sourceforge.net Nant], a build tool for .NET which can interpret the Visual Studio "solution" and "project" files supplied with the Python sources. I used version 0.85 release candidate 3 - the later "nightly build" version broke for me, and I haven't tested any other versions. Just download the binaries, extract somewhere, and put the "bin" directory on your PATH.
 
+As an alternative to nant, there is a program `VCbuild`, available from http://www.gotdotnet.com/team/cplusplus/ which might work - this has not been tested, however.
+
 == Setting up your environment ==
 
-You now need to set up a command line shell with the right bits in place. Start a Platform SDK "Build Environment Window" - there are a huge number added to your Start menu. I chose "Windows XP 32-bit Retail".
+You now need to set up a command line shell with the right bits in place. Use the start menu entries added by the Platform SDK install to start a Platform SDK "Build Environment Window" - there are a huge number added to your Start menu. I chose "Windows XP 32-bit Retail".
 
 Now add the extra bits you need to your environment, to pick up the Toolkit compiler, etc. The following code can be put in a `.bat` file and run:
 
@@ -46,6 +53,9 @@ set LIB=%TOOLKIT%\lib;%NET%\VC7\lib;%LIB%
 }}}
 
 The "win64" directory from the SDK is added to supply executables such as "cvtres" and "lib", which are not available elsewhere. The versions in the "win64" directory are 32-bit programs, so they are fine to use here.
+
+It is possible to build from a normal command shell, but you need to  modify LIB, PATH and INCLUDE to include the corresponding
+%SDK%/LIB , %SDK%/BIN and %SDK%/Include paths. This will allow core Python to build, but you may still have trouble with extensions such as TCL, which seem to require additional SDK environment variables.
 
 == Ready to Go ==
 
@@ -148,4 +158,4 @@ There's nothing needed for the build, but to use the extension (i.e., for the te
 
 === Bsddb ===
 
-I haven't tried to build this yet. It is built with a ".sln" file, so in theory a Nant build similar to the main Python build should work.
+Instructions for building this are included in the PCBuild/readme.txt file.
