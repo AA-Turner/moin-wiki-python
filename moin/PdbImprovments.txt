@@ -6,3 +6,18 @@ This page point issues related to [http://docs.python.org/lib/module-pdb.html Py
  * pdb's design issues (Could someone add more information about it?)
 
 You are welcome to add your pdb's wishes below.
+
+It would be great if pdb's environment were like the Python interactive shell - for example, you would be able to run multiline blocks, in the context of the running program.
+
+Something that's really needed is the possibility to stop another Python process in the middle and work from there - gdb has this possibility, and a few times I've tried to use it to find what my Python processes were doing, but it wasn't easy and most of the times I wasn't able to understand what they were really doing.
+
+Running pdb from another code - many times I want to go back again and again to a specific situation, and I turn out to many times do a specific procedure to get there, like setting a breakpoint, hitting it three times, setting another breakpoint, and so on. If there was a way to run all these commands from a Python function, all this would be much simpler - I would write a code to do it, and give me control after the procedure is done.
+
+It seems to me that the basic interface should be an instance which controlls an execution, which can be given commands such as:
+ * Set breakpoint
+ * Continue until reaching a breakpoing
+ * Execute code in the debugged context
+ * Evaluate an expression in the debugged context
+Such an interface would be easily wrapped by an interactive user interface similiar to that of today.
+
+Noam Raphael
