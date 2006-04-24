@@ -16,5 +16,33 @@ Write a simple network library which integrates with the pygame event queue.
  * poll()
 
 
+
 == Things not to worry about: ==
  * Object serialization
+
+== NOTES, api part 2? ==
+I think I like the url idea.  We could not worry about connections at all by using urls.  Optional carring about connections could be implmented.
+
+UDP and ENet are interesting things to consider for the api.  UDP is connectionless.
+
+
+All bits of data could be strings.
+
+The event queue api could event be used for some of it.
+{{{
+pygame.events.post(e)
+events = pygame.events.get()
+
+for e in events:
+    if e.type == NET:
+        if e.what == NET_DATA_IN:
+            print e.channel
+            print e.data
+        if e.what == NET_CONNECT:
+            print e.ip
+            print e.port
+            print e.sequence_id
+            print e.channel
+            pass
+
+}}}
