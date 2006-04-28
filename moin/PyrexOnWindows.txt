@@ -10,7 +10,7 @@ Run the windows installer for [http://www.cosc.canterbury.ac.nz/~greg/python/Pyr
 
 === step A.3 ===
 Install [http://www.mingw.org/download.shtml Mingw], the gcc compiler for Windows (download and run {{{MinGW-5.0.2.exe}}} and choose only the "base tools": `mingw-runtime 3.9`, `w32api-3.6`, `binutils 2.15.91` and `gcc-core 3.4.2`.
-Add Mingw path `C:\MinGW\bin` to the Windows `Path` environment variable. If you already have cygwin installed, add `C:\MinGW\bin` before the Cygwin path.
+Add Mingw path (`C:\MinGW\bin`) to the Windows `Path` environment variable. If you already have cygwin installed, add `C:\MinGW\bin` before the Cygwin path.
 
 === step A.4 ===
 Edit the file `c:/Python2x/Lib/distutils/distutils.cfg` (if it does not exist, create it) and add the following lines:
@@ -19,7 +19,7 @@ compiler = mingw32}}}
 
 === step A.5 ===
 MinGW links with `msvcrt.dll` whereas the main Python distribution links with `msvcr71.dll` (due to Visual C++ 2003). It is not safe to mix and blend different C runtime libraries. In order to make minGW link with `msvcr71.dll`, edit the text file `c:\mingw\lib\gcc\mingw32\3.2.4\specs` and change `-lmsvcrt` to `-lmsvcr71`. 
-
+-----------
 == B: Create your first Pyrex module ==
 
 === step B.1 ===
