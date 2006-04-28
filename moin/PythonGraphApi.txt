@@ -134,6 +134,19 @@ handles all decorations and manipulations of those decorations.  The graph algor
 graph structure itself -- not the decorations -- and the user would need to interface those results to the decorations. 
 (dschult)
 
+(Nick)
+I think that to be the most general the API should support hypergraphs, with regular graphs being a subclass. A hypergraph is defined by two sets of objects (a.k.a. nodes & edges).
+So if we have 'nodes' A={a1,a2,a3} and 'edges' B={B1,B2,B3} and then we make make a map d = {a1: (B1,B2), a2: (B2), a3: (B1,B2,B3)} Then G(A,B,d) is the hypergraph. The representation can be inverted too, so that B becomes the nodes and A the edges (if you start out with an incidence matrix with actors A down the rows and events they attend B across the columns the first form is the ties between the actors and the second is the ties between the This hypergraph has a
+As said before, a graph is a special case of a hypergraph where the number of points 'in' each edge is 2 (i.e. len(d[Bi])=2 for all i); and of course, a directed graph is a special case of that where d[Bi][0] is taken to be the sender and d[Bi][1] the receiver.
+
+As far as the API goes, it should be be both graph-theoretic and matrix-(uh?)-theoretic at once, because both representations are equally useful (though if I had to pick I'd pick graph because that is what this API is for, networks, not matricies).
+
+It has to support attributes on the nodes/edges _with ease_, to be able to support valued/signed graphs, as well as to provide a convienient hook for interfacing to other things (for example, colouring and labeling nodes/edges in generated diagrams)
+
+The nodes/edges could be arbitrary python objects. Besides just allowing python's natural expressive freedom to be made full use of, this would solve the attributes problem with ease: 
+An implementation wrinkle would be that the map would have to distinguish between seperate nodes/edges even though the actual items might have identical values, such as in the case of a signed graph where all edges are either -1 or +1 (perhaps index them when they get entered, and store them as (obj, index)?). This is basically dschult's suggestion, but I want to flesh out the bit about "it's up to the user..."; for example, if a library was written to calculate various measures on the graph it would be important that the values of the edges are numeric.
+(/Nick)
+
 === Specifics ===
 
 ''Put potential specifics here, that is, what functionality an API must cover. For now, it is completely
@@ -212,5 +225,6 @@ With the goal of designing an API for Python in mind, I would think one of the f
   * Dan Schult
   * Peter Froehlich
   * Aric Hagberg
+  * Nick Guenther
 
 (See also the Usenet discussion above for more contributors.)
