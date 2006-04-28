@@ -147,6 +147,10 @@ The nodes/edges could be arbitrary python objects. Besides just allowing python'
 An implementation wrinkle would be that the map would have to distinguish between seperate nodes/edges even though the actual items might have identical values, such as in the case of a signed graph where all edges are either -1 or +1 (perhaps index them when they get entered, and store them as (obj, index)?). This is basically dschult's suggestion, but I want to flesh out the bit about "it's up to the user..."; for example, if a library was written to calculate various measures on the graph it would be important that the values of the edges are numeric.
 (/Nick)
 
+Also: +1 for standard API so that algorithms can be described in a standard way.
+Also: I see that the requirement about allowing "Object" has already been raised on usenet
+Also: I missed a type of graph, the multigraph, where more than one type of relation is defined. You can fake this with multiple separate graphs, and in many ways I prefer this (then you can attach descriptive data to each relation...) but I can see that some algorithms might be more naturally expressed as operating on a multigraph. (Nick)
+
 === Specifics ===
 
 ''Put potential specifics here, that is, what functionality an API must cover. For now, it is completely
