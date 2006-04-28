@@ -172,8 +172,10 @@ Static graphs:
   * Size of Graph:  Report the number of edges in the graph.
   * Order of Graph: Report the number of nodes in the graph.
   * Degree of node: Report the number of neighbors for a node (or sum of edge weights incident on the node).
+"well this is tricky; the edges aren't neccessarily numbers, remember? (nick)"
 
 Accessing incident edges based on their labels can also be useful (e.g. in FSAs).
+"again tricky because it requires defining that a node/edge ""must"" have a label. Does this mean having `class LabeledGraph(Graph)`? (nick)"
 
 Dynamic graphs:
 
@@ -185,6 +187,8 @@ Dynamic graphs:
   * Edge decoration modification
   * Edge contraction  (Can't this be done using the add and delete above? Do we want to get this specialized? (dschult))
   * Node and edge hiding?
+
+"these all seem to revolve around the notion of a graph-update operation of some sort. So then the question is how to record what specific operation to perform? Also, do we just record which event comes before the others or do we attach a time to each? (nick)"
 
 It may be that a given representation only supports a subset of the given operations, and that
 subset might not necessarily be easy to predict. For example, even though it might seem that
@@ -199,10 +203,12 @@ graphs, but needn't be part of the standard.
 Should there be separate functionality for directed and undirected graphs? Should all graphs be chain graphs
 (which allow both directed and undirected edges)? Should two-way directed edge be treated as an undirected
 edge (and vice versa)?
+"Chain graphs are the most general, so we must have them. However, would they be a superset or simply next to normal graphs? (nick)"
 
 How do we handle the proliferation of other graph classes (such as multigraphs, pseudographs, ...), all of which
 are only minor tweaks of the basic structure? How about more radical departures such as hypergraphs (which allow
 an arbitrary number of nodes per edge)?
+"oops, didn't read this far. Well you know my answer: make every graph a hypergraph. (Nick)"
 
 One possibility would be to base the API definition on the [http://www.gupro.de/GXL Graph eXchange Langage] (GXL). It is derived from many separate graph representation languages and seems quite
 complete (it even supports hypergraphs and hierarchical graphs!), logical, and well-thought-out.
@@ -217,6 +223,8 @@ to define several layers of standard compliance, with Layer 0 being only the cur
 standard graph API, for example. (Magnus)
 
 With the goal of designing an API for Python in mind, I would think one of the first decisions that needs to be made is whether to use multiple classes (ala Vertex, Edge, Graph) or just one (ala Graph); also, are those classes going to be "Pythonic" in that they provide various methods in terms of Python operators or not (let's call the "not" alternative "Textbookish")? It seems to me that without settling this first, discussing the details of the API further is moot. But maybe I am wrong? (Peter)
+
+No, defining Vertex and Edge interfaces makes working with graphs just that much more difficult. That's the Java way, don't go there. (Nick)
 
 == Contributors ==
 
