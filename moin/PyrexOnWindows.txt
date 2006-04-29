@@ -18,7 +18,7 @@ Edit the file `c:/Python2x/Lib/distutils/distutils.cfg` (if it does not exist, c
 compiler = mingw32}}}
 
 === step A.5 ===
-MinGW links with `msvcrt.dll` whereas the main Python distribution links with `msvcr71.dll` (due to Visual C++ 2003). It is not safe to mix and blend different C runtime libraries. In order to make minGW link with `msvcr71.dll`, edit the text file `c:\mingw\lib\gcc\mingw32\3.2.4\specs` and change `-lmsvcrt` to `-lmsvcr71`. 
+MinGW links with `msvcrt.dll` whereas the main Python distribution links with `msvcr71.dll` (due to Visual C++ 2003). It is not safe to mix and blend these two different C runtime libraries. In order to make minGW link with `msvcr71.dll`, edit the text file `c:\mingw\lib\gcc\mingw32\3.2.4\specs` and change `-lmsvcrt` to `-lmsvcr71`. 
 -----------
 == B: Create your first Pyrex module ==
 
@@ -48,7 +48,7 @@ In your working directory, create a batch file called `build_and_install.bat` co
 pause}}}
 
 === step B.4 ===
-Mission completed. The file `primes.pyd` (a `pyd` is a Python Extension DLL) is now located in {{{C:\Python24\Lib\site-packages}}} and the {{{primes}}} module is available in Python. In your working directory, you can delete the file {{{primes.c}}} and the {{{build}}} folder created by the building process.
+Mission completed. The file `primes.pyd` (a Python Extension DLL) is now located in `C:\Python24\Lib\site-packages` and the `primes` module is available in Python. In your working directory, you can delete `primes.c` and the `build` folder created by the building process.
 
 You can now test your new module at the python shell:
 
