@@ -10,6 +10,15 @@ There are several unstable tests and other issues.  These are not problems with 
 || All           || 2.[45]  || Berkeley DB 3.2 is killed when running test_bsddb3, test_bsddb fails ||
 || All           || 2.[45]  || test_socket{,ssl,_server} fail if another test instance is running ||
 
+Here's a list of currently unexplained test failures:
+
+   * http://python.org/dev/buildbot/all/sparc%20Ubuntu%20dapper%20trunk/builds/180/step-test/0
+ http://python.org/dev/buildbot/all/alpha%20Debian%20trunk/builds/41/step-test/0
+     test test_ctypes failed -- Traceback (most recent call last):
+       File "/home/pybot/buildarea/trunk.klose-debian-alpha/build/Lib/ctypes/test/test_python_api.py", line 41, in test_PyInt_Long
+         self.failUnlessEqual(grc(42), ref42)
+     AssertionError: 550 != 551
+
 We need to add more platforms to the BuildBot farm.  If you have one of these machines you are willing to run BuildBot on, please contact python-dev@python.org:
 
    * Windows (and see BuildbotOnWindows)
