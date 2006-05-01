@@ -1,4 +1,4 @@
-= Python Performance Tips =
+[[TableOfContents]]
 
 This page is devoted to various tips and tricks that help improve the
 performance of your Python programs. Wherever the information comes from
@@ -21,33 +21,15 @@ Also new since this was originally written are packages like
 your application's performance by making it easier to push
 performance-critical code into C or machine language.
 
-== Contents ==
+== Other Versions ==
 
-    * [#datatype Choose the Right Data Structure (tbd)]
-    * [#sorting Sorting]
-    * [#stringcat String concatenation]
-    * [#loops Loops]
-    * [#dots Avoiding dots...]
-    * [#local Local Variables]
-    * [#initdict Initializing Dictionary Elements]
-    * [#import Import Statement Overhead]
-    * [#aggregate Data Aggregation]
-    * [#periodic Doing Stuff Less Often]
-    * [#notc Python is not C]
-    * [#xrange Use xrange instead of range]
-    * [#profiling Profiling Code]
-      * [#profile Profile Module]
-      * [#hotshot Hotshot Profiler (tbd)]
-      * [#trace Trace Module]
+ * Russian: http://omsk.lug.ru/wacko/PythonHacking/PerfomanceTips 
 
-
-[[Anchor(datatype)]]
 == Choose the Right Data Structure ==
 
 TBD.
 
 
-[[Anchor(sorting)]]
 == Sorting ==
 
 Sorting lists of basic Python objects is generally pretty efficient. The sort method for lists takes an optional comparison function as an
@@ -122,7 +104,6 @@ nlist = [val for (key, index, val) in nlist]
 }}}
 
 
-[[Anchor(stringcat)]]
 == String Concatenation ==
 
 Strings in Python are immutable. This fact frequently sneaks up and
@@ -187,7 +168,6 @@ machine a lot longer to figure out how to concatenate two strings.
 (Don't forget that Python does all method lookup at runtime.)
 
 
-[[Anchor(loops)]]
 == Loops ==
 
 Python supports a couple of looping constructs. The {{{for}}} statement is
@@ -239,7 +219,6 @@ Guido van Rossum wrote a much more detailed (and succinct) examination of [http:
 definitely worth reading.
 
 
-[[Anchor(dots)]]
 == Avoiding dots... ==
 
 Suppose you can't use {{{map}}} or a list comprehension? You may be stuck
@@ -262,7 +241,6 @@ that piece of code you will find yourself scanning up to check the
 definitions of {{{append}}} and {{{upper}}}.
 
 
-[[Anchor(local)]]
 == Local Variables ==
 
 The final speedup available to us for the non-{{{map}}} version of the {{{for}}}
@@ -293,7 +271,6 @@ Using map function              0.54
 }}}
 
 
-[[Anchor(initdict)]]
 == Initializing Dictionary Elements ==
 
 Suppose you are building a dictionary of word frequencies and you've
@@ -351,7 +328,6 @@ you could also use the {{{dict.setdefault}}} method, e.g.
 }}}
 This avoids having to lookup the key twice.
 
-[[Anchor(import)]]
 == Import Statement Overhead ==
 
 {{{import}}} statements can be executed just about anywhere. It's often
@@ -459,7 +435,6 @@ def parse_email():
 This way the {{{email}}} module will only be imported once, on the first
 invocation of {{{parse_email()}}}.
 
-[[Anchor(aggregate)]]
 == Data Aggregation ==
 
 Function call overhead in Python is relatively high, especially compared
@@ -519,7 +494,6 @@ have been even greater (exchanging a Python {{{for}}} loop for a C {{{for}}}
 loop as well as removing most of the function calls).
 
 
-[[Anchor(periodic)]]
 == Doing Stuff Less Often ==
 
 The Python interpreter performs some periodic checks. In particular, it
@@ -535,7 +509,6 @@ catching many signals, setting this to a larger value can improve the
 interpreter's performance, sometimes substantially.
 
 
-[[Anchor(notc)]]
 == Python is not C ==
 
 It is also not Perl, Java, C++ or Haskell. Be careful when transferring
@@ -618,7 +591,6 @@ others have pointed out numerous times, Python is slower than Perl for
 some things and faster for others. Relative performance also often
 depends on your experience with the two languages.
 
-[[Anchor(xrange)]]
 == Use xrange instead of range ==
 
 Python has two ways to get a range of numbers: {{{range}}} and {{{xrange}}}. Most people know about {{{range}}}, because of its obvious name. {{{xrange}}}, being way down near the end of the alphabet, is much less well-known.
@@ -656,7 +628,6 @@ And for this reason, the code runs instantly. If you substitute {{{range}}} ther
 
 In Python versions before 2.2, {{{xrange}}} objects also supported optimizations such as fast membership testing ({{{i in xrange(n)}}}). These features were removed in 2.2 due to lack of use.
 
-[[Anchor(profiling)]]
 == Profiling Code ==
 
 The first step to speeding up your program is learning where the
@@ -666,7 +637,6 @@ hotspots in my code, profile and trace. In later examples I also use the
 {{{timeit}}} module, which is new in Python 2.3.
 
 
-[[Anchor(profile)]]
 === Profile Module ===
 
 The
@@ -689,7 +659,6 @@ time consumed by Python builtins and functions in extension modulesto be
 profiled as well.
 
 
-[[Anchor(hotshot)]]
 === Hotshot Module ===
 
 New in Python 2.2, the 
@@ -702,7 +671,6 @@ distributions {{{Tools/scripts}}} directory which makes it easy to run your
 program under hotshot control from the command line.
 
 
-[[Anchor(trace)]]
 === Trace Module ===
 
 The
