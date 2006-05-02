@@ -1,0 +1,173 @@
+#format PYTHON
+======================================
+doctest for path.py
+
+Uncomplete, and tests POSIX paths only
+======================================
+
+>>> from mypath import path
+
+# Test root
+
+>>> path.ROOT
+path.ROOT
+
+>>> path.ROOT == path.ROOT
+True
+>>> path.ROOT < path.ROOT
+False
+>>> path.ROOT > path.ROOT
+False
+
+>>> path.ROOT == 'e'
+False
+>>> path.ROOT < 'h'
+True
+>>> path.ROOT > 'b'
+False
+>>> path.ROOT > 3
+Traceback (most recent call last):
+...
+TypeError: Comparison not defined
+
+>>> 'a' == path.ROOT
+False
+>>> 'a' < path.ROOT
+False
+>>> 'a' > path.ROOT
+True
+>>> 3 > path.ROOT
+Traceback (most recent call last):
+...
+TypeError: Comparison not defined
+
+
+# Basic path creation
+
+>>> path('/bin/arch')
+path('/bin/arch')
+>>> p = _
+>>> p[0]
+path.ROOT
+>>> p[1]
+'bin'
+>>> p[2]
+'arch'
+>>> len(p)
+3
+>>> path('hello/what')
+path('hello/what')
+>>> p = _
+>>> p[0]
+'hello'
+>>> p[1]
+'what'
+>>> len(p)
+2
+>>> path('.')
+path('.')
+>>> len(_)
+0
+>>> path('')
+path('.')
+>>> path()
+path('.')
+>>> path('/')
+path('/')
+
+# Constructing from a string
+
+>>> path('hello//what')
+path('hello/what')
+>>> path('hello//what/')
+path('hello/what')
+>>> path('/hello//what/')
+path('/hello/what')
+>>> path('//hello//what/')
+Traceback (most recent call last):
+...
+NotImplementedError: Paths with two leading slashes aren't supported.
+>>> path('///hello//what/')
+path('/hello/what')
+
+# Constructing from an iterable
+
+>>> path(['hello', 'how'])
+path('hello/how')
+>>> path([path.ROOT, 'hello', 'how'])
+path('/hello/how')
+>>> path(['hello', path.ROOT, 'how'])
+Traceback (most recent call last):
+...
+TypeError: Element path.ROOT is of a wrong type
+
+# Concatenation
+
+>>> path('hello/a') + path('b')
+path('hello/a/b')
+>>> path('hello/a') + 'b'
+path('hello/a/b')
+>>> path('hello/a') + 'b/c'
+path('hello/a/b/c')
+>>> 'b/c' + path('hello/a')
+path('b/c/hello/a')
+>>> 'b/c' + path('/hello/a')
+Traceback (most recent call last):
+...
+ValueError: Right operand should be a relative path
+>>> path('hello/a') + '/b/c'
+Traceback (most recent call last):
+...
+ValueError: Right operand should be a relative path
+
+# Slicing
+
+>>> p = path('/hello/a')
+>>> p[:2]
+path('/hello')
+>>> p[-1]
+'a'
+>>> p[:-1]
+path('/hello')
+
+# Multiplication
+
+>>> path('hello/a') * 3
+path('hello/a/hello/a/hello/a')
+>>> path('/hello/a') * 3
+Traceback (most recent call last):
+...
+ValueError: Only relative paths can be multiplied
+
+>>> 3 * path('hello/a')
+path('hello/a/hello/a/hello/a')
+>>> 3 * path('/hello/a')
+Traceback (most recent call last):
+...
+ValueError: Only relative paths can be multiplied
+
+# Comparison
+
+>>> L = ['/home/noam', '/home/allon', '/home/noam2', '/home/bbbb',
+...      'home/bbbb', 'home/noam', 'home/noam2', 'home/allon', 'a/b', '/b/c']
+>>> L.extend([path(x) for x in L])
+>>> L.sort()
+>>> L
+['/b/c', path('/b/c'), '/home/allon', path('/home/allon'), '/home/bbbb', path('/home/bbbb'), '/home/noam', path('/home/noam'), '/home/noam2', path('/home/noam2'), 'a/b', path('a/b'), 'home/allon', path('home/allon'), 'home/bbbb', path('home/bbbb'), 'home/noam', path('home/noam'), 'home/noam2', path('home/noam2')]
+
+
+
+# Matching
+
+>>> path('a/b').match('a/b')
+True
+>>> path('a/b').match('a/c')
+False
+>>> path('a/b').match('a')
+False
+>>> path('a/b').match('a/c*')
+False
+>>> path('a/b').match('a/b*')
+True
+>>> path('a/b').match('**')
+True
