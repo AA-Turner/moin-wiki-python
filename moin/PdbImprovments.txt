@@ -1,8 +1,8 @@
 This page point issues related to [http://docs.python.org/lib/module-pdb.html Python Debugger] that will led to(hopefully) better Python debugging environment:  
 
  * bugfixes/functionality improvments in bug/patch tracker
- * write pdb's unit_tests  
- * look at other debuggers(Python/non-Python) and see if we can      learn something from it (I'm sure we can;) 
+ * write pdb's unit_tests ''[rocky: the [http://bashdb.sourceforge.net/pydb extended python debugger] does in fact has such unit tests. Because lots of tests are needed, a diff output file mechanism was added on top of the standard unit test mechanism.]'' 
+ * look at other debuggers(Python/non-Python) and see if we can      learn something from it. (I'm sure we can;) ''[rocky: pydb mentioned above tries to follow gdb's command set.]''
  * pdb's design issues (Could someone add more information about it?)
 
 You are welcome to add your pdb's wishes below.
@@ -11,16 +11,24 @@ You are welcome to add your pdb's wishes below.
 
 It would be great if pdb's environment were like the Python interactive shell - for example, you would be able to run multiline blocks, in the context of the running program.
 
+''[rocky: I'm not exactly sure what this means. Both pdb (and pydb) inherit from the Cmd class which handles user interaction.]''
+
 Something that's really needed is the possibility to stop another Python process in the middle and work from there - gdb has this possibility, and a few times I've tried to use it to find what my Python processes were doing, but it wasn't easy and most of the times I wasn't able to understand what they were really doing.
+
+''[rocky: I'm not sure that this can be done without changing the python  interpreter or without arranging for the possibility previously. A step along the way to accomplish this might be to extend pdb to allow another process to control it, but the python program would have had to been started in a way that allows for this. Nir Aides in winpdb allows for control by remote execution for which this is a special case where the process lives on the same machine.]''
 
 Running pdb from another code - many times I want to go back again and again to a specific situation, and I turn out to many times do a specific procedure to get there, like setting a breakpoint, hitting it three times, setting another breakpoint, and so on. If there was a way to run all these commands from a Python function, all this would be much simpler - I would write a code to do it, and give me control after the procedure is done.
 
-It seems to me that the basic interface should be an instance which controlls an execution, which can be given commands such as:
+''[To a limited extent this exists. pdb allows for a script file to get run before starting the debugger. I think it reads .pdbrc or something. The [http://bashdb.sourceforge.net/pydb extended python debugger] may also be of use here. It uses .pydbrc rather than .pdbrc. But there is a "script" command that run commands at any time. Also there is a "restart" command which remembers debugger settings like breakpoints]''
+
+It seems to me that the basic interface should be an instance which controls an execution, which can be given commands such as:
  * Set breakpoint
- * Continue until reaching a breakpoing
+ * Continue until reaching a breakpoint
  * Execute code in the debugged context
  * Evaluate an expression in the debugged context
 Such an interface would be easily wrapped by an interactive user interface similiar to that of today.
+
+''[rocky: I'm not sure what the above means; bdb does the things listed above, while pdb or pydb is there to add the interactive user interface via Cmd.]''
 
 Noam Raphael
 
@@ -30,7 +38,12 @@ a couple of observations about pdb's source code:
 
  * pdb.py/bdb.py interaction seems to be very convoluted: it really feels that getting rid of bdb.py would simplify things a lot
 
- * runtime documentation of pdb.py is spread over 2 places (pdb.doc and pdb.py itself) with a lot of duplication (of course there are std lib docs too). My feeling is that pdb.doc should go
+''[rocky: sorry but I disagree here. bdb is there to handles just the debugging aspect, while pdb builds on this and adds the user interaction and command interface.]''
+
+ * runtime documentation of pdb.py is spread over 2 places (pdb.doc and pdb.py itself) with a lot of duplication (of course there are std lib docs too). My feeling is that pdb.doc should go.
+
+''[rocky: I agree that pdb.doc should go. In fact pdb.doc also duplicates a lot of the on-line help of various commands via doc strings that the Cmd class introspects and will show you via its help mechanism]''
+In pydb I have extended the documentation and that is self sufficient.
 
 Ilya (isandler)
 ----
