@@ -628,11 +628,50 @@ And for this reason, the code runs instantly. If you substitute {{{range}}} ther
 
 In Python versions before 2.2, {{{xrange}}} objects also supported optimizations such as fast membership testing ({{{i in xrange(n)}}}). These features were removed in 2.2 due to lack of use.
 
+== Re-map Functions at runtime ==
+Say you have a function
+
+ class Test:
+   def check(self,a,b,c):
+     if(a):
+       self.str = b*100
+     else:
+       self.str = c*100
+
+ a = Test()
+ def example():
+   for i in xrange(0,100000):
+     a.check(i,"b","c") 
+
+ import profile
+ profile.run("example()")
+
+And suppose this function gets called from somewhere else many times
+
+
+Well, your check will have an if statement slowing you down all the time except the first time, so you can do this:
+
+ class Test2: 
+   def check(self,a,b,c):
+     self.str = b*100
+     self.check = self.check_post
+   def check_post(self,a,b,c):
+     self.str = c*100
+
+ a = Test2()
+ def example2():
+   for i in xrange(0,100000):
+     a.check(i,"b","c") 
+
+ import profile
+ profile.run("example2()")
+ 
+well, this example is pretty crap, but if the 'if' statment is a pretty complicated expression (or something with lots of dots), you can save yourself evaluating it, if you know it will only be true the first time.
 == Profiling Code ==
 
 The first step to speeding up your program is learning where the
 bottlenecks lie. It hardly makes sense to optimize code that is never
-executed or that already runs fast. I use two modules to help locate the
+executed or that already runs fast. I use two modules to help locate the  
 hotspots in my code, profile and trace. In later examples I also use the
 {{{timeit}}} module, which is new in Python 2.3.
 
