@@ -151,6 +151,8 @@ Also: +1 for standard API so that algorithms can be described in a standard way.
 Also: I see that the requirement about allowing "Object" has already been raised on usenet
 Also: I missed a type of graph, the multigraph, where more than one type of relation is defined. You can fake this with multiple separate graphs, and in many ways I prefer this (then you can attach descriptive data to each relation...) but I can see that some algorithms might be more naturally expressed as operating on a multigraph. (Nick)
 
+(Multigraphs are mentioned. - Magnus)
+
 === Specifics ===
 
 ''Put potential specifics here, that is, what functionality an API must cover. For now, it is completely
@@ -174,8 +176,12 @@ Static graphs:
   * Degree of node: Report the number of neighbors for a node (or sum of edge weights incident on the node).
 "well this is tricky; the edges aren't neccessarily numbers, remember? (nick)"
 
+(I wasn't talking about numbers. "The number of X" means "how many Xs" there are. - Magnus)
+
 Accessing incident edges based on their labels can also be useful (e.g. in FSAs).
 "again tricky because it requires defining that a node/edge ""must"" have a label. Does this mean having `class LabeledGraph(Graph)`? (nick)"
+
+(The access here would, of course, only be available if the edges or labels do indeed have labels; not otherwise. - Magnus)
 
 Dynamic graphs:
 
@@ -189,6 +195,8 @@ Dynamic graphs:
   * Node and edge hiding?
 
 "these all seem to revolve around the notion of a graph-update operation of some sort. So then the question is how to record what specific operation to perform? Also, do we just record which event comes before the others or do we attach a time to each? (nick)"
+
+(Not sure what you mean here. Why would we need to record anything like this? Why not simply modify the graph? That was the idea... - Magnus)
 
 It may be that a given representation only supports a subset of the given operations, and that
 subset might not necessarily be easy to predict. For example, even though it might seem that
@@ -204,6 +212,8 @@ Should there be separate functionality for directed and undirected graphs? Shoul
 (which allow both directed and undirected edges)? Should two-way directed edge be treated as an undirected
 edge (and vice versa)?
 "Chain graphs are the most general, so we must have them. However, would they be a superset or simply next to normal graphs? (nick)"
+
+(Chain graphs are a generalization of both directed and undirected graphs. - Magnus)
 
 How do we handle the proliferation of other graph classes (such as multigraphs, pseudographs, ...), all of which
 are only minor tweaks of the basic structure? How about more radical departures such as hypergraphs (which allow
