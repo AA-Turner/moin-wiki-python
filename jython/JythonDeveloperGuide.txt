@@ -13,44 +13,31 @@ BrianZimmer, incept: 2005-01-31
 This is an introduction to developing Jython, just to get someone started. It doesn't cover in any depth the source code or the design behind Jython. It's purely aimed at getting a development environment setup. It's definitely not complete so feel free to make it better!
 
 
-''' CVS '''
+''' SVN '''
 
-  * Wiki:ConcurrentVersionControl
+  * http://subversion.tigris.org/
   * available on most *nix systems or with cygwin on Windows
   * GUI clients are available on most platforms
   * Eclipse users, see JythonDeveloperGuide/EclipseNotes
-
-  * '''Login'''
-  {{{
-      cvs -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/jython login
-  }}}
+  * can browse the current source archive at http://svn.sourceforge.net/viewcvs.cgi/jython/
     
-  * '''Checkout''' 
-    * ''NewStyleClasses:''you'll want to checkout the newstyle classes branch:
-     {{{   
-       cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/jython co -P -d jython.newstyle-branch -r newstyle-branch jython
-     }}}
+  * to obtain the a copy of the ''current development'' source, checkout from trunk:
+    {{{   
+    svn co https://svn.sourceforge.net/svnroot/jython/trunk/jython
+    }}}
 
-    * ''2.1 Stable:''
-     {{{   
-       cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/jython co -P -d jython.Release_2_1 -r Release_2_1 jython 
-     }}}
+  For ''2.1 Stable'', the last stable release:
+    {{{   
+    svn co https://svn.sourceforge.net/svnroot/jython/tags/Release_2_1/jython
+    }}}
 
-    * ''2.2 Alpha 0:''
-     {{{   
-       cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/jython co -P -d jython.Release_2_2alpha0 -r Release_2_2alpha0 jython 
-     }}}
+  For ''2.2 Alpha 1'', the last alpha release:
+    {{{   
+    svn co https://svn.sourceforge.net/svnroot/jython/tags/Release_2_2alpha1/jython
+    }}}
 
+  * Patches should be posted to the [http://sourceforge.net/tracker/?group_id=12867&atid=312867 jython patch tracker] as forward unified diffs. This can be done for example using ''svn diff'' from the command line, just plain ''diff -u'', or using the eclipse ''Team->Create Patch feature''. [TODO: write better patch submission guidelines, similar to http://www.python.org/dev/patches/).
 
-    * ''The tip:''
-     {{{   
-       cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/jython co -P jython 
-     }}}
-
-    * ''Preparing a Patch on Unix command line:'' (note multiple changes can be concatencated into one patch file using >> as shown.
-     {{{    
-       cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/jython diff -u PyFloat.java >> patchfile.txt 
-     }}}
 '''  Python '''
 
   * http://www.python.org/2.2.3/
@@ -142,15 +129,16 @@ Now you're ready to run tests...
   * Run the particular test or you can run the whole suite by running `regrtest.py` with the `-a` option
 
 ''' Directory layout '''
+Note the following describes the current trunk. If you are working from an older tag, src doesn't exist and src/com and src/org are moved up a level. 
 
-  * com       : zxJDBC related sources"
+  * src/com   : zxJDBC related sources"
   * Demo      : demo sources for the website and such"
   * Doc       : the website documentation"
   * installer : the current installer which apparently no longer works"
   * Lib       : the python source files for Jython standard library implementations
   * Lib/test  : test cases
   * Misc      : random scripts which are not all used; some generate source
-  * org       : top level package for python and apache (used for regex)
+  * src/org   : top level package for python and apache (used for regex)
   * Tools     : JythonC and Freeze
 
 ''' Coding Guidance '''
