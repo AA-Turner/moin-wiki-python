@@ -1,19 +1,40 @@
 The following goals were included in the sprint announcement. Please use this area as a staging point to indicate interest in specific goals and discuss possible approaches, recruit support for half-baked ideas and so on. This is a '''''Wiki''''', people! Create new pages at will.
 
- * Improving the decimal module by implementing portions in C
+CPython:
+ * General interpreter speedups
+ * Improve interaction with psyco
+ * Implement portions of decimal module in C
+ * Struct module improvements (e.g. struct.compile, struct.finditer)
+ * Create a string variant that provides lazy slicing without copying
+ * Allow selective removal of unused features (e.g. profiling support)
+ * Faster parsing of strings and bytes into int, long, etc.
+ * Buffer for use with network i/o
+ * Better collections (ordered dictionary, linked list, red/black tree, etc.)
+ * Create a 64 bit PyInt type
 
- * Investigate whether RPython offers sufficient speedup over the regular CPython interpreter to replace tailored C and C++ code in MMP gaming applications
+Twisted:
+ * Speed improvements to select and poll reactors
+ * Reactor based on /dev/epoll
+ * Better integration with psyco
+ * Improvements against twisted benchmark
 
- * Implement an ordered dictionary in both C and Python
+Psyco:
+ * Support for generator expressions
+ * Support for nested scopes
+ * Support for more dictionary operations
+ * Speedup float arithmetic
+ * Support for more built-ins (e.g. int(), long(), float(), etc.)
+ * Upgrade for python 2.5
+ * Better tools for profiling psyco-ness of application
+ * Investigate usefulness of IVM (with aim to producing a more streamlined dispatch loop)
+ * LLVM backend
+ * Virtualised longs (for long longs)
+ * Virtualised slots (Ability to cache __getattribute__() values)
 
- * Implement data-structure-specific algorithms, which rely heavily on certain data structures, as RPython
+PyPy:
+ * JIT compiler
+ * LLVM backend
+ * RPython extension modules for CPython
 
- * Adding an iterator interface (similar to re.finditer) to the struct module
-
- * Further refine the PyPy LLVM back end to improve general execution speeds
-
- * Offer the PyPy team a sprint venue to continue their development work on Python implementations written in Python
-
- * Create a string subtype that provides lazy slicing without copying
-
+Other:
  * Implement many improvements in the Python Package Index
