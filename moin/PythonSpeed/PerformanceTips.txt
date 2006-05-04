@@ -630,7 +630,7 @@ In Python versions before 2.2, {{{xrange}}} objects also supported optimizations
 
 == Re-map Functions at runtime ==
 Say you have a function
-
+{{{
  class Test:
    def check(self,a,b,c):
      if(a):
@@ -645,12 +645,12 @@ Say you have a function
 
  import profile
  profile.run("example()")
-
+}}}
 And suppose this function gets called from somewhere else many times
 
 
 Well, your check will have an if statement slowing you down all the time except the first time, so you can do this:
-
+{{{
  class Test2: 
    def check(self,a,b,c):
      self.str = b*100
@@ -665,7 +665,7 @@ Well, your check will have an if statement slowing you down all the time except 
 
  import profile
  profile.run("example2()")
- 
+}}}
 well, this example is pretty crap, but if the 'if' statment is a pretty complicated expression (or something with lots of dots), you can save yourself evaluating it, if you know it will only be true the first time.
 == Profiling Code ==
 
