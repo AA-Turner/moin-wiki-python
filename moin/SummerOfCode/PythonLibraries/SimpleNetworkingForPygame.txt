@@ -1,0 +1,65 @@
+= Simple Networking For Pygame =
+
+Write a simple network library which integrates with the pygame event queue. 
+
+== Basic requirements: ==
+ * Seamless reconnection
+ * Support TCP and UDP
+ * use select based non blocking IO
+ * network library is iterated manually (so we use our own event loops)
+
+== Potential API: ==
+ * connect(uri, onConnection, onLostConnection)
+ * send(conn, data)
+ * recv(conn, num_bytes)
+ * listen(uri, onConnection, onLostConnection)
+ * poll()
+
+
+
+== Things not to worry about: ==
+ * Object serialization
+
+== NOTES, api part 2? ==
+I think I like the url idea.  We could not worry about connections at all by using urls.  Optional carring about connections could be implmented.
+
+Two or three example games should be implemented to test the API.  Something turnbased.  Something with lots of action.  Something with lots of connections (eg > 100 players).
+
+UDP and ENet are interesting things to consider for the api.  UDP is connectionless.
+
+
+All bits of data could be strings.  Serialisation should be done outside of it... however perhaps we can add a safe basic serialisation so that people don't use pickle.
+
+The event queue api could event be used for some of it.
+{{{
+pygame.events.post(e)
+events = pygame.events.get()
+
+for e in events:
+    if e.type == NET:
+        if e.what == NET_DATA_IN:
+            print e.channel
+            print e.data
+        if e.what == NET_CONNECT:
+            print e.ip
+            print e.port
+            print e.sequence_id
+            print e.channel
+            pass
+
+}}}
+
+== COMMENT ==
+
+The pygame queue integrated networking library is a great idea.  
+
+I would suggest supporting client-to-client (peer-to-peer) networking, and adding functionality to find other networked machines running the same application.
+
+Using 'connection-less' http and urls introduced some limitations: How does the server initiate contact with the client (assuming it keeps track of clients)? It could use http, but firewalls on many workstations/play-stations/LANs block incoming http requests.
+
+Creating and maintaining connections would make the library more 
+generally useful, I think, than using independent one-transaction connections like http.  It would allow asynchronous notifications both ways, and would allow peer-to-peer networking.
+
+[[http://pitchersduel.iuplog.com/default.asp?item=89521 A very rough proposal on simple networking in python/pygame]]
+
+dkeeney
