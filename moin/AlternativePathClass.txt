@@ -1,7 +1,13 @@
 #language en
-This page describes the alternative path class. Its source can be found in AlternativePathModule.
+This page describes directory-based path classes, an alternative to [http://www.python.org/dev/peps/pep-0355/ PEP 355] which is string-based.  
 
-= Introduction =
+----
+
+= Proposal #1 (Noam Raphael) =
+
+The source can be found in AlternativePathModule.
+
+== Introduction ==
 
 Hello,
 
@@ -16,9 +22,9 @@ My basic problem with the current proposed path module is that it's a bit... mes
 
 So I tried to organize it all. The following section describes the changes. I think that the result may make file and path manipulation really easier. All these are ideas - I would like to hear what you think about them.
 
-= Major Changes =
+== Major Changes ==
 
-== a tuple instead of a string ==
+=== a tuple instead of a string ===
 
 The biggest conceptual change is that my path object is a subclass of ''tuple'', not a subclass of str. For example,
 {{{
@@ -58,7 +64,7 @@ This means that paths starting with a drive letter alone (!UnrootedDrive instanc
 
 I really think that it's a better way to handle paths. If you want an example, compare the current implementation of relpathto and my implementation.
 
-== Easier attributes for stat objects ==
+=== Easier attributes for stat objects ===
 
 The current path objects includes:
  * isdir, isfile, islink, and -
@@ -85,7 +91,7 @@ else:
 
 I think that still, isdir, isfile and islink should be added to stat_result objects: They turned out pretty useful in writing some of the more complex path methods.
 
-== One Method for Finding Files ==
+=== One Method for Finding Files ===
 
 (They're actually two, but with exactly the same interface). The original path object has these methods for finding files:
 
@@ -122,13 +128,13 @@ Now, for the promised additional method. The current implementation of glob does
 
 Oh, and it returns an iterator, not a list.
 
-== Separation of Calculations and System Calls ==
+=== Separation of Calculations and System Calls ===
 
 I like to know when I'm using system calls and when I don't. It turns out that using tuples instead of strings makes it possible to define all operations which do not use system calls as properties or operators, and all operations which do use system calls as methods.
 
 The only exception currently is .match(). What can I do?
 
-== Reduce the Number of Methods ==
+=== Reduce the Number of Methods ===
 
 I think that the number of methods should be reduced. The most obvious example are the copy functions. In the current proposal:
 
@@ -148,7 +154,7 @@ def copy(self, dst, copystat=False): ...
 
 It's just that I think that copyfile, copymode and copystat aren't usually useful, and there's no reason not to unite copy and copy2.
 
-= Other Changes =
+== Other Changes ==
 
 Here is a list of the smaller things I've changed in my proposal.
 
@@ -191,7 +197,7 @@ match - The current implementation matches the base name of the path against a p
 
 matchcase - I removed it. If you see a reason for keeping it, tell me.
 
-= Comparison to the Current Path Class =
+== Comparison to the Current Path Class ==
 
 Here's a comparison of doing things using the current path class and doing things using my proposed path class.
 
@@ -296,12 +302,26 @@ chroot, startfile - unchanged.
 
 }}}
 
-= Open Issues =
+== Open Issues ==
 
 Unicode - I have no idea about unicode paths. My current implementation simply uses str. This should be changed, I guess.
 
 Slash-terminated paths - In my current implementation, paths ending with a slash are normalized to paths without a slash (this is also the behaviour of os.path.normpath). However, they aren't really the same: stat() on paths ending with a slash fails if they aren't directories, and lstat() treats them as directories even if they are symlinks. Perhaps a final empty string should be allowed.
 
-= Comments =
+== Comments about proposal #1 ==
 
 Please write here comments. Thanks!
+
+----
+
+= Proposal #2 (Mike Orr) =
+
+----
+
+= Summary of Python-dev discussion =
+
+Threads:
+ * http://mail.python.org/pipermail/python-dev/2006-April/063977.html
+ * http://mail.python.org/pipermail/python-dev/2006-May/064745.html
+ * http://mail.python.org/pipermail/python-dev/2006-May/064749.html
+ * http://mail.python.org/pipermail/python-dev/2006-May/064802.html (proposal #1)
