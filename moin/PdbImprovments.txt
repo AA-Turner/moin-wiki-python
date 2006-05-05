@@ -19,7 +19,7 @@ Something that's really needed is the possibility to stop another Python process
 
 Running pdb from another code - many times I want to go back again and again to a specific situation, and I turn out to many times do a specific procedure to get there, like setting a breakpoint, hitting it three times, setting another breakpoint, and so on. If there was a way to run all these commands from a Python function, all this would be much simpler - I would write a code to do it, and give me control after the procedure is done.
 
-''[To a limited extent this exists. pdb allows for a script file to get run before starting the debugger. I think it reads .pdbrc or something. The [http://bashdb.sourceforge.net/pydb extended python debugger] may also be of use here. It uses .pydbrc rather than .pdbrc. But there is a "script" command that run commands at any time. Also there is a "restart" command which remembers debugger settings like breakpoints]''
+''[To a limited extent this exists. pdb allows for a script file to get run before starting the debugger. I think it reads .pdbrc or something. The [http://bashdb.sourceforge.net/pydb extended python debugger] may also be of use here. It uses .pydbrc rather than .pdbrc. But there is a "source" command that run commands at any time. Also there is a "restart" command which remembers debugger settings like breakpoints]''
 
 It seems to me that the basic interface should be an instance which controls an execution, which can be given commands such as:
  * Set breakpoint
@@ -42,8 +42,7 @@ a couple of observations about pdb's source code:
 
  * runtime documentation of pdb.py is spread over 2 places (pdb.doc and pdb.py itself) with a lot of duplication (of course there are std lib docs too). My feeling is that pdb.doc should go.
 
-''[rocky: I agree that pdb.doc should go. In fact pdb.doc also duplicates a lot of the on-line help of various commands via doc strings that the Cmd class introspects and will show you via its help mechanism]''
-In pydb I have extended the documentation and that is self sufficient.
+''[rocky: I agree that pdb.doc should go. In fact pdb.doc also duplicates a lot of the on-line help of various commands via doc strings that the Cmd class introspects and will show you via its help mechanism. In pydb I have extended the documentation and that is self sufficient.]''
 
 Ilya (isandler)
 ----
