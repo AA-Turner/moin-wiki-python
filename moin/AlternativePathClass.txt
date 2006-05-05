@@ -438,3 +438,10 @@ Nick Coghlan suggests paired walk methods:
   for src_path, dest_path in src_path.pairedwalkfiles(dest_path):
       src_path.copy_to(dest_path)
 }}}
+
+What should happen to the os.path functions and other redundancies?
+
+ * Leave them alone because they work and existing programs depend on them.
+ * Discourage their use in the documentation but continue to support them.
+ * Rewrite them to use their Path counterparts.  This is a lot of useless work if we...
+ * Remove them in Python 3.0.
