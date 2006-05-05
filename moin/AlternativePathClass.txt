@@ -387,6 +387,8 @@ Methods:  same as proposal #1 except...
    
 }}}
 
+MutablePath is a subclass that's mutable, so it cannot be used as a dictionary key.  The .path attribute is a list.
+
 == Open issues ==
 
 Proposal #1 returns a new path when slicing is used, dropping N directory components.  But when we slice .path, don't we get a tuple of directory *names*?  How do we create a derived path?
@@ -394,6 +396,8 @@ Proposal #1 returns a new path when slicing is used, dropping N directory compon
 Should .isdir() etc be Path methods or should one do p.stat().isdir? 
 
 Consider using .delete() instead of .remove() or .unlink().
+
+Should Path and MutablePath be called FrozenPath and Path?  Or frozenpath and path?
 
 == Comments on proposal #2 ==
 
