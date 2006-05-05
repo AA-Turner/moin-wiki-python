@@ -308,13 +308,96 @@ Unicode - I have no idea about unicode paths. My current implementation simply u
 
 Slash-terminated paths - In my current implementation, paths ending with a slash are normalized to paths without a slash (this is also the behaviour of os.path.normpath). However, they aren't really the same: stat() on paths ending with a slash fails if they aren't directories, and lstat() treats them as directories even if they are symlinks. Perhaps a final empty string should be allowed.
 
-== Comments about proposal #1 ==
+== Comments on proposal #1 ==
 
 Please write here comments. Thanks!
 
 ----
 
 = Proposal #2 (Mike Orr) =
+
+os.path.Path has attributes describing a path, including a tuple of directory components.  Paths are immutable and use unicode internally, and precache their string equivalent.  .__str__() returns the string equivalent, although it may be possible to subclass unicode and make Path a drop-in replacement for string paths.  The open() builtin should accept Path objects.  Each Path class is platform-specific (posixpath.Path, macpath.Path, etc), inheriting from a common basepath.Path.  The existing Python mechanism selects the appropriate module for os.path.  There may be a mutable subclass, see below.
+
+{{{
+class Path(object):     # May subclass str or tuple, see below.
+
+Class attributes:
+    sep
+    extsep
+    curdir
+    pardir
+
+Constructors:
+    Path(s)           # Create Path from string/unicode.
+    Path(s, encoding="latin1", errors="strict")
+                      # Same but use non-default encoding.
+    Path()            # Same as Path(Path.curdir)
+    Path.cwd()        # Same as Path(os.getcwd())
+    Path.cwd("c:")    # Get current directory for specified drive.
+
+Instance attributes:  (immutable, set by constructor)
+    root      # "" for relative, "/" for Unix absolute, r"C:\" for
+              # Windows absolute, r"C:" for Windows relative,
+              # r"\\HOST" for Windows UNC share, "http://host/" for
+              # URL.  Actual value may differ from this spec.
+
+    path      # Tuple of directory components.  The last may be a
+              # non-directory.
+    name      # Same as path[-1] without extension.
+    ext       # Extension without separator; "" if none.
+    isabsolute    # Is .root absolute?
+
+Methods:  same as proposal #1 except...
+    p + SEQUENCE  # Similar to os.path.join().  (String incompatible!)
+
+    Replace method .glob with:
+    listdir(pattern=None, names_only=False)
+                  # List of paths in directory matching 'pattern'.
+                  # If 'names_only' is true, same as os.listdir(self).
+    files(pattern=None, symlinks=True)
+                  # Same but return only regular files.  If 
+                  # 'symlinks' is false, do not follow symbolic links.
+    dirs(pattern=None, symlinks=True)
+                  # Same but return only directories.
+    symlinks(pattern=None)
+                  # Return only symbolic links.
+    # To find other device files, use .listdir().
+    walk(pattern=None, symlinks=True, topdown=True, onerror=None)
+                  # Recursively yield paths.  XXX What does onerror
+                  # do?
+    walkfiles(pattern=None, symlinks=True, onerror=None)
+    walkdirs(pattern=None, symlinks=True, onerror=None)
+    walklinks(pattern=None, onerror=None)
+
+    copy(dst, content=True, mode=True, time=False)
+
+    mkdir() and rmdir() succeed if the operation is already done.
+
+    purge()       # Delete file or directory recursively if exists.
+
+    symlink_to(s)  # Make self a symbolic link to s (Path or string).
+                   # Drop method .writelink().
+
+    symlink(p, absolute)     # Make path p a symbolic link to self.
+                   # 'absolute' is boolean.  Difficult to determine
+                   # number of ".." for relative?
+
+    expand()       # Same as .expanduser().expandvars().
+
+   
+}}}
+
+== Open issues ==
+
+Proposal #1 returns a new path when slicing is used, dropping N directory components.  But when we slice .path, don't we get a tuple of directory *names*?  How do we create a derived path?
+
+Should .isdir() etc be Path methods or should one do p.stat().isdir? 
+
+Consider using .delete() instead of .remove() or .unlink().
+
+== Comments on proposal #2 ==
+
+None yet.
 
 ----
 
@@ -325,3 +408,29 @@ Threads:
  * http://mail.python.org/pipermail/python-dev/2006-May/064745.html
  * http://mail.python.org/pipermail/python-dev/2006-May/064749.html
  * http://mail.python.org/pipermail/python-dev/2006-May/064802.html (proposal #1)
+
+There is general agreement for a new PEP containing one of these proposals.
+
+Guido is not convinced that PEP 355 or these proposals are necessarily better than the existing os.path module.  He's not following this discussion but will answer short (<= 20-line) requests for pronouncements cc'd to both him and python-dev.  
+
+Inclusion in Python 2.6 is possible if we agree on an implementation in several months and release it in the Cheeseshop.
+
+Nick Coghlan suggests paired walk methods:
+
+{{{
+   # Do path.walk over this directory, and also return the corresponding
+  # information for a destination directory (so the dest dir information
+  # probably *won't* match that file system
+  for src_info, dest_info in src_path.pairedwalk(dest_path):
+      src_dirpath, src_subdirs, src_files = src_info
+      dest_dirpath, dest_subdirs, dest_files = dest_info
+      # Do something useful
+
+  # Ditto for path.walkdirs
+  for src_dirpath, dest_dirpath in src_path.pairedwalkdirs(dest_path):
+      # Do something useful
+
+  # Ditto for path.walkfiles
+  for src_path, dest_path in src_path.pairedwalkfiles(dest_path):
+      src_path.copy_to(dest_path)
+}}}
