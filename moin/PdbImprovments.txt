@@ -19,7 +19,7 @@ Something that's really needed is the possibility to stop another Python process
 
 Running pdb from another code - many times I want to go back again and again to a specific situation, and I turn out to many times do a specific procedure to get there, like setting a breakpoint, hitting it three times, setting another breakpoint, and so on. If there was a way to run all these commands from a Python function, all this would be much simpler - I would write a code to do it, and give me control after the procedure is done.
 
-''[To a limited extent this exists. pdb allows for a script file to get run before starting the debugger. I think it reads .pdbrc or something. The [http://bashdb.sourceforge.net/pydb extended python debugger] may also be of use here. It uses .pydbrc rather than .pdbrc. But there is a "source" command that run commands at any time. Also there is a "restart" command which remembers debugger settings like breakpoints]''
+''[rocky: to a limited extent this exists. pdb allows for a script file to get run before starting the debugger. I think it reads .pdbrc or something. The [http://bashdb.sourceforge.net/pydb extended python debugger] may also be of use here. It uses .pydbrc rather than .pdbrc. But there is a "source" command that run commands at any time. Also there is a "restart" command which remembers debugger settings like breakpoints]''
 
 It seems to me that the basic interface should be an instance which controls an execution, which can be given commands such as:
  * Set breakpoint
@@ -42,7 +42,10 @@ a couple of observations about pdb's source code:
 
 [ilya: well, my biggest problem with pdb/bdb pair is that the modules just ''feel'' too intertwined.. All too often doing anything in pdb.py requires touching or understanding of internals of bdb...
 
-there are several minor annoyances: like bdb printing to stdout, or keeping bp list as Class variables, etc. But these are probably fixable... (but then again it would be much easier to fix them if there was no risk of breaking code relying on current bdb behaviour)
+''rocky: perhaps, but I think to some extent that's the nature of the beast. Suppose I have have this minitaur object which is half human and half horse. Any time you want to change the minitaur behavior you may find you are really have to understand either the horse or the human objects. In the case of pdb, the split is probably more 80% Bdb and 20% Cmd.''
+
+there are several minor annoyances: like bdb printing to stdout,
+''rocky: yes it should be fixed. In pydb it is done by subclassing all those routines that print to stdout. Better of course would be to fix bdb.'' or keeping bp list as Class variables, etc. But these are probably fixable... (but then again it would be much easier to fix them if there was no risk of breaking code relying on current bdb behaviour). ''rocky: you are more than welcome to suggest changes to pydb or pdb for that matter, but making changes to pydb I think the changes will have a shorter time to market.''
 ]
 
 
