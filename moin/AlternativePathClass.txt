@@ -1,6 +1,9 @@
 #language en
 This page describes directory-based path classes, an alternative to [http://www.python.org/dev/peps/pep-0355/ PEP 355] which is string-based.  
 
+'''''Please keep the proposals internally consistent and according to the author's intentions.'''''  You can state objections in the Comment section under each proposal, or in the general topic sections below the proposals.
+
+
 ----
 
 = Proposal #1 (Noam Raphael) =
@@ -316,10 +319,21 @@ Please write here comments. Thanks!
 
 = Proposal #2 (Mike Orr) =
 
-os.path.Path has attributes describing a path, including a tuple of directory components.  Paths are immutable and use unicode internally, and precache their string equivalent.  .__str__() returns the string equivalent, although it may be possible to subclass unicode and make Path a drop-in replacement for string paths.  The open() builtin should accept Path objects.  Each Path class is platform-specific (posixpath.Path, macpath.Path, etc), inheriting from a common basepath.Path.  The existing Python mechanism selects the appropriate module for os.path.  There may be a mutable subclass, see below.
+Two classes in os.path: FilePath, DirectoryPath.  These are defined in posixpath, ntpath, etc.  Inheritance graph:
+
+    posixpath.FilePath -> basepath.FilePath -> basepath.Path -> object
+
+    posixpath.DirectoryPath -> basepath.DirectoryPath -> basepath.BasePath -> object
+
+Both describe a path via their attributes, including a tuple of directory components.  For DirectoryPath, all components are directories.  For FilePath, the final component is a non-directory.  
+The filesystem object described by the path may or may not exist.  If a method is called that depends on an existing directory but a file is found instead, or vice versa, raise DirectoryError (subclass of PathError).
+
+Paths are immutable and may be used as dictionary keys.  .__str__() returns the string equivalent.  The open() builtin should accept Path objects.  Paths use unicode internally.
+
+XXX TODO: Split the combined Path below and Noam's class above into FilePath and DirectoryPath.
 
 {{{
-class Path(object):     # May subclass str or tuple, see below.
+class Path(object):     
 
 Class attributes:
     sep
@@ -391,7 +405,9 @@ MutablePath is a subclass that's mutable, so it cannot be used as a dictionary k
 
 == Open issues ==
 
-Proposal #1 returns a new path when slicing is used, dropping N directory components.  But when we slice .path, don't we get a tuple of directory *names*?  How do we create a derived path?
+Should *Path subclass str or unicode?  Advantages: drop-in replacement for string paths.  Disadvantages: str/unicode dichotomy, can't use p[:-N] to return a derived path with N directories dropped.
+
+Rename FilePath to Path, and Path to BasePath?
 
 Should .isdir() etc be Path methods or should one do p.stat().isdir? 
 
@@ -445,3 +461,5 @@ What should happen to the os.path functions and other redundancies?
  * Discourage their use in the documentation but continue to support them.
  * Rewrite them to use their Path counterparts.  This is a lot of useless work if we...
  * Remove them in Python 3.0.
+
+Greg Ewing suggested splitting the filename on .extsep.  Nick Coghlan and Mike Orr pointed out that extensions are merely conventions on some OSes, and the user has to tell us which apparent extensions to consider as extensions.  How many extensions does "foo.2006-02-12.tar.gz" have?  "foo.2006.02.12.tar.gz"?  And directories normally do *not* have extensions ("cron.daily", "modules.autoload.d").
