@@ -32,20 +32,20 @@ All bits of data could be strings.  Serialisation should be done outside of it..
 
 The event queue api could event be used for some of it.
 {{{
-pygame.events.post(e)
-events = pygame.events.get()
 
-for e in events:
-    if e.type == NET:
-        if e.what == NET_DATA_IN:
-            print e.channel
-            print e.data
-        if e.what == NET_CONNECT:
-            print e.ip
-            print e.port
-            print e.sequence_id
-            print e.channel
-            pass
+#pygame.network.send(data, channel, lossy)
+pygame.network.send("hello network.", CHANNEL_CHAT, 0)
+
+for e in pygame.event.get():
+   if e.type == NETWORK:
+       if e.what == NETWORK_DATA_IN:
+           print e.channel
+           print e.data
+           print e.sequenceid
+           print e.peer
+           if e.channel == CHANNEL_CHAT:
+               # we write the incomming text to our chat window.
+               chatwindow.write_text(e.peer, e.data)
 
 }}}
 
