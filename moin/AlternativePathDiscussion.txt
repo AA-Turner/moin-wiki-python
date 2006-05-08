@@ -20,11 +20,11 @@ Noam: I don't like it. Sometimes I don't know whether a path is a file or direct
 
 Jason: I don't like it.  It seems like I've worked with APIs like this and it's a pain.  It doesn't let you remain uncertain about it.  What do you do with isfile() and isdir() in this sort of design?
 
-== Inheritence from str to allow easy use in other functions ==
+== Inheritance from str to allow easy use in other functions ==
 
 Noam: I think that it doesn't work: Slicing by path element works differently from slicing by character, so inheriting from str breaks the rule that a subclass should behave like the base class.
 
-== Inheritence from tuple ==
+== Inheritance from tuple ==
 
 Noam: I think it works well. Guido said that he didn't like it, but I don't understand why. If all the data is stored in the sequence, I think a sequence interface should be provided. As far as I can see, the tuple interface is just that: an interface for an immutable sequence. This means that it doesn't cause any unwanted restrictions, so I don't see why not to inherit from it.
 
