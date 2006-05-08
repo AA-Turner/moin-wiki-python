@@ -8,11 +8,16 @@ The page is divided into sections, to make it easy to see what is said about wha
 
 = Representation =
 
-'''agreed:''' A logical representation is better than a string representation.
+'''agreed:''' A logical representation is better than a string representation.  
+
+Mike: p[:] should appear to be a tuple of path components (directories and the final filename).  str(p) should return a platform-specific string representing the entire path.   p[:-1] should return a new Path containing only the sliced components.  This eliminates the need for several properties/methods: .parent, .name, .join(), .split(), etc.  Does 'p1 + p2' mean join paths?  Does 'p1 + string' mean convert string to Path and join it?  Or does it mean append the string to the filename (useful for adding extensions)?  Should we disallow '+' entirely because of this ambiguity?
+
 
 == One sequence or several parts? ==
 
 Noam: A sequence. As Mike has said, a sequence allows for slicing to work simply. I think that's the main reason to use a sequence. Besides, you don't have to remember several attributes which save the data of the path: it's all in the sequence. About a different attribute for extensions: I don't like it. I think that extensions should make the logical representation more complex. See the section about extensions for a proposed solution.
+
+Mike: Some concepts are better expressed as attributes rather than embedded in the sequence.  "Absolute/relative" is one; "rooted from which drive" is another.
 
 == A seperate class for files and directories? ==
 
@@ -20,9 +25,11 @@ Noam: I don't like it. Sometimes I don't know whether a path is a file or direct
 
 Jason: I don't like it.  It seems like I've worked with APIs like this and it's a pain.  It doesn't let you remain uncertain about it.  What do you do with isfile() and isdir() in this sort of design?
 
+Mike: the advantage is that some methods apply only to files and others to directories, and having 30 methods in one object is a lot.  .isfile() and .isdir() becomes unnecessary in most cases: you simply do the desired operation (e.g., rmdir), and if the wrong type of object is found (file instead of directory or vice-versa), raise DirectoryError (subclass of PathError).  Call .purge() beforehand if you're creating a file/directory and don't mind overwriting whatever was there before.  As for shell command arguments ("svn add"), you have to manually convert the Path to an appropriate string anyway.
+
 == Inheritance from str to allow easy use in other functions ==
 
-Noam: I think that it doesn't work: Slicing by path element works differently from slicing by character, so inheriting from str breaks the rule that a subclass should behave like the base class.
+Noam, Mike: This won't work.  Strings must slice by character, and this is incompatible with slicing by directory component.
 
 == Inheritance from tuple ==
 
@@ -32,13 +39,13 @@ Jason: I suggest making it look like a sequence without actually subclassing tup
 
 Noam: I guess this may be Guido's decision. I feel it's fine, but I don't really care.
 
+Mike: the top level can emulate tuple slicing/addition to return a new Path object.  It doesn't have to *subclass* tuple.
+
 == A different class for special treatment of symbolic links ==
 
 (Nick proposed that)
 
-Noam: I think it complicates matters, and I don't see what's the benefit. On the contrary: I think that specifying the kind of method to use is clearer than stating it once and forgetting about it.
-
-Jason:  Agree with Noam.
+Noam, Jason, Mike: I think it complicates matters, and I don't see what's the benefit. On the contrary: I think that specifying the kind of method to use is clearer than stating it once and forgetting about it.
 
 == Root element storing the separator ==
 
@@ -48,21 +55,24 @@ I don't like that. I think that you should have a subclass for each platform, wh
 
 I think that it makes much sense to have a different subclass for each platform: There are other things which are different for different platforms (some methods only available on one platform and not the other). A URL will also be another subclass, with its own appropriate methods.
 
+Mike: The platform modules (posixpath, ntpath, etc) already exist and are the logical place for these Path classes.  Having the separators as class attributes is a convenience for the user, so why not?
+
 == Immutability ==
 
-Noam: I think that immutable paths are somewhat easier to implement, and allow usage as dictionary keys. I think that if we have managed to live so far without mutable strings, we will manage to live without mutable paths. I don't see this as a major issue, but immutable paths can be somewhat more efficient: you can hash the string representation, and you can make sure you have a path by writing things like {{{ dst=path(dst) }}}, and if dst is already a path, no new object will be created.
+Noam, Jason, Mike: I think that immutable paths are somewhat easier to implement, and allow usage as dictionary keys. I think that if we have managed to live so far without mutable strings, we will manage to live without mutable paths. I don't see this as a major issue, but immutable paths can be somewhat more efficient: you can hash the string representation, and you can make sure you have a path by writing things like {{{ dst=path(dst) }}}, and if dst is already a path, no new object will be created.
 
-Jason: Agree with Noam.
 
 = Extensions =
 
-'''agreed:''' extensions are a common and platform-specific convention, so treating them should be made easy by the class.
+'''agreed:''' extensions are a common and platform-specific convention, so treating them should be made easy by the class.  
 
 Noam:
-
 I think that the basic representation should ignore extension conventions, as it doesn't matter for the path - the walk from one node to another. How about using string subclasses instead of normal strings for elements, that would behave exactly like normal strings but would allow some extension operations? For example, you would be able to write things like {{{ p[-1].ext }}}.
 
 The interface should be defined: How should we distinguish between a file with an empty extension ("a.") and a file without an extension ("a")? And what should be the methods, anyway?
+
+Mike: subclassing str is impractical due to the string/unicode duality.  Why not path properties: p.ext, p.name (name without extension).  The full filename is p[-1] so it doesn't need a property.
+Whether an apparent extension *is* an extension is up to the user, so never treat it as an extension unless the user explicitly invokes an extension-related property or method.
 
 = Stat =
 
@@ -81,10 +91,11 @@ Unixism?  Most people think a file *is* a regular file or a directory.
 stat() examines -- is a quirk of Unix.
 
 Noam:
-
 I think that calling stat once is a reasonable thing. Where I work we have a really slow network, and you feel every filesystem call. I also think that calling stat repeatedly may cause synchronization bugs: the stat may change while the logic already assumes something about it.
 
 I don't see stat as a unixism - what's wrong about getting information about a file?
+
+Mike: There's no logical reason why .stat() traditionally contains certain diverse information but not other information.   Why should the user have to look one place for statted information and another place for non-statted, when the distinction is arbitrary?  os.path.getsize() and os.path.getmtime() duplicate stat() information but were considered important enough to add later, why?
 
 = Finding files =
 
@@ -106,6 +117,8 @@ Noam:
 I see what you mean. How about "glob" doing what it does in the current proposal, without the "onlyfiles" and "onlydirs" arguments, and "files" and "dirs" getting exactly the same arguments but yielding only files and directories, respectively?
 
 About the "l" versions: Having glob, files, dirs, lglob, lfiles, ldirs seems ugly. Perhaps this ''should'' go in as a flag, say, "follow_symlinks=True"? (I would put it after pattern, because remembering the string "topdown" is easier. I don't think of any better name than "follow_symlinks". I also tend to think that it is more useful.)
+
+Mike: Non-recursive lists: listdir, files, dirs, symlinks.  Recursive iterators: walk, walkfiles, walkdirs, walklinks.  All except *links should take a 'symlinks' argument, default True, meaning follow symlinks.  If false, never return a symlink.  The user can call *links to get the symlinks separately if desired.  listdir should have a 'names_only' argument, default False, meaning return the same as os.listdir().  Doesn't a 'pattern' argument eliminate the need for .glob()?
 
 = Expand =
 
@@ -167,6 +180,8 @@ Jason:  I think Python needs high-level APIs to do stuff like copytree().  The c
 
 I haven't tried pairedwalkfiles(), so no opinion.
 
+Mike: .pairedwalk() and friends may be useful.  The user wants to know which files/directories to create, update, and delete.  So it's essentially a diff report.
+
 = Copy =
 
 Nick:
@@ -187,6 +202,8 @@ Jason:  Definitely agree with Nick.
 
 Noam: What about copyto? It's easier to write, I think that it's not hard to understand, and perhaps it focuses less attention on the "to", making it look like a special kind of copy.
 
+Mike: src.copy(dest, content=True, mode=False, time=False).  .copy_to is OK, .copyto is bad.  Almost everybody expects .copy to mean .copy_to and not .copy_from.
+
 = Unicode =
 
 Noam: Someone with experience with unicode filenames, please help!
@@ -203,6 +220,8 @@ Noam:
 
 Thanks for the explanation. I agree about not mixing different kinds of strings. Is there a good way to convert unicode strings into file names on POSIX? How do you know the right encoding?
 
+Mike: At first I thought about forcing everything to Unicode on input and adding 'encoding' and 'onerror' arguments to the constructor.  That doesn't solve the problem of chosing the charset to encode on output.  But now I'm wondering if we should just preserve whatever type(s) the user inputs.
+
 = Obsoleting other modules =
 
 Nick:
@@ -216,3 +235,11 @@ Noam:
 I don't mind obsoleting os.path, shutil, fnmatch, glob, as I see them as high-level operations. I don't mind not obsoleting them either - it may keep the code more organized if different operations are in differnt modules. I agree that most of the functions in the os module shouldn't be obsoleted - these are really low-level operating system operations, and you shouldn't need to use a complex path object in order to call them.
 
 Jason:  The new API should be the one high-level API for this type of stuff.  All the other high-level APIs should be obsoleted.
+
+Mike: We cannot deprecate the existing functions in Python 2.x; too many existing programs would break.  But we can discourage them in the documentation.
+
+= Additional methods/attributes =
+
+== .purge() ==
+
+Mike: Delete "it" recursively if it exists, whatever it is.  This is convenient when you don't care whether it's a file or directory, you just want to overwrite it, and you don't want to take six lines of code to do it.
