@@ -55,3 +55,15 @@ there are several minor annoyances: like bdb printing to stdout,
 
 Ilya (isandler)
 ----
+One handy thing that gdb has that pdb and pydb don't appear to have is watchpoints.  
+
+In gdb, watchpoints cause a break whenever the value of an expression changes (watch) or when the value of a variable is used (rwatch).  
+
+I think watchpoints could be implemented in pdb/pydb using one of two approaches:
+ (1) using a callback whenever the value of a watched object is modified, or when a watched variable is rebound.  
+
+ (2) adding a conditional breakpoint on every statement where the watched object could be modified or the watched variable could be rebound.
+
+Does this sound like a useful feature?  Any suggestions?
+
+Ed Groth
