@@ -30,6 +30,8 @@ Noam: I think it works well. Guido said that he didn't like it, but I don't unde
 
 Jason: I suggest making it look like a sequence without actually subclassing tuple.  It is rather strange to be subclassing tuple this way.
 
+Noam: I guess this may be Guido's decision. I feel it's fine, but I don't really care.
+
 == A different class for special treatment of symbolic links ==
 
 (Nick proposed that)
@@ -98,6 +100,12 @@ About the name "glob": I have nothing against glob, but if you find another name
 Jason:  Hard-won knowledge here:  d.files('*.html') is just right.  This is the common use case.  glob() overgeneralizes it, forcing me to write d.glob('*.html', filesonly=True).  Yuck.
 
 Guido strongly prefers multiple APIs for distinct use cases, as opposed to a single API that serves all the use cases by providing boolean flags that toggle various aspects of its behavior.
+
+Noam:
+
+I see what you mean. How about "glob" doing what it does in the current proposal, without the "onlyfiles" and "onlydirs" arguments, and "files" and "dirs" getting exactly the same arguments but yielding only files and directories, respectively?
+
+About the "l" versions: Having glob, files, dirs, lglob, lfiles, ldirs seems ugly. Perhaps this ''should'' go in as a flag, say, "follow_symlinks=True"? (I would put it after pattern, because remembering the string "topdown" is easier. I don't think of any better name than "follow_symlinks". I also tend to think that it is more useful.)
 
 = Expand =
 
@@ -177,6 +185,8 @@ I think the different name and arguments are a good idea. What exactly does the 
 
 Jason:  Definitely agree with Nick.
 
+Noam: What about copyto? It's easier to write, I think that it's not hard to understand, and perhaps it focuses less attention on the "to", making it look like a special kind of copy.
+
 = Unicode =
 
 Noam: Someone with experience with unicode filenames, please help!
@@ -188,6 +198,10 @@ In the Win32 API, paths are Unicode strings.  To produce a path-string you'll ha
 In the POSIX API, paths are char strings, which means 8-bit strings on every platform I'm familiar with.  The character set varies from system to system.  Some use UTF-8.
 
 It's kind of squirrely if you allow both 8-bit strings and Unicode strings in your tuple.  I suggest using only Unicode within the tuple and converting to 8-bit only as needed to talk to POSIX.
+
+Noam:
+
+Thanks for the explanation. I agree about not mixing different kinds of strings. Is there a good way to convert unicode strings into file names on POSIX? How do you know the right encoding?
 
 = Obsoleting other modules =
 
