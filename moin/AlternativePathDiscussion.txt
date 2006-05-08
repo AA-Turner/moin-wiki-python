@@ -18,6 +18,8 @@ Noam: A sequence. As Mike has said, a sequence allows for slicing to work simply
 
 Noam: I don't like it. Sometimes I don't know whether a path is a file or directory - for example, "svn add FILE" adds a file if it's a file and recursively adds all the files in the directory if it's a directory. It does so by examining FILE to see whether it's a file or a directory. I think that a path is representation of "how to get to somewhere on the filesystem", and it can result in a file, a directory, a symbolic link, or simply not exist.
 
+Jason: I don't like it.  It seems like I've worked with APIs like this and it's a pain.  It doesn't let you remain uncertain about it.  What do you do with isfile() and isdir() in this sort of design?
+
 == Inheritence from str to allow easy use in other functions ==
 
 Noam: I think that it doesn't work: Slicing by path element works differently from slicing by character, so inheriting from str breaks the rule that a subclass should behave like the base class.
@@ -26,11 +28,15 @@ Noam: I think that it doesn't work: Slicing by path element works differently fr
 
 Noam: I think it works well. Guido said that he didn't like it, but I don't understand why. If all the data is stored in the sequence, I think a sequence interface should be provided. As far as I can see, the tuple interface is just that: an interface for an immutable sequence. This means that it doesn't cause any unwanted restrictions, so I don't see why not to inherit from it.
 
+Jason: I suggest making it look like a sequence without actually subclassing tuple.  It is rather strange to be subclassing tuple this way.
+
 == A different class from special treatment of symbolic links ==
 
 (Nick proposed that)
 
 Noam: I think it complicates matters, and I don't see what's the benefit. On the contrary: I think that specifying the kind of method to use is clearer than stating it once and forgetting about it.
+
+Jason:  Agree with Noam.
 
 == Root element storing the separator ==
 
@@ -43,6 +49,8 @@ I think that it makes much sense to have a different subclass for each platform:
 == Immutability ==
 
 Noam: I think that immutable paths are somewhat easier to implement, and allow usage as dictionary keys. I think that if we have managed to live so far without mutable strings, we will manage to live without mutable paths. I don't see this as a major issue, but immutable paths can be somewhat more efficient: you can hash the string representation, and you can make sure you have a path by writing things like {{{ dst=path(dst) }}}, and if dst is already a path, no new object will be created.
+
+Jason: Agree with Noam.
 
 = Extensions =
 
@@ -86,6 +94,10 @@ Noam:
 Can you give examples why this proposed method is evil? I think that the basic pattern idea is well defined. It gets three arguments. topdown is, I think, well defined and may be useful. onlyfiles and onlydirs are well defined and are only a convinience. I don't really mind ommitting them.
 
 About the name "glob": I have nothing against glob, but if you find another name for the method, I might have nothing against it either.
+
+Jason:  Hard-won knowledge here:  d.files('*.html') is just right.  This is the common use case.  glob() overgeneralizes it, forcing me to write d.glob('*.html', filesonly=True).  Yuck.
+
+Guido strongly prefers multiple APIs for distinct use cases, as opposed to a single API that serves all the use cases by providing boolean flags that toggle various aspects of its behavior.
 
 = Expand =
 
@@ -143,6 +155,10 @@ allowed the following:
        src_path.copy_to(dest_path)
 }}}
 
+Jason:  I think Python needs high-level APIs to do stuff like copytree().  The current state of affairs is just awful.  On Unix I can do os.system('cp ' + ...), but it's not portable.
+
+I haven't tried pairedwalkfiles(), so no opinion.
+
 = Copy =
 
 Nick:
@@ -159,9 +175,19 @@ The different method name also makes the direction of the copying clear (with a 
 Noam:
 I think the different name and arguments are a good idea. What exactly does the copyfile argument mean?
 
+Jason:  Definitely agree with Nick.
+
 = Unicode =
 
 Noam: Someone with experience with unicode filenames, please help!
+
+Jason:  I have some experience, not a ton.
+
+In the Win32 API, paths are Unicode strings.  To produce a path-string you'll have to decode any non-Unicode strings in your tuple; Python's default encoding is one option, but the operating system's default encoding is another option; I think the latter is what the os functions do on Windows.
+
+In the POSIX API, paths are char strings, which means 8-bit strings on every platform I'm familiar with.  The character set varies from system to system.  Some use UTF-8.
+
+It's kind of squirrely if you allow both 8-bit strings and Unicode strings in your tuple.  I suggest using only Unicode within the tuple and converting to 8-bit only as needed to talk to POSIX.
 
 = Obsoleting other modules =
 
@@ -174,3 +200,5 @@ At most, I would expect provision of an OO path API to result in a comment in th
 
 Noam:
 I don't mind obsoleting os.path, shutil, fnmatch, glob, as I see them as high-level operations. I don't mind not obsoleting them either - it may keep the code more organized if different operations are in differnt modules. I agree that most of the functions in the os module shouldn't be obsoleted - these are really low-level operating system operations, and you shouldn't need to use a complex path object in order to call them.
+
+Jason:  The new API should be the one high-level API for this type of stuff.  All the other high-level APIs should be obsoleted.
