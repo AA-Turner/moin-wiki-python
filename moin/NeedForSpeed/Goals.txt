@@ -16,6 +16,8 @@ You can add additional topics below.  Please discuss the specific goals and poss
 
  * Create a string subclass that provides lazy slicing without copying
 
+  FredrikLundh: Creating the class is easy, but integrating it into Python is harder (most code that handles e.g. 8-bit strings assume a PyString).  For Py3K, it would be quite interesting to "instrument" a Python interpreter, mapping all PyString macros to functions, and gathering some kind of usage statistics.
+
  * Allow selective removal of unused features such as profiling support
 
  * Faster parsing of strings and bytes into int, long, etc.
@@ -32,6 +34,8 @@ You can add additional topics below.  Please discuss the specific goals and poss
  * Create a 64 bit PyInt type (for 32 bit machines)
 
  * Optimize methods in stringobject.c
+
+   FredrikLundh: I'd like to work on refactoring the string method implementations into a "polymorphic" (SRE-style) support library for quite some time.  This would let us share source code between 8-bit and Unicode strings, and make it easier to reuse code also for future array/bytes types (etc).
 
  * Add itertools.imerge() and itertools.izip_longest()
 
