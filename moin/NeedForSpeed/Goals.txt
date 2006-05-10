@@ -16,7 +16,9 @@ You can add additional topics below.  Please discuss the specific goals and poss
 
  * Create a string subclass that provides lazy slicing without copying
 
-  FredrikLundh: Creating the class is easy, but integrating it into Python is harder (most code that handles e.g. 8-bit strings assume a PyString).  For Py3K, it would be quite interesting to "instrument" a Python interpreter, mapping all PyString macros to functions, and gathering some kind of usage statistics.
+  FredrikLundh: Creating the class is easy, but integrating it into Python is harder (most code that handles e.g. 8-bit strings assume a !PyString).  For Py3K, it would be quite interesting to "instrument" a Python interpreter, mapping all PyString macros to functions, and gathering some kind of usage statistics.
+
+  TimPeters: Just noting a subtlety: !PyString objects are always NUL-terminated, so that passing them to random C libraries doesn't require copying the guts.  String slices won't have that property.
 
  * Allow selective removal of unused features such as profiling support
 
