@@ -10,7 +10,7 @@ The page is divided into sections, to make it easy to see what is said about wha
 
 '''agreed:''' A logical representation is better than a string representation.  
 
-Mike: p[:] should appear to be a tuple of path components (directories and the final filename).  str(p) should return a platform-specific string representing the entire path.   p[:-1] should return a new Path containing only the sliced components.  This eliminates the need for several properties/methods: .parent, .name, .join(), .split(), etc.  Does 'p1 + p2' mean join paths?  Does 'p1 + string' mean convert string to Path and join it?  Or does it mean append the string to the filename (useful for adding extensions)?  Should we disallow '+' entirely because of this ambiguity?
+Mike: p[:] should appear to be a tuple of path components (directories and the final filename).  str(p) should return a platform-specific string representing the entire path.   {{{p[:-1]}}} should return a new Path containing only the sliced components.  This eliminates the need for several properties/methods: .parent, .name, .join(), .split(), etc.  Does 'p1 + p2' mean join paths?  Does 'p1 + string' mean convert string to Path and join it?  Or does it mean append the string to the filename (useful for adding extensions)?  Should we disallow '+' entirely because of this ambiguity?
 
 
 == One sequence or several parts? ==
