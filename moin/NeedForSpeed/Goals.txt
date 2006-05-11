@@ -14,6 +14,8 @@ You can add additional topics below.  Please discuss the specific goals and poss
 
    RichardJones: Looks like this has a good chance of being done in SummerOfCode.
 
+   RaymondHettinger: We can get them off to a good start by laying the groundwork (the C struct, some access macros, and implementing a couple of methods that they can use as a model).
+
  * Build-out struct module to support fast, high-volume binary conversions -- perhaps with regexp analogs such struct.compile() and struct.finditer()
 
  * Create a string subclass that provides lazy slicing without copying
@@ -21,6 +23,8 @@ You can add additional topics below.  Please discuss the specific goals and poss
   FredrikLundh: Creating the class is easy, but integrating it into Python is harder (most code that handles e.g. 8-bit strings assume a !PyString).  For Py3K, it would be quite interesting to "instrument" a Python interpreter, mapping all PyString macros to functions, and gathering some kind of usage statistics.
 
   TimPeters: Just noting a subtlety: !PyString objects are always NUL-terminated, so that passing them to random C libraries doesn't require copying the guts.  String slices won't have that property.
+
+  RaymondHettinger:  I will search for a patch that Skip wrote for a possible implementation of str.partition() which returns a string subclass with pointers to the slices instead of a full copy.  Any subsequent string ops lazily evaluate the slice into a full string.
 
  * Allow selective removal of unused features such as profiling support
 
