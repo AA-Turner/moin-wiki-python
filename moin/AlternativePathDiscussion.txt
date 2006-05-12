@@ -1,38 +1,40 @@
 #language en
 
-This page describes parts of the Path class design which are in discussion. It is meant to show the current state of the discussion, so when we reach a consensus, we can delete all the discussion details and just write the decision.
+This page describes parts of the Path class design which are in discussion. It is meant to show the current state of the discussion, so when we reach a consensus, we can delete all the discussion details and just write the decision.  Please write your opinions below in the appropriate section, or start a new section.  Also indicate what you agree with, so we know how close to consensus we are.
 
-Please write here your opinions. I (Noam) am terribly sorry, but due to lack of time (I don't sleep enough already) I only wrote my opinions. Please write yours, or write that you agree, so that we'll know if we agree on something or have to discuss it more.
-
-The page is divided into sections, to make it easy to see what is said about what. Please open new sections if you have new subjects to discuss.
+This discussion will be used to write a PEP (an alternative to PEP 355) and reference implementation.
 
 = Representation =
 
-'''agreed:''' A logical representation is better than a string representation.  
+'''agreed:''' A logical representation is better than a string representation.  {{{p[:]}}} should behave like a tuple of path components (directories and the final filename).  {{{p[n1:n2}}} should return a new Path containing only the sliced components.  {{{p1 + p2}}} should join paths (smartly if p2 is absolute).  This eliminates the need for several properties/methods: .parent, .name, .join(), .split(), etc.  {{{str(p)}}} should return a platform-specific string representing the entire path.  
 
-Mike: p[:] should appear to be a tuple of path components (directories and the final filename).  str(p) should return a platform-specific string representing the entire path.   {{{p[:-1]}}} should return a new Path containing only the sliced components.  This eliminates the need for several properties/methods: .parent, .name, .join(), .split(), etc.  Does 'p1 + p2' mean join paths?  Does 'p1 + string' mean convert string to Path and join it?  Or does it mean append the string to the filename (useful for adding extensions)?  Should we disallow '+' entirely because of this ambiguity?
+= Path + string =
 
-Noam: Do you mean that p[:] shouldn't return a path object? If so, why? path objects can behave just like tuples. p1 + p2 means join paths, and has the same meaning as tuple concatenation (it fails if p2 isn't relative). I think p1 + string should mean p1 + path(string), because that's the behaviour most similiar to p1 + p2. I don't think that it should add extensions - just use {{{p[:-1] + (p[-1]+'.ext')}}}. I don't see this as an ambiguity - concatenation to the last element isn't consistent with the tuple behaviour.
+What should {{{Path("/a/b") + "c"}}} do?  Alternatives:
 
-Mike: p[:] *should* return a Path object.  So should {{{p1 + p2}}}.  {{{p1 + string => p1 + Path(string)}}}, maybe.  Note that {{{tuple + string}}} and {{{list + string}}} are illegal in Python.  But there must be a convenient way to add/delete extensions.  How about {{{p.add_ext(*exts_without_separator)}}} and {{{p.del_ext(n=1)}}}.
+ 1.  Join paths.  Same as {{{Path("/a/b/c")}}}.
+ 2.  Append to the filename (useful for extensions).  Same as {{{Path("/a/bc")}}}.
+ 3.  Raise an exception because {{{tuple + string}}} and {{{list + string}}} are illegal in Python.   
 
-Noam: I know that tuple + string are illegal, but I think that since there's an obvious way to treat the string as a path, it's ok. About the add/delete extensions methods: Let's move to the "extension" section.
+Noam: I know that tuple + string are illegal, but I think that since there's an obvious way to treat the string as a path, it's ok.
+
+Mike: Maybe.  But Guido rejected {{{/}}} for joining; he may also reject {{{+}}}.  Its obviousness is debatable.  If we do use {{{+}}} for joining, we'll need APIs to modify the filename and extension without having to split/rejoin.  ''Note: discussion of a filename/extension API is in the Filename/Extensions section below.''
 
 == One sequence or several parts? ==
 
-Noam: A sequence. As Mike has said, a sequence allows for slicing to work simply. I think that's the main reason to use a sequence. Besides, you don't have to remember several attributes which save the data of the path: it's all in the sequence. About a different attribute for extensions: I don't like it. I think that extensions should make the logical representation more complex. See the section about extensions for a proposed solution.
+'''agreed:'''  The filename or leaf directory should be the final component of the sequence, with extensions treated as part of the filename.  
 
-Mike: Some concepts are better expressed as attributes rather than embedded in the sequence.  "Absolute/relative" is one; "rooted from which drive" is another.
+Should the root and drive be encoded as the first component of the sequence, or as attributes?  On POSIX there is one root: "/".  On Windows, each drive has its own root and current directory: r"C:\", r"D:\".  There is an implied default drive, subject to .chdir.  r"C:foo" is relative to drive C:'s current directory.  Should we encode all this info in the first Path component, or as .isabs/.isabsolute and .root attributes?  What about Windows UNC paths (r"\\a\b\c")?
 
-Noam: That would require slicing to guess what you mean. Should {{{p[:3]}}} preserve the root element? Should {{{p[1:3]}}} preserve it? If the root element is the first element, it's all clear. I have nothing against the absolute/relative attribute, since it's just an easy way to examine the data stored in the sequence (namely, is the first element a subclass of Root). But I think that attributes storing data not found in the sequence are complicating matters.
+Noam: Keep it all in the sequence. Sequence slicing is simple and intuitive.  Attributes storing data not found in the sequence is complicating matters.
 
-Mike: {{{p[:3]}}} can't preserve the root element because chopping off the front of an absolute path makes a relative path (or a Windows "drive-relative" path).
+Mike: Encoding absolute/relative and drive in the sequence may be too obscure and magical.  
 
-Noam: I don't understand: it doesn't chop off the front.
+Mike: Note that slicing off the front of an absolute path makes a relative path.  {{{Path("/a/b/c")[:1] => Path("b/c")}}}
 
 == A seperate class for files and directories? ==
 
-'''agreed:''' One class for every file type. (Reasons can be found in the wiki history)
+'''agreed:''' The same class will represent a file, directory, or symbolic link. (Reasons can be found in the wiki history)
 
 == Inheritance from str to allow easy use in other functions ==
 
@@ -50,19 +52,15 @@ Mike: the top level can emulate tuple slicing/addition to return a new Path obje
 
 Noam: Can you please elaborate about why not to subclass from tuple?
 
-Mike: Containment is better than inheritance.  Never subclass if you can reasonably put the value in an attribute; it leads to all sorts of potential conflicts and bugs.
+Mike: Containment is better than inheritance.  Never subclass if you can reasonably put the value in an attribute; it leads to all sorts of potential conflicts and bugs.  Subclass only if the object really ''is'' a type of the superclass, and/or if the user will be calling a lot of the superclass's methods directly.
 
 Noam: You can always use containment - you never really need to subclass. I think that if it's agreed that all the data is stored in the sequence, inheritence from tuple is ok, since we really behave like an immutable sequence, and add some operations about the sequence.
-
-== A different class for special treatment of symbolic links ==
-
-(Nick proposed that)
-
-Noam, Jason, Mike: I think it complicates matters, and I don't see what's the benefit. On the contrary: I think that specifying the kind of method to use is clearer than stating it once and forgetting about it.
 
 == Root element storing the separator ==
 
 '''agreed:''' The separator should be an attribute of the path class, not of the root element. (reasons are in version 10 of the wiki)
+
+Mike: I don't think anybody proposed storing the separator in the root element; it was a misunderstanding.  So this section can probably be deleted.
 
 == Immutability ==
 
@@ -74,17 +72,23 @@ Mike: A new 'basepath' module would contain the common base class. The platform 
 
 Noam: I think that all path OS subclasses fit nicely into one module. Most of the logic is in the base class, anyway, and it makes it easier to see what are the differences between each platform.
 
+Mike: Putting code for disparate architectures in one module is asking for trouble.  What if one architecture needs to import modules which aren't needed or can't be built on other architectures, especially C modules?  Plus the module would become very large due to the need to accommodate Windows's intricaies (e.g., r"C:foo", r"\\uncpath").
+
+= Filenames =
+
+Mike: If we use {{{+}}} for path joining, we need a way to create a derived path from a modified filename.  Example: "I want to add a prefix or suffix to the filename portion of "/a/b/filename".  Splitting/rejoining the path is messy, especially if you have to modify the base name but preserve the extensions.  No specific API proposal yet.
+
 = Extensions =
 
-'''agreed:''' extensions are a common and platform-specific convention, so treating them should be made easy by the class.  
+'''agreed:''' extensions are critical, so the class must make it easy to query/modify them without splitting/rejoining the Path.  Like directories, extensions have a platform-specific separator.  Unlike directories, extensions are conventions rather than OS-enforced rules: not every apparent extension should be treated as such.  The user must tell us when to recognize extensions, defined as N number of filename suffixes beginning with the platform's extension separator (.extsep).   For instance, most users consider "filename.2005-05-13.tar.gz" and "filename.2006.05.13.tar.gz" as having two extensions each (".tar.gz"), even though the number of apparent extensions is larger.
 
-Noam:
-I think that the basic representation should ignore extension conventions, as it doesn't matter for the path - the walk from one node to another. How about using string subclasses instead of normal strings for elements, that would behave exactly like normal strings but would allow some extension operations? For example, you would be able to write things like {{{ p[-1].ext }}}.
+We can put attributes/methods on the Path object, or on a special str/unicode subclass used for the filename (or for each directory component).
 
-The interface should be defined: How should we distinguish between a file with an empty extension ("a.") and a file without an extension ("a")? And what should be the methods, anyway?
+Noam: How should we distinguish between a file with an empty extension ("a.") and a file without an extension ("a")?
+
+Mike: The legacy os.path.splitext() returns ".ext", so it presumably returns "." for an empty extension.  We could stick with this.  That prevents the ability of treating extensions platform-independently though.    I doubt "a." is important enough to support though, have you ever seen it?
 
 Mike: subclassing str is impractical due to the string/unicode duality.  Why not path properties: p.ext, p.name (name without extension).  The full filename is p[-1] so it doesn't need a property.
-Whether an apparent extension *is* an extension is up to the user, so never treat it as an extension unless the user explicitly invokes an extension-related property or method.
 
 Noam: Why does the string/unicode duability makes subclassing str impractical? On Windows we can have unicode subclasses, and on POSIX we can have str subclasses. Having extension-related methods added to elements is nice because:
  * Extension is an attribute of a path element, not of the sequence of path elements. (dirs can have extensions just as well)
@@ -92,39 +96,23 @@ Noam: Why does the string/unicode duability makes subclassing str impractical? O
 
 What should be the interface? Mike said that adding and removing extensions is important. How should it be done?
 
+Mike: There must be a convenient way to add/delete extensions.  How about {{{p.add_ext(*exts_without_separator)}}} and {{{p.del_ext(n=1)}}}, each returning new Paths.  The only other operations then are querying N extensions or splitting the filename into name + N extensions.  (Note: if the extsep is attached, an empty string in the result would mean "there are not that many extensions".)
+
 = Stat =
 
-Mike (quoted from an email):
+'''agreed:''' p.stat() and p.lstat() should return an enhanced version of Python's os.stat() object, with attributes like  {{{p.stat().mtime}}} for all information traditionally provided by stat.  Include Noam's additional properties from http://wiki.python.org/moin/AlternativePathModule.  Do not have Path methods duplicating stat attributes.   
 
-Not sure about this.  I see the point in not duplicating .foo() vs
-.stat().foo.  .foo() exists in os.path to avoid the ugliness of
-os.stat() in the middle of an expression.  I think the current
-recommendation is to just do stats all the time because the overhead
-is minimal and it's not worth getting out of sync.
+Mike: Unlike os.stat(), do not support ugly attributes like .st_mtime or tuple indexing.
 
-The question is, does forcing people to use .stat() expose an
-implementation detail that should be hidden, and does it smell of
-Unixism?  Most people think a file *is* a regular file or a directory.
- The fact that this is encoded in the file's permission bits -- which
-stat() examines -- is a quirk of Unix.
-
-Noam:
-I think that calling stat once is a reasonable thing. Where I work we have a really slow network, and you feel every filesystem call. I also think that calling stat repeatedly may cause synchronization bugs: the stat may change while the logic already assumes something about it.
-
-I don't see stat as a unixism - what's wrong about getting information about a file?
-
-Mike: There's no logical reason why .stat() traditionally contains certain diverse information but not other information.   Why should the user have to look one place for statted information and another place for non-statted, when the distinction is arbitrary?  os.path.getsize() and os.path.getmtime() duplicate stat() information but were considered important enough to add later, why?
-
-Noam: I think that os.path.getmtime(path) was added because os.stat(path).st_mtime looked ugly. I think that path.stat().mtime is fine. What do you think?
+Mike: I formerly proposed moving all stat attributes into Path methods, because the distinction between "stat attribute" and "other file info" was arbitrarily defined by Unix tradition, but withdrew this because it's not critical.  Having .path() does let the user cache the result, and having .lpath() avoids the need for a parallel set of methods that don't follow symlinks.
 
 = Finding files =
 
-Nick:
-Swiss army methods are even more evil than wide APIs. And I consider the term 'glob' itself to be a Unixism - I've found the technique to be far more commonly known as wildcard matching in the Windows world.
+Jason Orendorff's path module has three methods returning a non-recursive list of paths: listdir, files, dirs; and three methods returning a recursive iteration of paths: walk, walkfiles, walkdirs.  Noam proposed combining all these plus filename globbing into one method: glob, with a special pattern "**" meaning "any subdirectory or recursive path of subdirectories".  
 
-Noam:
+Nick: Swiss army methods are even more evil than wide APIs. And I consider the term 'glob' itself to be a Unixism - I've found the technique to be far more commonly known as wildcard matching in the Windows world.
 
-Can you give examples why this proposed method is evil? I think that the basic pattern idea is well defined. It gets three arguments. topdown is, I think, well defined and may be useful. onlyfiles and onlydirs are well defined and are only a convinience. I don't really mind ommitting them.
+Noam: Can you give examples why this proposed method is evil? I think that the basic pattern idea is well defined. It gets three arguments. topdown is, I think, well defined and may be useful. onlyfiles and onlydirs are well defined and are only a convinience. I don't really mind ommitting them.
 
 About the name "glob": I have nothing against glob, but if you find another name for the method, I might have nothing against it either.
 
@@ -145,14 +133,15 @@ Noam: Can you explain why you think that "listdir, files, dirs, walk, walkfiles,
 Mike: Combining the recursive and non-recursive methods is acceptable.  They would all have to be generators in that case.  .glob() is not the best name: it sounds like something else to Unix people and incomprehensible to non-Unix people.  The *links() methods are useful when you want to treat symlinks specially; they eliminate an if-stanza in the main for loop.  No reason to shove disparate things into the same loop.  If symlinks=True, we do follow the links and inspect the actual directory/file, so we're in agreement.  We can drop names_only if we add listdir().  Sometimes you just want the names, and it's a pain (and inefficient) to unpack temporary Path objects made from those same names.
 
 Noam:
-
 About glob: Can you suggest a better name? I'm happy with glob but have nothing agains a better name.
 
-About listdir: I prefer to ommit that method. From my experience, you always want to add the base name to the dir name (what would you do with it otherwise?) I can live with the slight inefficiency and small pain of making a path and taking only the last element on the rare cases in which it's needed. I prefer the "one way to do it" approach here.
+About listdir: I prefer to omit that method. From my experience, you always want to add the base name to the dir name (what would you do with it otherwise?) I can live with the slight inefficiency and small pain of making a path and taking only the last element on the rare cases in which it's needed. I prefer the "one way to do it" approach here.
 
 About symlinks: I see what you mean. I prefer one iteration with an if stanza, since I then iterate over the contents of a directory only once, but it seems like a reasonable friend of "dirs" and "files". The name "link" is ok, but we should make sure that all symlinks are referred to as "links" in the method names - I don't want to remember when it's a link and when it's a symlink. If so, the "link" method should be renamed "hardlink".
 
 But "lfiles", "ldirs" are so ugly...
+
+Mike: {{{p.listdir() => os.listdir(str(p))}}} is small, simple, and unobtrusive; it won't bother anybody except purists.  Say you need the filenames for a GUI list box or a menu.  It's hard to find a name that means ".dirs plus .files"; maybe {{{.walk(recursive=False)}}} is OK.  That will surprise existing users of walk functions, but we haven't found a better name.  I agree we should be consistent about .(sym)links methods; maybe we should rename .link to .hardlink because it's so rarely used.  'follow_symlinks' as an argument is also acceptable; it's wordy but perhaps better self-explanatory than 'symlinks'.  Down with the 'l' versions!
 
 = Expand =
 
@@ -246,6 +235,8 @@ Mike: 'content' means copy the file contents.  If content=False and the destinat
 
 Noam: Why should you want to copy only attributes? Can you give an example?
 
+Mike: When you want to make the perms/mtime of one file match another file.  When you want to create an empty log file with the same perms/mtime as another file, because the logging program will have modify permission but not create permission.
+
 = Unicode =
 
 Noam: Someone with experience with unicode filenames, please help!
@@ -302,3 +293,9 @@ We can have rmtree work also for files, and even for non-existing paths, but I'm
 Mike: .rmtree would go away if .purge is added.  So we'd have to inline its implementation.  The main reason for .purge is .rmtree raises exceptions if (A) the Path is a file, or (B) the Path doesn't exist, and you don't want to clutter your code for all those cases when you just want to write or remove "it".
 
 Noam: I feel fine with the four lines above, but I can live with another method. We can bring this to python-dev decision.
+
+Mike: Adding the two capabilities to .rmtree would be functionally the same.  I think .purge is a better name though.
+
+= mkdir/rmdir =
+
+Mike: These should succeed silently if the operation is already done.  Otherwise the user has to write an unnecessary "if p.exists():" around it.  If the user really cares whether the item exists, he can explicity write the if-stanza.  If not, he shouldn't be forced to clutter his code, especially since that obscures whether it does matter or not that the item existed.
