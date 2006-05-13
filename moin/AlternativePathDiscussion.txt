@@ -337,6 +337,8 @@ Mike: At first I thought about forcing everything to Unicode on input and adding
 
 Noam: I don't think that preserving the type of the user input will work: You'll still have to decode it to str on POSIX. It seems to me that the only solution is to use the native "alphabet" of the system: Unicode chars on Windows, and byte chars on POSIX. To put it more clearly: All elements on Windows will be unicode, all elements on POSIX will be str.
 
+Noam: I checked, and it seems that on Windows, file-related functions work well with byte strings. I guess it's because there's a clearly defined system encoding. So why not use only byte strings, and convert from unicode if needed by using the system encoding?
+
 = Obsoleting other modules =
 
 Nick:
