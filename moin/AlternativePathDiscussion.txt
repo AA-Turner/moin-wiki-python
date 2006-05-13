@@ -35,11 +35,15 @@ Mike: Maybe.  But Guido rejected {{{/}}} for joining; he may also reject {{{+}}}
 
 Should the root and drive be encoded as the first component of the sequence, or as attributes?  On POSIX there is one root: "/".  On Windows, each drive has its own root and current directory: r"C:\", r"D:\".  There is an implied default drive, subject to .chdir.  r"C:foo" is relative to drive C:'s current directory.  Should we encode all this info in the first Path component, or as .isabs/.isabsolute and .root attributes?  What about Windows UNC paths (r"\\a\b\c")?
 
-Noam: Keep it all in the sequence. Sequence slicing is simple and intuitive.  Attributes storing data not found in the sequence is complicating matters.
+Noam: Keep it all in the sequence. Sequence slicing is simple and intuitive.  Attributes storing data not found in the sequence is complicating matters. The root element stores all the data of "where to start from". UNCRoot stores host and share name.
 
-Mike: Encoding absolute/relative and drive in the sequence may be too obscure and magical.  
+Mike: Encoding absolute/relative and drive in the sequence may be too obscure and magical.
+
+Noam: I don't think so - it's just an attribute of the root element, "isabs".
 
 Mike: Note that slicing off the front of an absolute path makes a relative path.  {{{Path("/a/b/c")[:1] => Path("b/c")}}}
+
+Noam: which is great.
 
 == A seperate class for files and directories? ==
 
@@ -82,6 +86,8 @@ Mike: A new 'basepath' module would contain the common base class. The platform 
 Noam: I think that all path OS subclasses fit nicely into one module. Most of the logic is in the base class, anyway, and it makes it easier to see what are the differences between each platform.
 
 Mike: Putting code for disparate architectures in one module is asking for trouble.  What if one architecture needs to import modules which aren't needed or can't be built on other architectures, especially C modules?  Plus the module would become very large due to the need to accommodate Windows's intricaies (e.g., r"C:foo", r"\\uncpath").
+
+Noam: Ok. It's basically an implementation detail, so we can decide on it after we implement the full class.
 
 = Filenames =
 
@@ -151,6 +157,17 @@ About symlinks: I see what you mean. I prefer one iteration with an if stanza, s
 But "lfiles", "ldirs" are so ugly...
 
 Mike: {{{p.listdir() => os.listdir(str(p))}}} is small, simple, and unobtrusive; it won't bother anybody except purists.  Say you need the filenames for a GUI list box or a menu.  It's hard to find a name that means ".dirs plus .files"; maybe {{{.walk(recursive=False)}}} is OK.  That will surprise existing users of walk functions, but we haven't found a better name.  I agree we should be consistent about .(sym)links methods; maybe we should rename .link to .hardlink because it's so rarely used.  'follow_symlinks' as an argument is also acceptable; it's wordy but perhaps better self-explanatory than 'symlinks'.  Down with the 'l' versions!
+
+Noam: To get all the files, you simply write {{{ p.glob() }}}, which is the same as {{{ p.glob('*') }}}. By the way, is writing
+{{{
+for subpath in p.glob():
+    if subpath.isfile():
+}}}
+so much worse than writing
+{{{
+for subpath in p.files():
+}}}
+It will mostly solve the "l" problem - only two methods for finding files: glob and lglob.
 
 = Expand =
 
@@ -246,6 +263,8 @@ Noam: Why should you want to copy only attributes? Can you give an example?
 
 Mike: When you want to make the perms/mtime of one file match another file.  When you want to create an empty log file with the same perms/mtime as another file, because the logging program will have modify permission but not create permission.
 
+Noam: It's sounds like a very special use case. Perhaps it would suffice to use the methods for obtaining and changing permissions directly?
+
 = Unicode =
 
 Noam: Someone with experience with unicode filenames, please help!
@@ -305,6 +324,10 @@ Noam: I feel fine with the four lines above, but I can live with another method.
 
 Mike: Adding the two capabilities to .rmtree would be functionally the same.  I think .purge is a better name though.
 
+Noam: I want to keep the number of methods and their complexity small enough. I'm against adding capabilities to .rmtree(). I prefer not having a method which can be clearly defined in four lines and I personally have never used, but it can be taken to python-dev.
+
 = mkdir/rmdir =
 
 Mike: These should succeed silently if the operation is already done.  Otherwise the user has to write an unnecessary "if p.exists():" around it.  If the user really cares whether the item exists, he can explicity write the if-stanza.  If not, he shouldn't be forced to clutter his code, especially since that obscures whether it does matter or not that the item existed.
+
+Noam: Simply use makedirs() and removedirs().
