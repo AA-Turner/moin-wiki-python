@@ -113,13 +113,33 @@ What should be the interface? Mike said that adding and removing extensions is i
 
 Mike: There must be a convenient way to add/delete extensions.  How about {{{p.add_ext(*exts_without_separator)}}} and {{{p.del_ext(n=1)}}}, each returning new Paths.  The only other operations then are querying N extensions or splitting the filename into name + N extensions.  (Note: if the extsep is attached, an empty string in the result would mean "there are not that many extensions".)
 
+Noam:
+
+Ok. Here's a suggestion. It's simple, and I think that it gives you all that you need.
+
+Path elements will be subclasses of str/unicode, with two additional properties:
+
+element.ext will return the string from the last dot, including the dot. If there's no dot, it will return the empty string.
+
+element.withoutext will return the string up to the last dot, not including the dot. It there's no dot, it will return the complete string.
+
+element.ext will return str/unicode. element.withoutext will return an instance of the same subclass as element, so that you'll be able to write element.withoutext.withoutext to strip off two extensions.
+
+So, to add extension to a path, you'll write {{{ p[:-1] + (p[-1]+'.py') }}}. To remove extension, you'll write {{{ p[:-1] + p[-1].withoutext }}}. To replace an extension, you'll write {{{ p[:-1] + (p[-1].withoutext + '.py') }}}.
+
+I've checked, and even in macpath.py, extsep is '.'. So I don't see a real problem of platform incompatibility with that scheme.
+
+Another possible name can be "stripext" instead of "withoutext". It's shorter, but perhaps less descriptive.
+
 = Stat =
 
 '''agreed:''' p.stat() and p.lstat() should return an enhanced version of Python's os.stat() object, with attributes like  {{{p.stat().mtime}}} for all information traditionally provided by stat.  Include Noam's additional properties from http://wiki.python.org/moin/AlternativePathModule.  Do not have Path methods duplicating stat attributes.   
 
 Mike: Unlike os.stat(), do not support ugly attributes like .st_mtime or tuple indexing.
 
-Mike: I formerly proposed moving all stat attributes into Path methods, because the distinction between "stat attribute" and "other file info" was arbitrarily defined by Unix tradition, but withdrew this because it's not critical.  Having .path() does let the user cache the result, and having .lpath() avoids the need for a parallel set of methods that don't follow symlinks.
+Noam: I think that it would be best if os.stat(pathstr) would return the same type of object as pathobj.stat() - in other words, add the easy attributes to os.stat() too. In that case, I guess that the ugly "st_" names will have to stay until Python 3.
+
+Mike: I formerly proposed moving all stat attributes into Path methods, because the distinction between "stat attribute" and "other file info" was arbitrarily defined by Unix tradition, but withdrew this because it's not critical.  Having .stat() does let the user cache the result, and having .lstat() avoids the need for a parallel set of methods that don't follow symlinks.
 
 = Finding files =
 
@@ -158,16 +178,48 @@ But "lfiles", "ldirs" are so ugly...
 
 Mike: {{{p.listdir() => os.listdir(str(p))}}} is small, simple, and unobtrusive; it won't bother anybody except purists.  Say you need the filenames for a GUI list box or a menu.  It's hard to find a name that means ".dirs plus .files"; maybe {{{.walk(recursive=False)}}} is OK.  That will surprise existing users of walk functions, but we haven't found a better name.  I agree we should be consistent about .(sym)links methods; maybe we should rename .link to .hardlink because it's so rarely used.  'follow_symlinks' as an argument is also acceptable; it's wordy but perhaps better self-explanatory than 'symlinks'.  Down with the 'l' versions!
 
-Noam: To get all the files, you simply write {{{ p.glob() }}}, which is the same as {{{ p.glob('*') }}}. By the way, is writing
+Noam: To get all the files, you simply write {{{ p.glob() }}}, which is the same as {{{ p.glob('*') }}}.
+
+Here's a suggestion. The two basic functions for finding files will be glob and lglob. They will have the same interface:
+
 {{{
-for subpath in p.glob():
-    if subpath.isfile():
+def glob(self, pattern='*', topdown=True)
+def lglob(self, pattern='*', topdown=True)
 }}}
-so much worse than writing
+
+In addition, you'll have two simple convinience methods:
+
 {{{
-for subpath in p.files():
+def files(self, pattern='*', topdown=True):
+    for subpath in self.glob(pattern, topdown):
+        if subpath.isfile():
+            yield subpath
+def dirs(self, pattern='*', topdown=True):
+    for subpath in self.glob(pattern, topdown):
+        if subpath.isdir():
+            yield subpath
 }}}
-It will mostly solve the "l" problem - only two methods for finding files: glob and lglob.
+
+We will ommit "lfiles", "ldirs" and "links" because:
+ * They are less useful
+ * They have ugly names
+ * They can be replaced by two lines of code.
+
+= isfile =
+
+Noam: It currently returns True if a file is a regular file. Perhaps it would be better if it returned whether a file is not a link or a dir? The rationale is that block device files and FIFO files can mostly be treated as regular files - you can write to and read from them, if permissions allow you. It simplifies things: paths can only be:
+ 1. Nonexisting
+ 2. Symlinks to nonexisting paths
+ 3. Symlinks to dirs (perhaps with a few "jumps")
+ 4. Symlinks to files (perhaps with a few "jumps")
+ 5. Dirs
+ 6. Files
+
+Each of the methods exists, isdir, isfile, lexists, lisdir, lisfile, islink returns True on a different subset of these: exists - 3,4,5,6. isdir - 3,5. isfile - 4,6. lexists - 2,3,4,5,6. lisdir - 5. lisfile - 6. islink - 2,3,4.
+
+= Access Permissions =
+
+Noam: I think that the "access" method should be replaced by three straightforward methods, which don't require the use of a constant from somewhere: p.isreadable(), p.iswriteable(), p.isexecutable().
 
 = Expand =
 
