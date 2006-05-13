@@ -6,7 +6,16 @@ This discussion will be used to write a PEP (an alternative to PEP 355) and refe
 
 = Representation =
 
-'''agreed:''' A logical representation is better than a string representation.  {{{p[:]}}} should behave like a tuple of path components (directories and the final filename).  {{{p[n1:n2}}} should return a new Path containing only the sliced components.  {{{p1 + p2}}} should join paths (smartly if p2 is absolute).  This eliminates the need for several properties/methods: .parent, .name, .join(), .split(), etc.  {{{str(p)}}} should return a platform-specific string representing the entire path.  
+'''agreed:''' A logical representation is better than a string representation.  {{{p[:]}}} should behave like a tuple of path components (directories and the final filename).  {{{p[n1:n2}}} should return a new Path containing only the sliced components.  {{{p1 + p2}}} should join paths.  This eliminates the need for several properties/methods: .parent, .name, .join(), .split(), etc.  {{{str(p)}}} should return a platform-specific string representing the entire path.  
+
+= Joining absolute paths =
+
+Mike: {{{ p1 + p2 }}} should return p2 if it isn't relative.
+
+Noam: {{{ p1 + p2 }}} should raise an exception if p2 isn't relative. Rationale: 
+ * Explicit is better than implicit.
+ * It makes len(p1 + p2) == len(p1) + len(p2), which is nice.
+ * It's pretty easy to write {{{ p1 + p2 if p2.isrel else p2 }}}
 
 = Path + string =
 
