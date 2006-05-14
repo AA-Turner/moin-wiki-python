@@ -17,6 +17,8 @@ Noam: {{{ p1 + p2 }}} should raise an exception if p2 isn't relative. Rationale:
  * It makes len(p1 + p2) == len(p1) + len(p2), which is nice.
  * It's pretty easy to write {{{ p1 + p2 if p2.isrel else p2 }}}
 
+Mike: My proposal matches existing os.path.join() behavior.  We shouldn't contradict it without a good reason.  The most common use case is {{{Path.cwd() + Path(sys.argv[1])}}}.  However, I'm not personally opposed to Noam's proposal if there's consensus for it.  Why does the length of the combined path matter?
+
 = Path + string =
 
 What should {{{Path("/a/b") + "c"}}} do?  Alternatives:
@@ -131,6 +133,8 @@ I've checked, and even in macpath.py, extsep is '.'. So I don't see a real probl
 
 Another possible name can be "stripext" instead of "withoutext". It's shorter, but perhaps less descriptive.
 
+Mike: OK on .ext and .withoutext.  Concerned about using subclasses, but maybe it'll be OK.
+
 = Stat =
 
 '''agreed:''' p.stat() and p.lstat() should return an enhanced version of Python's os.stat() object, with attributes like  {{{p.stat().mtime}}} for all information traditionally provided by stat.  Include Noam's additional properties from http://wiki.python.org/moin/AlternativePathModule.  Do not have Path methods duplicating stat attributes.   
@@ -138,6 +142,8 @@ Another possible name can be "stripext" instead of "withoutext". It's shorter, b
 Mike: Unlike os.stat(), do not support ugly attributes like .st_mtime or tuple indexing.
 
 Noam: I think that it would be best if os.stat(pathstr) would return the same type of object as pathobj.stat() - in other words, add the easy attributes to os.stat() too. In that case, I guess that the ugly "st_" names will have to stay until Python 3.
+
+Mike: No, this is supposed to be an improvement and an API we'll want permanently.  Nobody using legacy stat objects will get caught up because they'll never call Path.stat().
 
 Mike: I formerly proposed moving all stat attributes into Path methods, because the distinction between "stat attribute" and "other file info" was arbitrarily defined by Unix tradition, but withdrew this because it's not critical.  Having .stat() does let the user cache the result, and having .lstat() avoids the need for a parallel set of methods that don't follow symlinks.
 
@@ -205,6 +211,10 @@ We will ommit "lfiles", "ldirs" and "links" because:
  * They have ugly names
  * They can be replaced by two lines of code.
 
+Mike: There will be significant opposition to "one method to rule them all", so let's have a main proposal and an alternate proposal.  I think mine more closely matches the expectations of the majority of Pythoneers who favor a Path object, especially those who have used Orendorff's/interim/PEP 355.  We can code your .glob() in the reference implementation (perhaps as .glob2()), and then mention that some methods will be dropped in the final.
+
+Mike: But the #1 thing is, .glob() should not call glob.glob() unless it has to.  So pattern='*' should bypass glob and call os.listdir() directly. 
+
 = isfile =
 
 Noam: It currently returns True if a file is a regular file. Perhaps it would be better if it returned whether a file is not a link or a dir? The rationale is that block device files and FIFO files can mostly be treated as regular files - you can write to and read from them, if permissions allow you. It simplifies things: paths can only be:
@@ -217,9 +227,13 @@ Noam: It currently returns True if a file is a regular file. Perhaps it would be
 
 Each of the methods exists, isdir, isfile, lexists, lisdir, lisfile, islink returns True on a different subset of these: exists - 3,4,5,6. isdir - 3,5. isfile - 4,6. lexists - 2,3,4,5,6. lisdir - 5. lisfile - 6. islink - 2,3,4.
 
+Mike: I don't understand what you're proposing.  os.path.is* follow symlinks, and you can add "and os.path.islink()" to find only symlinks or only non-links.  I've done that in several programs and haven't found it cumbersome.  To check for a special file: "not os.path.isfile(foo) and not os.path.isdir(foo)".  This is a little strange but perhaps better than adding a bunch of obscure methods (ischr, isblk, isfifo, issock, isdoor).  I proposed a method last year that would return a one-character type a la Unix find ('f' for regular files, 'c' for character devices, etc), but it found opposition over the character constants.
+
 = Access Permissions =
 
 Noam: I think that the "access" method should be replaced by three straightforward methods, which don't require the use of a constant from somewhere: p.isreadable(), p.iswriteable(), p.isexecutable().
+
+Mike: .canread(), .canwrite(), .canexecute().  The access() function is cumbersome and was probably added to conform to the Unix API.
 
 = Expand =
 
@@ -380,8 +394,12 @@ Mike: Adding the two capabilities to .rmtree would be functionally the same.  I 
 
 Noam: I want to keep the number of methods and their complexity small enough. I'm against adding capabilities to .rmtree(). I prefer not having a method which can be clearly defined in four lines and I personally have never used, but it can be taken to python-dev.
 
+Mike: The purpose of this module (or any Python module) is to make the calling code elegant, so it describes the level of detail that matches the conceptual operation, and is not cluttered with unnecessary details (if-stanzas) simply because the module owner refused to include commonly-used convenience functions.  That forces every developer to write the same stanzas again and again, or to each write their own function encapsulating it.
+
 = mkdir/rmdir =
 
 Mike: These should succeed silently if the operation is already done.  Otherwise the user has to write an unnecessary "if p.exists():" around it.  If the user really cares whether the item exists, he can explicity write the if-stanza.  If not, he shouldn't be forced to clutter his code, especially since that obscures whether it does matter or not that the item existed.
 
 Noam: Simply use makedirs() and removedirs().
+
+Mike: Those methods should go away.  Their names are kludgey, and their behavior can be done with a 'parents=False' argument.
