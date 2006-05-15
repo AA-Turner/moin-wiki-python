@@ -20,6 +20,8 @@ You can add additional topics below.  Please discuss the specific goals and poss
 
  * Build-out struct module to support fast, high-volume binary conversions -- perhaps with regexp analogs such struct.compile() and struct.finditer()
 
+   SeanReifschneider: I am interested in working on this.  First job would be figuring out how to best do this.  Can/should it be any faster than a tight C loop that creates the required objects, I think that may dominate execution speed, but would appreciate input.
+
  * Create a string subclass that provides lazy slicing without copying
 
   FredrikLundh: Creating the class is easy, but integrating it into Python is harder (most code that handles e.g. 8-bit strings assume a !PyString).  For Py3K, it would be quite interesting to "instrument" a Python interpreter, mapping all PyString macros to functions, and gathering some kind of usage statistics.
@@ -33,6 +35,8 @@ You can add additional topics below.  Please discuss the specific goals and poss
  * Faster parsing of strings and bytes into int, long, etc.
 
    TimPeters:  part of that is algorithms, and part is the sheer depth of the call stack.  There's at least one patch pending to use faster algorithms for conversion of decimal strings to ints/longs.  The platform C library converts decimal strings to floats.
+
+   SeanReifschneider: If the string is less than 9 bytes, can we just call strtol?  Would that help?  I suspect the check may cost too much, but maybe something in between like special-casing short strings to call strtol?
 
  * Buffer for use with network I/O
 
