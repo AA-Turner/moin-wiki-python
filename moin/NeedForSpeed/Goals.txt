@@ -42,6 +42,8 @@ You can add additional topics below.  Please discuss the specific goals and poss
 
    Fredrik Lundh: Also see the stringobject comment below.
 
+   SeanReifschneider: If we have buffering of network I/O, we can change readline() so that there is not a system-call for every character in the line.  What about for file I/O?
+
  * Build-out the collections module for optimized data structures:
    * ordered dictionary
    * alternate list implementation optimized for fast insertion and deletion
@@ -50,6 +52,8 @@ You can add additional topics below.  Please discuss the specific goals and poss
    * skip list
 
    TimPeters:  what does "ordered dictionary" mean?  For example, sorted by key value, or sorted by insertion time?
+
+   SeanReifschneider: John Shipman has a skiplist implementation.  http://infohost.nmt.edu/tcc/help/lang/python/examples/pyskip/
 
  * Create a 64 bit PyInt type (for 32 bit machines)
 
@@ -60,6 +64,8 @@ You can add additional topics below.  Please discuss the specific goals and poss
  * Optimize methods in stringobject.c
 
    FredrikLundh: I'd like to work on refactoring the string method implementations into a "polymorphic" (SRE-style) support library.  This would let us share source code between 8-bit and Unicode strings, and make it easier to reuse code also for future array/buffer/bytes types (etc).
+
+   SeanReifschneider: I'd help with that.  Adding rfind() to string was horribly painful because of the code duplication.
 
  * Add itertools.imerge() and itertools.izip_longest()
 
@@ -72,6 +78,8 @@ You can add additional topics below.  Please discuss the specific goals and poss
  * Other ideas for speeding up function calls.  For example, [http://www.python.org/sf/1479611 patch 1479611].
 
  * Are there any other patches in the [http://sourceforge.net/tracker/?group_id=5470&atid=305470 patch tracker] that are worth investigating?
+
+   SeanReifschneider: I'd be willing to work on going through the tracker for performance patches.
 
  * Improve gzip's readline performance (e.g. [http://www.python.org/sf/1281707 patch 1281707]).
 
