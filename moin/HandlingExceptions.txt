@@ -195,7 +195,7 @@ def myfunc(x=None):
    result = ""
    if x is None:
        result = "No argument given"
-   elif x = 0:
+   elif x == 0:
        result = "Zero"
    elif 0 < x <= 3:
        resutl = "x is between 0 and 3"
@@ -204,7 +204,7 @@ def myfunc(x=None):
    return result
 }}}
 
-There is no benefit in deferring returning value as myfunc does, just for the sake of having a single exit point. "Have a single exit point" is a good heuristic for many functions, but it is pointless make-work for this one. (In fact, it increases, not decreases, the chances of a bug. If you look carefully, myfunc above has such a bug in the zero clause.)
+There is no benefit in deferring returning value as myfunc does, just for the sake of having a single exit point. "Have a single exit point" is a good heuristic for many functions, but it is pointless make-work for this one. (In fact, it increases, not decreases, the chances of a bug. If you look carefully, myfunc above has such a bug in the "0 < x <= 3" clause.)
 
 Used correctly, exceptions in Python have more advantages than disadvantages. They aren't just for errors either: exceptions can be triggered for exceptional cases (hence the name) without needing to track (and debug) multiple special cases.
 
