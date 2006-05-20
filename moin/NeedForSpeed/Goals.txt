@@ -136,3 +136,13 @@ You can add additional topics below.  Please discuss the specific goals and poss
 
 = Py3000 =
  * Make a wishlist for possible performance gains in Py3.0
+
+= Shared Memory Lib =
+
+* MartinBlais: I have had this idea in the back of my head for the longest time, to write a small C library to let non-related Python processes (i.e. not forked from one another) access a same shared memory location, even if it is just to share strings, in the manner of a shared dictionary.  There is POSH, but it cannot do that, you have to fork from a single parent to use it, which means it won't work within certain contexts (i.e. apache prefork).  There is memcached, but it uses sockets, I'm sure shmem would be faster (and it's applicable in the case where sharing only within the host is good enough).  Now, I understand that it's not directly on the Python interpreter itself, but it would provide a path to making certain kinds of Python applications faster (could EWT benefit from this?), so I'm proposing it here anyway.  I'm thinking of the following steps:
+
+  - Write it in C, with a thin Python layer just to convert the strings
+  - Only allow the following operations: get, set, del, list keys
+  - Only allow storing strings into it
+
+(I'm a sucker, really, because that's mostly an excuse to play with shmem interfaces, which I haven't had the chance to do under Linux yet...)
