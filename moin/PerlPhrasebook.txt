@@ -233,8 +233,24 @@ the last element.  If either index is negative, the length of the array
 is added to it.
 
 
-Perl has similar slicing operations [describe].
+In Perl, slicing is performed by giving the array a list
+of indicies to be included in the slice. This list can be
+any arbitrary list and by using the range operator `...`,
+you can get Python like slicing. If any of the indices in
+the list is out of bounds an `undef` is inserted there.
 
+{{{
+@array = ('zero', 'one', 'two', 'three', 'four')  
+
+# slicing with range operator to generate slice index list
+@slice = @array[0..2]  # returns ('zero', 'one', 'two')
+
+# Using arbitary index lists
+@slice = @array[0,3,2] # returns ('zero', 'three', 'two')
+@slice = @array[0,9,1] # returns ('zero', undef, 'one')
+}}}
+
+Note: Perl range operator uses a closed interval.
 
 
 == Importing ==
@@ -331,9 +347,9 @@ random notes here.  I will organize them later.
  * I find Python's syntax much cleaner than Perl's
  * I find Perl's syntax too flexible, leading to silent errors.  The -w flag and `use strict` helps quite a bit, but still not as much as Python.
  * I like Python's small core with a large number of standard libraries.  Perl has a much larger core, and though many libraries are available, since they are not standard, it is often best to avoid them for portability.
- * Python's object model is very uniform, allowing you, for example, to define types that can be used wherever a standard file object can be used.
- * Python allows you to define operators for user-defined types.
-
+ * Python's object model is very uniform, allowing you, for example, to define types that can be used wherever a standard file object can be used. 
+ * Python allows you to define operators for user-defined types. The operator overloading facility in Perl is provided as an add-on---the `overload` module.
+ 
 
 
 
@@ -596,8 +612,8 @@ printLoL ("filled with somefunc via temps:", \@LoL);
 
 {{{
 for i in range(10):
-    tmp = somefunc(i)
-    LoL[i] = [tmp]
+    tmp = [ somefunc(i) ]
+    LoL[i] = tmp
 
 printLoL('filled with somefunc via temps:', LoL)
 }}}
@@ -698,8 +714,9 @@ printSep()
 ==== Another element ====
 
 {{{
-# upcase the first letter
-$LoL[1][1] =~ s/(\w)/\u$1/;
+# upcase the first letter of each word
+# s/(\w)/\u$1/ is equivalent to Python .capitalize()
+$LoL[1][1] =~  s{\b([\w])}{\u$1}g;
 print ("element 1, 1 is now $LoL[1][1]\n");
 printSep();
 
@@ -715,11 +732,23 @@ Perl's regexp matching and substitution is enormously powerful; see
 especially the new syntax for comments and whitespace inside regular
 expressions.
 
-In python, string methods are often used where perl would use a regex.  Among
-these string methods are `title()` and `capitalize()`.  In the context of
-names, `title()` will be used as it correctly changes "smith-jones" to
-"Smith-Jones" whereas `capitalize()` would produce "Smith-jones".
+In Python, string methods are often used where perl would use a
+regex.  Among these string methods are `title()` and `capitalize()`.  
 
+In the context of names, `title()` will be used as it correctly
+changes "smith-jones" to "Smith-Jones" whereas `capitalize()`
+would produce "Smith-jones".
+
+`str2 = str1.capitalize()` in Python is equivalent to `$str2 = ucfirst($str1)` in Perl.
+
+Python's `str2 = str1.title()` is equivalent to Perl's:
+{{{
+$str2 = $str1;
+$str2 =~ s{\b([\w])}{\u$1}g;
+}}}
+
+This is because regular expression search and replace operations
+modify the string in place (Perl strings are mutable).
 
 === Printing a list of lists ===
 
@@ -763,8 +792,21 @@ printSep()
 }}}
 
 
-In Perl, the highest valid index of an array `@A` is
-`$#A`.  In Python, it is `len(A)`.
+The highest valid index of an array `A`:
+ * Perl: `$#A`.  
+ * Python: `len(A) - 1`.
+
+Size of an array `A`:
+ * Perl: `scalar(@A)`
+ * Python: `len(A)`
+
+Note: Perl does not really have a length operator like Python.  `scalar()` simply provides a scalar context, and in a scalar context an array returns its size. (Perl is context-sensitive and things behave differently based on their context.)
+
+Generate range of numbers:
+ * Perl: `(0..9)`
+ * Python: `range(0, 10)` or simply `range(10)` (assumes 0 as initial)
+
+Note: Perl uses a closed interval, while Python uses a closed-open interval. You will notice that this pattern is quite consistently applied in both languages.
 
 [Link to details of the range function]
 
@@ -830,8 +872,46 @@ since all it means is that you have to provide a name for the function.
 Since you can define a function within another function, this does not
 lead to namespace clutter.
 
-In perl, a function can be defined inside another function, but it is
-defined in the namespace of the current package.
+In Perl, a function can be defined inside another function, but it is
+defined in the namespace of the current package. If you need Python-like scoping of functions, you can create an anonymous subroutine and assign it to a lexically scoped variable:
+
+{{{
+# A Python function with its own private function
+def lolprint(LoL):
+   # Private function
+   def lprint(alist):
+      print " ".join(str(alist))
+   map(lprint, LoL)
+
+# Achieving the same in Perl
+sub lolprint {
+   my @LoL = (@_);
+
+   # Private function 
+   # (function reference stored in a lexically scoped variable)
+   my $lprint = sub {
+      my $list = shift;
+      print join(" ", (@{$list}) );
+   };
+
+   map { $lprint->($_) } (@LoL);
+}
+
+# In Perl, if you did this, the function is no longer private.
+sub lolprint {
+   my @LoL = (@_);
+   
+   # This is not a private function
+   sub lprint {
+      my $list = shift;
+      print join(" ", (@{$list}) );
+   };
+
+   map { lprint($_) } (@LoL);
+}
+
+}}}
+
 
 
 == Hashes/dictionaries of lists ==
