@@ -81,7 +81,14 @@ You can add additional topics below.  Please discuss the specific goals and poss
 
    TimPeters: Guido would probably be happy if "short" Python ints were in fact 64 bits on all boxes; that's come up before.
 
+
+---- /!\ '''Edit conflict - other version:''' ----
  * Optimize methods in stringobject.c/unicodeobject.c
+
+---- /!\ '''Edit conflict - your version:''' ----
+ * Optimize methods in stringobject.c/unicodeobject.c
+
+---- /!\ '''End of edit conflict''' ----
 
    FredrikLundh: I'd like to work on refactoring the string method implementations into a "polymorphic" (SRE-style) support library.  This would let us share source code between 8-bit and Unicode strings, and make it easier to reuse code also for future array/buffer/bytes types (etc).
 
@@ -93,6 +100,18 @@ You can add additional topics below.  Please discuss the specific goals and poss
     * handle single-character strings separately (use Py_UNICODE_FILL)
     * instead of repeating the original string, repeat the string that has already been built (use Py_UNICODE_COPY instead of memcpy)
 
+
+---- /!\ '''Edit conflict - other version:''' ----
+* Comparing 8-bit and Unicode performance (AndrewDalke, FredrikLundh)
+
+  * 8-bit repeat is a lot faster than Unicode:
+    * handle single-character strings separately (use Py_UNICODE_FILL)
+    * instead of repeating the original string, repeat the string that has already been built (use Py_UNICODE_COPY instead of memcpy)
+
+
+---- /!\ '''Edit conflict - your version:''' ----
+
+---- /!\ '''End of edit conflict''' ----
  * Add itertools.imerge() and itertools.izip_longest()
 
  * Guido has a standing request to have threading.py written in C
