@@ -4,7 +4,7 @@ To compare, use
 
 {{{
 $ python2.4 pybench.py -f out
-$ python2.5 pybench.py -s out
+$ python2.5 pybench.py -c out
 }}}
 
 Here's what I get (Windows XP, Core Duo, using Tools/pybench from a Python 2.5 checkout):
@@ -65,4 +65,64 @@ Tests:                              per run    per oper.    diff *)
                 UnicodeSlicing:      77.97 ms    0.45 us    +0.23%
 ------------------------------------------------------------------------
             Average round time:    3843.92 ms               +5.07%
+}}}
+
+Here's what SeanReifschneider gets comparing 2.4.3 to 2.5a2 on a Fedora Core 5 system running on a Dual Xeon 3.2:
+
+{{{
+Tests:                              per run    per oper.    diff *)
+------------------------------------------------------------------------
+          BuiltinFunctionCalls:      45.85 ms    0.36 us   +18.17%
+           BuiltinMethodLookup:      95.75 ms    0.18 us    +6.63%
+                 CompareFloats:      52.65 ms    0.12 us   +12.38%
+         CompareFloatsIntegers:      68.85 ms    0.15 us    +0.07%
+               CompareIntegers:      65.65 ms    0.07 us   +22.37%
+        CompareInternedStrings:      48.30 ms    0.10 us    +8.78%
+                  CompareLongs:      58.80 ms    0.13 us   +28.24%
+                CompareStrings:      77.20 ms    0.15 us    +3.90%
+                CompareUnicode:      56.45 ms    0.15 us    -0.09%
+                 ConcatStrings:      83.60 ms    0.56 us    -0.12%
+                 ConcatUnicode:     123.55 ms    0.82 us    +0.73%
+               CreateInstances:      67.70 ms    1.61 us    +1.27%
+       CreateStringsWithConcat:      29.70 ms    0.15 us    -0.34%
+       CreateUnicodeWithConcat:      82.65 ms    0.41 us    -1.25%
+                  DictCreation:      52.75 ms    0.35 us    +1.83%
+             DictWithFloatKeys:     144.30 ms    0.24 us    +1.37%
+           DictWithIntegerKeys:      65.25 ms    0.11 us   +12.02%
+            DictWithStringKeys:      68.30 ms    0.11 us    +4.35%
+                      ForLoops:      59.95 ms    6.00 us   +27.69%
+                    IfThenElse:      55.45 ms    0.08 us    -0.45%
+                   ListSlicing:      41.95 ms   11.99 us    -2.44%
+                NestedForLoops:      40.95 ms    0.12 us   +17.34%
+          NormalClassAttribute:      71.55 ms    0.12 us    +1.13%
+       NormalInstanceAttribute:      67.55 ms    0.11 us    +2.74%
+           PythonFunctionCalls:      92.85 ms    0.56 us    +8.22%
+             PythonMethodCalls:      68.90 ms    0.92 us    +9.37%
+                     Recursion:      59.70 ms    4.78 us   +11.17%
+                  SecondImport:      36.95 ms    1.48 us    -2.51%
+           SecondPackageImport:      37.90 ms    1.52 us   +18.81%
+         SecondSubmoduleImport:      49.85 ms    1.99 us    +4.07%
+       SimpleComplexArithmetic:      38.95 ms    0.18 us    +5.70%
+        SimpleDictManipulation:      48.90 ms    0.16 us    +9.27%
+         SimpleFloatArithmetic:      68.55 ms    0.12 us    +7.78%
+      SimpleIntFloatArithmetic:      62.55 ms    0.09 us   +14.35%
+       SimpleIntegerArithmetic:      60.45 ms    0.09 us    +8.72%
+        SimpleListManipulation:      42.75 ms    0.16 us    +7.41%
+          SimpleLongArithmetic:      44.85 ms    0.27 us   +44.91%
+                    SmallLists:      67.40 ms    0.26 us    +3.06%
+                   SmallTuples:      73.75 ms    0.31 us    -0.20%
+         SpecialClassAttribute:      71.55 ms    0.12 us    +5.69%
+      SpecialInstanceAttribute:     111.60 ms    0.19 us    -2.70%
+                StringMappings:      72.60 ms    0.58 us   +10.84%
+              StringPredicates:      74.90 ms    0.27 us    +2.60%
+                 StringSlicing:      55.55 ms    0.32 us    -2.03%
+                     TryExcept:      53.20 ms    0.04 us    -2.21%
+                TryRaiseExcept:      63.70 ms    4.25 us   +68.74%
+                  TupleSlicing:      79.90 ms    0.76 us    +3.90%
+               UnicodeMappings:      60.40 ms    3.36 us    +3.42%
+             UnicodePredicates:      67.60 ms    0.30 us    -0.22%
+             UnicodeProperties:      73.65 ms    0.37 us   +11.93%
+                UnicodeSlicing:      77.55 ms    0.44 us    +1.37%
+------------------------------------------------------------------------
+            Average round time:    3784.00 ms               +7.68%
 }}}
