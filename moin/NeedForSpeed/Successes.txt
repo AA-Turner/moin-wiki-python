@@ -16,3 +16,30 @@ str(ms) uni(ms) %       comment
 1643.69 1652.60 99.5    TOTAL optimized match macro
 1644.99 969.33  169.7   TOTAL optimized in
 }}}
+
+ * Patch 1335972 was a combination bugfix+speedup for string->int conversion.  These are the speedups measured on my Windows box for decimal strings of various lengths.  Note that the difference between 9 and 10 is the difference between short and long Python ints on a 32-bit box.  The patch doesn't actually do anything to speed conversion to long directly; the speedup in those cases is solely due to due to detecting "unsigned long" overflow more quickly:
+
+{{{
+length speedup
+------ -------
+ 1       12.4%
+ 2       15.7%
+ 3       20.6%
+ 4       28.1%
+ 5       33.2%
+ 6       37.5%
+ 7       41.9%
+ 8       46.3%
+ 9       51.2%
+10       19.5%
+11       19.9%
+12       23.9%
+13       23.7%
+14       23.3%
+15       24.9%
+16       25.3%
+17       28.3%
+18       27.9%
+19       35.7%
+
+}}}
