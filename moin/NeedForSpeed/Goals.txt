@@ -46,7 +46,7 @@ You can add additional topics below.  Please discuss the specific goals and poss
 
  * Faster parsing of strings and bytes into int, long, etc.
 
-   TimPeters:  part of that is algorithms, and part is the sheer depth of the call stack.  The platform C library converts decimal strings to floats.  There are two patches outstanding of special interest:  SF:1335972 for string -> short int, and SF:1442927 for string -> long.
+   TimPeters:  part of that is algorithms, and part is the sheer depth of the call stack.  The platform C library converts decimal strings to floats.  There are two patches outstanding of special interest:  SF:1335972 for string -> short int (DONE), and SF:1442927 for string -> long.
 
    SeanReifschneider: If the string is less than 9 bytes, can we just call strtol?  Would that help?  I suspect the check may cost too much, but maybe something in between like special-casing short strings to call strtol?
 
