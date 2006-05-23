@@ -84,35 +84,67 @@ $
 A preview of the usage:
 {{{
 usage:
-       java -jar jython_HEAD.jar [-s | -c] [-d dir] [-h | -?] [-t type] [-j dir]
+       java -jar jython_version.jar [-c | -s | -A] [-d dir] [-t type] [-i part(s)]
+       [-e part(s)] [-j dir] [-v] [-h | -?]
 
-the following options are available:
- -?                     print this help/usage.
- -c,--console           do a console based installation (with user
-                        interaction).
- -d,--directory <dir>   target directory to install to;
-                        required if in silent mode;
-                        ignored if not in silent mode.
- -h,--help              print this help/usage.
- -j,--jre <dir>         home directory of the runtime jre, or jdk;
-                        executables are assumed in the /bin subdirectory;
-                        ignored if not in silent mode.
- -s,--silent            do a silent installation (without user interaction).
- -t,--type <type>       installation type: all, standard or minimum;
-                        ignored if not in silent mode.
-
-no option at all will start the interactive GUI installer.
-
+no option at all will start the interactive GUI installer, except:
+options respected in GUI mode are 'directory' and 'jre': the values provided
+for these serve as defaults;
+in non GUI mode the following options are available:
+.
+ -c,--console             console based installation (user interaction)
+                          any other options will be ignored (except 'verbose')
+ -s,--silent              silent installation (without user interaction)
+ -A,--autotest            automatic stress tests for the installer
+                          most of the other options are ignored
+                          allowed additional options: 'verbose', 'jre'
+ -d,--directory <dir>     target directory to install to
+                          (required in silent mode,
+                          used as default in GUI mode)
+ -t,--type <type>         installation type
+                          one of the following types is possible
+                          (see also include/exclude parts):
+                          - all: everything (including src)
+                          - standard: core, mod, demo, doc
+                          - minimum: core
+                          - standalone: (not yet implemented)
+ -i,--include <part(s)>   finer control over parts to install
+                          more than one of the following is possible:
+                          - mod: library modules
+                          - demo: demos and examples
+                          - doc: documentation
+                          - src: java source code
+ -e,--exclude <part(s)>   finer control over parts not to install
+                          more than one of the following is possible:
+                          - mod: library modules
+                          - demo: demos and examples
+                          - doc: documentation
+                          - src: java source code
+                          (excludes override includes)
+ -j,--jre <dir>           home directory of the runtime jre or jdk
+                          (executables are assumed in the /bin subdirectory)
+                          select this if you want to run Jython with a
+                          different java version than the installation
+ -v,--verbose             print more output during the installation
+                          (also valid in GUI and autotest mode)
+ -h,--help                print this help (overrides any other options)
+ -?                       print this help (overrides any other options)
 
 example of a GUI installation:
-	java -jar jython_HEAD.jar
+	java -jar jython_version.jar
 
 example of a console installation:
-	java -jar jython_HEAD.jar -c
+	java -jar jython_version.jar -c
 
 example of a silent installation:
-	java -jar jython_HEAD.jar -s -d targetDirectory
+	java -jar jython_version.jar -s -d targetDirectory
 
-example of a silent installation with more options:
-	java -jar jython_HEAD.jar -s -d targetDirectory -t minimum -j javaHome
+examples of a silent installation with more options:
+	java -jar jython_version.jar -s -d targetDirectory -t minimum -i src -j javaHome
+	java -jar jython_version.jar -s -d targetDirectory -t standard -e demo doc
+		 -i src -j javaHome -v
+
+example of an autotest installation into temporary directories:
+	java -jar jython_version.jar -A
+	(make sure you do NOT touch mouse NOR keyboard after hitting enter/return!)
 }}}
