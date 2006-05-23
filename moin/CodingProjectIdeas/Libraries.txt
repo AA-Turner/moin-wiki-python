@@ -1,3 +1,8 @@
+== Python library ideas ==
+
+Suggestions that involve working on various third-party libraries that
+aren't part of the Python source tree.
+
 
  * Add EPS import to ReportLab PDF library
      http://article.gmane.org/gmane.comp.python.reportlab.user/4052
@@ -6,8 +11,52 @@
      These are Python-level cross-toolkit compatibility libraries for GUI work. Currently there is a "live" project called [http://developer.berlios.de/projects/cimarron/ Cimarron] along these lines. (PyGUI is not a dead project, however Anygui is)
  * NotebookInterfaceForIpython
  * ../PygameOnCtypes
-* Develop the Visual Designer and help update the documentation of [http://dabodev.com/ Dabo].
+ * Develop the Visual Designer and help update the documentation of [http://dabodev.com/ Dabo].
      Dabo is a framework for creating 3-tier desktop applications. The UI tier is a wrapper around [http://www.wxpython.org/ wxPython] that greatly streamlines and simplifies the wxPython API, and the Designer is a RAD tool for visually developing UI interfaces.
+ * Psyco for MacOSX.  PPC, and universal binary versions. (Note: unlikely to find a mentor)
+ * Create a bunch of modules like what Squeak has for 3D modeling,
+ events etc. (the exact list may be somewhat different, I haven't
+ researched this in any depth). This is inspired by a recommendation
+ from Alan Kay made at the Shuttleworth workshop.  (Would the (GPL) soya3D projects be relevant here?)
+ * Design and implement an interface for manipulating both [http://www.openoffice.org/product/calc.html Calc] and [http://www.gnome.org/projects/gnumeric/ Gnumeric] spreadsheets (in the same way that DB-API allows programs to interact with a variety of databases).
+ * Write an IPC or RPC package to allow for concurrent Python execution. Compare with http://rpyc.sourceforge.net
+ * Implement ctypes support for GCC ARM platforms. The underlying issue is lack of closure API support for ARM in libffi. A patch available at http://handhelds.org/~pb/arm-libffi.dpatch, that should be hopefully a good starting point. ctypes CVS has a libffi_arm_wince directory, which also seems to support closure API.
+ * Create a Python web app server, synthesized from the many options already available, with an eye towards the total developer experience.
+ * Integrate a Javascript interpreter with Python. [http://webcleaner.sourceforge.net/ WebCleaner] has some initial work; so extracting, documenting, and refining that code would be in order. The whole spec is probably too much, but you could focus on langauge support, or on "what typical web pages actually need".
+ * Implement [http://www.ieee802.org/1/pages/802.1x.html IEEE Std 802.1X] Authenticator for wired networks,with one of the low-level python networking libraries: [http://www.secdev.org/projects/scapy/ scapy],[http://twistedmatrix.comTwisted.Pair],[http://pycap.sourceforge.net/ pycap] or maybe something else.Probably some python firewall bindings will be needed too.
+ * PyGame Projects
+  * Implement CodingProjectIdeas/PygameOnCtypes
+  * Make a pygame plugin for IE, netscape. CodingProjectIdeas/PythonWebPlugin
+  * ../PygameGui
+  * ./SimpleNetworkingForPygame
+ * Data mining in Python (e.g., adding a new data mining algorithm or tool to the Orange data mining suite, develop a new widget for text mining or 3-D data visualization, develop Orange interface to R or alike, port Orange to Mac OS X, [http://www.ailab.si/orange])
+ * Add a wxPython/wax based object browser to the ipipe module which will be part of the next release of [http://ipython.scipy.org/ IPython] (more info on the [http://projects.scipy.org/ipython/ipython/wiki/GoogleSommerOfCode2006 IPython wiki]).
+ * Implement a pure python library that handles unicode [http://www.unicode.org/cldr/ CLDR]. (like ICU?)
+ * Take an existing set of sources for M2Crypto and build a robust distribution from it. This should include comprehensive API documentation, a full test suite, and providing a better Python interface, not just a light wrapper around openssl, for many of the functions like X.509 certificates that are not currently exposed.
+ * Work on [http://sage.scipy.org/sage/ SAGE], which is a Python-based free open source computer algebra system. SAGE is the algebraic analogue of [http://www.scipy.org scipy]---it incorporates and "glues together" a wide range of existing open-source mathematics packages such as Maxima, Matplotlib, and GAP. Here's a [http://sage.scipy.org/sage/projects list of projects] and an [mailto:wstein@gmail.com email contact].
+ * Conduct a review of one chunk of functionality in [http://www.scipy.org scipy] similar to the one currently in progress about [http://projects.scipy.org/scipy/scipy/wiki/StatisticsReview the statistics package]. Alternatively, add a chunk of functionality to scipy. Recently discussed requests have been bindings to [http://www.llnl.gov/casc/sundials/ SUNDIALS], sparse matrices in [http://www.netlib.org/lapack/lug/node121.html LAPACK packed storage formats], 3-D Delaunay tetrahedralization and natural neighbour interpolation, and porting the [http://www.ncrg.aston.ac.uk/netlab/index.php Netlab] neural network code to scipy.
+ * Add more plot types to the recently refactored [http://code.enthought.com/chaco/ Chaco] plotting library ([mailto:robert.kern@enthought.com contact]).
+ * Make [http://code.enthought.com/traits/ Traits UI] available to Qt, Tk, or GTK applications ([mailto:robert.kern@enthought.com contact]).
+ * Help make [http://ipython.scipy.org/ IPython's] capabilities available inside a wxPython application.
+ * Use [http://www.cs.washington.edu/research/constraints/cassowary/ Cassowary] or some other constraint solving library to implement automatic, "nice" GUI layout.
+ * Write general [http://pango.org/ Pango] bindings that can be used by Python libraries to do general text layout outside of PyGTK and pycairo.
+ * Help merge the codebases of [http://matplotlib.sourceforge.net matplotlib] and [http://code.enthought.com/chaco/ Chaco] ([mailto:jdhunter@nitace.bsd.uchicago.edu contact], [mailto:robert.kern@enthought.com contact]).
+ * Implement mathematical formula typesetting using TeX algorithms and TeX fonts but without needing a TeX installation.
+ * [http://www.soya3d.org/wiki/Soya Soya3d] Projects
+  * add multi-texture support (bump/normals mapping, etc)
+  * verse support for shapes and materials
+  * improved exporters/importers (blender, etc)
+  * cal3d per-bone and morph animations
+  * improved ode integration
+  * api reference and improved examples/tutorials
+ * Improve [http://yaml.org/ YAML] [http://pyyaml.org/ support in Python], e.g.,
+  * make [http://pyyaml.org/wiki/PySyck Python support in Syck] (C extension) as complete as Ruby's
+  * make [http://whytheluckystiff.net/syck/ Syck] support Unicode
+  * contribute to [http://pyyaml.org/wiki/PyYAML PyYAML] (pure Python version)
+ * Review and consolidate libraries/ modules for, e.g., file metadata reading and writing (MS Word doc, PDF, GIF, MP3/ ID3)
+ * Choose some common modules and [http://peak.telecommunity.com/DevCenter/PythonEggs eggsify] them; write about it to promote more eggsification
+ * Extend the CodeCoverage module to extend into os.fork() and os.exec('python') calls.  Fix Nose to facilitate this.
+ * Write a [http://www.scipy.org scipy] module that implements black-box, [http://statistik.wu-wien.ac.at/projects/arvag/index.html automatic random number generation] algorithms for the numerous probability distributions defined in [http://www.scipy.org/doc/api_docs/scipy.stats.distributions.html scipy.stats] ([mailto:robert.kern@enthought.com contact]).
 
 -----
 
