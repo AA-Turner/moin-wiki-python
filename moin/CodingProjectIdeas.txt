@@ -21,25 +21,16 @@ Ideally, each project below should be expanded into a more full-featured descrip
  * CleanupUrlLibProject
  * Cleanup/modernize a module(s) in the stdlib.  
  * The modules which deal with both str and unicode sometimes treat them differently -- which is usually a bug.
- * Clean up the porting ifdefs, including os and posixmodule
  * CompleteSslSupport
- * Add a MemoryUsageProfiler to python
-      Currently it is almost impossible to figure out where memory is going in a large python program, especially if you have C extensions loaded. It'd be nice to know where the memory is going, if there are circular references, or if objects are being held too long.
- * math speedups or IO speedups (I think the string-in-base-10 to an int was recently sped up, but there may be other similar locations)
  * JythonProjects
       Port IDLE from tk to swing, OS X improvements.  
  * Port standard library modules implemented in C to Python
       This is basically what the PyPy project is doing.  See their site for more details on what parts of the Python standard library have not yet been translated.
- * Unify and extend Python's import mechanisms, possibly by prototyping it with PyPy (much easier than messing with CPython's import.c). 
  * Plone Projects
       Work on Plone or a related Plone Product.
       See [http://plone.org/events/other/summerofcode Plone's Summer of Code Page] for details.
  * UnicodeonWindowsExtensions
  * ./PythonWebProgrammingIdeas
- * SpeedUpInterpreterStartup
- * SandboxedPython
- * ./PythonGarbageCollected
- * ./RegisterVirtualMachine
  * ./WebServiceStack
  * ./PythonDocInOpenEbook
  * fix some old, old bugs in sourceforge
@@ -47,7 +38,7 @@ Ideally, each project below should be expanded into a more full-featured descrip
  * Add EPS import to ReportLab PDF library
      http://article.gmane.org/gmane.comp.python.reportlab.user/4052
  * make [http://www.spread.org/ Spread] Python Binding compile with Python 2.4 on win32 (and possibly other major platforms)
- * A better way to create (singlefile) executeables by bringing the advantages of py2exe and McMillans compiler together.
+ * A better way to create (singlefile) executables by bringing the advantages of py2exe and McMillans compiler together.
     Note that the next version of py2exe will allow this - it's 95% finished in CVS already -- theller.
     Don't forget [http://starship.python.net/crew/atuining/cx_Freeze/ cx_Freeze] which has a lot of nice properties too.
     For Windows, Linux and Irix also look at [http://pyinstaller.hpcf.upr.edu PyInstaller].
@@ -78,6 +69,3 @@ Less fleshed-out ideas:
       Having something similar to Simulink would be VERY useful in regards to the visual programming environment.  
 
  * A more flushed out version of Modelica in Python would also be useful http://www.ercim.org/publication/Ercim_News/enw36/ernst.html or http://moncs.cs.mcgill.ca/people/ffan/report.dtml
-
-
- * Better introspection support for C functions: ability to expose arguments through inspect. Might require retrofitting existing extensions.
