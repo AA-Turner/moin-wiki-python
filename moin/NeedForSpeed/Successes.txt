@@ -2,5 +2,17 @@ Things we think the Python community will like.
 
 Assorted tweaks:
 
+ * Frame optimizations 
+
  * Made Gzip readline 30-40% faster (BobIppolito)
- * Speed up Unicode repeat operations (AndrewDalke, FredrikLundh)
+
+ * Speed up Unicode operations (AndrewDalke, FredrikLundh).  Most notable, repeat and most search operations (find, index, count, in) are now a lot faster.  Current stringbench results:
+
+{{{
+str(ms) uni(ms) %       comment
+-----------------------------------------------------
+1648.95 2940.04 56.1    TOTAL 2.5a2
+1644.42 2795.33 58.8    TOTAL current (repeat tweaks)
+1643.69 1652.60 99.5    TOTAL optimized match macro
+1644.99 969.33  169.7   TOTAL optimized in
+}}}
