@@ -6,15 +6,13 @@ Assorted tweaks:
 
  * Made Gzip readline 30-40% faster (BobIppolito)
 
- * Speed up Unicode operations (AndrewDalke, FredrikLundh).  Most notable, repeat and most search operations (find, index, count, in) are now a lot faster.  Current stringbench results:
+ * Speed up Unicode operations (AndrewDalke, FredrikLundh).  Most notable, repeat and most search operations (find, index, count, in) are now a lot faster.  Also, rsplit is now as fast as split, and splitlines is nearly as fast as a plain split("\n").  Current stringbench results:
 
 {{{
 str(ms) uni(ms) %       comment
 -----------------------------------------------------
-1648.95 2940.04 56.1    TOTAL 2.5a2
-1644.42 2795.33 58.8    TOTAL current (repeat tweaks)
-1643.69 1652.60 99.5    TOTAL optimized match macro
-1644.99 969.33  169.7   TOTAL optimized in
+2374.13 3786.27 62.7    TOTAL 2.5a2
+2347.33 1335.65 175.7   TOTAL trunk
 }}}
 
  * Patch 1335972 was a combination bugfix+speedup for string->int conversion.  These are the speedups measured on my Windows box for decimal strings of various lengths.  Note that the difference between 9 and 10 is the difference between short and long Python ints on a 32-bit box.  The patch doesn't actually do anything to speed conversion to long directly; the speedup in those cases is solely due to due to detecting "unsigned long" overflow more quickly:
@@ -43,3 +41,6 @@ length speedup
 19       35.7%
 
 }}}
+
+
+ * The struct module has been rewritten to pre-compile struct descriptors (similar to the RE module).  On average, this leads to a 20% speedup [BobIppolito].
