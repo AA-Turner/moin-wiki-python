@@ -15,7 +15,7 @@ str(ms) uni(ms) %       comment
 2347.33 1335.65 175.7   TOTAL trunk
 }}}
 
- * Patch 1335972 was a combination bugfix+speedup for string->int conversion.  These are the speedups measured on my Windows box for decimal strings of various lengths.  Note that the difference between 9 and 10 is the difference between short and long Python ints on a 32-bit box.  The patch doesn't actually do anything to speed conversion to long directly; the speedup in those cases is solely due to due to detecting "unsigned long" overflow more quickly:
+ * Patch 1335972 was a combination bugfix+speedup for string->int conversion.  These are the speedups measured on my Windows box for decimal strings of various lengths.  Note that the difference between 9 and 10 is the difference between short and long Python ints on a 32-bit box.  The patch doesn't actually do anything to speed conversion to long directly; the speedup in those cases is solely due to detecting "unsigned long" overflow more quickly:
 
 {{{
 length speedup
