@@ -47,3 +47,55 @@ Things we think the Python community will like.
  * The struct module has been rewritten to pre-compile struct descriptors (similar to the RE module).  This gives a 20% speedup, on average, for the test suite [BobIppolito].  Taking advantage of new ability to "compile" a struct pattern (similar to compiling regexps) can be much faster still.
 
  * Worked on using profile guided optimizations in Visual Studio 8 (KristjanJonsson, RichardMTew).  This appears to give on the order of 15% speed improvement in the pybench test suite.  A new PCBuild8 directory will be added with automated mechanisms for doing this.
+
+ * Patch 1442927 aimed at speeding `long(str, base)` operations.  It required major fiddling for portability, endcase correctness, and avoiding significant slowdowns on shorter input strings.  Now it's up to 6x faster, although it takes a lot of digits to get that, and it's still slower for 1-digit inputs.  Speedups at various lengths for decimal inputs, comparing 2.4.3 with current trunk:
+
+{{{
+  len  speedup
+ ----  -------
+   1     -4.5%
+   2      4.6%
+   3      8.3%
+   4     12.7%
+   5     16.9%
+   6     28.6%
+   7     35.5%
+   8     44.3%
+   9     46.6%
+  10     55.3%
+  11     65.7%
+  12     77.7%
+  13     73.4%
+  14     75.3%
+  15     85.2%
+  16    103.0%
+  17     95.1%
+  18    112.8%
+  19    117.9%
+  20    128.3%
+  30    174.5%
+  40    209.3%
+  50    236.3%
+  60    254.3%
+  70    262.9%
+  80    295.8%
+  90    297.3%
+ 100    324.5%
+ 200    374.6%
+ 300    403.1%
+ 400    391.1%
+ 500    388.7%
+ 600    440.6%
+ 700    468.7%
+ 800    498.0%
+ 900    507.2%
+1000    501.2%
+2000    450.2%
+3000    463.2%
+4000    452.5%
+5000    440.6%
+6000    439.6%
+7000    424.8%
+8000    418.1%
+9000    417.7%
+}}}
