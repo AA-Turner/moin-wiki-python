@@ -11,9 +11,12 @@ Things we think the Python community will like.
 {{{
         str(ms) uni(ms) %       comment
         -----------------------------------------------------
-        2374.13 3786.27 62.7    TOTAL 2.5a2
-        2347.33 1335.65 175.7   TOTAL trunk
+        2271.31 3608.32 62.9    TOTAL 2.5a2
+        2261.85 1187.84 190.4   TOTAL tuesday
+        2230.05 1027.68 217.0   TOTAL wednesday
 }}}
+
+(yes, the Unicode string type is more than twice as fast on this set of tests.)
 
  * Patch 1335972 was a combination bugfix+speedup for string->int conversion.  These are the speedups measured on my Windows box for decimal strings of various lengths.  Note that the difference between 9 and 10 is the difference between short and long Python ints on a 32-bit box.  The patch doesn't actually do anything to speed conversion to long directly; the speedup in those cases is solely due to detecting "unsigned long" overflow more quickly:
 
