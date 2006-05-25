@@ -6,7 +6,7 @@ Things we think the Python community will like.
 
  * Made Gzip readline 30-40% faster (BobIppolito)
 
- * Speed up Unicode operations (AndrewDalke, FredrikLundh).  Most notable, repeat is much faster, and most search operations (find, index, count, in) are a LOT faster (20x for the related stringbench tests).  Also, rsplit is now as fast as split, and splitlines is nearly as fast as a plain split("\n").  Current stringbench results:
+ * Speed up Unicode operations (AndrewDalke, FredrikLundh).  Most notable, repeat is much faster, and most search operations (find, index, count, in) are a LOT faster (25x for the related stringbench tests).  Also, rsplit is now as fast as split, and splitlines is nearly as fast as a plain split("\n").  Current stringbench results:
 
 {{{
         str(ms) uni(ms) %       comment
@@ -18,8 +18,7 @@ Things we think the Python community will like.
 
   (yes, the Unicode string type is now more than twice as fast on this set of tests, and over 4 times faster than when we started.  ymmv.)
 
- * Later: Speed up string operations (AndrewDalke, FredrikLundh),
-using similar approaches as for Unicode.
+ * Later: Speed up string operations (AndrewDalke, FredrikLundh), using similar approaches as for Unicode.
 
 {{{
         str(ms) uni(ms) %       comment
@@ -111,4 +110,4 @@ using similar approaches as for Unicode.
 }}}
 
 
- * Replaced some Python C-API calls by newer, speedier versions.
+ * Replaced some Python C-API calls by newer, speedier versions.  Most notably, using PyObject_CallFunctionObjArgs instead of PyObject_CallFunction when all arguments are PyObject pointers (the O format code) can shave of some 30% from the actual function call.
