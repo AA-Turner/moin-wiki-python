@@ -5,52 +5,55 @@ Discussion about any Python-related SoC topic should take place on
 
 For information on last year's accepted projects, see ["SummerOfCode/2005"].
 
-= Pygame on ctypes =
+= Improving the Python debugger =
 
-Student: Alex Holkner
+Student: Matthew J Fleming 
 
-Mentor:  Richard Jones
+Mentor: Robert L. Bernstein 
 
-My project proposal is to rewrite Pygame to use ctypes.  The current implementation is written as a C module that links to SDL.  The proposed addition of ctypes to Python 2.5 is a great catalyst for using it to wrap SDL and reimplementing Pygame in pure Python.  This would allow developers to extend Pygame with much more ease than is currently possible, and to make use of SDL features not exported by Pygame, and to give PyPy development another library.
+Many people have voiced their concern that the Python debugger could be improved in a number of ways. This project aims to incorporate these suggestions into an improved version of Pdb.
 
-= SQLAlchemy Schema Migration =
+= Base multidimensional array type for Python core =
 
-Student: Evan Pierce Rosson 
+Student: KarolLangner 
 
-Mentor: Jonathan La``Cour
+Mentor: Travis E. Oliphant 
 
-SQLAlchemy is an excellent object-relational database mapper for Python projects. Currently, it does a fine job of creating a database from scratch, but provides no tool to assist the user in modifying an existing database. This project aims to provide such a tool. 
+The goal is to prepare a simple, generic multidimensional array interface that can be readily placed in the Python core as a new built-in base type (called, for instance, 'dimarray'), and possibly included in a future Python distribution (maybe 2.6?). This new base type will have the same C-structure as the current array implementation in numpy and will be based on a interface recently formulated by Travis Oliphant within a Python Enhancement Proposal (http://svn.scipy.org/svn/PEP/). After preparing a 'ready to insert' version of the array interface, it will be applied to numpy and several other packages that work with multidimensional data, and possibly modified in order to work out an optimal scope.
 
+= Logging Usage in the Standard Library (PEP 337) =
 
-= Drop-in WSGI support for Commodity Hosting =
+Student: Jackilyn Hoxworth 
 
-Student: Jonathan Rosebaugh 
+Mentor: James Joseph Jewett
 
-Mentor: Benjamin C. Bangert 
+Implement PEP 337, possibly updating the PEP to take account of any new issues that arise.
 
-Tentative Pythonesque Project Name: Holy Grail
+= Decimal module in C. =
 
-[http://www.inklesspen.com/trac/grail/ Project Trac]
+Student: Mateusz Rukowicz 
 
-I intend to take advantage of existing developments in WSGI such as Paste, flup, and various WSGI-compatible frameworks in order to develop a simple drop-in method for hosting WSGI webapps in commodity hosting.
+Mentor: Facundo Batista 
 
-Project Goals in rough order of priority
-
-  * WSGI Admin Panel - A self-contained WSGI app which allows the user to attach various WSGI apps to different urls. At its most basic it will be a simple wrapper around paste.urlmap, but it will be able to handle more complex situations, involving such things as paste.cascade, paste.urlparser, various middleware, and other complex situations. When I can use PasteDeploy I will, but there will have to be support for manual importing of apps from modules.
-  * FastCGI made easy - flup has taken us most of the way, but it needs to be friendlier. Some hosting providers want the FastCGI process to be running on a specified port; some providers want the web server to spawn it. Either option should be easy to do, with robust process management to make sure the FastCGI process stays up.
-  * Ease of installation for webhosts - Ideally, a commodity webhost should be able to provide this package for their customers; just click a button in the signup and the WSGI admin panel is deployed to the user's account, creating an isolated user environment using workingenv and setuptools.
-  * Ease of installation by end users - However, until this has widespread support by webhosts, the user needs a quick and simple install process. We'll have a simple installer--command line for those who have shell access, python cgi, and maybe even a php-based installer--that lets the user set up their WSGI package using workingenv and setuptools.
+Adding C implementation of decimal module, which eventually would replace current implementation, with no side effects to applications using this module. 
 
 
-= PyDev - Python for Eclipse =
+= Rewrite of the zipfile module. =
 
-Student: Sean Handley
+Student: Nilton Volpato
 
-Mentor: Fabio Zadrozny 
+Mentor: Ilya Etingof 
 
-Project Blog: http://www.planet-soc.com/?q=blog/114
+The project  is to write a new and updated version of the
+zipfile module for dealing with ZIP files with much more features that
+are not supported by zipfile module currently.
 
-My objectives for PyDev are to implement as many of the most popular requested features as I can, bringing the power of Python development in Eclipse up to the same standards as Java. Specifically, I will be adding new features to the debugger and code editor.
+These changes are intended to overcome the current limitations of the module, and include, but are not limited to:
+ * Add support for bzip2 encryption
+ * Add support for removing files stored in zip files
+ * Add file-like object API to ZIP archive members
+ * Add support for the traditional PKWARE encryption
+
 
 = Ajax in python based on PyPy's JavaScript backend =
 
@@ -87,21 +90,17 @@ with the difference that IronPython is a compiler (though most of the
 job is done by the runtime environment), while PyPy.NET will be an
 interpreter.
 
-= Improving the Python debugger =
 
-Student: Matthew J Fleming 
+= PyPy Proposal - Write and port modules from CPython with ctypes =
 
-Mentor: Robert L. Bernstein 
+Student: Lawrence Oluyede 
 
-Many people have voiced their concern that the Python debugger could be improved in a number of ways. This project aims to incorporate these suggestions into an improved version of Pdb.
+Mentor: Christian Tismer 
 
-= Base multidimensional array type for Python core =
-
-Student: KarolLangner 
-
-Mentor: Travis E. Oliphant 
-
-The goal is to prepare a simple, generic multidimensional array interface that can be readily placed in the Python core as a new built-in base type (called, for instance, 'dimarray'), and possibly included in a future Python distribution (maybe 2.6?). This new base type will have the same C-structure as the current array implementation in numpy and will be based on a interface recently formulated by Travis Oliphant within a Python Enhancement Proposal (http://svn.scipy.org/svn/PEP/). After preparing a 'ready to insert' version of the array interface, it will be applied to numpy and several other packages that work with multidimensional data, and possibly modified in order to work out an optimal scope.
+I'd like to make PyPy ready for encrypted communications adding SSL support in the
+ongoing and in-development socket module. The other modules I'll port are: bz2, 
+fcntl, mmap and time (very fundamental). 
+If there's time I'd like to start working on 'os' and 'select' modules also.
 
 
 = SciPy Vector Machine support =
@@ -109,6 +108,49 @@ The goal is to prepare a simple, generic multidimensional array interface that c
 Student: Albert Strasheim 
 
 Mentor: David Kammeyer 
+
+= Neural Nets in SciPy =
+
+Student: Frederic Mailhot 
+
+Mentor: Robert Kern 
+
+The goal of this project is to extend SciPy's functionality by adding modules for the design, training and use of a variety of neural network architectures, including standard feedforward and recurrent networks, among others. As a guide I intend to work from the modules in Matlab's Netlab toolkit, as well as from my own experience implementing recurrent networks.
+
+= Enhancements to mathtext (part of matplotlib) - a Python package for typesetting =
+
+Student: Edin Salkovic 
+
+Mentor: John D Hunter 
+
+After a discussion at the scipy user list, and the comments of the possible
+mentor (John Hunter, creator/maintainer of matplotlib), I decided to work 
+on improving mathtext, which is part of matplotlib. So, for this summer of
+code I could work on the following (roughly in order of importance/realization):
+
+ * replace the existing bakoma truetype fonts with a set of good,
+ comprehensive, math fonts, eg, STIX (http://www.stixfonts.org/).
+ The STIX fonts should be available by the begining of June. Also,
+ the code should be refactored so that unicode names for symbols can
+ be used. This will allow plugging in any font that supports unicode
+ (STIX fonts already support unicode). Currently mathtext hardcodea
+ the mapping from TeX symbol name to a (font_file, glyph_index) tuple,
+ which ties mathtext to a given set of fonts (eg, the Bakoma fonts).
+
+ * incorporate some of Knuth's layout algorithms into the mathtext
+ layout engine.
+
+ * refactor mathtext into a stand-alone module
+
+
+ * add support for kerning - the current bakoma fonts do not have kerning
+ info in them.
+
+ * improve the parser to handle more TeX
+
+ * add support for fractions (\frac), arrays etc.
+
+I plan to continue the work on mathtext after SoC.
 
 = Soya3D Collision API : Improving ODE integration in the core =
 
@@ -122,6 +164,65 @@ collision API or a properly integrated physics engine.
 I am applying to Summer of Code 2006 in order to fix these deficiencies by
 improving support for the Open Dynamics Engine (ode.org), which is barely working and too low-level in the last release of Soya, and provide a similar collision detection system to
 all objects whether ODE is in use or not.
+
+= Soya3D exporting/importing tools for Blender =
+
+Student: Palle Raabjerg 
+
+Mentor: Buddha Michael Dylan Buck 
+
+Currently, no Soya3D importers exist for Blender. This means you cannot import any Soya3D or Cal3D models into Blender. This can be inconvenient for both the game developer, as he needs to publish the .blend files to allow people to modify models, and for a gamer community surrounding a project, as they can't modify models unless the developer publishes the .blend files. (Note: This might be a perfectly okay and even preferable situation for some proprietary game developers, but Soya3D is built on a philosophy of openness and freedom, making this a more important feature.)
+
+The Soya3D exporter tools basically consists of the blender2soya and blender2cal3d scripts. blender2soya is currently used for static (non-animated) models, and blender2cal3d is used for exporting animated skeletal models to the Cal3D format, which can also be used with Soya.
+These two scripts lack many features, however, and still contain known flaws.
+
+If I am assigned to this project, I will create Soya3D and Cal3D importers for Blender, and I will work on both exporter scripts
+
+= Pygame on ctypes =
+
+Student: Alex Holkner
+
+Mentor:  Richard Jones
+
+My project proposal is to rewrite Pygame to use ctypes.  The current implementation is written as a C module that links to SDL.  The proposed addition of ctypes to Python 2.5 is a great catalyst for using it to wrap SDL and reimplementing Pygame in pure Python.  This would allow developers to extend Pygame with much more ease than is currently possible, and to make use of SDL features not exported by Pygame, and to give PyPy development another library.
+
+= SQLAlchemy Schema Migration =
+
+Student: Evan Pierce Rosson 
+
+Mentor: Jonathan La``Cour
+
+SQLAlchemy is an excellent object-relational database mapper for Python projects. Currently, it does a fine job of creating a database from scratch, but provides no tool to assist the user in modifying an existing database. This project aims to provide such a tool. 
+
+= Drop-in WSGI support for Commodity Hosting =
+
+Student: Jonathan Rosebaugh 
+
+Mentor: Benjamin C. Bangert 
+
+Tentative Pythonesque Project Name: Holy Grail
+
+[http://www.inklesspen.com/trac/grail/ Project Trac]
+
+I intend to take advantage of existing developments in WSGI such as Paste, flup, and various WSGI-compatible frameworks in order to develop a simple drop-in method for hosting WSGI webapps in commodity hosting.
+
+Project Goals in rough order of priority
+
+  * WSGI Admin Panel - A self-contained WSGI app which allows the user to attach various WSGI apps to different urls. At its most basic it will be a simple wrapper around paste.urlmap, but it will be able to handle more complex situations, involving such things as paste.cascade, paste.urlparser, various middleware, and other complex situations. When I can use PasteDeploy I will, but there will have to be support for manual importing of apps from modules.
+  * FastCGI made easy - flup has taken us most of the way, but it needs to be friendlier. Some hosting providers want the FastCGI process to be running on a specified port; some providers want the web server to spawn it. Either option should be easy to do, with robust process management to make sure the FastCGI process stays up.
+  * Ease of installation for webhosts - Ideally, a commodity webhost should be able to provide this package for their customers; just click a button in the signup and the WSGI admin panel is deployed to the user's account, creating an isolated user environment using workingenv and setuptools.
+  * Ease of installation by end users - However, until this has widespread support by webhosts, the user needs a quick and simple install process. We'll have a simple installer--command line for those who have shell access, python cgi, and maybe even a php-based installer--that lets the user set up their WSGI package using workingenv and setuptools.
+
+
+= PyDev - Python for Eclipse =
+
+Student: Sean Handley
+
+Mentor: Fabio Zadrozny 
+
+Project Blog: http://www.planet-soc.com/?q=blog/114
+
+My objectives for PyDev are to implement as many of the most popular requested features as I can, bringing the power of Python development in Eclipse up to the same standards as Java. Specifically, I will be adding new features to the debugger and code editor.
 
 
 
@@ -155,43 +256,6 @@ generated code and hence performance is improved.
 
 
 
-= Decimal module in C. =
-
-Student: Mateusz Rukowicz 
-
-Mentor: Facundo Batista 
-
-Adding C implementation of decimal module, which eventually would replace current implementation, with no side effects to applications using this module. 
-
-
-= Rewrite of the zipfile module. =
-
-Student: Nilton Volpato
-
-Mentor: Ilya Etingof 
-
-The project  is to write a new and updated version of the
-zipfile module for dealing with ZIP files with much more features that
-are not supported by zipfile module currently.
-
-These changes are intended to overcome the current limitations of the module, and include, but are not limited to:
- * Add support for bzip2 encryption
- * Add support for removing files stored in zip files
- * Add file-like object API to ZIP archive members
- * Add support for the traditional PKWARE encryption
-
-= Soya3D exporting/importing tools for Blender =
-
-Student: Palle Raabjerg 
-
-Mentor: Buddha Michael Dylan Buck 
-
-Currently, no Soya3D importers exist for Blender. This means you cannot import any Soya3D or Cal3D models into Blender. This can be inconvenient for both the game developer, as he needs to publish the .blend files to allow people to modify models, and for a gamer community surrounding a project, as they can't modify models unless the developer publishes the .blend files. (Note: This might be a perfectly okay and even preferable situation for some proprietary game developers, but Soya3D is built on a philosophy of openness and freedom, making this a more important feature.)
-
-The Soya3D exporter tools basically consists of the blender2soya and blender2cal3d scripts. blender2soya is currently used for static (non-animated) models, and blender2cal3d is used for exporting animated skeletal models to the Cal3D format, which can also be used with Soya.
-These two scripts lack many features, however, and still contain known flaws.
-
-If I am assigned to this project, I will create Soya3D and Cal3D importers for Blender, and I will work on both exporter scripts
 
 = YAML parser and emitter =
 
@@ -264,40 +328,6 @@ The next part of this project will include collaboration with Richard Jones, PyP
 
 The remaining time will be spent on resolving all problems that would occur during usage of Cheesecake and PyPI. Along with fixing bugs, I will develop a simple Hello world package that can be taken as an example of good development practices for all Python developers. It should also score 100% in the Cheesecake test of course. ;-) It will be what [http://savannah.gnu.org/projects/hello/ hello] is for GNU Project. 
 
-= Enhancements to mathtext (part of matplotlib) - a Python package for typesetting =
-
-Student: Edin Salkovic 
-
-Mentor: John D Hunter 
-
-After a discussion at the scipy user list, and the comments of the possible
-mentor (John Hunter, creator/maintainer of matplotlib), I decided to work 
-on improving mathtext, which is part of matplotlib. So, for this summer of
-code I could work on the following (roughly in order of importance/realization):
-
- * replace the existing bakoma truetype fonts with a set of good,
- comprehensive, math fonts, eg, STIX (http://www.stixfonts.org/).
- The STIX fonts should be available by the begining of June. Also,
- the code should be refactored so that unicode names for symbols can
- be used. This will allow plugging in any font that supports unicode
- (STIX fonts already support unicode). Currently mathtext hardcodea
- the mapping from TeX symbol name to a (font_file, glyph_index) tuple,
- which ties mathtext to a given set of fonts (eg, the Bakoma fonts).
-
- * incorporate some of Knuth's layout algorithms into the mathtext
- layout engine.
-
- * refactor mathtext into a stand-alone module
-
-
- * add support for kerning - the current bakoma fonts do not have kerning
- info in them.
-
- * improve the parser to handle more TeX
-
- * add support for fractions (\frac), arrays etc.
-
-I plan to continue the work on mathtext after SoC.
 
 = PyCells: Port of CLOS Cells extension =
 
@@ -327,30 +357,3 @@ Mentor: Mark Hammond
 Writing plugins with the NPAPI requires using the cumbersome and error-prone C or C++. I propose a thin binding of the interface to Python, by the means of a plugin embedding a Python interpreter and exposing inside it the NPAPI. It does not imply executing Python code from webpages, simply a way to write plugins in Python instead of C.
 
 In addition to ease the creation of plugins, I would make bindings to readily enable the use of wxPython, PyGTK, PyGame and Soya3D. These bindings would enable those libraries to handle the in-browser window and associated events.
-
-= Neural Nets in SciPy =
-
-Student: Frederic Mailhot 
-
-Mentor: Robert Kern 
-
-The goal of this project is to extend SciPy's functionality by adding modules for the design, training and use of a variety of neural network architectures, including standard feedforward and recurrent networks, among others. As a guide I intend to work from the modules in Matlab's Netlab toolkit, as well as from my own experience implementing recurrent networks.
-
-= PyPy Proposal - Write and port modules from CPython with ctypes =
-
-Student: Lawrence Oluyede 
-
-Mentor: Christian Tismer 
-
-I'd like to make PyPy ready for encrypted communications adding SSL support in the
-ongoing and in-development socket module. The other modules I'll port are: bz2, 
-fcntl, mmap and time (very fundamental). 
-If there's time I'd like to start working on 'os' and 'select' modules also.
-
-= Logging Usage in the Standard Library (PEP 337) =
-
-Student: Jackilyn Hoxworth 
-
-Mentor: James Joseph Jewett
-
-Implement PEP 337, possibly updating the PEP to take account of any new issues that arise.
