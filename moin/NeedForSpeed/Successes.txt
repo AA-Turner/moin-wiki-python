@@ -111,3 +111,21 @@ Things we think the Python community will like.
 
 
  * Replaced some Python C-API calls by newer, speedier versions.  Most notably, using PyObject_CallFunctionObjArgs instead of PyObject_CallFunction when all arguments are PyObject pointers (the O format code) can shave of some 30% from the actual function call.
+
+ * Added support for min(), max(), sum(), and pow() to Psyco.  This produces significant speedups when used in combination with virtualized objects.
+
+{{{
+    Operation             CPython 2.4.3    Psyco 1.5.1   Psyco-NFS
+    ------------------    -------------    -----------   -----------
+    sum(range(100))       9.856            8.709         0.016
+    min(1, max(2, 3))     1.131            0.504         0.017
+    pow(3, 2, 2)          0.602            0.140         0.016
+}}}
+
+ * Added support for int(), float(), and round() to Psyco.  These become quite efficient within a set of other psyco operations.
+
+{{{
+    Operation             CPython 2.4.3    Psyco 1.5.1   Psyco-NFS
+    ------------------    -------------    -----------   -----------
+    int(round(5.375))     0.975            0.461         0.015
+}}}
