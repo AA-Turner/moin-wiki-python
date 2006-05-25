@@ -1,0 +1,57 @@
+ * Continue function call speed enhancements. Neal Norwitz patch review. Zombie frames? TimPeters will continue.
+
+ * Faster parsing of strings and bytes into int, long, and back. TimPeters: patch ready - needs clean-up
+
+ * Buffer for use with network I/O MartinBlais working in blair-bytebuf branch --> sandbox? [Performance comparisons first]
+
+ * Patch list review DONE (see ListOfPerformanceRelatedPatches)
+
+ * Implement portions of the decimal module in C: GeorgBrandl and JackDeiderich
+
+ * Create a PyInt64 type (for 32 bit machines) Evaluate source impact ...GvR: Not in 2.5! [/Deferred?]
+
+ * Build-out struct module to support fast, high-volume binary conversions [perhaps with regexp analogs such struct.compile() and struct.finditer()] Offset arg? DONE
+
+ * Optimize methods in stringobject.c FredrikLundh + AndrewDalke
+
+ * Allow selective removal of unused features such as profiling support DONE [/DeferredSuccesses?]
+
+ * Expose/develop pre-allocation arguments/methods for dict/list? API? [/DeferredSucceses]
+
+ * String benchmark DONE
+
+ * Improve interpreter startup time, like in patch [SF]921466? GeorgBrandl
+
+ * Patch that Skip wrote for a possible implementation of str.partition() which returns a string subclass with pointers to the slices instead of a full copy. Any subsequent string ops lazily evaluate the slice into a full string. [--> RaymondHettinger]
+
+ * Unicode improvements per CCP requirements: DONE
+
+ * Build-out the collections module for optimized data structures: ordered dictionary: API? Use case?! red/black? pivot tbl? skip list: contribution? radix/crit-bit trees? ChristianTismer + RichardEmslie
+
+ * Struct benchmark DONE - needs to be incorporated into pybench BobIppolito
+
+ * Improve the API for timeit.py [SH to search python-dev and call Raymond Hettinger for details if necessary]
+
+ * Update PythonSpeed/PerformanceTips Everyone can make suggestions SeanReifschneider + JohnBenediktsson
+
+ * Evaluate the PEPs for optimizing global and attribute lookups
+
+    PEP 266
+    PEP 267
+    PEP 280
+
+
+* Psyco improvements:
+  Support for generator expressions
+  Support for nested scopes
+  Support for more dictionary operations
+  Speedup float arithmetic
+  Support for more built-ins (e.g. int(), long(), float(), etc.)
+  Upgrade for python 2.5
+  Better tools for profiling psyco-ness of application
+  Investigate usefulness of IVM (with aim to producing a more streamlined dispatch loop)
+  LLVM backend
+  Virtualized longs (for long longs)
+  Virtualized slots (Ability to cache getattribute() values)
+
+* Py3000: Make a wishlist for possible performance gains in Py3.0
