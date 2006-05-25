@@ -2,7 +2,7 @@ Things we think the Python community will like.
 
  * Frame optimizations: once a function is called it retains the allocated frame for use in future calls, avoiding allocation and initialization overhead. Frame size has also been slightly reduced.
 
- PyStone is over 10% higher on RichardJones' test machine, compared to Python 2.4 (from 20242 to 22935).  PyBench reports an overall slowdown, attributed to a 150% slowdown in a piece of code that wasn't changed.  Sigh.
+ PyStone is over 10% higher on RichardJones' test machine, compared to Python 2.4 (from 20242 to 22935).
 
  * Made Gzip readline 30-40% faster (BobIppolito)
 
@@ -17,6 +17,16 @@ Things we think the Python community will like.
 }}}
 
   (yes, the Unicode string type is now more than twice as fast on this set of tests, and over 4 times faster than when we started.  ymmv.)
+
+ * Later: Speed up string operations (AndrewDalke, FredrikLundh),
+using similar approaches as for Unicode.
+
+{{{
+        str(ms) uni(ms) %       comment
+        -----------------------------------------------------
+        2271.31 3608.32 62.9    TOTAL 2.5a2
+        694.97  883.67  78.6    TOTAL thursday
+}}}
 
  * Patch 1335972 was a combination bugfix+speedup for string->int conversion.  These are the speedups measured on my Windows box for decimal strings of various lengths.  Note that the difference between 9 and 10 is the difference between short and long Python ints on a 32-bit box.  The patch doesn't actually do anything to speed conversion to long directly; the speedup in those cases is solely due to detecting "unsigned long" overflow more quickly:
 
