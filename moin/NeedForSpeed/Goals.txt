@@ -6,11 +6,6 @@ You can add additional topics below.  Please discuss the specific goals and poss
 
  * CPython 2.5 is slower than CPython 2.4.  See ["/Slowdown"].
 
- * Evaluate the PEPs for optimizing global and attribute lookups 
-   [http://www.python.org/dev/peps/pep-0266/ PEP 266],
-   [http://www.python.org/dev/peps/pep-0267/ PEP 267],
-   and [http://www.python.org/dev/peps/pep-0280/ PEP 280]
-
  * Can floating point ops be sped-up by avoiding flag/exception checks at every step?  Can some floating point ops be in-lined in ceval.c?
 
    TimPeters: By default, CPython does no flag or exception checks on float ops -- the `PyFPE_START_PROTECT` and `PyFPE_END_PROTECT` macros normally have empty expansions.  Inlining is possible but probably undesirable.  Doing masses of fp ops in one gulp via the NumPy (or whatever it's called now) extension is the sanest approach.
