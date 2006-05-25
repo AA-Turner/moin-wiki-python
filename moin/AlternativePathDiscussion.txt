@@ -4,6 +4,13 @@ This page describes parts of the Path class design which are in discussion. It i
 
 This discussion will be used to write a PEP (an alternative to PEP 355) and reference implementation.
 
+= Constructor =
+'''agreed:'''
+{{{Path("/a/b")       => a Path object for "/a/b".
+Path()             => same as Path(os.curdir).
+Path.cwd()         => same as Path(os.getcwd()).
+Path(["a", "b"])   => ???  Join paths?}}}
+
 = Representation =
 
 '''agreed:''' A logical representation is better than a string representation.  {{{p[:]}}} should behave like a tuple of path components (directories and the final filename).  {{{p[n1:n2}}} should return a new Path containing only the sliced components.  {{{p1 + p2}}} should join paths.  This eliminates the need for several properties/methods: .parent, .name, .join(), .split(), etc.  {{{str(p)}}} should return a platform-specific string representing the entire path.  
@@ -74,12 +81,6 @@ Noam: Can you please elaborate about why not to subclass from tuple?
 Mike: Containment is better than inheritance.  Never subclass if you can reasonably put the value in an attribute; it leads to all sorts of potential conflicts and bugs.  Subclass only if the object really ''is'' a type of the superclass, and/or if the user will be calling a lot of the superclass's methods directly.
 
 Noam: You can always use containment - you never really need to subclass. I think that if it's agreed that all the data is stored in the sequence, inheritence from tuple is ok, since we really behave like an immutable sequence, and add some operations about the sequence.
-
-== Root element storing the separator ==
-
-'''agreed:''' The separator should be an attribute of the path class, not of the root element. (reasons are in version 10 of the wiki)
-
-Mike: I don't think anybody proposed storing the separator in the root element; it was a misunderstanding.  So this section can probably be deleted.
 
 == Immutability ==
 
@@ -239,9 +240,11 @@ Noam: It currently returns True if a file is a regular file. Perhaps it would be
 
 Each of the methods exists, isdir, isfile, lexists, lisdir, lisfile, islink returns True on a different subset of these: exists - 3,4,5,6. isdir - 3,5. isfile - 4,6. lexists - 2,3,4,5,6. lisdir - 5. lisfile - 6. islink - 2,3,4.
 
-Mike: I don't understand what you're proposing.  os.path.is* follow symlinks, and you can add "and os.path.islink()" to find only symlinks or only non-links.  I've done that in several programs and haven't found it cumbersome.  To check for a special file: "not os.path.isfile(foo) and not os.path.isdir(foo)".  This is a little strange but perhaps better than adding a bunch of obscure methods (ischr, isblk, isfifo, issock, isdoor).  I proposed a method last year that would return a one-character type a la Unix find ('f' for regular files, 'c' for character devices, etc), but it found opposition over the character constants.
+Mike: In other words, Norm is proposing that .isfile return True for all non-directories, whereas os.path.isfile(F) returns True only for regular files (not special files).  This parallels the other methods (.files()).  However, it does make it harder for the user to treat special files separately.  Normally if ``not os.path.isfile(foo) and not os.path.isdir(foo)``, the file is a device.  Since we're removing functionality, let's add .isspecial() to bring it back -- even better than os.path does!  This returns True if any of the ``stat.S_*`` functions would return True.  
 
-Noam: I propose to simplify the model: there are only links, directories and files. There are many kinds of files, but that's not something you should bother yourself with usually, since they behave like regular files for most uses.
+Mike: There are no methods to check for a special file type (ischr, isblk, isfifo, issock, isdoor).  Instead you have to do ``stat.S_ISBLK( Path("FOO").stat().mode )``.  I'm tempted to say we should add the methods, although they're rarely used.
+
+Mike: Note that .isfile() and .isspecial() follow symbolic links, so they refer to the pointed-to file.  They both return False if the link is dead, because these methods should never return True when .exists() would return False).  But .lisfile() and .isspecial() return False and True respectively for a symbolic link, regardless of what the link points to.
 
 = Access Permissions =
 
@@ -322,30 +325,24 @@ Nick:
 OK, this is one case where a swiss army method may make sense. Specifically, 
 something like:
 
-   def copy_to(self, dest, copyfile=True, copymode=True, copytime=False)
+   def copy_to(self, dest, copymode=True, copytime=False)
 
-Whether or not to copy the file contents, the permission settings and the last access and modification time are then all independently selectable.
+*[Mike removed the 'copyfile' argument, aka 'content'.  If you want to copy just the mode or time or create an empty file, without copying the file content, use other methods.]*
+
+Whether or not to copy the permission settings and the last access and modification time are then all independently selectable.
 
 The different method name also makes the direction of the copying clear (with a bare 'copy', it's slightly ambiguous as the 'cp src dest' parallel isn't as strong as it is with a function).
 
 Noam:
-I think the different name and arguments are a good idea. What exactly does the copyfile argument mean?
+I think the different name and arguments are a good idea.
 
 Jason:  Definitely agree with Nick.
 
 Noam: What about copyto? It's easier to write, I think that it's not hard to understand, and perhaps it focuses less attention on the "to", making it look like a special kind of copy.
 
-Mike: src.copy(dest, content=True, mode=False, time=False).  .copy_to is OK, .copyto is bad.  Almost everybody expects .copy to mean .copy_to and not .copy_from.
+Mike: src.copy(dest, mode=False, time=False).  .copy_to is OK, .copyto is bad.  Almost everybody expects .copy to mean .copy_to and not .copy_from.
 
-Noam: Please, what does the content/copyfile argument mean? About copymode vs. mode: I prefer copymode. "mode" seems like a mode specification (like in mkdir), not like a boolean.
-
-Mike: 'content' means copy the file contents.  If content=False and the destination doesn't exist, create an empty file.  If content=False and the destination does exist, copy the file attributes only but don't modify the content.  This covers all copying use cases.
-
-Noam: Why should you want to copy only attributes? Can you give an example?
-
-Mike: When you want to make the perms/mtime of one file match another file.  When you want to create an empty log file with the same perms/mtime as another file, because the logging program will have modify permission but not create permission.
-
-Noam: It sounds like a very special use case. Perhaps it would suffice to use the methods for obtaining and changing permissions directly?
+Noam: About copymode vs. mode: I prefer copymode. "mode" seems like a mode specification (like in mkdir), not like a boolean.
 
 = Unicode =
 
@@ -427,3 +424,5 @@ Noam: Simply use makedirs() and removedirs().
 Mike: Those methods should go away.  Their names are kludgey, and their behavior can be done with a 'parents=False' argument.
 
 Noam: I don't agree. In this case, I like to leave the basic OS calls do what they do, and keep the API of the complex methods simple (avoid the parents=False option.)
+
+Mike: This is supposed to be an improved API.  Programs are more readable if the methods reflect the operations the user really wants to do.  If the user calls .mkdir it means they want to create the directory, no ifs ands or buts.  The shell commands have a --parents option so why can't we?  If we must have .makedirs it should be called .mkdirs.
