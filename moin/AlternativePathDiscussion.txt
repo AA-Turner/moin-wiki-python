@@ -9,7 +9,7 @@ This discussion will be used to write a PEP (an alternative to PEP 355) and refe
 {{{Path("/a/b")       => a Path object for "/a/b".
 Path()             => same as Path(os.curdir).
 Path.cwd()         => same as Path(os.getcwd()).
-Path(["a", "b"])   => ???  Join paths?}}}
+Path(["a", "b"])   => same as Path('a/b') - since a path is a sequence of items, it should be initializable from an iterable of items.
 
 = Representation =
 
@@ -72,7 +72,7 @@ Noam: I think it works well. Guido said that he didn't like it, but I don't unde
 
 Jason: I suggest making it look like a sequence without actually subclassing tuple.  It is rather strange to be subclassing tuple this way.
 
-Noam: (My previous statement wasn't well formed) I guess this may be left to Guido's decision. I feel that subclassing from tuple is fine, but I don't really care.
+Noam: I guess this may be left to Guido's decision. I feel that subclassing from tuple is fine, but I don't really care.
 
 Mike: the top level can emulate tuple slicing/addition to return a new Path object.  It doesn't have to *subclass* tuple.
 
@@ -240,11 +240,15 @@ Noam: It currently returns True if a file is a regular file. Perhaps it would be
 
 Each of the methods exists, isdir, isfile, lexists, lisdir, lisfile, islink returns True on a different subset of these: exists - 3,4,5,6. isdir - 3,5. isfile - 4,6. lexists - 2,3,4,5,6. lisdir - 5. lisfile - 6. islink - 2,3,4.
 
-Mike: In other words, Norm is proposing that .isfile return True for all non-directories, whereas os.path.isfile(F) returns True only for regular files (not special files).  This parallels the other methods (.files()).  However, it does make it harder for the user to treat special files separately.  Normally if ``not os.path.isfile(foo) and not os.path.isdir(foo)``, the file is a device.  Since we're removing functionality, let's add .isspecial() to bring it back -- even better than os.path does!  This returns True if any of the ``stat.S_*`` functions would return True.  
+Mike: In other words, Noam is proposing that .isfile return True for all non-directories, whereas os.path.isfile(F) returns True only for regular files (not special files).  This parallels the other methods (.files()).  However, it does make it harder for the user to treat special files separately.  Normally if ``not os.path.isfile(foo) and not os.path.isdir(foo)``, the file is a device.  Since we're removing functionality, let's add .isspecial() to bring it back -- even better than os.path does!  This returns True if any of the ``stat.S_*`` functions would return True.
 
 Mike: There are no methods to check for a special file type (ischr, isblk, isfifo, issock, isdoor).  Instead you have to do ``stat.S_ISBLK( Path("FOO").stat().mode )``.  I'm tempted to say we should add the methods, although they're rarely used.
 
+Noam: Great! We can add them to the stat object - no need to make them methods of Path. "isfile" is a method of path because it's quite common to write "if p.exists() and p.stat().isfile". But we don't have to add those shortcuts for rarely-used tests.
+
 Mike: Note that .isfile() and .isspecial() follow symbolic links, so they refer to the pointed-to file.  They both return False if the link is dead, because these methods should never return True when .exists() would return False).  But .lisfile() and .isspecial() return False and True respectively for a symbolic link, regardless of what the link points to.
+
+Noam: About .isspecial(), I think that it ought to be left as an attribute of stat, as I wrote. About lisfile(): It should return True if p.lexists() and p.stat().isfile - it should return True only for files, not for symlinks and dirs.
 
 = Access Permissions =
 
@@ -426,3 +430,7 @@ Mike: Those methods should go away.  Their names are kludgey, and their behavior
 Noam: I don't agree. In this case, I like to leave the basic OS calls do what they do, and keep the API of the complex methods simple (avoid the parents=False option.)
 
 Mike: This is supposed to be an improved API.  Programs are more readable if the methods reflect the operations the user really wants to do.  If the user calls .mkdir it means they want to create the directory, no ifs ands or buts.  The shell commands have a --parents option so why can't we?  If we must have .makedirs it should be called .mkdirs.
+
+Noam: I'm not sure about the name. makedirs/removedirs is more verbose but not too verbose, and keeps "name compatibility" with the os module. On the other hand, mkdirs/rmdirs looks more like mkdir/rmdir. We can leave this to python-dev/Guido decision.
+
+Jason wrote that Guido prefers separate functions for different cases, and in this case, I prefer it too. I think that a simple API is generally better than a complex API. I think that in this case, separate functions are simpler than one function with another option.
