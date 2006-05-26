@@ -1,8 +1,10 @@
 Things we think the Python community will like.
 
- * Frame optimizations: once a function is called it retains the allocated frame for use in future calls, avoiding allocation and initialization overhead. Frame size has also been slightly reduced.
+ * Frame optimizations: once a function is called it retains the allocated frame for use in future calls, avoiding allocation and initialization overhead. Frame size has also been slightly reduced (RichardJones).
 
- PyStone is over 10% higher on RichardJones' test machine, compared to Python 2.4 (from 20242 to 22935).
+ This gave a 10% PyStone improvement on RichardJones' test machine, compared to Python 2.4 (from 20242 to 22935).
+
+ * Applied Py_LOCAL and PY_LOCAL_AGGRESSIVE compiler tuning from SRE to ceval.c (currently for Windows only).  This results in a 3-10% PyStone speedup on our Intel boxes (FredrikLundh).
 
  * Made Gzip readline 30-40% faster (BobIppolito)
 
@@ -27,7 +29,9 @@ Things we think the Python community will like.
         694.97  883.67  78.6    TOTAL thursday
 }}}
 
- * Patch 1335972 was a combination bugfix+speedup for string->int conversion.  These are the speedups measured on my Windows box for decimal strings of various lengths.  Note that the difference between 9 and 10 is the difference between short and long Python ints on a 32-bit box.  The patch doesn't actually do anything to speed conversion to long directly; the speedup in those cases is solely due to detecting "unsigned long" overflow more quickly:
+ * Patch 1335972 was a combination bugfix+speedup for string->int conversion.  These are the speedups measured on my Windows box for decimal strings of various lengths.  Note that the difference between 9 and 10 is the difference between short and long Python ints on a 32-bit box. (TimPeters)
+
+The patch doesn't actually do anything to speed conversion to long directly; the speedup in those cases is solely due to detecting "unsigned long" overflow more quickly:
 
 {{{
         length speedup
@@ -53,11 +57,13 @@ Things we think the Python community will like.
         19       35.7%
 }}}
 
- * The struct module has been rewritten to pre-compile struct descriptors (similar to the RE module).  This gives a 20% speedup, on average, for the test suite [BobIppolito].  Taking advantage of new ability to "compile" a struct pattern (similar to compiling regexps) can be much faster still.
+ * The struct module has been rewritten to pre-compile struct descriptors (similar to the RE module).  This gives a 20% speedup, on average, for the test suite (BobIppolito).  Taking advantage of new ability to "compile" a struct pattern (similar to compiling regexps) can be much faster still.
 
  * Worked on using profile guided optimizations in Visual Studio 8 (KristjanJonsson, RichardMTew).  This appears to give on the order of 15% speed improvement in the pybench test suite.  A new PCBuild8 directory will be added with automated mechanisms for doing this.
 
- * Patch 1442927 aimed at speeding `long(str, base)` operations.  It required major fiddling for portability, endcase correctness, and avoiding significant slowdowns on shorter input strings.  Now it's up to 6x faster, although it takes a lot of digits to get that, and it's still slower for 1-digit inputs.  Speedups at various lengths for decimal inputs, comparing 2.4.3 with current trunk:
+ * Patch 1442927 aimed at speeding `long(str, base)` operations.  It required major fiddling for portability, endcase correctness, and avoiding significant slowdowns on shorter input strings.  Now it's up to 6x faster, although it takes a lot of digits to get that, and it's still slower for 1-digit inputs.  (TimPeters)
+
+Speedups at various lengths for decimal inputs, comparing 2.4.3 with current trunk:
 
 {{{
   len  speedup
@@ -109,8 +115,7 @@ Things we think the Python community will like.
 9000    417.7%
 }}}
 
-
- * Replaced some Python C-API calls by newer, speedier versions.  Most notably, using PyObject_CallFunctionObjArgs instead of PyObject_CallFunction when all arguments are PyObject pointers (the O format code) can shave off some 30% from the actual function call.
+ * Replaced some Python C-API calls by newer, speedier versions.  Most notably, using PyObject_CallFunctionObjArgs instead of PyObject_CallFunction when all arguments are PyObject pointers (the O format code) can shave some 30% off the actual function call (GeorgBrandl).
 
  * Added support for min(), max(), sum(), and pow() to Psyco.  This produces significant speedups when used in combination with virtualized objects. (JohnBenediktsson)
 
