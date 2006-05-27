@@ -151,4 +151,4 @@ Speedups at various lengths for decimal inputs, comparing 2.4.3 with current tru
 
  * GeorgBrandl and JackDiederich worked on a rewrite of the Decimal module in C. This will kick-start a Google SummerOfCode project, which will therefore achieve more than originally planned.
 
- * [unfinished] _sre.c matching can be sped up by 3-5% by using free lists for the small frequently allocated objects.  It uses very few at the same time - even caching a single SRE_REPEAT object gives a speedup of almost 1%.  I [JackDiederich] will try and finish the patch before 2.5beta.
+ * regexp searching speedup by 1%-2% on linux just by using PyObject_(MALLOC|FREE) for small allocations instead of system malloc.  Unfinished is a free lists implementation for the small frequently allocated objects.  _sre.c uses very few objects at the same time - even caching a single SRE_REPEAT object gives a speedup of almost 1%!  I [JackDiederich] will try and finish the patch before 2.5beta.
