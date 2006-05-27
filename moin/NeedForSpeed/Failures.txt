@@ -24,4 +24,4 @@ As part of the new exceptions implementation, we tried making a singleton StopIt
 
 Making a PyDict_GET_SIZE like PyTuple_GET_SIZE doesn't give a measurable improvement in pybench or pystone.  This is likely because the compiler notices that those functions that use it have alreaday done NULL checks and frequently PyDict_Check so we aren't telling it anything it didn't already know.
 
-Conversley changing all Py(Tuple|List)_GET_SIZE to point to plain Size has no measurable slowdown! Well, in the range of 0.5%, which may just be noise.  Switching the #define to the real functions generates some spurious warnings because the regular methods expect PyObjects and not the more specific types.
+Conversely changing all Py(Tuple|List)_GET_SIZE to point to plain Size has no measurable slowdown! Well, in the range of 0.5%, which may just be noise.  Switching the #define to the real functions generates some spurious warnings because the regular methods expect PyObjects and not the more specific types.
