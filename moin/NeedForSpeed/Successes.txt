@@ -59,6 +59,8 @@ The patch doesn't actually do anything to speed conversion to long directly; the
 
  * The struct module has been rewritten to pre-compile struct descriptors (similar to the RE module).  This gives a 20% speedup, on average, for the test suite (BobIppolito).  Taking advantage of new ability to "compile" a struct pattern (similar to compiling regexps) can be much faster still.
 
+* A pack_to() method has been added to the struct module to support packing directly into a writable buffer.  Also, recv_buf() and recvfrom_buf() methods were added to the socket module to read directly into a writable buffer (MartinBlais).  Right now, the only way to create a writable buffer from Python is via the array module, but I'm adding a new class that supports this (see below).
+
  * Worked on using profile guided optimizations in Visual Studio 8 (KristjanJonsson, RichardMTew).  This appears to give on the order of 15% speed improvement in the pybench test suite.  A new PCBuild8 directory will be added with automated mechanisms for doing this.
 
  * Patch 1442927 aimed at speeding `long(str, base)` operations.  It required major fiddling for portability, endcase correctness, and avoiding significant slowdowns on shorter input strings.  Now it's up to 6x faster, although it takes a lot of digits to get that, and it's still slower for 1-digit inputs.  (TimPeters)
@@ -152,3 +154,7 @@ Speedups at various lengths for decimal inputs, comparing 2.4.3 with current tru
  * GeorgBrandl and JackDiederich worked on a rewrite of the Decimal module in C. This will kick-start a Google SummerOfCode project, which will therefore achieve more than originally planned.
 
  * regexp searching speedup by 1%-2% on linux just by using PyObject_(MALLOC|FREE) for small allocations instead of system malloc.  Unfinished is a free lists implementation for the small frequently allocated objects.  _sre.c uses very few objects at the same time - even caching a single SRE_REPEAT object gives a speedup of almost 1%!  I [JackDiederich] will try and finish the patch before 2.5beta.
+
+ * [unfinished] _sre.c matching can be sped up by 3-5% by using free lists for the small frequently allocated objects.  It uses very few at the same time - even caching a single SRE_REPEAT object gives a speedup of almost 1%.  I [JackDiederich] will try and finish the patch before 2.5beta.
+
+ * Implemented a new “hot buffer” class, which consists in a moving string that sits on top of a fixed allocated memory buffer.  The buffer has a window which defines the visible portion (you can change this window during parsing).  Given a hot buffer, you should be able to read data into it from the network or from a file without having to create temporary strings, and to extract bytes and other basic types from it similarly.  The hot buffer will also implement common parsing patterns in C (line-delimited protocols, netstrings) (Martin Blais).
