@@ -8,25 +8,15 @@ Things we think the Python community will like.
 
  * Made Gzip readline 30-40% faster (BobIppolito)
 
- * Speed up Unicode operations (AndrewDalke, FredrikLundh).  Most notable, repeat is much faster, and most search operations (find, index, count, in) are a LOT faster (25x for the related stringbench tests).  Also, rsplit is now as fast as split, and splitlines is nearly as fast as a plain split("\n").  Current stringbench results:
+ * Speed up string and Unicode operations (AndrewDalke, FredrikLundh).    Most notable, repeat is much faster, and most search operations (find, index, count, in) are a LOT faster (25x for the related stringbench tests).  Parts of the code has also been moved into a "stringlib" directory, which contain code that's used by both string types.  Here are the current "stringbench" results:
 
 {{{
         str(ms) uni(ms) %       comment
         -----------------------------------------------------
-        2271.31 3608.32 62.9    TOTAL 2.5a2
-        2261.85 1187.84 190.4   TOTAL tuesday
-        2247.84  875.13 256.9   TOTAL wednesday
-}}}
+        1699.32 2321.11 73.2    TOTAL 2.4.3
+        1208.67 2322.07 52.1    TOTAL 2.5a2
+         303.15  384.46  78.9    TOTAL trunk (revision 46448)
 
-  (yes, the Unicode string type is now more than twice as fast on this set of tests, and over 4 times faster than when we started.  ymmv.)
-
- * Later: Speed up string operations (AndrewDalke, FredrikLundh), using similar approaches as for Unicode.
-
-{{{
-        str(ms) uni(ms) %       comment
-        -----------------------------------------------------
-        2271.31 3608.32 62.9    TOTAL 2.5a2
-        694.97  883.67  78.6    TOTAL thursday
 }}}
 
  * Patch 1335972 was a combination bugfix+speedup for string->int conversion.  These are the speedups measured on my Windows box for decimal strings of various lengths.  Note that the difference between 9 and 10 is the difference between short and long Python ints on a 32-bit box. (TimPeters)
