@@ -120,11 +120,12 @@ Speedups at various lengths for decimal inputs, comparing 2.4.3 with current tru
  * Reworked, debugged and applied a patch to speed up interpreter startup by reducing the number of open() calls (GeorgBrandl).
 
    Even for repeated invocation of the interpreter where all files remain in the cache, you get the following figures:
-
+{{{
    Time for 1000 interpreter startups
    Python 2.4 trunk  16.470 secs
    Python 2.5.2a2    17.328 secs
    Python 2.5 trunk  15.873 secs
+}}}
 
  * Made all built-in exceptions real C new-style types. In 2.5 alpha, they were just objects faking to be classes, which slowed them down by 20% compared to 2.4. After this change, exception handling is around 30% faster than in 2.4 (RichardJones, GeorgBrandl).
 
