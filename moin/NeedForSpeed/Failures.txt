@@ -7,3 +7,7 @@ Adding the ability to pre-allocate builtin list storage. At best we can speed up
 '''Out-thinking exceptions'''
 
 CPython spends considerable time moving exception info around among thread states, frame objects, and the `sys` module.  This code is complicated and under-documented.  Patch SF:1145039 took a stab at reverse-engineering a weak invariant, and exploited it for a bit of speed.  That worked fine so far as it went (and a variant was checked in), but it's likely more remains to be gotten.  Alas, the `tim-exc_sanity` branch set up to try that consumed a lot of time fighting mysteries, and looks like it's more trouble than it's worth.
+
+'''Singleton of StopIteration'''
+
+As part of the new exceptions implementation, we tried making a singleton StopIteration instance. No speedup was detected. This is primarily due to most uses of StopIteration using the type object directly (ie "raise StopIteration" vs. "raise StopIteration()"). Even for a crafted test case where the instance use was forced there was no detectable change in speed.
