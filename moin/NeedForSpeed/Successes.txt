@@ -117,6 +117,10 @@ Speedups at various lengths for decimal inputs, comparing 2.4.3 with current tru
 
  * Replaced some Python C-API calls by newer, speedier versions.  Most notably, using PyObject_CallFunctionObjArgs instead of PyObject_CallFunction when all arguments are PyObject pointers (the O format code) can shave some 30% off the actual function call (GeorgBrandl).
 
+ * Reworked, debugged and applied a patch to speed up interpreter startup by reducing the number of open() calls (GeorgBrandl).
+
+ * Made all built-in exceptions real C new-style types. In 2.5 alpha, they were just objects faking to be classes, which slowed them down by 20% compared to 2.4. After this change, exception handling is around 30% faster than in 2.4 (RichardJones, GeorgBrandl).
+
  * Added support for min(), max(), sum(), and pow() to Psyco.  This produces significant speedups when used in combination with virtualized objects. (JohnBenediktsson)
 
 {{{
