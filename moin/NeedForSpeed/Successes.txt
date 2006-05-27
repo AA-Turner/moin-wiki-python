@@ -59,7 +59,7 @@ The patch doesn't actually do anything to speed conversion to long directly; the
 
  * The struct module has been rewritten to pre-compile struct descriptors (similar to the RE module).  This gives a 20% speedup, on average, for the test suite (BobIppolito).  Taking advantage of new ability to "compile" a struct pattern (similar to compiling regexps) can be much faster still.
 
-* A pack_to() method has been added to the struct module to support packing directly into a writable buffer.  Also, recv_buf() and recvfrom_buf() methods were added to the socket module to read directly into a writable buffer (MartinBlais).  Right now, the only way to create a writable buffer from Python is via the array module, but I'm adding a new class that supports this (see below).
+ * A pack_to() method has been added to the struct module to support packing directly into a writable buffer.  Also, recv_buf() and recvfrom_buf() methods were added to the socket module to read directly into a writable buffer (MartinBlais).  Right now, the only way to create a writable buffer from Python is via the array module, but I'm adding a new class that supports this (see below).
 
  * Worked on using profile guided optimizations in Visual Studio 8 (KristjanJonsson, RichardMTew).  This appears to give on the order of 15% speed improvement in the pybench test suite.  A new PCBuild8 directory will be added with automated mechanisms for doing this.
 
