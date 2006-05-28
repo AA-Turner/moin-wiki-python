@@ -29,3 +29,8 @@ Conversely changing all Py(Tuple|List)_GET_SIZE to point to plain Size has no me
 '''Specializing Dictionaries'''
 
 One man-day was spent trying to seperate the dicts used in namespaces (module.__dict__, instance/type/class __dicts__) the result was changing over a quarter of the PyDict* macros in the trunk to PySymdict (over half if you exclude Modules/).  This was such a massive change it was abandoned after sprint Day1.
+
+
+'''Copyless network I/O'''
+
+A "hot buffer" class was implemented in order to perform I/O and parsing (using struct) without creating or copying strings around.  This is compared for performance with a loop that creates strings via slices and concatenates strings.  It turns out that the hot buffer version is not much faster (about the same speed) because it replaces string allocations and concatenations with dict lookup in order to access its attributes (position and limit).  The version that uses strings is pretty fast since we write it using the string protocol, i.e. no dict lookup is performed.  However, by implementing the common use patterns in C we should be able to make parsing of common input (e.g. netstrings) much faster.  The hot buffer provides a more intuitive interface to parsing.  The fact is that currently the performance gains with the initial version are not significant.
