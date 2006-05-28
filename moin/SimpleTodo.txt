@@ -35,6 +35,16 @@ convention on Windows.  There are probably many modules where these macros could
 Currently these macros only make a difference on Windows.  Are there other pragmas
 that could be used with GCC or other compilers?
 
+== Use Py_MEMCPY ==
+
+Py_MEMCPY can be used instead of memcpy in cases where the copied blocks
+are often very short.  While most platforms have highly optimized code for
+large transfers, the setup costs for memcpy are often quite high.  MEMCPY
+solves this by doing short copies "in line".
+
+Using this macro gave a 20% speed improvement to some string functions.  
+Are there other uses of memcpy() in CPython that would also benefit?
+
 == Update Demo/ and Tools/ directories ==
 
 PEP 356 says "Check the various bits of code in Demo/ all still work, update or remove the ones that don't."
