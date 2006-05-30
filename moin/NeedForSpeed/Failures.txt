@@ -29,3 +29,13 @@ Conversely changing all Py(Tuple|List)_GET_SIZE to point to plain Size has no me
 '''Specializing Dictionaries'''
 
 One man-day was spent trying to seperate the dicts used in namespaces (module.__dict__, instance/type/class __dicts__) the result was changing over a quarter of the PyDict* macros in the trunk to PySymdict (over half if you exclude Modules/).  This was such a massive change it was abandoned after sprint Day1.
+
+
+'''Switching to 64-bit ints on 32-bit platforms'''
+
+Tested out an idea about switching Python "integer" types to use 64
+bits instead of 32 bits on 32-bit platforms.  In the end, it would have
+been a major pain to do, and while it would have resulted in 34%
+performance improvements for apps that use integers between 32 and 64 bits,
+it would have been around a 10% slow-down for apps that only use 32-bit
+numbers.  Decided not to do it for those reasons.
