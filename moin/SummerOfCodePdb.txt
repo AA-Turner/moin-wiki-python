@@ -18,15 +18,13 @@ The design of these improvements has been of great importance and we have specif
 
 == Debugging communication techniques and ideas ==
 
-We have discussed various communication mechanisms including sockets and serial communication. For debugging from another process it  became clear (after looking at other debuggers) that most people choose to go with a 'socket-based' approach. The advantages of using this approach is that it is a tried and test method that many debuggers use. However, obviously this approach becomes a problem when a programmer does not have a socket module at their disposal. One alternative to the socket approach is to use xmlrpc which allows the passing around of requests in a structured format, which may come in most handy when the debugger server is sending information to a debugger console. For instance, if someone were to write an IDE for MPdb, it would be trivial when using xmlrpc to allow the debugging server class to return a tagged message to the console which would indicate,
+We have discussed various communication mechanisms including sockets and serial communication. For debugging from another process it  became clear (after looking at other debuggers) that most people choose to go with a 'socket-based' approach. The advantages of using this approach is that it is a tried and tested method that many debuggers use. One alternative to the socket approach is to use xmlrpc which allows the passing around of requests in a structured format, which may come in most handy when the debugger server is sending information to a debugger console. For instance, if someone were to write an IDE for MPdb, it would be trivial when using xmlrpc to allow the debugging server class to return a tagged message to the console which would indicate,
 
  * Where in the source we currently were
  * The state of some configuration variable on the server side
-
-However, a disadvantage to using xmlrpc is if a programmer wanted to use serial communication (this is available in gdb), they would have to undo all the xml data and turn it back into a stream of bytes.
 
 It became clear that the method of communication that is available to a programmer when debugging an application will change between projects. An embedded devices programmer working with python may not necessarily have access to a network card and thus, no access to network sockets. However, they may have access to a serial port on the embedded device and whilst this project may not provide code to allow communication over a serial line, it should be easy for a programmer to subclass MPdb and write one themselves, without having to undo or 'work around' any of the features or specifications or MPdb.
 
 == Where does the source live ==
 
-One issue the Rocky raised was that most GUI front-ends (and even gdb) will want the source available locally. This is because they all do their own parsing and scanning of the source. MPdb should allow for some way to lookup the source file locally or perhaps even send it to a remote debugging console. These are things that MPdb will have to take into account.
+One issue the Rocky raised was that most GUI front-ends (and even gdb) will need the source available locally. This is because they all do their own parsing and scanning of the source. MPdb should allow for some way to lookup the source file locally or perhaps even send it to a remote debugging console. These are things that MPdb will have to take into account.
