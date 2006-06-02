@@ -107,3 +107,21 @@ If you do not have a GUI, then add -o dir_to_install_to to the command. Jython w
 Download and unpack the jar file made available as the latest release. If you build straight from the unpacked jar file, you will probably get a Java compilation error indicating package org.python.core doesn't exist. To fix, move the contents of the src/java directory to the base directory the jar was unpacked into. 
 
 You will also need CPython 2.2 installed on the same machine, plus other dependencies listed with the release.
+
+---
+
+== Jython cannot find your Java class, even though it exists in the class path. ==
+
+Jython cannot find your Java class, even though it exists in the class path. This shows up as "ImportError: cannot import name xxx" or "AttributeError: java package xxx' has no attribute 'yyy'"
+
+This happens when Jython is installed as a Java extension (i.e. when jython.jar is installed in java\jre\lib\ext\) and your classes are installed in the classpath.
+
+The reason is Java extensions can only see other extensions, not other classes defined in the CLASSPATH or passed in to java using the --classpath option.
+
+There are two ways to fix this:
+
+1) Move your classes to the java\jre\lib\ext directory.
+
+2) Remove jython.jar from the java\jre\lib\ext directory and put jython.jar in the CLASSPATH or use the java --classpath option.
+
+(from the Jython-users mailing list)
