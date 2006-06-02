@@ -2,7 +2,7 @@
 
 This page is devoted to various tips and tricks that help improve the
 performance of your Python programs. Wherever the information comes from
-someone else, I've tried to identify the source. 
+someone else, I've tried to identify the source.
 
 Python has changed in some significant ways since I first wrote my "fast
 python" page in about 1996, which means that some of the orderings will have
@@ -23,7 +23,19 @@ performance-critical code into C or machine language.
 
 == Other Versions ==
 
- * Russian: http://omsk.lug.ru/wacko/PythonHacking/PerfomanceTips 
+ * Russian: http://omsk.lug.ru/wacko/PythonHacking/PerfomanceTips
+
+== Overview: Optimize what needs optimizing ==
+
+You can only know what makes your program slow after first getting the program to give correct results, then running it to see if the correct program is slow. [[BR]]
+When found to be slow, profiling can show what parts of the program are consuming most of the time. A comprehensive but quick to run test -suite can then ensure that future optimizations don't change the correctness of your program. [[BR]] In short:
+  1. Get it right.
+  2. Test its right.
+  3. Profile if slow.
+  4. Optimise.
+  5. Repeat from 2.
+
+Certain optimizations amount to good programming style and so should be learned as you learn the language. An example would be moving the calculation of values that don't change within a loop, outside of the loop.
 
 == Choose the Right Data Structure ==
 
@@ -70,13 +82,13 @@ Here's an example use:
 {{{
 >>> somelist = [(1, 2, 'def'), (2, -4, 'ghi'), (3, 6, 'abc')]
 >>> somelist.sort()
->>> somelist 
+>>> somelist
 [(1, 2, 'def'), (2, -4, 'ghi'), (3, 6, 'abc')]
 >>> nlist = sortby(somelist, 2)
 >>> sortby_inplace(somelist, 2)
 >>> nlist == somelist
 True
->>> nlist = sortby(somelist, 1) 
+>>> nlist = sortby(somelist, 1)
 >>> sortby_inplace(somelist, 1)
 >>> nlist == somelist
 True
@@ -213,7 +225,7 @@ newlist = (s.upper() for s in oldlist)
 }}}
 
 Which method is appropriate will depend on what version of Python you're
-using and the characteristics of the data you are manipulating. 
+using and the characteristics of the data you are manipulating.
 
 Guido van Rossum wrote a much more detailed (and succinct) examination of [http://www.python.org/doc/essays/list2str.html loop optimization] that is
 definitely worth reading.
@@ -320,7 +332,7 @@ one of the first two approaches was faster. It seems that all three
 approaches now exhibit similar performance (within about 10% of each
 other), more or less independent of the properties of the list of words.
 
-Also, if the value stored in the dictionary is an object or a (mutable) list, 
+Also, if the value stored in the dictionary is an object or a (mutable) list,
 you could also use the {{{dict.setdefault}}} method, e.g.
 {{{
 ...
@@ -371,11 +383,11 @@ much faster the second is than the first:
 >>> def doit1():
 ...   import string
 ...   string.lower('Python')
-... 
+...
 >>> import string
 >>> def doit2():
 ...   string.lower('Python')
-... 
+...
 >>> import timeit
 >>> t = timeit.Timer(setup='from __main__ import doit1', stmt='doit1()')
 >>> t.timeit()
@@ -401,7 +413,7 @@ Here's the proof from {{{timeit}}}:
 {{{
 >>> def doit3():
 ...   'Python'.lower()
-... 
+...
 >>> t = timeit.Timer(setup='from __main__ import doit3', stmt='doit3()')
 >>> t.timeit()
 2.5606080293655396
@@ -417,7 +429,7 @@ which can be very expensive) until you are sure it is required.
 
 This is only a significant saving in cases where the module wouldn't have been imported
 at all (from any module) -- if the module is already loaded (as will be the case for many standard
-modules, like {{{string}}} or {{{re}}}), avoiding an import doesn't save you anything.  
+modules, like {{{string}}} or {{{re}}}), avoiding an import doesn't save you anything.
 To see what modules are loaded in the system look in {{{sys.modules}}}.
 
 A good way to do lazy imports is:
@@ -479,7 +491,7 @@ Here's the proof in the pudding using an interactive session:
 >>> t = time.time()
 >>> for i in list:
 ...     doit1(i)
-... 
+...
 >>> print "%.3f" % (time.time()-t)
 0.758
 >>> t = time.time()
@@ -641,7 +653,7 @@ Say you have a function
  a = Test()
  def example():
    for i in xrange(0,100000):
-     a.check(i,"b","c") 
+     a.check(i,"b","c")
 
  import profile
  profile.run("example()")
@@ -651,7 +663,7 @@ And suppose this function gets called from somewhere else many times
 
 Well, your check will have an if statement slowing you down all the time except the first time, so you can do this:
 {{{
- class Test2: 
+ class Test2:
    def check(self,a,b,c):
      self.str = b*100
      self.check = self.check_post
@@ -661,7 +673,7 @@ Well, your check will have an if statement slowing you down all the time except 
  a = Test2()
  def example2():
    for i in xrange(0,100000):
-     a.check(i,"b","c") 
+     a.check(i,"b","c")
 
  import profile
  profile.run("example2()")
@@ -671,7 +683,7 @@ well, this example is pretty crap, but if the 'if' statment is a pretty complica
 
 The first step to speeding up your program is learning where the
 bottlenecks lie. It hardly makes sense to optimize code that is never
-executed or that already runs fast. I use two modules to help locate the  
+executed or that already runs fast. I use two modules to help locate the
 hotspots in my code, profile and trace. In later examples I also use the
 {{{timeit}}} module, which is new in Python 2.3.
 
@@ -700,7 +712,7 @@ profiled as well.
 
 === Hotshot Module ===
 
-New in Python 2.2, the 
+New in Python 2.2, the
 [http://www.python.org/doc/current/lib/module-hotshot.html hotshot package] is intended
 as a replacement for the profile module. The underlying module is
 written in C, so using hotshot should result in a much smaller
