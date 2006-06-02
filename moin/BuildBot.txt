@@ -14,14 +14,9 @@ There are several unstable tests and other issues.  These are not problems with 
 
 Here's a list of currently unexplained test failures:
 
-   * http://python.org/dev/buildbot/all/sparc%20Ubuntu%20dapper%20trunk/builds/180/step-test/0
- http://python.org/dev/buildbot/all/alpha%20Debian%20trunk/builds/41/step-test/0
-     test test_ctypes failed -- Traceback (most recent call last):
-     File "/home/pybot/buildarea/trunk.klose-debian-alpha/build/Lib/ctypes/test/test_python_api.py", line 41, in test_PyInt_Long
-       self.failUnlessEqual(grc(42), ref42)
-     AssertionError: 550 != 551
+   * None?
 
-We need to add more platforms to the BuildBot farm.  If you have one of these machines you are willing to run BuildBot on, please contact python-dev@python.org:
+We need to add more platforms (and compilers!) to the BuildBot farm.  If you have one of these machines you are willing to run BuildBot on, please contact python-dev@python.org:
 
    * Windows (and see BuildbotOnWindows)
    * AIX
@@ -54,3 +49,16 @@ Then edit buildarea/info/admin and buildarea/info/host to set them appropriately
 Finally, start buildbot with:
 
 % buildbot start ~/buildarea
+
+Required ports
+--------------
+
+In order for the buildbot to operate properly, it needs access to various TCP ports on the internet.  Below is a list of known ports and hosts.
+
+|| Port  || Host       || Description ||
+|| 80    || python.org || test_urllibnet ||
+|| 995   || gmail.org  || test_socket_ssl ||
+|| 50007 || localhost  || test_socket ||
+|| 50008 || (listen)   || test_socket ||
+|| 9020  || python.org || Buildbot connection ||
+|| 9020  || localhost  || test_logging will try up to 9120 ||
