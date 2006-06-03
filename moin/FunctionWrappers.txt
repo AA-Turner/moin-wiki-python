@@ -1,0 +1,51 @@
+## page was renamed from FunctionWrappersInPython
+#language en
+
+Wiki:FunctionWrapper is a design pattern used when dealing with relatively complicated functions. The wrapper function typically performs some prologue and epilogue tasks like
+
+ * allocating and disposing resources
+ * checking pre- and post-conditions
+ * caching / recycling a result of a slow computation
+
+but otherwise it should be ''fully'' compatible with the wrapped function, so it can be used instead of it. (This is related to the DecoratorPattern.)
+
+As of Python 2.1 and the introduction of nested scopes, wrapping a function is easy:
+
+{{{#!python
+def wrap(pre, post):
+    def decorate(func):
+        def call(*args, **kwargs):
+            pre(func, *args, **kwargs)
+            result = func(*args, **kwargs)
+            post(func, *args, **kwargs)
+           return result
+        return call
+   return decorate
+}}}
+
+The additional decorate function is needed to work with the Python 2.4 decorator syntax.
+
+Now, let's wrap something up:
+
+{{{#!python
+def trace_in(func, *args, **kwargs):
+   print "Entering function",  func.__name__
+
+def trace_out(func, *args, **kwargs):
+   print "Leaving function", func.__name__
+
+@wrap(trace_in, trace_out)
+def calc(x, y):
+   return x + y
+}}}
+
+The wrapping effect is:
+
+{{{#!python
+>>> print calc(1, 2)
+Entering function calc
+Leaving function calc
+3
+}}}
+
+Of course, a wrapper would normally perform some more useful task. Have a look [http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/412719 here] for a recipe how to wrap a function that processes files so that the result is recycled from a cache file if appropriate.
