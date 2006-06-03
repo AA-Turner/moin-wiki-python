@@ -27,7 +27,7 @@ Verify that if `PyMem_*` APIs are used to (re)allocate memory, that `PyMem_*` AP
 With the conversion to use `Py_ssize_t`, it's important that we didn't miss any APIs.  There are very few APIs which take (or return) a long.  But there are still quite a few that take/return an int.  All of these are believed to be correct, but more reviewers could help.  Any API which returns an int is fine if the value is known to fit in 32 bits (like APIs that return a value between -2 and 2).
 
 
-== Add Py_LOCAL, Py_LOCAL_INLINE declarations =
+== Add Py_LOCAL, Py_LOCAL_INLINE declarations ==
 
 At the NeedForSpeed sprint, these macros were added to use a faster calling 
 convention on Windows.  There are probably many modules where these macros could be used.
