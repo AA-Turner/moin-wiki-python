@@ -39,3 +39,11 @@ been a major pain to do, and while it would have resulted in 34%
 performance improvements for apps that use integers between 32 and 64 bits,
 it would have been around a 10% slow-down for apps that only use 32-bit
 numbers.  Decided not to do it for those reasons.
+
+'''Pymalloc with VC8'''
+
+Tried not using the pymalloc module in the VC8 windows build environment.  MS boasts of its own fast small block allocator, but it turned out not to work.  Possibly it needs to be explicitly turned on!
+
+'''Unicode Classification'''
+
+Disabling the Unicode classification stuff (isupper) and using the c-runtime supplied one, turned out to be much slower.  no surprises. 
