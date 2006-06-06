@@ -463,3 +463,27 @@ Instead of:
 }}}
 
 It seems inconsistent to have certain functions (like hex, round, raw_input, pow!?) as builtins when they can't be applied to every type of object.
+
+== Default to assign class object rather than class reference ==
+Consider the following:
+{{{
+   havarti = Cheese
+   havarti.spices = "carraway"
+   gouda = havarti
+   gouda.spices = ""
+   # havarti.spices is ""!
+}}}
+
+How useful is it to assign a reference by default? You force everyone who wants to assign class objects to create a method for each class they want to copy that copies all values of the class to the new class variable.
+
+On the other hand, you should be able to assign references. It's never required, but sometimes useful. Perhaps a standard method or a new keyword could be used to assign the reference rather than the value.
+
+The main issue with copying references is that it is somewhat inconsistent. Basic datatypes don't suffer from this issue; complex datatypes do.
+
+The other large issue with this is that it's not covered anywhere in the tutorials.
+
+The third large issue is that the common usage is the one you have to do the most work for.
+
+So why is this a feature?
+
+--Chris W
