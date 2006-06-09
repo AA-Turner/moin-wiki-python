@@ -111,34 +111,17 @@ Student: Edin Salković
 
 Mentor: John D Hunter 
 
-After a discussion at the scipy user list, and the comments of the possible
-mentor (John Hunter, creator/maintainer of matplotlib), I decided to work 
-on improving mathtext, which is part of matplotlib. So, for this summer of
-code I could work on the following (roughly in order of importance/realization):
+ * Allow replacing of the existing bakoma truetype fonts with a set of good, comprehensive, unicode math fonts. This will allow pluging in the STIX fonts when (if) they are finaly out. Currently mathtext hardcodea the mapping from TeX symbol name to a (font_file, glyph_index) tuple, which ties mathtext to a given set of fonts (eg, the Bakoma fonts).
 
- * replace the existing bakoma truetype fonts with a set of good,
- comprehensive, math fonts, eg, STIX (http://www.stixfonts.org/).
- The STIX fonts should be available by the begining of June. Also,
- the code should be refactored so that unicode names for symbols can
- be used. This will allow plugging in any font that supports unicode
- (STIX fonts already support unicode). Currently mathtext hardcodea
- the mapping from TeX symbol name to a (font_file, glyph_index) tuple,
- which ties mathtext to a given set of fonts (eg, the Bakoma fonts).
-
- * incorporate some of Knuth's layout algorithms into the mathtext
- layout engine.
+ * incorporate some of Knuth's layout algorithms into the mathtext layout engine.
 
  * refactor mathtext into a stand-alone module
 
-
- * add support for kerning - the current bakoma fonts do not have kerning
- info in them.
+ * add support for kerning - the current bakoma fonts do not have kerning info in them.
 
  * improve the parser to handle more TeX
 
  * add support for fractions (\frac), arrays etc.
-
-I plan to continue the work on mathtext after SoC.
 
 = Soya3D Collision API : Improving ODE integration in the core =
 
