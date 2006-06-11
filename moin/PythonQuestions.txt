@@ -11,13 +11,13 @@ But see also:
 
 [[TableOfContents]]
 
-==== Win 95 Installation ====
+== Win 95 Installation ==
 
 '''Q.''' I run a Windows 95 200 MHz Compaq computer, when I tried to install Python 2.0, the installation program consistently crashes/freezes at 52% of the process. Can you give me any suggestions?
 
 '''A.''' Make sure you have enough disk space.  Accept the default choices the installer suggests.  Make sure all other programs are killed first, especially virus scanners (use Ctrl+Alt+Del repeatedly to kill off everything except Explorer and Systray).  Try a more recent version of Python (like 2.2.1), which uses better installer technology.  Try an ActiveState installer, which uses completely different installer technology.  Try the minimalist PythonWare installer, which seems to amount to an automated unzip.  Accept that Microsoft no longer supports Win95 and plan to get another OS.
 
-==== pyexpat Module ====
+== pyexpat Module ==
 
 '''Q.''' I just downloaded version 2.0. When I try to run the test_sax.py module it complains that it can't find the driver pyexpat.py. I looked in the distribution and it doesn't seem to be there? I'm running on Solaris 2.7. Thank You.
 
@@ -27,7 +27,7 @@ Modules/Setup file and type "make" in the top level of the Python source tree.  
 Python for you, or you can copy Modules/pyexpat.so to $exec_prefix/lib/python2.0/lib-dynload/ if you're building
 modules as shared objects.
 
-==== Documentation in Windows Helpfile Format ====
+== Documentation in Windows Helpfile Format ==
 
 '''Q.''' Where do I get the documentation for Python in the CHM (Compiled HTML) format?
 
@@ -35,7 +35,7 @@ modules as shared objects.
 
 '''A.''' Since version 2.3 included in Windows distribution.
 
-==== Windows XP look-and-feel ====
+== Windows XP look-and-feel ==
 
 '''Q.''' How can I make ["WxPython"] on Windows XP assume XP look-and-feel?
 
@@ -64,7 +64,7 @@ This may also affect other Python modules that use Windows display API.
 
  If you run into this problem and deleting manifests doesn't help, try un- and reinstalling Python.
 
-==== Missing Readline Module ====
+== Missing Readline Module ==
 
 I have problem when i first install Python 2.4. It seems that the distribution lack readline.py
 
@@ -81,7 +81,7 @@ Python 2.4.2 (#1, Feb 16 2006, 20:42:14)
 
 It's possible that the readline module is a separate package in your SUSE Linux distribution.
 
-==== How to Access Tomcat from Python ====
+== How to Access Tomcat from Python ==
 
 Looking for examples of accessing Tomcat applications from Python.
 
@@ -121,6 +121,33 @@ else:
 
 This yields a 401 'not authorized' when it should not, i.e. the username and password are correct.  This is to connect to the page for the Tomcat manager application as a test, not to do any real work.
 
+== Python Object ID ==
+
+You can get a unique ID number for any object:
+
+{{{
+#!python
+>>> x="hello"
+>>> id( x )
+10855264
+>>> 
+}}}
+
+...but how do you get from the object ID, back to the object itself?
+
+What can I do to take 10855264, in this case, and see if I can get back "hello"?
+
+Or is that not possible, without making a dictionary to hold it?
+
+{{{
+#!python
+>>> x="hello"
+>>> d={}
+>>> d[id(x)]=x
+>>> d
+{10855264: 'hello'}
+>>>
+}}}
 
 ----
 Contributors: SteveHolden, FredrikLundh, JohannesGijsbers, SkipMontanaro
