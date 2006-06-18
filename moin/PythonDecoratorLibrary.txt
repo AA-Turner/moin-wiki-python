@@ -669,7 +669,7 @@ the 'debug' keyword argument to the decorator:
     0 -- NONE:   No type-checking. Decorators disabled.
     1 -- MEDIUM: Print warning message to stderr. (Default)
     2 -- STRONG: Raise TypeError with message.
-If 'debug' is not passed to the decorator, the default level is used.
+If 'debug' is not passed to the decorator, the default level is used. 
 
 Example usage:
     >>> NONE, MEDIUM, STRONG = 0, 1, 2
@@ -680,16 +680,14 @@ Example usage:
     ...     return (x + y + z) / 2
     ... 
     >>> average(5.5, 10, 15.0)
-    TypeWarning:  'average' method accepts
-    (<type 'int'>, <type 'int'>, <type 'int'>), but was given
-    (<type 'float'>, <type 'int'>, <type 'float'>)
+    TypeWarning:  'average' method accepts (int, int, int), but result is
+    (float, int, float)
     15.25
     >>> average(5, 10, 15)
-    TypeWarning:  'average' method returns <type 'float'>, but result is
-    <type 'int'>
+    TypeWarning:  'average' method returns (float), but result is (int)
     15
 
-Needed to cast params as floats in function def (or simply divided by 2.0)
+Needed to cast params as floats in function def (or simply divide by 2.0).
     
     >>> TYPE_CHECK = STRONG
     >>> @accepts(int, debug=TYPE_CHECK)
@@ -701,9 +699,8 @@ Needed to cast params as floats in function def (or simply divided by 2.0)
     >>> fib(5.3)
     Traceback (most recent call last):
       ...
-    TypeError: 'fib' method accepts (<type 'int'>,), but was given
-    (<type 'float'>,)    
-
+    TypeError: 'fib' method accepts (int), but result is (float)
+    
 """
 import sys
 
@@ -732,8 +729,7 @@ def accepts(*types, **kw):
                 assert len(args) == len(types)
                 argtypes = tuple(map(type, args))
                 if argtypes != types:
-                    msg = "'%s' method accepts %s, but was given %s"\
-                          % (f.__name__, types, argtypes)
+                    msg = info(f.__name__, types, argtypes, 0)
                     if debug == 1:
                         print >> sys.stderr, 'TypeWarning: ', msg
                     elif debug == 2:
@@ -741,7 +737,8 @@ def accepts(*types, **kw):
                 return f(*args)
             newf.__name__ = f.__name__
             return newf
-        return decorator   
+        return decorator
+    
     except KeyError, key:
         raise KeyError, key + "is not a valid keyword argument"
     except TypeError, msg:
@@ -773,8 +770,7 @@ def returns(ret_type, **kw):
                     return result
                 res_type = type(result)
                 if res_type != ret_type:
-                    msg = "'%s' method returns %s, but result is %s"\
-                          % (f.__name__, ret_type, res_type)
+                    msg = info(f.__name__, (ret_type,), (res_type,), 1)
                     if debug == 1:
                         print >> sys.stderr, 'TypeWarning: ', msg
                     elif debug == 2:
@@ -787,4 +783,11 @@ def returns(ret_type, **kw):
         raise KeyError, key + "is not a valid keyword argument"
     except TypeError, msg:
         raise TypeError, msg
-}}}
+    
+def info(fname, expected, given, flag):
+    """ Convenience function returns nicely formatted error/warning msg. """
+    format = lambda types: ', '.join([str(t).split("'")[1] for t in types])
+    expected, given = format(expected), format(given)
+    msg = "'%s' method " % fname + ("accepts", "returns")[flag]\
+          + " (%s), but result is (%s)" % (expected, given)
+    return msg
