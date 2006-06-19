@@ -2,7 +2,7 @@
 #language en
 
 
-PyDSTool is an integrated simulation, modeling and analysis package for dynamical systems, written in Python. It is being developed at Cornell University by Robert Clewley, Drew LaMar, and Erik Sherwood. For full documentation see our [[http://pydstool.sourceforge.net wiki]] site. To download, please go to the  [http://www.sourceforge.net/projects/pydstool SourceForge] files page, where you can read the release notes. The source code is available under the terms of the BSD license.
+PyDSTool is an integrated simulation, modeling and analysis package for dynamical systems, written in Python. It is being developed at Cornell University by Robert Clewley, Drew La``Mar, and Erik Sherwood. For full documentation see our [[http://pydstool.sourceforge.net wiki]] site. To download, please go to the  [http://www.sourceforge.net/projects/pydstool SourceForge] files page, where you can read the release notes. The source code is available under the terms of the BSD license.
 
 The PyDSTool software is "research code" in a Beta stage of development, and should not be treated as a complete or comprehensive dynamical systems package, with the associated expectation that its design and implementation have thoroughly stabilized and have been well tested. We have added features as and when we have had a use for them in our own research, and have omitted many important features that we would love to add if time permits us, or if our research so demands.
 
@@ -10,8 +10,6 @@ You might like to submit feature requests, or you may also like to contribute to
 
 
 = Features implemented =
-
-Our package incorporates:
 
  * Efficient and state-of-the-art ODE / DAE / discrete map simulation tools (using dynamically-linked and automatically generated C code, if external compiler available) (see [http://www.cam.cornell.edu/~rclewley/cgi-bin/moin.cgi/Generators wiki page])
  * Hybrid model and event-driven simulation support (see [http://www.cam.cornell.edu/~rclewley/cgi-bin/moin.cgi/HybridSystems wiki page])
@@ -25,7 +23,7 @@ Our package incorporates:
  * Memory management utilities, data import & export (inc. basic SBML conversion and La``Te``X markup via the SloppyCell package)
  * Modular code design allows easy expansion to support other algorithms (contributions welcome)
  * Data structures and toolkits for parameter estimation / model fitting and other time-series and data-driven problems
- * Seamless use with tools in SciPy, Numpy, etc. through dynamic typing
+ * Seamless use with tools in [http://www.cam.cornell.edu/~rclewley/cgi-bin/moin.cgi/SciPy SciPy], etc. through dynamic typing
  * Additional toolboxes for specific applications, including biomechanical modeling, computational neuroscience, and systems biology (see [http://www.cam.cornell.edu/~rclewley/cgi-bin/moin.cgi/ToolboxDocumentation wiki page])
  * Many tutorial examples and documentation available online at the [http://pydstool.sourceforge.net wiki]
 
@@ -47,10 +45,10 @@ A key aspect in the design of PyDSTool is the provision of adequate diagnostic i
 
 = Design philosophy =
 
-In our design we have emphasized modularized data structures and interface design that facilitates data-driven approaches to the modeling of physical processes, and we have built upon standard numerical, scientific and graphics libraries for Python (for instance, SciPy and MatPlotLib).  These, in turn, make use of well-established and efficient legacy codes for numerical integration of ODEs, and for dealing with linear algebra, optimization, and root solving (for instance, the LAPACK and MINPACK Fortran libraries). These legacy codes are typically interfaced using SWIG.  The low-level languages of these codes provide the computational speed that Python itself lacks, in the places for which computation is most intensive.
+In our design we have emphasized modularized data structures and interface design that facilitates data-driven approaches to the modeling of physical processes, and we have built upon standard numerical, scientific and graphics libraries for Python (for instance, [http://www.cam.cornell.edu/~rclewley/cgi-bin/moin.cgi/SciPy SciPy] and [http://matplotlib.sourceforge.net Matplotlib]).  These, in turn, make use of well-established and efficient legacy codes for numerical integration of ODEs, and for dealing with linear algebra, optimization, and root solving (for instance, the [http://netlib2.cs.utk.edu/lapack/ LAPACK] and [http://www.netlib.org/minpack/ MINPACK] Fortran libraries). These legacy codes are typically interfaced using [http://www.swig.org SWIG].  The low-level languages of these codes provide the computational speed that Python itself lacks, in the places for which computation is most intensive.
 
 All of the code involved in the PyDSTool project is open source, and we have aimed to create as few dependencies on external software packages as possible.  In particular, the package can be used with Microsoft Windows, Mac OS X and Linux machines.
 
 On top of the third-party libraries we have added several new tools and capabilities. We have enhanced legacy numerical integration code for ordinary differential equations to perform various additional tasks of use in hybrid systems modeling, implemented at the C-code level for maximal efficiency.  This includes supporting discrete event detection during dynamical evolution.  Adding arbitrary user-specified event detection to a model permits ODEs and maps to be used in combination as "hybrid" dynamical systems. Also, the inclusion of data-based time series inputs to a dynamical system’s evolution equations is a feature that aids data-driven modeling.
 
-Utilities have been added that allow the movement of data and model specifications both in and out of PyDSTool, for sharing in other software environments.  As well as basic importing and exporting of numerical data as text files, this also includes more systems-level interfacing.  For instance, a user can export a dynamical model’s definition to a Matlab environment in which Automatic Differentiation is available for parameter sensitivity calculations (via the package ADMC++).  Also, PyDSTool can be interfaced with the systems biology modeling package SloppyCell, through which PyDSTool inherits access to an interface with the Systems Biology Markup Language (SBML) for model specification, and the LaTeX mathematical markup language.  Further interfaces to packages are in active development, such as to the original DsTool and to other simulation tools such as [http://www.math.pitt.edu/~bard/xpp/xpp.html XPP] or [http://neuron.duke.edu/ NEURON].
+Utilities have been added that allow the movement of data and model specifications both in and out of PyDSTool, for sharing in other software environments.  As well as basic importing and exporting of numerical data as text files, this also includes more systems-level interfacing.  For instance, a user can export a dynamical model’s definition to a Matlab environment in which Automatic Differentiation is available for parameter sensitivity calculations (via the package ADMC++).  Also, PyDSTool can be interfaced with the systems biology modeling package SloppyCell, through which PyDSTool inherits access to an interface with the Systems Biology Markup Language (SBML) for model specification, and the La``Te``X mathematical markup language.  Further interfaces to packages are in active development, such as to the original [http://www.cam.cornell.edu/~rclewley/cgi-bin/moin.cgi/DsTool DsTool] and to other simulation tools such as [http://www.math.pitt.edu/~bard/xpp/xpp.html XPP] or [http://neuron.duke.edu/ NEURON].
