@@ -680,8 +680,7 @@ Example usage:
     ...     return (x + y + z) / 2
     ... 
     >>> average(5.5, 10, 15.0)
-    TypeWarning:  'average' method accepts (int, int, int), but result is
-    (float, int, float)
+    TypeWarning:  'average' method accepts (int, int, int), but was given (float, int, float)
     15.25
     >>> average(5, 10, 15)
     TypeWarning:  'average' method returns (float), but result is (int)
@@ -699,7 +698,7 @@ Needed to cast params as floats in function def (or simply divide by 2.0).
     >>> fib(5.3)
     Traceback (most recent call last):
       ...
-    TypeError: 'fib' method accepts (int), but result is (float)
+    TypeError: 'fib' method accepts (int), but was given (float)
     
 """
 import sys
@@ -783,11 +782,12 @@ def returns(ret_type, **kw):
     except TypeError, msg:
         raise TypeError, msg
     
-def info(fname, expected, given, flag):
+def info(fname, expected, actual, flag):
     """ Convenience function returns nicely formatted error/warning msg. """
     format = lambda types: ', '.join([str(t).split("'")[1] for t in types])
-    expected, given = format(expected), format(given)
-    msg = "'%s' method " % fname + ("accepts", "returns")[flag]\
-          + " (%s), but result is (%s)" % (expected, given)
+    expected, actual = format(expected), format(actual)
+    msg = "'%s' method " % fname \
+          + ("accepts", "returns")[flag] + " (%s), but " % expected\
+          + ("was given", "result is")[flag] + " (%s)" % actual
     return msg
 }}}
