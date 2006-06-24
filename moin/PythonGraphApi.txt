@@ -234,7 +234,36 @@ standard graph API, for example. (Magnus)
 
 With the goal of designing an API for Python in mind, I would think one of the first decisions that needs to be made is whether to use multiple classes (ala Vertex, Edge, Graph) or just one (ala Graph); also, are those classes going to be "Pythonic" in that they provide various methods in terms of Python operators or not (let's call the "not" alternative "Textbookish")? It seems to me that without settling this first, discussing the details of the API further is moot. But maybe I am wrong? (Peter)
 
+
 No, defining Vertex and Edge interfaces makes working with graphs just that much more difficult. That's the Java way, don't go there. (Nick)
+
+
+
+
+Well, the "Java way" can also be the "OO way" and thus could also be the "Python way". Theoretically a Graph G is defined a set of vertices and a set of Edges. '''G=(V,E)'''. (Nick V.)
+
+= Vertices and Edges as Separate Objects =
+
+1. I think a '''Vertex''' and an '''Edge''' as objects are meaninful and useful. One should be able to create v1=Vertex(1) and v2=Vertex(2) and then e12=Edge(v1,v2). Then do G.add_edge(e12), which should be no different than doing G.add_vertex(v1); G.add_vertex(v2); G.add_edge(e12).  In this respect this is a departure from the NetworkX idea of using integers as nodes and 2-tuples of integers as edges, having the user map back and forth between nodes and data.
+
+2. Whatever the repsentation used, the graph could expose a set of nodes and edges like graph.nodes and graph.edges. A new graph could be built from an existing set of nodes and edges: newG=Graph(G.nodes,G.edges). .nodes and .edges could be provided on-the-fly by property descriptors, regardless if a matrix or adj. list is used for internal representation. If the graph is connected, the graph could be exactly represented by G.edges
+
+3. A Vertex object would have an .id attribute that could uniquely identify it, and provide an __eq__ and __hash__ magic methods. This way it could be inserted into a set. It could also a have a label or reference to some data. Perhaps there could be a "tag" attribute which would be similar to what the Tk Canvas has. A tag could be anything like a color value, a 'visited' flag.
+
+4. A Vertex object should not reference its edges. Edges should reference its vertices, because that is what an 'edge' is  -- a relation between 2 vertices. So Edges will contain references to its nodes. An Edge object could have a 'from_vertex' and a 'to_vertex' attributes, a data attribute which could be the weight for example, and also a "tag" attribute like the Vertex.
+
+5. Providing a way to obtain edges to neighbour vertices in this scheme would ammount to an exhaustive search of the edges set. Therefore edges would be held in a nested dict like edges[v1][v2]=edge12 . To quickly access the edges to neighbours of v1 would be:
+class Graph: 
+  def get_downstream_edges(v):
+    return edges[v].values()
+  ...
+
+(Nick V.)
+
+= Hypergaphs =
+
+As far as hypergraphs are concerned, a hypergraph is equivalent to a bi-partite graph, with two different set of nodes. One represents the regualar nodes, the other a set of edges (<- these are not edges of the Graph itself, but separate Edge(s) created earlier. So it is probably not necessary to include a separate mechanism hypergraphs for it.
+(Nick V.)
 
 == Contributors ==
 
@@ -248,5 +277,6 @@ No, defining Vertex and Edge interfaces makes working with graphs just that much
   * Peter Froehlich
   * Aric Hagberg
   * Nick Guenther
+  * Nick Vatamaniuc
 
 (See also the Usenet discussion above for more contributors.)
