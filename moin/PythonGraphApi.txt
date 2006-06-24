@@ -252,18 +252,12 @@ Well, the "Java way" can also be the "OO way" and thus could also be the "Python
 
 4. A Vertex object should not reference its edges. Edges should reference its vertices, because that is what an 'edge' is  -- a relation between 2 vertices. So Edges will contain references to its nodes. An Edge object could have a 'from_vertex' and a 'to_vertex' attributes, a data attribute which could be the weight for example, and also a "tag" attribute like the Vertex.
 
-5. Providing a way to obtain edges to neighbour vertices in this scheme would ammount to an exhaustive search of the edges set. Therefore edges would be held in a nested dict like edges[v1][v2]=edge12 . To quickly access the edges to neighbours of v1 would be:
-class Graph: 
-  def get_downstream_edges(v):
-    return edges[v].values()
-  ...
-
+5. Providing a way to obtain edges to neighbour vertices in this scheme would ammount to an exhaustive search of the edges set. Therefore edges would be held in a nested dict like edges[v1][v2]=edge12 . To quickly access the edges to neighbours of v1 would be G.edges[v1].values()
 (Nick V.)
 
 = Hypergaphs =
 
-As far as hypergraphs are concerned, a hypergraph is equivalent to a bi-partite graph, with two different set of nodes. One represents the regualar nodes, the other a set of edges (<- these are not edges of the Graph itself, but separate Edge(s) created earlier. So it is probably not necessary to include a separate mechanism hypergraphs for it.
-(Nick V.)
+As far as hypergraphs are concerned, a hypergraph is equivalent to a bi-partite graph, with two different set of nodes. One represents the regualar nodes, the other a set of edges (<- these are not edges of the Graph itself, but separate Edge(s) created earlier. So it is probably not necessary to include a separate mechanism for hypergraphs. (Nick V.)
 
 == Contributors ==
 
