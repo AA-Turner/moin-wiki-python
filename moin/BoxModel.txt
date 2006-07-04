@@ -1,0 +1,102 @@
+'''Box Model''' refers to something like [http://www.w3.org/TR/CSS21/box.html the W3C CSS box model.]
+
+ * Names for coordinates.
+ * Names for widths and heights.
+ * Padding, Border, Margin, top-right-bottom-left.
+
+There are applications in ''visualization'' and ''user interface'' development.
+
+Ideal:
+
+ * Compute X-Y coordinates for different points on the box model.
+ * Allow for naming the different points of the box model.
+ * Support different layout methods: absolute positioning, positioning by traits (padding, border, margin, contents), positioning by tensions, horizontal or vertical or grid or absolute positioning of interior contents, and so on.
+
+Is there anything ''easily reusable'' in Python that presently does this sort of work?
+
+(Perhaps WxPython can be (ab)used for this purpose..? Can you do all the size calculations, without ever rendering anything, or initializing wx?)
+
+== Example ==
+
+Here's some Python code that can track horizontal layouts.
+
+That is, as long as you nest cells ''horizontally,'' everything works out and gets calculated.
+
+{{{
+#!python
+class Rect:
+    def __init__(self, size=0):
+        if hasattr(size, "__int__"):
+            (t, r, b, l) = map(int, [size]*4)
+        elif hasattr(size, "__len__") and len(size) == 4:
+            (t, r, b, l) = size
+        else:
+            raise ValueError(size)
+        (self.top, self.right, self.bottom, self.left) = (t,r,b,l)
+    def width(self):
+        return self.left + self.right
+    def height(self):
+        return self.top + self.bottom
+
+class Cell:
+    def __init__(self, children=[], padding=0, border=0, margin=0):
+        self.children = children  # spatially arranged left-to-right
+        self.padding = Rect(padding)
+        self.border = Rect(border)
+        self.margin = Rect(margin)
+    def parts(self):
+        return self.children + [self.padding, self.border, self.margin]
+    def width(self):
+        return sum([x.width() for x in self.parts()])
+    def height(self):
+        return sum([x.height() for x in self.parts()])
+    def top(self):
+        return sum([x.top for x in [self.margin, self.border, self.padding]])
+    def right(self):
+        return sum([x.right for x in [self.padding, self.border, self.margin]])
+    def bottom(self):
+        sum([x.bottom for x in [self.padding, self.border, self.margin]])
+    def left(self):
+        return sum([x.left for x in [self.margin, self.border, self.padding]])
+    def children_height(self):
+        if len(self.children) == 0:
+            return 0
+        return max([x.height() for x in self.children])
+    def children_width(self):
+        return sum([x.width() for x in self.children])
+
+def blank(width, height, border=0, margin=0):
+    v = (height*1.0) / 2  # vertical
+    h = (width*1.0) / 2  # horizontal
+    b = Cell(padding=[v, h, v, h], border=border, margin=margin)
+    return b
+
+def progressive_count(N):
+    return [range(x+1) for x in range(0, N)]
+
+def indexes_from(L, indexes):
+    return [L[i] for i in indexes]
+
+def progressive_lists(L):
+    return [indexes_from(L, indexes) for indexes in progressive_count(len(L))]
+
+def progressive_sums(L):
+    return map(sum, progressive_lists(L))
+
+def call_with_coordinates(func, cell, x=0, y=0):
+    x_coords = progressive_sums([cell.left()] + [child.width() for child in cell.children] + [cell.right()])
+    y_coords = [cell.top()] * len(cell.children)
+    coords = zip(x_coords[0:-2], y_coords)
+    
+    return [func(cell, x, y),
+            [call_with_coordinates(func, child, x+mx, y+my) for
+             (child, (mx, my)) in zip(cell.children, coords)]]
+
+
+def report(cell, x, y):
+    return "cell upper-left at (%s, %s)" % (x,y)
+
+call_with_coordinates(report, Cell([blank(3,3), blank(3,3)], margin=[2,4,2,4]))
+
+call_with_coordinates(report, Cell([blank(4, 2), blank(4, 2), blank(4, 2)], padding=2, border=1))
+}}}
