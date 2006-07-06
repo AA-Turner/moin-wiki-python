@@ -44,13 +44,17 @@ Something that's been requested, but needs much more thought and analysis to see
 purposes both of searching and determining name uniqueness when registering.
 
 
-== Database Hints ==
+== Development Environment Hints ==
 
 These are notes so we can remember how to dump / restore the packages database:
 
   pg_dump -Fc -b packages >packages-20060706.dump
 
+  createdb packages
+
   pg_restore -O -d packages -Fc packages-20060706.dump
+
+Ask RichardJones if you need a database dump.
 
 PageTemplates are obtained from:
 
@@ -61,3 +65,5 @@ PageTemplates are obtained from:
   svn co svn://svn.zope.org/repos/main/zope.interface/trunk zope.interface
 
   svn co svn://svn.zope.org/repos/main/zope.i18nmessageid/trunk zope.i18nmessageid
+
+We also need to install ez_setup and docutils.
