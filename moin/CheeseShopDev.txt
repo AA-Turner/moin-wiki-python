@@ -83,3 +83,15 @@ Then go ahead and edit pypi.ini and this line in pypi.cgi:
   cfg = config.Config('/tmp/pypi.ini', 'webui')
 
 if your config.ini isn't in /tmp/pypi.ini.  You can leave it as 'config.ini' if it's in the same directory as pypi.py.
+
+If you wish to test functionality that requires login, then you will need to configure your apache to pass through basic auth. You do this by adding lines '''similar''' to the following to your apache2 conf file:
+
+   RewriteCond %{HTTP:Authorization}  ^(.+)$
+
+   RewriteRule ^/cgi-bin/pypi.cgi(.*) /Library/WebServer/CGI-Executables/pypi.cgi$1 [e=HTTP_CGI_AUTHORIZATION:%1,t=application/x-httpd-cgi,l]
+
+If this doesn't work, then you can use these lines to debug:
+
+  RewriteLog /var/log/httpd/rewrite.log
+
+  RewriteLogLevel 9
