@@ -1,0 +1,32 @@
+== Cheese Shop XML-RPC Interface ==
+
+'''package_releases(package name)'''
+  Retreive a list of the releases registered for the given package name. Returns a list of version strings.
+
+'''package_stable_version(package name)'''
+  Retrieve the most recent "stable" version the given package. Returns a version string, or None if there is no "stable" version.
+
+'''package_urls(package_name, version)'''
+  Retrieve a list of download URLs for the given package release. Returns a list of dicts {'url': the url, 'packagetype': the download package type} where the packagetype is one of the setup.py package types ('sdist', 'bdist', etc).
+
+'''package_data(package_name, version)'''
+  Retrieve metadata describing a specific package release. Returns a dict with keys for:
+
+     * name
+     * version
+     * stable_version
+     * author
+     * author_email
+     * maintainer
+     * maintainer_email
+     * home_page
+     * license
+     * summary
+     * description
+     * keywords
+     * platform
+     * download_url
+     * classifiers (list of classifier strings)
+
+'''search(spec[, operator])'''
+   Search the package database using the indicated search spec, combined using either "and" (the default) or "or". The spec may include any of the keywords described in the above list, for example: {'description': 'spam'} will search description fields. The results are returned as a list of dicts {'name': package name, 'version': package release version, 'summary': package release summary}
