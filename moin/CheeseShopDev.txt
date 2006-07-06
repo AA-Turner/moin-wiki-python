@@ -42,3 +42,12 @@ Discussion about the Cheese Shop should be had on the Catalog SIG mailing list:
 
 Something that's been requested, but needs much more thought and analysis to see whether it causes any problems: the ability to treat project names and versions as case-insensitive, while removing extraneous characters (as in pkg_resources.safe_name()) for 
 purposes both of searching and determining name uniqueness when registering.
+
+
+== Database Hints ==
+
+These are notes so we can remember how to dump / restore the packages database:
+
+  pg_dump -Fc -b packages >packages-20060706.dump
+
+  pg_restore -O -d packages -Fc packages-20060706.dump
