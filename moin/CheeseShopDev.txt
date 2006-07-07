@@ -2,7 +2,13 @@ This page documents the development of the Python Cheese Shop:
 
   http://cheeseshop.python.org
 
-The PyPI (packages index, Cheese Shop web interface) code resides in SVN at:
+= XML-RPC Interface =
+
+The Cheese Shop has an XML-RPC interface which may be used by any 3rd-party application developer. See CheeseShopXmlRpc for details.
+
+= Developing the Cheese Shop =
+
+This information is for developers working on the PyPI code. The PyPI (packages index, Cheese Shop web interface) code resides in SVN at:
 
   https://svn.python.org/packages/ (trunk,features,branches)
 
@@ -28,9 +34,6 @@ Discussion about the Cheese Shop should be had on the Catalog SIG mailing list:
 
   http://mail.python.org/mailman/listinfo/catalog-sig
 
-== XML-RPC Interface ==
-
-The Cheese Shop has an XML-RPC interface. See CheeseShopXmlRpc for details.
 
 == TO-DO list ==
 
@@ -57,35 +60,37 @@ purposes both of searching and determining name uniqueness when registering.
 
 Before restoring database, "pypi" role must exists:
 
+{{{
   createuser pypi
+}}}
 
 These are notes so we can remember how to dump / restore the packages database:
 
+{{{
   pg_dump -Fc -b packages >packages-20060706.dump
-
   createdb packages
-
   pg_restore -O -d packages -Fc packages-20060706.dump
+}}}
 
 Ask RichardJones if you need a database dump.
 
 PageTemplates are obtained from:
 
+{{{
   svn co svn://svn.zope.org/repos/main/zope.pagetemplate/trunk zope. pagetemplate
-
   svn co svn://svn.zope.org/repos/main/zope.tal/trunk zope.tal
-
   svn co svn://svn.zope.org/repos/main/zope.interface/trunk zope.interface
-
   svn co svn://svn.zope.org/repos/main/zope.i18nmessageid/trunk zope.i18nmessageid
-
   svn co svn://svn.zope.org/repos/main/zope.tales/trunk zope.tales
+}}}
 
 We also need to install ez_setup and docutils.
 
 Then go ahead and edit pypi.ini and this line in pypi.cgi:
 
+{{{
   cfg = config.Config('/tmp/pypi.ini', 'webui')
+}}}
 
 if your config.ini isn't in /tmp/pypi.ini.  You can leave it as 'config.ini' if it's in the same directory as pypi.py.
 
