@@ -7,3 +7,23 @@ One of the most powerful features of Jython is that it is possible to access Jyt
 There are two key components which must be followed in order to access jython code from java.  One key behind accessing jython code from within a java appliation is the "jythonc" utility.  This utility has the ability to compile jython code into a compatible java source.  ''jythonc'' can also create jar files, freeze associated code modules, enable dependency tracking, and much more.  The utilty is responsible for performing the task of creating a java source file from the designated jython (.py) module or class.  It then calls a java compiler and creates class files from the produced java source.
 
 As stated previously, ''jythonc'' has a number of available options.
+
+
+The second key to success for accessing jython from java is creating java-compatible classes.  In order for a jython class or module to  pass as java-compatible, it must adhere to the following rules:
+
+The class must be within a module of the same name
+The class must subclass a Java class or interface.  A standard class would subclass java.lang.Object.
+
+In order to use any of the methods written in jython within a java application, you must also include Java method signature hints, also known as sig-strings.  Sig-strings are doc strings which adhere to the following format:
+{{{"@sig <<method signature>>"}}}
+
+For instance:
+         
+
+
+The previous example illustrates the usage of sig-strings specifying a public method with a String object as a parameter and a String object as a return value.
+
+The exception to Java method signature hints are those methods which are overridden.  If a method appearing in a Jython class overrides a method which appears in the Java superclass then no method signature is required.  The jythonc utility handles those cases by obtaining the information from the Java superclass.
+
+The new class can be used from java class like this:
+
