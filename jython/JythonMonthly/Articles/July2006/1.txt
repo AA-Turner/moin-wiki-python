@@ -19,6 +19,19 @@ In order to use any of the methods written in jython within a java application, 
 
 For instance:
          
+{{{import java
+class Foo(java.util.Date):
+    def __init__(self):
+        self.count = 0
+    def bar(self, incr=1):
+        """@sig void bar(int incr)"""
+        self.count += incr
+        return self.count
+    def toString(self):
+        cnt = self.bar()
+        return "Foo[" + java.util.Date.toString(self) + " " + `cnt` +
+        "]"
+}}}
 
 
 The previous example illustrates the usage of sig-strings specifying a public method with a String object as a parameter and a String object as a return value.
@@ -27,3 +40,20 @@ The exception to Java method signature hints are those methods which are overrid
 
 The new class can be used from java class like this:
 
+
+{{{public class FooTest {
+    public static void main(String[] args) {
+        Foo foo = new Foo();
+        System.out.println(foo);
+        foo.bar();
+        foo.bar(43);
+        System.out.println(foo);
+    }
+}
+}}}
+
+''Using Reflection to Invoke Your Compiled Jython from Java''
+
+In order to make things a bit easier for invoking your Jython classes from Java you can use a bit of reflection.  You simply create a Java class which accepts some String parameters, and then use reflection to find your ''jythonc'' compiled Jython class.
+
+For instance:
