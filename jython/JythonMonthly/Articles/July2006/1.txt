@@ -1,15 +1,32 @@
-'''Extending on the FAQ -- Accessing your Jython code from Java'''
+'''Extending on the FAQ -- Accessing your Jython code from Java and Using Reflection to Access'''
 
 ''Submitted by: Josh Juneau''
 
 One of the most powerful features of Jython is that it is possible to access Jython code directly within a Java application.  Many times performing simple tasks within Java can produce bloated code which is difficult to maintain.  Jython gives you the ability to take that same code and reduce the complexity, producing easier to read and highly maintainable code.
 
-There are two key components which must be followed in order to access jython code from java.  One key behind accessing jython code from within a java appliation is the "jythonc" utility.  This utility has the ability to compile jython code into a compatible java source.  ''jythonc'' can also create jar files, freeze associated code modules, enable dependency tracking, and much more.  The utilty is responsible for performing the task of creating a java source file from the designated jython (.py) module or class.  It then calls a java compiler and creates class files from the produced java source.
+There are two key components which must be followed in order to access Jython code from Java.  One key behind accessing Jython code from within a java appliation is the "jythonc" utility.  This utility has the ability to compile Jython code into a compatible java source.  ''jythonc'' can also create jar files, freeze associated code modules, enable dependency tracking, and much more.  The utilty is responsible for performing the task of creating a Java source file from the designated Jython (.py) module or class.  It then calls a Java compiler and creates class files from the produced java source.
 
-As stated previously, ''jythonc'' has a number of available options.
+As stated previously, ''jythonc'' has a number of available options.  Since there are so many available options (you can see them all using ''jythonc'' without any paremeters), I will only mention a couple of the options which I find most useful.  
+
+   -d     The deep option creates a self-contained application.  It locates and compiles
+          all dependencies required for an application.
 
 
-The second key to success for accessing jython from java is creating java-compatible classes.  In order for a jython class or module to  pass as java-compatible, it must adhere to the following rules:
+   -w     By default, a directory named jpywork is created containing the compiled class
+          files when you use ''jythonc''.  The -w or --workingdir option allows you to 
+          specify a different directory in which to place your compiled Jython class files.
+
+
+   -C     The -c or --compiler option allows you to specify a Java compiler to use.
+
+
+   -p     The -p or --package option allows you to place your compiled Jython class files 
+          within a specified package.  For instance, if you'd like to have your Jython
+          class reside within the ''jythonclasses'' package, you would use 
+          "-p jythonclasses" within your ''jythonc'' call.
+
+
+The second key to success for accessing Jython from java is creating java-compatible classes.  In order for a Jython class or module to  pass as java-compatible, it must adhere to the following rules:
 
 The class must be within a module of the same name
 The class must subclass a Java class or interface.  A standard class would subclass java.lang.Object.
@@ -38,7 +55,7 @@ The previous example illustrates the usage of sig-strings specifying a public me
 
 The exception to Java method signature hints are those methods which are overridden.  If a method appearing in a Jython class overrides a method which appears in the Java superclass then no method signature is required.  The jythonc utility handles those cases by obtaining the information from the Java superclass.
 
-The new class can be used from java class like this:
+The new class can be used from a Java class like this:
 
 
 {{{public class FooTest {
