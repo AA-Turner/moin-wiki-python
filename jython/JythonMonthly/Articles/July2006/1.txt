@@ -73,6 +73,8 @@ The new class can be used from a Java class like this:
 
 In order to make things a bit easier for invoking your Jython classes from Java you can use a bit of reflection.  You simply create a Java class which accepts a String parameter for the Jython class and method ("class.method"), as well as an array of arguments (or no arguments).  You can then use reflection to find your ''jythonc'' compiled Jython class utilizing these paremeters.
 
+The advantage of using the reflection technique as opposed to hard coding against your compiled Jython classes is that it affords you the ability to modify the Jython classes without recompiling the Java code.
+
 For instance:
 
 The following static method takes two parameters:  a String value which represents the Jython class and method ("class.method") as well as a String array of arguments.  The following utility only accepts String values as arguments, so the Jython method would have to accomodate for any data type conversions.  The following method also does not return any values, it could be modified to return values from the executed Jython method if needed.
