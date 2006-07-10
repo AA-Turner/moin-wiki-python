@@ -74,3 +74,77 @@ The new class can be used from a Java class like this:
 In order to make things a bit easier for invoking your Jython classes from Java you can use a bit of reflection.  You simply create a Java class which accepts a String parameter for the Jython class and method ("class.method"), as well as an array of arguments (or no arguments).  You can then use reflection to find your ''jythonc'' compiled Jython class utilizing these paremeters.
 
 For instance:
+
+The following static method takes two parameters:  a String value which represents the Jython class and method ("class.method") as well as a String array of arguments.  The following utility only accepts String values as arguments, so the Jython method would have to accomodate for any data type conversions.  The following method also does not return any values, it could be modified to return values from the executed Jython method if needed.
+
+{{{
+    public static void execJython(String filename, String[] args){
+        String className = filename.substring(0,filename.indexOf("."));
+        String methodName = filename.substring(filename.indexOf(".") + 1);
+        Class JythonClass  = null;
+        Object[] arguments  = null;
+        Class [] parameterTypes = null;
+        int argCount        = 0;
+        try {
+            JythonClass = Class.forName(className);
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        if(args != null){
+           
+           parameterTypes = new Class[args.length];
+                for(int pTypes = 0; pTypes <= args.length -1; pTypes++){
+                    parameterTypes[pTypes] = String.class;
+                }
+            
+        } else {
+            parameterTypes = new Class[] {String.class};
+        }
+        String defaultObj   = new String();
+        int size           = 0;
+        if (args != null){
+            size = args.length;
+            arguments = new Object[size];
+        } else {
+            arguments = new Object[size + 1];
+        }
+        try {
+            Method jyMethod = JythonClass.getMethod(methodName, parameterTypes);
+            if(args != null){
+                for(int x = 0; x <= args.length -1; x++){
+                    arguments[x] = args[x];
+                }
+            } else {
+                arguments[0] = "none";
+            }
+            jyMethod.invoke(JythonClass.newInstance(), arguments);
+        } catch (SecurityException ex) {
+            ex.printStackTrace();
+        } catch (NoSuchMethodException ex) {
+            ex.printStackTrace();
+        } catch (IllegalAccessException ex){
+            ex.printStackTrace();
+        } catch (InvocationTargetException ex){
+            ex.printStackTrace();
+        } catch (InstantiationException ex){
+            ex.printStackTrace();
+        }
+  
+      
+    }
+}}}
+
+Suppose you have a Jython class defined as follows:
+
+{{{
+import java
+class Hello(java.lang.Object):
+   def __init__(self):
+      pass
+   def printHello(self, str=None):
+      """@sig public void printHello(java.lang.String str)"""
+      print 'Hello Jython!'
+
+}}}
+
+If you have compiled the above Jython class using ''jythonc'' and the resulting class files reside within the classpath or an imported package, you could invoke the Jython using the utility with the command ''execJython("Hello.hello",args)'' where ''args'' is a String array of arguments.
