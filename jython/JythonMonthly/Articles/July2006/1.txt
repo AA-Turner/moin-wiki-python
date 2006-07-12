@@ -151,6 +151,24 @@ class Hello(java.lang.Object):
 
 If you have compiled the above Jython class using ''jythonc'' and the resulting class files reside within the classpath or an imported package, you could invoke the Jython using the utility with the command ''execJython("Hello.hello",args)'' where ''args'' is a String array of arguments.
 
+''Exposing your object constructor''
+
+In the same way that you add a signature line for a method, you can add one for your __init__ method.
+
+{{{
+class MyClass(java.lang.Object):
+   def __init__(self, size):
+      """@sig MyClass(int size)"""
+      self.__size = size
+   def sayHello(self):
+      """@sig public void sayHello()"""
+       print self.__size * "Hello!\n"
+}}}
+
+It turns out you MUST do this if your __init__ method has any arguments besides 'self', or you cannot construct your object.
+There also appear to a variety of bugs that are silently ignored.  For example, this does not ''apparently'' work (with 2.2a1)
+when your object inherits from a java interface.  The behavior in these cases seems to be to simply ignore the signature.
+
 Resources:
  [http://www.amazon.com/gp/product/0735711119/ref=sr_11_1/002-4876309-4396038?ie=UTF8 Jython for Java Programmers]
 
