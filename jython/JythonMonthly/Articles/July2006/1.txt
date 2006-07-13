@@ -166,8 +166,10 @@ class MyClass(java.lang.Object):
 }}}
 
 It turns out you MUST do this if your __init__ method has any arguments besides 'self', or you cannot construct your object.
-There also appear to a variety of bugs that are silently ignored.  For example, this does not ''apparently'' work (with 2.2a1)
-when your object inherits from a java interface.  The behavior in these cases seems to be to simply ignore the signature.
+This has some subtlety to it's behavior -- the @sig lines are only honored if 'jythonc' understands that your class is
+extending a java class (or interface) -- if the class you extend is not found on the classpath, it is assumed to be an (unresolved)
+python class, and the resulting compiled class does not expose java signatures.  You can easily test the result by using (e.g.):
+{{{ javap -classpath jpywork MyClass }}}
 
 Resources:
  [http://www.amazon.com/gp/product/0735711119/ref=sr_11_1/002-4876309-4396038?ie=UTF8 Jython for Java Programmers]
