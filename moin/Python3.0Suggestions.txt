@@ -33,8 +33,8 @@ related pep:
  * [http://www.python.org/peps/pep-0296.html : Adding a bytes Object Type]
 
 
-== New binary operator symbols  ≤ ≥ ≠ ==
-these operators ≤ ≥ ≠ should be added to the language having the following meaning:
+== New binary operator symbols  d e ` ==
+these operators d e ` should be added to the language having the following meaning:
    <= >= !=
 this should improve readibility (and make language more accessible to beginners).
 
@@ -154,18 +154,18 @@ else:
 Agreed, only comparison operators ({{{==}}}, {{{>}}}, {{{<}}}) should return True/False, leave and/or as is ''(Note: the comparison operators do *not* return only True/False; they can return any value, as used by Numeric and SQLObject)''
 
 :::  some new true boolean operators should be added.
-The binary/boolean {{{and}}} should be represented by one of the following: {{{+}}}, {{{&&}}}, {{{∧}}}.
-The binary/boolean {{{and}}} should be represented by one of the following: {{{*}}}, {{{||}}}, {{{∨}}}.
+The binary/boolean {{{and}}} should be represented by one of the following: {{{+}}}, {{{&&}}}, {{{'}}}.
+The binary/boolean {{{and}}} should be represented by one of the following: {{{*}}}, {{{||}}}, {{{(}}}.
 
-The +, * are by mathematical analogy with addition and multiplication, within  mathematical ℕ₂ .
+The +, * are by mathematical analogy with addition and multiplication, within  mathematical ‚ .
 
 The && and || comes from the ugly c/java notation, I mean languages from an other century...
 
-{{{∧}}}. {{{∨}}}. comes from unicode representation for boolean operations. They might be completed by 
-three others boolean operators, xor, nand and nor: {{{⊻ ⊼⊽}}}
-{{{∧}}}. {{{∨}}} are for boolean what {{{∩∪}}} are for set. (similar notation, similar meaning).
+{{{'}}}. {{{(}}}. comes from unicode representation for boolean operations. They might be completed by 
+three others boolean operators, xor, nand and nor: {{{» ¼½}}}
+{{{'}}}. {{{(}}} are for boolean what {{{)*}}} are for set. (similar notation, similar meaning).
 
-They also have a curly notation: {{{⋎⋏}}}.
+They also have a curly notation: {{{ÎÏ}}}.
 
 {{{
 a + b # a or b. should return True, when a and b are true (instead of 2) 
@@ -174,8 +174,8 @@ a * b #should return a logic_and b for boolean
 a && b #should return a logic_and b for boolean
 a || b #should return a logic_or b for boolean
 
-a ∧ b #should return a logic_and b 
-a ∨ b #should return a logic_or b 
+a ' b #should return a logic_and b 
+a ( b #should return a logic_or b 
 
 should return True or False
 
@@ -342,9 +342,10 @@ the file open. -- SkipMontanaro
 
 == Parameterize functions that hardcode stdout or stderr ==
 
-Some modules assume that their output should necessarily to to stdout or
-stderr.  One example is the dis module.  The functions/methods in such
-modules should be updated to accept an optional stream argument. -- SkipMontanaro
+Some modules hardcode the target of their output, typically as stdout
+or stderr.  One example is the dis module.  The functions/methods in such
+modules should be updated to accept an optional stream argument. --
+SkipMontanaro
 
 == Module interface ==
 
@@ -450,6 +451,8 @@ and results in x referring to a one-element tuple.  I think Python 3.0 should re
 parens for all tuple literals. -- SkipMontanaro
 
   Would that disallow {{{a, b == func()}}} ?  That would make me very sad.  -- IanBicking
+
+  Yes.  You'd have to write {{{(a, b) == func()}}} -- Skip
 
 == Remove [<listcomp>] syntax in favor of list(<genexp>) syntax ==
 
