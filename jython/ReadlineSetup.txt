@@ -10,20 +10,22 @@ Jython can support line editing and history via the [http://java-readline.source
 
 These instructions were tested on a Fedora linux system, with Jython-2.1, Sun JDK1.5 (note GCJ does not work at this time), and GCC. It as assumed that Jython has already been installed.
 
-1. [http://sourceforge.net/project/showfiles.php?group_id=48669 Download Java-Readline] (version 0.8.0 as of this writing) and follow the included build instructions. This will require both java and C compilers. If your JAVA_HOME environment variable is set and the necessary compilers can be found in your path, building should be as simple as:
+1. [http://sourceforge.net/cvs/?group_id=48669 Checkout Java-Readline], uncomment the correct OS_FLAVOR line in java-readline/Makefile and follow the included build instructions. This will require both java and C compilers. If the necessary compilers can be found in your path, building should be as simple as:
 
 {{{
-$ tar -zxf libreadline-java-0.8.0-src.tar.gz
-$ cd libreadline-java-0.8.0
+$ cvs -d:pserver:anonymous@java-readline.cvs.sourceforge.net:/cvsroot/java-readline login 
+$ cvs -z3 -d:pserver:anonymous@java-readline.cvs.sourceforge.net:/cvsroot/java-readline co -P java-readline
+$ cd java-readline
+$ vi Makefile#or whatever editor you prefer to fix OS_FLAVOR
 $ make
 }}}
 
-Otherwise edit the Java-Readline Makefile or set the environment variables JAVA_HOME and update your path. The build results in the creation of following two files:
+The build results in the creation of following two files:
 
  * libreadline-java.jar
- * libJavaReadline.so
+ * libJavaReadline.so on most systems or libJavaReadline.jnilib on Mac
 
-These can be copied to a convient location, but the rest of these instructions assume they remain in /home/myname/libreadline-java-0.8.0.
+These can be copied to a convient location, but the rest of these instructions assume they remain in /home/myname/java-readline.
 
 2. Jython needs to be configured to use the Java-Readline library. Edit the jython [http://www.jython.org/docs/registry.html registry] file, setting the following two lines:
 
@@ -32,14 +34,16 @@ python.console=org.python.util.ReadlineConsole
 python.console.readlinelib=GnuReadline
 }}} 
 
-3. Jython also needs to have libreadline-java.jar in its CLASSPATH, and the shared library libJavaReadline.so needs to be available to the OS's dynamic linker when loading Jython. Both of these can be done through setting environment variables as follows:
+3. Jython also needs to have libreadline-java.jar in its CLASSPATH, and the shared library needs to be available to the OS's dynamic linker when loading Jython. Both of these can be done through setting environment variables as follows on most systems:
 
 {{{
-export LD_LIBRARY_PATH=/home/myname/libreadline-java-0.8.0
-export CLASSPATH=/home/myname/libreadline-java-0.8.0/libreadline-java.jar:$CLASSPATH
+export LD_LIBRARY_PATH=/home/myname/java-readline
+export CLASSPATH=/home/myname/java-readline/libreadline-java.jar:$CLASSPATH
 }}}
 
 You can put these directly into the shell script that invokes jython (created by the installer), or into one of your environment's startup scripts.
+
+On Mac you should add the jar to the CLASSPATH as above, but instead of adding the java-readline dir to LD_LIBRARAY_PATH copy libJavaReadline.jnilib to the ~/Library/Java/Extensions directory(go ahead and create it if it doesn't exist).
 
 That's it. You should now be able to invoke jython's interactive console, with readline powered command line editing enabled.
 
