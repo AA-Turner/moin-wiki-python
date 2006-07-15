@@ -3,7 +3,7 @@ This page contains general information about the Python BuildBot setup and issue
 
 There are several unstable tests and other issues.  These are not problems with BuildBot, but rather are problems with Python and/or the environment it is built/run in.
 
-|| Platform      || Version || Issue ||
+||<tablestyle="border:1"> '''Platform'''      || '''Version''' || '''Issue''' ||
 || Mac OS X 10.3 || 2.[45]  || getaddrinfo configure check fails sometimes ||
 || cygwin        || 2.5     || test_bsddb3 crashes interpreter (old version of BSD DB?), test_curses, test_socketserver, test_time fail ||
 || OpenBSD (x86) || 2.4     || test_compare fails sometimes probably due to missing backport of fixes to test for negative address handling ||
@@ -26,8 +26,7 @@ We need to add more platforms (and compilers!) to the BuildBot farm.  If you hav
 
 It might also be beneficial to run on older versions of operating systems or others not mentioned above.  Feel free to contact us if you would like to offer another type of system.
 
-Installing a buildslave
------------------------
+== Installing a buildslave ==
 
 You need to fetch the latest [http://buildbot.sf.net buildbot source]. It requires Python and Twisted.
 
@@ -37,11 +36,11 @@ Unpack and install it.
 
 Create a new user "buildbot" (highly recommended)
 
-% su - buildbot
-
-% mkdir buildarea
-
-% buildbot slave `pwd`/buildarea dinsdale.python.org:9020 slavename slavepasswd
+{{{
+ % su - buildbot
+ % mkdir buildarea
+ % buildbot slave `pwd`/buildarea dinsdale.python.org:9020 slavename slavepasswd
+}}}
 
 You'll need to get someone to create the slavename/slavepasswd on dinsdale.python.org before doing this. Talk to someone like Martin, Anthony or Neal to do this.
 
@@ -49,14 +48,15 @@ Then edit buildarea/info/admin and buildarea/info/host to set them appropriately
 
 Finally, start buildbot with:
 
-% buildbot start ~/buildarea
+{{{
+ % buildbot start ~/buildarea
+}}}
 
-Required ports
---------------
+== Required ports ==
 
 In order for the buildbot to operate properly, it needs access to various TCP ports on the internet.  Below is a list of known ports and hosts.
 
-|| Port  || Host       || Description ||
+|| '''Port'''  || '''Host''' || '''Description''' ||
 || 80    || python.org || test_urllibnet ||
 || 995   || gmail.org  || test_socket_ssl ||
 || 50007 || localhost  || test_socket ||
