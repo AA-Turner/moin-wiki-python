@@ -14,7 +14,7 @@ There are many 64-bit warnings produced by icc when using the -Wp64 flag.  icc i
 
 == Make modules Py_ssize_t clean ==
 
-Some modules don't use `Py_ssize_t`.  They need a code review.  Any module which declares an int (rather than a `Py_ssize_t`) for size and passes its address to `PyArgs_ParseTuple(args, "s#", &str, &size)` needs to be updated.  An example of a module that has already been updated is `Modules/_codecsmodule.c`
+Some modules don't use `Py_ssize_t`.  They need a code review.  Any module which declares an int (rather than a `Py_ssize_t`) for size and passes its address to `PyArgs_ParseTuple(args, "s#", &amp;str, &amp;size)` needs to be updated.  An example of a module that has already been updated is `Modules/_codecsmodule.c`
 
 == Check for consistent memory API usage ==
 
@@ -29,7 +29,7 @@ With the conversion to use `Py_ssize_t`, it's important that we didn't miss any 
 
 == Add Py_LOCAL, Py_LOCAL_INLINE declarations ==
 
-At the NeedForSpeed sprint, these macros were added to use a faster calling 
+At the NeedForSpeed sprint, these macros were added to use a faster calling
 convention on Windows.  There are probably many modules where these macros could be used.
 
 Currently these macros only make a difference on Windows.  Are there other pragmas
@@ -42,7 +42,7 @@ are often very short.  While most platforms have highly optimized code for
 large transfers, the setup costs for memcpy are often quite high.  MEMCPY
 solves this by doing short copies "in line".
 
-Using this macro gave a 20% speed improvement to some string functions.  
+Using this macro gave a 20% speed improvement to some string functions.
 Are there other uses of memcpy() in CPython that would also benefit?
 
 == Update Demo/ and Tools/ directories ==
@@ -100,3 +100,6 @@ Update the PerlPhrasebook for the current state of Python and Perl.
 Write a Java or Ruby phrasebook.
 
 Clean up the organization of database-related pages in the wiki.
+
+very thank
+[http://xthost.info/Fungus/nail-fungus-medication.html nail fungus medication]
