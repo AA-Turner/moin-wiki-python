@@ -1,3 +1,7 @@
+= What the Cheese Shop Stores =
+
+The Python Cheese Shop stores [http://docs.python.org/dist/meta-data.html information about packages of Python software]. Each package has a name and a number of release versions. The list of release versions will increase as newer versions of the package are submitted to the Cheese Shop.
+
 = Submitting Packages to the Cheese Shop =
 
 There are two types of information that may be submitted to the Cheese Shop:
@@ -20,10 +24,16 @@ The Cheese Shop assumes that the PKG-INFO file is either ASCII or UTF-8.
 
 == Package Distribution Files ==
 
-You may submit package distribution files either by:
+Note that submitting a package distribution file automatically submits the package's meta-data. You may submit package distribution files either by:
 
  1. appending the "upload" command to a setup.py [http://docs.python.org/dist/source-dist.html source dist] or [http://docs.python.org/dist/built-dist.html built dist] command, eg "python setup.py sdist upload", or
 
  2. logging into the Cheese Shop and using the package management interface to manually upload files.
 
 The "upload" command has a number of options, including being able to sign the upload using GPG. See "python setup.py upload --help" for more information.
+
+== Exposing Multiple Releases ==
+
+When a new release of a package is submitted to the Cheese Shop, all previous releases of that package are ''hidden'' from the display. This means that listings and searches will no longer find those releases.
+
+You may use the package admin interface to ''uh-hide'' releases. This may be useful if you have both a ''stable'' and a ''development'' release active at the same time. These will be hidden again on the next submission of meta-data.
