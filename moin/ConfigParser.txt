@@ -82,3 +82,5 @@ Maybe next time!  -- MartinManey
 It seems to me defaults are just place holders, what I want is to check for file.ini and if it is not found in the current directory write it with defaults. There is no 'defaults' section, if I want defaults I just delete the file.ini. -- GaryMoffatt
 
 Is there any rationale in `ConfigParser` for `sections()` not returning the list of sections in the order presented in the file?  -- StephenHahn
+
+ Very simple: the order isn't stored; the sections are stored as a dictionary.  It's also possible that the file contains multiple sections by the same name, which are collapsed into a single entry in the internal dictionary.  --FredDrake
