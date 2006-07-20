@@ -41,6 +41,14 @@ a user .ini sets it in the "Defaults" section, which wins?)
 I don't know how universal these conventions are.
 
 JimJJewett
+
+At Zope Corporation, we're using !ConfigParser for configuration files
+used in our "buildout" process.  We use a wrapper API that takes the
+section and option names, and searches for a platform-specific value
+before getting the non-specific value.  The platform-specific values
+are given in alternate sections that have derived names.  This seems
+to work well.  --FredDrake
+
 ----
 
 I've been thinking about writing up some thoughts I've had while trying to use `ConfigParser` for what seemed like a dirt-simple application a while ago.
