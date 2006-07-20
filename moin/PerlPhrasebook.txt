@@ -40,6 +40,10 @@ QUESTIONS:
 
 Python don't need no steenking semicolons.
 
+== The not so obvious ==
+There are many Integrated Development Environments, (IDEs),  for Python that are usually recommended to new users and used by seasoned Python programmers alike. The Idle IDE is a TK based GUI providing language-aware editing, debugging and command line shell for Python that is part of the Python distribution. 
+Many of the python examples shown can be experimented with in the Idle IDE.
+  
 
 == Simple types ==
 
@@ -334,15 +338,30 @@ initialization determines the type.  For example, `a = []`
 creates an empty array `a`, `d = {}` creates an
 empty dictionary.
 
+=== looping over files given on the command line or stdin ===
+The useful perl idiom of:
+{{{
+while (<>) {
+    ...			# code for each line
+}
+}}}
+loops over each line of every file named on the commandline when executing the script; or, if no files are named, it will loop over every line of the standard input file descriptor.
 
-
+The Python fileinput module does a similar task:
+{{{
+import fileinput
+for line in fileinput.input():
+    ...                 # code to process each line
+}}}
+The fileinput module also allows inplace editing or editing with the creation of a backup of the files, and a different list of files can be given insteaad of taking the command line arguments. 
+ 
 == Some general comparisons ==
 
 This section is under construction; for the moment I am just putting
 random notes here.  I will organize them later.
 
 
- * Perl's regular expressions are much more powerful than those of Python.
+ * Perl's regular expressions are much more accessible than those of Python being embedded in Perl syntax in contrast to Pythons import of its re module. 
  * Perl's quoting mechanisms are more powerful than those of Python.
  * I find Python's syntax much cleaner than Perl's
  * I find Perl's syntax too flexible, leading to silent errors.  The -w flag and `use strict` helps quite a bit, but still not as much as Python.
@@ -746,6 +765,7 @@ printSep()
 Perl's regexp matching and substitution is enormously powerful; see
 especially the new syntax for comments and whitespace inside regular
 expressions.
+Python replaced its original regular epression module some years ago with one that closely matches the capabilities of Perls, including being able to do advanced RE tasks such as calling a function to provide the data for an RE substitution, and the optional inclusion of whitespace and comments in REs. 
 
 In Python, string methods are often used where perl would use a
 regex.  Among these string methods are `title()` and `capitalize()`.  
@@ -810,6 +830,10 @@ printSep()
 The highest valid index of an array `A`:
  * Perl: `$#A`.  
  * Python: `len(A) - 1`.
+But note: The highest valid upper bound to a python range is len(A) as in
+{{{
+A[0:len(A)]
+}}}
 
 Size of an array `A`:
  * Perl: `scalar(@A)`
