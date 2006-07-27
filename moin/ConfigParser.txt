@@ -94,3 +94,5 @@ Is there any rationale in `ConfigParser` for `sections()` not returning the list
  Very simple: the order isn't stored; the sections are stored as a dictionary.  It's also possible that the file contains multiple sections by the same name, which are collapsed into a single entry in the internal dictionary.  --FredDrake
 
   Thanks.  I had thought that .INI files had to have unique sections, but perhaps not.  Being order-preserving allows sections to have precedence based on order, rather than an explicit attribute (which is what the config file I've inherited has done, although it was parsed using another language's INI module).  -- StephenHahn
+
+   Hmm.  Other parsers may be less forgiving.  Too bad there's no real specification for the INI format (as best as I've been able to tell).  --FredDrake
