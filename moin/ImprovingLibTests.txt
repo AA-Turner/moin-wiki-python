@@ -70,5 +70,8 @@ Please try to get all tests in alphabetical order
 
 == Improve Tests ==
 || Test Name                      ||Things to improve       || Volunteer              ||
+||Lib/test/test_runpy.py     ||  Test with zip modules [1] ||
 
+
+[1] The current tests for the runpy module don't cover the case of running a module from inside a zip file because the normal tests should still run even if the zipfile module isn't available. For Python 2.5, testing that runpy works with modules in zip files was done manually instead. To avoid regressions, this should be covered by the unit tests in 2.6. Doing this as a separate test_runpy_zip.py module is probably the easiest way to avoid messing with the results of the tests for normal filesystem based imports.
  
