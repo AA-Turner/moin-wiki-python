@@ -85,3 +85,33 @@ A call to {{{cls.func(a, b)}}} does '''not''' get translated into {{{cls.__class
 {{{__setattr__()}}} complains, it expects the object whose attribute should get set as its first
 argument.
 You could have written {{{M.__setattr__(cls, 'y', 1)}}} instead.
+
+
+'''Hex values passed to external code'''
+{{{
+ioctl(fd, 0xc0107307)
+}}}
+
+'''Usage'''
+{{{
+>>> fd = open("/dev/null")
+>>> import fcntl
+>>> fcntl.ioctl(fd,0xc0107307)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in ?
+OverflowError: long int too large to convert to int
+
+}}}
+
+'''Question'''
+
+How do I pass in a hex cmd to ioctl, or some other external function that is expecting an int, not a long?
+
+'''Answer'''
+
+There doesn't seem to be anyway to let python know that you are trying to build an unsigned value, so:
+
+def convert32(number):
+   return int(-(number ^ 0xffffffff)-1)
+
+ioctl(fd, convert32(0xc0107307))
