@@ -155,7 +155,7 @@ class memoized(object):
    def __repr__(self):
       """Return the function's docstring."""
       return self.func.__doc__
-                        
+
 @memoized
 def fibonacci(n):
    "Return the nth fibonacci number."
@@ -211,7 +211,7 @@ WHAT_TO_DEBUG = set(['io', 'core'])  # change to what you need
 
 class debug:
     """ Decorator which helps to control what aspects of a program to debug
-    on per-function basis. Aspects are provided as list of arguments. 
+    on per-function basis. Aspects are provided as list of arguments.
     It DOESN'T slowdown functions which aren't supposed to be debugged.
     """
     def __init__(self, aspects=None):
@@ -274,23 +274,23 @@ def print_x(self):
 #!python
 class countcalls(object):
    "Decorator that keeps track of the number of times a function is called."
-   
+
    __instances = {}
-   
+
    def __init__(self, f):
       self.__f = f
       self.__numCalls = 0
       countcalls.__instances[f] = self
-      
+
    def __call__(self, *args, **kwargs):
       self.__numCalls += 1
       return self.__f(*args, **kwargs)
-      
+
    @staticmethod
    def count(f):
       "Return the number of times the function f was called."
       return countcalls.__instances[f].__numCalls
-      
+
    @staticmethod
    def counts():
       "Return a dict of {function: # of calls} for all registered functions."
@@ -330,8 +330,8 @@ class SomeClass:
 
 == Creating Well-Behaved Decorators ==
 
-Note:  This is only one recipe.  Others include inheritance 
-from a standard decorator (link?) and a factory function 
+Note:  This is only one recipe.  Others include inheritance
+from a standard decorator (link?) and a factory function
 such as [http://www.phyast.pitt.edu/~micheles/python/decorator.zip Michele Simionato's decorator module] which even preserves signature information.
 
 {{{
@@ -341,9 +341,9 @@ def simple_decorator(decorator):
     into well-behaved decorators, so long as the decorators
     are fairly simple. If a decorator expects a function and
     returns a function (no descriptors), and if it doesn't
-    modify function attributes or docstring, then it is 
+    modify function attributes or docstring, then it is
     eligible to use this. Simply apply @simple_decorator to
-    your decorator and it will automatically preserve the 
+    your decorator and it will automatically preserve the
     docstring and function attributes of functions to which
     it is applied."""
     def new_decorator(f):
@@ -418,15 +418,15 @@ def dumpArgs(func):
     argnames = func.func_code.co_varnames[:func.func_code.co_argcount]
     fname = func.func_name
     def echoFunc(*args,**kwargs):
-        print fname, ":", ', '.join('%s=%r' % entry 
+        print fname, ":", ', '.join('%s=%r' % entry
                                     for entry in zip(argnames,args) + kwargs.items())
         return func(*args, **kwargs)
     return echoFunc
-    
+
 @dumpArgs
 def f1(a,b,c):
     print a + b + c
-    
+
 f1(1, 2, 3)
 }}}
 
@@ -669,18 +669,18 @@ the 'debug' keyword argument to the decorator:
     0 -- NONE:   No type-checking. Decorators disabled.
     1 -- MEDIUM: Print warning message to stderr. (Default)
     2 -- STRONG: Raise TypeError with message.
-If 'debug' is not passed to the decorator, the default level is used. 
+If 'debug' is not passed to the decorator, the default level is used.
 
 Example usage:
     >>> NONE, MEDIUM, STRONG = 0, 1, 2
-    >>> 
+    >>>
     >>> @accepts(int, int, int)
     ... @returns(float)
     ... def average(x, y, z):
     ...     return (x + y + z) / 2
-    ... 
+    ...
     >>> average(5.5, 10, 15.0)
-    TypeWarning:  'average' method accepts (int, int, int), but was given 
+    TypeWarning:  'average' method accepts (int, int, int), but was given
     (float, int, float)
     15.25
     >>> average(5, 10, 15)
@@ -688,19 +688,19 @@ Example usage:
     15
 
 Needed to cast params as floats in function def (or simply divide by 2.0).
-    
+
     >>> TYPE_CHECK = STRONG
     >>> @accepts(int, debug=TYPE_CHECK)
     ... @returns(int, debug=TYPE_CHECK)
     ... def fib(n):
     ...     if n in (0, 1): return n
     ...     return fib(n-1) + fib(n-2)
-    ... 
+    ...
     >>> fib(5.3)
     Traceback (most recent call last):
       ...
     TypeError: 'fib' method accepts (int), but was given (float)
-    
+
 """
 import sys
 
@@ -714,8 +714,8 @@ def accepts(*types, **kw):
     kw    -- Optional specification of 'debug' level (this is the only valid
              keyword argument, no other should be given).
              debug=( 0 | 1 | 2 )
-                 
-    """   
+
+    """
     if not kw:
         # default level: MEDIUM
         debug = 1
@@ -733,7 +733,7 @@ def accepts(*types, **kw):
                     if debug == 1:
                         print >> sys.stderr, 'TypeWarning: ', msg
                     elif debug == 2:
-                        raise TypeError, msg 
+                        raise TypeError, msg
                 return f(*args)
             newf.__name__ = f.__name__
             return newf
@@ -754,7 +754,7 @@ def returns(ret_type, **kw):
     kw       -- Optional specification of 'debug' level (this is the only valid
                 keyword argument, no other should be given).
                 debug=( 0 | 1 | 2 )
-                 
+
     """
     try:
         if not kw:
@@ -782,7 +782,7 @@ def returns(ret_type, **kw):
         raise KeyError, key + "is not a valid keyword argument"
     except TypeError, msg:
         raise TypeError, msg
-    
+
 def info(fname, expected, actual, flag):
     """ Convenience function returns nicely formatted error/warning msg. """
     format = lambda types: ', '.join([str(t).split("'")[1] for t in types])
@@ -791,4 +791,40 @@ def info(fname, expected, actual, flag):
           + ("accepts", "returns")[flag] + " (%s), but " % expected\
           + ("was given", "result is")[flag] + " (%s)" % actual
     return msg
+}}}
+
+
+
+== CGI method wrapper ==
+
+Handles HTML boilerplate at top and bottom of pages returned from CGI methods.  Works with cgilib module.  Now your request handlers can just output the interesting HTML, and let the decorator deal with all the top and bottom clutter.
+
+(Note: the exception handler eats all exceptions, which in CGI is no big loss, since the program runs in its separate subprocess.  At least here, the exception contents will be written to the output page.)
+
+{{{
+#!python
+class CGImethod(object):
+    def __init__(self,title):
+        self.title = title
+    def __call__(self,fn):
+        def wrappedFn(*args):
+            print "Content-Type: text/html\n\n"
+            print "<HTML>"
+            print "<HEAD><TITLE>%s</TITLE></HEAD>" % self.title
+            print "<BODY>"
+            try:
+                fn(*args)
+            except Exception,e:
+                print
+                print e
+                raise
+            finally:
+                print
+                print "</BODY></HTML>"
+        return wrappedFn
+
+@CGIMethod("Hello with Decorator")
+def sayHello():
+    print '<h1>Hello from CGI-Land</h1>'
+
 }}}
