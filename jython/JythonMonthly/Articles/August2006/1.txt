@@ -61,3 +61,10 @@ Your logging will now take place within the file you specified within the proper
 == Using log4j in Jython Scripts ==
 
 Many may ask, why in the world would you be interested in logging information about your scripts?  Most of the time a script is executed interactively via the command line.  However, there are plenty of instances where it makes sense to have the system invoke a script for you.  As you probably know, this technique is used quite often within an environment to run nightly tasks, or even daily tasks which are automatically invoked on a scheduled basis.  For these cases, it can be extremely useful to log errors or information using log4j.  Some may even wish to create a separate automated task to email these log files after the tasks complete. 
+
+The overall implementation is the same as above, the most important thing to remember is that you must have the log4j.jar archive and properties file within your Jython path.  Once this is ready to go you can use log4j in your script.
+
+{
+ from org.apache.log4j import *
+ logger = Logger.getLogger("scriptname")
+ PropertyConfigurator.configure(sys.path[0] + "/log4j.properties")
