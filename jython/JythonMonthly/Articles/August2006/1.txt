@@ -8,10 +8,11 @@ Are you still using the Jython ''print'' command to show your errors?  How about
 
 == Setting Up Your Environment ==
 
-The most difficult part about using log4j with Jython is the setup.  You must ensure that the log4j.jar archive resides somewhere within your Jython PATH.  You then set up a properties file for use with log4j.  Within the properties file, you can include appender information, where logs should reside, and much more.
+The most difficult part about using log4j with Jython is the setup.  You must ensure that the log4j.jar archive resides somewhere within your Jython PATH (usually this entails setting the CLASSPATH to include necessary files in Windows environment).  You then set up a properties file for use with log4j.  Within the properties file, you can include appender information, where logs should reside, and much more.
 
 Example properties file:
-{ log4j.rootLogger=debug, stdout, R
+{{{ 
+log4j.rootLogger=debug, stdout, R
 
 log4j.appender.stdout=org.apache.log4j.ConsoleAppender
 log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
@@ -27,7 +28,8 @@ log4j.appender.R.MaxFileSize=100KB
 log4j.appender.R.MaxBackupIndex=1
 
 log4j.appender.R.layout=org.apache.log4j.PatternLayout
-log4j.appender.R.layout.ConversionPattern=%p %t %c - %m%n }
+log4j.appender.R.layout.ConversionPattern=%p %t %c - %m%n 
+}}}
 
 You are now ready to use log4j in your Jython application.  As you can see, if you've ever used log4j with Java, it is pretty much the same.
 
@@ -37,26 +39,30 @@ Once again, using log4j within a Jython application is very similar to it's usag
 
 First, you must import the log4j packages:
 
-{ from org.apache.log4j import * }
+{{{ 
+from org.apache.log4j import * 
+}}}
 
 Second, you obtain a new logger for your class or module and set up a PropertyConfigurator:
 
-{ Logger logger = Logger.getLogger("myClass")
+{{{
+ Logger logger = Logger.getLogger("myClass")
   # Assume that the log4j properties resides within a folder named "utilities"
   PropertyConfigurator.configure(sys.path[0] + "/utilities/log4j.properties")
-}
+}}}
 
 Lastly, use log4j:
 
-{  # Example module within the class:
+{{{
+  # Example module within the class:
    def submitDocument(self, event):
        try:
            # Assume we perform some SQL here              
        except SQLException, ex:
            self.logger.error("docPanel#submitDocument ERROR: %s" % (ex)) 
-}
+}}}
 
-Your logging will now take place within the file you specified within the properties.
+Your logging will now take place within the file you specified in the properties file for ''log4j.appender.R.File''.
 
 == Using log4j in Jython Scripts ==
 
@@ -64,7 +70,15 @@ Many may ask, why in the world would you be interested in logging information ab
 
 The overall implementation is the same as above, the most important thing to remember is that you must have the log4j.jar archive and properties file within your Jython path.  Once this is ready to go you can use log4j in your script.
 
-{
+{{{
  from org.apache.log4j import *
  logger = Logger.getLogger("scriptname")
- PropertyConfigurator.configure(sys.path[0] + "/log4j.properties")
+ PropertyConfigurator.configure("C:\path_to_properties\log4j.properties")
+ logger.info("Test the logging")
+}}}
+
+== Future Possibilities ==
+
+Log4J is nice, but there are other logging frameworks which could be extremely useful in Jython as well.  As a matter of fact, there is a new logging "anti-framework" which is called SimpleLog 2.0 and it looks helpful.  I haven't yet reviewed SimpleLog 2.0, but I plan to do so in the near future!
+
+Check it out at: [https://simple-log.dev.java.net/]
