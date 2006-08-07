@@ -104,7 +104,7 @@ Check it out at: [https://simple-log.dev.java.net/]
 == Create a Jython Time Profiler ==
 
 A module that helps to inject time profiling code
-in other modules to measures actual execution times
+in other modules to measure actual execution times
 of blocks of code.
 
 [http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/496938 Python Cookbook Recipe]
@@ -124,6 +124,31 @@ Learn more about the Coolapps Developer Challenge: https://coolapps.developer.ne
 
 = Off The Lists =
 
+Question:
+''I would like to know what you think is the best way to recognize -
+right at the beginning of a script -, whether the code is run by
+Jython or pure Python interpreter, because I will get ImportError when
+Python sees the "import java" lines etc. (also if the script is part
+of a package and another module is imported)''
+
+Answers:
+
+{{{import sys
+if sys.platform.startswith('java'):
+    ...}}}
+OR
+{{{import sys
+isJython = hasattr(sys,'classLoader')
+}}}
+OR
+{{{import sys
+
+if sys.platform.startswith('java'):
+   JAVA = 1
+else:
+   JAVA=0
+}}}
+
 
 = Mentionable Books =
 
@@ -141,7 +166,21 @@ If you are interested in developing Jython, please take a look at the [http://so
 
 = Who's Using Jython? =
 
+ActiveGrid chooses Jython to bring LAMP closer to Java
+[http://www.pythonthreads.com/news/latest/activegrid-chooses-jython-to-bring-lamp-development-closer-to-java..html]
 
+[http://sourceforge.net/projects/protocard ProtoCard]
+Framework for playing card games online, from Poker to Magic. Server and client written in Java, and extensible via Jython modules. 
+
+= IDE Information =
+
+[http://sourceforge.net/projects/jyconsole JyConsole]
+JyConsole is an advanced Java graphic console for Jython. JyConsole provides an object-oriented completion on Java and Python objects and allows the direct manipulation of objects. JyConsole includes command history, script loading and GUI preference.
+
+= Jython Blogs = 
+
+Jython Considered Dangerous?
+http://dev2dev.bea.com/blog/simonvc/archive/2006/07/jython_consider.html
 
 = Useful Links =
 
@@ -149,12 +188,6 @@ If you are interested in developing Jython, please take a look at the [http://so
 ||||
 || [http://www.devshed.com/c/a/Python/Introduction-to-Jython/ Intro to Jython] ||
 || [http://today.java.net/pub/a/today/2003/06/10/jython.html Scripting with Jython Instead of XML] ||
-
-
-||<tablestyle="width: 80%"> '''Tutorials ''' ||
-||||
-|| [http://www.rexx.com/~dkuhlman/jython_course_01.html#compiling-jython-to-and-for-java Online Jython Course] ||
-
 
 ||<tablestyle="width: 80%"> '''Links ''' ||
 ||||
