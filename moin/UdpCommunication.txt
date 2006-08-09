@@ -45,13 +45,17 @@ while True:
     print "received message:", data
 }}}
 
-= Discussion =
+== Discussion ==
 
 *
 It would seem easy to extend this to a simple means to open a file on the sender side, send datagrams to the receiver side, and write those packets to a file there - I just wonder about synchronisation issues regarding the buffer...Anyone smart care to put something down, say as a simple practical extension of what is already here?  (And if you do it pls delete this message)
 *
 
+Extending UDP to add synchronization is basically writing TCP on top of it. You may do it, but why bother?
+
 == Multicasting? ==
+
+The ''official'' example of multicast can be found at /usr/share/doc/python2.3/examples/Demo/sockets/mcast.py (at least on Debian Sarge, after `apt-get install python-examples`). It worked on my machine, but I have yet to try it running on different machines.
 
 I've been googling for some time now, and ''still'' have yet to find a ''working'' example of Python multicast listening.
 
