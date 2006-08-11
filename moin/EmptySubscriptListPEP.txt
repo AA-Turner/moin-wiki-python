@@ -1,5 +1,4 @@
 #language en
-
 {{{
 PEP: XXX
 Title: Allow Empty Subscript List Without Parentheses
@@ -38,31 +37,21 @@ consists of many subscripts, or of a single subscript with a trailing
 comma, a tuple is passed to the resulting __getitem__ or __setitem__
 call, with an item for each subscript.
 
-Here is the formal definition of the grammar:
+Here is the formal definition of the grammar::
 
-}}}
-{{{
-::
     trailer: '(' [arglist] ')' | '[' subscriptlist ']' | '.' NAME
     subscriptlist: subscript (',' subscript)* [',']
     subscript: '.' '.' '.' | test | [test] ':' [test] [sliceop]
     sliceop: ':' [test]
-}}}
-{{{#!rst
 
 This PEP suggests to allow an empty subscript list, with nothing
 inside the square brackets. It will result in passing an empty tuple
 to the resulting __getitem__ or __setitem__ call.
 
 The change in the grammar is to make "subscriptlist" in the first
-quoted line optional:
+quoted line optional::
 
-}}}
-{{{
-::
     trailer: '(' [arglist] ')' | '[' [subscriptlist] ']' | '.' NAME
-}}}
-{{{#!rst
 
 
 Motivation
@@ -107,26 +96,16 @@ and similar packages work as expected for zero-dimensional arrays
 without
 any changes.
 
-Another hint for consistency: Currently, these equivalences hold:
+Another hint for consistency: Currently, these equivalences hold::
 
-}}}
-{{{
-::
     x[i, j, k]  <-->  x[(i, j, k)]
     x[i, j]     <-->  x[(i, j)]
     x[i, ]      <-->  x[(i, )]
     x[i]        <-->  x[(i)]
-}}}
-{{{#!rst
 
-If this PEP is accepted, another equivalence will hold:
+If this PEP is accepted, another equivalence will hold::
 
-}}}
-{{{
-::
     x[]         <-->  x[()]
-}}}
-{{{#!rst
 
 
 Backwards Compatibility
@@ -160,6 +139,5 @@ This document has been placed in the public domain.
    fill-column: 70
    coding: utf-8
    End:
-
 
 }}}
