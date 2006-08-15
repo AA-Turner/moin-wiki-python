@@ -10,6 +10,13 @@ There are many, many different HTML/XML templating packages and modules for Pyth
 
 The number of templating engines is so great because the mechanisms involved are pretty easy to write in Python, at least for a fairly basic template engine; [http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/52305 this recipe from the Python Cookbook] shows how easy it is.
 
+=== Engines using Value Substitution ===
+
+The simplest form of templating engine is that which merely substitutes values into a template in order to produce the final output.
+
+    * [http://docs.python.org/lib/node109.html string.Template] in the standard library
+    * [http://www.stringtemplate.org stringtemplate] - employs recursion in order to provide support for complicated templating whilst avoiding side-effects
+
 === Engines Mixing Logic into Templates ===
 
 A popular approach with templating engines is to embed logic or control-flow statements into the templates themselves in a way that can make the templates visually rather different from the final output, as well as introducing problems for some XML-based tools. Nevertheless, such templating engines may be more applicable to non-Web templating problems or for situations where separating logic from content may actually make the solution harder to understand.
@@ -25,12 +32,11 @@ A popular approach with templating engines is to embed logic or control-flow sta
     * [http://wsgiarea.pocoo.org/jinja/ Jinja]
     * [http://www.myghty.org/ Myghty] inspired by Perl's Mason
     * ["Spyce"]
-    * [http://www.stringtemplate.org stringtemplate]
     * [http://www.execulink.com/~robin1/wasp/readme.html WASP]
 
 === Engines with Annotated Templates ===
 
-The following engines feature template documents whose sections are marked using special attributes (or, less frequently, special elements or tags). In some systems, the sections are then manipulated within program code:
+The following engines feature template documents whose sections are marked using special attributes (or, less frequently, special elements or tags). In some systems, the sections are then manipulated within program code; in others, the template structure indicates sections which are to be repeated, omitted, and so on. Generally, the reason for annotating templates in this way (particularly through the use of attributes) is to better support the editing of such templates in XML-based tools which might otherwise complain about or damage template information if it were not included carefully in documents.
 
     * [#ClearSilver] - uses special elements/tags
     * [http://freespace.virgin.net/hamish.sanderson/htmltemplate.html HTMLTemplate]
