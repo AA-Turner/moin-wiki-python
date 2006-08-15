@@ -1,0 +1,40 @@
+I'm using this page to record notes and reminders while assessing trackers.  Please do not edit these notes.  (Feel free to add a comment at the bottom of a section if there's something you want to respond to; just don't edit my text.)
+
+
+= Trac =
+
+'View Active Tickets' query only returns a single spam query, but 
+the bugs **are** in the tracker.  Not sure why 'View Active' isn't working like I expect.
+
+Tripped a Python traceback (query: all new/assigned/reopened, 
+component is Documentation; group by Owner): {{{
+Traceback (most recent call last):
+  File "/usr/lib/python2.4/site-packages/trac/web/main.py", line 335, in dispatch_request
+    dispatcher.dispatch(req)
+  File "/usr/lib/python2.4/site-packages/trac/web/main.py", line 220, in dispatch
+    resp = chosen_handler.process_request(req)
+  File "/usr/lib/python2.4/site-packages/trac/ticket/query.py", line 443, in process_request
+    self.display_html(req, query)
+  File "/usr/lib/python2.4/site-packages/trac/ticket/query.py", line 608, in display_html
+    req.hdf['query.num_matches_group'] = num_matches_group
+  File "/usr/lib/python2.4/site-packages/trac/web/clearsilver.py", line 195, in __setitem__
+    self.set_value(name, value, True)
+  File "/usr/lib/python2.4/site-packages/trac/web/clearsilver.py", line 243, in set_value
+    add_value(name, value)
+  File "/usr/lib/python2.4/site-packages/trac/web/clearsilver.py", line 235, in add_value
+    add_value('%s.%s' % (prefix, k), value[k])
+  File "/usr/lib/python2.4/site-packages/trac/web/clearsilver.py", line 242, in add_value
+    set_str(prefix, value)
+  File "/usr/lib/python2.4/site-packages/trac/web/clearsilver.py", line 213, in set_str
+    self.hdf.setValue(prefix.encode('utf-8'), str(value))
+Error: Traceback (innermost last):
+  File "neo_hdf.c", line 805, in hdf_set_value()
+  File "neo_hdf.c", line 795, in _set_value()
+AssertError: Unable to set Empty component query.num_matches_group.Fred L. Drake, Jr.
+}}}
+
+= Roundup =
+
+= Jira =
+
+= Launchpad =
