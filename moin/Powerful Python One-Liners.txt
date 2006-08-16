@@ -39,3 +39,29 @@ What this does is replace the substring "at" by "op" on all lines of all files (
 {{{#!python
 import sys,os,re,fileinput;a=[i[2] for i in os.walk('.') if i[2]] [0];[sys.stdout.write(re.sub('at','op',j)) for j in fileinput(a,inplace=1)]
 }}}
+=== Craming Python into Makefiles ===
+A related issue is embedding Python into a Makefile.  I had a really long script
+that I was trying to cram into a makefile so I automated the process:
+{{{
+import sys,re
+
+def main():
+    fh = open(sys.argv[1],'r')
+    lines = fh.readlines()
+    print '\tpython2.2 -c "`printf \\"if 1:\\n\\'
+    for line in lines:
+        re.compile('(?P<char_to_esc>[\\\'\"()])').sub('\\\g<char_to_esc>',line)
+        # grab leading white space (should be multiples of 4) and makes them into
+        # tabs
+        wh_spc_len = len(re.compile('^(?P<lead_white_space>\s*)').search(line).group('lead_white_space'))
+        
+        sys.stdout.write('\t')
+        sys.stdout.write(wh_spc_len/4*'\\t'+line.rstrip().lstrip())
+        sys.stdout.write('\\n\\\n')
+    print '\t\\"`"'
+
+if __name__=='__main__':
+    main()
+}}}
+
+This script generates a "one-liner" from make's point of view.  
