@@ -23,23 +23,31 @@ Note [http://psf.pollenation.net/cgi-bin/trac.cgi/ticket/160].
 
  * Image Processing, Array Numerics and Python
 
-   array module, numpy/numeric/scipy framework
+   Combine the use of the Python Imaging Library (PIL) module and one of the numeric modules and demonstrate how to effectively process large arrays of data, using images as something non-scientists can follow.  Cover the array module, its strengths and weaknesses and then move on to the numpy/numeric/scipy framework.
+
+   Note that this article could also be written using the processing of audio data instead.
 
  * Functional Programming in Python
 
-   Provide an overview with examples of the functional programming features of Python.  Cover the lambda, map and reduce functions but move on to the newer all(), any() and generator/coroutine support in Python 2.5.  Discuss the broad support Python iterators
-
-  itertools functools
+   Provide an overview with examples of the functional programming features of Python.  Cover the lambda, map and reduce functions but move on to the new all(), any() and generator/coroutine support in Python 2.5.  Discuss the broad support Python iterators and the functionality in the itertools and functools (new in Python 2.5) modules.
 
  * Mixing Network Protocols in Python
 
- * 
+   Gradually assemble an example using the Twisted framework of how a single Python program can serve web pages as well as handle the telnet or imap/pop protocols.
 
-  interpreter prompt, inspect module, the power of tracebacks, pprint module
+   One idea is to create a telnet-based chat room, with the web page displaying a list of attendees and any icon/slogan they may have set on their avatar via the telnet interface.
 
- *
+   The Twisted framework is complex and powerful so the article needs to keep things simple in this introductory article.
 
-  packaging; imports, zipimports, distutils, eggs and cheeseshop
+ * Interacting with Python at the Prompt
+
+   Introduce the read to the interactive nature of Python, not just the entering of expressions but use of the inspect module, how tracebacks are a programmer's friend and using the pprint module to display complex data structures.
+
+ * Packaging your Python Application for Distribution
+
+   Provide an introduction to the various packaging options for Python.  Start with simple package imports and use of the zipimport module, work up to the distutils module and provide a light introduction to eggs.  Wrap up with mention of the cheeseshop, what it is for and how to use easy_install to cryptographically sign and upload your work.  Discuss briefly dependency resolution and perhaps compare it all to the CPAN network.
+
+   Focus on what is needed to package an application and not on the underlying egg magic.  Act like the reader is someone new to Python who has been given the task of packaging an existing application he didn't write.
 
  *
 
@@ -64,8 +72,7 @@ Note [http://psf.pollenation.net/cgi-bin/trac.cgi/ticket/160].
 
  * Writing a Web Client with Python
 
-   Walk the reader thru the creation of a program to fetch content from a website, starting with simple HTML text, adding basic/digest authentication, cookie support and SSL certificate checking.  Also discuss having this program talk thru a web proxy ala SOCKS and briefly cover parsing the retrieved page using one of the DOM modules.  This article would cover a lot of the API in the urllib2 module.
-
+   Walk the reader thru the creation of a program to fetch content from a website, starting with simple HTML text, adding basic/digest authentication, cookie support and SSL certificate checking.  Also discuss having this program talk thru a web proxy ala SOCKS and briefly cover parsing the retrieved page using one of the DOM modules.  This article would cover a lot of the API in the urllib2 module.  Also show use of the robotparser module so that the client doesn't walk sites it should not.
 
 
 For active discussion on advocating for Python, please join the mailing list at [http://wingware.com/mailman/listinfo/marketing-python]
