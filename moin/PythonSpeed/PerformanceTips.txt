@@ -110,7 +110,7 @@ sort(nlist, key=operator.itemgetter(n))
 Note that the original item is never used for sorting, only the returned key - this is equivalent to doing:
 
 {{{
-nlist = [(x[n], i, x) for (i, x) in enumerate(nlist)]
+nlist = [(x[i], i, x) for (i, x) in enumerate(nlist)]
 nlist.sort()
 nlist = [val for (key, index, val) in nlist]
 }}}
