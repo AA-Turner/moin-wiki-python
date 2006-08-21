@@ -4,6 +4,9 @@ This page describes parts of the Path class design which are in discussion. It i
 
 This discussion will be used to write a PEP (an alternative to PEP 355) and reference implementation.
 
+= Work coordination =
+Mike (2006/08/20): I'll be working on a reference implementation and a PEP soon.  Anybody else feel inclined?  We should get working now if we want this in Python 2.6.
+
 = Constructor =
 '''agreed:'''
 {{{Path("/a/b")       => a Path object for "/a/b".
@@ -285,14 +288,14 @@ application specific. Note that even os.walk provides a callback hook for if
 the call to os.listdir() fails when attempting to descend into a directory.
 
 For copytree, the issues to be considered are significantly worse:
-   - what to do if listdir fails in the source tree?
-   - what to do if reading a file fails in the source tree?
-   - what to do if a directory doesn't exist in the target tree?
-   - what to do if a directory already exists in the target tree?
-   - what to do if a file already exists in the target tree?
-   - what to do if writing a file fails in the target tree?
-   - should the file contents/mode/time be copied to the target tree?
-   - what to do with symlinks in the source tree?
+   * what to do if listdir fails in the source tree?
+   * what to do if reading a file fails in the source tree?
+   * what to do if a directory doesn't exist in the target tree?
+   * what to do if a directory already exists in the target tree?
+   * what to do if a file already exists in the target tree?
+   * what to do if writing a file fails in the target tree?
+   * should the file contents/mode/time be copied to the target tree?
+   * what to do with symlinks in the source tree?
 
 Now, what might potentially be genuinely useful is paired walk methods that 
 allowed the following:
@@ -321,6 +324,8 @@ I haven't tried pairedwalkfiles(), so no opinion.
 Mike: .pairedwalk() and friends may be useful.  The user wants to know which files/directories to create, update, and delete.  So it's essentially a diff report.
 
 Noam: I'm not sure about pairedwalk() - it may be a bit complicated, I'm afraid. However, perhaps copytree() isn't such a big deal if it works only when the source is a directory and the destination doesn't exist. Then, exceptions aren't expected, so if they happen they can simply be propagated.
+
+Mike: I'm now thinking about a class with methods to handle each of the exceptional cases, and boolean attributes for the alternative behaviors.  Then we'd define one or more default behaviors as {{{copytree = CopyTree.__call__}}}.
 
 = Copy =
 
