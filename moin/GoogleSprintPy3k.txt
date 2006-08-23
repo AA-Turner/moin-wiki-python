@@ -1,47 +1,55 @@
 = Python 3000 Goals for the Google Sprint =
 
-Here are some possible tasks for the Py3k portion of the GoogleSprint.
+Here are some things we could work on, are working on, have worked on.
 
-To claim a task, please add your name to it.
+== Suggested Tasks ==
 
- * Clean up comparisons. Remove the ability to order objects where it doesn't make sense. (Guido -- could use help)
+To claim a task, please add your name to it and move it to the next section.
 
- * Fix various unit tests that are currently failing in the p3yk (sic) branch (all done).
-
- * Unify int/long (Martin von Löwis??? see http://mail.python.org/pipermail/python-3000/2006-August/003046.html)
-
- * Get rid of all references to file() in favor of open().
-Anna has checked through Lib/g*.py and found no file() references that need to be changed. (only use of file in those are in docstrings or as variable names.) Anna will continue tomorrow on this task. (AMR)
+ * Make IDLE work -- there are relative import issues, perhaps others.
 
  * Work on the new I/O library (I have much interest in this but need help -- Guido); you can check http://sebulba.wikispaces.com/project+iostack+v2 for a reference on what was generally agreed in the py3k list.
 
  * When the I/O library is ready, start unifying str/unicode.
 
- * Rewrite import in Python (Brett Cannon?, Alex Martelli?,
-   Osvaldo Santana)
-
- * Rip out the last remains of coerce (Done, need to rename nb_coerce slot)
-
  * Put back nb_ <true division> slots (regular and augmented)
 
- * Rip out classic classes (already done; Guido)
-
- * Make it so that __hash__ can be set to None to declare an unhashable type, and to automatically do this the first time __eq__ or __cmp__ are overridden but __hash__ is not (done)
-
- * Implement PEP PEP:3102 (keyword-only arguments) (Jiwon Seo?)
-
  * Py3kConversionTools: Work on tool to help convert (flag keywords like with/as, removed functions/methods:  apply/{}.iter*/{}.has_key/etc) (Jeremy Hylton)
-
- * See PEP PEP:3100 for more ideas
 
  * Make zip() an iterator (like itertools.izip())
 
  * Make map() and filter() iterators and make them stop at the end of the shortest input (like zip()) instead of at the end of the longest input (like itertools?)
 
- * Rip out reduce() (done -- John Reese and Jacques Frechet)
+ * See PEP PEP:3100 for more ideas
+
+
+== Claimed Tasks ==
+
+ * Clean up comparisons. Remove the ability to order objects where it doesn't make sense. (Guido, Alex)
+
+ * Unify int/long (Martin von Löwis; see http://mail.python.org/pipermail/python-3000/2006-August/003046.html)
+
+ * Get rid of all references to file() in favor of open(). (Anna)
+
+ * Implement PEP PEP:3102 (keyword-only arguments) (Jiwon Seo, Brett C.)
+
+ * Rewrite import in Python (Brett Cannon?, Alex Martelli?, Osvaldo Santana)
 
  * Make xrange() support longs; then rename it to range() (see http://www.python.org/sf/1472639 for all but the supporting-long part) (Neal)
 
- * Kill uses of has_key() in idlelib (John R & Jacques F).
 
- * Remove basestring.find and basestring.rfind, per [http://www.python.org/dev/peps/pep-3100/ PEP 3100] (done -- Hasan)
+== Finished Tasks ==
+
+ * Rip out classic classes (done, Guido)
+
+ * Fix various unit tests that are currently failing in the p3yk branch (done, various sprinters).
+
+ * Rip out the last remains of coerce (done, Neal; need to rename nb_coerce slot)
+
+ * Make it so that __hash__ can be set to None to declare an unhashable type, and to automatically do this the first time __eq__ or __cmp__ are overridden but __hash__ is not (done, Guido & Alex)
+
+ * Rip out reduce() (done, John Reese and Jacques Frechet)
+
+ * Kill uses of has_key() in idlelib (done, John R & Jacques F).
+
+ * Remove basestring.find and basestring.rfind, per [http://www.python.org/dev/peps/pep-3100/ PEP 3100] (done, Hasan -- needs to be reviewed and checked in)
