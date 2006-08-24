@@ -1,5 +1,26 @@
 '''Note:''' These are older notes on content migration from the old site.  Since some of the old site is still in the old format and copied over automatically by the build process, this is being retained in case there is something useful in it.
 
+= A quick guide to how a link should converted on the new website =
+
+First an example.
+
+Old Style: ../Mirrors.html
+
+New Style: /doc/mirrors/
+
+What would have been a single page in the old site is now a directory named after the old page (without '.html') containing index.html.
+
+In the source repository, the page is made up of several files that contain template information, content and maybe some sub-menu stuff and this is all whacked together by Pyramid to produce the new site. But you should know that already if you are editing links in pages.. :-)
+
+A link on a page like '<a href="../Mirrors.html">Blah</a>' should be converted so that:
+
+a) The link is lowercase (because the directory that the page content is in will be
+
+b) The suffix should be removed if it is .html, not if it is .pdf or .rst
+
+c) Preferably the relative portion should be replaced with an abolute path. If the page is moved within the website, the links on the page will not require maintenance.
+
+
 = Files/Directories that need to be copied over into the new python tree =
 
 not checking the /<N> or /doc/<N> folders yet
