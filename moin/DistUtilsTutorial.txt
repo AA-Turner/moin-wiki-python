@@ -1,3 +1,31 @@
+= Introduction to distutils =
 I have recently used distutils for the first time and it took me quite some time to get it working for me. I won't pretend I understand all of it, there is much mystery still!
 
 This is a tutorial to take those new to distutils from a development project through to a setup.py of the project.
+
+'''Please note:''' ''I am not a pro. All this is based on my own hacking and struggling to get things to work. I am sure there will be alternative ways to do things and that I will make mistakes. Caveat Emptor.''
+
+(Based on Gnu/Linux)
+
+== The layout of files and folders ==
+A proper layout of your files and folders can really save you trouble later on. I use this layout:
+{{{
+.
+|-- package
+|   |-- __init__.py
+|   |-- module.py
+|   `-- things
+|       |-- cross.png
+|       |-- fplogo.png
+|       `-- tick.png
+|-- runner
+|-- MANIFEST
+|-- MANIFEST.in
+|-- README
+`-- setup.py
+}}}
+* The very top of the tree is some arbitrary folder, perhaps in your home directory under pythondev. It doesn't matter.
+* package - Is a folder. I call it this to indicate that it will be where you keep your Python packages. 
+ ''(Packages are simply folders with modules (py files) in them. They also have a special file called __init__.py so that Python will know that this folder is a package.)''
+* package/things - Is a folder. This is where I will keep all my things. Here I have some image files, but you can put anything your module may need here. Naturally you can use any folder name you like.
+* The other files are all in the root and will be described soon.
