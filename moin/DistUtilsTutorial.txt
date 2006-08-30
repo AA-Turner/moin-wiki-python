@@ -1,16 +1,14 @@
 = Introduction to distutils =
-I have recently used distutils for the first time and it took me quite some time to get it working for me. I won't pretend I understand all of it, there is much mystery still!
-
-This is a tutorial to take those new to distutils from a development project through to a setup.py of the project.
+I have recently used distutils for the first time and thought I would share what I have learned.
 
 '''Please note:''' ''I am not a pro. All this is based on my own hacking and struggling to get things to work. I am sure there will be alternative ways to do things and that I will make mistakes. Caveat Emptor.''
 
 (Based on Gnu/Linux)
 
-== The layout of files and folders ==
+== The layout of folders ==
 A proper layout of your files and folders can really save you trouble later on. I use this layout:
 {{{
-.
+top
 |-- package
 |   |-- __init__.py
 |   |-- module.py
@@ -19,13 +17,62 @@ A proper layout of your files and folders can really save you trouble later on. 
 |       |-- fplogo.png
 |       `-- tick.png
 |-- runner
-|-- MANIFEST
 |-- MANIFEST.in
 |-- README
 `-- setup.py
 }}}
-* The very top of the tree is some arbitrary folder, perhaps in your home directory under pythondev. It doesn't matter.
-* package - Is a folder. I call it this to indicate that it will be where you keep your Python packages. 
- ''(Packages are simply folders with modules (py files) in them. They also have a special file called __init__.py so that Python will know that this folder is a package.)''
-* package/things - Is a folder. This is where I will keep all my things. Here I have some image files, but you can put anything your module may need here. Naturally you can use any folder name you like.
-* The other files are all in the root and will be described soon.
+
+ * top - The very top of the tree is some arbitrary folder, perhaps in your home directory under pythondev. It doesn't matter.
+ * package - I call it this to indicate that it's where I am developing my package(s).
+ ''(Packages are simply folders with modules (py files) in them. They also have a special file called `__init__.py` so that Python will know that this folder is a package.)''
+ * package/things - This is where I will keep all my things. Here I have some image files, but you can put anything your module may need here. Naturally you can use any folder name you like.
+ * The other files are all in the root and will be described soon.
+
+== The files ==
+I assume that there will be a single script file that you will use to start your Python app. I call it 'runner' (without the .py) in this example. It will import the actual package. Here is the code:
+
+''runner''
+{{{
+#!/usr/bin/env python2.4
+
+##This will work in development on a relative folder basis
+##It will then work when installed in site-packages on a target system
+##where the runner script is in /usr/bin (or wherever)
+##
+##So, you don't need anything special - no fancy path tricks.
+
+import package.module
+
+package.module.start ()
+}}}
+
+Next is the package. In this case there is only one module in the package (import package.module), so here is the module:
+''module.py''
+{{{#!/usr/bin/env python2.4
+
+import os, sys
+
+def determine_path ():
+    """Borrowed from wxglade.py"""
+    try:
+        root = __file__
+        if os.path.islink(root):
+            root = os.path.realpath(root)
+        return os.path.dirname(os.path.abspath(root))
+    except:
+        print "I'm sorry, but something is wrong."
+        print "There is no __file__ variable. Please contact the author."
+        sys.exit ()
+        
+def start ():
+    print "module is running"
+    print determine_path ()
+    print "My various data files and so on are:"
+    files = [f for f in os.listdir(determine_path () + "/things")]
+    print files
+    
+if __name__ == "__main__":
+    print "Decide what to do"
+}}}
+This uses the magic variable `__file__` that will return the path and name of the module. Without it you would have to jump through some hoops to locate the module on any given distro or O/S.
+ ''(If you can find this in the Python docs, then your grep-foo is better than mine. I found it by pouring through other Python apps in the site-packages folder of python2.4)''
