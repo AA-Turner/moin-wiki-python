@@ -29,6 +29,7 @@ top
  * The other files are all in the root and will be described soon.
 
 == The files ==
+=== runnner ===
 I assume that there will be a single script file that you will use to start your Python app. I call it 'runner' (without the .py) in this example. It will import the actual package. Here is the code:
 
 ''runner''
@@ -45,11 +46,14 @@ import package.module
 
 package.module.start ()
 }}}
-----
+
+=== module.py ===
 
 Next is the package. In this case there is only one module in the package (import package.module), so here is the module:
+
 ''module.py''
-{{{#!/usr/bin/env python2.4
+{{{
+#!/usr/bin/env python2.4
 
 import os, sys
 
@@ -57,9 +61,9 @@ def determine_path ():
     """Borrowed from wxglade.py"""
     try:
         root = __file__
-        if os.path.islink(root):
-            root = os.path.realpath(root)
-        return os.path.dirname(os.path.abspath(root))
+        if os.path.islink (root):
+            root = os.path.realpath (root)
+        return os.path.dirname (os.path.abspath (root))
     except:
         print "I'm sorry, but something is wrong."
         print "There is no __file__ variable. Please contact the author."
@@ -81,12 +85,141 @@ This uses the magic variable `__file__` that will return the path and name of th
  ''(If you can find this in the Python docs, then your grep-foo is better than mine. I found it by pouring through other Python apps in the site-packages folder of python2.4)''
 
 It shows that it can find the data files in the things folder.
-----
 
-The `__init__.py` file is empty
-----
+=== `__init__.py` ===
+The `__init__.py` file is empty.
+
+=== README ===
 
 The README file is named that way because it's one of the ways that distutils automatically looks for it. 
 You should put details about your app into it. It's not a required file.
 
-----
+=== MANIFEST.in ===
+The MANIFEST.in file took me a while to understand. It's the file that distutils uses to collect ''all'' the files in your project that will go into the final installer tarball (the file that gets distributed).
+
+'''NB:''' whatever is in MANIFEST.in will be in your installer. Whatever is '''not''' in there, will '''not''' be in your installer.
+
+Shortly, in your setup.py file, you will see other references to the various files in your project. It seems redundant to refer to all the files you want twice, but this is a fact: MANIFEST.in == what will go '''into''' your installer.
+
+Here is the file:
+
+''MANIFEST.in''
+{{{
+include runner README
+recursive-include package/things *
+}}}
+It has a limited syntax (see the docs),but basically:
+ * ''include'' - pick up files (by glob or name) relative to the root.
+ * ''recursive-include path file'' - pick up files (by name or glob) recursively under the given path.
+
+You do not have to include any .py files in your package folder. You do have to include the runner script because it has no .py extension.
+(I am not sure if it would pick up .py files in the root.)
+
+=== setup.py ===
+Finally we get to the setup.py file:
+
+''setup.py''
+{{{
+#!/usr/bin/env python
+
+from distutils.core import setup
+
+#This is a list of files to install, and where
+#(relative to the 'root' dir, where setup.py is)
+#You could be more specific.
+files = ["things/*"]
+
+setup(name = "appname",
+    version = "100",
+    description = "yadda yadda",
+    author = "myself and I",
+    author_email = "email@someplace.com",
+    url = "whatever",
+    #Name the folder where your packages live:
+    #(If you have other packages (dirs) or modules (py files) then
+    #put them into the package directory - they will be found 
+    #recursively.)
+    packages = ['package'],
+    #'package' package must contain files (see list above)
+    #I called the package 'package' thus cleverly confusing the whole issue...
+    #This dict maps the package name =to=> directories
+    #It says, package *needs* these files.
+    package_data = {'package' : files },
+    #'runner' is in the root.
+    scripts = ["runner"],
+    long_description = """Really long text here."""          
+) 
+
+}}}
+ * ''name'' - becomes the name of the installation tarball.
+ * ''version'' - gets appended to the end of the tarball name.
+ * packages = [] - A list naming '''all''' the packages you want to include.
+ ''(I am unsure about how to create multiple packages. The docs are a little too concise and I read too fast.)''
+ * package_data = {} - A dictionary where the key ('package') is related to the list of files (in things/). I read this as saying "The package named 'package' needs the following files in the list."
+ * scripts = [] - A script(s) to be installed into standard locations like /usr/bin. If you include a path, you can control where they go. in this case I want /usr.bin/runner to be a available on the user's system.
+
+== Making the installation tarball ==
+Well, that's the lot. It's quite simple really, as long as you keep to the pattern. If you want extra folders and sub-packages and so forth, it gets a little hairy. But, I suppose, if you want all that then you will have no trouble extending it from this tutorial.
+
+To make the installation tarball, you simply run:
+{{{
+python setup.py sdist}}}
+That will crank through all the files in your MANIFEST.in and build the tar.gz file in a folder called dist off your root.
+
+Look for errors. You might have to fix lines in your MANIFEST.in file.
+
+Here is what I see:
+''output''
+{{{
+distutils:$ python setup.py sdist
+running sdist
+reading manifest file 'MANIFEST'
+creating appname-100
+creating appname-100/package
+creating appname-100/package/things
+making hard links in appname-100...
+hard linking README -> appname-100
+hard linking runner -> appname-100
+hard linking setup.py -> appname-100
+hard linking package/__init__.py -> appname-100/package
+hard linking package/module.py -> appname-100/package
+hard linking package/things/cross.png -> appname-100/package/things
+hard linking package/things/fplogo.png -> appname-100/package/things
+hard linking package/things/tick.png -> appname-100/package/things
+tar -cf dist/appname-100.tar appname-100
+gzip -f9 dist/appname-100.tar
+removing 'appname-100' (and everything under it)
+}}}
+
+== Testing the tarball ==
+I perform these steps:
+{{{
+cd dist
+tar xzf appname-100.tar.gz 
+cd appname-100
+sudo python setup.py install
+password:######
+running install
+running build
+running build_py
+running build_scripts
+running install_lib
+running install_scripts
+changing mode of /usr/bin/runner to 755
+}}}
+Then I cd over to /usr/lib/python2.4/site-packages and have a look for a folder named 'package'.
+I also try to run 'runner' and see what ensues.
+
+It should look (something) like this:
+{{{
+distutils:$ runner
+module is running
+/usr/lib/python2.4/site-packages/package
+My various data files and so on are:
+['cross.png', 'fplogo.png', 'tick.png']
+}}}
+
+== Fin ==
+I hope this helps someone. Happy coding.
+-- DonnIngle
+[mailto:donn.ingle@gmail.com DonnIngle]
