@@ -157,6 +157,17 @@ setup(name = "appname",
  ''(I am unsure about how to create multiple packages. The docs are a little too concise and I read too fast.)''
  * package_data = { } A dictionary where the key ('package') is related to the list of files (in things/). I read this as saying "The package named 'package' needs the files in [list]"
  * scripts = [ ] A script(s) to be installed into standard locations like /usr/bin. If you include a path, you can control where they go. in this case I want /usr/bin/runner to be available on the user's system.
+ * "long_description" may be valid ReStructuredText which will be turned into HTML when displayed at the Cheese Shop.
+
+== Registering with the Cheese Shop (PyPI) ==
+
+Requires Python 2.3 or later:
+
+{{{
+distutils:$ python setup.py register
+}}}
+
+
 
 == Making the installation tarball ==
 Well, that's the lot. It's quite simple really, as long as you keep to the pattern. If you want extra folders and sub-packages and so forth, it gets a little hairy. But, I suppose, if you want all that then you will have no trouble extending it from this tutorial.
@@ -218,6 +229,20 @@ module is running
 /usr/lib/python2.4/site-packages/package
 My various data files and so on are:
 ['cross.png', 'fplogo.png', 'tick.png']
+}}}
+
+== Submittting to the Cheese Shop (PyPI) ==
+
+Requires Python 2.5 or later:
+
+{{{
+distutils:$ python setup.py sdist upload
+}}}
+
+To GPG-sign the upload, use:
+
+{{{
+distutils:$ python setup.py sdist upload --sign
 }}}
 
 == Fin ==
