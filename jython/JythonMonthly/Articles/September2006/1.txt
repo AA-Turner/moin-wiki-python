@@ -2,7 +2,7 @@
 
 '''''Submitted By: Josh Juneau'''''
 
-You may or may not know that it is possible to access Jython code from Java without compiling it using the jythonc utility.  This technique is possible using a mixture of Java interfaces and usage of the PythonInterpreter.  As a matter of fact, I believe that using this technique correctly is more effective than using jythonc..although the performance may not be as good.
+You may or may not know that it is possible to access Jython code from Java without compiling it using the jythonc utility.  This technique is possible using a mixture of Java interfaces and usage of the PythonInterpreter.  As a matter of fact, I believe that using this technique correctly is more effective than using jythonc.
 
 To put it simply, to use this technique you must create a "factory" method which uses the PythonInterpreter class to interpret a .py module for use within Java code.  Any Java code that uses the Jython code should be coded against an interface which is implemented by the Jython code.
 
@@ -136,4 +136,6 @@ public class Main {
 }
 }}}
 
-This technique is powerful because it allows an application to use code which can be interchanged or dynamically updated without re-deployment or re-compile.  It also follows a great Java practice which is ''code against Java interfaces''!!  So the next time you plan to create a Java application that contains some Jython code, give this technique a try...
+This technique is powerful because it allows an application to use code which can be interchanged or dynamically updated without re-deployment or re-compile.  It also follows a great Java practice which is ''code against Java interfaces''!!  One downfall to this approach is that the code is interpreted every time it is invoked, so the performance may not be as good as using a jythonc compiled piece of code.  It obviously depends upon the requirements of the application, but the usefulness of this technique may outweigh the performance factor in many cases.
+
+Next time you plan to create a Java application that contains some Jython code, give this technique a try...
