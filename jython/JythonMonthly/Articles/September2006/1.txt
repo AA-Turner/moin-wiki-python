@@ -3,3 +3,35 @@
 '''''Submitted By: Josh Juneau'''''
 
 ''In Progress''
+
+You may or may not know that it is possible to access Jython code from Java without compiling it using the jythonc utility.  This technique is possible using a mixture of Java interfaces and usage of the PythonInterpreter.  As a matter of fact, I believe that using this technique correctly is more effective than using jythonc..although the performance may not be as good.
+
+To put it simply, to use this technique you must create a "factory" method which uses the PythonInterpreter class to interpret a .py module for use within Java code.  Any Java code that uses the Jython code should be coded against an interface which is implemented by the Jython code.
+
+In order to provide a fully functional example, I've created a simple application with hard-coded data.  This application shows the potential for using this technique within your Java applications to have the ability for use of dynamic Jython objects.
+
+The application is simply called "jyinterface" and it contains four pieces of code:
+   Main.java
+
+   JythonFactory.java - Uses the PythonInterpreter to return a Java object
+
+   EmployeeType.java - An interface which will be implemented by a Jython bean 
+
+   Employee.py - Jython bean representing an employee
+
+We'll start by coding the "EmployeeType.java" interface which is what our Java code will use in order to interact with the Jython object:
+
+[
+package jyinterface.interfaces;
+
+public interface EmployeeType {
+    
+    public String getEmployeeFirst();
+    public String getEmployeeLast();
+    public String getEmployeeId();
+    
+}
+]
+
+
+The Jython bean "Employee.py" is just a simple Jython object which implements the Java interface "EmployeeType.java":
