@@ -13,6 +13,47 @@ The idea is this: let's say you work on project Foo, or decide to help project F
 
 === Question ===
 
+I've downloaded buildbot and made a buildbot.tac. I've also made a 
+python-tool directory and an empty run_tests.py file. Now what? From 
+the [http://agiletesting.blogspot.com/2006/08/setting-up-pybots-buildslave.html instructions], it's not entirely clear to me what I should  do next. What packages should I be testing? Can I keep those separated  from my "normal" Python install? Some more help would be appreciated.
+
+=== Answer ===
+
+Your run_tests.py script is supposed to check out the latest source
+code for that project (or the latest tar.gz and unpack it), then run
+the automated test suite that the project provides. If the project
+doesn't have an automated unit test suite (or functional tests), then
+it's not a good candidate for inclusion in the pybots. The main thing
+we're achieving here is that those automated tests will be run via a
+newly-built python binary. The binary will be built on your buildslave machine via commands that will be sent from the master to the slave. You don't need to do anything special on your slave for that. The new binary will be installed in /tmp/python-buildbot/local/bin/python, so we'll run your run_tests.py script via:
+
+{{{
+/tmp/python-buildbot/local/bin/python run_tests.py
+}}}
+
+=== Question ===
+
+What would be the procedure for releasing a new version of
+project Foo to the pybots system? 
+
+=== Answer ===
+
+The way pybots is running the Twisted unit tests is: the Twisted buildslave checks out the latest Twisted code from the Twisted svn repository, then it uses the newly built python binary to run them. It's detailed in these [http://agiletesting.blogspot.com/2006/08/setting-up-pybots-buildslave.html instructions].
+
+If you prefer to test a released package against the latest python binary, we can do that too. The pybots buildslave just needs to know where to get the package from, then it can unpack it and run its automated tests. Basically, anything you can do from the command line, you can also run within a buildslave. 
+
+=== Question ===
+
+How do you get the various buildslaves to update the run_tests.py and prepare_packages.sh files or are these pushed to the slaves by the buildmaster?
+
+=== Answer ===
+
+The only thing that the master knows about is the name of the script that will run the automated tests on each buildslave. The content of the script is totally up to the owner of the buildslave, so any updates happen on a slave-by-slave basis. 
+
+The master doesn't push any scripts to the slaves, it only sends them commands to run certain scripts. So you can customize your run_tests.py script to do whatever you need. The prepare_packages.sh script is an example of a customization: I needed to install the prerequisite packages for Twisted using the newly-built python binary. You might not need this.
+
+=== Question ===
+
 We'd be interested in getting project Foo into the pybots test builds
 and would also contribute a buildbot if we can get some idea of the security implications this would have.
 
@@ -27,35 +68,13 @@ The other security implication is that there is a "Force build" button on the We
 OK, but I am still a little worried about the possibility of using the build machine for purposes such as e.g. sending out spam mail. After all, the buildbot system is per definition a bot net :-)
 
 Is there some level of control as to what gets executed on the
-build slaves ?
+build slaves?
 
 === Answer ===
 
 The build slaves only run the commands that are specified as build steps in the buildmaster configuration file. Everything is controlled on the buildmaster. The buildslave will not run any other commands, so there is no danger of somebody using your buildslave to run random commands. 
 
-=== Question ===
 
-What would be the procedure for releasing a new version of
-project Foo to the pybots system ? 
-
-=== Answer ===
-
-The way pybots is running the Twisted unit tests is: the Twisted buildslave checks out the latest Twisted code from the Twisted svn repository, then it uses the newly built python binary to run them. It's detailed in these [http://agiletesting.blogspot.com/2006/08/setting-up-pybots-buildslave.html instructions].
-
-If you prefer to test a released package against the latest python binary, we can do that too. The pybots buildslave just needs to know where to get the package from, then it can unpack it and run its automated tests. Basically, anything you can do from the command line, you can also run within a buildslave. 
-
-=== Question ===
-
-How do you get the various to update the run_tests.py and prepare_packages.sh files or are these pushed to the slaves by the buildmaster ?
-
-=== Answer ===
-
-The only thing that the master knows about is the name of the script that will run the automated tests on each buildslave. 
-
-The content of the script is totally up to the owner of the buildslave, so any updates happen on a slave-by-slave basis. 
-
-The master doesn't push any scripts to the slaves, it only sends them commands to run certain scripts. So you can customize your run_tests.py script to do whatever you need. The prepare_packages.sh script is an example of a customization: I needed to install the prerequisite packages for Twisted using the newly-built python binary. You might not need this.
- 
 === Question ===
 
 I don't have a project Foo right now.  Do you know of a couple candidates?
