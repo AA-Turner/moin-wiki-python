@@ -22,8 +22,9 @@ import dbus
 bus = dbus.SessionBus()
 
 # Create an object that will proxy for a particular remote object.
-remote_object = bus.get_object("org.freedesktop.DBus",
-                               "/org/freedesktop/DBus")
+remote_object = bus.get_object("org.freedesktop.DBus", # Connection name
+                               "/org/freedesktop/DBus" # Object's path
+                              )
 
 # Introspection returns an XML document containing information
 # about the methods supported by an interface.
@@ -49,4 +50,14 @@ Output:
       <arg direction="out" type="u"/>
     </method>
  ...
+}}}
+
+
+= Calling an interface method =
+
+After executing the introspection example:
+{{{
+# Get a particular interface
+iface = dbus.Interface(remote_object, 'org.freedesktop.DBus')
+print iface.ListNames()
 }}}
