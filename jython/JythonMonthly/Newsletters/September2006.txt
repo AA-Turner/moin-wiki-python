@@ -1,13 +1,11 @@
 ||<tablestyle="width: 100%" rowstyle="background-color: #FFFFE0" style="width: 80%">  '''''Jython Monthly'''''  ||<:>http://www.jython.org/css/jython.png ||
 ||'''September 2006 -- Issue #3''' ||||
 
-'''''Newsletter In Progress...'''''
-
 Welcome to the September 2006 issue of Jython Monthly.  The content of this newsletter will focus on using and developing the Jython languge.  I want to encourage the readers of Jython Monthly to send any articles, tips, tricks, or any other Jython related material to me if you think it should be distributed with this newsletter.   
 
 - Josh Juneau
 
-Questions, comments, or suggestions???
+Questions, comments, or suggestions?
 
 Please send email to: 
 
@@ -161,6 +159,64 @@ public class Main {
 This technique is powerful because it allows an application to use code which can be interchanged or dynamically updated without re-deployment or re-compile.  It also follows a great Java practice which is ''code against Java interfaces''!!  One downfall to this approach is that the code is interpreted every time it is invoked, so the performance may not be as good as using a jythonc compiled piece of code.  It obviously depends upon the requirements of the application, but the usefulness of this technique may outweigh the performance factor in many cases.
 
 Next time you plan to create a Java application that contains some Jython code, give this technique a try...
+
+== Closures in Jython - Simple Example ==
+
+http://wiki.python.org/jython/JythonMonthly/Articles/September2006/2
+
+''Submitted By: Josh Juneau''
+
+There has been a lot of discussion regarding closures recently.  The topic of closures being added to the Java
+language is hot, but many of you know that this methodology already exists in Jython and Python...and it is quite easy to use.  
+
+In case you are unfamiliar with the topic, please read more about closures and their usage [http://en.wikipedia.org/wiki/Closure_(computer_science) here].
+
+This brief article was written to show a simple example of how to use closures in Jython.  There are various different ways to write
+a closure in Jython and I will show you two such methods.  
+
+This foundation for this example is based around the age old restaurant tip calculator.  Many
+people suggest that a good waitor or waitress shall receive upwards to 20%, and others say that 15% is sufficient.  This closure function 
+would prove useful for porting into applications which may require such variations for tip calculation.
+
+Lets place our tip calculator into a module appropriately named calcTip.py and defined as follows:
+{{{
+def calcTip(x):
+   def multiplyTip(y):
+      return y + (x * y)
+   return multiplyTip
+}}}
+
+As you can see, the closure is simply a function within a function.  Using the popular lambda syntax, this closure can also be written as follows:
+
+{{{
+def calcTip(x):
+   return lambda y: y + (x * y)
+}}}
+
+Obviously, using lambda cuts out some typing and it is the preferred method.  Now, why would something like this be useful?  If we look within the 
+realm of our restaurant tip calculator mentioned above, we will see that this can be extremely useful.  So lets say we wish to create an application which will 
+print out a total restaurant bill including tip for three different categories: ''Poor Service'', ''Mediocre Service'', and ''Excellent Service''.  Completely defining this
+application is outside of the context of this brief article, but I can show you the idea with the following lines of code.
+
+Let's say we have defined our tip calculator using either of the two closure definitions listed above.  We can use it in our example as follows:
+
+{{{
+# Calculate tip for bill total of $30.95
+poor = calcTip(.15)		# tip 15 percent
+mediocre = calcTip(.18)        # tip 18 percent
+excellent = calcTip(.20)        # tip 20 percent
+print 'Poor: %s, Mediocre: %s, Excellent %s' % (poor(30.95),mediocre(30.95), excellent(30.95))
+}}}
+
+Result:
+{{{
+Poor: 35.5925, Mediocre: 36.521, Excellent 37.14
+}}}
+
+Of course, you can format the output to suit the needs of your application.  As ou can see, this simply spits out the unformatted bill + tip total.  If we wanted to, we could pass these functions around just like a regular variable.  The possibilities are endless..
+
+Now, hopefully you can appreciate the beauty of closures a bit more!
+
 
 = Off The Lists =
 
