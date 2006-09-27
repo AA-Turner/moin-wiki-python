@@ -19,7 +19,23 @@ The simplest form of templating engine is that which merely substitutes values i
 
 === Engines Mixing Logic into Templates ===
 
-A popular approach with templating engines is to embed logic or control-flow statements into the templates themselves in a way that can make the the final output appear rather different from the original template. The introduction of such logic may also cause problems for some XML-based tools. Despite these shortcomings, such templating engines may be more applicable to non-Web templating problems or for situations where separating logic from content may actually make the solution harder to understand.
+A popular approach with templating engines is to embed logic or control-flow statements into the templates themselves in a way that can make the the final output appear rather different from the original template. For example:
+
+{{{
+<table>
+  <%
+  for item in items:
+    %>
+    <tr>
+      <th>Name</th>
+      <td><%= item.name %></td>
+    </tr>
+    <%
+  %>
+</table>
+}}}
+
+The introduction of such logic may also cause problems for some XML-based tools. Despite these shortcomings, such templating engines may be more applicable to non-Web templating problems or for situations where separating logic from content may actually make the solution harder to understand.
 
     * [http://airspeed.pythonconsulting.com/ Airspeed] - Velocity Templates for Python
     * ["Castalian"]
@@ -36,7 +52,18 @@ A popular approach with templating engines is to embed logic or control-flow sta
 
 === Engines with Annotated Templates ===
 
-The following engines feature template documents whose sections are marked using special attributes (or, less frequently, special elements or tags). In some systems, the sections are then manipulated within program code; in others, the template structure indicates sections which are to be repeated, omitted, and so on. Generally, the reason for annotating templates in this way (particularly through the use of attributes) is to better support the editing of such templates in XML-based tools which might otherwise complain about or damage template information if it were not included carefully in documents.
+The following engines feature template documents whose sections are marked using special attributes (or, less frequently, special elements or tags). For example:
+
+{{{
+<table annotation:element="items">
+  <tr annotation:element="item">
+    <th>Name</th>
+    <td>{name}</td>
+  </tr>
+</table>
+}}}
+
+In some systems, the sections are then manipulated within program code; in others, the template structure indicates sections which are to be repeated, omitted, and so on, and the templating system then merges the template with some data structure provided by the program. Generally, the reason for annotating templates in this way (particularly through the use of attributes) is to better support the editing of such templates in XML-based tools which might otherwise complain about or damage template information if it were not included carefully in documents.
 
     * [#ClearSilver] - uses special elements/tags
     * [http://freespace.virgin.net/hamish.sanderson/htmltemplate.html HTMLTemplate]
@@ -46,6 +73,7 @@ The following engines feature template documents whose sections are marked using
     * [http://pytan.com/public/sprite/ Sprite] - uses special comment-like markers
     * ["teng"] - uses processing instruction-like markers
     * [http://psilib.sf.net/webstring.html webstring] uses ID attributes for markers
+    * [http://www.python.org/pypi/XSLTools XSLTools] - uses special attributes (with XML documents providing the data)
 
 In other systems, the annotations are actually evaluated in order to produce repeated sections to omit or to include sections, and so on:
 
@@ -53,8 +81,7 @@ In other systems, the annotations are actually evaluated in order to produce rep
     * [http://htmltmpl.sourceforge.net/ htmltmpl] - uses special elements/tags
     * [http://www.kid-templating.org/ Kid] - XML based, compiling template engine
     * [[Anchor(SimpleTAL)]][http://www.owlfish.com/software/simpleTAL/ SimpleTAL] - introduces a certain amount of logic but in an XML-compatible fashion
-
- * [http://cherrytemplate.python-hosting.com/ CherryTemplate]
+    * [http://cherrytemplate.python-hosting.com/ CherryTemplate]
 
 == HTML Shorthand Processors ==
 
