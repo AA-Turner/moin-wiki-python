@@ -33,6 +33,35 @@ newly-built python binary. The binary will be built on your buildslave machine v
 
 === Question ===
 
+I have several projects that I'd like to test, but I don't want to configure a buildslave for each project -- instead, I'd like to run the tests as separate build steps on a single buildslave. Is this possible?
+
+=== Answer ===
+
+Yes, it is. 
+
+If you want to test project_A and project_B on your buildslave, all you need to do is change your run_tests.py script so
+that it accepts an extra argument from the command line. That argument
+will be "project_A" for the build step involving project_A, and
+"project_B" for the build step involving project_B.
+
+For example, Sanghyeon Seo (who was the initiator of the multiple-step feature) wanted to run tests for both docutils and roundup
+on the same buildslave. His run_tests.py script is prepared to run
+the docutils tests if it receives "docutils" as the first argument on
+the command line, and run the roundup tests if "roundup" is received.
+
+=== Question ===
+
+I'd like to be able to run the 'prepare' script (the one that installs the pre-requisites for the package I want to test) as a separate build
+step in my buildslave. How do I do this?
+
+=== Answer ===
+
+The way this works is that the buildmaster will send the command "run_tests.py prepare" to your buildslave. You run_tests.py script will have to be able to interpret the 'prepare' command line argument and launch the appropriate pre-requisite installation script.
+
+Thanks to Manuzhai for asking for this feature :-)
+
+=== Question ===
+
 What would be the procedure for releasing a new version of
 project Foo to the pybots system? 
 
