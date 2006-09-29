@@ -46,7 +46,7 @@ main_namespace["CppClass"] = class_<CppClass>("CppClass")
 }}}
 Of course, if the `CppClass` were more complicated, it would be necessary to use a more complicated series of `def`s. Now you can replace the "print Hello, World" Python code with the following, to call the getNum(), and you should see "7" printed to the console:
 {{{
-"cpp = CppClass\n"
+"cpp = CppClass()\n"
 "print cpp.getNum()\n"
 }}}
 So, now you can create C++ objects in Python, but you will probably want the Python code to be able to access existing C++ data. To do this, first create an instance of `CppClass` (we'll call ours `cpp`) at the beginning of `main()`. Now, after the `class_` declaration, add:
