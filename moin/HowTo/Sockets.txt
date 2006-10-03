@@ -45,11 +45,13 @@ máquinas cualesquiera sea increiblemente sencilla (al menos comparada con otros
 
 Cuando ha pulsado el enlace que le ha traído a esta página, su navegador ha hecho algo parecido a lo siguiente:
 
+{{{
     # crea un socket INET de tipo STREAM
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     # ahora se conecta al servidor web en el puerto 80 (http)
     s.connect(("www.mcmillan-inc.com", 80))
+}}}
 
 Cuando la conexión se completa, el socket se usa para enviar una
 petición para el texto de la página.  El mismo socket puede leer la
@@ -58,6 +60,7 @@ respuesta, y después se destruye.  Sí, así es, se destruye.  Los socket clien
 Lo que ocurre en el servidor es un poco más complejo.  Primero el
 servidor web crea un 'socket servidor'.
 
+{{{
     # crea un socket INET de tipo STREAM
     serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -67,6 +70,7 @@ servidor web crea un 'socket servidor'.
 
     # lo convierte en socket servidor
     serversocket.listen(5)
+}}}
 
 Un par de cosas a tener en cuenta: cuando se usa
 \code{socket.gethostname()} el socket debería ser visible desde el
@@ -401,4 +405,3 @@ más lentos que los no bloqueantes, en mucho casos son la solución
 datos que recibe de un socket, no tiene mucho sentido complicar la
 lógica sólo para que la aplicación pueda esperar en un \code{select()}
 en lugar de en un \code{recv()}.
-
