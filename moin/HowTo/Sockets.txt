@@ -12,8 +12,20 @@ para hacer que todo funcione. No cubre las cuestiones puntuales (y hay
 muchas), pero espero que le dé un conocimiento suficiente como para
 empezar a usarlos decentemente. 
 
-Este documento está disponible, en el idioma original, en http://www.python.org/doc/howto, la traducción al castellano actualizada, por David Villa (dvilla en gmx.net), se puede descargar e https://arco.inf-cr.uclm.es/svn/public/doc/python-sockets/.
+Este documento está disponible, en el idioma original, en http://www.python.org/doc/howto, la traducción al castellano actualizada, por David Villa (dvilla en gmx.net), se puede descargar de https://arco.inf-cr.uclm.es/svn/public/doc/python-sockets/.
 
 == Sockets ==
 
 Los sockets se usan casi en cualquier parte, pero son una de las tecnología peor comprendidas. Este documento es una panorámica de los sockets. No se trata de un tutorial - debes poner trabajo de tu parte para hacer que todo funcione.  No cubre las cuestiones puntuales (y hay muchas), pero espero que le dé un conocimiento suficiente como para empezar a usarlos decentemente.
+
+Sólo se van a tratar los sockets INET, pero éstos representan el 99\% de
+los sockets que se usan. Y sólo se hablará de los STREAM sockets - a
+menos que realmente sepa lo que estás haciendo (en cuyo caso este
+documento no le será útil), conseguirá un comportamiento mejor y más
+rendimiento de un STREAM socket que de cualquier otro.  Intentaré revelar
+el misterio de qué es un socket, así como las cuestiones relativas a
+cómo trabajar con sockets bloqueantes y no bloqueantes. Pero empezaré
+hablando sobre sockets bloqueantes. Necesita saber cómo trabajan los
+primeros antes de pasar a los sockets no bloqueantes.
+
+Parte del problema para entender qué es ``socket'' puede significar unas cuantas cosas con sutiles diferencias, dependiendo del contexto. Lo primero de todo, hay que hacer una distinción entre socket ``cliente'' - un extremo de la conversación, y un socket ``servidor'', que es más como un operador de una centralita. La aplicación cliente (tu navegador, por ejemplo) usa exclusivamente sockets ``cliente''; el servidor web con el que habla usa tanto sockets ``servidor'' como sockets ``cliente''.
