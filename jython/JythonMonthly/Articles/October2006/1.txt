@@ -25,9 +25,9 @@ In order to facilitate the usage of Jython within your Java application, I recom
 
 ''If you are testing this code, you must ensure that you have all of the appropriate packages imported first!''
 
-As stated previously, hrough the usage of this new JDK 6 scripting engine you can integrete Jython code with Java application code in a seamless manner.  I have found some nuances within the documentation for JDK 6 because most of the docs use javascript examples.  As I show you some examples, I will point out the differences that I have found in the implementations of Javascript and Jython so you do not run into the same issues.
+As stated previously, through the usage of this new JDK 6 scripting engine you can integrete Jython code with Java application code in a seamless manner.  I have found some nuances within the documentation for JDK 6 because most of the docs use javascript examples.  As I show you some examples, I will point out the differences that I have found between the implementations of Javascript and Jython so you do not run into the same issues.
 
-Everything we will need to use for coding Java with Jython resides within the javax.scripting API. As stated earlier, the scripting API has support for a number of languages and this is orchestrated via the the ScriptEngineManager.  In order to select a specified scripting engine to use, you'll first need to obtain the scripting engine from the [https://scripting.dev.java.net/ scripting.java.net website].  Once you've extracted the engine of your choice, in our case Jython, you'll have to ensure that the engine resides within your classpath.  Once this task has been completed, it is easy to gain access to your scripting language.  
+As stated earlier, the scripting API has support for a number of languages and this is orchestrated via the the ScriptEngineManager.  In order to select a specified scripting engine to use, you'll first need to obtain the scripting engine from the [https://scripting.dev.java.net/ scripting.java.net website].  Once you've extracted the engine of your choice, in our case Jython, you'll have to ensure that the engine resides within your classpath.  Once this task has been completed, it is easy to gain access to your scripting language.  
 
 To list all of the available engines, you can use the following method:
 {{{
@@ -71,7 +71,7 @@ ScriptEngineFactory Info
 }}}
 
 
-In the code below, I've created two engines and invoke an inline Jython script.  
+In the code below, I've created two engines (Jython and Javascript) and invoke an inline Jython script.  
 {{{
        ScriptEngineManager m = new ScriptEngineManager();
         //Create Jython Engine
@@ -114,7 +114,7 @@ Our result...
 Our number is: 13
 }}}
 
-The new scripting API becomes extemely useful when you wish to access functions from an external Jython file within a Java application.  For instance, you can create an external Jython library and invoke functions as needed from Java.  
+The new scripting API becomes extremely useful when you wish to access functions from an external Jython file within a Java application.  For instance, you can create an external Jython library and invoke functions as needed from Java.  
 
 Suppose we have the following simple Jython script:
 {{{
@@ -123,8 +123,6 @@ Suppose we have the following simple Jython script:
 from java.lang import Object
 from java.lang import System
 
-x = None
-
 def hello(Object):
    return "Hello " + Object
 
@@ -132,11 +130,9 @@ def calcNumbers(y, z):
    x = y + z
    return x
 
-if __name__ == "__main__":
-   print calcNumbers()
 }}}
 
-We can utilize any of the functions defined within hello.py from inside our Java application.  However, I have been unable to utilize the scripting API as it is [http://developers.sun.com/learning/javaoneonline/2006/coreplatform/TS-1382.pdf docuemented for Javascript].  Within the other sources of documentation there are plenty of examples using Javascript and they all work as expected.  The Jython engine does not perform in the same fashion...I ran into error messages when I tried to use the ''Invocable'' interface.  Therefore, I had to use some ''Jython specific'' code in order to make external scripting function in a useful manner.
+We can utilize any of the functions defined within hello.py from inside our Java application.  However, I have been unable to utilize the scripting API as it is [http://developers.sun.com/learning/javaoneonline/2006/coreplatform/TS-1382.pdf documented for Javascript].  Within the other sources of documentation there are plenty of examples using Javascript and they all work as expected.  The Jython engine does not perform in the same fashion...I ran into error messages when I tried to use the ''Invocable'' interface.  Therefore, I had to use some ''Jython specific'' code in order to make external scripting function in a useful manner.
 
 In the example below, I invoke the external Jython script by actually returning a reference to a named function.  In order to pass values to the script I've instantiated Jython objects.  The code below functions without issue.
 
