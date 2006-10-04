@@ -117,3 +117,78 @@ Our number is: 13
 The new scripting API becomes extemely useful when you wish to access functions from an external Jython file within a Java application.  For instance, you can create an external Jython library and invoke functions as needed from Java.  
 
 Suppose we have the following simple Jython script:
+{{{
+# File:  hello.py
+
+from java.lang import Object
+from java.lang import System
+
+x = None
+
+def hello(Object):
+   return "Hello " + Object
+
+def calcNumbers(y, z):
+   x = y + z
+   return x
+
+if __name__ == "__main__":
+   print calcNumbers()
+}}}
+
+We can utilize any of the functions defined within hello.py from inside our Java application.  However, I have been unable to utilize the scripting API as it is [http://developers.sun.com/learning/javaoneonline/2006/coreplatform/TS-1382.pdf docuemented for Javascript].  Within the other sources of documentation there are plenty of examples using Javascript and they all work as expected.  The Jython engine does not perform in the same fashion...I ran into error messages when I tried to use the ''Invocable'' interface.  Therefore, I had to use some ''Jython specific'' code in order to make external scripting function in a useful manner.
+
+In the example below, I invoke the external Jython script by actually returning a reference to a named function.  In order to pass values to the script I've instantiated Jython objects.  The code below functions without issue.
+
+{{{
+        try {
+            // Evaluate our external jython script
+            jyEngine.eval(new FileReader("C:/path-to-external-script/hello.py"));
+
+            // Obtain the script bindings
+            Bindings bindings2 = jyEngine.getBindings(ScriptContext.ENGINE_SCOPE);
+
+            // Instantiate a Jython object to pass
+            PyString name = new PyString("Josh");
+
+            // Obtain a reference to the Jython function contained in the external script
+            PyFunction containsKey2 = (PyFunction) bindings2.get("hello");
+ 
+            // Invoke the script using the Jython __call__() method, and pass the appropriate parameter
+            System.out.println("How useful?  Oh well, we have it: " + containsKey2.__call__(name));
+
+            // Repeat as above to invoke another function within the external script
+            PyInteger y = new PyInteger(10);
+            PyInteger z = new PyInteger(386);
+            PyFunction ourResult = (PyFunction) bindings2.get("calcNumbers");
+            System.out.println("The result of our number calculation is " + ourResult.__call__(y,z));
+            Integer x = (Integer) bindings2.get("x");
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (ScriptException ex) {
+            ex.printStackTrace();
+        }
+}}}
+
+Our results...
+{{{
+
+How useful?  Oh well, we have it: Hello Josh
+The result of our number calculation is 396
+}}}
+
+This may not seem useful if we only invoke a function or two since there is a good amount of coding in order to seamlessly integrate the external script.  However, if you were to create an entire Jython function library within this external script, then this procedure may be very useful.  
+
+== Conclusion ==
+
+The JDK 6 scripting API adds yet another way of integrating Jython code with your Java applications.  It is all a matter of preference because you have also seen other ways of performing these same concepts.  The scripting API is easy to use and it is nice to have this functionality integrated in the JDK.  I suggest trying to use the scripting API and see what methods you prefer.  Perhaps this will be the solution for you.
+
+== Resources ==
+
+[http://developers.sun.com/learning/javaoneonline/2006/coreplatform/TS-1382.pdf Scripting for the Java Platform]
+
+[http://java.sun.com/javase/6/docs/technotes/tools/share/jrunscript.html JRunscript Command Line script Shell]
+
+[https://jdk6.dev.java.net/ JDK 6 Project]
+
+[https://scripting.dev.java.net/ scripting.dev.java.net]
