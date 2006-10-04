@@ -23,5 +23,97 @@ In order to facilitate the usage of Jython within your Java application, I recom
 
 == Utilizing Jython from Java ==
 
-As stated previously, hrough the usage of this new JDK 6 scripting engine you can integrete Jython code with Java application code in a seamless manner.  I have found some nuances within the documentation for JDK 6 because most of the docs use javascript examples.  
+''If you are testing this code, you must ensure that you have all of the appropriate packages imported first!''
+
+As stated previously, hrough the usage of this new JDK 6 scripting engine you can integrete Jython code with Java application code in a seamless manner.  I have found some nuances within the documentation for JDK 6 because most of the docs use javascript examples.  As I show you some examples, I will point out the differences that I have found in the implementations of Javascript and Jython so you do not run into the same issues.
+
+Everything we will need to use for coding Java with Jython resides within the javax.scripting API. As stated earlier, the scripting API has support for a number of languages and this is orchestrated via the the ScriptEngineManager.  In order to select a specified scripting engine to use, you'll first need to obtain the scripting engine from the [https://scripting.dev.java.net/ scripting.java.net website].  Once you've extracted the engine of your choice, in our case Jython, you'll have to ensure that the engine resides within your classpath.  Once this task has been completed, it is easy to gain access to your scripting language.  
+
+To list all of the available engines, you can use the following method:
+{{{
+    public static void listEngines(){
+        ScriptEngineManager mgr = new ScriptEngineManager();
+        List<ScriptEngineFactory> factories =
+                mgr.getEngineFactories();
+        for (ScriptEngineFactory factory: factories) {
+            System.out.println("ScriptEngineFactory Info");
+            String engName = factory.getEngineName();
+            String engVersion = factory.getEngineVersion();
+            String langName = factory.getLanguageName();
+            String langVersion = factory.getLanguageVersion();
+            System.out.printf("\tScript Engine: %s (%s)\n",
+                    engName, engVersion);
+            List<String> engNames = factory.getNames();
+            for(String name: engNames) {
+                System.out.printf("\tEngine Alias: %s\n", name);
+            }
+            System.out.printf("\tLanguage: %s (%s)\n",
+                    langName, langVersion);
+        }
+    }
+}}}
+And a sample result:
+{{{
+ScriptEngineFactory Info
+        Script Engine: jython (2.1)
+        Engine Alias: jython
+        Engine Alias: python
+        Language: python (2.1)
+ScriptEngineFactory Info
+        Script Engine: Mozilla Rhino (1.6 release 2)
+        Engine Alias: js
+        Engine Alias: rhino
+        Engine Alias: JavaScript
+        Engine Alias: javascript
+        Engine Alias: ECMAScript
+        Engine Alias: ecmascript
+        Language: ECMAScript (1.6)
+}}}
+
+
+In the code below, I've created two engines and invoke an inline Jython script.  
+{{{
+       ScriptEngineManager m = new ScriptEngineManager();
+        //Create Jython Engine
+        ScriptEngine jyEngine = m.getEngineByName("jython");
+        //Create Javascript Engine
+        ScriptEngine jsEngine = m.getEngineByName("js");
+        try {
+            jyEngine.eval("print 'hello jython!'");
+        } catch (ScriptException ex) {
+            ex.printStackTrace();
+        }
+}}}
+
+The result (as expected):
+{{{
+hello jython!
+}}}
  
+Now that we have seen an easy inline script, we probably need to pass variables so we can actually perform a useful task.  This is easily performed by invoking the ''put(String, value)'' method on the scripting engine you've created.  Once you have assigned values to variables then you can also obtain the result by using the ''getBindings''.  For example, below I will perform simple addition of two values and obtain the result.  Now you can see that this is a lot of code for such a minute task, but remember that this is just a simple example.
+
+{{{ 
+       jyEngine.put("a",6);
+       jyEngine.put("b",7);
+       try {
+           // Invoke inline Jython script and obtain the result
+           Object retval = jyEngine.eval("d = a + b");
+       } catch (ScriptException ex) {
+            ex.printStackTrace();
+        }
+        
+        // Retrieve the bindings we from the script
+        Bindings bindings = jyEngine.getBindings(ScriptContext.ENGINE_SCOPE);
+        // Obtain the value we wish to use
+        Integer containsKey = (Integer) bindings.get("d");
+        System.out.println("Our number is: " + containsKey);
+}}}
+
+Our result...
+{{{
+Our number is: 13
+}}}
+
+The new scripting API becomes extemely useful when you wish to access functions from an external Jython file within a Java application.  For instance, you can create an external Jython library and invoke functions as needed from Java.  
+
+Suppose we have the following simple Jython script:
