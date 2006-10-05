@@ -1,0 +1,98 @@
+= A Restructured Standard Library =
+
+Despite the continuous introduction of many new language features to Python, and compounded by the steady addition of new modules to the standard library over the years, the structure of the Python standard library has remained relatively static throughout most of Python's lifetime until the present day. However, new additions to the library have made the selection of appropriate library facilities relatively difficult, even for experienced developers. For example:
+
+ * Does one choose urllib or urllib2 to open connections to remote resources?
+ * Is popen2, commands or subprocess the best module to choose to manage spawned processes? What are the trade-offs?
+ * Why is URL parsing done in urlparse and not in urllib?
+
+A persuasive argument once upon a time was the simplicity of the Python standard library's layout in comparison to the "aggressively hierarchical" layout of the standard Java APIs, for example. But with a large number of overlapping modules and packages within the Python standard library reducing its relative coherency to Java's API proliferation (see java.sun.com for details), it seems appropriate to perform a reorganisation of the library's layout in order to promote a more memorable and intuitive structure that can be more coherently documented.
+
+== A Note on Backward Compatibility ==
+
+One argument against reorganising the standard library is that "if you ignore them, they won't bother you" - that is, the presence of many apparently haphazardly named modules is not a problem unless you need to import many of them. Fortunately, this observation can be used to work in favour of a reorganisation: the old module and package names can be retained in addition to a new layout, existing software will continue to work by importing modules via their old names, improved documentation can focus on the new layout, reference material describing the old layout could also be provided to assist those working with older software. One disadvantage might be the additional space requirement of two different library layouts, however.
+
+= Suggested Improvements =
+
+The following sections present observations about the current situation and possible recommendations for future editions of the standard library.
+
+== Activities, Grouping and Redundancy ==
+
+The current standard library employs many modules as siblings at the top level of a relatively shallow namespace hierarchy. Many modules have been introduced to remedy, augment or partially replace existing modules, leading to problems of redundancy and incoherency.
+
+=== Overlapping Module Groups ===
+
+The following groups of modules exhibit overlapping functionality:
+
+ * email, rfc822, mimetools, mimify, multifile
+ * HTMLParser, htmllib (see below)
+ * commands, subprocess, popen2
+ * urllib, urllib2 (see below)
+ * datetime, time, calendar
+
+Modules in the above groups would be consolidated either within a single module or organised into a more intuitive package layout in a restructured standard library.
+
+=== Functional Module Groups ===
+
+The following groups of modules may intentionally provide similar functionality through different implementations, or may provide complementary functionality that belongs within a common "functional group":
+
+ * StringIO, cStringIO (different implementations)
+ * UserDict, UserList, UserString (common theme: built-in type emulation)
+ * base64, binhex, binascii, quopri, uu (common theme: encodings)
+ * HTMLParser, sgmllib, htmllib (common theme: HTML/SGML parsing)
+ * anydbm, whichdb, dbm, gdbm, dbhash, bsddb, dumbdb (common theme - database file access)
+ * cPickle, pickle, copy_reg, marshal, shelve, pickletools (differing implementations, common theme: persistence)
+ * optparse, getopt (common theme: command line options)
+ * readline, rlcompleter, cmd, shlex, code (common theme: interpreter I/O)
+ * codeop, compiler, py_compile, compileall (common theme: code generation)
+ * pwd, spwd, grp, crypt, nis (common theme: authentication)
+ * asyncore, asynchat, wsgiref, BaseHTTPServer, SimpleHTTPServer, CGIHTTPServer, SimpleXMLRPCServer, DocXMLRPCServer (common theme: network and Web programming)
+ * urllib, urllib2, urlparse, httplib, ftplib, gopherlib, poplib, imaplib, nntplib, smtplib, telnetlib, xmlrpclib (common theme: network client programming)
+ * audioop, sunau, wave, sndhdr (common theme: audio)
+ * imageop, aifc, chunk, rgbimg, imghdr (common theme: images)
+ * textwrap, formatter (common theme: text formatting)
+
+Modules in the above groups would be placed in intuitively named packages, possibly with improved names.
+
+=== Recommendations ===
+
+Just as the current standard library documentation divides the modules into particular groups, albeit with only moderate success, the above functional groupings could be used to define package boundaries that are more useful in distinguishing between different activities. A cursory review of the above could suggest the following set of packages:
+
+ * audio
+ * authentication
+ * client
+ * compiler
+ * commandline
+ * database
+ * encoding
+ * image
+ * interpreter
+ * parsing
+ * persistence
+ * server
+ * text
+ * usertype
+
+The names employed above may not be entirely suitable, and due to the ambiguity of certain category names, it might be appropriate to establish packages with certain names (eg. parsing) within other packages (eg. compiler), thus providing a level of context (eg. Python source code parsing, as opposed to HTML/SGML parsing).
+
+== Naming ==
+
+The current standard library employs a number of naming conventions:
+
+ * string, calendar (simple singular words)
+ * types, collections (simple plural words)
+ * struct, re, repr (foreshortenings and acronyms)
+ * textwrap, unicodedata (combinations of simple words)
+ * stringprep, fpformat (combinations of foreshortenings and acronyms)
+ * difflib, httplib (lib-suffixed names, often using foreshortenings and acronyms)
+ * StringIO, UserDict (mixed-cased variants of combinations)
+ * rfc822, netrc (specific references to specifications or technical details)
+ * copy_reg, dummy_thread (combinations involving underscores)
+
+=== Recommendations ===
+
+In order to simplify the recollection process, names should follow a consistent naming scheme, arguably favouring descriptive names which mention the nature of the activity supported. We might decide to permit only lower-case characters, together with numbers (only where absolutely necessary), although this can often appear confusing with acronyms and word combinations (eg. stringio, cstringio). However, since the use of acronyms may potentially be relegated to the level of class names, we may at that level employ mixed-case class names, along with upper-case acronyms as apparently tolerated by [http://www.python.org/dev/peps/pep-0008/ PEP 8 "Style Guide for Python Code"]. Thus, StringIO.StringIO would not become stringio.StringIO, but perhaps something like stringfile.StringIO or something even more descriptive.
+
+== Editorial Notes ==
+
+This is currently a draft, featuring a number of points that should be discussed rather than being interpreted as a final opinion or a final set of recommendations. -- PaulBoddie
