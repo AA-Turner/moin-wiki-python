@@ -93,6 +93,33 @@ The current standard library employs a number of naming conventions:
 
 In order to simplify the recollection process, names should follow a consistent naming scheme, arguably favouring descriptive names which mention the nature of the activity supported. We might decide to permit only lower-case characters, together with numbers (only where absolutely necessary), although this can often appear confusing with acronyms and word combinations (eg. stringio, cstringio). However, since the use of acronyms may potentially be relegated to the level of class names, we may at that level employ mixed-case class names, along with upper-case acronyms as apparently tolerated by [http://www.python.org/dev/peps/pep-0008/ PEP 8 "Style Guide for Python Code"]. Thus, StringIO.StringIO would not become stringio.StringIO, but perhaps something like stringfile.StringIO or something even more descriptive.
 
+== Module Functionality ==
+
+The diversity of module naming provides an "archaeological" guide to the accumulation processes operating within the standard library, yet more fundamental changes in style, recommended practices and techniques exist within the code of the modules themselves. Since the results of such differing implementation techniques manifest themselves as differently organised class hierarchies or interaction patterns, users of standard library modules must often master styles of usage which are often unnecessarily complicated for the task at hand or which diverge from previously accepted abstractions for similar tasks.
+
+However, for certain kinds of tasks it is appropriate to employ differing approaches and thus expose differing representations to users. For example, the choice of XML parsing module may involve trade-offs with respect to resource usage, convenience and performance, and no single approach is likely to satisfy the needs of all users.
+
+=== Styles of Organisation/Interaction in Modules ===
+
+The following styles of class organisation or interaction patterns appear in the standard library:
+
+ * Abstract superclass plus handler subclasses (sgmllib)
+ * Abstract superclass plus handler subclasses and separate processor classes (compiler, BaseHTTPServer)
+ * Static mix-in hierarchies (SocketServer)
+ * Dynamic mix-in hierarchies (urllib2)
+
+The following styles of behaviour configuration are employed in the standard library:
+
+ * Module-level globals to change module function behaviour (calendar, urllib)
+ * Functionality registration mechanisms (copy_reg, xml.dom)
+ * Environment variable access (urllib2)
+
+=== Recommendations ===
+
+Clearly, a diversity of patterns, mechanisms and styles are necessary to provide different approaches to particular tasks (as noted above). However, the revision of certain approaches and the subsequent "archaelogical" accumulation of modules suggests that contributors have not been able to settle, at least initially, on a style widely regarded as being satisfactory to many standard library users.
+
+An interesting example of evolving styles, as well as a number of peculiarities in the APIs provided, can be found in the urllib and urllib2 modules. Here, a moderately simple initial API has evolved into a more complicated (and presumably more powerful) subsequent API, but despite the conveniences provided in "loading up" the configured objects with specific handler functionality in advance, an alternative might involve "flattening" the style of interactions by having users process responses explicitly using separate objects or functions.
+
 == Editorial Notes ==
 
 This is currently a draft, featuring a number of points that should be discussed rather than being interpreted as a final opinion or a final set of recommendations. -- PaulBoddie
