@@ -1,0 +1,93 @@
+= Simple and Efficient Jython Object Factories =
+
+''Submitted By: CharlieGroves''
+
+Writing code in Python that can be easily called by Java code is one of the most attractive features of Jython.  In last month's newsletter, Josh wrote [http://wiki.python.org/jython/JythonMonthly/Articles/September2006/1 Accessing Jython from Java Without Using jythonc].  It shows how to easily use Jython objects implementing Java interfaces in Java code.  He mentions that "using this technique correctly is more effective than using jythonc".  I'll go one step further:  unless you're running in an environment that doesn't allow dynamically created classes(e.g. in a servlet engine with security restrictions) or have extreme masochistic tendencies you shouldn't use jythonc.  It has no speed benefits over regular Jython, requires the added complexity of a compile step and doesn't have basic features like line numbers in stack traces.
+
+At the end of the article he mentions a couple drawbacks of his technique: it requires the creation of a new interpreter for every new object and it reevaluates the Python code in every new interpreter created.  This article shows how to avoid those problems.  
+
+I used the same basic types that Josh used in his article.  The `EmployeeType` he defined is unchanged:
+
+{{{
+package jyinterface.interfaces;
+
+public interface EmployeeType {
+    
+    public String getEmployeeFirst();
+    public String getEmployeeLast();
+    public String getEmployeeId();
+    
+}
+}}}
+
+It just defines a simple `JavaBean` with first, last and id fields.  Then I took his `Employee.py` and added arguments for the fields to the constructor:
+{{{
+from jyinterface.interfaces import EmployeeType
+
+class Employee(EmployeeType):
+   def __init__(self, first, last, id):
+      self.first = first
+      self.last  =  last
+      self.id = id
+
+   def getEmployeeFirst(self):
+      return self.first
+
+   def getEmployeeLast(self):
+      return self.last
+
+   def getEmployeeId(self):
+      return self.id
+}}}
+
+Finally, I created a new factory class that creates these Jython Employees:
+{{{
+package jyinterface.factory;
+
+import jyinterface.interfaces.EmployeeType;
+import org.python.core.PyObject;
+import org.python.core.PyString;
+import org.python.util.PythonInterpreter;
+
+public class EmployeeFactory {
+
+    public EmployeeFactory() {
+        PythonInterpreter interpreter = new PythonInterpreter();
+        interpreter.exec("from Employee import Employee");
+        jyEmployeeClass = interpreter.get("Employee");
+    }
+
+    public EmployeeType create(String first, String last, String id) {
+        return (EmployeeType)jyEmployeeClass.__call__(new PyString(first),
+                                                      new PyString(last),
+                                                      new PyString(id));
+    }
+
+    private PyObject jyEmployeeClass;
+}
+}}}
+
+This class is where Java and Python meet.  The constructor first creates an interpreter and imports the Employee class into it.  This means that Employee.py must be located on `sys.path` for the import to work.  After a successful import, the constructor stores a reference to the Employee class.  This PyObject functions identically to the `Employee` class in Python code.  That means `jyEmployeeClass.__call__()` in Java is the same as `Employee()` in Python and `jyEmployeeClass.__getattr__("__doc__")` in Java is the same as `Employee.__doc__` in Python etc.  The create method uses this to make instances of Employee.  It calls `__call__` on `jyEmployeeClass` with arguments for first, last and id which translates to `Employee(first, last id)`.  It's able to cast the return to `EmployeeType` since `Employee` implements that interface.
+
+This new Main shows the factory in action:
+{{{
+package jyinterface;
+
+import jyinterface.factory.EmployeeFactory;
+import jyinterface.interfaces.EmployeeType;
+
+public class Main {
+
+    private static void print(EmployeeType employee) {
+        System.out.println("Name: " + employee.getEmployeeFirst() + " "
+                + employee.getEmployeeLast());
+        System.out.println("Id: " + employee.getEmployeeId());
+    }
+
+    public static void main(String[] args) {
+        EmployeeFactory factory = new EmployeeFactory();
+        print(factory.create("Josh", "Juneau", "1"));
+        print(factory.create("Charlie", "Groves", "2"));
+    }
+}
+}}}
