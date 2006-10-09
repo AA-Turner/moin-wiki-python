@@ -12,7 +12,7 @@ A persuasive argument once upon a time was the simplicity of the Python standard
 
 One argument against reorganising the standard library is that "if you ignore them, they won't bother you" - that is, the presence of many apparently haphazardly named modules is not a problem unless you need to import many of them. Fortunately, this observation can be used to work in favour of a reorganisation: the old module and package names can be retained in addition to a new layout, existing software will continue to work by importing modules via their old names, improved documentation can focus on the new layout, reference material describing the old layout could also be provided to assist those working with older software. One disadvantage might be the additional space requirement of two different library layouts, however.
 
-= Suggested Improvements =
+= Potential Areas of Improvement =
 
 The following sections present observations about the current situation and possible recommendations for future editions of the standard library.
 
@@ -40,16 +40,16 @@ The following groups of modules may intentionally provide similar functionality 
  * UserDict, UserList, UserString (common theme: built-in type emulation)
  * base64, binhex, binascii, quopri, uu (common theme: encodings)
  * HTMLParser, sgmllib, htmllib (common theme: HTML/SGML parsing)
- * anydbm, whichdb, dbm, gdbm, dbhash, bsddb, dumbdb (common theme - database file access)
+ * anydbm, whichdb, dbm, gdbm, dbhash, bsddb, dumbdbm (common theme - database file access)
  * cPickle, pickle, copy_reg, marshal, shelve, pickletools (differing implementations, common theme: persistence)
  * optparse, getopt (common theme: command line options)
  * readline, rlcompleter, cmd, shlex, code (common theme: interpreter I/O)
  * codeop, compiler, py_compile, compileall (common theme: code generation)
  * pwd, spwd, grp, crypt, nis (common theme: authentication)
  * asyncore, asynchat, wsgiref, BaseHTTPServer, SimpleHTTPServer, CGIHTTPServer, SimpleXMLRPCServer, DocXMLRPCServer (common theme: network and Web programming)
- * urllib, urllib2, urlparse, httplib, ftplib, gopherlib, poplib, imaplib, nntplib, smtplib, telnetlib, xmlrpclib (common theme: network client programming)
- * audioop, sunau, wave, sndhdr (common theme: audio)
- * imageop, aifc, chunk, rgbimg, imghdr (common theme: images)
+ * asynchat, urllib, urllib2, urlparse, httplib, ftplib, gopherlib, poplib, imaplib, nntplib, smtplib, telnetlib, xmlrpclib (common theme: network client programming)
+ * audioop, aifc, chunk, sunau, wave, sndhdr (common theme: audio)
+ * imageop, rgbimg, imghdr (common theme: images)
  * textwrap, formatter (common theme: text formatting)
 
 Modules in the above groups would be placed in intuitively named packages, possibly with improved names.
@@ -59,7 +59,7 @@ Modules in the above groups would be placed in intuitively named packages, possi
 Just as the current standard library documentation divides the modules into particular groups, albeit with only moderate success, the above functional groupings could be used to define package boundaries that are more useful in distinguishing between different activities. A cursory review of the above could suggest the following set of packages:
 
  * audio
- * authentication
+ * authentication (or account)
  * client
  * compiler
  * commandline
@@ -93,6 +93,8 @@ The current standard library employs a number of naming conventions:
 
 In order to simplify the recollection process, names should follow a consistent naming scheme, arguably favouring descriptive names which mention the nature of the activity supported. We might decide to permit only lower-case characters, together with numbers (only where absolutely necessary), although this can often appear confusing with acronyms and word combinations (eg. stringio, cstringio). However, since the use of acronyms may potentially be relegated to the level of class names, we may at that level employ mixed-case class names, along with upper-case acronyms as apparently tolerated by [http://www.python.org/dev/peps/pep-0008/ PEP 8 "Style Guide for Python Code"]. Thus, StringIO.StringIO would not become stringio.StringIO, but perhaps something like stringfile.StringIO or something even more descriptive.
 
+In some situations it may be advisable to retain technical names instead of employing names which obscure the purpose of the module. For example, the base64 module refers to a specific kind of encoding, but any invented descriptive name for this module may prove be verbose and yet fail to accurately communicate the same information.
+
 == Module Functionality ==
 
 The diversity of module naming provides an "archaeological" guide to the accumulation processes operating within the standard library, yet more fundamental changes in style, recommended practices and techniques exist within the code of the modules themselves. Since the results of such differing implementation techniques manifest themselves as differently organised class hierarchies or interaction patterns, users of standard library modules must often master styles of usage which are often unnecessarily complicated for the task at hand or which diverge from previously accepted abstractions for similar tasks.
@@ -119,6 +121,81 @@ The following styles of behaviour configuration are employed in the standard lib
 Clearly, a diversity of patterns, mechanisms and styles are necessary to provide different approaches to particular tasks (as noted above). However, the revision of certain approaches and the subsequent "archaelogical" accumulation of modules suggests that contributors have not been able to settle, at least initially, on a style widely regarded as being satisfactory to many standard library users.
 
 An interesting example of evolving styles, as well as a number of peculiarities in the APIs provided, can be found in the urllib and urllib2 modules. Here, a moderately simple initial API has evolved into a more complicated (and presumably more powerful) subsequent API, but despite the conveniences provided in "loading up" the configured objects with specific handler functionality in advance, an alternative might involve "flattening" the style of interactions by having users process responses explicitly using separate objects or functions.
+
+= Proposals =
+
+The most natural starting point for the definition of a restructured standard library is the package hierarchy itself. Taking the grouping recommendations into consideration, we might define a more complete hierarchy by applying certain wider categorisation principles as follows:
+
+ * audio
+   * aiff (replaces aifc)
+   * au (replaces sunau)
+   * chunk
+   * header (replaces sndhdr)
+   * raw (replaces audioop)
+   * wav (replaces wave)
+ * account (or authentication)
+   * groups (replaces grp)
+   * nis
+   * passwords (replaces pwd, spwd)
+ * client
+   * ftp (replaces ftplib)
+   * gopher (replaces gopherlib)
+   * http (replaces httplib)
+   * mail
+     * imap (replaces imaplib)
+     * pop (replaces poplib)
+   * nntp (replaces nntplib)
+   * smtp (replaces smtplib)
+   * telnet (replaces telnetlib)
+   * url (replaces urllib, urllib2, urlparse)
+   * xmlrpc (replaces xmlrpclib)
+ * compiler
+   * code (replaces parts of compiler, codeop, py_compile, compileall)
+   * parsing (contains compiler parsing functions)
+ * commandline
+   * getopt
+   * options (replaces optparse)
+ * database
+   * anydbm (includes whichdb)
+   * bsddb
+   * bsddbm (replaces dbhash?)
+   * dbm
+   * dumbdbm
+   * gdbm
+ * encoding
+   * base64
+   * binascii
+   * binhex
+   * quopri
+   * uu
+ * image
+   * header (replaces imghdr)
+   * raw (replaces imageop)
+   * rgb (replaces rgbimg)
+ * interpreter
+   * generic (replaces cmd)
+   * python (replaces code)
+   * readline (includes rlcompleter)
+ * net
+   * async (includes parts of asyncore, asynchat)
+ * persistence
+   * marshal
+   * pickle (replaces/combines cPickle, pickle, copy_reg, pickletools)
+   * shelve
+ * server
+   * http (replaces/combines BaseHTTPServer, SimpleHTTPServer)
+     * cgi (replaces CGIHTTPServer)
+     * wsgi (replaces wsgiref)
+     * xmlrpc (replaces/combines SimpleXMLRPCServer, DocXMLRPCServer)
+ * text
+   * formatters
+     * formatter
+     * textwrap
+   * html (replaces/combines htmllib, HTMLParser)
+   * sgml (replaces sgmllib)
+   * shellsyntax (replaces shlex)
+   * xml (contains the top-level xml package)
+ * usertype (contains UserDict as dict, UserList as list, UserString as str)
 
 == Editorial Notes ==
 
