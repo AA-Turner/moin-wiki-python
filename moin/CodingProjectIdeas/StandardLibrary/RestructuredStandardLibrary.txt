@@ -77,7 +77,7 @@ Just as the current standard library documentation divides the modules into part
  * persistence
  * server
  * text
- * usertype
+ * types
 
 The names employed above may not be entirely suitable, and due to the ambiguity of certain category names, it might be appropriate to establish packages with certain names (eg. parsing) within other packages (eg. compiler), thus providing a level of context (eg. Python source code parsing, as opposed to HTML/SGML parsing). One inspiration for top-level category names could be the MIME media type hierarchy which uses such names as application, audio, image, text, and so on, although enthusiasm for replicating that hierarchy would need to be restrained in areas beyond file type handling.
 
@@ -185,7 +185,8 @@ The most natural starting point for the definition of a restructured standard li
    * dbm
    * dumbdbm
    * gdbm
- * datetime (includes calendar?)
+ * datetime (includes calendar, sched?)
+ * decimal
  * email
    * message (replaces email, rfc822, mimetools, mimify, multifile)
    * mailbox (includes mailbox contents)
@@ -204,6 +205,9 @@ The most natural starting point for the definition of a restructured standard li
    * generic (replaces cmd)
    * python (replaces code)
    * readline (includes rlcompleter)
+ * math
+   * complex (replaces cmath)
+   * operator
  * net
    * async (includes parts of asyncore, asynchat)
    * url (replaces urlparse)
@@ -212,11 +216,19 @@ The most natural starting point for the definition of a restructured standard li
    * marshal
    * pickle (replaces/combines cPickle, pickle, copy_reg, pickletools)
    * shelve
+ * random
  * server
    * http (replaces/combines BaseHTTPServer, SimpleHTTPServer)
      * cgi (replaces CGIHTTPServer)
      * wsgi (replaces wsgiref)
      * xmlrpc (replaces/combines SimpleXMLRPCServer, DocXMLRPCServer)
+ * system (contains "native" or "platform" APIs)
+   * mmap
+   * select (could be part of the network package)
+   * stat (replaces stat, statvfs)
+   * tempfile
+   * time (may be obsolete)
+   * zlib (could be part of a compression package)
  * text
    * csv
    * formatters
@@ -226,12 +238,16 @@ The most natural starting point for the definition of a restructured standard li
    * sgml (replaces sgmllib)
    * shellsyntax (replaces shlex)
    * xml (contains the top-level xml package)
- * system (contains "native" or "platform" APIs)
-   * mmap
-   * select (could be part of the network package)
-   * time (may be obsolete)
-   * zlib (could be part of a compression package)
- * usertype (contains UserDict as dict, UserList as list, UserString as str)
+ * types (augments types, contains UserDict as dict, UserList as list, UserString as str)
+   * array
+   * collections
+   * functional (replaces functools)
+   * heapqueue (replaces heapq)
+   * iterators (replaces itertools)
+   * mutex
+   * queue (replaces Queue)
+   * set (replaces sets)
+   * weakref
 
 == Additional Categorisation ==
 
