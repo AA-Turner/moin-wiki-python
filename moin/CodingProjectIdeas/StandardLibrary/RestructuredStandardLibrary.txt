@@ -18,7 +18,7 @@ The following sections present observations about the current situation and poss
 
 == Activities, Grouping and Redundancy ==
 
-The current standard library employs many modules as siblings at the top level of a relatively shallow namespace hierarchy. Many modules have been introduced to remedy, augment or partially replace existing modules, leading to problems of redundancy and incoherency.
+The current standard library employs many modules as siblings at the top level of a relatively shallow namespace hierarchy. Many modules have been introduced to remedy, augment or partially replace existing modules, leading to problems of redundancy and incoherency. However, a policy of preserving APIs which resemble "system", "native" or "platform" APIs has also been maintained, leading to the provision of numerous functions and abstractions in modules such as os, select, mmap, errno, getopt, and so on.
 
 === Overlapping Module Groups ===
 
@@ -51,6 +51,9 @@ The following groups of modules may intentionally provide similar functionality 
  * audioop, aifc, chunk, sunau, wave, sndhdr (common theme: audio)
  * imageop, rgbimg, imghdr (common theme: images)
  * textwrap, formatter (common theme: text formatting)
+ * zlib, gzip, bz2, zipfile, tarfile (common theme: archiving)
+ * hashlib, hmac, md5, sha (common theme: cryptography)
+ * mailcap, robotparser, netrc, ConfigParser (common theme: configuration, albeit with specific and generic cases)
 
 Modules in the above groups would be placed in intuitively named packages, possibly with improved names.
 
@@ -58,11 +61,14 @@ Modules in the above groups would be placed in intuitively named packages, possi
 
 Just as the current standard library documentation divides the modules into particular groups, albeit with only moderate success, the above functional groupings could be used to define package boundaries that are more useful in distinguishing between different activities. A cursory review of the above could suggest the following set of packages:
 
+ * archive
  * audio
  * authentication (or account)
  * client
  * compiler
  * commandline
+ * configuration (or config)
+ * cryptography (or crypto)
  * database
  * encoding
  * image
@@ -73,7 +79,9 @@ Just as the current standard library documentation divides the modules into part
  * text
  * usertype
 
-The names employed above may not be entirely suitable, and due to the ambiguity of certain category names, it might be appropriate to establish packages with certain names (eg. parsing) within other packages (eg. compiler), thus providing a level of context (eg. Python source code parsing, as opposed to HTML/SGML parsing).
+The names employed above may not be entirely suitable, and due to the ambiguity of certain category names, it might be appropriate to establish packages with certain names (eg. parsing) within other packages (eg. compiler), thus providing a level of context (eg. Python source code parsing, as opposed to HTML/SGML parsing). One inspiration for top-level category names could be the MIME media type hierarchy which uses such names as application, audio, image, text, and so on, although enthusiasm for replicating that hierarchy would need to be restrained in areas beyond file type handling.
+
+The issue remains of providing access to "system", "native" or "platform" APIs, especially since developers with a systems programming background may wish to make use of such APIs in preference to others, possibly to implement other abstractions or to maintain compatibility with (or resemblance to) other works. We may decide to retain a package for such APIs and not to remove them entirely from the standard library, despite the duplication of functionality that this might suggest.
 
 == Naming ==
 
@@ -124,8 +132,17 @@ An interesting example of evolving styles, as well as a number of peculiarities 
 
 = Proposals =
 
-The most natural starting point for the definition of a restructured standard library is the package hierarchy itself. Taking the grouping recommendations into consideration, we might define a more complete hierarchy by applying certain wider categorisation principles as follows:
+The most natural starting point for the definition of a restructured standard library is the package hierarchy itself. Taking the grouping recommendations into consideration, in order to identify broad categories, and taking the naming recommendations into account, we might define a more complete hierarchy:
 
+ * account (or authentication)
+   * groups (replaces grp)
+   * nis
+   * passwords (replaces pwd, spwd)
+ * archive
+   * bz2
+   * gzip
+   * tar (replaces tarfile)
+   * zip (replaces zipfile)
  * audio
    * aiff (replaces aifc)
    * au (replaces sunau)
@@ -133,10 +150,6 @@ The most natural starting point for the definition of a restructured standard li
    * header (replaces sndhdr)
    * raw (replaces audioop)
    * wav (replaces wave)
- * account (or authentication)
-   * groups (replaces grp)
-   * nis
-   * passwords (replaces pwd, spwd)
  * client
    * ftp (replaces ftplib)
    * gopher (replaces gopherlib)
@@ -147,7 +160,7 @@ The most natural starting point for the definition of a restructured standard li
    * nntp (replaces nntplib)
    * smtp (replaces smtplib)
    * telnet (replaces telnetlib)
-   * url (replaces urllib, urllib2, urlparse)
+   * url (replaces urllib, urllib2)
    * xmlrpc (replaces xmlrpclib)
  * compiler
    * code (replaces parts of compiler, codeop, py_compile, compileall)
@@ -155,6 +168,16 @@ The most natural starting point for the definition of a restructured standard li
  * commandline
    * getopt
    * options (replaces optparse)
+ * config
+   * mailcap
+   * netrc
+   * generic (replaces ConfigParser)
+   * robots (replaces robotparser)
+ * crypto
+   * hash (replaces hashlib)
+   * hmac
+   * md5
+   * sha
  * database
    * anydbm (includes whichdb)
    * bsddb
@@ -162,6 +185,11 @@ The most natural starting point for the definition of a restructured standard li
    * dbm
    * dumbdbm
    * gdbm
+ * datetime (includes calendar?)
+ * email
+   * message (replaces email, rfc822, mimetools, mimify, multifile)
+   * mailbox (includes mailbox contents)
+     * mh (replaces mhlib)
  * encoding
    * base64
    * binascii
@@ -178,6 +206,8 @@ The most natural starting point for the definition of a restructured standard li
    * readline (includes rlcompleter)
  * net
    * async (includes parts of asyncore, asynchat)
+   * url (replaces urlparse)
+   * xdr (replaces xdrlib)
  * persistence
    * marshal
    * pickle (replaces/combines cPickle, pickle, copy_reg, pickletools)
@@ -188,6 +218,7 @@ The most natural starting point for the definition of a restructured standard li
      * wsgi (replaces wsgiref)
      * xmlrpc (replaces/combines SimpleXMLRPCServer, DocXMLRPCServer)
  * text
+   * csv
    * formatters
      * formatter
      * textwrap
@@ -195,7 +226,26 @@ The most natural starting point for the definition of a restructured standard li
    * sgml (replaces sgmllib)
    * shellsyntax (replaces shlex)
    * xml (contains the top-level xml package)
+ * system (contains "native" or "platform" APIs)
+   * mmap
+   * select (could be part of the network package)
+   * time (may be obsolete)
+   * zlib (could be part of a compression package)
  * usertype (contains UserDict as dict, UserList as list, UserString as str)
+
+== Additional Categorisation ==
+
+Here, additional categorisation is introduced in order to distinguish between categories in different contexts. For example, http packages appear in both the client and server top-level packages. Instead of dividing the previously identified http category in this way, we might have decided to preserve a single http package and divide it into client and server subpackages. However, as suggested above, we regard the client and server categorisations as being more important than one of many technologies that may be relevant to both of these categorisations.
+
+== Difficult Categories and Packages ==
+
+Some categories may be established at the top level despite their nature suggesting a placement in some other category. For example, the email package could in certain respects be placed in either the archive or text packages, but since this might appear counterintuitive to different users of the package, a separate placement hopefully eliminates confusion and gives the package a deservedly more prominent status in the library.
+
+Some modules or sections of functionality can be awkward to categorise. For example, the processing of URLs as attempted by the urlparse module could be placed in various networking categories or in some other category, since URIs/URLs are also used in contexts unrelated to networking and the Internet (eg. in XML namespaces and RDF identifiers). A compromise may therefore be necessary, placing a proposed url module in the net top-level package, for example.
+
+== System Packages ==
+
+As noted above, a special "system" ("native" or "platform") package could be established. Care should be taken, however, to avoid filling such a package with other packages that really ought to be disassembled, reorganised or recategorised.
 
 == Editorial Notes ==
 
