@@ -197,8 +197,10 @@ The most natural starting point for the definition of a restructured standard li
    * binascii
    * binhex
    * quopri
-   * unicode (replaces encodings)
+   * struct
+   * unicode (replaces encodings, stringprep)
    * uu
+ * files (replaces os.path, possibly tempfile, stat)
  * image
    * header (replaces imghdr)
    * raw (replaces imageop)
@@ -252,18 +254,21 @@ The most natural starting point for the definition of a restructured standard li
  * system (contains "native" or "platform" APIs)
    * locale
    * mmap
+   * os (could be reorganised)
    * select (could be part of the network package)
    * stat (replaces stat, statvfs)
    * tempfile
    * time (may be obsolete)
    * zlib (could be part of a compression package)
- * text
+ * text (replaces/includes string)
    * csv
+   * diff (replaces difflib)
    * formatters
      * formatter
      * textwrap
    * gettext
    * html (replaces/combines htmllib, HTMLParser)
+   * re (more specific than its text siblings, could be moved)
    * sgml (replaces sgmllib)
    * shellsyntax (replaces shlex)
    * xml (contains the top-level xml package)
@@ -313,3 +318,4 @@ This is currently a draft, featuring a number of points that should be discussed
  4. Is the io package too weak? Things like XML parsers do I/O and they're probably best in the text package (or their own top-level package). -- PaulBoddie
     * ''I question whether the xml package belongs in text.  Lots of people use XML for stuff other than HTML on steroids.'' -- SkipMontanaro
     * ''Yes, it's something which is potentially important enough to have its own category.'' -- PaulBoddie
+ 5. Are the io package and files package too close in purpose? Could things like tempfile (with a nicer API) be part of the files package? -- PaulBoddie
