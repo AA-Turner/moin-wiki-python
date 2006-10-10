@@ -12,7 +12,7 @@ A persuasive argument once upon a time was the simplicity of the Python standard
 
 == A Note on Backward Compatibility ==
 
-One argument against reorganising the standard library is that "if you ignore them, they won't bother you" - that is, the presence of many apparently haphazardly named modules is not a problem unless you need to import many of them. Fortunately, this observation can be used to work in favour of a reorganisation: the old module and package names can be retained in addition to a new layout, existing software will continue to work by importing modules via their old names, improved documentation can focus on the new layout, reference material describing the old layout could also be provided to assist those working with older software. One disadvantage might be the additional space requirement of two different library layouts, however.
+One argument against reorganising the standard library is that "if you ignore them, they won't bother you" - that is, the presence of many apparently haphazardly named modules is not a problem unless you need to import many of them. Fortunately, this observation can be used to work in favour of a reorganisation: the old module and package names can be retained in addition to a new layout, existing software will continue to work by importing modules via their old names, improved documentation can focus on the new layout, reference material describing the old layout could also be provided to assist those working with older software. One disadvantage might be the additional space requirement of two different library layouts, however. Another disadvantage, more serious than the first is the case where a top-level module is replaced by one with the same name but with different functionality; strict backward compatibility measures would be necessary to avoid migration issues in such cases.
 
 = Potential Areas of Improvement =
 
@@ -186,7 +186,8 @@ The most natural starting point for the definition of a restructured standard li
    * dbm
    * dumbdbm
    * gdbm
- * datetime (includes calendar, sched?)
+ * datetime
+   * calendar (includes sched?)
  * decimal
  * email
    * message (replaces email, rfc822, mimetools, mimify, multifile)
@@ -314,6 +315,7 @@ This is currently a draft, featuring a number of points that should be discussed
     * ''It's not obvious to me that putting all these package at the top level will improve matters significantly.  On the one hand, people have been living with the current flat standard module namespace and using names that avoid collisions.  By creating a bunch of top-level packages that avoid the current names you run the risk of stomping on names others have selected for their own use (text, config, audio, image, database all seem like names people might have chosen).  By giving Python its own one package namespace you avoid most of that.'' -- SkipMontanaro
     * ''It's a trade-off to avoid Java-style deep hierarchies: we could move the xml package up out of the text package, but would we then want it under std? Perhaps a conservative set of names is best: put client and server under net, for example, but reserve things like audio and image. I suspect that generic standard library names are least likely to collide with published packages (and only config from the suggested names seems to do so), and there's an argument that the standard library provides definitive answers: the archive package is '''the''' archive package for Python. Would prefixing such solutions with std not add "conceptual boilerplate"?'' -- PaulBoddie
     * ''Would it make any sense to have a few top-level slots for people's packages? Things like "pypi" and "local" or "optlib", "ext" and "user" (or "spkg" only), so that non-std packages (which I assume will be less used than the standard lib) carry the burden of deep hierarchies. It would also allow for easy hooks for some "separated Python enviroments" functionality and would extend the organization down to site-packages (e.g. PIL and numpy are de facto "optlib", my own dirty scripts are "local" or "trash"). And if someone really needs some special module in the top-level, a simple '''mv''' hack should be enough.'' -- ajaksu
+    * ''The danger of having user, local, trash and other subjective packages is that as soon as you promote your work to something non-dirty, you have to go and change all the imports. And people are likely to forget to do this when releasing their code, too. Of course, definitive naming in the Java world involves strict hierarchies which use Internet domains (apart from Sun's stuff, understandably, and Oracle's stuff, not so understandably), but this just produces long branches. I guess people would just have to do due diligence before choosing names, but this isn't a different situation to what we have now. Still, "non-functional" categories at the top-level is an interesting idea.'' -- PaulBoddie
  2. Should client and server be under net? Would this be too much of the obvious? -- PaulBoddie
  3. Should encodings be under text or merged with text? -- PaulBoddie
  4. Is the io package too weak? Things like XML parsers do I/O and they're probably best in the text package (or their own top-level package). -- PaulBoddie
