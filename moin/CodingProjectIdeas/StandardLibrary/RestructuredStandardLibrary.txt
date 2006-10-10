@@ -65,18 +65,18 @@ Just as the current standard library documentation divides the modules into part
 
  * archive
  * audio
- * authentication (or account)
+ * authentication (or auth, account)
  * client
  * compiler
  * commandline
- * configuration (or config)
+ * configuration (or config, preferences, prefs)
  * cryptography (or crypto)
  * database
  * encoding
  * image
  * interpreter
  * parsing
- * persistence
+ * persistence (or persist)
  * server
  * text
  * types
@@ -104,6 +104,8 @@ The current standard library employs a number of naming conventions:
 In order to simplify the recollection process, names should follow a consistent naming scheme, arguably favouring descriptive names which mention the nature of the activity supported. We might decide to permit only lower-case characters, together with numbers (only where absolutely necessary), although this can often appear confusing with acronyms and word combinations (eg. stringio, cstringio). However, since the use of acronyms may potentially be relegated to the level of class names, we may at that level employ mixed-case class names, along with upper-case acronyms as apparently tolerated by [http://www.python.org/dev/peps/pep-0008/ PEP 8 "Style Guide for Python Code"]. Thus, StringIO.StringIO would not become stringio.StringIO, but perhaps something like stringfile.StringIO or something even more descriptive.
 
 In some situations it may be advisable to retain technical names instead of employing names which obscure the purpose of the module. For example, the base64 module refers to a specific kind of encoding, but any invented descriptive name for this module may prove be verbose and yet fail to accurately communicate the same information.
+
+In a standard library organisation where no encapsulating top-level package exists (eg. std), care must be taken not to conflict with existing or likely independent package names. One potential conflict involves the config package, already registered in the Python Package Index.
 
 == Module Functionality ==
 
@@ -172,11 +174,6 @@ The most natural starting point for the definition of a restructured standard li
  * commandline
    * getopt
    * options (replaces optparse)
- * config
-   * mailcap
-   * netrc
-   * generic (replaces ConfigParser)
-   * robots (replaces robotparser)
  * crypto
    * hash (replaces hashlib)
    * hmac
@@ -226,6 +223,11 @@ The most natural starting point for the definition of a restructured standard li
    * marshal
    * pickle (replaces/combines cPickle, pickle, copy_reg, pickletools)
    * shelve
+ * preferences
+   * mailcap
+   * netrc
+   * generic (replaces ConfigParser)
+   * robots (replaces robotparser)
  * random
  * runtime (replaces sys)
    * atexit
@@ -305,7 +307,7 @@ This is currently a draft, featuring a number of points that should be discussed
  1. Should there be a top-level package representing the entire standard distribution, e.g., "std"?  {{{from std.database import anydbm}}} -- SkipMontanaro
     * ''I think the proposed hierarchy (which is obviously tentative) should be at the top level, although the risk of name collisions with independent packages and the issue of how "selfish" the standard library should be ought to be worked out.'' -- PaulBoddie
     * ''It's not obvious to me that putting all these package at the top level will improve matters significantly.  On the one hand, people have been living with the current flat standard module namespace and using names that avoid collisions.  By creating a bunch of top-level packages that avoid the current names you run the risk of stomping on names others have selected for their own use (text, config, audio, image, database all seem like names people might have chosen).  By giving Python its own one package namespace you avoid most of that.'' -- SkipMontanaro
-    * ''It's a trade-off to avoid Java-style deep hierarchies: we could move the xml package up out of the text package, but would we then want it under std? Perhaps a conservative set of names is best: put client and server under net, for example, but reserve things like audio and image. I suspect that generic standard library names are least likely to collide with published packages, and there's an argument that the standard library provides definitive answers: the archive package is '''the''' archive package for Python. Would prefixing such solutions with std not add "conceptual boilerplate"?'' -- PaulBoddie
+    * ''It's a trade-off to avoid Java-style deep hierarchies: we could move the xml package up out of the text package, but would we then want it under std? Perhaps a conservative set of names is best: put client and server under net, for example, but reserve things like audio and image. I suspect that generic standard library names are least likely to collide with published packages (and only config from the suggested names seems to do so), and there's an argument that the standard library provides definitive answers: the archive package is '''the''' archive package for Python. Would prefixing such solutions with std not add "conceptual boilerplate"?'' -- PaulBoddie
  2. Should client and server be under net? Would this be too much of the obvious? -- PaulBoddie
  3. Should encodings be under text or merged with text? -- PaulBoddie
  4. Is the io package too weak? Things like XML parsers do I/O and they're probably best in the text package (or their own top-level package). -- PaulBoddie
