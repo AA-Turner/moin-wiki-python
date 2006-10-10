@@ -156,6 +156,7 @@ The most natural starting point for the definition of a restructured standard li
    * ftp (replaces ftplib)
    * gopher (replaces gopherlib)
    * http (replaces httplib)
+     * cookie (replaces cookielib - see also net.cookie)
    * mail
      * imap (replaces imaplib)
      * pop (replaces poplib)
@@ -199,6 +200,7 @@ The most natural starting point for the definition of a restructured standard li
    * binascii
    * binhex
    * quopri
+   * unicode (replaces encodings)
    * uu
  * image
    * header (replaces imghdr)
@@ -208,11 +210,16 @@ The most natural starting point for the definition of a restructured standard li
    * generic (replaces cmd)
    * python (replaces code)
    * readline (includes rlcompleter)
+ * io
+   * curses
+   * logging
+   * unicode (replaces codecs)
  * math
    * complex (replaces cmath)
    * operator
  * net
    * async (includes parts of asyncore, asynchat)
+   * cookie (replaces/includes parts of cookielib, Cookie dealing with representations)
    * url (replaces urlparse)
    * xdr (replaces xdrlib)
  * persistence
@@ -235,10 +242,13 @@ The most natural starting point for the definition of a restructured standard li
    * warning (replaces warnings)
  * server
    * http (replaces/combines BaseHTTPServer, SimpleHTTPServer)
-     * cgi (replaces CGIHTTPServer)
+     * cgi (replaces CGIHTTPServer, cgitb)
+     * cookie (replaces Cookie - see also net.cookie)
      * wsgi (replaces wsgiref)
      * xmlrpc (replaces/combines SimpleXMLRPCServer, DocXMLRPCServer)
+   * smtp (replaces smtpd)
  * system (contains "native" or "platform" APIs)
+   * locale
    * mmap
    * select (could be part of the network package)
    * stat (replaces stat, statvfs)
@@ -250,6 +260,7 @@ The most natural starting point for the definition of a restructured standard li
    * formatters
      * formatter
      * textwrap
+   * gettext
    * html (replaces/combines htmllib, HTMLParser)
    * sgml (replaces sgmllib)
    * shellsyntax (replaces shlex)
@@ -275,6 +286,8 @@ Some categories may be established at the top level despite their nature suggest
 
 Some modules or sections of functionality can be awkward to categorise. For example, the processing of URLs as attempted by the urlparse module could be placed in various networking categories or in some other category, since URIs/URLs are also used in contexts unrelated to networking and the Internet (eg. in XML namespaces and RDF identifiers). A compromise may therefore be necessary, placing a proposed url module in the net top-level package, for example.
 
+Some categories are difficult to justify from the selection of modules available. For example, an io package (input/output) may contain all modules involving things like streams and files, but it may be the case that such modules belong elsewhere, or perhaps the name of such a top-level package should be more suggestive, such as files or streams, even if such names are arguably too specific or start to cover other topics: a files package might include file metadata processing, too.
+
 == System Packages ==
 
 As noted above, a special "system" ("native" or "platform") package could be established. Care should be taken, however, to avoid filling such a package with other packages that really ought to be disassembled, reorganised or recategorised.
@@ -292,3 +305,5 @@ This is currently a draft, featuring a number of points that should be discussed
  1. Should there be a top-level package representing the entire standard distribution, e.g., "std"?  {{{from std.database import anydbm}}}
     * ''I think the proposed hierarchy (which is obviously tentative) should be at the top level, although the risk of name collisions with independent packages and the issue of how "selfish" the standard library should be ought to be worked out.'' -- PaulBoddie
  2. Should client and server be under net? Would this be too much of the obvious? -- PaulBoddie
+ 3. Should encodings be under text or merged with text? -- PaulBoddie
+ 4. Is the io package too weak? Things like XML parsers do I/O and they're probably best in the text package (or their own top-level package). -- PaulBoddie
