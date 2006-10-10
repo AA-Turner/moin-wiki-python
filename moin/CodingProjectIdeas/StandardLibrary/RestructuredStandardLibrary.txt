@@ -166,7 +166,8 @@ The most natural starting point for the definition of a restructured standard li
    * xmlrpc (replaces xmlrpclib)
  * compiler
    * code (replaces parts of compiler, codeop, py_compile, compileall)
-   * parsing (contains compiler parsing functions)
+   * parsing (contains compiler parsing functions, replaces parser)
+   * lexing (contains symbol, token, tokenize)
  * commandline
    * getopt
    * options (replaces optparse)
@@ -219,6 +220,19 @@ The most natural starting point for the definition of a restructured standard li
    * pickle (replaces/combines cPickle, pickle, copy_reg, pickletools)
    * shelve
  * random
+ * runtime (replaces sys)
+   * atexit
+   * context (replaces contextlib)
+   * fp (replaces fpectl)
+   * gc
+   * importers (replaces imp)
+     * zipimport
+   * inspect
+   * locaters (replaces pkgutil, modulefinder, runpy)
+   * site
+   * traceback
+   * user
+   * warning (replaces warnings)
  * server
    * http (replaces/combines BaseHTTPServer, SimpleHTTPServer)
      * cgi (replaces CGIHTTPServer)
@@ -264,6 +278,10 @@ Some modules or sections of functionality can be awkward to categorise. For exam
 == System Packages ==
 
 As noted above, a special "system" ("native" or "platform") package could be established. Care should be taken, however, to avoid filling such a package with other packages that really ought to be disassembled, reorganised or recategorised.
+
+== Runtime Packages ==
+
+The current standard library has a sys package along with other auxilliary packages which affect the behaviour of the runtime system. It is suggested that these packages be available under the runtime top-level package. Although sys might be a more compatible name with existing programmers' expectations, if that name were to be preserved, the system package would need to take one of the other proposed names instead.
 
 == Editorial Notes ==
 
