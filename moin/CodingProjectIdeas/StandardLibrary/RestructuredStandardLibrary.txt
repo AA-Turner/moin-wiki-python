@@ -105,7 +105,22 @@ In order to simplify the recollection process, names should follow a consistent 
 
 In some situations it may be advisable to retain technical names instead of employing names which obscure the purpose of the module. For example, the base64 module refers to a specific kind of encoding, but any invented descriptive name for this module may prove be verbose and yet fail to accurately communicate the same information.
 
-In a standard library organisation where no encapsulating top-level package exists (eg. std), care must be taken not to conflict with existing or likely independent package names. One potential conflict involves the config package, already registered in the Python Package Index.
+== Top-level Organisation ==
+
+Currently, the standard library "owns" a number of top-level module names; indeed, since the library is relatively flat, a large number of module names are effectively reserved. Here is some anecdotal evidence of the confusion caused when standard library names are inadvertently chosen for other things:
+
+''"Some care is required in picking a name for the application. I thought 'calendar' would be a good name for a test application - but it turns out that this conflicts with the Python calendar library."'' -- [http://www.djangoproject.com/documentation/tutorial1/#c2363 Comment on the Django tutorial]
+
+=== Recommendations ===
+
+In a standard library organisation where no encapsulating top-level package exists (eg. std), care must be taken not to conflict with existing or likely independent package names. One potential conflict involves the config package, already registered in the Python Package Index. A solution may involve minimising the footprint of the library by creating as few packages as possible and by giving those packages distinct, meaningful, and possibly unlikely names.
+
+Alternatively, an encapsulating top-level package could be chosen, with a name like one of the following suggestions:
+
+ * common
+ * lib (or library)
+ * py (or python)
+ * std (or stdlib, standard)
 
 == Module Functionality ==
 
