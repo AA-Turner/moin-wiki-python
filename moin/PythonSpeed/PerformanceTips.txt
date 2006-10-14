@@ -190,7 +190,7 @@ overhead. This is where the
 [http://www.python.org/doc/lib/built-in-funcs.html map] function is handy.
 You can think of {{{map}}} as a {{{for}}} moved into C code. The only
 restriction is that the "loop body" of {{{map}}} must be a function call.
-Note that the {{{map}}} function will be removed in [http://www.python.org/dev/peps/pep-3000/#id38 Python 3000] in favor of list comprehensions.
+Note that the {{{map}}} function will be removed in [http://www.python.org/dev/peps/pep-3000/#id38 Python 3000] in favor of list comprehensions. Besides the syntactic benefit of list comprehensions, they are often as fast or faster than equivilent use of {{{map}}}.
 
 Here's a straightforward example. Instead of looping over a list of
 words and converting them to upper case:
@@ -209,7 +209,7 @@ newlist = map(str.upper, oldlist)
 }}}
 
 List comprehensions were added to Python in version 2.0 as well. They
-provide a syntactically more compact way of writing the above for loop:
+provide a syntactically more compact and more efficient way of writing the above for loop:
 
 {{{
 newlist = [s.upper() for s in oldlist]
