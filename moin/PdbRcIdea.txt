@@ -65,20 +65,32 @@ elif os.name == 'nt':                   # Contributed by Jeff Bauer
 home = os.path.realpath(home) + os.sep
 
 # Try to execute local file (if any) unless we are in the home dir.
-if home != os.path.realpath(os.curdir):
+if home != os.path.realpath(os.curdir) + os.sep:
+    # Avoid recursively loading this file.
     try:
-        execfile("pdbrc.py")
-    except IOError:
-        pass
+        _already_loaded += 1
+    except NameError:
+        _already_loaded = 1
+    if _already_loaded < 3:
+        try:
+            execfile("pdbrc.py")
+        except IOError:
+            pass
 
 # Cleanup any variables that could otherwise clutter up the namespace.
-del atexit
-del home
-del info
-del os
-del pdb
-del readline
-del rlcompleter
+try:
+    del atexit
+    del home
+    del info
+    del os
+    del pdb
+    del readline
+    del rlcompleter
+    # careful here:
+    del _already_loaded
+except NameError:
+    # Probably this is a second pdbrc that has been loaded.
+    pass
 
 print ".pdbrc.py finished"
 }}}
