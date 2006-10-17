@@ -15,9 +15,6 @@ Use execfile() to run a file containing your Python code.
 # local pdbrc.py (no leading dot!) in your working directory if it
 # exists).
 
-# Note that (at least with Python 2.3) this .pdbrc is called twice when you're
-# in your home directory.
-
 # If ~/.pdbrc.py is missing, you get an error message (which doesn't
 # hurt).
 
@@ -51,12 +48,35 @@ def info(type, value, tb):
 
 sys.excepthook = info
 
+# From (on my machine) /usr/local/lib/python2.3/less user.py:
+import os
+home = os.curdir                        # Default
+if 'HOME' in os.environ:
+    home = os.environ['HOME']
+elif os.name == 'posix':
+    home = os.path.expanduser("~/")
+elif os.name == 'nt':                   # Contributed by Jeff Bauer
+    if 'HOMEPATH' in os.environ:
+        if 'HOMEDRIVE' in os.environ:
+            home = os.environ['HOMEDRIVE'] + os.environ['HOMEPATH']
+        else:
+            home = os.environ['HOMEPATH']
 
-# Try to execute local file (if any)
-try:
-    execfile("pdbrc.py")
-except IOError:
-    pass
+# Try to execute local file (if any) unless we are in the home dir.
+if home != os.path.realpath(os.curdir):
+    try:
+        execfile("pdbrc.py")
+    except IOError:
+        pass
+
+# Cleanup any variables that could otherwise clutter up the namespace.
+del atexit
+del home
+del info
+del os
+del pdb
+del readline
+del rlcompleter
 
 print ".pdbrc.py finished"
 }}}
