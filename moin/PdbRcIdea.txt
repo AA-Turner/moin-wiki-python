@@ -61,6 +61,8 @@ elif os.name == 'nt':                   # Contributed by Jeff Bauer
             home = os.environ['HOMEDRIVE'] + os.environ['HOMEPATH']
         else:
             home = os.environ['HOMEPATH']
+# Make sure home always ends with a directory separator:
+home = os.path.realpath(home) + os.sep
 
 # Try to execute local file (if any) unless we are in the home dir.
 if home != os.path.realpath(os.curdir):
