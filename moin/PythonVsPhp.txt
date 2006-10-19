@@ -190,7 +190,7 @@ PHP does not have first-class functions. There are equivalents to Python's map, 
 
 Examples of PHP's schizophrenic function naming: (string functions) stripslashes vs strip_tags; (array functions) array_keys vs asort vs count and shuffle; (variable functions etc) isset vs is_array.
 
-PHP has constants, which are initialized with a totally different syntax than variable assignment. The advantage of constants is that they can be defined only once, allowing you to define sensitive constants in a secure include file, then prevent untrusted code from overriding them. Constants are global: they bypass the scoping rules. One disadvantage is that a constant is a bare word: if you misspell it, you'll silently get a NULL value.
+PHP has constants, which are initialized with a totally different syntax than variable assignment. The advantage of constants is that they can be defined only once, allowing you to define sensitive constants in a secure include file, then prevent untrusted code from overriding them. Constants are global: they bypass the scoping rules. One disadvantage is that a constant is a bare word: if you misspell it, you'll silently get a NULL value (it's not true: you get misspelled name as the value and a "notice" information (usually not displayed)).
 
 Syntax errors show the file and line number, but not the character position. Sometimes the error message is specific, sometimes just "parse error". This leads to staring at the code for a while until you realize you're missing '$' or ';', or you put something besides a semicolon on the END line matching <<<END .
 
