@@ -1,13 +1,15 @@
+= Python vs. PHP =
+
 This page was copied mindlessly from [http://wiki.w4py.org/python-vs-php.html] ([http://72.14.203.104/search?q=cache:bo4LWB1ZHswJ:wiki.w4py.org/python-vs-php.html+php+vs+python&hl=en&gl=us&ct=clnk&cd=1 Google Cache])
 
 ----
 
-Common Ground
+== Common Ground ==
 
 Both PHP and Python:
 
     * are interpreted, high level languages with dynamic typing
-    * are OpenSource (except PHP's ZEND compiler?) ("Zend Compiler" doesn't exist)
+    * are OpenSource (except where various [http://www.zend.com/products Zend products], recommended by some, are employed)
     * are supported by large developer communities
     * are easy to learn (compared to Java, and even Perl)
     * are easy to extend in C, C++ and Java
@@ -15,8 +17,9 @@ Both PHP and Python:
     * support for variable number of function arguments.
     * have the ability to freeze live objects in a string representation (for storing arbitrary objects on disk, moving them over the network, etc); they can then be converted back to identical objects with data intact. PHP's serialize function; Python's pickle and marshal modules. Note that PHP, handling of serialized objects and classes is much weakier and error prone than Python's due to PHP's lack of modules. When an object is serialized, only its attributes are stored, not its methods. Thus, the object's class must be present (with the exact same name) in the script that unserializes it. In Python this is handled automatically via the module/import framework. (this COULD be handled with PHP 5's __autoload(), but is not done automatically)
 
-Compared as Languages
-What does PHP have that Python doesn't?
+== Compared as Languages ==
+
+=== What does PHP have that Python doesn't? ===
 
     * syntax from C and Perl, with lots curly braces and dollar signs
     * the 'switch' statement and 'do ... while' construct
@@ -29,23 +32,26 @@ What does PHP have that Python doesn't?
     * one array type that doubles as a list and a dictionary. Dictionary keys are iterated in their original order.
     * An EXCELLENT on-line and off-line Manual
 
-What does Python have that PHP doesn't?
+=== What does Python have that PHP doesn't? ===
 
-    * a general purpose programming language (not just for the web) (not true PHP has a CLI SAPI, and is embeddable)
+    * a general purpose programming language (not just for the web)
+      * Retort: ''not true PHP has a CLI SAPI, and is embeddable''
     * indentation is used to mark out block structure rather than curly braces
     * namespaces and modules
     * a small core
     * very clear, concise, and orthogonal syntax
     * it is self documenting with docstrings and pydoc (PHP 5 has reflection and doc strings)
     * keyword arguments to functions and methods, easy support for default arguments
-    * true object orientation and 'first class' classes and functions (OO has been completely revamped in PHP 5)
+    * true object orientation and 'first class' classes and functions
+      * Retort: ''OO has been completely revamped in PHP 5''
     * classes are used extensively in the standard library
     * a notion of private attributes (PHP 5 supports this)
     * multiple inheritance
     * object-oriented file handling
     * method chaining
     * excellent introspection (PHP 5 Reflection)
-    * everything is a reference! (references are painful in PHP) (Not in PHP 5)
+    * everything is a reference! (references are painful in PHP)
+      * Retort: ''Not in PHP 5''
     * one 'del' statement for all data types. PHP has 'unset' for variables and something else for array members. (Array members can be unset())
     * consistent case sensitivity (PHP does for variables, but not functions) (Functions are case insensitive)
     * a simple array slicing syntax
@@ -67,7 +73,7 @@ What does Python have that PHP doesn't?
     * maturity, stability and upward-compatibility (PHP is stable, mature and up/backward-compatible) (ahem.. in general PHP applications must be ported between PHP 4, PHP 5 and future PHP 6 with Unicode)
     * tends to lead to much more scalable applications -- importing modules is safer than textually including code as in PHP: global variables are not used to exchange information.
 
-Compared as Web Development Frameworks
+== Compared as Web Development Frameworks ==
 
 Unlike PHP, which has web development features built directly into the core language, Python's web development capabilites are provided by add-on modules. Basic CGI capabilities are provided by the 'cgi' module which comes in Python's standard library. There's also a wide range of third-party modules available for Python; some are complementary, others compete. As a result, Python provides a more flexible base for web development.
 
@@ -75,123 +81,55 @@ There are some adverse side effects of this flexibility. First, the range of cho
 
 Another difference is that PHP is embedded in the web server, whereas Python web applications can either be embedded in the web server like PHP or run in a separate process. Here's a simple classification of Python web development platforms:
 
-    * emdedded in the web server process
-          o Apache modules mod_python and mod_snake embed the Python interpreter in Apache and allow other Apache modules to be written with Python. This is the same idea as mod_perl.
-          o PyWX is an extension to AOLServer that serves the same purpose as the Apache modules above.
-          o MS ASP scripts can be written using Python via Active Scripting Host.
-    * running in a separate process
-          o non-persistent process (a new process is spawned for each request)
-                + custom CGI scripts
-          o persistent process (all requests are sent from the web server to one persistent process)
-                + custom Fast-CGI scripts
-                + 'Application Servers'
-                      # Zope -- comes with its own web server but can also communicate with Apache via the CGI or Fast-CGI protocols.
-                      # Webware? -- works with any web server via CGI. With Apache it can communicate via a custom Fast-CGI like protocol.
-                      # SkunkWeb? -- only works with Apache, communicates via a custom Fast-CGI like protocol.
+ * emdedded in the web server process
+   * Apache modules (eg. mod_python) embed the Python interpreter in Apache and allow other Apache modules to be written with Python. This is the same idea as mod_perl.
+   * PyWX is an extension to AOLServer that serves the same purpose as the Apache modules above.
+   * MS ASP scripts can be written using Python via Active Scripting Host.
+ * running in a separate process
+   * non-persistent process (a new process is spawned for each request)
+     * custom CGI scripts
+   * persistent process (all requests are sent from the web server to one persistent process)
+     * custom Fast-CGI scripts
+     * 'Application Servers' (eg. Zope, Webware, SkunkWeb)
 
-(Note: PHP programs can be run standalone or as ordinary CGI scripts. However, when called indirectly from the web (e.g., from a Perl CGI script), it requires unsetting an undocumented number of web environment variables so that PHP doesn't think it's running from the web and look in the wrong place for the script. Likewise, it's _possible_ to write a long-running server in PHP, but there are precious few examples of it.)
+(Note: PHP programs can be run standalone or as ordinary CGI scripts. However, when called indirectly from the web (eg. from a Perl CGI script), it requires unsetting an undocumented number of web environment variables so that PHP doesn't think it's running from the web and look in the wrong place for the script. Likewise, it's ''possible'' to write a long-running server in PHP, but there are precious few examples of it.)
 
-The vast majority of Python web applications are run in a separate process. This has some important implications. ... to be continued ...
+The vast majority of Python Web applications are run in a separate process. This has some important implications.
 
-... please add your observations
-Python Application Servers
-
-...
-Python Template Engines
-
-...
+== Security ==
 
 Here's some interesting notes on security in PHP: http://www.securereality.com.au/studyinscarlet.txt
-Community Support
 
-PHP
+== Community Support ==
 
-    * huge installed user base, but the figures are probably distorted by shared hosting (Not true. It has PEAR and PECL repository)
-    * low signal-to-noise ratio -- because PHP is so expedient, many of the users are not invested in the technology (or even their own code) or the community (Not true. IBM and Oracle invested in PHP, but IBM and Oracle is neither users nor community)
+=== PHP ===
 
-Python
+    * huge installed user base, but the figures are probably distorted by shared hosting
+      * Retort: ''Not true. It has PEAR and PECL repository''
+    * low signal-to-noise ratio -- because PHP is so expedient, many of the users are not invested in the technology (or even their own code) or the community
+      * Retort: ''Not true. IBM and Oracle invested in PHP, but IBM and Oracle is neither users nor community''
+
+=== Python ===
 
     * sizable, but not huge, installed user base
     * Python Software Foundation
     * lots of specialized interest groups
     * very high signal-to-noise ratio
 
-Commercial Support
+== Commercial Support ==
 
-PHP
+=== PHP ===
 
     * http://www.zend.com
 
-Python
+=== Python ===
 
-    * http://www.zope.com
-    * http://www.activestate.com
-    * http://www.pythonware.com
-    * http://www.archaeopteryx.com
-    * http://www.theKompany.com
-    * http://home.rmi.net/~lutz/mytrain.html
+See the ["CommercialServices"] page for more information.
 
-Documentation
-Core Documentation
+== Documentation ==
 
-Although both PHP and Python have excellent core documentation, Python's is more extensive and generally higher quality. PHP has a large number of translations available. Python doesn't. For PHP see http://www.php.net/docs.php and for Python see http://python.org/doc/ Python allows documentation on modules, classes, and functions to be included in the program code. The documentation becomes an attribute of the module/class/function, accessible from inside of the language itself. Python manual is really awfully structurized and presented compared to PHP manual, which uses cross-links, a lot of colorized examples and invaluable user comments to make it easier to comprehend the magic. PHP manual merges different versions of the language together making it a little bit bloated. 
+Although both PHP and Python have excellent core documentation, Python's is more extensive and generally higher quality. PHP has a large number of translations available. Python doesn't. For PHP see http://www.php.net/docs.php and for Python see http://python.org/doc/ Python allows documentation on modules, classes, and functions to be included in the program code. The documentation becomes an attribute of the module/class/function, accessible from inside of the language itself. Python manual is really awfully structurized and presented compared to PHP manual, which uses cross-links, a lot of colorized examples and invaluable user comments to make it easier to comprehend the magic. PHP manual merges different versions of the language together making it a little bit bloated.
 
-Online Tutorials
+== Editorial Notes ==
 
-For Python see http://python.org/doc/current/tut/tut.html and http://python.org/doc/Newbies.html
-
-For PHP see http://www.devshed.com/Server_Side/PHP/, http://phpbuilder.com and http://zend.com
-Books
-
-For books on PHP see http://php.net/books.php?type_lang=PHP_all . For Python, see http://www.amazon.com/exec/obidos/tg/listmania/list-browse/-/12QMUFII6951W and http://www.awaretek.com/book.html
-Conclusion
-
-...
-Frequently Asked Questions
-
-Q1
-
-    ... what is the best way to build web-based database applications like accounting systems, on Python? i.e. what is the equivalent of ASP pages or PHP pages or JSP pages, for Python?? Shouldn't we be learning THAT instead of PHP???
-
-A1
-
-    There is no simple answer to this question. There are many tools available for doing this in Python. So many that the choices can be bewildering. You're best to think of the tools as falling into two complementary categories: Application Servers (there's probably a better term to use here) and Template Engines.
-
-Application Servers:
-
-    * plain old Python CGI scripts
-    * Zope (includes a Content Management System and a whole lot more)
-    * Webware
-    * SkunkWeb
-    * see http://www.boddie.org.uk/python/web_frameworks.html for more
-
-Templating Engines:
-
-    * Zope's DTML
-    * Zope's Page Templates
-    * Webware's Python Server Pages
-    * Cheetah (integrates with Webware)
-    * Yaptu
-    * SkunkWeb's STML
-    * see http://webware.sourceforge.net/Papers/Templates/ for more.
-
-My personal preference is Apache/Webware/Cheetah. I'll write more about this later. -- TavisRudd? - 23 Nov 2001
-General Discussion
-
-(add your comments here, along with a signature and date)
-
-I haven't used PHP with XML, and I've only used Python with XML a little, but I get the impression Python is much better suited -- specifically because it is strongly types, where PHP is rather weak in its typing (like C). But I can't say from experience
-
--- IanBicking - 26 Nov 2001
-
-To clarify, PHP's types are more dynamic than Python's. All variables are automatically initialized to NULL. It automatically converts between strings, numbers and NULL when a different type is needed for the operation, or with a type case. It also "does something" to convert to/from array and object. '123' -> 123, 'non-numeric' -> 0, NULL -> '', etc. Sometimes all this is convenient, especially when a missing CGI param converts to NULL which converts to '' in the VALUE= attribute, but it also leads to wrong ouput rather than errors if you misspell a variable or key.
-
-PHP does not have first-class functions. There are equivalents to Python's map, reduce, filter, and there's array_walk, but they all take the name of a function rather than the function itself.
-
-Examples of PHP's schizophrenic function naming: (string functions) stripslashes vs strip_tags; (array functions) array_keys vs asort vs count and shuffle; (variable functions etc) isset vs is_array.
-
-PHP has constants, which are initialized with a totally different syntax than variable assignment. The advantage of constants is that they can be defined only once, allowing you to define sensitive constants in a secure include file, then prevent untrusted code from overriding them. Constants are global: they bypass the scoping rules. One disadvantage is that a constant is a bare word: if you misspell it, you'll silently get a NULL value (it's not true: you get misspelled name as the value and a "notice" information (usually not displayed)).
-
-Syntax errors show the file and line number, but not the character position. Sometimes the error message is specific, sometimes just "parse error". This leads to staring at the code for a while until you realize you're missing '$' or ';', or you put something besides a semicolon on the END line matching <<<END .
-
--- MikeOrr - 15 Dec 2001
+Given the copy-and-paste origins of this document, along with the age of the original document, the text has been somewhat incoherent. Several changes have since been made to tidy up the text, drop redundant content (old comments which can be viewed in the original document, links to outdated resources and content found elsewhere in this Wiki), and to focus the remaining content on the actual topic of the page.
