@@ -18,7 +18,7 @@ Este documento está disponible, en el idioma original, en http://www.python.org
 
 Los sockets se usan casi en cualquier parte, pero son una de las tecnología peor comprendidas. Este documento es una panorámica de los sockets. No se trata de un tutorial - debes poner trabajo de tu parte para hacer que todo funcione.  No cubre las cuestiones puntuales (y hay muchas), pero espero que le dé un conocimiento suficiente como para empezar a usarlos decentemente.
 
-Sólo se van a tratar los sockets INET, pero éstos representan el 99\% de los sockets que se usan. Y sólo se hablará de los STREAM sockets - a menos que realmente sepa lo que estás haciendo (en cuyo caso este
+Sólo se van a tratar los sockets INET, pero éstos representan el 99% de los sockets que se usan. Y sólo se hablará de los STREAM sockets - a menos que realmente sepa lo que estás haciendo (en cuyo caso este
 documento no le será útil), conseguirá un comportamiento mejor y más
 rendimiento de un STREAM socket que de cualquier otro.  Intentaré revelar el misterio de qué es un socket, así como las cuestiones relativas a cómo trabajar con sockets bloqueantes y no bloqueantes. Pero empezaré hablando sobre sockets bloqueantes. Necesita saber cómo trabajan los primeros antes de pasar a los sockets no bloqueantes.
 
@@ -70,16 +70,8 @@ servidor web crea un 'socket servidor'.
 
 Un par de cosas a tener en cuenta: cuando se usa
 {{{socket.gethostname()}}} el socket debería ser visible desde el
-
----- /!\ '''Edit conflict - other version:''' ----
 exterior. Si hubiera usado {{{s.bind(('', 80))}}} or
 {{{s.bind(('localhost', 80))}}} or {{{s.bind(('127.0.0.1', 80))}}}
-
----- /!\ '''Edit conflict - your version:''' ----
-exterior. Si hubiera usado {{{s.bind(('', 80))}}} or
-{{{s.bind(('localhost', 80))}}} or {{{s.bind(('127.0.0.1', 80))}}}
-
----- /!\ '''End of edit conflict''' ----
 también tendría un socket servidor, pero solo sería accesible desde la
 misma máquina
 
@@ -105,13 +97,8 @@ Bien, ahora tiene un socket servidor, escuchando en el puerto 80. Ahora entra en
 }}}
 
 
----- /!\ '''Edit conflict - other version:''' ----
-Realmente, hay tres modos en los que este bucle puede trabajar - creando un hilo para manejar {{{clientsocket}}}, o reestructurar esta aplicación para usar sockets no bloqueantes, y ``multiplexar'' entre el socket servidor y uno de los clientsockets activos usando {{{select()}}}. Lo verá más adelante. La cuestión que es importante entender ahora es ésta: esto es \emph{todo} lo que hace un socket servidor. No envía ningún dato. No recibe ningún dato. Simplemente produce un {{{clientsocket}}}. Un socket cliente se crea en respuesta a ''otro'' socket cliente que invoca \code{connect()} al host y puerto al que está vinculado el socket servidor.  Tan pronto como se crea el socket cliente, se vuelve a escuchar en espera de nuevas conexiones.  Los dos clientes son libres de hablar - usan un puerto temporal que se reciclará cuando la conversación termine.
-
----- /!\ '''Edit conflict - your version:''' ----
 Realmente, hay tres modos en los que este bucle puede trabajar - creando un hilo para manejar {{{clientsocket}}}, o reestructurar esta aplicación para usar sockets no bloqueantes, y ''multiplexar'' entre el socket servidor y uno de los clientsockets activos usando {{{select()}}}. Lo verá más adelante. La cuestión que es importante entender ahora es ésta: esto es \emph{todo} lo que hace un socket servidor. No envía ningún dato. No recibe ningún dato. Simplemente produce un {{{clientsocket}}}. Un socket cliente se crea en respuesta a ''otro'' socket cliente que invoca {{{connect()}}} al host y puerto al que está vinculado el socket servidor.  Tan pronto como se crea el socket cliente, se vuelve a escuchar en espera de nuevas conexiones.  Los dos clientes son libres de hablar - usan un puerto temporal que se reciclará cuando la conversación termine.
 
----- /!\ '''End of edit conflict''' ----
 
 === IPC ===
 
