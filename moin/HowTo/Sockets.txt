@@ -70,8 +70,8 @@ servidor web crea un 'socket servidor'.
 
 Un par de cosas a tener en cuenta: cuando se usa
 {{{socket.gethostname()}}} el socket debería ser visible desde el
-exterior. Si hubiera usado \code{s.bind(('', 80))} or
-\code{s.bind(('localhost', 80))} or \code{s.bind(('127.0.0.1', 80))}
+exterior. Si hubiera usado {{{s.bind(('', 80))}}} or
+{{{s.bind(('localhost', 80))}}} or {{{s.bind(('127.0.0.1', 80))}}}
 también tendría un socket servidor, pero solo sería accesible desde la
 misma máquina
 
@@ -96,7 +96,7 @@ Bien, ahora tiene un socket servidor, escuchando en el puerto 80. Ahora entra en
         ct.run()
 }}}
 
-Realmente, hay tres modos en los que este bucle puede trabajar - creando un hilo para manejar \code{clientsocket}, o reestructurar esta aplicación para usar sockets no bloqueantes, y ``multiplexar'' entre el socket servidor y uno de los clientsockets activos usando {{{select()}}}. Lo verá más adelante. La cuestión que es importante entender ahora es ésta: esto es \emph{todo} lo que hace un socket servidor. No envía ningún dato. No recibe ningún dato. Simplemente produce un \code{clientsocket}. Un socket cliente se crea en respuesta a \emph{otro} socket cliente que invoca \code{connect()} al host y puerto al que está vinculado el socket servidor.  Tan pronto como se crea el socket cliente, se vuelve a escuchar en espera de nuevas conexiones.  Los dos clientes son libres de hablar - usan un puerto temporal que se reciclará cuando la conversación termine.
+Realmente, hay tres modos en los que este bucle puede trabajar - creando un hilo para manejar {{{clientsocket}}}, o reestructurar esta aplicación para usar sockets no bloqueantes, y ``multiplexar'' entre el socket servidor y uno de los clientsockets activos usando {{{select()}}}. Lo verá más adelante. La cuestión que es importante entender ahora es ésta: esto es \emph{todo} lo que hace un socket servidor. No envía ningún dato. No recibe ningún dato. Simplemente produce un {{{clientsocket}}}. Un socket cliente se crea en respuesta a ''otro'' socket cliente que invoca \code{connect()} al host y puerto al que está vinculado el socket servidor.  Tan pronto como se crea el socket cliente, se vuelve a escuchar en espera de nuevas conexiones.  Los dos clientes son libres de hablar - usan un puerto temporal que se reciclará cuando la conversación termine.
 
 === IPC ===
 
