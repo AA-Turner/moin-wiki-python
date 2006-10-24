@@ -120,7 +120,7 @@ transformar su socket cliente en algo similar a un fichero y usar
 {{{read()}}} y {{{write()}}}. Esta última forma es la que usa Java en sus sockets. No vamos a tratar ese tema aquí, excepto para advertir de la necesidad de usar {{{flush()}}} en los sockets. Hay ''ficheros'' buffereados, y un error habitual es escribir algo, y a continuación leer la respuesta. Si no se hace {{{flush()}}}, puede que tenga que esperar para siempre, porque la petición sigue en el buffer de salida.
 
 Ahora llegamos al mayor tropiezo de los sockets -  {{{send()}}} y
-{{{recv()}}} operan en buffers de red.  No tratan necesariamente todos los bytes que se les entrega (o se espera de ellos), porque ellos están más preocupados de gestionar los buffers de red. En general, retornan cuando los buffers de red asociados se han llenado ({{e{send()}}}) o vaciado ({{{recv()}}}). Es en esos momentos cuando informan de cuantos bytes han tratado. Es su responsabilidad invocar de nuevo hasta que el mensaje se haya aceptado completamente.
+{{{recv()}}} operan en buffers de red.  No tratan necesariamente todos los bytes que se les entrega (o se espera de ellos), porque ellos están más preocupados de gestionar los buffers de red. En general, retornan cuando los buffers de red asociados se han llenado ({{{send()}}}) o vaciado ({{{recv()}}}). Es en esos momentos cuando informan de cuantos bytes han tratado. Es su responsabilidad invocar de nuevo hasta que el mensaje se haya aceptado completamente.
 
 Cuando una llamada a {{{recv()}}} devuelve 0 bytes, significa que el
 otro lado ha cerrado (o está cerrando) la conexión. No recibirá más
@@ -256,7 +256,7 @@ hace después de crear el socket, pero antes de usarlo. Realmente, si
 está un poco chiflado, puede cambiar entre un modo y otro
 
 La diferencia más importante es que {{{send()}}}, {{{recv()}}},
-{{{connect()}}} y {{{accept()}} puede volver sin haber hecho
+{{{connect()}}} y {{{accept()}}} puede volver sin haber hecho
 nada. Hay, por supuesto, varias alternativas. Puede comprobar el valor de retorno y el código de error y generalmente volverse loco. Si no lo
 cree, debería intentarlo alguna vez. Su aplicación pronto será grande,
 pesada y llena de errores. De modo que pasemos de las soluciones
@@ -306,7 +306,7 @@ embargo, esto no ayuda con el problema de determinar si el otro extremo ha termi
 
 '''Advertencia de portabilidad''': En UNIX, {{{select()}}}
 funciona tanto con sockets como con ficheros. No intente esto en
-Windows. En Windows, {{{select()}} sólo funciona con sockets. También
+Windows. En Windows, {{{select()}}} sólo funciona con sockets. También
 debe notar que en C, muchas de las opciones avanzadas con sockets son
 diferentes en Windows. De hecho, en Windows normalmente se usan hilos
 (que funcionan muy bien) con sockets. Si quiere rendimiento, su código
