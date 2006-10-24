@@ -69,7 +69,7 @@ servidor web crea un 'socket servidor'.
 }}}
 
 Un par de cosas a tener en cuenta: cuando se usa
-\code{socket.gethostname()} el socket debería ser visible desde el
+{{{socket.gethostname()}}} el socket debería ser visible desde el
 exterior. Si hubiera usado \code{s.bind(('', 80))} or
 \code{s.bind(('localhost', 80))} or \code{s.bind(('127.0.0.1', 80))}
 también tendría un socket servidor, pero solo sería accesible desde la
@@ -79,7 +79,7 @@ Una segunda cuestión: los puertos con número bajo normalmente están
 reservados para servicios 'bien conocidos' (HTTP; SNMP, etc). Si está
 experimentando, use un número alto (4 dígitos)
 
-Finalmente, el argumento de \code{listen} le dice a la librería socket
+Finalmente, el argumento de listen() le dice a la librería socket
 que quiere encolar un máximo de 5 peticiones de conexión (lo normal)
 antes de rechazar conexión externas. Si el resto del código está bien
 escrito, debería ser suficiente.
