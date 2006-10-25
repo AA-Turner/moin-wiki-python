@@ -230,6 +230,45 @@ T& t = extract<T&>(pyt);
 
 See ["../extract"]
 
+=== SWIG exposed C++ object from Python ===
+
+This is how SWIG encapsulates Pointers in Python
+{{{
+struct PySwigObject {
+    PyObject_HEAD 
+    void * ptr;
+    const char * desc;
+};
+}}}
+
+We use this function to extract the Pointer from the Python object
+{{{
+void* extract_swig_wrapped_pointer(PyObject* obj)
+{
+    char thisStr[] = "this";
+    //first we need to get the this attribute from the Python Object
+    if (!PyObject_HasAttrString(obj, thisStr))
+        return NULL;
+        
+    PyObject* thisAttr = PyObject_GetAttrString(obj, thisStr);
+    if (thisAttr == NULL)
+        return NULL;
+    //This Python Object is a SWIG Wrapper and contains our pointer
+    return (((PySwigObject*)thisAttr)->ptr);
+}
+}}}
+
+This call ensures that for objects of type SWIGClass our converter function will be used.
+{{{
+boost::python::converter::registry::insert(&extract_swig_wrapped_pointer, type_id<SWIGExposedClass>());
+}}}
+
+We can then have a normal exposed function take our SWIGExposedClass
+{{{
+void foo(SWIGExposedClass* x)
+{...}
+}}}
+
 === multithreading support for my function ===
 The best way to safely unblock Python threads is to write a
 thin wrapper around your function which uses Py_BEGIN_ALLOW_THREADS
