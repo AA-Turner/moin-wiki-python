@@ -543,3 +543,20 @@ Ah, okay. Thanks. Then I would suggest updating the documentation instead.
 
 == Unicode identifier ==
 If Perl, dot Net, StarBasic and Java have unicode ientifier support, will python one day have it?
+
+== Remove support for complex numbers ==
+Complex numbers are almost never used by casual programmers and integration into python core provide only one tiny syntaxic sugar: 
+{{{#!python
+# you can write a complex number
+x = 10+5j
+# instead of
+x = 10+5*j
+# or
+x = complex(10,5)
+}}}
+So I suggest to move complex data type and cmath module to an external library (SciPy for sample). 
+
+== Reserve some keywords for futur extensions ==
+Some PEPs which are not ready for Python 3.0 will need new keywords. Reserving them in Python 3.0 will provide better backward compatibility in Python 3.x. Of curse, this should only be done for PEPs wich have good chances to be accepted.
+
+This reserved keywords could be: switch, case, make ... 
