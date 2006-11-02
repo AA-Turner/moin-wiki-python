@@ -6,7 +6,7 @@ For more information about sprints in general, read the SprintIntroduction page.
 
 == Location ==
 
-[http://www.bivio.biz bivio Software, Inc.], 28th and Iris. Above Hair Elite in Suite S. [http://maps.google.com/maps?f=q&hl=en&q=2701+Iris+Ave.,+Boulder+CO&ie=UTF8&z=15&om=1&iwloc=A Google Maps link]
+[http://www.bivio.biz/ bivio Software, Inc.], 28th and Iris. Above Hair Elite in Suite S. [http://maps.google.com/maps?f=q&hl=en&q=2701+Iris+Ave.,+Boulder+CO&ie=UTF8&z=15&om=1&iwloc=A Google Maps link]
 
 Thanks to Alex Viggio, Eric Dobbs, and Rob Nagler of bivio for generously providing us this sprint space.
 
@@ -21,15 +21,39 @@ Specifically, we would like to build on the good work already done by the Django
 The bug report stipulating Oracle support by Django version 1.0 is here:
 http://code.djangoproject.com/ticket/1990
 
+== Preliminary Tasks ==
+(Many of these are refinements and performance improvements that we won't get to, since we're focused only on correct behavior right now.  But several of us reviewed the code and didn't want to lose any feedback.  After the sprint, we will enter the outstanding issues in [http://code.djangoproject.com/newticket the Django project Trac].)
+
+ * CREATE [SEQUENCE|CONSTRAINTS] gets logged twice
+ * backend creates LONG columns, should use LOBs instead
+ * backend may create two LONG columns, but Oracle allows one per table (don't use LONG columns..)
+ * In "syncdb", foreign keys should be created as a second pass after table creation, using ALTER statements.  Otherwise the DDL will reference tables not yet created, and Oracle throws errors.
+ * Primary key "id" column (AutoField) is NUMBER(38) in creation.py.  Does it need to be that large?
+ * "syncdb" should always create indexes for foreign key columns, or Oracle will optimize poorly
+ * "syncdb" doesn't check for table existence before running table creation SQL?
+ * FormatStylePlaceholderCursor object: is it needed?  We thought cx_Oracle already did named params...
+ * fulltext search isn't supported
+ * Use INSTR instead of costly LIKE for the endswith construct (LIKE %s) ?
+ * get_indexes() and get_relations() unimplemented.  Use USER_CONSTRAINTS and USER_INDEXES from Oracle.
+ * SlugField, PhoneNumberField, etc., use VARCHAR and CHAR, but all should use VARCHAR2 consistently.
+ * TimeField should use "INTERVAL DAY TO SECOND" datatype
+ * NullBooleanField should be NUMBER(1) like BooleanField, not NUMBER(38)
+ * Don't use Oracle's non-native Integer and SmallInteger types, which result in a NUMBER(38).
+ * XmlField unimplemented, although Oracle now has native support for this.
+ * In db/models/base.py, should use COUNT(*) instead of Oracle LIMIT 1 conditional test
+ * Create a function-based index on lower() columns, or else check if DB is Oracle 10g
+ * move query.py oracle tests out to the db module
+ * Which versions of Oracle do we need to support?  (9i and 10g, hopefully, although old versions of cx_Oracle still support 8i)
+
 == Participants ==
 
  0. Jim Baker
- 0. Matt Boersma, Aries
+ 0. Matt Boersma, Ares
  0. Eric Dobbs
  0. Ian Kelly
  0. Matt Drew, Capricorn
  0. Michelle Cyr, Cancer
- 0. Jacob Kaplan-Moss, one of the original Django developers!
+ 0. Jacob Kaplan-Moss, lead Django developer
  0. Malcolm Tredinnick (working remotely from Sydney)
 
 == Post Sprint Party ==
