@@ -24,14 +24,14 @@ http://code.djangoproject.com/ticket/1990
 == Preliminary Tasks ==
 (Many of these are refinements and performance improvements that we won't get to, since we're focused only on correct behavior right now.  But several of us reviewed the code and didn't want to lose any feedback.  After the sprint, we will enter the outstanding issues in [http://code.djangoproject.com/newticket the Django project Trac].)
 
- * Use ROWNUM, not LIMIT 1
+ * Use ROWNUM, not LIMIT 1. Oracle guru Tom Kyte addresses this in a recent [http://www.oracle.com/technology/oramag/oracle/06-sep/o56asktom.html article] in Oracle magazine. It boils down to using a doubly nested subquery.
  * Create LOB columns out-of-line
  * Need a way to explicitly specify TABLESPACE for table creation
  * CREATE [SEQUENCE|CONSTRAINTS] gets logged twice
- * backend creates LONG columns, should use LOBs instead
- * backend may create two LONG columns, but Oracle allows one per table (don't use LONG columns..)
+ * backend creates LONG columns, should use CLOBs instead
+ * backend may create two LONG columns, but Oracle allows one per table (don't use LONG columns... solved by using CLOBs)
  * In "syncdb", foreign keys should be created as a second pass after table creation, using ALTER statements.  Otherwise the DDL will reference tables not yet created, and Oracle throws errors.
- * Primary key "id" column (AutoField) is NUMBER(38) in creation.py.  Does it need to be that large?
+ * Primary key "id" column (AutoField) is NUMBER(38) in creation.py.  Does it need to be that large? No it doesn't.
  * "syncdb" should always create indexes for foreign key columns, or Oracle will optimize poorly
  * "syncdb" doesn't check for table existence before running table creation SQL?
  * FormatStylePlaceholderCursor object: is it needed?  We thought cx_Oracle already did named params...
@@ -49,6 +49,7 @@ http://code.djangoproject.com/ticket/1990
  * Which versions of Oracle do we need to support?  (9i and 10g, hopefully, although old versions of cx_Oracle still support 8i)
  * Good comment from Winston Lee: "I think the biggest issue is the restriction of only one LONG field type on a table. This means that NCLOB will need to be used for TextField? in creation.py. cx_Oracle will then return NCLOB field as a cx_Oracle.LOB. I thought that it would be possible to use cx_Oracle.Connection.register to hook into the return and read the LOB object but it should really be a lazy fetch."
  * Add more Monty Python references to the code.
+
 == Participants ==
 
  0. Jim Baker
