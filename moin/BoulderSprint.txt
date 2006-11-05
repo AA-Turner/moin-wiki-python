@@ -27,21 +27,21 @@ http://code.djangoproject.com/ticket/1990
  * Use ROWNUM, not LIMIT 1. Oracle guru Tom Kyte addresses this in a recent [http://www.oracle.com/technology/oramag/oracle/06-sep/o56asktom.html article] in Oracle magazine. It boils down to using a doubly nested subquery.
  * Create LOB columns out-of-line
  * Need a way to explicitly specify TABLESPACE for table creation
- * CREATE [SEQUENCE|CONSTRAINTS] gets logged twice
- * backend creates LONG columns, should use CLOBs instead
- * backend may create two LONG columns, but Oracle allows one per table (don't use LONG columns... solved by using CLOBs)
+ * (Done) CREATE [SEQUENCE|CONSTRAINTS] gets logged twice
+ * (Done) backend creates LONG columns, should use CLOBs instead
+ * (Done) backend may create two LONG columns, but Oracle allows one per table (don't use LONG columns... solved by using CLOBs)
  * In "syncdb", foreign keys should be created as a second pass after table creation, using ALTER statements.  Otherwise the DDL will reference tables not yet created, and Oracle throws errors.
- * Primary key "id" column (AutoField) is NUMBER(38) in creation.py.  Does it need to be that large? No it doesn't.
+ * (Done) Primary key "id" column (AutoField) is NUMBER(38) in creation.py.  Does it need to be that large? No it doesn't.
  * "syncdb" should always create indexes for foreign key columns, or Oracle will optimize poorly
  * "syncdb" doesn't check for table existence before running table creation SQL?
- * FormatStylePlaceholderCursor object: is it needed?  We thought cx_Oracle already did named params...
+ * (Done--as is) FormatStylePlaceholderCursor object: is it needed?  We thought cx_Oracle already did named params...
  * fulltext search isn't supported
  * Use INSTR instead of costly LIKE for the endswith construct (LIKE %s) ?
- * get_indexes() and get_relations() unimplemented.  Use USER_CONSTRAINTS and USER_INDEXES from Oracle.
- * SlugField, PhoneNumberField, etc., use VARCHAR and CHAR, but all should use VARCHAR2 consistently.
+ * (Partially done) get_indexes() and get_relations() unimplemented.  Use USER_CONSTRAINTS and USER_INDEXES from Oracle.
+ * (Done) SlugField, PhoneNumberField, etc., use VARCHAR and CHAR, but all should use VARCHAR2 consistently.
  * TimeField should use "INTERVAL DAY TO SECOND" datatype
- * NullBooleanField should be NUMBER(1) like BooleanField, not NUMBER(38)
- * Don't use Oracle's non-native Integer and SmallInteger types, which result in a NUMBER(38).
+ * (Done) NullBooleanField should be NUMBER(1) like BooleanField, not NUMBER(38)
+ * (Done) Don't use Oracle's non-native Integer and SmallInteger types, which result in a NUMBER(38).
  * XmlField unimplemented, although Oracle now has native support for this.
  * In db/models/base.py, should use COUNT(*) instead of Oracle LIMIT 1 conditional test
  * Create a function-based index on lower() columns, or else check if DB is Oracle 10g
