@@ -9,3 +9,12 @@ However, I would like my Python script to run in a secured sandbox that would no
 Also, I would like to be able to call compiled programs to do work (distribute a compiled C++ module to use hard hard hard calculations as a program, then pass the program parameters to do the work, then retrieve the values from standard out, etc); but again, the compiled programs would be "untrustworthy" and would need to be sandboxed somehow.
 
 And thoughts that could help along with this would be great!  Thanks.
+
+== Some ideas about sandboxing Python ==
+
+Here are some ideas that you might consider; note that not all of them will be appropriate for some kinds of environments or systems:
+
+ * Use ["Jython"] and try and use the Java platform to lock down the program's privileges. It should be possible to run Jython programs as applets, if implemented appropriately.
+ * Have some kind of mechanism that builds a chroot jail for your software, perhaps using [http://www.wiredyne.com/software/chrootbuilder.html chrootbuilder] - a Python program which defines chroot jails and emits shell scripts which set them up.
+
+Unfortunately, CPython's restricted execution capabilities (rexec, Bastion) were deprecated after it was discovered that improved introspection capabilities had rendered their mechanisms ineffective. By using an alternative runtime (ie. ["Jython"]) or operating system features (eg. chroot jails), you may actually be utilising a better solution, however. -- PaulBoddie
