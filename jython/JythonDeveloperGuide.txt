@@ -134,6 +134,14 @@ if [%1] == [] goto end
 :: fill in <placeholders> below:
 java -Dpython.home=<path to dist directory>\\dist -jar <path to dist directory>\dist\jython.jar %ARGS%
 }}}
+
+On Unix you can use a shell script: {{{
+#!/bin/sh
+
+exec java -Dpython.home=<path>/dist/ -jar <path>/dist/jython.jar $*
+}}}
+
+
 Now you're ready to run tests...
 
   * There are a couple different places to find test cases
