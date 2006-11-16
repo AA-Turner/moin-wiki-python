@@ -19,21 +19,11 @@ This is an introduction to developing Jython, just to get someone started. It do
   * available on most *nix systems or with cygwin on Windows
   * GUI clients are available on most platforms
   * Eclipse users, see JythonDeveloperGuide/EclipseNotes
-  * can browse the current source archive at http://svn.sourceforge.net/viewcvs.cgi/jython/
+  * can browse the current source archive at http://fisheye3.cenqua.com/browse/jython
     
   * to obtain the a copy of the ''current development'' source, checkout from trunk:
     {{{   
     svn co https://svn.sourceforge.net/svnroot/jython/trunk/jython
-    }}}
-
-  For ''2.1 Stable'', the last stable release:
-    {{{   
-    svn co https://svn.sourceforge.net/svnroot/jython/tags/Release_2_1/jython
-    }}}
-
-  For ''2.2 Alpha 1'', the last alpha release:
-    {{{   
-    svn co https://svn.sourceforge.net/svnroot/jython/tags/Release_2_2alpha1/jython
     }}}
 
   For ''2.3'', the development branch the next version:
@@ -45,17 +35,7 @@ This is an introduction to developing Jython, just to get someone started. It do
 
 '''  Python '''
 
-  * http://www.python.org/2.2.3/
-  * Jython uses Python's standard library where possible. This means you will need a working copy of Python source files for the stdlib. We currently use Python 2.2 so you can grab the files from here if you don't already have 2.2 installed.
-
-
-''' JavaCC '''
-
-  * https://javacc.dev.java.net/
-  * Parser generator for Java. Generally needed only for working on parser.
-  * It's not really required that you install this so I'd skip it.
-  * The latest version is JDK 1.5 compatible (uses 'e' rather than 'enum' as variable name).
-
+  * Jython uses the py files Python's standard library where possible. This means you will need a working copy of Python source files for the stdlib. The trunk uses Python 2.2 so you can grab the files from the source distribution [http://www.python.org/download/releases/2.2.3/ here] if you don't already have 2.2 installed.  If you're going to work on the 2.3 branch, you'll want the release from [http://www.python.org/download/releases/2.3.6/ here].
 
 ''' Ant '''
 
@@ -94,21 +74,8 @@ This is an introduction to developing Jython, just to get someone started. It do
 
     python.lib=/usr/lib/python2.2/lib-old
     }}}
+  * After getting Ant setup, run ''ant'' in your Jython checkout directory.  That should produce ''dist/jython.jar'' if everything is setup correctly. 
 
-''' Jars '''
-
-  * Jython uses many optional jars
-  * These are not required for building locally but are for deployment with the installer
-  * The ant script takes care of conditional compilation
-
-''' IDEs '''
-
-  * Any Java IDE will work
-    * IntelliJ
-    * Eclipse see /EclipseNotes
-    * NetBeans see /NetbeansGuide
-    * Vim
-    * ...
 
 ''' Tests '''
  After you've built the project, you may want to set up an excutable file on your path to make it easy to launch your build of jython. This file will need to:
@@ -145,18 +112,16 @@ exec java -Dpython.home=<path>/dist/ -jar <path>/dist/jython.jar $*
 Now you're ready to run tests...
 
   * There are a couple different places to find test cases
-    * Jython's Lib/test
-    * Jython's bugtests repository
-    * Python2.2's Lib/test
-  * Run the particular test or you can run the whole suite by running `regrtest.py` with the `-a` option
+    * Jython's dist/Lib/test
+    * Jython's bugtests repository(''svn co https://svn.sourceforge.net/svnroot/jython/trunk/bugtests'' to get this)
+  * Run a particular test or you can run the whole Python tes tsuite by running `dist/Lib/regrtest.py` with the `-a` option
 
 ''' Directory layout '''
 Note the following describes the current trunk. If you are working from an older tag, src doesn't exist and src/com and src/org are moved up a level. 
 
   * src/com   : zxJDBC related sources"
   * Demo      : demo sources for the website and such"
-  * Doc       : the website documentation"
-  * installer : the current installer which apparently no longer works"
+  * Doc       : the website documentation(the current website actually lives in https://svn.sourceforge.net/svnroot/jython/trunk/website)"
   * Lib       : the python source files for Jython standard library implementations
   * Lib/test  : test cases
   * Misc      : random scripts which are not all used; some generate source
@@ -172,6 +137,3 @@ Note the following describes the current trunk. If you are working from an older
 ''' Other Stuff '''
 
  * /WebsiteBuilderSetup : How to get the pieces setup to edit and build the Jython website
-
-
-  
