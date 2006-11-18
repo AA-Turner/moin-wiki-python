@@ -54,3 +54,9 @@ Last duration: 0.0160000324249
 -- -- MikeRovner [[DateTime(2005-08-02T10:19:06Z)]]
 
  Mike, that code generates a very different (and much shorter) s. Note how the original code takes the half of the ''preconcatenated'' s, making the size grow exponentially (which generates megabytes of data). -- JürgenHermann [[DateTime(2005-08-30T18:44:05Z)]]
+
+
+-- -- DavidFord [[DateTime(2005-10-18T10:19:06Z)]]
+A few notes (your mileage may vary - this is a 4Mb file being stripped of unprintable characters)
+ * Regex replacement rather than creating a list and joining it is 2.5x faster than the tooling above
+ * This is far slower than the equivalent Java code (around 4x slower) using String.charAt() and StringBuffers
