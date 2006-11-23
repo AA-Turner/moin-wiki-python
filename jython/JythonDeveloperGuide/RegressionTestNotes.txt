@@ -1,0 +1,972 @@
+= Results of running the regrtest.py on a 2.3 branch =
+I'm not sure how much use this will be, so feel free to edit/delete any/all of it if that's felt necessary!
+
+== Environment, etc ==
+This was undertaken on WinXP, with JDK 1.4.2, on a up-to-date (23-Nov-06) checkout of the 2.3 SVN branch.
+(https://svn.sourceforge.net/svnroot/jython/branches/2.3)
+
+== Notes ==
+Picket tests take a long time, so you might want to exclude them if you've not got long!
+I thought they were hanging & excluded test_cpickle, but left test_pickle and, given a long time, it completed.
+== Results Summary ==
+{{{
+106 tests OK.
+87 tests skipped:
+    test_aepack test_al test_asynchat test_audioop test_bsddb
+    test_bsddb185 test_bsddb3 test_bz2 test_capi test_cd test_cl
+    test_cmath test_codeccallbacks test_codeop test_commands
+    test_crypt test_csv test_curses test_dbm test_dl test_dummy_thread
+    test_dummy_threading test_email test_email_codecs test_fcntl
+    test_filecmp test_fork1 test_gc test_gdbm test_getargs2
+    test_gettext test_gl test_grp test_heapq test_hotshot test_imageop
+    test_imgfile test_import test_ioctl test_itertools
+    test_linuxaudiodev test_locale test_logging test_longexp
+    test_macfs test_macostools test_mmap test_mpz test_nis
+    test_normalization test_openpty test_optparse test_ossaudiodev
+    test_parser test_plistlib test_poll test_posix test_pty test_pwd
+    test_pyexpat test_regex test_resource test_rgbimg test_robotparser
+    test_rotor test_scriptpackages test_select test_signal
+    test_socket_ssl test_socketserver test_stringprep test_strop
+    test_strptime test_sunaudiodev test_sundry test_symtable
+    test_tarfile test_timeout test_timing test_unicode_file
+    test_univnewlines test_urllibnet test_wave test_weakref
+    test_winreg test_winsound test_zipimport
+35 skips unexpected on java1.4.2_09:
+    test_dummy_thread test_normalization test_posix test_macostools
+    test_getargs2 test_bsddb185 test_ossaudiodev test_zipimport
+    test_ioctl test_filecmp test_plistlib test_scriptpackages
+    test_bsddb3 test_macfs test_itertools test_csv test_tarfile
+    test_mpz test_resource test_import test_codeccallbacks test_bz2
+    test_strptime test_univnewlines test_aepack test_urllibnet
+    test_codeop test_weakref test_heapq test_logging test_timeout
+    test_robotparser test_optparse test_stringprep
+    test_dummy_threading
+76 tests failed:
+    test_StringIO test___all__ test_atexit test_binascii test_bool
+    test_builtin test_codecs test_coercion test_complex test_copy
+    test_descr test_descrtut test_dis test_doctest test_dumbdbm
+    test_eof test_exceptions test_extcall test_file test_fileinput
+    test_format test_frozen test_generators test_getopt test_gzip
+    test_hexoct test_hmac test_imp test_inspect test_isinstance
+    test_largefile test_long_future test_mailbox test_marshal
+    test_mhlib test_module test_mutants test_netrc test_new
+    test_operator test_os test_pep263 test_pep277 test_pickle
+    test_pickletools test_pkg test_pkgimport test_popen test_popen2
+    test_posixpath test_profilehooks test_pyclbr test_random
+    test_richcmp test_sax test_sha test_shutil test_slice
+    test_softspace test_sort test_str test_syntax test_sys
+    test_tempfile test_textwrap test_threaded_import test_trace
+    test_ucn test_unicode test_unicodedata test_urllib test_userstring
+    test_uu test_xpickle test_zipfile test_zlib
+61 fails unexpected on java1.4.2_09:
+    test_fileinput test_imp test_pep263 test_getopt test_userstring
+    test_mailbox test_hmac test_pkg test_generators test_module
+    test___all__ test_syntax test_ucn test_unicodedata test_gzip
+    test_extcall test_copy test_exceptions test_file test_shutil
+    test_hexoct test_doctest test_isinstance test_format test_popen2
+    test_sort test_xpickle test_pickletools test_codecs test_textwrap
+    test_str test_binascii test_largefile test_bool test_sha
+    test_builtin test_mutants test_sax test_coercion test_operator
+    test_mhlib test_tempfile test_netrc test_slice test_StringIO
+    test_os test_complex test_sys test_popen test_posixpath test_dis
+    test_richcmp test_pep277 test_zipfile test_dumbdbm test_softspace
+    test_eof test_unicode test_inspect test_urllib test_random
+}}}
+
+== Missing modules ==
+{{{
+aepack al asyncore audioop bsddb bsddb185 bz2 _testcapi(capi) cd cl cmath 
+unicodedata crypt csv curses dbm dl dummy_thread dummy_threading locale 
+fcntl filecmp gc gdbm _testcapi(getargs2) gettext gl grp heapq hotshot 
+imageop imgfile os itertools locale select macfs macostools mmap mpz nis 
+unicodedata optparse parser plistlib select pty pwd pyexpat regex resource 
+rgbimg robotparser rotor aetools select signal stringprep strop locale 
+sunaudiodev select _symtable tarfile timing wave gc _winreg winsound 
+zipimport
+}}}
+
+== Raw Log ==
+{{{
+test_grammar
+test_opcodes
+test_operations
+test_builtin
+test test_builtin failed -- errors occurred in test_builtin.BuiltinTest
+test_exceptions
+test test_exceptions produced unexpected output:
+**********************************************************************
+*** mismatch between line 13 of expected output and line 13 of actual output:
+- 'spam'
+? -    -
++ spam
+**********************************************************************
+test_types
+test_MimeWriter
+test_StringIO
+test test_StringIO failed -- errors occurred; run in verbose mode for details
+test___all__
+test test___all__ failed -- Traceback (most recent call last):
+  File "D:\Work\JythonDev\dist\Lib\unittest.py", line 229, in __call__
+  File "D:\Work\JythonDev\dist\Lib\test\test___all__.py", line 88, in test_all
+  File "D:\Work\JythonDev\dist\Lib\test\test___all__.py", line 41, in check_all
+  File "D:\Work\JythonDev\dist\Lib\test\test_support.py", line 180, in verify
+TestFailed: dis has no __all__ attribute
+
+test___future__
+test_aepack
+test_aepack skipped -- no module named aepack
+test_al
+test_al skipped -- no module named al
+test_anydbm
+test_array
+test_asynchat
+test_asynchat skipped -- no module named asyncore
+test_atexit
+test test_atexit crashed -- java.lang.IllegalArgumentException: java.lang.IllegalArgumentException
+test_audioop
+test_audioop skipped -- no module named audioop
+test_augassign
+test_base64
+test_bastion
+test_binascii
+test test_binascii failed -- errors occurred in test_binascii.BinASCIITest
+test_binhex
+test_binop
+test_bisect
+test_bool
+test test_bool failed -- errors occurred in test_bool.BoolTest
+test_bsddb
+test_bsddb skipped -- no module named bsddb
+test_bsddb185
+test_bsddb185 skipped -- no module named bsddb185
+test_bsddb3
+test_bsddb3 skipped -- Use of the `bsddb' resource not enabled
+test_bufio
+test_bugfixes
+test_bz2
+test_bz2 skipped -- no module named bz2
+test_calendar
+test_call
+test_capi
+test_capi skipped -- no module named _testcapi
+test_cd
+test_cd skipped -- no module named cd
+test_cfgparser
+test_cgi
+test_charmapcodec
+test_cl
+test_cl skipped -- no module named cl
+test_class
+test_cmath
+test_cmath skipped -- no module named cmath
+test_codeccallbacks
+test_codeccallbacks skipped -- no module named unicodedata
+test_codecs
+test test_codecs failed -- Traceback (most recent call last):
+  File "D:\Work\JythonDev\dist\Lib\unittest.py", line 229, in __call__
+  File "D:\Work\JythonDev\dist\Lib\test\test_codecs.py", line 318, in test_nameprep
+  File "D:\Work\JythonDev\dist\Lib\encodings\idna.py", line 3, in ?
+ImportError: no module named stringprep
+
+test_codeop
+test_codeop skipped -- cannot import name PyCF_DONT_IMPLY_DEDENT
+test_coercion
+test test_coercion produced unexpected output:
+**********************************************************************
+*** mismatch between line 523 of expected output and line 523 of actual output:
+- [1] *= <MethodNumber 1> => [1]
++ [1] *= <MethodNumber 1> ... exceptions.TypeError
+*** mismatch between line 535 of expected output and line 535 of actual output:
+- [1] *= <CoerceNumber 2> => [1, 1]
++ [1] *= <CoerceNumber 2> ... exceptions.TypeError
+**********************************************************************
+test_commands
+test_commands skipped -- Not posix; skipping test_commands
+test_compare
+test_compile
+test_complex
+test test_complex failed -- errors occurred in test_complex.ComplexTest
+test_contains
+test_cookie
+test_copy
+test test_copy failed -- errors occurred in test_copy.TestCopy
+test_copy_reg
+test_crypt
+test_crypt skipped -- no module named crypt
+test_csv
+test_csv skipped -- no module named csv
+test_curses
+test_curses skipped -- no module named curses
+test_datetime
+test_dbm
+test_dbm skipped -- no module named dbm
+test_descr
+test test_descr crashed -- java.lang.NullPointerException: java.lang.NullPointerException
+test_descrtut
+*****************************************************************
+Failure in example:
+pprint.pprint(dir(list))    # like list.__dict__.keys(), but sorted
+from line #30 of test_descrtut.__test__.tut3
+Expected:
+['__add__',
+ '__class__',
+ '__contains__',
+ '__delattr__',
+ '__delitem__',
+ '__delslice__',
+ '__doc__',
+ '__eq__',
+ '__getattribute__',
+ '__getitem__',
+ '__getslice__',
+ '__hash__',
+ '__iadd__',
+ '__imul__',
+ '__init__',
+ '__len__',
+ '__mul__',
+ '__ne__',
+ '__new__',
+ '__nonzero__',
+ '__radd__',
+ '__reduce__',
+ '__repr__',
+ '__rmul__',
+ '__setattr__',
+ '__setitem__',
+ '__setslice__',
+ '__str__',
+ '__unicode__',
+ 'append',
+ 'count',
+ 'extend',
+ 'index',
+ 'insert',
+ 'pop',
+ 'remove',
+ 'reverse',
+ 'sort']
+Got:
+['__add__',
+ '__class__',
+ '__contains__',
+ '__delattr__',
+ '__delitem__',
+ '__delslice__',
+ '__doc__',
+ '__eq__',
+ '__getattribute__',
+ '__getitem__',
+ '__getslice__',
+ '__hash__',
+ '__iadd__',
+ '__imul__',
+ '__init__',
+ '__len__',
+ '__mul__',
+ '__ne__',
+ '__new__',
+ '__nonzero__',
+ '__radd__',
+ '__reduce__',
+ '__reduce_ex__',
+ '__repr__',
+ '__rmul__',
+ '__setattr__',
+ '__setitem__',
+ '__setslice__',
+ '__str__',
+ '__unicode__',
+ 'append',
+ 'count',
+ 'extend',
+ 'index',
+ 'insert',
+ 'pop',
+ 'remove',
+ 'reverse',
+ 'sort']
+*****************************************************************
+1 items had failures:
+   1 of  13 in test_descrtut.__test__.tut3
+***Test Failed*** 1 failures.
+test test_descrtut failed -- 1 of 91 doctests failed
+test_difflib
+test_dircache
+test_dis
+test test_dis failed -- errors occurred in test_dis.DisTests
+test_dl
+test_dl skipped -- no module named dl
+test_doctest
+*****************************************************************
+Failure in example: is_private("a.b", "my_func")
+from line #8 of doctest.is_private
+Expected: False
+Got: 0
+*****************************************************************
+Failure in example: is_private("", "")  # senseless but consistent
+from line #20 of doctest.is_private
+Expected: False
+Got: 0
+*****************************************************************
+1 items had failures:
+   2 of   7 in doctest.is_private
+***Test Failed*** 2 failures.
+test test_doctest failed -- 2 of 71 doctests failed
+test_doctest2
+test_dumbdbm
+test test_dumbdbm failed -- Traceback (most recent call last):
+  File "D:\Work\JythonDev\dist\Lib\unittest.py", line 229, in __call__
+  File "D:\Work\JythonDev\dist\Lib\test\test_dumbdbm.py", line 113, in test_random
+  File "D:\Work\JythonDev\dist\Lib\unittest.py", line 302, in failUnlessEqual
+AssertionError: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb' != 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+
+test_dummy_thread
+test_dummy_thread skipped -- no module named dummy_thread
+test_dummy_threading
+test_dummy_threading skipped -- no module named dummy_threading
+test_email
+test_email skipped -- no module named locale
+test_email_codecs
+test_email_codecs skipped -- cannot import name TestEmailBase
+test_enumerate
+test_eof
+test test_eof failed -- errors occurred in test_eof.EOFTestCase
+test_errno
+test_extcall
+test test_extcall crashed -- exceptions.TypeError: g() argument after * must be a sequence
+test_fcntl
+test_fcntl skipped -- no module named fcntl
+test_file
+test test_file crashed -- exceptions.AttributeError: 'file' object has no attribute 'softspace'
+test_filecmp
+test_filecmp skipped -- no module named filecmp
+test_fileinput
+test test_fileinput crashed -- exceptions.OSError: [Errno 0] couldn't rename file: __test1
+test_fnmatch
+test_fork1
+test_fork1 skipped -- os.fork not defined -- skipping test_fork1
+test_format
+test test_format failed -- did not get expected exception: int argument required
+test_fpformat
+test_frozen
+test test_frozen failed -- import __hello__ failed:no module named __hello__
+test_funcattrs
+test_future
+test_gc
+test_gc skipped -- no module named gc
+test_gdbm
+test_gdbm skipped -- no module named gdbm
+test_generators
+*****************************************************************
+Failure in example:
+while 1:
+    for s in sets:
+        print "%s->%s" % (s, s.find()),
+    print
+    if len(roots) > 1:
+        s1 = random.choice(roots)
+        roots.remove(s1)
+        s2 = random.choice(roots)
+        s1.union(s2)
+        print "merged", s1, "into", s2
+    else:
+        break
+from line #147 of test_generators.__test__.email
+Expected:
+A->A B->B C->C D->D E->E F->F G->G H->H I->I J->J K->K L->L M->M
+merged D into G
+A->A B->B C->C D->G E->E F->F G->G H->H I->I J->J K->K L->L M->M
+merged C into F
+A->A B->B C->F D->G E->E F->F G->G H->H I->I J->J K->K L->L M->M
+merged L into A
+A->A B->B C->F D->G E->E F->F G->G H->H I->I J->J K->K L->A M->M
+merged H into E
+A->A B->B C->F D->G E->E F->F G->G H->E I->I J->J K->K L->A M->M
+merged B into E
+A->A B->E C->F D->G E->E F->F G->G H->E I->I J->J K->K L->A M->M
+merged J into G
+A->A B->E C->F D->G E->E F->F G->G H->E I->I J->G K->K L->A M->M
+merged E into G
+A->A B->G C->F D->G E->G F->F G->G H->G I->I J->G K->K L->A M->M
+merged M into G
+A->A B->G C->F D->G E->G F->F G->G H->G I->I J->G K->K L->A M->G
+merged I into K
+A->A B->G C->F D->G E->G F->F G->G H->G I->K J->G K->K L->A M->G
+merged K into A
+A->A B->G C->F D->G E->G F->F G->G H->G I->A J->G K->A L->A M->G
+merged F into A
+A->A B->G C->A D->G E->G F->A G->G H->G I->A J->G K->A L->A M->G
+merged A into G
+A->G B->G C->G D->G E->G F->G G->G H->G I->G J->G K->G L->G M->G
+Got:
+A->A B->B C->C D->D E->E F->F G->G H->H I->I J->J K->K L->L M->M
+merged J into I
+A->A B->B C->C D->D E->E F->F G->G H->H I->I J->I K->K L->L M->M
+merged D into E
+A->A B->B C->C D->E E->E F->F G->G H->H I->I J->I K->K L->L M->M
+merged I into M
+A->A B->B C->C D->E E->E F->F G->G H->H I->M J->M K->K L->L M->M
+merged E into C
+A->A B->B C->C D->C E->C F->F G->G H->H I->M J->M K->K L->L M->M
+merged G into L
+A->A B->B C->C D->C E->C F->F G->L H->H I->M J->M K->K L->L M->M
+merged M into F
+A->A B->B C->C D->C E->C F->F G->L H->H I->F J->F K->K L->L M->F
+merged K into C
+A->A B->B C->C D->C E->C F->F G->L H->H I->F J->F K->C L->L M->F
+merged B into F
+A->A B->F C->C D->C E->C F->F G->L H->H I->F J->F K->C L->L M->F
+merged C into L
+A->A B->F C->L D->L E->L F->F G->L H->H I->F J->F K->L L->L M->F
+merged A into H
+A->H B->F C->L D->L E->L F->F G->L H->H I->F J->F K->L L->L M->F
+merged L into H
+A->H B->F C->H D->H E->H F->F G->H H->H I->F J->F K->H L->H M->F
+merged H into F
+A->F B->F C->F D->F E->F F->F G->F H->F I->F J->F K->F L->F M->F
+*****************************************************************
+1 items had failures:
+   1 of  31 in test_generators.__test__.email
+***Test Failed*** 1 failures.
+test test_generators failed -- 1 of 142 doctests failed
+test_getargs
+test_getargs2
+test_getargs2 skipped -- no module named _testcapi
+test_getopt
+test test_getopt crashed -- exceptions.AttributeError: module 'getopt' has no attribute 'gnu_getopt'
+test_gettext
+test_gettext skipped -- no module named gettext
+test_gl
+test_gl skipped -- no module named gl
+test_glob
+test_global
+test_grp
+test_grp skipped -- no module named grp
+test_gzip
+test test_gzip crashed -- exceptions.OSError: [Errno 0] couldn't delete file: __test
+test_hash
+test_heapq
+test_heapq skipped -- no module named heapq
+test_hexoct
+test test_hexoct failed -- errors occurred in test_hexoct.TextHexOct
+test_hmac
+test test_hmac failed -- Traceback (most recent call last):
+  File "D:\Work\JythonDev\dist\Lib\unittest.py", line 229, in __call__
+  File "D:\Work\JythonDev\dist\Lib\test\test_hmac.py", line 51, in test_sha_vectors
+  File "D:\Work\JythonDev\dist\Lib\test\test_hmac.py", line 47, in shatest
+  File "D:\Work\JythonDev\dist\Lib\unittest.py", line 302, in failUnlessEqual
+AssertionError: 'A96B2018C8D932201DC8DE1603192CCB047107D201C0DC8' != 'B617318655057264E28BC0B6FB378C8EF146BE00'
+
+test_hotshot
+test_hotshot skipped -- no module named hotshot
+test_htmllib
+test_htmlparser
+test_httplib
+test_imageop
+test_imageop skipped -- no module named imageop
+test_imaplib
+test_imgfile
+test_imgfile skipped -- no module named imgfile
+test_imp
+test test_imp crashed -- exceptions.AttributeError: class 'org.python.modules.imp' has no attribute 'lock_held'
+test_import
+test_import skipped -- No module named os
+test_importhooks
+test_inspect
+test test_inspect failed -- isbuiltin(sys.exit)
+test_ioctl
+test_ioctl skipped -- No fcntl or termios module
+test_isinstance
+test test_isinstance failed -- errors occurred; run in verbose mode for details
+test_iter
+test_itertools
+test_itertools skipped -- no module named itertools
+test_janoninner
+test_javalist
+test_javashell
+test_jbasic
+test_joverload
+test_jreload
+test_jser
+test_jser2
+test_jsubclass
+test_jy_compile
+test_jy_generators
+test_jy_internals
+test_largefile
+test test_largefile crashed -- exceptions.OSError: [Errno 0] couldn't delete file: __test
+test_linuxaudiodev
+test_linuxaudiodev skipped -- Use of the `audio' resource not enabled
+test_locale
+test_locale skipped -- no module named locale
+test_logging
+test_logging skipped -- no module named select
+test_long
+test_long_future
+test test_long_future failed -- expected OverflowError from 'huge / 1'
+test_longexp
+test_longexp skipped -- The 65535 byte limit on methods in the JVM is a problem for jython.
+test_macfs
+test_macfs skipped -- no module named macfs
+test_macostools
+test_macostools skipped -- no module named macostools
+test_macpath
+test_mailbox
+test test_mailbox failed -- errors occurred in test_mailbox.MaildirTestCase
+test_marshal
+test test_marshal failed -- for int 9223372036854775807, simulated marshal string is 'I\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x7F', loaded back as -1
+test_math
+test_md5
+test_methods
+test_mhlib
+test test_mhlib failed -- Traceback (most recent call last):
+  File "D:\Work\JythonDev\dist\Lib\unittest.py", line 229, in __call__
+  File "D:\Work\JythonDev\dist\Lib\test\test_mhlib.py", line 211, in test_sequence
+  File "D:\Work\JythonDev\dist\Lib\mhlib.py", line 340, in setcurrent
+  File "D:\Work\JythonDev\dist\Lib\mhlib.py", line 951, in updateline
+  File "D:\Work\JythonDev\dist\Lib\javaos.py", line 122, in rename
+OSError: [Errno 0] couldn't rename file: D:\Work\JythonDev\__test_MH\MH\wide\.mh_sequences~
+
+test_mimetools
+test_mimetypes
+test_minidom
+test_mmap
+test_mmap skipped -- no module named mmap
+test_module
+test test_module failed -- test failed
+test_mpz
+test_mpz skipped -- no module named mpz
+test_multifile
+test_mutants
+test test_mutants crashed -- exceptions.OSError: [Errno 0] couldn't delete file: __test
+test_netrc
+test test_netrc failed -- Traceback (most recent call last):
+  File "D:\Work\JythonDev\dist\Lib\unittest.py", line 239, in __call__
+  File "D:\Work\JythonDev\dist\Lib\test\test_netrc.py", line 35, in tearDown
+  File "D:\Work\JythonDev\dist\Lib\javaos.py", line 118, in remove
+OSError: [Errno 0] couldn't delete file: __test
+
+test_new
+test test_new produced unexpected output:
+**********************************************************************
+*** lines 7-10 of actual output doesn't appear in expected output after line 6:
++ corrupt closure accepted
++ corrupt closure accepted
++ corrupt closure accepted
++ corrupt closure accepted
+**********************************************************************
+test_nis
+test_nis skipped -- no module named nis
+test_normalization
+test_normalization skipped -- no module named unicodedata
+test_ntpath
+test_openpty
+test_openpty skipped -- No openpty() available.
+test_operator
+test test_operator failed -- errors occurred in test_operator.OperatorTestCase
+test_optparse
+test_optparse skipped -- no module named optparse
+test_os
+test test_os failed -- errors occurred; run in verbose mode for details
+test_ossaudiodev
+test_ossaudiodev skipped -- Use of the `audio' resource not enabled
+test_parser
+test_parser skipped -- no module named parser
+test_pep247
+test_pep263
+test test_pep263 crashed -- exceptions.AssertionError: 
+test_pep277
+test test_pep277 crashed -- exceptions.AttributeError: module 'javapath' has no attribute 'supports_unicode_filenames'
+test_pickle
+test test_pickle failed -- errors occurred; run in verbose mode for details
+test_pickletools
+*****************************************************************
+Failure in example: raw
+from line #3 of pickletools.read_float8
+Expected: '\xbf\xf4\x00\x00\x00\x00\x00\x00'
+Got: '\xBF\xF4\x00\x00\x00\x00\x00\x00'
+*****************************************************************
+Failure in example: enc
+from line #4 of pickletools.read_unicodestring4
+Expected: 'abcd\xea\xaf\x8d'
+Got: u'abcd\xEA\xAF\x8D'
+*****************************************************************
+Failure in example: s == t
+from line #8 of pickletools.read_unicodestring4
+Expected: True
+Got: 0
+*****************************************************************
+Failure in example:
+read_unicodestringnl(StringIO.StringIO("abc\uabcd\njunk"))
+from line #2 of pickletools.read_unicodestringnl
+Expected: u'abc\uabcd'
+Got: u'abc\uABCD'
+*****************************************************************
+Failure in example: dis(pickle.dumps(random.random, 0))
+from line #58 of pickletools.__test__.disassembler_test
+Exception raised:
+Traceback (most recent call last):
+  File "D:\Work\JythonDev\dist\Lib\doctest.py", line 441, in _run_examples_inner
+  File "<string>", line 1, in ?
+  File "D:\Work\JythonDev\dist\Lib\pickle.py", line 1386, in dumps
+  File "D:\Work\JythonDev\dist\Lib\pickle.py", line 231, in dump
+  File "D:\Work\JythonDev\dist\Lib\pickle.py", line 313, in save
+  File "D:\Work\JythonDev\dist\Lib\copy_reg.py", line 69, in _reduce_ex
+TypeError: can't pickle PyRandom$1exposed_random objects
+*****************************************************************
+4 items had failures:
+   1 of  24 in pickletools.__test__.disassembler_test
+   1 of   4 in pickletools.read_float8
+   2 of   8 in pickletools.read_unicodestring4
+   1 of   2 in pickletools.read_unicodestringnl
+***Test Failed*** 5 failures.
+test test_pickletools failed -- 5 of 94 doctests failed
+test_pkg
+test test_pkg crashed -- exceptions.AttributeError: module 'tempfile' has no attribute 'mkdtemp'
+test_pkgimport
+test test_pkgimport failed -- Traceback (most recent call last):
+  File "D:\Work\JythonDev\dist\Lib\unittest.py", line 220, in __call__
+  File "D:\Work\JythonDev\dist\Lib\test\test_pkgimport.py", line 20, in setUp
+AttributeError: module 'tempfile' has no attribute 'mkdtemp'
+
+test_plistlib
+test_plistlib skipped -- no module named plistlib
+test_poll
+test_poll skipped -- no module named select
+test_popen
+test test_popen crashed -- exceptions.TypeError: iteration over non-sequence
+test_popen2
+test test_popen2 crashed -- exceptions.AssertionError: 
+test_posix
+test_posix skipped -- posix is not available
+test_posixpath
+test test_posixpath failed -- errors occurred in test_posixpath.PosixPathTest
+test_pow
+test_pprint
+test_profile
+test_profilehooks
+test test_profilehooks failed -- errors occurred; run in verbose mode for details
+test_pty
+test_pty skipped -- no module named pty
+test_pwd
+test_pwd skipped -- no module named pwd
+test_pyclbr
+test test_pyclbr failed -- errors occurred in test_pyclbr.PyclbrTest
+test_pyexpat
+test_pyexpat skipped -- no module named pyexpat
+test_queue
+test_quopri
+test_random
+test test_random failed -- errors occurred; run in verbose mode for details
+test_re
+test_regex
+test_regex skipped -- no module named regex
+test_repr
+test_resource
+test_resource skipped -- no module named resource
+test_rfc822
+test_rgbimg
+test_rgbimg skipped -- no module named rgbimg
+test_richcmp
+test test_richcmp failed -- errors occurred; run in verbose mode for details
+test_robotparser
+test_robotparser skipped -- no module named robotparser
+test_rotor
+test_rotor skipped -- no module named rotor
+test_sax
+test test_sax crashed -- org.xml.sax.SAXParseException: Traceback (innermost last):
+
+  File "D:\Work\JythonDev\dist\Lib\xml\sax\drivers2\drv_javasax.py", line 58, in fatalError
+
+  File "D:\Work\JythonDev\dist\Lib\xml\sax\handler.py", line 38, in fatalError
+
+SAXParseException: <unknown>:2:-1: Relative URI "expat.gif"; can not be resolved without a base URI.
+
+
+test_scope
+test_scriptpackages
+test_scriptpackages skipped -- no module named aetools
+test_select
+test_select skipped -- no module named select
+test_sets
+test_sgmllib
+test_sha
+test test_sha failed -- errors occurred in test_sha.SHATestCase
+test_shelve
+test_shlex
+test_shutil
+test test_shutil failed -- Traceback (most recent call last):
+  File "D:\Work\JythonDev\dist\Lib\unittest.py", line 229, in __call__
+  File "D:\Work\JythonDev\dist\Lib\test\test_shutil.py", line 19, in test_dont_move_dir_in_itself
+AttributeError: module 'tempfile' has no attribute 'mkdtemp'
+
+test_signal
+test_signal skipped -- no module named signal
+test_slice
+test test_slice crashed -- exceptions.AttributeError: 'slice' object has no attribute 'indices'
+test_socket
+test_socket_ssl
+test_socket_ssl skipped -- socket module has no ssl support
+test_socketserver
+test_socketserver skipped -- Use of the `network' resource not enabled
+test_softspace
+test test_softspace failed -- 'a\nb c  d\t e\nf g\n' == 'a\nb c  d\te\nf g\n'
+test_sort
+test test_sort produced unexpected output:
+**********************************************************************
+*** lines 2-4 of actual output doesn't appear in expected output after line 1:
++     Mutation during list.sort() wasn't caught.
++     Passing None as cmpfunc failed.
++ Test failed 2
+**********************************************************************
+test_str
+test test_str failed -- errors occurred in test_str.StrTest
+test_strftime
+test_string
+test_stringprep
+test_stringprep skipped -- no module named stringprep
+test_strop
+test_strop skipped -- no module named strop
+test_strptime
+test_strptime skipped -- no module named locale
+test_struct
+test_structseq
+test_subclasses
+test_sunaudiodev
+test_sunaudiodev skipped -- no module named sunaudiodev
+test_sundry
+test_sundry skipped -- no module named select
+test_symtable
+test_symtable skipped -- no module named _symtable
+test_syntax
+test test_syntax failed -- Traceback (most recent call last):
+  File "D:\Work\JythonDev\dist\Lib\unittest.py", line 229, in __call__
+  File "D:\Work\JythonDev\dist\Lib\test\test_syntax.py", line 29, in test_assign_del
+  File "D:\Work\JythonDev\dist\Lib\test\test_syntax.py", line 21, in _check_error
+  File "D:\Work\JythonDev\dist\Lib\unittest.py", line 270, in fail
+AssertionError: SyntaxError did not contain ''delete''
+
+test_sys
+test test_sys failed -- errors occurred in test_sys.SysModuleTest
+test_tarfile
+test_tarfile skipped -- no module named tarfile
+test_tempfile
+test test_tempfile crashed -- exceptions.AttributeError: module 'tempfile' has no attribute '_text_openflags'
+test_textwrap
+test test_textwrap failed -- Traceback (most recent call last):
+  File "D:\Work\JythonDev\dist\Lib\unittest.py", line 229, in __call__
+  File "D:\Work\JythonDev\dist\Lib\test\test_textwrap.py", line 321, in test_unicode
+AssertionError
+
+test_thread
+test_threaded_import
+test test_threaded_import crashed -- exceptions.AttributeError: class 'org.python.modules.imp' has no attribute 'lock_held'
+test_threadedtempfile
+test_threading
+test_time
+test_timeout
+test_timeout skipped -- Use of the `network' resource not enabled
+test_timing
+test_timing skipped -- no module named timing
+test_tokenize
+test_trace
+test test_trace failed -- errors occurred; run in verbose mode for details
+test_traceback
+test_ucn
+test test_ucn failed -- errors occurred in test_ucn.UnicodeNamesTest
+test_unary
+test_unicode
+test test_unicode produced unexpected output:
+**********************************************************************
+*** lines 2-88 of actual output doesn't appear in expected output after line 1:
++ * <built-in method startswith of unicode object> u'hello' 1 True
++ * <built-in method startswith of unicode object> u'hello' 1 True
++ * <built-in method startswith of unicode object> u'hello' 0 False
++ * <built-in method startswith of unicode object> u'hello' 1 True
++ * <built-in method startswith of unicode object> u'hello' 0 False
++ * <built-in method startswith of unicode object> u'hello' 1 True
++ * <built-in method startswith of unicode object> u'hello' 1 True
++ * <built-in method startswith of unicode object> u'hello' 0 False
++ * <built-in method startswith of unicode object> u'hello' 1 True
++ * <built-in method startswith of unicode object> u'hello' 0 False
++ * <built-in method startswith of unicode object> u'helloworld' 1 True
++ * <built-in method startswith of unicode object> u'helloworld' 1 True
++ * <built-in method startswith of unicode object> u'helloworld' 0 False
++ * <built-in method endswith of unicode object> u'hello' 1 True
++ * <built-in method endswith of unicode object> u'hello' 0 False
++ * <built-in method endswith of unicode object> u'hello' 1 True
++ * <built-in method endswith of unicode object> u'hello' 0 False
++ * <built-in method endswith of unicode object> u'helloworld' 0 False
++ * <built-in method endswith of unicode object> u'helloworld' 1 True
++ * <built-in method endswith of unicode object> u'helloworld' 1 True
++ * <built-in method endswith of unicode object> u'helloworld' 1 True
++ * <built-in method endswith of unicode object> u'helloworld' 1 True
++ * <built-in method endswith of unicode object> u'helloworld' 1 True
++ * <built-in method endswith of unicode object> u'helloworld' 0 False
++ * <built-in method endswith of unicode object> u'helloworld' 0 False
++ * <built-in method endswith of unicode object> u'ab' 0 False
++ * <built-in method endswith of unicode object> u'ab' 0 False
++ * <built-in method endswith of str object> 'helloworld' 1 True
++ * <built-in method endswith of str object> 'helloworld' 0 False
++ Testing Unicode comparisons... done.
++ * <built-in method islower of unicode object> u'a' 1 True
++ * <built-in method islower of unicode object> u'A' 0 False
++ * <built-in method islower of unicode object> u'\n' 0 False
++ * <built-in method islower of unicode object> u'\u1FFC' 0 False
++ * <built-in method islower of unicode object> u'abc' 1 True
++ * <built-in method islower of unicode object> u'aBc' 0 False
++ * <built-in method islower of unicode object> u'abc\n' 1 True
++ * <built-in method isupper of unicode object> u'a' 0 False
++ * <built-in method isupper of unicode object> u'A' 1 True
++ * <built-in method isupper of unicode object> u'\n' 0 False
++ * <built-in method isupper of unicode object> u'ABC' 1 True
++ * <built-in method isupper of unicode object> u'AbC' 0 False
++ * <built-in method isupper of unicode object> u'ABC\n' 1 True
++ * <built-in method istitle of unicode object> u'a' 0 False
++ * <built-in method istitle of unicode object> u'A' 1 True
++ * <built-in method istitle of unicode object> u'\n' 0 False
++ * <built-in method istitle of unicode object> u'\u1FFC' 1 True
++ * <built-in method istitle of unicode object> u'A Titlecased Line' 1 True
++ * <built-in method istitle of unicode object> u'A\nTitlecased Line' 1 True
++ * <built-in method istitle of unicode object> u'A Titlecased, Line' 1 True
++ * <built-in method istitle of unicode object> u'Greek \u1FFCitlecases ...' 1 True
++ * <built-in method istitle of unicode object> u'Not a capitalized String' 0 False
++ * <built-in method istitle of unicode object> u'Not\ta Titlecase String' 0 False
++ * <built-in method istitle of unicode object> u'Not--a Titlecase String' 0 False
++ * <built-in method isalpha of unicode object> u'a' 1 True
++ * <built-in method isalpha of unicode object> u'A' 1 True
++ * <built-in method isalpha of unicode object> u'\n' 0 False
++ * <built-in method isalpha of unicode object> u'\u1FFC' 1 True
++ * <built-in method isalpha of unicode object> u'abc' 1 True
++ * <built-in method isalpha of unicode object> u'aBc123' 0 False
++ * <built-in method isalpha of unicode object> u'abc\n' 0 False
++ * <built-in method isalnum of unicode object> u'a' 1 True
++ * <built-in method isalnum of unicode object> u'A' 1 True
++ * <built-in method isalnum of unicode object> u'\n' 0 False
++ * <built-in method isalnum of unicode object> u'123abc456' 1 True
++ * <built-in method isalnum of unicode object> u'a1b3c' 1 True
++ * <built-in method isalnum of unicode object> u'aBc000 ' 0 False
++ * <built-in method isalnum of unicode object> u'abc\n' 0 False
++ Testing Unicode contains method... done.
++ Testing Unicode formatting strings... done.
++ Testing builtin unicode()... done.
++ Testing builtin codecs... done.
++ Testing standard mapping codecs... 0-127... 128-255... done.
++ Testing Unicode string concatenation... done.
++ Testing Unicode printing... abc
++ abc def
++ abc def
++ abc def
++ abc
++ 
++ abc
++ abc
++ def
++ 
++ def
++ 
++ done.
+**********************************************************************
+test_unicode_file
+test_unicode_file skipped -- cannot import name TESTFN_UNICODE
+test_unicodedata
+test test_unicodedata failed -- errors occurred; run in verbose mode for details
+test_univnewlines
+test_univnewlines skipped -- This Python does not have universal newline support
+test_unpack
+test_urllib
+test test_urllib failed -- errors occurred; run in verbose mode for details
+test_urllib2
+test_urllibnet
+test_urllibnet skipped -- Use of the `network' resource not enabled
+test_urlparse
+test_userdict
+test_userlist
+test_userstring
+test test_userstring failed -- errors occurred in test_userstring.UserStringTest
+test_uu
+test test_uu failed -- errors occurred; run in verbose mode for details
+test_warnings
+test_wave
+test_wave skipped -- no module named wave
+test_weakref
+test_weakref skipped -- no module named gc
+test_whichdb
+test_winreg
+test_winreg skipped -- no module named _winreg
+test_winsound
+test_winsound skipped -- no module named winsound
+test_xmllib
+test_xmlrpc
+test_xpickle
+test test_xpickle failed -- errors occurred; run in verbose mode for details
+test_xreadline
+test_zipfile
+test test_zipfile crashed -- exceptions.OSError: [Errno 0] couldn't delete file: junk9708.tmp
+test_zipimport
+test_zipimport skipped -- no module named zipimport
+test_zlib
+test test_zlib failed -- errors occurred; run in verbose mode for details
+106 tests OK.
+87 tests skipped:
+    test_aepack test_al test_asynchat test_audioop test_bsddb
+    test_bsddb185 test_bsddb3 test_bz2 test_capi test_cd test_cl
+    test_cmath test_codeccallbacks test_codeop test_commands
+    test_crypt test_csv test_curses test_dbm test_dl test_dummy_thread
+    test_dummy_threading test_email test_email_codecs test_fcntl
+    test_filecmp test_fork1 test_gc test_gdbm test_getargs2
+    test_gettext test_gl test_grp test_heapq test_hotshot test_imageop
+    test_imgfile test_import test_ioctl test_itertools
+    test_linuxaudiodev test_locale test_logging test_longexp
+    test_macfs test_macostools test_mmap test_mpz test_nis
+    test_normalization test_openpty test_optparse test_ossaudiodev
+    test_parser test_plistlib test_poll test_posix test_pty test_pwd
+    test_pyexpat test_regex test_resource test_rgbimg test_robotparser
+    test_rotor test_scriptpackages test_select test_signal
+    test_socket_ssl test_socketserver test_stringprep test_strop
+    test_strptime test_sunaudiodev test_sundry test_symtable
+    test_tarfile test_timeout test_timing test_unicode_file
+    test_univnewlines test_urllibnet test_wave test_weakref
+    test_winreg test_winsound test_zipimport
+35 skips unexpected on java1.4.2_09:
+    test_dummy_thread test_normalization test_posix test_macostools
+    test_getargs2 test_bsddb185 test_ossaudiodev test_zipimport
+    test_ioctl test_filecmp test_plistlib test_scriptpackages
+    test_bsddb3 test_macfs test_itertools test_csv test_tarfile
+    test_mpz test_resource test_import test_codeccallbacks test_bz2
+    test_strptime test_univnewlines test_aepack test_urllibnet
+    test_codeop test_weakref test_heapq test_logging test_timeout
+    test_robotparser test_optparse test_stringprep
+    test_dummy_threading
+76 tests failed:
+    test_StringIO test___all__ test_atexit test_binascii test_bool
+    test_builtin test_codecs test_coercion test_complex test_copy
+    test_descr test_descrtut test_dis test_doctest test_dumbdbm
+    test_eof test_exceptions test_extcall test_file test_fileinput
+    test_format test_frozen test_generators test_getopt test_gzip
+    test_hexoct test_hmac test_imp test_inspect test_isinstance
+    test_largefile test_long_future test_mailbox test_marshal
+    test_mhlib test_module test_mutants test_netrc test_new
+    test_operator test_os test_pep263 test_pep277 test_pickle
+    test_pickletools test_pkg test_pkgimport test_popen test_popen2
+    test_posixpath test_profilehooks test_pyclbr test_random
+    test_richcmp test_sax test_sha test_shutil test_slice
+    test_softspace test_sort test_str test_syntax test_sys
+    test_tempfile test_textwrap test_threaded_import test_trace
+    test_ucn test_unicode test_unicodedata test_urllib test_userstring
+    test_uu test_xpickle test_zipfile test_zlib
+61 fails unexpected on java1.4.2_09:
+    test_fileinput test_imp test_pep263 test_getopt test_userstring
+    test_mailbox test_hmac test_pkg test_generators test_module
+    test___all__ test_syntax test_ucn test_unicodedata test_gzip
+    test_extcall test_copy test_exceptions test_file test_shutil
+    test_hexoct test_doctest test_isinstance test_format test_popen2
+    test_sort test_xpickle test_pickletools test_codecs test_textwrap
+    test_str test_binascii test_largefile test_bool test_sha
+    test_builtin test_mutants test_sax test_coercion test_operator
+    test_mhlib test_tempfile test_netrc test_slice test_StringIO
+    test_os test_complex test_sys test_popen test_posixpath test_dis
+    test_richcmp test_pep277 test_zipfile test_dumbdbm test_softspace
+    test_eof test_unicode test_inspect test_urllib test_random
+}}}
