@@ -1,14 +1,16 @@
 '''Contents''' [[TableOfContents]]
 
-=== Jython 2.2 ===
+= Jython 2.2 =
 
-==== Slots ====
+== regrtest Failures ==
 
-==== Bug Triage ====
+ * descr
+ * new
+ * weakref
+ * zlib
+ * windows only failures
 
-==== regrtest Failures ====
-
-=== Jython 2.3 ===
+= Jython 2.3 =
 
 yield is always a keyword.
 
@@ -31,26 +33,31 @@ assert no longer checks __debug__ flag.
 
 Many type objects are now callable.
 
+PEP 218: A Standard Set Datatype
 
-==== Replace jythonc ====
+PEP 263: Defining Python Source Code Encodings
 
-==== Solidify Import System ====
+PEP 273: Importing Modules from Zip Archives
 
-==== Fix Java to Python naming integration ====
+PEP 278: Universal Newline Support
 
-==== PEP 218: A Standard Set Datatype ====
+PEP 285: A Boolean Type
 
-==== PEP 263: Defining Python Source Code Encodings ====
+PEP 305: Pickle Enhancements
 
-==== PEP 273: Importing Modules from Zip Archives ====
+== Replace jythonc ==
 
-==== PEP 278: Universal Newline Support ====
+jythonc doesn't handle generators and is difficult to debug and improve.  The current thinking is to add capabilites to jython itself to generate bytecode from py files and run those statically compiled items rather than jythonc's approach of making Java classes that work like the base Python code.  See http://thread.gmane.org/gmane.comp.lang.jython.devel/1429/focus=1430 for the general idea. 
 
-==== PEP 285: A Boolean Type ====
+== Solidify Import System ==
 
-==== PEP 305: Pickle Enhancements ====
+Jython adds to Python's import system to handle loading from Java's classpath and to load from jar files.  It's not exactly clear what modifications are in place and what techniques are best for adding jar files to the path at runtime and things like that.  A JEP explaining what's been added and how things relate to both the Python and Jython sides would be nice.  
 
-=== Jython 2.4 ===
+== Complete Java to Python naming integration ==
+
+Java allows a method and field of the same name to exist in the same class.  Python only has a single namespace for these items.  This leads to methods being hidden in a Java instance in Jython if the instance has a field of the same name.  In addition, the bean convenience methods that map object.getField() in Java to  object.field in Jython lead to collisions.  A standard system for renaming fields and methods to avoid collisions and a JEP explaining the whole thing would be most welcome.
+
+= Jython 2.4 =
 
 Built-in set, frozenset
 
@@ -62,7 +69,7 @@ Function/method decorators
 
 Multi-line imports
 
-=== Jython 2.5 ===
+= Jython 2.5 =
 
 Conditional expressions
 
