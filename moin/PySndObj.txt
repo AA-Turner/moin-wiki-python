@@ -2,7 +2,6 @@ homepage:
 http://sndobj.sourceforge.net/#python
 
 
-__________________
 
 Available examples not in manual (please add):
 
@@ -11,36 +10,36 @@ Available examples not in manual (please add):
 #and alternating L-R output
 
 import sndobj
-import time
+[[BR]]import time
 
 tab = sndobj.HarmTable()
-osc = sndobj.Oscili(tab, 440, 10000)
-noise = sndobj.Randh(100000, 10000)
+[[BR]]osc = sndobj.Oscili(tab, 440, 10000)
+[[BR]]noise = sndobj.Randh(100000, 10000)
 
 x=1
-y=2
+[[BR]]y=2
 
 outp = sndobj.SndRTIO(2)
-outp.SetOutput(x, osc)
-outp.SetOutput(y, noise)
+[[BR]]outp.SetOutput(x, osc)
+[[BR]]outp.SetOutput(y, noise)
 
 mod = sndobj.Oscili(tab, 2, 560)
-osc.SetFreq(440,mod)
+[[BR]]osc.SetFreq(440,mod)
 
 mod2=sndobj.Oscili(tab, 4, 50)
-mod.SetFreq(2, mod2)
+[[BR]]mod.SetFreq(2, mod2)
 
 q=2
-mod3 = sndobj.Oscili(tab, q, 1000)
-noise.SetFreq(1000, mod3)
+[[BR]]mod3 = sndobj.Oscili(tab, q, 1000)
+[[BR]]noise.SetFreq(1000, mod3)
 
 thread = sndobj.SndThread()
-thread.AddObj(mod)
-thread.AddObj(mod2)
-thread.AddObj(mod3)
-thread.AddObj(osc)
-thread.AddObj(noise)
-thread.AddObj(outp, sndobj.SNDIO_OUT)
+[[BR]]thread.AddObj(mod)
+[[BR]]thread.AddObj(mod2)
+[[BR]]thread.AddObj(mod3)
+[[BR]]thread.AddObj(osc)
+[[BR]]thread.AddObj(noise)
+[[BR]]thread.AddObj(outp, sndobj.SNDIO_OUT)
 
 thread.ProcOn()
 
@@ -48,13 +47,13 @@ n=0
 while n < 8:
     if x==1:
         x=2
-        y=1
+        [[BR]]y=1
     else:
         x=1
-        y=2
+        [[BR]]y=2
     outp.SetOutput(x, osc)
-    outp.SetOutput(y, noise)
+    [[BR]]outp.SetOutput(y, noise)
     time.sleep(1)
-    n +=1
+    [[BR]]n +=1
 
 thread.ProcOff()
