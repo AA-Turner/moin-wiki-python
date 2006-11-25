@@ -73,7 +73,7 @@ I thought they were hanging & excluded test_cpickle, but left test_pickle and, g
     test_eof test_unicode test_inspect test_urllib test_random
 }}}
 
-== Missing modules ==
+== Skipped due to missing modules ==
 {{{
 aepack al asyncore audioop bsddb bsddb185 bz2 _testcapi(capi) cd cl cmath 
 unicodedata crypt csv curses dbm dl dummy_thread dummy_threading locale 
@@ -83,6 +83,32 @@ unicodedata optparse parser plistlib select pty pwd pyexpat regex resource
 rgbimg robotparser rotor aetools select signal stringprep strop locale 
 sunaudiodev select _symtable tarfile timing wave gc _winreg winsound 
 zipimport
+}}}
+
+=== Skipped by Python23 on Win32 ===
+{{{
+43 tests skipped:
+    test_aepack test_al test_bsddb185 test_bsddb3 test_cd test_cl
+    test_commands test_crypt test_curses test_dbm test_dl
+    test_email_codecs test_fcntl test_fork1 test_gdbm test_gl test_grp
+    test_imgfile test_ioctl test_largefile test_linuxaudiodev
+    test_macfs test_macostools test_mhlib test_mpz test_nis
+    test_normalization test_openpty test_ossaudiodev test_plistlib
+    test_poll test_posix test_pty test_pwd test_resource
+    test_scriptpackages test_signal test_socket_ssl test_socketserver
+    test_sunaudiodev test_timeout test_timing test_urllibnet
+Those skips are all expected on win32.
+}}}
+
+=== Missing modules excluding above win32 skips ===
+{{{
+_winreg _symtable aetools asyncore audioop bsddb bz2
+_testcapi(capi) cmath unicodedata csv dummy_thread 
+dummy_threading locale filecmp gc gdbm _testcapi(getargs2) 
+gettext heapq hotshot imageop itertools locale mmap 
+optparse os parser pwd pyexpat regex rgbimg robotparser 
+rotor select stringprep strop tarfile timing unicodedata
+wave winsound zipimport
 }}}
 
 == Raw Log ==
