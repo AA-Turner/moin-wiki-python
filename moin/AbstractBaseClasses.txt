@@ -1,1 +1,121 @@
-This page is about a re-factoring of the base and built-in Python types into a set of Abstract Base Classes (ABCs).
+= Python Class Tree =
+
+This page is about a re-factoring of the base and built-in Python types into a set of Abstract Base Classes (ABCs) and concrete types.  This would probably be a good time to enumerate the exceptions various basic operations can raise, as well.
+
+Some questions:
+ * How to handle optional parameters, such as in the "sort" method on {{{MutableSequence}}}?
+ * Should {{{Boolean}}} be an abstract type that's mixed-in to {{{Object}}}, or a concrete type that inherits from {{{Object}}} (thus implying that non-Boolean {{{Object}}}s may exist)?
+ * Should destructive operations on {{{MutableSequence}}} return the sequence?  They don't currently, but this would be very useful.
+
+{{{
+Comparable:
+ is (other) => Boolean
+ equals (other) => Boolean
+ None
+
+Boolean (Comparable):
+ True
+ False
+
+Object (Comparable):
+ hash () => Integer
+ id () => Integer
+ boolean () => Boolean
+
+Orderable:
+ less_than (Object) => Boolean
+ greater_than (Object) => Boolean
+
+Numeric:
+ add (Numeric) => Numeric
+ subtract (Numeric) => Numeric
+ product (Numeric) => Numeric
+ quotient (Numeric) => Numeric
+ floored_quotient (Numeric) => Numeric
+ remainder (Numeric) => Numeric
+ negate (Numeric) => Numeric
+ absolute_value () => Numeric
+ exponentiate (Numeric) => Numeric
+ magnitude () => Numeric
+
+Integer (Object, Orderable, Numeric):
+ or (Integer) => Integer
+ xor (Integer) => Integer
+ and (Integer) => Integer
+ shift (Integer) => Integer
+ invert (Integer) => Integer
+ real () => Real
+
+Real (Object, Orderable, Numeric):
+ floor () => Integer
+ ceiling () => Integer
+
+Complex (Object, Orderable, Numeric):
+ conjugate () => Complex
+
+Iterable:
+ iterator () => Iteration
+
+Iteration (Object, Iterable):
+ next () => other
+
+# should Container be Iterable, or should that be reserved for real types, like Tuple?
+Container (Iterable):
+ len () => Integer
+ contains (Object) => Boolean
+
+Set (Container):
+ is_subset (Set) => Boolean
+ is_superset (Set) => Boolean
+ union_with (Set) => Set
+ intersection_with (Set) => Set
+ difference (Set) => Set
+ symmetric_difference (Set) => Set
+ # should this be "multiply" to match Sequence?
+ shallow_copy () => Set
+
+Sequence (Container):
+ # normal access via index
+ slice1 (Integer) => Object
+ # normal slice of range
+ slice2 (Integer, Integer) => Sequence
+ # slice with step K
+ slice3 (Integer, Integer, Integer) => Sequence
+ # return self + other Sequence
+ concatenate (Sequence) => Sequence
+ # N shallow copies of self
+ multiply (Integer) => Sequence
+ # do "min" and "max" make sense over arbitrary sequences?  Should really only apply to sequences of "Orderable"
+ min () => Object
+ max () => Object
+
+MutableSequence (Sequence):
+ append (Object) => self
+ insert (Integer position, Object) => self
+ # value at I is replaced with Object
+ replace (Integer position, Object) => self
+ # slice from I to J is replaced with values of Iterator
+ replace2 (Integer start, Integer end, Iterable) => self
+ # slice from I to J with step K is replaced by Iterator
+ replace3 (Integer start, Integer end, Integer step, Iterable) => self
+ extend (Object) => self
+ count (Object) => Integer
+ reverse ()
+ index1 (Object) => Integer
+ index2 (Object, Integer start, Integer end) => Object
+ pop1 () => Object
+ pop2 (Integer position) => Object
+ delete1 (Integer position) => self
+ delete2 (Integer start, Integer end) => self
+ delete3 (Integer start, Integer end, Integer step) => self
+ sort0 () => self
+ sort1 (Function comparison_fn) => self
+ sort2 (Function comparison_fn, Function key_fn) => self
+ sort3 (Function comparison_fn, Function key_fn, Boolean reverse) => self
+
+String (Object, Comparable, Sequence):
+ TBD
+
+}}}
+
+ 
