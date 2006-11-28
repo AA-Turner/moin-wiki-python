@@ -1,0 +1,57 @@
+= Fixed =
+ * altmro - mro is totally broken
+ * kwdargs
+ * ints - bug #1603312
+
+= Filed =
+ * pymods - PyModule is old style class - bug #1603314
+ * test_dir - see pymods
+ * modules - see pymods
+ * keywords - bug #1603315
+ * setdict - bug #1506749
+ * descrdoc - bug #1604250
+ * setclass - bug #1604252
+ * copies - bug #1604258
+ * str_of_str_subclass - bug #1604264
+ * dictproxyiterkeys - bug #1604265
+ * dictproxyitervalues - bug #1604265
+ * dictproxyiteritems - bug #1604265
+
+= To File =
+ * methods - binding instance method to class calls class instead of instance
+ * supers - subclassing super causes binding to break
+
+= To Fix =
+ * metaclass - new on metaclass not called
+ * overloading - a[0:10] = "foo" doesn't call __setslice__ on a
+ * inherits - __eq__ on inherited classes is not called.  superclass is used in\stead
+ * binopoverride - see inherits
+ * str_subclass_as_dict_key - see inherits
+ * rich_comparisons - see inherits
+ * slotspecials - slots need __weakref__
+
+= Cpython Specific Tests =
+ * errors - not allowed to inherit CFunction?
+ * slots - expects immediate gc
+ * classic - expects attributes to be descriptors
+ * specials - expects id == hash on object
+ * subclasspropagation - see specials
+ * weakref - expects immediate gc
+
+= To Investigate =
+ * pickles
+ * delhook
+ * pickleslots
+ * docdescriptor
+ * string_exceptions
+ * copy_setstate
+ * subtype_resurrection
+ * slotmultipleinheritance
+ * test_mutable_bases
+ * test_mutable_bases_catch_mro_conflict
+ * mutable_names
+ * subclass_right_op
+ * meth_class_get
+ * isinst_isclass
+ * proxysuper
+ * carloverre
