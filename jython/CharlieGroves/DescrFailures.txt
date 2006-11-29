@@ -32,10 +32,14 @@
   * str_of_str_subclass
  * http://jython.org/bugs/1605009
   * string_exceptions
+ * http://jython.org/bugs/1605011 - assigning __bases__ doesn't change lookup in classes
+  * test_mutable_bases
+  * test_mutable_bases_catch_mro_conflict
 
 = To File =
  * methods - binding instance method to class calls class instead of instance
  * supers - subclassing super causes binding to break
+ * mutable_names - setting __name__ on a class does nothing
 
 = To Fix =
  * metaclass - new on metaclass not called
@@ -58,15 +62,13 @@
  * expects id == hash on object
   * specials
   * subclasspropagation
+ * expects classes to have __basicsize__
+  * slotmultipleinheritance
 
 = To Investigate =
  * pickles
  * delhook
  * pickleslots
- * slotmultipleinheritance
- * test_mutable_bases
- * test_mutable_bases_catch_mro_conflict
- * mutable_names
  * subclass_right_op
  * meth_class_get
  * isinst_isclass
