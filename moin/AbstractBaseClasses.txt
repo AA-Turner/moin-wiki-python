@@ -6,8 +6,9 @@ Some questions:
  * How to handle optional parameters, such as in the "sort" method on {{{MutableSequence}}}?
  * Should {{{Boolean}}} be an abstract type that's mixed-in to {{{Object}}}, or a concrete type that inherits from {{{Object}}} (thus implying that non-Boolean {{{Object}}}s may exist)?
  * Should destructive operations on {{{MutableSequence}}} return the sequence?  They don't currently, but this would be very useful.  I've made it so in this list...
- * In Py2, Boolean is a sub-type of Integer.  Does this make sense?  I've made it its own type in this list...
- * Should None just be an instance of Object?  Does NoneType need to exist?
+ * In Py2, {{{Boolean}}} is a sub-type of Integer.  Does this make sense?  I've made it its own type in this list...
+ * Should {{{None}}} just be an instance of {{{Object}}}?  Does {{{NoneType}}} need to exist?
+ * If a file is opened in binary mode, should its iterator be over bytes instead of lines?  Should "readline()" even work on a binary file?
 
 {{{
 Comparable:
@@ -25,7 +26,7 @@ Ellipsis (Object):
  # contains only the single value represented by three dots
  ThreeDots
 
-NoneType (Object):
+Null (Object):
  # only a single value of this type
  None
 
@@ -72,6 +73,9 @@ Iterable:
 
 Iteration (Object, Iterable):
  next () => other
+
+KeyValueIterable (Iterable):
+ # yields iteration of key-value pairs 
 
 # should Container be Iterable, or should that be reserved for real types, like Tuple?
 Container (Iterable):
@@ -139,7 +143,66 @@ String (Object, Sequence):
 
 Tuple (Object, Sequence):
 
-List (Object, Comparable, MutableSequence):
+List (Object, MutableSequence):
+
+Mapping:
+ get (Object key) => Object
+ get_with_default (Object key, Object default) => Object
+ set (Object key, Object value)
+ # should delete return the deleted value?  Why not.  That removes the need for "pop".
+ delete (Object key) => Object
+ clear ()
+ copy () => Mapping
+ contains (Object key) => Boolean
+ # items returns a value which is guaranteed to satisfy both the Set interface and the KeyValueIterable interface
+ items () => (Set and KeyValueIterable)
+ keys () => Set
+ values () => Set
+ # get_or_set is the current "setdefault"
+ get_or_set (Object key, Object value) => Object
+ update (Mapping) => self
+ # alternate form of "update" takes Iterable of key-value pairs
+ update (KeyValueIterable) => self
+ # do we really need fromkeys?
+ fromkeys (Sequence keys, Object initial_value) => Mapping
+
+Dict (Object, Mapping, Container):
+ # should some methods (e.g., "fromkeys") be here instead of in Mapping?
+
+ExecutionContext:
+ enter () => ExecutionContext
+ exit (ExceptionContext) => Boolean
+
+Stream:
+ close ()
+ flush ()
+ read () => ByteSequence
+ read (Integer) => ByteSequence
+ write (ByteSequence) => Integer
+
+RandomAccessStream (Stream):
+ # do we really need to continue to mimic the low-level UNIX seek and tell?
+ # why not use Python sequence-style indices for offset?
+ seek (Integer offset)
+ tell () => Integer
+
+TextStream (Stream):
+ readline () => String
+ readlines () => Sequence
+ writeline (String) => Boolean
+ writelines (Sequence) => Boolean
+ codeset_name () => String
+
+OpenFile (RandomAccessStream):
+ # it would be great if this had a "mimetype" method
+ fileno () => Integer
+ filename () => String
+ isatty () => Boolean
+ truncate (Integer size)
+ 
+BinaryOpenFile (Object, Stream, OpenFile, Iterable, ExecutionContext):
+
+TextOpenFile (Object, TextStream, OpenFile, Iterable, ExecutionContext):
 
 }}}
 ----
