@@ -35,20 +35,23 @@
  * http://jython.org/bugs/1605011 - assigning __bases__ doesn't change lookup in classes
   * test_mutable_bases
   * test_mutable_bases_catch_mro_conflict
+ * http://jython.org/bugs/1605019  - binding instance method to class calls class instead of instance
+  * methods
+ * http://jython.org/1605023 - new on metaclass not called
+  * metaclass 
 
 = To File =
- * methods - binding instance method to class calls class instead of instance
- * supers - subclassing super causes binding to break
  * mutable_names - setting __name__ on a class does nothing
  * slotspecials - slots need __weakref__
- * metaclass - new on metaclass not called
 
 = Don't Understand Failure =
+ * supers - subclassing super causes binding to break
  * overloading - a[0:10] = "foo" doesn't call __setslice__ on a
- * inherits - __eq__ on inherited classes is not called.  superclass is used instead
- * binopoverride - see inherits
- * str_subclass_as_dict_key - see inherits
- * rich_comparisons - see inherits
+ * comparison method on inherited class not called, superclass is used instead
+  * inherits
+  * binopoverride
+  * str_subclass_as_dict_key
+  * rich_comparisons
 
 = Cpython Specific Tests =
  * checks that things aren't allowed to inherit CFunction.  I doubt we care.
