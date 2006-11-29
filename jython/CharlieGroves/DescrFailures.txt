@@ -1,27 +1,37 @@
 = Fixed =
- * altmro - mro is totally broken
- * kwdargs
- * ints - http://jython.org/bugs/1603312
+ * mro can't be modified by subtypes
+  * altmro
+ * http://jython.org/bugs/1603315 - jython doesn't line up with CPython's expected kwargs
+  * kwdargs
+ * http://jython.org/bugs/1603312 - an overflow error isn't raised by int subclasses for large values
+  * ints
 
 = Filed =
- * PyModule is old style class - http://jython.org/bugs/1603314
+ * http://jython.org/bugs/1603314 - PyModule is old style class
   * pymods
   * test_dir
   * modules
- * keywords - http://jython.org/bugs/1603315
- * setdict - http://jython.org/bugs/1506749
- * descrdoc - http://jython.org/bugs/1604250
- * setclass - http://jython.org/bugs/1604252
+ * http://jython.org/bugs/1603315 - jython doesn't line up with CPython's expected kwargs
+  * keywords
+ * http://jython.org/bugs/1506749 - instance dicts can't be set or deleted
+  * setdict
+ * http://jython.org/bugs/1604250
+  * descrdoc
+ * http://jython.org/bugs/1604252
+  * setclass
  * copy doesn't work on instances of new style classes - http://jython.org/bugs/1604258
   * copies
   * copy_setstate
- * str_of_str_subclass - http://jython.org/bugs/1604264
+ * http://jython.org/bugs/1604264
+  * str_of_str_subclass
  * PyStringMap is missing iter methods - http://jython.org/bugs/1604265
   * dictproxyiterkeys
   * dictproxyitervalues
   * dictproxyiteritems
- * docdescriptor - http://jython.org/bugs/1605006
- * string_exceptions - http://jython.org/bugs/1605009
+ * http://jython.org/bugs/1605006
+  * str_of_str_subclass
+ * http://jython.org/bugs/1605009
+  * string_exceptions
 
 = To File =
  * methods - binding instance method to class calls class instead of instance
@@ -37,18 +47,22 @@
  * slotspecials - slots need __weakref__
 
 = Cpython Specific Tests =
- * errors - not allowed to inherit CFunction?
- * slots - expects immediate gc
- * classic - expects attributes to be descriptors
- * specials - expects id == hash on object
- * subclasspropagation - see specials
- * weakref - expects immediate gc
+ * checks that things aren't allowed to inherit CFunction.  I doubt we care.
+  * errors
+ * expects immediate gc
+  * slots
+  * subtype_resurrection
+  * weakref
+ * expects attributes to be descriptors
+  * classic
+ * expects id == hash on object
+  * specials
+  * subclasspropagation
 
 = To Investigate =
  * pickles
  * delhook
  * pickleslots
- * subtype_resurrection
  * slotmultipleinheritance
  * test_mutable_bases
  * test_mutable_bases_catch_mro_conflict
