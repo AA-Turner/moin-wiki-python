@@ -5,7 +5,9 @@ This page contain an incomplete thinking-out-loud description of a re-factoring 
 Some questions:
  * How to handle optional parameters, such as in the "sort" method on {{{MutableSequence}}}?
  * Should {{{Boolean}}} be an abstract type that's mixed-in to {{{Object}}}, or a concrete type that inherits from {{{Object}}} (thus implying that non-Boolean {{{Object}}}s may exist)?
- * Should destructive operations on {{{MutableSequence}}} return the sequence?  They don't currently, but this would be very useful.
+ * Should destructive operations on {{{MutableSequence}}} return the sequence?  They don't currently, but this would be very useful.  I've made it so in this list...
+ * In Py2, Boolean is a sub-type of Integer.  Does this make sense?  I've made it its own type in this list...
+ * Should None just be an instance of Object?  Does NoneType need to exist?
 
 {{{
 Comparable:
@@ -16,6 +18,15 @@ Object (Comparable):
  # presumable for "is" we compare the ids of the two objects
  id () => Integer
  true () => Boolean
+ # the __str__ method
+ printable () => String
+
+Ellipsis (Object):
+ # contains only the single value represented by three dots
+ ThreeDots
+
+NoneType (Object):
+ # only a single value of this type
  None
 
 Boolean (Object):
@@ -52,6 +63,9 @@ Real (Object, Orderable, Numeric):
 
 Complex (Object, Orderable, Numeric):
  conjugate () => Complex
+
+Decimal (Object, Orderable, Numeric):
+ TBD
 
 Iterable:
  iterator () => Iteration
@@ -114,9 +128,19 @@ MutableSequence (Sequence):
  sort2 (Function comparison_fn, Function key_fn) => self
  sort3 (Function comparison_fn, Function key_fn, Boolean reverse) => self
 
-String (Object, Comparable, Sequence):
+ByteSequence (Object, Sequence):
+ # should this be a MutableSequence?
+
+Buffer (Object, MutableSequence):
+ # is this just mutable version of ByteSequence?
+
+String (Object, Sequence):
  TBD
 
-}}}
+Tuple (Object, Sequence):
 
- 
+List (Object, Comparable, MutableSequence):
+
+}}}
+----
+CategoryLanguage
