@@ -4,10 +4,20 @@ This page contain an incomplete thinking-out-loud description of a re-factoring 
 
 Some questions:
  * How to handle optional parameters, such as in the "sort" method on {{{MutableSequence}}}?
+
+Do you mean optional methods (a deque may not be appropriate for sorting)?  Or are you talking about parameters on methods (such as the "key" keyword of most sort methods)?
+
+
  * Should {{{Boolean}}} be an abstract type that's mixed-in to {{{Object}}}, or a concrete type that inherits from {{{Object}}} (thus implying that non-Boolean {{{Object}}}s may exist)?
+
+I'm assuming that True and False will still exist, and this is for the __bool__ special method (replacing today's __nonzero__, that is used when an arbitrary object is tested for true/false).
+
  * Should destructive operations on {{{MutableSequence}}} return the sequence?  They don't currently, but this would be very useful.  I've made it so in this list...
+
  * In Py2, {{{Boolean}}} is a sub-type of Integer.  Does this make sense?  I've made it its own type in this list...
+
  * Should {{{None}}} just be an instance of {{{Object}}}?  Does {{{NoneType}}} need to exist?
+
  * If a file is opened in binary mode, should its iterator be over bytes instead of lines?  Should "readline()" even work on a binary file?
 
 {{{
