@@ -118,6 +118,10 @@ Decimal (Object, Orderable, Numeric):
 Iterable:
  iterator () => Iteration
 
+###
+# are you renaming __iter__ to iterator()?
+###
+
 StringIterable:
  # yields an iteration of String values
 
@@ -127,9 +131,17 @@ KeyValueIterable (Iterable):
 Iteration (Object, Iterable):
  next () => other
 
+#######
+# Don't you mean => Object
+# (it *could* return itself)
+#######
+
 # should Container be Iterable, or should that be reserved for real types, like Tuple?
 Container (Iterable):
- len () => Integer
+ len () => Integer   
+#####
+# Why is length mandatory?
+#####
  contains (Object) => Boolean
 
 Set (Container):
@@ -144,6 +156,10 @@ Set (Container):
 
 Sequence (Container):
  contains (Sequence) => Sequence
+#######
+# Don't you still mean => Boolean?
+#######
+
  # normal access via index
  # "end" defaults to start, "step" defaults to 1
  slice (Integer start, Integer end = None, Integer step = None) => Object
@@ -172,6 +188,9 @@ MutableSequence (Sequence):
  push (Object, Integer position = 0) => self
  delete (Integer start, Integer end = start, Integer step = 1) => self
  sort (Function comparison_fn = None, Function key_fn = None, Boolean reverse = False) => self
+#########
+# Are these methods all required?  delete =/=> replace
+#########
 
 ByteSequence (Object, Sequence):
  # should this be a MutableSequence?
