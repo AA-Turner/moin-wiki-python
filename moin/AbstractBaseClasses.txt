@@ -87,11 +87,14 @@ Decimal (Object, Orderable, Numeric):
 Iterable:
  iterator () => Iteration
 
-Iteration (Object, Iterable):
- next () => other
+StringIterable:
+ # yields an iteration of String values
 
 KeyValueIterable (Iterable):
- # yields iteration of key-value pairs 
+ # yields an iteration of key-value pairs 
+
+Iteration (Object, Iterable):
+ next () => other
 
 # should Container be Iterable, or should that be reserved for real types, like Tuple?
 Container (Iterable):
@@ -179,6 +182,9 @@ Mapping:
  update (Mapping) => self
  # alternate form of "update" takes Iterable of key-value pairs
  update (KeyValueIterable) => self
+ # yet another form takes no positional parameters, and arbitrary keyword arguments
+ # I need a notation for this kind of method
+ update (KWDS) => self
  # do we really need fromkeys?
  fromkeys (Sequence keys, Object initial_value) => Mapping
 
@@ -191,35 +197,47 @@ ExecutionContext:
 
 Stream:
  close ()
- flush ()
- read () => ByteSequence
- read (Integer) => ByteSequence
- write (ByteSequence) => Integer
 
-RandomAccessStream (Stream):
+RandomAccessStream:
  # do we really need to continue to mimic the low-level UNIX seek and tell?
- # why not use Python sequence-style indices for offset?
+ # why not use Python sequence-style indices for offset?  Positive int for relative
+ # to start, negative int for relative to end, and just call tell() and add an offset
+ # if  you want to seek relative to the current location, for heaven's sake.
  seek (Integer offset)
  tell () => Integer
+ 
+BinaryInputStream (Stream):
+ # read tries to read the whole file, but may return just a part of it
+ read () => ByteSequence
+ read (Integer) => ByteSequence
 
-TextStream (Stream):
- readline () => String
- readlines () => Sequence
- writeline (String) => Boolean
- writelines (Sequence) => Boolean
+OutputStream:
+ flush()
+
+BinaryOutputStream:
+ write (ByteSequence) => Integer
+
+TextStream:
  encoding () => String
 
-OpenFile (RandomAccessStream):
- # it would be great if this had a "mimetype" method
+TextOutputStream (OutputStream, TextStream):
+ writeline (String) => Boolean
+ writelines (StringIterable) => Boolean
+
+TextInputStream (InputStream, TextStream)
+ readline () => String
+ readlines () => StringIterable
+
+DiskFile (RandomAccessStream):
  fileno () => Integer
  filename () => String
  isatty () => Boolean
  truncate (Integer size)
  mode () => String
- 
-BinaryOpenFile (Object, Stream, OpenFile, Iterable, ExecutionContext):
-
-TextOpenFile (Object, TextStream, OpenFile, Iterable, ExecutionContext):
+ # returns two strings, the MIME major type and minor type for the file
+ # return None, None if it can't figure it out.  Suggest UNIX implementation just
+ # uses "file", while Windows implementation uses registry and file extensions.
+ mimetype () => String, String
 
 }}}
 ----
