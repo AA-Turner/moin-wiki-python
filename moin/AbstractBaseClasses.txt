@@ -18,9 +18,24 @@ Object (Comparable):
  hash () => Integer
  # presumable for "is" we compare the ids of the two objects
  id () => Integer
+
+##
+# Why is id an integer?  That is convenient in current CPython
+# (which never moves objects, so can use an address), but perhaps
+# not in other implementations.  The only real requirement is that
+# it be comparable (== and != -- I'm not even sure about sorting)
+# to other ids.
+##
+
  true () => Boolean
  # the __str__ method
  printable () => String
+
+###
+# huh?  Are you saying it has a __str__, or it meets a "printable"
+# interface, or ..?
+###
+
  class () => Type
  implements (Type) => Boolean
 
@@ -28,7 +43,14 @@ Type (Object):
  name () => String
  # supertypes yields list of immediate parent types (what's in __bases__)
  supertypes () => Sequence
- # interfaces yields flattened list of all interface types this implements
+
+###
+# is it strictly a Sequence of Types?  (or types?) 
+# (and/or interfaces?)
+###
+
+ # interfaces yields flattened list of all interface types this   
+ # implements
  interfaces () => Sequence
 
 Ellipsis (Object):
@@ -38,6 +60,11 @@ Ellipsis (Object):
 Null (Object):
  # only a single value of this type
  None
+
+################
+# How is this different from None?  Or are you saying that the
+# Null interface is like the NoneType?
+################
 
 Exception (Object):
  args () => Sequence
@@ -53,6 +80,10 @@ Boolean (Object):
 Orderable:
  less_than (Object) => Boolean
  greater_than (Object) => Boolean
+##
+# What about <=, >=?
+# Currently, only < is used for ordering
+##
 
 Numeric:
  add (Numeric) => Numeric
