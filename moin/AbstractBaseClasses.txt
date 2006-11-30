@@ -114,42 +114,33 @@ Set (Container):
 Sequence (Container):
  contains (Sequence) => Sequence
  # normal access via index
- slice1 (Integer) => Object
- # normal slice of range
- slice2 (Integer, Integer) => Sequence
- # slice with step K
- slice3 (Integer, Integer, Integer) => Sequence
+ # "end" defaults to start, "step" defaults to 1
+ slice (Integer start, Integer end = None, Integer step = None) => Object
  # return self + other Sequence
  concatenate (Sequence) => Sequence
  # N shallow copies of self
  multiply (Integer) => Sequence
+
+SequenceOfOrderable (Sequence):
  # do "min" and "max" make sense over arbitrary sequences?  Should really only apply to sequences of "Orderable"
- min () => Object
- max () => Object
+ min () => Orderable
+ max () => Orderable
 
 MutableSequence (Sequence):
  append (Object) => self
  insert (Integer position, Object) => self
  # value at I is replaced with Object
- replace (Integer position, Object) => self
+ replace (Object, Integer position) => self
  # slice from I to J is replaced with values of Iterator
- replace2 (Integer start, Integer end, Iterable) => self
- # slice from I to J with step K is replaced by Iterator
- replace3 (Integer start, Integer end, Integer step, Iterable) => self
+ replace (Iterable, Integer start, Integer end, Integer step = 1) => self
  extend (Object) => self
  count (Object) => Integer
  reverse ()
- index1 (Object) => Integer
- index2 (Object, Integer start, Integer end) => Object
- pop1 () => Object
- pop2 (Integer position) => Object
- delete1 (Integer position) => self
- delete2 (Integer start, Integer end) => self
- delete3 (Integer start, Integer end, Integer step) => self
- sort0 () => self
- sort1 (Function comparison_fn) => self
- sort2 (Function comparison_fn, Function key_fn) => self
- sort3 (Function comparison_fn, Function key_fn, Boolean reverse) => self
+ index (Object, Integer start = 0, Integer end = len(self)) => Integer
+ pop (Integer position = 0) => Object
+ push (Object, Integer position = 0) => self
+ delete (Integer start, Integer end = start, Integer step = 1) => self
+ sort (Function comparison_fn = None, Function key_fn = None, Boolean reverse = False) => self
 
 ByteSequence (Object, Sequence):
  # should this be a MutableSequence?
@@ -165,12 +156,12 @@ Tuple (Object, Sequence):
 List (Object, MutableSequence):
 
 Mapping:
- get (Object key) => Object
- get_with_default (Object key, Object default) => Object
+ get (Object key, Object default = None) => Object
  set (Object key, Object value)
  # should delete return the deleted value?  Why not.  That removes the need for "pop".
  delete (Object key) => Object
  clear ()
+ # shallow copy of mapping
  copy () => Mapping
  contains (Object key) => Boolean
  # items returns a value which is guaranteed to satisfy both the Set interface and the KeyValueIterable interface
