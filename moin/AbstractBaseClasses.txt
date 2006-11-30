@@ -211,7 +211,7 @@ BinaryInputStream (Stream):
  read () => ByteSequence
  read (Integer) => ByteSequence
 
-OutputStream:
+OutputStream (Stream):
  flush()
 
 BinaryOutputStream:
@@ -224,7 +224,7 @@ TextOutputStream (OutputStream, TextStream):
  writeline (String) => Boolean
  writelines (StringIterable) => Boolean
 
-TextInputStream (InputStream, TextStream)
+TextInputStream (Stream, TextStream)
  readline () => String
  readlines () => StringIterable
 
@@ -234,10 +234,12 @@ DiskFile (RandomAccessStream):
  isatty () => Boolean
  truncate (Integer size)
  mode () => String
- # returns two strings, the MIME major type and minor type for the file
- # return None, None if it can't figure it out.  Suggest UNIX implementation just
- # uses "file", while Windows implementation uses registry and file extensions.
- mimetype () => String, String
+ # It would be nice to have another method, "mimetype", which would try to guess
+ # the MIME type for the file, and if it can it would return two strings, the MIME major
+ # type and minor type for the file.  It would return None, None if it couldn't figure it out.
+ # I'd suggest UNIX implementation just use "file", while Windows implementations
+ # use registry and file extensions.
+ # something like:  mimetype () => String, String
 
 }}}
 ----
