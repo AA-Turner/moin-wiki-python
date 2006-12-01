@@ -16,55 +16,30 @@ Comparable:
 
 Object (Comparable):
  hash () => Integer
- # presumable for "is" we compare the ids of the two objects
- id () => Integer
-
-##
-# Why is id an integer?  That is convenient in current CPython
-# (which never moves objects, so can use an address), but perhaps
-# not in other implementations.  The only real requirement is that
-# it be comparable (== and != -- I'm not even sure about sorting)
-# to other ids.
-##
-
+ # presumably for "is" we compare the ids of the two objects
+ id () => Comparable
  true () => Boolean
- # the __str__ method
+ # we rename __str__ to "printable_rendition"
  printable () => String
-
-###
-# huh?  Are you saying it has a __str__, or it meets a "printable"
-# interface, or ..?
-###
-
  class () => Type
  implements (Type) => Boolean
+ getattr (String name) => Object
+ setattr (String name, Object value)
+ delattr (String name) => Object
+
+TypeSequence (Sequence):
+ # sequence of Type objects
 
 Type (Object):
  name () => String
  # supertypes yields list of immediate parent types (what's in __bases__)
- supertypes () => Sequence
-
-###
-# is it strictly a Sequence of Types?  (or types?) 
-# (and/or interfaces?)
-###
-
- # interfaces yields flattened list of all interface types this   
- # implements
- interfaces () => Sequence
-
-Ellipsis (Object):
- # contains only the single value represented by three dots
- ThreeDots
+ supertypes () => TypeSequence
+ # interfaces yields flattened list of all interface types this implements
+ interfaces () => TypeSequence
 
 Null (Object):
- # only a single value of this type
+ # according to the language reference manual, the Null type contains only one value, "None"
  None
-
-################
-# How is this different from None?  Or are you saying that the
-# Null interface is like the NoneType?
-################
 
 Exception (Object):
  args () => Sequence
@@ -78,12 +53,8 @@ Boolean (Object):
  False
 
 Orderable:
+ # according to Jim Jewett, only < is currently used for ordering
  less_than (Object) => Boolean
- greater_than (Object) => Boolean
-##
-# What about <=, >=?
-# Currently, only < is used for ordering
-##
 
 Numeric:
  add (Numeric) => Numeric
@@ -116,11 +87,8 @@ Decimal (Object, Orderable, Numeric):
  TBD
 
 Iterable:
+ # let's rename __iter__ to "iterator"
  iterator () => Iteration
-
-###
-# are you renaming __iter__ to iterator()?
-###
 
 StringIterable:
  # yields an iteration of String values
@@ -129,22 +97,24 @@ KeyValueIterable (Iterable):
  # yields an iteration of key-value pairs 
 
 Iteration (Object, Iterable):
- next () => other
-
-#######
-# Don't you mean => Object
-# (it *could* return itself)
-#######
+ next () => Object
 
 # should Container be Iterable, or should that be reserved for real types, like Tuple?
 Container (Iterable):
+ # we keep "len" as a mandatory method -- should we?
  len () => Integer   
-#####
-# Why is length mandatory?
-#####
  contains (Object) => Boolean
+ # we rename __getitem__ to "get"
+ get (Object key) => Object
 
-Set (Container):
+MutableContainer (Container):
+ # we rename __setitem__ to "add"
+ # may quite easily raise KeyError when "key" is of the wrong type
+ add (Object key, Object value)
+ # we rename __delitem__ to "remove"
+ remove (Object key)
+
+Set:
  is_subset (Set) => Boolean
  is_superset (Set) => Boolean
  union_with (Set) => Set
@@ -155,11 +125,10 @@ Set (Container):
  shallow_copy () => Set
 
 Sequence (Container):
- contains (Sequence) => Sequence
-#######
-# Don't you still mean => Boolean?
-#######
-
+ # this "contains" method looks for sub-sequences
+ # how do we differentiate it from the Container method "contains()"?
+ # should it be called "subsequence"?
+ contains (Sequence) => Boolean
  # normal access via index
  # "end" defaults to start, "step" defaults to 1
  slice (Integer start, Integer end = None, Integer step = None) => Object
@@ -173,9 +142,9 @@ SequenceOfOrderable (Sequence):
  min () => Orderable
  max () => Orderable
 
-MutableSequence (Sequence):
+MutableSequence (Sequence, MutableContainer):
+ # append just calls "add(len(self), Object)"
  append (Object) => self
- insert (Integer position, Object) => self
  # value at I is replaced with Object
  replace (Object, Integer position) => self
  # slice from I to J is replaced with values of Iterator
@@ -188,9 +157,6 @@ MutableSequence (Sequence):
  push (Object, Integer position = 0) => self
  delete (Integer start, Integer end = start, Integer step = 1) => self
  sort (Function comparison_fn = None, Function key_fn = None, Boolean reverse = False) => self
-#########
-# Are these methods all required?  delete =/=> replace
-#########
 
 ByteSequence (Object, Sequence):
  # should this be a MutableSequence?
@@ -206,8 +172,8 @@ Tuple (Object, Sequence):
 List (Object, MutableSequence):
 
 Mapping:
+ # extra version of "get" which takes a default value
  get (Object key, Object default = None) => Object
- set (Object key, Object value)
  # should delete return the deleted value?  Why not.  That removes the need for "pop".
  delete (Object key) => Object
  clear ()
@@ -229,7 +195,7 @@ Mapping:
  # do we really need fromkeys?
  fromkeys (Sequence keys, Object initial_value) => Mapping
 
-Dict (Object, Mapping, Container):
+Dict (Object, Mapping, MutableContainer):
  # should some methods (e.g., "fromkeys") be here instead of in Mapping?
 
 ExecutionContext:
