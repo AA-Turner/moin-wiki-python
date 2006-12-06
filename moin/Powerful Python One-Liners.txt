@@ -37,8 +37,12 @@ What this does is replace the substring "at" by "op" on all lines of all files (
 
  * '''''Caution:''''' Don't run this on your home directory or you're going to get '''all your text files edited'''.
 {{{#!python
-import sys,os,re,fileinput;a=[i[2] for i in os.walk('.') if i[2]] [0];[sys.stdout.write(re.sub('at','op',j)) for j in fileinput(a,inplace=1)]
+import sys,os,re,fileinput;a=[i[2] for i in os.walk('.') if i[2]] [0];[sys.stdout.write(re.sub('at','op',j)) for j in fileinput.input(a,inplace=1)]
 }}}
+
+Clearer is:
+{{{import os.path; a=[f for f in os.listdir('.') if not os.path.isdir(f)]}}}
+
 === Craming Python into Makefiles ===
 A related issue is embedding Python into a Makefile.  I had a really long script
 that I was trying to cram into a makefile so I automated the process:
