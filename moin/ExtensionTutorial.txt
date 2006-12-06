@@ -1,0 +1,100 @@
+= Creating a Python Extension Module from Scratch =
+
+This guide will take you through the process of creating a Python extension module. It is assumed that you have a recent Python version (2.4 or later) and setuptools installed.
+
+We'll be creating a project called 'exam' (short for 'example'.)
+
+=== Step 1: Create the project directory ===
+
+{{{> mkdir exam
+> cd exam
+}}}
+
+=== Step 2: Create the setup.py script ===
+
+In the directory you just created, make a new file, setup.py containing the following:
+{{{#!python
+from setuptools import setup, Extension
+
+setup(
+    # Name of this package
+    name="exam",
+    
+    # Package version
+    version=0.1,
+    
+    # This tells setup how to find our unit tests.
+    test_suite = "test.exam_unittest",
+    
+    # Describes how to build the actual extension module from C source files.
+    ext_modules = [
+        Extension(
+          'exam',         # Python name of the module
+          ['src/exam.c']  # Source files to build
+        )]
+    )}}}
+
+The {{{setup.py}}} file tells Python how to compile, test, and install your extension module.
+
+=== Step 3: Create the module source file ===
+
+This will be located in the location specified in the {{{setup.py}}} script given above; in this example, the location is {{{exam/src/exam.c}}}. This file will contain the following:
+
+{{{#!cplusplus
+#include <Python.h>
+
+PyMODINIT_FUNC initexam(void)
+{
+    PyObject *m;
+    
+    m = Py_InitModule( "exam", NULL );
+}
+}}}
+
+As you can see, this is a pretty minimal extension module - it does nothing but establish that there is, in fact, a module. We'll add more to this later, but for now, let's just see if we can get it to compile and run.
+
+=== Step 4: Create the unit test module ===
+
+Create an empty __init.py__ file in exam/test.
+
+{{{>mkdir test
+> touch test/__init__.py
+}}}
+
+=== Step 5: Create the unit test source file ===
+
+This will be located in {{{exam/test/exam_unittest.py}}}. This file will contain the following.
+
+{{{#!python
+import unittest
+import doctest
+
+class DeviceTest( unittest.TestCase ):
+    # This is a simple test that just tries to load the module
+    def runTest( self ):
+        try:
+            import exam
+        except ImportError, e:
+            self.Fail( str( e ) )
+}}}
+
+The {{{setup.py}}} will automatically scan this file for unit test cases (subclasses of {{{unittest.TestCase}}}).
+
+At this point, your directory structure should look like this:
+{{{
+exam/
+  setup.py
+  src/
+    exam.c
+  test/
+    __init__.py
+    exam_unittest.py
+}}}
+
+=== Step 6: Build and test the module ===
+
+{{{
+> python setup.py test
+}}}
+
+If everything is correct, your extension module should have built, and you should see a message on the console telling you that your unit test has passed.
