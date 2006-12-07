@@ -4,6 +4,7 @@ This page contain an incomplete thinking-out-loud description of a re-factoring 
 
 Some questions:
  * How to handle optional and keyword parameters to methods, such as the ''cmp'' parameter to the "sort" method on {{{MutableSequence}}}?  Are they different methods with and without the parameter?  Are they just keyword methods, and don't affect the method differentiation?  [+1 to drop 'cmp' completely and make 'key' the first positional arg]
+ * What is the real relationship between Sequence, Mapping, Set, and Dict?  Isn't a Sequence also a mapping (of integer index values to Object sequence values)?  Isn't a Dict also a Set (of key values)?
  * Should the {{{MutableSequence}}} interface be further broken up -- for instance, a {{{deque}}} may not be appropriate for sorting?
  * Currently, {{{Boolean}}} is a subtype of {{{Integer}}}, which is odd.  But we still want a way to test any {{{Object}}} for "trueness".  Should {{{Boolean}}} be an abstract type that's mixed-in to {{{Object}}}, or a concrete type that inherits from {{{Object}}} (thus implying that non-Boolean {{{Object}}}s may exist)?  I've added a "true()" method to {{{Object}}}, which is simply a way of coercing it to a {{{Boolean}}} value (perhaps it should be called "boolean()"). [+1 for mixin]
  * Should destructive operations on {{{MutableSequence}}} return the sequence?  They don't currently, but this would be very useful.  I've made it so in this list...
@@ -101,7 +102,7 @@ Iteration (Object, Iterable):
 
 # should Container be Iterable, or should that be reserved for real types, like Tuple?
 Container (Iterable):
- # we keep "len" as a mandatory method -- should we?
+ # we keep "len" as a mandatory method -- should we?  And why isn't it "size"?
  len () => Integer   
  contains (Object) => Boolean
  # we rename __getitem__ to "get"
@@ -128,10 +129,10 @@ Sequence (Container):
  # this "contains" method looks for sub-sequences
  # how do we differentiate it from the Container method "contains()"?
  # should it be called "subsequence"?
- contains (Sequence) => Boolean
+ covers (Sequence) => Boolean
  # normal access via index
  # "end" defaults to start, "step" defaults to 1
- slice (Integer start, Integer end = None, Integer step = None) => Object
+ slice (Integer start, Integer end = None, Integer step = None) => Sequence
  # return self + other Sequence
  concatenate (Sequence) => Sequence
  # N shallow copies of self
@@ -178,7 +179,7 @@ Mapping:
  delete (Object key) => Object
  clear ()
  # shallow copy of mapping
- copy () => Mapping
+ shallow_copy () => Mapping
  contains (Object key) => Boolean
  # items returns a value which is guaranteed to satisfy both the Set interface and the KeyValueIterable interface
  items () => (Set and KeyValueIterable)
