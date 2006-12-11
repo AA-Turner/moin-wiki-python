@@ -21,11 +21,40 @@ jython-monthly@mchsi.com or jython-users@lists.sourceforge.net for discussion.
 
 = Articles =
 
-= Interested in Developing Jython? =
+= Tips and Tricks =
 
-Check out the new [http://wiki.python.org/jython/JythonDeveloperGuide/PortingPythonModulesToJython Porting Python Modules to Jython] guide which has been posted by Charlie Groves.  This guide will help beginners get a quick start on developing Jython.  Thanks for the guide Charlie.
+This is an old useful trick for referencing a static method within a Jython class.  
 
-If you are interested in developing Jython, please take a look at the [http://sourceforge.net/tracker/?func=browse&group_id=12867&atid=112867 current bug listing] and submit patches for items which you can repair.
+{{{
+# direct, naive approach -- doesn't work...:
+class Class1:
+    def static1(name):
+        print "Hello",name
+
+# ...but now, a call such as:
+Class1.static1("John")
+# will fail with a TypeError, as 'static1' has become 
+# an unbound-method object, not a plain function.
+
+# This is easy to solve with a simple tiny wrapper:
+class Callable:
+    def __init__(self, anycallable):
+        self.__call__ = anycallable
+
+# toy-example usage:
+class Class2:
+    def static2(name):
+        print "Hi there",name
+    static2 = Callable(static2)
+
+# now, a call such as:
+Class2.static2("Peter")
+# works just fine, and as-expected
+}}}
+
+Thanks to Alex Martelli for posting this recipe.
+
+[http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/52304 Python Cookbook]
 
 = Podcasts =
 
@@ -75,6 +104,14 @@ Developers on the Jython project are predicting that the next beta release will 
 ----
 
 Jython - Average Job Salary & Stats in UK http://www.itjobswatch.co.uk/jobs/uk/jython.do
+
+= Interested in Developing Jython? =
+
+Check out the new [http://wiki.python.org/jython/JythonDeveloperGuide/PortingPythonModulesToJython Porting Python Modules to Jython] guide which has been posted by Charlie Groves.  This guide will help beginners get a quick start on developing Jython.  Thanks for the guide Charlie.
+
+If you are interested in developing Jython, please take a look at the [http://sourceforge.net/tracker/?func=browse&group_id=12867&atid=112867 current bug listing] and submit patches for items which you can repair.
+
+
 
 = Useful Links =
 
