@@ -1,19 +1,182 @@
+Jim Baker: I have added relevant posts from the Front Range Pythoneers
+mailing list, since they seem to be a good starting point for a plan
+for the Jython sprint. Currently this is a disorganized mess! Please
+help edit this into something coherent!
+
+= Overall =
+
+Jim Baker: After all of this, I can see that Jython development is currently
+rather disorganized. But here is one compelling blog entry to say it's
+not dead yet, it's just looking for love. And Jython is certainly a
+juicy project. People are still actively using it, there's some
+interesting technical challenges, and in this one, we see substantial
+org challenges to overcome as well. So should the Pythoneers adopt
+this adorable puppy?
+
+With this in mind, what if we plan in the following way:
+
+ * Jan 6, Feb 3 (Saturdays 9 AM - 6 PM) - we hold BoulderSprint, to prepare and otherwise plan for
+
+ * Feb 26 - Mar 1 - 4 day sprint at PyCon on Jython
+
 = Need for a Jython Sprint =
 
-There's a blog post I've been thinking about for a couple weeks now.
-The thought keeps tugging at my sleeve.  Bear with me for a little
-background -- this note really is about python.  Sun hired the two
-lead developers of JRuby a few months back.  Tim Bray has mentioned
-fairly regularly on his blog that the JVM needs to offer better
-support for dynamic languages and the hiring of the JRuby guys is
-evidence that he's been successful in making that pitch within Sun.
+Eric Dobbs: There's a blog post I've been thinking about for a couple
+weeks now.  The thought keeps tugging at my sleeve.  Bear with me for
+a little background -- this note really is about python.  Sun hired
+the two lead developers of JRuby a few months back.  Tim Bray has
+mentioned fairly regularly on his blog that the JVM needs to offer
+better support for dynamic languages and the hiring of the JRuby guys
+is evidence that he's been successful in making that pitch within Sun.
 
-One of those JRuby guys made a
-[http://headius.blogspot.com/2006/11/jython-alive-and-well-and-looking-for.html
-pitch] for jython (of all things) a couple weeks ago.
+One of those JRuby guys made a [http://headius.blogspot.com/2006/11/jython-alive-and-well-and-looking-for.html pitch] for jython (of all things) a couple weeks ago.
 
 So what do you think?  I know at least a few people who've been to the
 recent meetings are also java developers.  Anyone interested in giving
 jython a little nudge?  I'm just testing the waters for now.  If it
 looks like there's some interest I'll dig up specifics and propose a
 code sprint (maybe for January).
+
+= Engineering =
+
+Kip Lehman:
+
+== Jython status communication ==
+
+The likelihood that you, unless you are a core Jython developer, know
+what components are complete in Jython for a 2.2 release is quite
+small.  Why?  There appears to be no publicly available and easily
+digestible record of what is done, what is being worked on (and how
+far along it might be) and what remains to be done.
+
+A starting point might be to segment the product into a handful of
+categories (with some subcategorization) and put up a red/yellow/green
+scoreboard for each item on the Jython web-site.  What might those
+categorizations be?  later...  There is a Jython wiki page that might
+be an appropriate target for this.  Having some rudimentary form of
+project status tracking might be helpful in terms of bringing in
+additional help.  If you don't know what needs to be done or fixed,
+you might not want to volunteer your time.  Knowing specific areas or
+items that are in need of attention and have a close relationship to
+your area of interest/expertise could be a catalyst for involvement
+and action.
+
+== Design ==
+
+Jim Baker: One insight I got from the Django-Oracle sprint is the value of
+design. Well, no one questioned that, but what we saw was the input of
+design even late into the process with respect to supporting
+Oracle. We had enough experts in the room to resolve definitively some
+open questions - or redress some ones that had not been done
+satisfactorily before. So some design issues to be addressed for
+Jython would be byte code translation of Python features, possibly via
+an intermediary like Janino; requisite modules; etc. (I was looking at
+the list of missing modules, and there was Bastion, disabled as of
+2.3...)
+
+== Testing ==
+
+And if we are doing design up front, why not testing too ;) . So here's
+one addition to having an effective test-driven process. It would be
+nice if Jython were in the Pybots. I mean, why should Jython be
+chasing CPython constantly, when it comes to pure Python code? Complex
+projects like Twisted and Django have their dependencies too, and
+that's why they're in Pybots. My intuitive feeling is that Jython
+should not be converging on CPython 2.3 but on 2.6.
+
+== Designate a champion ==
+
+As for a big sponsor, a white knight, my feeling is that is not going
+to happen until after some progress is made, if even then. (But Sun
+could still sponsor the PyCon sprint.) Still, if we get the
+participation of a company or group out there that's actively using
+Jython, that would add significant focus, just as Array Biopharma
+helped on the Django-Oracle sprint.
+
+
+= Technical Wish List =
+
+Kip Lehman:
+
+strawman categories:
+
+ * core language capabilities (new style classes, slots, generators, etc.)
+ * modules
+ * Java version compatibility
+ * installer
+ * GUI development/usage/examples
+ * Jythonc
+ * Web related considerations (server side, client side?)
+ * applet related considerations (environment, howto, examples)
+
+== Classpath / invocation environment issues ==
+
+Having observed the Jython mailing for some years, a repeated topic of
+confusion is one related to setting the CLASSPATH, using jars and how
+to properly reference jars/dirs in manifests.  Providing a primer on
+how to operate using the different constructs and some pointers on the
+decision making process of when and how to use said constructs would
+be a valuable addition to the Jython community.
+
+== Improving coverage and awareness of Jython environments ==
+
+ * Jython 2.1 supports Java 1.2 through Java 1.5
+
+ * Jython 2.2x is slated to support Java 1.2? through Java 1.5 .
+
+ * Java 1.6 has either had an alpha release or such a release will occur within the next 3 months.
+
+Identifying features and capabilities within Java 1.5 and 1.6 that
+would be candidates for exploitation from Jython or need documentation
+to introduce/explain them to Jython developers would be helpful and a
+good advertisement for Jython.
+
+Results of running the Jython test suite on various platforms/ JVM
+versions could provide a one-stop shop for those wondering if Jython
+could work in their environment and also serve to display the wide
+range of Jython applicability.
+
+== Jython installation package ==
+
+Unknown what state the 2.2x version is in.  My recollection is that
+the 2.1 version was characterized as not being suitable for continued
+use.  A Jython installation package that can:
+
+ 0. be configured/scripted for large scale installations (aka headless)
+
+ 0. offer novice users a GUI with helpful explanations of installation choices and the opportunity to return and modify those choices (aka headed)
+
+would be a important component in polishing the Jython image.  It
+could be that most of the work for the new installer is done and that
+testing activities would be the most important contribution.
+
+
+o   Jython and web-services / SOAP
+
+Python SOAP implementations seem to offer only limited coverage
+and the documentation can be somewhat difficult to comprehend.
+
+Java web-services implementations seem to have a wider range of
+capabilities and larger operational acceptance.  Leveraging some of
+the better Java web-services products with Jython might be a niche
+that could widen and diversify the Jython community.
+
+== Jythonc ==
+
+My impression from sporadic reading of the jython-dev mailing list is
+that jythonc isn't going to be a workable part of 2.2.  Documenting
+the state of jythonc 2.1 and the problematic areas that prevent its
+completion in 2.2 would at least provide the community with valuable
+information.
+
+
+= Resources =
+
+ * [http://www.jython.org/Project/devfaq.html Developers' FAQ]
+ * [http://www.jython.org/Project/devguide.html Developers' Guide]
+
+= Supporting Comments =
+
+ * Matt Boersma. I'd like to help, especially if it involves getting at least Python 2.3-level support.  I wrote a large EJB/Swing app all in jython 2.1 a few years ago, and it was fast enough and much more pleasant than writing the equivalent Java code.  Plus, we can't let the Rubyists get ahead of us.  :- )
+
+ * Bill Simons. Yes!  I'm a fan of jython and it's been disappointing to see it lagging behind the other python implementations.  Probably like a lot of other bellyachers I'm not sure I have the time or energy to make a significant contribution to its development, but a sprint sounds like a good way to get our feet wet.
