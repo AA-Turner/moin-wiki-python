@@ -6,9 +6,9 @@ Potentially this provides a rapid and pythonic way to develop web applications, 
 
 The software used in my examples are: 
 
-jython 2.2.a0 
-web.py 0.2 
-tomcat 5.5.20 
+jython 2.2.a1,  
+web.py 0.2,  
+tomcat 5.5.20,  
 java 1.4.2
 
 Some minor modifications to web.py are required as it is written for CPython 2.4 and above, and due to some missing Jython functionality, which I document below, note the way I have implemented the missing Jython dict() functionality could be improved... The patch updates the database module so it uses zxJDBC and adds support for Oracle, but omits pooled connection support, although it should be possible to use a Java library for this if required. web.py uses flup for session functionality, I haven't looked at whether this will work on Jython as yet. 
@@ -294,6 +294,40 @@ To run:sh> jython webapp.py 80
 
 3) Using wsgi, modjy and tomcat.
 
+Follow the instructions at http://www.xhaus.com/modjy to install and configure modjy in your Tomcat installation, ensure you modify the web.xml python.home attribute to point correctly at your local Jython installation, and create the test web application (modjy_webapp) as per instructions. I had to put the jython files in the modjy distribution in my local Jython installs Lib directory and modify modjy_impl.py as there is a bug, as per http://henkenotes.blogspot.com/search/label/jython. Thanks to Henke Eriksson for this. 
+
+Modify your web.py application as below and place it in the root of the modjy_webapp context (webapps/modjy_webapp/). 
+
+
+
+{{{
+
+import web
+from web import form
+
+urls = ('/','index','/myselect','myselect')
+
+
+class index:
+  def GET(self):
+    print "Home"
+
+class myselect:
+  def GET(self):
+    tst = web.select('user',what='*',where="nid=4")
+    for ts in tst:
+      print ts[('name')]
+
+
+web.config.db_parameters = web.utils.dbdict(dbn='mysql',user='me',pw='you',db='jdbc:mysql://localhost/db',driver='org.gjt.mm.mysql.Driver')
+
+###Replace orig main line with wsgi handler:
+
+handler = web.wsgifunc(web.webpyfunc(urls, globals()))
+
+}}}
+
+You should now be able to access your web.py application using Tomcat, e.g. http://localhost:8080/modjy_webapp/myselect.
 
 
 Cheers
