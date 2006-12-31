@@ -1,1 +1,301 @@
 = Web Application Development Using web.py and Jython =
+
+Given the recent discusion on the Jython-dev list of getting popular CPython applications ported to run on Jython I took a look at whether it was possible to get the increasingly poplar web.py web appplication (anti)framework to work on the Jython platform. It turned out it was relatively easy to get it running and most of the basic functionality working: db connectivity, form.py and template.py. 
+
+Potentially this provides a rapid and pythonic way to develop web applications, whilst providing all the advantages that a Jython/Java platform gives, and a possible alternate hosting solution for web.py based solutions. The web.py/Jython combination can either be run using either web.py's builtin web server as a quick way to develop web applications without needing the typical Java web stack, or using it's wsgi component in combination with modjy and a Java application server, in this example Tomcat. 
+
+The software used in my examples are: 
+
+jython 2.2.a0
+web.py 0.2
+tomcat 5.5.20 
+java 1.4.2
+
+Some minor modifications to web.py are required as it is written for CPython 2.4 and above, and due to some missing Jython functionality, which I document below, note the way I have implemented the missing Jython dict() functionality could be improved... The patch updates the database module so it uses zxJDBC and adds support for Oracle, but omits pooled connection support, although it should be possible to use a Java library for this if required. web.py uses flup for session functionality, I haven't looked at whether this will work on Jython as yet. 
+
+1) Patch web.py
+
+Download web.py and copy the source directory (web) from the web.py distribution into your Jython installations Lib directory. The following changes are then required to get it to run on Jython:
+
+{{{
+
+####################
+
+db.py:
+
+5a6,7
+> from __future__ import generators
+> 
+19a22,27
+> #needed to import external packages in jython, also need to be on classpath
+> import sys
+> sys.add_package('com.ziclix.python.sql')
+> sys.add_package('oracle.jdbc.driver')
+> sys.add_package('org.gjt.mm.mysql')
+> 
+24c32
+< from utils import storage, iters, iterbetter
+---
+> from utils import storage, iters, iterbetter, fdict
+162d169
+<         >>> sqlify(None)
+234c241
+< def connect(dbn, **keywords):
+---
+> def connect(keywords):
+241a249
+>     dbn = keywords['dbn']
+244c252
+<             import psycopg2 as db
+---
+>             from com.ziclix.python.sql import zxJDBC as db
+247c255
+<                 import psycopg as db
+---
+>                 from com.ziclix.python.sql import zxJDBC as db
+253,254c261,263
+<         keywords['database'] = keywords['db']
+<         del keywords['db']
+---
+>         if 'db' in keywords:
+>             keywords['database'] = keywords['db']
+>             del keywords['db']
+257c266
+<         import MySQLdb as db
+---
+>         from com.ziclix.python.sql import zxJDBC as db
+259c268
+<             keywords['passwd'] = keywords['pw']
+---
+>             keywords['password'] = keywords['pw']
+261c270,284
+<         db.paramstyle = 'pyformat' # it's both, like psycopg
+---
+>         if 'db' in keywords:
+>             keywords['database'] = keywords['db']
+>             del keywords['db']
+>         #db.paramstyle = 'pyformat' # it's both, like psycopg
+>         db.paramstyle = 'qmark' # it's both, like psycopg
+> 
+>     elif dbn == "oracle":
+>         from com.ziclix.python.sql import zxJDBC as db
+>         if 'pw' in keywords:
+>             keywords['password'] = keywords['pw']
+>             del keywords['pw']
+>         if 'db' in keywords:
+>             keywords['database'] = keywords['db']
+>             del keywords['db']
+>         db.paramstyle = 'numeric' 
+265c288
+<             import sqlite3 as db
+---
+>             from com.ziclix.python.sql import zxJDBC as db
+273,275c296,298
+<         web.config._hasPooling = False
+<         keywords['database'] = keywords['db']
+<         del keywords['db']
+---
+>         if 'db' in keywords:
+>             keywords['database'] = keywords['db']
+>             del keywords['db']
+278c301
+<         import kinterbasdb as db
+---
+>         from com.ziclix.python.sql import zxJDBC as db
+280c303
+<             keywords['passwd'] = keywords['pw']
+---
+>             keywords['password'] = keywords['pw']
+282,283c305,307
+<         keywords['database'] = keywords['db']
+<         del keywords['db']
+---
+>         if 'db' in keywords:
+>             keywords['database'] = keywords['db']
+>             del keywords['db']
+294,301c318,319
+<         if isinstance(web.ctx.db, dict):
+<             keywords = web.ctx.db
+<             if web.config._hasPooling:
+<                 if 'db' not in globals(): 
+<                     globals()['db'] = PooledDB(dbapi=db, **keywords)
+<                 web.ctx.db = globals()['db'].connection()
+<             else:
+<                 web.ctx.db = db.connect(**keywords)
+---
+>         keywords = web.ctx.db
+>         web.ctx.db = db.connect(keywords.get('database'),keywords.get('user'), keywords.get('password'), keywords.get('driver'))
+302a321
+> 
+373c392
+<                 yield storage(dict(zip(names, row)))
+---
+>                 yield storage(fdict(zip(names, row)))
+378c397
+<         out.list = lambda: [storage(dict(zip(names, x))) \
+---
+>         out.list = lambda: [storage(fdict(zip(names, x))) \
+545a565,567
+>     elif web.ctx.db_name == "oracle":
+> 	       web.ctx.db_execute(db_cursor, sql_query)
+>         sql_query = SQLQuery("SELECT "+seqname+".currval from dual")
+624a647
+> 
+
+
+####################
+
+debugerror.py:
+
+16a17
+> from utils import fdict
+20c21,27
+< whereami = os.path.sep.join(whereami.split(os.path.sep)[:-1])
+---
+> #whereami = os.path.sep.join(whereami.split(os.path.sep)[:-1])
+> #sep attribute doesn't seem to exist in jython, hence:
+> if os.name == 'nt':
+>     whereami = '\\'.join(whereami.split('\\')[:-1]) 
+> else:
+>     whereami = '/'.join(whereami.split('/')[:-1]) 
+> 
+201c208
+< $:dicttable(dict(newctx))
+---
+> $:dicttable(fdict(newctx))
+
+
+####################
+
+form.py:
+
+22c22,23
+<         o = copy.deepcopy(self)
+---
+>         #not sure about this ... template.py throws error with deepcopy().
+>         o = copy.copy(self)
+
+####################
+
+template.py:
+
+8c8
+< from utils import storage, group
+---
+> from utils import storage, group, fdict
+585c585
+<         kw = dict([(x, self.h(y)) for (x, y) in i[KWARGS]])
+---
+>         kw = fdict([(x, self.h(y)) for (x, y) in i[KWARGS]])
+
+####################
+
+utils.py:
+
+5a6,7
+> from __future__ import generators
+> 
+145,148c147,150
+< iters.__doc__ = """
+< A list of iterable items (like lists, but not strings). Includes whichever
+< of lists, tuples, sets, and Sets are available in this version of Python.
+< """
+---
+> #iters.__doc__ = """
+> #A list of iterable items (like lists, but not strings). Includes whichever
+> #of lists, tuples, sets, and Sets are available in this version of Python.
+> #"""
+355c357
+<     return dict([(value, key) for (key, value) in mapping.iteritems()])
+---
+>     return fdict([(value, key) for (key, value) in mapping.iteritems()])
+528c530,531
+<     return ''.join(c for c in str(string).split('.')[0] if c.isdigit())
+---
+>     return ''.join([c for c in str(string).split('.')[0] if c.isdigit()])
+711c714,715
+<     for (key, value) in locals.iteritems():
+---
+>     #for (key, value) in locals.iteritems():
+>     for (key, value) in locals.items():
+759a764,774
+> def fdict(seq):
+>     result = {}
+>     for key,value in seq:
+>         result[key] = value
+>     return result
+> 
+> def dbdict(**seq):
+>     result = {}
+>     for key,value in seq.items():
+>         result[key] = value
+>     return result
+
+####################
+
+webapi.py:
+
+5a6,7
+> from __future__ import generators
+> 
+20c22
+< from utils import storage, storify, threadeddict, dictadd, intget, lstrips
+---
+> from utils import storage, storify, threadeddict, dictadd, intget, lstrips, fdict
+93c95
+<     def dictify(fs): return dict([(k, fs[k]) for k in fs.keys()])
+---
+>     def dictify(fs): return fdict([(k, fs[k]) for k in fs.keys()])
+252c254,255
+<         db.connect(**config.db_parameters)
+---
+>         db.connect(config.db_parameters)
+
+
+}}}
+
+
+2) Using web.py builtin web server:
+
+Once patched you should be able to run a web.py application as follows:
+
+webapp.py:
+
+{{{
+
+import web
+from web import form
+
+urls = ('/','index','/myselect','myselect')
+
+
+class index:
+  def GET(self):
+    print "Home"
+
+class myselect:
+  def GET(self):
+    tst = web.select('user',what='*',where="nid=4")
+    for ts in tst:
+      print ts[('name')]
+
+
+#notice using dbdict() rather than dict() for db connections
+
+web.config.db_parameters = web.utils.dbdict(dbn='mysql',user='me',pw='you',db='jdbc:mysql://localhost/db',driver='org.gjt.mm.mysql.Driver')
+
+if __name__ == "__main__":web.run(urls, globals())
+
+
+}}}
+
+To run:sh> jython webapp.py 80
+
+
+3) Using wsgi, modjy and tomcat.
+
+
+
+Cheers
+Colin
+
