@@ -62,9 +62,7 @@ and action.
 
 == Design ==
 
-Jim Baker: One insight I got from the Django-Oracle sprint is the value of
-design. Well, no one questioned that, but what we saw was the input of
-design even late into the process with respect to supporting
+Jim Baker: One insight I got from the Django-Oracle sprint is the value of design. Well, no one questioned that, but what we saw was the input of design even late into the process with respect to supporting
 Oracle. We had enough experts in the room to resolve definitively some
 open questions - or redress some ones that had not been done
 satisfactorily before. So some design issues to be addressed for
@@ -75,12 +73,7 @@ the list of missing modules, and there was Bastion, disabled as of
 
 == Testing ==
 
-And if we are doing design up front, why not testing too ;) . So here's
-one addition to having an effective test-driven process. It would be
-nice if Jython were in the Pybots. I mean, why should Jython be
-chasing CPython constantly, when it comes to pure Python code? Complex
-projects like Twisted and Django have their dependencies too, and
-that's why they're in Pybots. My intuitive feeling is that Jython
+And if we are doing design up front, why not testing too ;) . So here's one addition to having an effective test-driven process. It would be nice if Jython were in the Pybots. I mean, why should Jython be chasing CPython constantly, when it comes to pure Python code? Complex projects like Twisted and Django have their dependencies too, and that's why they're in Pybots. My intuitive feeling is that Jython
 should not be converging on CPython 2.3 but on 2.6.
 
 == Designate a champion ==
@@ -99,12 +92,12 @@ Kip Lehman:
 
 strawman categories:
 
- * core language capabilities (new style classes, slots, generators, etc.)
+ * core language capabilities (new style classes, slots, generators, etc.) Most of these are implemented in the alpha release.
  * modules
  * Java version compatibility
  * installer
  * GUI development/usage/examples
- * Jythonc
+ * Jythonc.
  * Web related considerations (server side, client side?)
  * applet related considerations (environment, howto, examples)
 
@@ -168,6 +161,11 @@ the state of jythonc 2.1 and the problematic areas that prevent its
 completion in 2.2 would at least provide the community with valuable
 information.
 
+Jim:
+
+From what I can tell, the current implementation of jythonc has been abandoned, because the idea of translating to Java instead of Java bytecode turned out to be a bad decision.
+
+The right decision is probably to provide for emitting Java bytecode persistently and providing runtime eval access to the Jython Jar, possibly via an embedding via the Jar Jar tool.  A great discussion topic for the sprint!
 
 = Resources =
 
