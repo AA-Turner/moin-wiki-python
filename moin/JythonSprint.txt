@@ -3,32 +3,53 @@
  * BoulderSprint Jan 6, Feb 3 (Saturdays 9 AM - 6 PM) at bivio
  * Feb 26 - Mar 1 - 4 day sprint at PyCon on Jython
 
-Jython is certainly a juicy project still actively used, there are
-interesting technical challenges, and in this one, we see substantial
-org challenges to overcome as well.
+= Rationale =
 
-= Homework Assignment =
+Jython is certainly a juicy project: it’s still actively used, there are
+interesting technical challenges, and in this one, we see substantial
+organizational challenges to overcome as well.
+
+= Design Ideas =
+
+This is the result of some ideas from the sprint on Jan 6. Our overall thinking was based on the premise of unification and reuse:
+
+ * Unification. Try to bring Jython into the main branch of CPython development, to avoid chasing what’s going on there. There’s simply too much to catch up on. This means updating the grammar, getting more of the Python standard library that is pure Python running on Jython, etc. 
+
+ * Reuse. What can Jython use from the Java ecosystem, especially other dynamic languages. As we will see, this means mostly frameworks for bytecode engineering, specifically [http://asm.objectweb.org/ ASM].
+
+Note that unification without 2.5 is not without controversy. In particular, an incremental approach might in fact be the best course of action.
+
+== Keep JavaCC ==
+
+In the spirit of radical revolution, we looked at the feasibility of using CPython’s new AST approach. (AST = abstract syntax tree, think of a specific snippet of Python code as a Lisp expression.) This is documented in [http://www.python.org/dev/peps/pep-0339/ PEP 339]. This was motivated by the idea, why not just lift the grammar – Python.asdl - from CPython 2.5 exactly. This is elegantly written and would allow for exact compliance. Seems like a nice idea! 
+
+First, let’s look at what’s currently happening in Jython. Jython uses [https://javacc.dev.java.net/ JavaCC] and the related project [https://javacc.dev.java.net/doc/JJTree.html JJTree]. JJTree in particular is used to preprocess the JavaCC grammar (python.jjt), which is then compiled to python.jj, then to PythonGrammar.java (a standard YACCish state machine), and all of the AST nodes in ast/*.java.
+
+CPython 2.5 is using Zephyr’s ASDL (Abstract Syntax Definition Language), which is a language for writing tree grammars. At first, we thought that it meant it was using Zephyr code generation – and this is convenient, asdlGen supports both Java and C generation. But this is not in fact the case. The reason is very sound: to enable introspection of any ASTs, the module asdl_c.py generates nodes for the AST that are made out of standard Python internal data structures like PyObject. But of course we are not interested in C data structures here. We also should mention that [http://sourceforge.net/projects/asdl Zephyr] itself has not been updated in nearly 5 years on SourceForge.
+
+ANTLR is another approach, but this does not address the unification goal with CPython development.
+
+== Rework Bytecode Generation ==
+
+ * Jython. CodeCompiler.java
+ * Groovy. AsmClassGenerator.java
+ * CPython. compile.c
+
+= Sprint Participation =
+
+== Homework Assignment ==
 
 If you plan to participate in the sprints, please try to get your development environment set up ahead of time so we can make the best use of the time we code together.  Start here: http://wiki.python.org/jython/JythonDeveloperGuide
 
 Please also review the Resources listed below.
 
-= Engineering =
+== Engineering ==
 
 Charlie Groves (jython committer) suggests: 
 
-I've been starting people out with
-porting a Python module written in C to Jython as described in
-http://wiki.python.org/jython/JythonDeveloperGuide/PortingPythonModulesToJython.
-Paul has been making a nice writeup of porting the csv module in more
-detail in his blog at http://gushieblog.blogspot.com/
+I've been starting people out with porting a Python module written in C to Jython as described in http://wiki.python.org/jython/JythonDeveloperGuide/PortingPythonModulesToJython. Paul has been making a nice writeup of porting the csv module in more detail in his blog at http://gushieblog.blogspot.com/
 
-I've wanted to get unicodedata for a while since several things depend
-on it.  If you've got someone with some serious unicode experience
-that could be nice.  We're moving to Java 1.4(or 5) for 2.3 so the
-select implementation could use Java's nio which would be much better
-than the current implementation.  If someone has serious nio or select
-experience, that could be a good target.
+I've wanted to get unicodedata for a while since several things depend on it.  If you've got someone with some serious unicode experience that could be nice.  We're moving to Java 1.4(or 5) for 2.3 so the select implementation could use Java's nio which would be much better than the current implementation.  If someone has serious nio or select experience, that could be a good target.
 
 You could also look at http://wiki.python.org/jython/BiggerTasks for
 things to do.  They're probably a little too much to pick up and do
@@ -103,12 +124,7 @@ strawman categories:
 
 == Classpath / invocation environment issues ==
 
-Having observed the Jython mailing for some years, a repeated topic of
-confusion is one related to setting the CLASSPATH, using jars and how
-to properly reference jars/dirs in manifests.  Providing a primer on
-how to operate using the different constructs and some pointers on the
-decision making process of when and how to use said constructs would
-be a valuable addition to the Jython community.
+Having observed the Jython mailing for some years, a repeated topic of confusion is one related to setting the CLASSPATH, using jars and how to properly reference jars/dirs in manifests.  Providing a primer on how to operate using the different constructs and some pointers on the decision making process of when and how to use said constructs would be a valuable addition to the Jython community.
 
 == Improving coverage and awareness of Jython environments ==
 
