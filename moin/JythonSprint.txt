@@ -13,7 +13,7 @@ organizational challenges to overcome as well.
 
 This is the result of some ideas from the sprint on Jan 6. Our overall thinking was based on the premise of unification and reuse:
 
- * Unification. Try to bring Jython into the main branch of CPython development, to avoid chasing what’s going on there. There’s simply too much to catch up on. This means updating the grammar, getting more of the Python standard library that is pure Python running on Jython, etc. 
+ * Unification. Try to bring Jython into the main branch of CPython development, to avoid chasing what’s going on there. There’s simply too much to catch up on. This means updating the grammar, getting more of the Python standard library that is pure Python running on Jython, etc.
 
  * Reuse. What can Jython use from the Java ecosystem, especially other dynamic languages. As we will see, this means mostly frameworks for bytecode engineering, specifically [http://asm.objectweb.org/ ASM].
 
@@ -21,7 +21,7 @@ Note that unification without 2.5 is not without controversy. In particular, an 
 
 == Keep JavaCC ==
 
-In the spirit of radical revolution, we looked at the feasibility of using CPython’s new AST approach. (AST = abstract syntax tree, think of a specific snippet of Python code as a Lisp expression.) This is documented in [http://www.python.org/dev/peps/pep-0339/ PEP 339]. This was motivated by the idea, why not just lift the grammar – Python.asdl - from CPython 2.5 exactly. This is elegantly written and would allow for exact compliance. Seems like a nice idea! 
+In the spirit of radical revolution, we looked at the feasibility of using CPython’s new AST approach. (AST = abstract syntax tree, think of a specific snippet of Python code as a Lisp expression.) This is documented in [http://www.python.org/dev/peps/pep-0339/ PEP 339]. This was motivated by the idea, why not just lift the grammar – Python.asdl - from CPython 2.5 exactly. This is elegantly written and would allow for exact compliance. Seems like a nice idea!
 
 First, let’s look at what’s currently happening in Jython. Jython uses [https://javacc.dev.java.net/ JavaCC] and the related project [https://javacc.dev.java.net/doc/JJTree.html JJTree]. JJTree in particular is used to preprocess the JavaCC grammar (python.jjt), which is then compiled to python.jj, then to PythonGrammar.java (a standard YACCish state machine), and all of the AST nodes in ast/*.java.
 
@@ -29,11 +29,55 @@ CPython 2.5 is using Zephyr’s ASDL (Abstract Syntax Definition Language), whic
 
 ANTLR is another approach, but this does not address the unification goal with CPython development.
 
-== Rework Bytecode Generation ==
+Conclusion: we should simply update the JavaCC grammar in python.jjt.
+
+However, we quickly realized that just like is done with ANTLR, we could immediately test this new version of the grammar for compliance, simply by parsing large numbers of Python source files. One potential corpus, in addition to the standard library: the Python Cookbook. Casual inspection of its entries suggests it would be a good coverage test.
+
+Would it make sense to unify the actual AST nodes as well? We need to look at that too.
+
+== Move to ASM for Bytecode Generation ==
+
+ASM has emerged as a standard library for manipulating and emitting bytecode. The analogy that might be used here is think of writing XML output. The first instinct is to DIY with print because it’s so easy. But then consider entities, encodings, etc., and quickly one realizes that even just writing XML is a hassle without using packages like ElementTree.
+
+=== Removing Reflection ===
+
+ASM also readily enables what Dennis Sosnoski described as [http://www-128.ibm.com/developerworks/java/library/j-dyn0610/ classworking], a method of replacing reflection with bytecode generation, since this is what ASM directly supports. Comments in the current code, PyJavaClass.java, to support reflection suggest there’s an [http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4071957  ancient (1997) bug] lurking here. Is it possible to remove reflection then completely in favor of just a bit more bytecode generation? It would seem so.
+
+=== Comparative Generation ===
+
+Here’s a list of modules that perform bytecode generation in the respective languages:
 
  * Jython. CodeCompiler.java
  * Groovy. AsmClassGenerator.java
  * CPython. compile.c
+
+Some relevant resources:
+
+ * [http://java.sun.com/docs/books/vmspec/2nd-edition/html/VMSpecTOC.doc.html Java VM specification]
+
+== Fix a Compliance Target ==
+
+Regression testing against the CPython test suite is certainly a noble goal. Probably what will excite more interest are supported applications in Jython. Here’s a list:
+
+ * Django
+ * TurboGears
+
+This follows what Charles Nutter observed about JRuby and Rails. (Add relevant link.)
+
+== Replacing JythonC ==
+
+Kip Lehman noted in one post that his impression from sporadic reading of the jython-dev mailing list is that jythonc isn't going to be a workable part of 2.2.
+
+Apparently the current implementation of jythonc has been abandoned, because the idea of translating to Java instead of Java bytecode turned out to be a bad decision.
+
+The right decision is probably to provide for emitting Java bytecode persistently and providing runtime eval access to the Jython Jar, possibly via an embedding via the Jar Jar tool.  A great discussion topic for the sprint!
+
+ * [http://java.sun.com/j2se/1.4.2/docs/api/java/util/jar/package-summary.html Jar API]
+ * [http://tonicsystems.com/products/jarjar/ Jar Jar Links]
+
+== Supporting select ==
+
+Various networking modules in the standard library do not work because of a lack of Posix style select. Java NIO has what looks like a close match in [http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/Selector.html java.nio.channels.Selector].
 
 = Sprint Participation =
 
@@ -45,7 +89,7 @@ Please also review the Resources listed below.
 
 == Engineering ==
 
-Charlie Groves (jython committer) suggests: 
+Charlie Groves (jython committer) suggests:
 
 I've been starting people out with porting a Python module written in C to Jython as described in http://wiki.python.org/jython/JythonDeveloperGuide/PortingPythonModulesToJython. Paul has been making a nice writeup of porting the csv module in more detail in his blog at http://gushieblog.blogspot.com/
 
@@ -169,19 +213,6 @@ capabilities and larger operational acceptance.  Leveraging some of
 the better Java web-services products with Jython might be a niche
 that could widen and diversify the Jython community.
 
-== Jythonc ==
-
-My impression from sporadic reading of the jython-dev mailing list is
-that jythonc isn't going to be a workable part of 2.2.  Documenting
-the state of jythonc 2.1 and the problematic areas that prevent its
-completion in 2.2 would at least provide the community with valuable
-information.
-
-Jim:
-
-From what I can tell, the current implementation of jythonc has been abandoned, because the idea of translating to Java instead of Java bytecode turned out to be a bad decision.
-
-The right decision is probably to provide for emitting Java bytecode persistently and providing runtime eval access to the Jython Jar, possibly via an embedding via the Jar Jar tool.  A great discussion topic for the sprint!
 
 = Resources =
 
