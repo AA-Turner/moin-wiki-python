@@ -1,0 +1,19 @@
+I just upgraded from python 2.4.2 to 2.5 (r25:51908, Jan 4 2007, 17:18:25) and my program using the xmpp module stopped working. Investigating, it appears that ssl() is no longer part of the socket module, but I can't find any documenation to that effect. Here is what I see (opensuse 10.1):
+
+{{{/usr/bin/python
+Python 2.4.2 (#1, May  2 2006, 08:13:46)
+[GCC 4.1.0 (SUSE Linux)] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import socket
+>>> [x for x in socket.__dict__.keys() if x[0] == 's']
+['sslerror', 'socketpair', 'socket', 'ssl', 'setdefaulttimeout', 'sys']
+>>>
+gpomper@dhcp-10-111-54-146:~/Desktop/Python-2.5$ python
+Python 2.5 (r25:51908, Jan  4 2007, 17:18:25)
+[GCC 4.1.0 (SUSE Linux)] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import socket
+>>> [x for x in socket.__dict__.keys() if x[0] == 's']
+['socketpair', 'socket', 'setdefaulttimeout', 'sys']
+}}}
+Where did ssl go?
