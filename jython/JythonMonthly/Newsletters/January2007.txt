@@ -7,18 +7,67 @@
 
 = Off The Lists =
 
+''Question from "Divya":''
+
+I would like to parse ". java "  /   ".class"   files and detect class
+name's, attributes  name's and type's (and or list of methods).
+
+Is there any module who can parse easily a java file using jython?
+
+''Answer from Luis:''
+
+It would probably be easiest to work on compiled .class files and use
+the reflection API.
+
+If you have access to Java 6, you could even use the compiler API. See
+the following article:
+
+http://www.javalobby.org/java/forums/t44534.html
+
+''Question from Mike:''
+
+I'm embedding Jython in a Java servlet and have set the 'python.path' to include a directory which contains python scripts I have written and packaged. 
+
+For example I have a folder "/package" which contains 'myscript.py' and '__init__.py'.
+
+My servlet executes some arbitary python script which imports the module 'myscript'. The first time this happens 'myscript.py' is compiled to 'myscript$py.class' which is fine. However, if I change 'myscript.py' there is no detection of the new script and I must shutdown and restart the servlet to reload my changes. 
+
+Is there any simple way around this?
+
+''Answer from Leouser:''
+
+have you tried the reload function yet?
+
+{{{import Thing
+Thing.doSomething()
+#change Thing.py src
+reload(Thing)
+Thing.doSomething()
+}}}
+
 = Interested in Developing Jython? =
 
 If you are interested in developing Jython, please take a look at the [http://sourceforge.net/tracker/?func=browse&group_id=12867&atid=112867 current bug listing] and submit patches for items which you can repair.
 
-= IDE Information =
+= Tips and Tricks =
 
+[http://aspn.activestate.com:80/ASPN/Cookbook/Python/Recipe/499295 Python Cookbook: Reload Classes Dynamically]
 
-= Who's Using Jython? =
+[http://aspn.activestate.com:80/ASPN/Cookbook/Python/Recipe/499296 Python Cookbook: The KeyedDict object keeps a list of approved key values]
 
+[http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/499304 Python Cookbook: Calculate hamming distance between two strings]
+
+= Noteworthy Book Releases =
+
+[http://www.techbookreport.com/tbr0278.html Python Phrasebook]
 
 = Jython Blogs =
 
+[http://gushieblog.blogspot.com:80/ Great Jython blogs from Paul Drummond]
+
+[http://henkenotes.blogspot.com/2006/12/cherrypy-jython-modjy-jboss-true.html CherryPy + Jython + modjy + JBoss = true]
+
+[http://gushieblog.blogspot.com/2006/12/handling-method-arguments-in-jython.html Handling Method Arguments in Jython]
 
 = Interesting Facts =
 
