@@ -560,3 +560,14 @@ So I suggest to move complex data type and cmath module to an external library (
 Some PEPs which are not ready for Python 3.0 will need new keywords. Reserving them in Python 3.0 will provide better backward compatibility in Python 3.x. Of curse, this should only be done for PEPs wich have good chances to be accepted.
 
 This reserved keywords could be: switch, case, make ... 
+
+== Simplify the filename search when importing ==
+When Python executes 'import os' (for example) it looks for
+{{{
+os.so
+osmodule.so
+os.py
+os.pyc
+}}}
+Is the {{{osmodule.so}}} really needed when you already have
+{{{os.so}}}, or is the 'module' suffix just an historical relic which can be removed? It seems unnecessary, a bit like adding 'string' onto the end of all your string variables.
