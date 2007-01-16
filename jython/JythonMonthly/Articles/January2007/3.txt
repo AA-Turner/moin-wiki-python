@@ -10,8 +10,23 @@ The jython-users thread had many suggestions but none were found to work. After 
 
 '''Method'''
 
-For brevity I will not repeat the original Java code here, but it will be linked to in the References [2]. This is how I use it (note that one can use either addFile or addURL depending on whether the Jar is on a file system or remote server). 
+For brevity I will not repeat the original Java code here, but it will be linked to in the References [2]. This is how I call the Jython class (note that one can use either addFile or addURL depending on whether the Jar is on a file system or remote server). 
 
 {{{
+from com.ziclix.python.sql import zxJDBC
 
+d,u,p,v = "jdbc:postgresql://localhost/img_arc2","postgres","","org.postgresql.Driver"
+
+try :
+    # if called from command line with .login CLASSPATH setup right,this works
+    db = zxJDBC.connect(d, u, p, v)
+except:
+    # if called from Apache or account where the .login has not set CLASSPATH
+    # need to use run-time CLASSPATH Hacker
+    try :
+        jarLoad = classPathHacker()
+        a = jarLoad.addFile("/usr/share/java/postgresql-jdbc3.jar")
+        db = zxJDBC.connect(d, u, p, v)
+    except :
+        sys.exit ("still failed \n%s" % (sys.exc_info() ))
 }}}
