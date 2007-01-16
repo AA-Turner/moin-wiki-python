@@ -2,11 +2,11 @@
 
 During Oct-Nov 2006 there was a thread in the jython-users group titled "adding Jars to sys.path". More accurately the objective there was to add Jars to the sys.path at runtime. Several people asked the question, "Why would you want to do that?" Well there are at least 2 good reasons. First, if you want to distribute a jython or Java package that includes non-standard Jars in it, perhaps you want to make life easier for the target user and ''not'' demand that they know how to set environment variables. A second even more compelling reason is when '''there is no normal user account to provide environment variables'''. 
 
-"What?", you ask. Well, in my case I came upon it in the following way. I am authoring an Open Source IHE Image Archive Actor [1] and needed a web interface. I'm using AJAX on the client side to route database calls through CGI to a jython-JDBC enabled API. Testing the jython-JDBC API from the command line worked fine, I had the PostGres driver in my CLASSPATH. But, when called via the web interface I got "zxJDBC error, postGres driver not found" errors. Why? Because APACHE was calling the API and APACHE is not a normal account with environment variables. 
+"What?", you ask. Well, in my case I came upon it in the following way. I am authoring an open source IHE Image Archive Actor [1] and needed a web interface. I'm using AJAX on the client side to route database calls through CGI to a jython-JDBC enabled API. Testing the jython-JDBC API from the command line worked fine, I had the PostGres driver in my CLASSPATH. But, when called via the web interface I got "zxJDBC error, postGres driver not found" errors. Why? Because APACHE was calling the API and APACHE is not a normal account with environment variables. 
 
 What to do? 
 
-The jython-users thread had many suggestions but none were found to work. After a while, it occured to me that perhaps someone in the Java world had found a similar problem and had solved it. Then all I would have to do is trasnlate the solution. And that is exactly what happened.
+The jython-users thread had many suggestions but none were found to work. I also checked several books. In Chapter 11 of O'Reilly's "Jython Essentials", the section on "System and File Modules" has a taunt that mentions that "... to load a class at runtime one also needs an appropriate class loader." Of course, no mention is made beyond that. After a while, it occured to me that perhaps someone in the Java world had found a similar problem and had solved it. Then all I would have to do is trasnlate the solution. And that is exactly what happened.
 
 '''Method'''
 
@@ -83,7 +83,7 @@ class classPathHacker :
 
 '''Conclusions'''
 
-
+That's it. Depressingly short for what it does, but then that's another proof of the power of this tool. 
 
 
 '''References'''
