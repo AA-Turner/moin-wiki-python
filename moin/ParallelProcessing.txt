@@ -7,6 +7,7 @@ A number of Python-related libraries exist for the programming of solutions eith
 Some libraries, often to preserve some similarity with more familiar concurrency models (such as Python's threading API), employ parallel processing techniques which limit their relevance to SMP-based hardware, mostly due to the usage of process creation functions such as the UNIX fork system call. However, a technique called process migration may permit such libraries to be useful in certain kinds of computational clusters as well, notably single-system image cluster solutions ([http://openmosix.sourceforge.net/ OpenMosix] being one such example).
 
  * [http://www.python.org/pypi/parallel parallel/pprocess] - fork-based process creation with asynchronous channel-based communications
+ * [http://poshmodule.sourceforge.net/ POSH] Python Object Sharing is an extension module to Python that allows objects to be placed in shared memory.  POSH allows concurrent processes to communicate simply by assigning objects to shared container objects.
  * [http://www.parallelpython.com/ ppsmp] - process-based, job-oriented solution (''source code not available, has restrictive licence'')
  * [http://www.python.org/pypi/processing processing] - fork-based process creation (using threads on other platforms), implementing an API like the standard library's threading API and providing familiar objects such as queues and semaphores through the use of a manager process
  * [http://www.python.org/pypi/remoteD remoteD] - fork-based process creation with a dictionary-based communications paradigm
@@ -17,11 +18,16 @@ Advantages of such approaches include convenient process creation and the abilit
 
 Unlike SMP architectures and especially in contrast to thread-based concurrency, cluster (and grid) architectures offer high scalability due to the relative absence of shared resources, although this can make the programming paradigms seem somewhat alien to uninitiated developers. In this domain, some overlap with other distributed computing technologies may be observed (see DistributedProgramming for more details).
 
+ * [http://seweb.se.wtb.tue.nl/~hat/batchlib.html batchlib] - a distributed computation system with automatic selection of processing services (''no longer developed'')
+ * [http://seweb.se.wtb.tue.nl/~hat/execproxy.html exec_proxy] - a system for executing arbitrary programs and transferring files (''no longer developed'')
+ * [http://codespeak.net/py/current/doc/execnet.html py.execnet] - asynchronous execution of client-provided code fragments
  * [http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/software.htm#pycluster pycluster] - binding for the [http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/ Cluster] software (apparently oriented towards bioinformatics tasks)
  * [http://www-users.cs.york.ac.uk/~aw/pylinda/ PyLinda] - distributed computing using tuple spaces
  * [http://pyMPI.sourceforge.net/ pyMPI] - MPI-based solution
  * [http://datamining.anu.edu.au/~ole/pypar/ pypar] - Numeric Python and MPI-based solution
  * [http://pypvm.sourceforge.net/ pypvm] - PVM-based solution
+ * [http://pyro.sourceforge.net/ Pyro] PYthon Remote Objects, distributed object system, takes care of network communication between your objects once you split them over different machines on the network
+ * [http://www.cs.tut.fi/~ask/rthread/index.html rthread] - distributed execution of functions via SSH
  * [http://www.cimec.org.ar/python/ "Resources for Parallel Computing in Python"]
    * [http://www.cimec.org.ar/python/mpi4py.html "MPI for Python"] - MPI-based solution
    * [http://www.cimec.org.ar/python/python.html "Parallelized Python Interpreter"] - interactive, parallelized version of the Python interpreter
@@ -29,9 +35,6 @@ Unlike SMP architectures and especially in contrast to thread-based concurrency,
    * Scientific.Distributed``Computing.Master``Slave implements a master-slave model in which a master process requests computational tasks that are executed by an arbitrary number of slave processes. The strong points are ease of use and the possibility to work with a varying number of slave process. It is less suited for the construction of large, modular parallel applications. Ideal for parallel scripting. Uses [http://pyro.sourceforge.net/ "Pyro"].
    * Scientific.BSP is an object-oriented implementation of the [http://www.bsp-worldwide.org/ "Bulk Synchronous Parallel (BSP)"] model for parallel computing, whose main advantages over message passing are the impossibility of deadlocks and the possibility to evaluate the computational cost of an algorithm as a function of machine parameters. The Python implementation of BSP features parallel data objects, communication of arbitrary Python objects, and a framework for defining distributed data objects implementing parallelized methods.
    * Scientific.MPI is an interface to MPI that emphasizes the possibility to combine Python and C code, both using MPI. Contrary to pypar and pyMPI, it does not support the communication of arbitrary Python objects, being instead optimized for Numeric/NumPy arrays.
- * [http://pyro.sourceforge.net/ Pyro] PYthon Remote Objects, distributed object system, takes care of network communication between your objects once you split them over different machines on the network
- * [http://poshmodule.sourceforge.net/ POSH] Python Object Sharing is an extension module to Python that allows objects to be placed in shared memory.  POSH allows concurrent processes to communicate simply by assigning objects to shared container objects. 
-
 
 == Grid Computing ==
 
