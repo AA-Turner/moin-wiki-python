@@ -1,30 +1,30 @@
-   Scientific applications are known for their ability to generate huge amounts of
-   data which are sometimes hard to manage. This page lists some of the tools which
-   have been made available for interfacing with standard scientific file formats,
-   as well as Python-specific tools for manipulating arrays and text files.
+Scientific applications are known for their ability to generate huge amounts of
+data which are sometimes hard to manage. This page lists some of the tools which
+have been made available for interfacing with standard scientific file formats,
+as well as Python-specific tools for manipulating arrays and text files.
 
 Interfaces to Standard Formats
 
-     * NetCDF Interfaces
-       Interface to [http://www.unidata.ucar.edu/packages/netcdf/ Unidata NetCDF] array-oriented data interface files.
+     * [http://www.unidata.ucar.edu/packages/netcdf/ Unidata NetCDF] Interfaces
 
      The netCDF datafile format stores large, uniform, data arrays efficiently and
      avoids byte-order problems when moving binary data between different machines.
      It is well-documented and looks like a good compromise between simplicity and
      generality.
-          + [http://starship.python.net/crew/hinsen/scientific.html NetCDF interface] - NetCDF interface that makes array variables look like
-            NumPy arrays. (Konrad Hinsen)
-          + [http://snow.cit.cornell.edu/noon/ncmodule.html NetCDF interface] - Interface to NetCDF portable data files (William
-            Noon)
-          + [http://www.geog.ubc.ca/~kschalmNetCDF interface] - A Numeric-Python aware NetCDF portable data file
-            interface (Kyle Schalm)
-          + [http://www.pyngl.ucar.edu/Nio.shtml PyNIO] - A Numeric-based Python package that allows read and/or write access to a variety of data formats (NetCDF, HDF 4, GRIB) using an interface modelled on Konrad Hinsen's [http://starship.python.net/crew/hinsen/scientific.html NetCDF interface]. 
-         + [http://www.pyacts.org/pypnetcdf PyPnetCDF] - A Numeric-based Python package that allows read and/or write access to NetCDF file in a parallel environment using MPI and an interface to the [http://www-unix.mcs.anl.gov/parallel-netcdf/ PnetCDF] library. The object PNetCDFVariable and  PNetCDFFile are very similar to Konrad Hinsen's definitions but PyPnetCDF implements a parallel access in a transparent and simple way to the programmer. 
 
+          + [http://dirac.cnrs-orleans.fr/ScientificPython/ NetCDF interface in ScientificPython] - NetCDF interface that makes array variables look like NumPy arrays. (KonradHinsen)
 
-          + [http://code.google.com/p/netcdf4-python/ netcdf4-python] - python/numpy interface to netCDF version 4 library. netCDF version 4 has many features not found in earlier versions of the library, such as hierarchical groups, zlib compression, multiple unlimited dimensions, and new data types. It is implemented on top of HDF5. This module implements many of the new features, and can read and write netCDF files compatibile with older versions of the library. The API is modelled after Scientific.IO.NetCDF, and should be familiar to users of that module (Jeff Whitaker).
+          + [http://snow.cit.cornell.edu/noon/ncmodule.html NetCDF interface] - Interface to NetCDF portable data files (William Noon)
 
-          + [http://taoetc.org/24 pupynere] - a PUre PYthon NEtcdf REader. It allows read-access to netCDF files using the same syntax as the Scientific.IO.NetCDF module. 
+          + [http://www.geog.ubc.ca/~kschalmNetCDF interface] - A Numeric-Python aware NetCDF portable data file interface (Kyle Schalm)
+
+          + [http://www.pyngl.ucar.edu/Nio.shtml PyNIO] - A Numeric-based Python package that allows read and/or write access to a variety of data formats (NetCDF, HDF 4, GRIB) using an interface modelled on KonradHinsen's [http://dirac.cnrs-orleans.fr/ScientificPython/ NetCDF interface]. 
+
+         + [http://www.pyacts.org/pypnetcdf PyPnetCDF] - A Numeric-based Python package that allows read and/or write access to NetCDF file in a parallel environment using MPI and an interface to the [http://www-unix.mcs.anl.gov/parallel-netcdf/ PnetCDF] library. The object PNetCDFVariable and  PNetCDFFile are very similar to KonradHinsen's definitions but PyPnetCDF implements a parallel access in a transparent and simple way to the programmer.
+
+         + [http://code.google.com/p/netcdf4-python/ netcdf4-python] - python/numpy interface to netCDF version 4 library. netCDF version 4 has many features not found in earlier versions of the library, such as hierarchical groups, zlib compression, multiple unlimited dimensions, and new data types. It is implemented on top of HDF5. This module implements many of the new features, and can read and write netCDF files compatibile with older versions of the library. The API is modelled after Scientific.IO.NetCDF, and should be familiar to users of that module (Jeff Whitaker).
+
+         + [http://taoetc.org/24 pupynere] - a PUre PYthon NEtcdf REader. It allows read-access to netCDF files using the same syntax as the Scientific.IO.NetCDF module. 
 
      * PyPDB is an interface to the PDB Portable Data Format library which is part
        of the PACT system (by the LLNL crew). It is available as part of the
@@ -54,7 +54,7 @@ Python-specific Tools
   >>> [x, y, dy] = TableIO.readColumns(file, [0, 8, 9])
 }}}       to read the first column in to the 1D array x and the eigth and ninth into y
        and dy."
-     * [http://starship.python.net/crew/hinsen/scientific.html FortranFormat.py] by Konrad Hinsen.
+     * [http://dirac.cnrs-orleans.fr/ScientificPython/ Scientific.IO.FortranFormat] by KonradHinsen.
        "This module provides two classes that aid in reading and writing
        Fortran-formatted text files. Only a subset of formatting options is
        supported: A, D, E, F, G, I, and X formats, plus string constants for output.
