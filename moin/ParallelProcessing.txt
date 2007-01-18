@@ -6,11 +6,11 @@ A number of Python-related libraries exist for the programming of solutions eith
 
 Some libraries, often to preserve some similarity with more familiar concurrency models (such as Python's threading API), employ parallel processing techniques which limit their relevance to SMP-based hardware, mostly due to the usage of process creation functions such as the UNIX fork system call. However, a technique called process migration may permit such libraries to be useful in certain kinds of computational clusters as well, notably single-system image cluster solutions ([http://openmosix.sourceforge.net/ OpenMosix] being one such example).
 
- * [http://www.python.org/pypi/parallel parallel/pprocess] - fork-based process creation with asynchronous channel-based communications
- * [http://poshmodule.sourceforge.net/ POSH] Python Object Sharing is an extension module to Python that allows objects to be placed in shared memory.  POSH allows concurrent processes to communicate simply by assigning objects to shared container objects.
- * [http://www.parallelpython.com/ ppsmp] - process-based, job-oriented solution (''source code not available, has restrictive licence'')
- * [http://www.python.org/pypi/processing processing] - fork-based process creation (using threads on other platforms), implementing an API like the standard library's threading API and providing familiar objects such as queues and semaphores through the use of a manager process
- * [http://www.python.org/pypi/remoteD remoteD] - fork-based process creation with a dictionary-based communications paradigm
+ * [http://www.python.org/pypi/parallel parallel/pprocess] - fork-based process creation with asynchronous channel-based communications (''currently only POSIX/UNIX/Linux, perhaps Cygwin'')
+ * [http://poshmodule.sourceforge.net/ POSH] Python Object Sharing is an extension module to Python that allows objects to be placed in shared memory.  POSH allows concurrent processes to communicate simply by assigning objects to shared container objects. (''POSIX/UNIX/Linux only'')
+ * [http://www.parallelpython.com/ ppsmp] - process-based, job-oriented solution ('''source code not available, has restrictive licence''')
+ * [http://www.python.org/pypi/processing processing] - fork-based process creation (using threads on other platforms), implementing an API like the standard library's threading API and providing familiar objects such as queues and semaphores through the use of a manager process (''platform-independent - needs threading or a fork implementation'')
+ * [http://www.python.org/pypi/remoteD remoteD] - fork-based process creation with a dictionary-based communications paradigm (''platform independent, according to PyPI entry'')
 
 Advantages of such approaches include convenient process creation and the ability to share resources. Indeed, the fork system call permits efficient sharing of common read-only data structures on modern UNIX-like operating systems.
 
