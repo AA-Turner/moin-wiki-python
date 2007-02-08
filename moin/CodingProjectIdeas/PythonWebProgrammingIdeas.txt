@@ -17,6 +17,7 @@ See also ../WebServiceStack
  * A library/framework/WSGI application for a WebDAV server.
  * Code that records and plays back WSGI interactions, so you can record a test session and replay it against an application.
  * A WSGI application for progress-tracking uploads.  Most frameworks don't give control to user code until after the entire request has been parsed; to track progress in uploading you have to have a special request parser that can write progress reports while it's processing the upload.
+ * A WSGI publish/subscribe messaging service to route requests for services, provided by other WSGI servers. For example, a WSGI interface to a template parser, such as Meld3, could subscribe to requests for templating. That service could in turn send a (sub)request of a template, such as a request for a database query. Likewise an ORM, such as SQLalchemy or SQLobject could subscribe to requests for database access, and receive notification of such subrequests. The goal would be to eliminate hard coded service routing, and replace it with discoverable WSGI services.
 
 == Spyce ==
 [http://spyce.sourceforge.net Spyce] is a web application environment similar to [http://asp.net ASP.NET] or [http://jakarta.apache.org/tapestry/ Tapestry], in that all these frameworks allow you to create reusable components containing model, view, and controller.  Spyce provides the convenience of [http://spyce.sourceforge.net/docs/doc-lang_handlers.html active handlers] without imposing a leaky event model on your application.  Spyce could use help with
