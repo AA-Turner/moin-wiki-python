@@ -216,3 +216,11 @@ And I really like {{{auto_retry}}}.
 Am I too late?
 
 Stephen Dolan
+
+  By several months. However, you can still write something like {{{auto_retry}}} as a generator which returns an appropriate sequence of context managers:
+{{{
+    for mgr in auto_retry(Exception, 3):
+        with mgr:
+            retry_if_this_fails()
+}}}
+  -- ''Nick Coghlan''
