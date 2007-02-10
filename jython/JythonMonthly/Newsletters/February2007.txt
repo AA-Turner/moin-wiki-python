@@ -40,6 +40,72 @@ During Oct-Nov 2006 there was a thread in the jython-users group titled "adding 
 
 = Off The Lists =
 
+'''''Question From Luca Cassioli:'''''
+
+ I need I have a function "waiting in background" for an event to be
+ triggered.
+ Can it be done from console, or should I write a script?
+ 
+ In other words, I want to port such a source to Jython:
+ 
+ import javax.telephony.*;
+ import javax.telephony.events.*;
+ /*
+ * The MyInCallObserver class implements the CallObserver and
+ * recieves all Call-related events.
+ */
+ public class MyInCallObserver implements CallObserver {
+    public void callChangedEvent(CallEv[] evlist) {
+    [....]
+    [handle event]
+    }
+ }
+
+ import javax.telephony.*;
+ import javax.telephony.events.*;
+ import MyInCallObserver;
+ [....]
+ try {
+     Terminal terminal = myprovider.getTerminal("1234567890");
+     terminal.addCallObserver(new MyInCallObserver());
+ } catch (Exception excp) {
+     System.out.println("Can’t get Terminal: " + excp.toString());
+     System.exit(0);
+ }
+ }
+
+'''''Answer From Jeff Emanuel:'''''
+
+see http://www.jython.org/Project/userguide.html#a-short-example
+
+Direct translation:
+
+# imports omitted
+class MyInCallObserver(CallObserver):
+   def callChangedEvent(self, evList):
+     # handle event ...
+
+try:
+   terminal = myprovider.getTerminal('1234567890')
+   terminal.addCallObserver(MyInCallObserver())
+except java.lang.Exception, ex:
+   print "Can't get terminal " + ex.toString()
+   System.exit(0)
+
+
+Or try the bean events technique
+(http://www.jython.org/Project/userguide.html#event-properties):
+
+def handleCall(evList):
+   # handleEvent
+
+try:
+   terminal = myprovider.getTerminal('1234567890')
+   terminal.callChangedEvent=handleCall
+except java.lang.Exception, ex:
+   print "Can't get terminal " + ex.toString()
+   System.exit(0)
+
 = Interested in Developing Jython? =
 
 If you are interested in developing Jython, please take a look at the [http://sourceforge.net/tracker/?func=browse&group_id=12867&atid=112867 current bug listing] and submit patches for items which you can repair.
@@ -58,7 +124,19 @@ If you are interested in developing Jython, please take a look at the [http://so
 
 [http://fwierzbicki.blogspot.com/2007/02/jython-22-beta1-released.html Jython 2.2 - Beta 1 Released -- Frank Wierzbicki]
 
+[http://jj-blogger.blogspot.com/2007/02/jython-22-beta-1-released.html Jython 2.2 Beta 1 -- Josh Juneau]
 
+
+
+= IDE =
+
+'''Pydev and Pydev Extensions 1.2.6 have been released'''
+
+Details on Pydev Extensions: http://www.fabioz.com/pydev
+
+Details on Pydev: http://pydev.sf.net
+
+Details on its development: http://pydev.blogspot.com
 
 
 = Discussions =
