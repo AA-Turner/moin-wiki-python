@@ -1,0 +1,386 @@
+#format wiki
+#pragma section-numbers off
+
+''(FileMaker Pro.app terminology, generated from /Applications/Development/FileMaker Pro 6/FileMaker Pro.app)''
+
+|| '''Suites''' || [#suite_URL_Suite URL Suite] [#suite_Subset_of_the_Core_Table_and_Database_suites Subset of the Core, Table, and Database suites] [#suite_FileMaker_Suite FileMaker Suite]  ||
+|| '''Commands''' || [#command_begin_transaction begin_transaction] [#command_class_info class_info] [#command_close close] [#command_copy copy] [#command_count count] [#command_create create] [#command_cut cut] [#command_data_size data_size] [#command_delete delete] [#command_do_menu do_menu] [#command_do_script do_script] [#command_duplicate duplicate] [#command_end_transaction end_transaction] [#command_event_info event_info] [#command_exists exists] [#command_find find] [#command_get_data get_data] [#command_get_remote_URL get_remote_URL] [#command_getURL getURL] [#command_go_to go_to] [#command_open open] [#command_paste paste] [#command_print_ print_] [#command_quit quit] [#command_redo redo] [#command_save save] [#command_set_data set_data] [#command_show show] [#command_sort sort] [#command_undo undo]  ||
+|| '''Classes''' || [#class_application application] [#class_cell cell] [#class_database database] [#class_document document] [#class_field field] [#class_FileMaker_script FileMaker_script] [#class_layout layout] [#class_menu menu] [#class_menu_item menu_item] [#class_record record] [#class_request request] [#class_window window]  ||
+
+
+[[Anchor(suite_URL_Suite)]]
+== URL Suite  ==
+Standard Suite for Uniform Resource Locators
+
+=== Commands ===
+
+ [[Anchor(command_getURL)]]'''application.getURL(...)'''  -- Open a FileMaker Pro database using a URL specification[[BR]]
+  ''Text'' -- The URL specification for the FileMaker Pro database in the form "FMP5://[host]/filename"[[BR]]
+  Result: ''None''
+
+
+
+
+[[Anchor(suite_Subset_of_the_Core_Table_and_Database_suites)]]
+== Subset of the Core, Table, and Database suites  ==
+Subset of Events supported by other Applications
+
+=== Commands ===
+
+ [[Anchor(command_begin_transaction)]]'''application.begin_transaction()'''  -- Begin a transaction[[BR]]
+  Result: ''SInt32''  -- The transaction ID
+
+ [[Anchor(command_class_info)]]'''application.class_info(...)'''  -- Get information about an object class[[BR]]
+  [''Type''] -- The object class about which information is requested[[BR]]
+  ['''in_'''=''IntlWritingCode''] -- The human language and script system in which to return information[[BR]]
+  Result: ''ClassInfo''  -- A record containing the object&amp;#8217;s properties and elements
+
+ [[Anchor(command_close)]]'''reference.close()'''  -- Close an object[[BR]]
+  Result: ''None''
+
+ [[Anchor(command_copy)]]'''application.copy()'''  -- Copy an object to the clipboard[[BR]]
+  Result: ''None''
+
+ [[Anchor(command_count)]]'''reference.count(...)'''  -- Return the number of elements of a particular class within an object[[BR]]
+  '''class_'''=''Type'' -- The class of the elements to be counted[[BR]]
+  Result: ''SInt32''  -- The number of elements
+
+ [[Anchor(command_create)]]'''application.create(...)'''  -- Create a new element[[BR]]
+  '''new'''=''Type'' -- The class of the new element[[BR]]
+  ['''at'''=''InsertionLoc''] -- The location at which to insert the element[[BR]]
+  ['''with_data'''=''Anything''] -- The initial data for the element[[BR]]
+  ['''with_properties'''=''AERecord''] -- The initial data for the properties of the element[[BR]]
+  Result: ''ObjectSpecifier''  -- To the new object(s)
+
+ [[Anchor(command_cut)]]'''application.cut()'''  -- Cut an object to the clipboard[[BR]]
+  Result: ''None''
+
+ [[Anchor(command_data_size)]]'''reference.data_size(...)'''  -- Return the size in bytes of an object[[BR]]
+  ['''as'''=''Type''] -- The data type for which the size is calculated[[BR]]
+  Result: ''SInt32''  -- The size of the object in bytes
+
+ [[Anchor(command_delete)]]'''reference.delete()'''  -- Delete an element from an object[[BR]]
+  Result: ''None''
+
+ [[Anchor(command_do_menu)]]'''application.do_menu(...)'''  -- Execute a menu command[[BR]]
+  ''Anything'' -- This denotes both the menu ID and the menu item[[BR]]
+  ['''menu_named'''=''Text''] -- The name of the menu item[[BR]]
+  Result: ''Anything''  -- Result of menu selection
+
+ [[Anchor(command_do_script)]]'''application.do_script(...)'''  -- Execute a script[[BR]]
+  ''Text'' -- The name or specifier of the FileMaker script to be executed[[BR]]
+  Result: ''Anything''  -- The result of the Script
+
+ [[Anchor(command_duplicate)]]'''reference.duplicate(...)'''  -- Duplicate an object[[BR]]
+  ['''to'''=''InsertionLoc''] -- The new location for the object[[BR]]
+  Result: ''ObjectSpecifier''  -- To the duplicated object(s)
+
+ [[Anchor(command_end_transaction)]]'''application.end_transaction()'''  -- End a transaction[[BR]]
+  Result: ''None''
+
+ [[Anchor(command_event_info)]]'''application.event_info(...)'''  -- Get information about the Apple events in a suite[[BR]]
+  ''Type'' -- The event class of the Apple events for which to return information[[BR]]
+  ['''in_'''=''IntlWritingCode''] -- The human language and script system in which to return information[[BR]]
+  Result: ''list of EventInfo''  -- A record containing the events and their parameters
+
+ [[Anchor(command_exists)]]'''reference.exists()'''  -- Tell if an object exists[[BR]]
+  Result: ''Boolean''  -- True if it exists, false if not
+
+ [[Anchor(command_get_data)]]'''reference.get_data(...)'''  -- Get the data for an object[[BR]]
+  ['''as'''=''list of Type''] -- The desired types for the data, in order of preference[[BR]]
+  Result: ''Anything''
+
+ [[Anchor(command_open)]]'''reference.open(...)'''  -- Open an object[[BR]]
+  ['''with_password'''=''Text''] -- The password to use[[BR]]
+  Result: ''None''
+
+ [[Anchor(command_paste)]]'''application.paste()'''  -- Paste an object from the clipboard[[BR]]
+  Result: ''None''
+
+ [[Anchor(command_print_)]]'''reference.print_()'''  -- Print an object[[BR]]
+  Result: ''None''
+
+ [[Anchor(command_quit)]]'''application.quit()'''  -- Perform tasks before termination, then terminate[[BR]]
+  Result: ''None''
+
+ [[Anchor(command_redo)]]'''application.redo()'''  -- Reverse the action of the immediately preceding undo[[BR]]
+  Result: ''None''
+
+ [[Anchor(command_save)]]'''reference.save()'''  -- Save an object[[BR]]
+  Result: ''None''
+
+ [[Anchor(command_set_data)]]'''reference.set_data(...)'''  -- Set an object's data[[BR]]
+  '''to'''=''Anything'' -- The new value[[BR]]
+  Result: ''None''
+
+ [[Anchor(command_show)]]'''reference.show()'''  -- Bring an object into view[[BR]]
+  Result: ''None''
+
+ [[Anchor(command_sort)]]'''reference.sort(...)'''  -- Sort the records in a layout[[BR]]
+  ['''by'''=''ObjectSpecifier''] -- The fields to sort by[[BR]]
+  ['''in_order'''=''k.ascending | k.descending | k.custom''] -- The sort type[[BR]]
+  Result: ''None''
+
+ [[Anchor(command_undo)]]'''application.undo()'''  -- Undo the action of the previous event or user interaction[[BR]]
+  Result: ''None''
+
+
+=== Classes ===
+
+ [[Anchor(class_application)]]'''application'''  -- The application
+
+
+  Properties:
+
+   '''best_type''' (r/o) ''Type'' -- The best descriptor type[[BR]]
+   '''class_''' (r/o) ''Type'' -- The class[[BR]]
+   '''default_type''' (r/o) ''Type'' -- The default descriptor type[[BR]]
+   '''frontmost''' (r/o) ''Boolean'' -- Is this the frontmost application?[[BR]]
+   '''name''' (r/o) ''IntlText'' -- The name of the application[[BR]]
+   '''version''' (r/o) ''Version'' -- The version of the application[[BR]]
+
+  Elements:
+
+   '''[#class_document documents]''' -- '' index | name''[[BR]]
+   '''[#class_window windows]''' -- '' index | name''[[BR]]
+   '''[#class_menu menus]''' -- '' name | index''[[BR]]
+
+
+ [[Anchor(class_window)]]'''window'''  -- A FileMaker Pro document window
+
+
+  Properties:
+
+   '''best_type''' (r/o) ''Type'' -- The best descriptor type[[BR]]
+   '''class_''' (r/o) ''Type'' -- The class[[BR]]
+   '''default_type''' (r/o) ''Type'' -- The default descriptor type[[BR]]
+   '''name''' (r/o) ''IntlText'' -- The name of the window[[BR]]
+   '''bounds'''  ''QDRectangle'' -- The bounding rectangle of the window[[BR]]
+   '''visible'''  ''Boolean'' -- Is the window visible?[[BR]]
+   '''index''' (r/o) ''SInt32'' -- The number of the window[[BR]]
+   '''floating''' (r/o) ''Boolean'' -- Does the window float?[[BR]]
+   '''zoomable''' (r/o) ''Boolean'' -- Is the window zoomable?[[BR]]
+   '''zoomed'''  ''Boolean'' -- Is the window zoomed?[[BR]]
+   '''modal''' (r/o) ''Boolean'' -- Is the window modal?[[BR]]
+   '''resizable''' (r/o) ''Boolean'' -- Is the window resizable?[[BR]]
+   '''has_close_box''' (r/o) ''Boolean'' -- Does the window have a close box?[[BR]]
+   '''has_title_bar''' (r/o) ''Boolean'' -- Does the window have a title bar?[[BR]]
+
+  Elements:
+
+   '''[#class_document documents]''' -- '' name | index''[[BR]]
+   '''[#class_FileMaker_script FileMaker_scripts]''' -- '' name | index | relative | range | test | id''[[BR]]
+   '''[#class_database databases]''' -- '' name | index''[[BR]]
+
+
+ [[Anchor(class_document)]]'''document'''  -- A FileMaker Pro document
+
+
+  Properties:
+
+   '''best_type''' (r/o) ''Type'' -- The best descriptor type[[BR]]
+   '''class_''' (r/o) ''Type'' -- The class[[BR]]
+   '''default_type''' (r/o) ''Type'' -- The default descriptor type[[BR]]
+   '''name''' (r/o) ''IntlText'' -- The name of the document[[BR]]
+   '''modified''' (r/o) ''Boolean'' -- True if the document has been modified[[BR]]
+
+  Elements:
+
+   '''[#class_window windows]''' -- '' index | name''[[BR]]
+   '''[#class_database databases]''' -- '' name | index''[[BR]]
+   '''[#class_FileMaker_script FileMaker_scripts]''' -- '' name | index | relative | range | test | id''[[BR]]
+
+
+ [[Anchor(class_database)]]'''database'''  -- A FileMaker Pro database
+
+
+  Properties:
+
+   '''best_type''' (r/o) ''Type'' -- The best descriptor type[[BR]]
+   '''class_''' (r/o) ''Type'' -- The class[[BR]]
+   '''default_type''' (r/o) ''Type'' -- The default descriptor type[[BR]]
+   '''name''' (r/o) ''IntlText'' -- The name of the database[[BR]]
+   '''lock''' (r/o) ''k.unlocked | k.shared_lock | k.exclusive_lock'' -- The current session's lock on the database[[BR]]
+   '''current_layout'''  ''ObjectSpecifier'' -- The current layout[[BR]]
+   '''current_record'''  ''ObjectSpecifier'' -- The current record[[BR]]
+   '''access''' (r/o) ''k.no_access | k.read | k.write | k.update | k.create | k.delete | k.read_write | k.read_update | k.read_create | k.read_delete | k.write_update | k.write_create | k.write_delete | k.update_create | k.update_delete | k.write_delete | k.read_write_update | k.read_write_create | k.read_write_delete | k.write_update_create | k.write_update_delete | k.update_create_delete | k.read_create_delete | k.read_update_delete | k.write_create_delete | k.read_update_create | k.no_delete | k.no_create | k.no_update | k.no_read | k.no_write | k.full'' -- The access privileges[[BR]]
+   '''multiuser'''  ''Boolean'' -- If true, users have access to the database over the network[[BR]]
+
+  Elements:
+
+   '''[#class_layout layouts]''' -- '' name | index | relative | range | test | id''[[BR]]
+   '''[#class_FileMaker_script FileMaker_scripts]''' -- '' name | index | relative | range | test | id''[[BR]]
+
+
+ [[Anchor(class_FileMaker_script)]]'''FileMaker_script'''  -- A FileMaker script
+
+
+  Properties:
+
+   '''best_type''' (r/o) ''Type'' -- The best descriptor type[[BR]]
+   '''class_''' (r/o) ''Type'' -- The class[[BR]]
+   '''default_type''' (r/o) ''Type'' -- The default descriptor type[[BR]]
+   '''name''' (r/o) ''IntlText'' -- The name of the FileMaker Script[[BR]]
+   '''ID''' (r/o) ''LongFloat'' -- The unique ID of the FileMaker Script[[BR]]
+
+
+
+ [[Anchor(class_layout)]]'''layout'''  -- A FileMaker Pro layout
+
+
+  Properties:
+
+   '''best_type''' (r/o) ''Type'' -- The best descriptor type[[BR]]
+   '''class_''' (r/o) ''Type'' -- The class[[BR]]
+   '''default_type''' (r/o) ''Type'' -- The default descriptor type[[BR]]
+   '''name''' (r/o) ''IntlText'' -- The name of the layout[[BR]]
+   '''ID''' (r/o) ''LongFloat'' -- The unique ID of the layout[[BR]]
+   '''access''' (r/o) ''k.no_access | k.read | k.write | k.update | k.create | k.delete | k.read_write | k.read_update | k.read_create | k.read_delete | k.write_update | k.write_create | k.write_delete | k.update_create | k.update_delete | k.write_delete | k.read_write_update | k.read_write_create | k.read_write_delete | k.write_update_create | k.write_update_delete | k.update_create_delete | k.read_create_delete | k.read_update_delete | k.write_create_delete | k.read_update_create | k.no_delete | k.no_create | k.no_update | k.no_read | k.no_write | k.full'' -- The access privileges of the layout[[BR]]
+   '''protection''' (r/o) ''k.read_only | k.formulas_protected | k.read_write'' -- Indicates whether the formulas of the cells in the layout can be changed[[BR]]
+   '''lock''' (r/o) ''k.unlocked | k.shared_lock | k.exclusive_lock'' -- The lock on the layout[[BR]]
+   '''kind''' (r/o) ''k.table | k.view'' -- The kind of layout (View = FileMaker Pro layout, table = all fields i.e. layout 0)[[BR]]
+   '''visible''' (r/o) ''Boolean'' -- Is the layout visible in the layouts menu?[[BR]]
+
+  Elements:
+
+   '''[#class_field fields]''' -- '' name | index | relative | range | test | id''[[BR]]
+   '''[#class_record records]''' -- '' name | index | relative | range | test | id''[[BR]]
+   '''[#class_cell cells]''' -- '' name | index | relative | range | test | id''[[BR]]
+   '''[#class_request requests]''' -- '' name | index | relative | range | test | id''[[BR]]
+
+
+ [[Anchor(class_field)]]'''field'''  -- A FileMaker Pro field
+
+
+  Properties:
+
+   '''best_type''' (r/o) ''Type'' -- The best descriptor type[[BR]]
+   '''class_''' (r/o) ''Type'' -- The class[[BR]]
+   '''default_type''' (r/o) ''Type'' -- The default descriptor type[[BR]]
+   '''choices''' (r/o) ''AEList'' -- The value list for the field[[BR]]
+   '''access''' (r/o) ''k.no_access | k.read | k.write | k.update | k.create | k.delete | k.read_write | k.read_update | k.read_create | k.read_delete | k.write_update | k.write_create | k.write_delete | k.update_create | k.update_delete | k.write_delete | k.read_write_update | k.read_write_create | k.read_write_delete | k.write_update_create | k.write_update_delete | k.update_create_delete | k.read_create_delete | k.read_update_delete | k.write_create_delete | k.read_update_create | k.no_delete | k.no_create | k.no_update | k.no_read | k.no_write | k.full'' -- The access privileges for the field[[BR]]
+   '''formula''' (r/o) ''Text'' -- The field's calculation formula[[BR]]
+   '''ID''' (r/o) ''LongFloat'' -- The unique ID of the field[[BR]]
+   '''lock''' (r/o) ''k.unlocked | k.shared_lock | k.exclusive_lock'' -- The lock status of the field[[BR]]
+   '''name''' (r/o) ''Text'' -- The name of the field[[BR]]
+   '''nulls_OK''' (r/o) ''Boolean'' -- Is this field allowed to be empty?[[BR]]
+   '''protection''' (r/o) ''k.read_only | k.formulas_protected | k.read_write'' -- The protection of this field[[BR]]
+   '''repeats''' (r/o) ''Enumeration'' -- Is this a repeating field?[[BR]]
+   '''repeat_size''' (r/o) ''SInt32'' -- Maximum number of repetitions of the field[[BR]]
+   '''unique_value''' (r/o) ''Boolean'' -- Must this field contain unique values?[[BR]]
+   '''globalValue''' (r/o) ''Boolean'' -- Is this field a global field?[[BR]]
+
+  Elements:
+
+   '''[#class_cell cells]''' -- '' name | index | relative | range | test | id''[[BR]]
+
+
+ [[Anchor(class_record)]]'''record'''  -- A FileMaker Pro record
+
+
+  Properties:
+
+   '''best_type''' (r/o) ''Type'' -- The best descriptor type[[BR]]
+   '''class_''' (r/o) ''Type'' -- The class[[BR]]
+   '''default_type''' (r/o) ''Type'' -- The default descriptor type[[BR]]
+   '''name''' (r/o) ''IntlText'' -- The name of the record[[BR]]
+   '''ID''' (r/o) ''LongFloat'' -- The unique ID of the record[[BR]]
+   '''lock''' (r/o) ''k.unlocked | k.shared_lock | k.exclusive_lock'' -- The lock for the record[[BR]]
+   '''protection''' (r/o) ''k.read_only | k.formulas_protected | k.read_write'' -- Indicates whether the formulas of the cells in the record can be changed[[BR]]
+   '''access''' (r/o) ''k.no_access | k.read | k.write | k.update | k.create | k.delete | k.read_write | k.read_update | k.read_create | k.read_delete | k.write_update | k.write_create | k.write_delete | k.update_create | k.update_delete | k.write_delete | k.read_write_update | k.read_write_create | k.read_write_delete | k.write_update_create | k.write_update_delete | k.update_create_delete | k.read_create_delete | k.read_update_delete | k.write_create_delete | k.read_update_create | k.no_delete | k.no_create | k.no_update | k.no_read | k.no_write | k.full'' -- Indicates the access privileges for the record[[BR]]
+
+  Elements:
+
+   '''[#class_cell cells]''' -- '' name | index | relative | range | test | id''[[BR]]
+
+
+ [[Anchor(class_cell)]]'''cell'''  -- A field value in a record or request
+
+
+  Properties:
+
+   '''best_type''' (r/o) ''Type'' -- The best descriptor type[[BR]]
+   '''class_''' (r/o) ''Type'' -- The class[[BR]]
+   '''default_type''' (r/o) ''Type'' -- The default descriptor type[[BR]]
+   '''choices''' (r/o) ''AEList'' -- The value list for the cell[[BR]]
+   '''formula''' (r/o) ''Text'' -- The cell's calculation formula[[BR]]
+   '''lock''' (r/o) ''k.unlocked | k.shared_lock | k.exclusive_lock'' -- The lock status of the cell[[BR]]
+   '''name''' (r/o) ''Text'' -- The cell's name[[BR]]
+   '''protection''' (r/o) ''k.read_only | k.formulas_protected | k.read_write'' -- The protection of this cell[[BR]]
+   '''cellValue'''  ''Text'' -- The cell value[[BR]]
+   '''ID''' (r/o) ''AEList'' -- The unique ID of the cell (the first element is the record ID, the second element is the cell ID)[[BR]]
+   '''repeat_size''' (r/o) ''SInt32'' -- Number of repetitions of the cell[[BR]]
+   '''globalValue''' (r/o) ''Boolean'' -- Is this cell a global cell?[[BR]]
+
+
+
+
+
+[[Anchor(suite_FileMaker_Suite)]]
+== FileMaker Suite  ==
+FileMaker Pro-specific events and objects
+
+=== Commands ===
+
+ [[Anchor(command_go_to)]]'''reference.go_to()'''  -- Go to an object[[BR]]
+  Result: ''None''
+
+ [[Anchor(command_find)]]'''reference.find()'''  -- Perform a FileMaker Pro Find given current requests[[BR]]
+  Result: ''None''
+
+ [[Anchor(command_get_remote_URL)]]'''application.get_remote_URL()'''  -- Opens a hosted FileMaker Pro database[[BR]]
+  Result: ''Text''  -- The URL specification for the opened database in the form "FMP5://[host]/filename"
+
+
+=== Classes ===
+
+ [[Anchor(class_request)]]'''request'''  -- A FileMaker Pro find request
+
+
+  Properties:
+
+   '''best_type''' (r/o) ''Type'' -- The best descriptor type[[BR]]
+   '''class_''' (r/o) ''Type'' -- The class[[BR]]
+   '''default_type''' (r/o) ''Type'' -- The default descriptor type[[BR]]
+   '''name''' (r/o) ''IntlText'' -- The name of the find request[[BR]]
+   '''ID''' (r/o) ''LongFloat'' -- The unique ID of the find request[[BR]]
+   '''omitted'''  ''Boolean'' -- True if the request is to be omitted[[BR]]
+
+  Elements:
+
+   '''[#class_cell cells]''' -- '' name | index | relative | range | test | id''[[BR]]
+
+
+ [[Anchor(class_menu_item)]]'''menu_item'''  -- A menu item
+
+
+  Properties:
+
+   '''best_type''' (r/o) ''Type'' -- The best descriptor type[[BR]]
+   '''class_''' (r/o) ''Type'' -- The class[[BR]]
+   '''default_type''' (r/o) ''Type'' -- The default descriptor type[[BR]]
+   '''name'''  ''IntlText'' -- The name of the menu item[[BR]]
+   '''ID'''  ''SInt32'' -- The unique ID of the menu item[[BR]]
+   '''enabled'''  ''Boolean'' -- Is the menu item enabled?[[BR]]
+   '''item_number''' (r/o) ''ShortInteger'' -- The menu item number[[BR]]
+   '''checked'''  ''Boolean'' -- Is the menu item checked?[[BR]]
+   '''notify_address'''  ''TargetID'' -- The target ID[[BR]]
+
+
+
+ [[Anchor(class_menu)]]'''menu'''  -- A menu
+
+
+  Properties:
+
+   '''best_type''' (r/o) ''Type'' -- The best descriptor type[[BR]]
+   '''class_''' (r/o) ''Type'' -- The class[[BR]]
+   '''default_type''' (r/o) ''Type'' -- The default descriptor type[[BR]]
+   '''name'''  ''IntlText'' -- The name of the menu[[BR]]
+   '''ID''' (r/o) ''ShortInteger'' -- The resource ID of the menu[[BR]]
+   '''enabled'''  ''Boolean'' -- Is the menu enabled?[[BR]]
+
+  Elements:
+
+   '''[#class_menu_item menu_items]''' -- '' index | name''[[BR]]
+   '''[#class_menu menus]''' -- '' index | name''[[BR]]
