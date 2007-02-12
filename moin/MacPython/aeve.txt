@@ -1,0 +1,71 @@
+ 
+#pragma section-numbers off
+= aeve =
+aeve is a near-complete rewrite of the Apple Event support (gensuitemodule, etc.) for Python. It's extremely pythonic and easy to use, but it's chattier than doing it "raw" and currently does not support any kind of asynchronous mode. This is normally not an issue, but I'm looking into adding that sort of stuff. The version posted below is a work in progress, your mileage may vary. I'd like to hear from you if you do anything with it, especially if you have any contributions (bugfixes, example code, etc.), problems or suggestions. Note that it's only going to work in Python 2.3 or later.
+ 
+= status =
+ 
+aeve is currently at its fourth public release, 0.0.3.
+ 
+= examples =
+ 
+== iChat + Jaguar Mail ==
+{{{
+#!python
+"""
+I get an inordinate amount of spam to one of my accounts,
+and they get put into spam-definite on my imap server.
+The spam-definite mailbox gets flushed on a daily basis to train
+spamassasin.
+This script changes my status message on iChat to the number of
+spams in this mailbox every five minutes.
+"""
+import time
+import aeve
+i = aeve.talkto('com.apple.iChat')
+m = aeve.talkto('com.apple.Mail')
+spam = m.rules['Junk'].transfer_message.messages
+while True:
+    i.status_message = '%d spams today' % len(spam)
+    time.sleep(300.0)
+}}}
+ 
+== iCal ==
+ 
+{{{
+#!python
+"""
+This is an example of how to do the make command from aeve to create a new calendar.
+It's unfortunately hard at the moment.
+ 
+Translated from:
+tell application "iCal"
+    make calendar with properties {title:"newCalendar"}
+end tell
+"""
+import aeve
+app = aeve.talkto('com.apple.iCal')
+from aeve.Applications import iCal
+# we have to do this ourselves, aeve doesn't understand property dictionaries
+title_code = iCal.iCal_suite._aereg_.iterObjectsForName("title", aekind="property", deep=True).next()
+newCalendar = app.make(new=iCal.calendar, with_properties={title_code:"newCalendar"})
+}}}
+ 
+= homepage =
+ 
+http://undefined.org/python/#aeve
+ 
+= known issues =
+ 
+Not compatible with:
+ * Panther mail
+ * Xcode
+ 
+Hard to do:
+ * the make command (with_properties, specifically)
+ 
+= see also =
+ 
+ * /AppleScript
+ * /AppleScriptNotes
+ * /AeveNewbieDiscussion
