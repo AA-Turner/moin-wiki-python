@@ -1,0 +1,12 @@
+["/AppscriptModule"] scripting for /PhotoShop
+
+To apply unsharp mask to the first layer of the first document:
+{{{
+#!python
+
+ps = app("Adobe Photoshop CS")
+ps.filter_(ps.documents[1].art_layers[1], using=k.unsharp_mask, with_options={k.threshold:2, k.amount: 200.0, k.radius: 1.0})
+
+}}}
+
+You need the latest version of /AppscriptModule for the {{{ filter_() }}} command to work correctly.
