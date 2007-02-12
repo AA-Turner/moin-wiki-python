@@ -1,0 +1,24 @@
+#pragma section-numbers off
+= /LaunchServices =
+LaunchServices is a pythonic wrapper for just about everything Apple's [http://developer.apple.com/technotes/tn/tn2017.html Launch Services API] has to offer.  It was developed primarily to make ["/aeve"] a hell of a lot easier to use.
+
+= status =
+
+LaunchServices is at its first public release, 0.1
+
+= examples =
+
+{{{
+#!python
+>> import /LaunchServices as LS
+>> LS.GetDisplayNameForPath('/')
+u'Crack'
+>> LS.GetKindStringForPath('/')
+u'Volume'
+>> LS.GetApplicationPathForInfo(extension='mp3')
+u'/Applications/iTunes.app'
+>> LS.GetApplicationPathForInfo(creator='MACS')
+u'/System/Library/CoreServices/Finder.app'
+>> LS.FindApplicationPath(bundle='com.apple.iChat')
+u'/Applications/iChat.app'
+}}}
