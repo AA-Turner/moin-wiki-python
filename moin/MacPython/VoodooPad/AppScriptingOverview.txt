@@ -1,0 +1,82 @@
+/!\ ''using Carbon.File.FSSpec doesn't seem to be the best way to handle files. I'll correct these examples asap...''
+
+'''1. Opening documents, creating pages and modifying content'''
+
+{{{
+#!python
+#!/usr/bin/pythonw
+
+from appscript import *
+from Carbon.File import FSSpec
+
+# connect to /VoodooPad
+vp = app(id='com.flyingmeat.VoodooPad')
+
+# open an existing test document
+vpdoc = vp.open(FSSpec('/Users/SOMEUSER/Test1.vdoc'))
+
+# create a scratchpad with some initial content
+scratchpad = u'AppScript Scratchpad'
+
+vpdoc.create_page(
+	with_title = scratchpad, 
+	with_contents = u'Hello, world !')
+
+# add some text to the scratchpad
+vp.prepend(
+	text = u'some text before...\n', 
+	to = vpdoc.pages[scratchpad])
+	
+vp.append(
+	text = u'\n...some text after\n\n', 
+	to = vpdoc.pages[scratchpad])
+
+# add a link from the index page to the scratchpad page 
+vp.prepend(
+	text = u'A link to the /AppScript Scratchpad Page...\n\n', 
+	to = vpdoc.pages[u'index'])
+
+# create a bunch of pages
+for pnum in xrange(1,10):
+	vpdoc.create_page(
+		with_title = u'Page %d' % pnum, 
+		with_contents = u'Hello, world !\n\nThis is page %d.' % pnum)	
+
+# create an index on the scratchpad
+vpdoc.open_page(with_title=scratchpad)
+
+comment = u'There are %d page(s) and %d paragraph(s) in document %s:\n\n' % (
+	vpdoc.count(each=k.page),
+	vpdoc.pages.text.count(each=k.paragraph),
+	vpdoc.name.get())
+
+vp.append(
+	text = comment, 
+	to = vpdoc.pages[scratchpad])
+
+for pname in vpdoc.pages.name.get():
+	vp.append(
+		text = u'\u2022 %s\n' % pname, 
+		to = vpdoc.pages[scratchpad])	
+
+# ?
+print vp.taunt()
+
+}}}
+
+
+'''2. Deleting pages and content'''
+
+{{{
+#!python
+# do some cleanup
+vpdoc.delete_page(with_title=scratchpad)
+
+for i in xrange(1,10):
+	vpdoc.delete_page(with_title='page %d' % i)
+
+# doesn't work:
+#vpdoc.pages['index'].text.paragraphs.first.delete()
+
+
+}}}
