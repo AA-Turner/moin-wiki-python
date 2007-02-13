@@ -1,0 +1,63 @@
+## page was renamed from MacPython/FileMakerProAndDeliciousLibrary
+'''Transfer data from a DeliciousLibrary XML database to a FileMakerPro database'''
+ 
+ 
+{{{
+#!python
+#!/usr/bin/pythonw
+ 
+from pprint import pprint
+from elementtree import /ElementTree # [1]
+from appscript import *
+from Carbon.File import FSSpec # [2]
+ 
+# /FileMaker prefs
+FM_ID = 'com.filemaker.pro7'
+FM_DB_PATH = '/Users/SOMEUSER/Desktop/Library.fp7' # [3][4]
+FM_DB = 'Library'
+FM_TABLE = 'Library'
+ 
+# Delicious Library prefs
+DL_DB_PATH = '/Users/SOMEUSER/Library/Application Support/Delicious Library/Library Media Data.xml' # [4][5]
+ 
+# connect to the /FileMaker database
+try:
+ fm = app(id=FM_ID)
+except ApplicationNotFoundError:
+ print "FileMaker Pro 7 application has not been found."
+ sys.exit(0)
+ 
+if not fm.databases[FM_DB].exists():
+ try:
+  fm.open(FSSpec(FM_DB_PATH))
+ except:
+  print "Can't open source database '%s'." % FM_DB_PATH
+  sys.exit(0)
+ 
+if not fm.databases[FM_DB].tables[FM_TABLE].exists():
+ print "Table '%s' doesn't exists in source database '%s'." % (FM_TABLE, FM_DB)
+ sys.exit(0)
+ 
+t1 = fm.databases[FM_DB].tables[FM_TABLE]
+ 
+# open Delicious Library XML file
+ 
+tree = ElementTree.parse(DL_DB_PATH)
+ 
+## and transfer book records
+ 
+fields = t1.fields.name.get()
+ 
+for el in tree.findall('//items/book'):
+ data = [ (el.get(f) or '') for f in fields ]
+ rec = fm.create(new=k.record, with_data=data, at=t1)
+}}}
+ 
+'''Footnotes:'''
+ 1. [http://effbot.org/zone/element-index.htm ElementTree]
+ 2. ...Carbon.File.FSSpec not a good idea... will correct asap...
+ 3. ...will post Library.fp7 sample database asap...
+ 4. you have to adapt the path...
+ 5. [http://www.delicious-monster.com/ DeliciousLibrary]
+ 
+/!\ '''Warning:''' you could use /ElementTree to edit the /DeliciousLibrary XML file, but don't forget it's not a database: you could corrupt your /DeliciousLibrary database in case of concurrent access. And no, /DeliciousLibrary is not (yet) scriptable :-/
