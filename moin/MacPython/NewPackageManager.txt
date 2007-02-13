@@ -11,7 +11,7 @@ We need more metadata, here's what we need:
  * '''Metadata-Version''': needs to be bumped above 1.0
  * '''Package-Name''': We need something that tells us what the actual name of the package or module is!  Right now the name is arbitrary and doesn't need to relate to the name of the module in Python.
  * '''Depends''': (optional) A list of other packages, by Package-Name (which must by definition follow python module naming guidelines), that this package depends on.
- * '''Recommends''': (optional) A list of other packages, by Package-Name, that enhance the functionality of this package (i.e. Twisted recommends /PyCrypto because it enables Conch (the SSH2 client/server))
+ * '''Recommends''': (optional) A list of other packages, by Package-Name, that enhance the functionality of this package (i.e. Twisted recommends PyCrypto because it enables Conch (the SSH2 client/server))
 
 I believe this will be sufficient.  However it may be nice to be able to specify C or C++ libraries that a package wraps or depends on (but does not include).  Ideas?
 
@@ -19,7 +19,7 @@ One thing, related to Package-Name, is that we should completely deprecate the p
 
 == Discussion of PEP-243 ( http://www.python.org/peps/pep-0243.html ) ==
 
-PEP-243 proposes a central module repository system for source modules.  We should say that the /PackMan system will supplant this because (a) it could take advantage of a central module repository if available and (b) it's easier these days to host open source projects anyways (a la sourceforge).  Speaking of sourceforge, we should have special integration for sourceforge downloads in /PackMan (let the user choose a preferred mirror, display to the use who is sponsoring their download).  It's possible that the scapegoat may choose to come to an arrangement with the package maintainers such that package maintainers will host the scapegoat-built binary packages on their site to make it more economical for scapegoats.
+PEP-243 proposes a central module repository system for source modules.  We should say that the PackMan system will supplant this because (a) it could take advantage of a central module repository if available and (b) it's easier these days to host open source projects anyways (a la sourceforge).  Speaking of sourceforge, we should have special integration for sourceforge downloads in PackMan (let the user choose a preferred mirror, display to the use who is sponsoring their download).  It's possible that the scapegoat may choose to come to an arrangement with the package maintainers such that package maintainers will host the scapegoat-built binary packages on their site to make it more economical for scapegoats.
 
 == Embrace and Extend PEP-262 ( http://www.python.org/peps/pep-0262.html ) ==
 
@@ -29,14 +29,14 @@ For our platform, PEP-262 has one inherent deficiency: INSTALLDB (the location f
 
 I think that we can deprecate the REQUIRES and PROVIDES files by adding Depends, Package-Name, and Recommends to PKG-INFO.  I don't think that the "PROVIDES" file makes a whole lot of sense, unless the strings used in provides means it corresponds to a definitive module interface.  There is not currently any sort of registry or PEP for this kind of thing, so it's probably not at all useful.  Since we have upgraded PEP-241, we should also upgrade the Package class in PEP-262 to include the new metadata.
 
-= Notes for /NewPackageManager =
+= Notes for NewPackageManager =
  * Read "[http://mail.python.org/pipermail/pythonmac-sig/2003-October/thread.html#8891 Package Manager idea, adding URL scheme]" thread on pythonmac-sig very carefully
  * Needs to have a receipt database for each installation location (PEP-262 extension)
  * Needs extra metadata from PKG-INFO (PEP-241 extension)
- * Must work without mandatory crypto support see commentary started by /MichaelHudson
- * Should use hashes to be as secure as possible without crypto, where hashes of the /PackMan database should be available at 3rd party sites (i.e. "I Jack Jansen, trust that Bob's repository has a SHA-1 hash of .....") see "check integrity" comments by /JackJansen
+ * Must work without mandatory crypto support see commentary started by MichaelHudson
+ * Should use hashes to be as secure as possible without crypto, where hashes of the PackMan database should be available at 3rd party sites (i.e. "I Jack Jansen, trust that Bob's repository has a SHA-1 hash of .....") see "check integrity" comments by JackJansen
  * Should leverage SSL certificates (when assigned by a trusted CA) whenever possible
- * Should be able to cryptographically sign a package list (i.e. PGP / /ElGamal / etc.)
+ * Should be able to cryptographically sign a package list (i.e. PGP / ElGamal / etc.)
  * Focus is on binary package installs, but source package installs should also be supported
  * Need to deal with people installing packages themselves
  * Move to distutils.version for comparisons
@@ -46,7 +46,7 @@ I think that we can deprecate the REQUIRES and PROVIDES files by adding Depends,
  * Data belonging to packages in a plain way, possibly another PEP
  * Don't use .plist as the file suffix, that makes it impossible to bind an application to package manager databases
 
-= Notes for /NewPackageManager GUI =
+= Notes for NewPackageManager GUI =
 
  * Needs to be a lot smarter, less clutter, more organization (think trees, don't differentiate between binary/source installs, filter out packages the user has acceptable versions of, etc.)
  * Support uninstalls, receipt viewing, do we need rollback?
@@ -56,7 +56,7 @@ I think that we can deprecate the REQUIRES and PROVIDES files by adding Depends,
  * Make it a responsive application, show a lot of progress indications
  * Probably fork python to do most things and communicate over TCP or some such
  * Try not to import modules to check versions
- * ["/PyObjC"] implementation would be awesome, should also do ["wxPython"] implementation for win32?
+ * ["../PyObjC"] implementation would be awesome, should also do WxPython implementation for win32?
  * Allow user to install from local files (downloaded binary packages or source packages themselves)
  * Lots of version checks so the user is unlikely to break something by accident (package X v1.0 isn't known to work with package Y v1.1 yet, are you sure you want to upgrade Y?)
  * Display package dependencies, maybe (advanced) let user decide which of them to install.
