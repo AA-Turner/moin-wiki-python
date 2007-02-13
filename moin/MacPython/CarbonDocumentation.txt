@@ -1,0 +1,97 @@
+= General Tips =
+
+Try some or all:
+ * Read Apple Carbon documentation
+ * Use `dir()` and `help()`
+ * Look into MacPython IDE code, or in the few Mac Python modules like `macostools`, `findertools` or other modules in `plat-mac`
+ * Look into the C modules that implement the glue between Python and Carbon. 
+ * Ask the good people at `#macpython` in `irc.freenode.org`
+
+= Recipes =
+
+== Getting file and folder information ==
+
+You want to know the file type or creator of a file.
+{{{
+>>> from Carbon import File
+>>> info = File.FSSpec('Todo').FSpGetFInfo()     
+>>> info.Type
+'****'
+>>> info.Creator
+'Hdra'
+>>> 
+}}}
+
+Note that FSSpecs have some issues, see http://developer.apple.com/technotes/tn2002/tn2078.html
+
+Here is another simpler way (from MacPython IDE):
+{{{
+>>>import MacOS
+>>> MacOS.GetCreatorAndType('Todo')
+('Hdra', '****')
+}}}
+
+
+= Carbon Reference =
+
+Python 2.3 Carbon Modules:
+
+   * ["../AE"]
+   * ["../AH"]
+   * ["../Aliases"]
+   * ["../App"]
+   * ["../Appearance"]
+   * ["../AppleEvents"]
+   * ["../AppleHelp"]
+   * ["../CF"]
+   * ["../CG"]
+   * ["../CarbonEvents"]
+   * ["../CarbonEvt"]
+   * ["../Cm"]
+   * ["../Components"]
+   * ["../ControlAccessor"]
+   * ["../Controls"]
+   * ["../CoreFoundation"]
+   * ["../CoreGraphics"]
+   * ["../Ctl"]
+   * ["../Dialogs"]
+   * ["../Dlg"]
+   * ["../Drag"]
+   * ["../Dragconst"]
+   * ["../Events"]
+   * ["../Evt"]
+   * ["../File"]
+   * ["../Files"]
+   * ["../Fm"]
+   * ["../Folder"]
+   * ["../Folders"]
+   * ["../Fonts"]
+   * ["../Help"]
+   * ["../IBCarbon"]
+   * ["../IBCarbonRuntime"]
+   * ["../Icn"]
+   * ["../Icons"]
+   * ["../List"]
+   * ["../Lists"]
+   * ["../MacHelp"]
+   * ["../MacTextEditor"]
+   * ["../MediaDescr"]
+   * ["../Menu"]
+   * ["../Menus"]
+   * ["../Mlte"]
+   * ["../QDOffscreen"]
+   * ["../Qd"]
+   * ["../Qdoffs"]
+   * ["../Qt"]
+   * ["../QuickDraw"]
+   * ["../QuickTime"]
+   * ["../Res"]
+   * ["../Resources"]
+   * ["../Scrap"]
+   * ["../Snd"]
+   * ["../Sound"]
+   * ["../TE"]
+   * ["../TextEdit"]
+   * ["../WASTEconst"]
+   * ["../Win"]
+   * ["../Windows"]
