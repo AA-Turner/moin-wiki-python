@@ -1,0 +1,112 @@
+{i} ''to use this script, you'll need the Library.fp7 and Library.tab sample files (I will post them asap) and to edit the {{{DBPATH}}} and {{{IMPORTFILE}}} variables accordingly.''
+
+{{{
+#!python
+#!/usr/bin/pythonw
+
+from pprint import pprint
+from appscript import *
+from Carbon.File import FSSpec
+import codecs
+from sets import Set
+
+DBPATH = '/Users/SOMEUSER/Desktop/Library.fp7'
+DBNAME = 'Library'
+TBLNAME = 'Library'
+IMPORTFILE = '/Users/SOMEUSER/Desktop/library.tab'
+
+
+""" 
+	Connecting to /FileMaker and opening database
+"""
+
+fm = app(id='com.filemaker.pro7') # [1]
+
+if not fm.databases[DBNAME].exists():
+	fm.open(FSSpec(DBPATH)) # [2]
+
+
+"""
+    Querying database schema
+"""
+
+print "FileMaker has %d database(s) opened: " % fm.count(class_=k.database)
+print ", ".join(fm.databases.name.get()) # [3]
+
+db = fm.databases[DBNAME] # [3]
+
+print "\nDatabase '%s' has %d table(s): " % (DBNAME, db.count(class_='cTBL')) # [4]
+print ", ".join(db.tables.name.get())
+
+t1 = db.tables[TBLNAME]
+
+print "\nTable '%s' has %d field(s): " % (TBLNAME, t1.count(class_=k.field))
+print ", ".join(t1.fields.name.get())
+
+print "\nTable '%s' schema:\n(name, type, nulls OK, unique value, global value)" % TBLNAME
+pprint(zip(
+	t1.fields.name.get(), 
+	t1.fields.default_type.get(),
+	t1.fields.nulls_OK.get(),
+	t1.fields.unique_value.get(),
+	t1.fields.globalValue.get()))
+
+
+"""
+	Creating new records
+"""
+
+if t1.count(class_=k.record) > 0:
+	t1.records.delete()
+
+f = codecs.open(IMPORTFILE, 'r', 'mac_roman')
+
+for line in f:
+	data = line.split('\t')
+	rec = fm.create(new=k.record, with_data=data, at=t1) # [5]
+
+f.close()
+
+
+"""
+	Looking at records
+"""
+
+print "\nTable '%s' has %d record(s)" % (TBLNAME, t1.count(class_=k.record))
+
+qry1 = t1.records.filter(its.fields['title'].cellValue.contains(u'Calvin'))
+
+if qry1.exists():
+	print "\nselect title from library where title contains \'Calvin\':"
+	pprint(qry1.fields['title'].get())
+
+qry2 = t1.records.filter(its.fields['author'].cellValue.contains(u'McCaffrey'))
+
+if qry2.exists():
+	print "\nselect title from library where author contains \'McCaffrey\':"
+	pprint(qry2.fields['title'].get())
+
+qry3 = t1.records.filter(its.fields['genre'].cellValue.contains(u'Thrillers'))
+
+if qry3.exists():
+	print "\nselect title, authors from library where genre contains \'Thrillers\':"
+	pprint(zip(qry3.fields['title'].get(), qry3.fields['author'].get()))
+
+print "\nselect distinct author from library:"
+pprint(Set(t1.fields['author'].get())) # [XXX]
+
+# show "List" layout with the records from qry3, sorted by authors
+
+qry3.show()
+fm.layouts['List'].show()
+fm.layouts['List'].sort(by=fm.fields['author']) # [XXX]
+}}}
+
+'''Footnotes:'''
+ 1. use {{{app(id='com.filemaker.pro7')}}} instead of {{{app('FileMaker Pro')}}} to be sure only /FileMakerPro 7 is launched
+ 2. Carbon.File.FSSpec is not the best way to handle files. I have to investigate that point...
+ 3. {{{fm.databases.name}}} returns the db name with the '.fp7' suffix, but it can be omitted when specifying {{{fm.databases[...]}}}
+ 4. specifying the table class as {{{class_=k.table}}} doesn't work, use {{{class_='cTBL'}}} instead
+ 5. according to FileMakerPro's Apple Event Reference, the fastest way to insert data is to: 
+  * use {{{fm.create(new=k.record, with_data=data, at=table1)}}}, with data as a list of values in the same order as {{{table1.fields.name.get()}}}
+  * insert data at the table level, outside the currently found set.
