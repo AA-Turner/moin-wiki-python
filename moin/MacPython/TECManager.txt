@@ -1,0 +1,28 @@
+#pragma section-numbers off
+= TECManager =
+Pythonic wrapper for the Text to Unicode functionality of Apple's [http://developer.apple.com/documentation/Carbon/Conceptual/ProgWithTECM/ Text Encoding Conversion Manager].
+
+= status =
+
+TECManager is at it's second release, version 0.2.  It now supports Python text encodings (replaces the built-in mac specific codecs and adds new ones), and its usage is pretty much transparent after the module has been imported.
+
+= examples =
+
+{{{
+#!python
+>> import TECManager as TM
+>> # convert a macRoman bullet to a unicode bullet
+>> '\xa5'.decode('mac_roman')
+u'\u2022'
+>> # convert a smHebrew HEBREW POINT QAMATS, alternate form "qamats qatan"
+>> '\xde'.decode('mac_hebrew')
+u'\u05b8\uf87f'
+>> # create a new 'mac_turkish' encoding, which is a modified smRoman script.
+>> TM.tec_codecs.createModule('encodings.mac_turkish', TM.getTextEncoding(script=TM.smRoman, language=TM.langTurkish, region=TM.verTurkey))
+>> '\xa5'.decode('mac_turkish')
+u'\u2022'
+}}}
+
+= links =
+
+http://undefined.org/python/#TECManager
