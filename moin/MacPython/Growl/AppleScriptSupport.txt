@@ -1,0 +1,82 @@
+## page was renamed from MacPython/GrowlAppleScriptSupport
+Translated examples from Growl's [wiki:MacPython/AppleScript AppleScript] Support page:
+
+ * '''Basics'''
+  {{{
+#!python
+#!/usr/bin/pythonw
+from appscript import *
+
+# connect to Growl
+growl = app('GrowlHelperApp')
+
+# Make a list of all the notification types 
+# that this script will ever send:
+allNotificationsList = ['Test Notification', 'Another Test Notification']
+
+# Make a list of the notifications 
+# that will be enabled by default.      
+# Those not enabled by default can be enabled later 
+# in the 'Applications' tab of the growl prefpane.
+enabledNotificationsList = ['Test Notification']
+
+# Register our script with growl.
+# You can optionally (as here) set a default icon 
+# for this script's notifications.
+growl.register(
+    as_application='Growl Appscript Sample', 
+    all_notifications=allNotificationsList, 
+    default_notifications=enabledNotificationsList, 
+    icon_of_application='PythonIDE')
+
+# Send a Notification...
+growl.notify(
+    with_name='Test Notification', 
+    title='Test Notification', 
+    description='This is a test Appscript notification.', 
+    application_name='Growl Appscript Sample')
+
+# Another one...
+growl.notify(
+    with_name='Another Test Notification', 
+    title='Another Test Notification :) ', 
+    description='Alas - you won\'t see me until you enable me...', 
+    application_name='Growl Appscript Sample')
+}}}
+
+ * '''Notifications using Images'''
+  * Application Icons
+   {{{
+#!python
+growl.notify( 
+    with_name="Some Notification",
+    title="This is a Notification with an App Icon",
+    description="We are using an Application Icon...",
+    application_name="Growl /AppleScript Sample",
+    icon_of_application="Script Editor.app")
+}}}
+  
+  * File Icons
+   {{{
+#!python
+growl.notify(
+    with_name="Some Notification",
+    title="This is a Notification with an File Icon",
+    description="We are using a File's Icon...",
+    application_name="Growl /AppleScript Sample",
+    icon_of_file="file:///Users/someone/Growl")
+}}}
+  
+  * Image Files
+   {{{
+#!python
+growl.notify(
+    with_name "Some Notification",
+    title="This is a Notification with an Image File",
+    description="We are using an Image File...",
+    application_name="Growl /AppleScript Sample",
+    image_from_location="file:///Users/someone/pictures/stopWatch.png")
+}}}
+  
+  * Image Data
+   ''(not done yet...)''
