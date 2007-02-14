@@ -12,13 +12,13 @@ A: In order to install aeve on Panther you need these modules: - ww nov 03
 ''' Q: How do I get started?  I know Python, but I don't know a thing about ../AppleScript.'''
 A: To get a primer on how to "read" ../AppleScript and understand it as a Python programmer, I found Apple's "!AppleScript Language Guide" the most useful. - WinstonWolff Nov 03
 
-''' Q: I've seen the iCal example of how to "make" an object, but I want to automate Omni Graffle.  How do I create these properties to pass into make()?  I've tried the following, but the iter Objects For Name() doesn't work.'''
+''' Q: I've seen the iCal example of how to "make" an object, but I want to automate ../OmniGraffle.  How do I create these properties to pass into make()?  I've tried the following, but the iter Objects For Name() doesn't work.'''
 
 {{{
 #!python
 import aeve
 app = aeve.talkto('/Applications/OmniGraffle.app')
-from aeve.Applications import ../OmniGraffle as og
+from aeve.Applications import OmniGraffle as og
 origin 	= og.shape._aereg_.iterObjectsForName("origin", aekind="property", deep=True).next()
 size 	= og.Standard_Suite._aereg_.iterObjectsForName("size", aekind="property", deep=True).next()
 name 	= og.Standard_Suite._aereg_.iterObjectsForName("name", aekind="property", deep=True).next()
