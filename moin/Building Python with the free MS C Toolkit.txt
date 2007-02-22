@@ -1,7 +1,168 @@
+= Building Python with the free MS C Toolkit =
 
-<a href=" http://volny.cz/mlt/Agenzia-Moda.html ">Agenzia Moda</a>
-<a href=" http://volny.cz/mlt/Moda-Bambina.html ">Moda Bambina</a>
-<a href=" http://volny.cz/mlt/Capello-Moda.html ">Capello Moda</a>
-<a href=" http://volny.cz/mlt/Accessorio-Moda.html ">Accessorio Moda</a>
-----
-CategoryPythonInBusiness
+These instructions are largely based on a Usenet posting by David Murmann, to whom most of the credit should go.
+
+'''Update''': These instructions have now been incorporated into the Python sources, as part of file `PCBuild/readme.txt`. Read that version for more up to date details. Some particular changes:
+ * The nant `python.build` file is now included in the PCBuild directory.
+ * The build command is slightly modified as a result: `nant -buildfile:python.build all`.
+ * There are instructions for building bsddb included.
+
+== What You Need ==
+
+To start with, you have to download a number of pieces of software from Microsoft:
+
+ * The Visual C++ Toolkit Compiler (from [http://msdn.microsoft.com/visualc/vctoolkit2003/ here])
+ * A recent Platform SDK (from [http://www.microsoft.com/downloads/details.aspx?FamilyId=0BAF2B35-C656-4969-ACE8-E4C0C0716ADB&displaylang=en here]).  The components that need to be installed to build Python are:
+   * Microsoft Windows Core SDK > Tools > Tools (Intel 64-bit)
+   * Microsoft Windows Core SDK > Build Environment > Build Environment (x86 32-bit)
+   * Microsoft Windows Core SDK > Redistributable Components
+   * Microsoft Data Access Services (MDAC) > Build Environment > Build Environment (x86 32-bit)
+   * Microsoft Windows Installer SDK > Build Environment > Build Environment (x86 32-bit)
+  All other components can be left uninstalled.
+   
+ * The .NET 1.1 SDK (from [http://www.microsoft.com/downloads/details.aspx?FamilyID=9b3a2ca6-3647-4070-9f41-a333c6b9181d here])
+
+You need the Visual C++ Toolkit Compiler 2003, as this is the version compatible with the Visual Studio version used to build Python. This is an optimising compiler, unlike the compiler supplied with the .NET SDK.
+
+(Note from PeterDoubleday: This can be very hard to find, since Microsoft are determined to force everyone onto the new .NET DLLs.  Try [http://npg.dl.ac.uk/MIDAS/download/midassort/midassort_Windows.html this link].)
+
+The platform SDK is needed to provide the Windows header files and libraries - these are not included in the Toolkit Compiler package.
+
+The .NET SDK is needed to provide a version of msvcrt.lib which links with the msvcr71.dll C runtime. It is '''critical''' that you get the version 1.1 SDK - the .NET 2.0 SDK links to msvcr80.dll, which is not compatible with the standard Python build.
+
+== Installation ==
+
+All of these packages can be installed as "typical" installs. It's quite likely that only a subset of the platform SDK is needed, but I have only tested this process with a typical install. (Actually, my testing was with the Windows Server 2003 R1 SDK, rather than the R2 one which is current. I don't expect any differences on this point, however).
+
+== Other Packages ==
+
+You'll need subversion, or another way of getting a copy of the Python sources.
+
+You'll also need [http://nant.sourceforge.net Nant], a build tool for .NET which can interpret the Visual Studio "solution" and "project" files supplied with the Python sources. I used version 0.85 release candidate 3 - the later "nightly build" version broke for me, and I haven't tested any other versions. Just download the binaries, extract somewhere, and put the "bin" directory on your PATH.
+
+== Setting up your environment ==
+
+You now need to set up a command line shell with the right bits in place. Use the start menu entries added by the Platform SDK install to start a Platform SDK "Build Environment Window" - there are a huge number added to your Start menu. I chose "Windows XP 32-bit Retail".
+
+Now add the extra bits you need to your environment, to pick up the Toolkit compiler, etc. The following code can be put in a `.bat` file and run:
+
+{{{
+@echo off
+rem Set these values according to where you installed the software
+set TOOLKIT=C:\Program Files\Microsoft Visual C++ Toolkit 2003
+set SDK=C:\Program Files\Microsoft Platform SDK
+set NET=C:\Program Files\Microsoft Visual Studio .NET 2003
+set NANT=C:\Utils\Nant
+
+set PATH=%TOOLKIT%\bin;%PATH%;%SDK%\Bin\win64;%NANT%\bin
+set INCLUDE=%TOOLKIT%\include;%INCLUDE%
+set LIB=%TOOLKIT%\lib;%NET%\VC7\lib;%LIB%
+}}}
+
+The "win64" directory from the SDK is added to supply executables such as "cvtres" and "lib", which are not available elsewhere. The versions in the "win64" directory are 32-bit programs, so they are fine to use here.
+
+It is possible to build from a normal command shell, but you need to  modify LIB, PATH and INCLUDE to include the corresponding
+%SDK%/LIB , %SDK%/BIN and %SDK%/Include paths. This will allow core Python to build, but you may still have trouble with extensions such as TCL, which seem to require additional SDK environment variables.
+
+== Ready to Go ==
+
+If all you want to do is to build core Python, and you're not bothered about the various binary extensions supplied with Python, you're ready to go.
+
+Go to the `PCBuild` directory in your Python source tree, and put the following code in a file called `python.build`:
+
+{{{
+<?xml version="1.0"?>
+<project>
+ <target name="python" description="Build all targets.">
+   <solution configuration="release">
+     <projects>
+       <include name="make_versioninfo.vcproj" />
+     </projects>
+   </solution>
+   <exec program="make_versioninfo" output="pythonnt_rc.h" />
+
+   <solution configuration="release" solutionfile="pcbuild.sln">
+     <excludeprojects>
+       <include name="_bsddb.vcproj" />
+       <include name="bz2.vcproj" />
+       <include name="_tkinter.vcproj" />
+       <include name="_ssl.vcproj" />
+       <include name="_sqlite3.vcproj" />
+     </excludeprojects>
+   </solution>
+ </target>
+</project>
+}}}
+
+You'll see that I've excluded all of the projects which depend on external libraries. Be patient, we'll get to these!
+
+OK, you should now be able to simply run
+{{{
+nant python
+}}}
+
+Easy as that!
+
+You can now run the Python tests, using rt.bat, and you should see something like
+{{{
+258 tests OK.
+55 tests skipped:
+    test__locale test_aepack test_al test_applesingle test_bsddb
+    test_bsddb185 test_bsddb3 test_bz2 test_cd test_cl
+    test_codecmaps_cn test_codecmaps_hk test_codecmaps_jp
+    test_codecmaps_kr test_codecmaps_tw test_commands test_crypt
+    test_curses test_dbm test_dl test_fcntl test_fork1 test_gdbm
+    test_gl test_grp test_imgfile test_ioctl test_largefile
+    test_linuxaudiodev test_macfs test_macostools test_mhlib test_nis
+    test_normalization test_openpty test_ossaudiodev test_plistlib
+    test_poll test_posix test_pty test_pwd test_resource
+    test_scriptpackages test_signal test_socket_ssl test_socketserver
+    test_sqlite test_sunaudiodev test_tcl test_threadsignals
+    test_timeout test_urllib2net test_urllibnet test_wait3 test_wait4
+4 skips unexpected on win32:
+    test_tcl test_sqlite test_bz2 test_bsddb
+}}}
+
+The "unexpected" skips are because we didn't build the relevant modules.
+
+== Building the remaining extensions ==
+
+To build the bz2, bsddb, tkinter, sqlite3 and ssl modules needs a bit more work. This is because these modules rely on 3rd party code, which you have to build.
+
+Luckily, there are detailed instructions on how to do this in the file PCBuild\readme.txt in the Python distribution. If you simply follow the instructions as described there, you should have no problems. I have tested this using the sources from the Python subversion repository (use the given "svn export" commands as given in PCBuild\readme.txt to get the sources, don't get the original sources from the project's home site).
+
+As you get things set up for the additional modules, you simply need to remove the module from the `<excludeprojects>` element in python.build and rebuild.
+
+There are a few small issues that need to be resolved.
+
+=== Bz2, TCL and Tk ===
+
+No issues - build as specified.
+
+=== Tix ===
+
+The makefile refers to an environment variable only present in Visual Studio. To resolve this, edit makefile.vc in the tix-8.4.0\win directory to remove 3 references to TOOLS32. Two are to provide absolute pathnames for cl.exe and link.exe - just remove the path - and the third is to add an include directory that's already present, so remove it. The 3 lines should now read
+
+{{{
+cc32   		= cl.exe
+link32 		= link.exe
+include32 	= 
+}}}
+
+=== SSL ===
+
+To build openssl, you need the object library setargv.obj, which is not supplied in the platform SDK. However, the sources for it are. So you need to build it by hand:
+
+ * Copy setargv.c, cruntime.h and internal.h from %SDK%\src\crt to a temporary directory
+ * Compile setargv.c using the command line `cl /c /I. /MD /D_CRTBLD setargv.c`
+ * Move the resulting setargv.obj to somewhere on your LIB environment variable (%SDK%\lib is a reasonable place)
+
+With that in place, the build should be fine.
+
+=== SQLite ===
+
+There's nothing needed for the build, but to use the extension (i.e., for the tests to succeed) you need to obtain sqlite3.dll from http://www.sqlite.org (any version 3.3.4 or later - I used 3.3.5) and place it with the other DLLs Python uses (in the PCBuild directory for testing, and in Python25\DLLs in a distribution directory structure)
+
+=== Bsddb ===
+
+Instructions for building this are included in the PCBuild/readme.txt file.
