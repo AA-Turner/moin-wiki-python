@@ -1,7 +1,96 @@
+#pragma section-numbers off
+= CGI Scripts =
 
-<a href=" http://volny.cz/mlt/Accessorio-Per-Cani.html ">Accessorio Per Cani</a>
-<a href=" http://volny.cz/mlt/Cani-E-Gatti.html ">Cani E Gatti</a>
-<a href=" http://volny.cz/mlt/Moda.html ">Moda</a>
-<a href=" http://volny.cz/mlt/Depeche-Moda.html ">Depeche Moda</a>
+The [http://www.python.org/doc/current/lib/module-cgi.html cgi module] is at the core of Python CGI scripts.
+
+The simplest CGI script that can be considered interesting involves printing out an HTTP header ("Content-type: text/html") and a Web page. In addition, you might want to handle any incoming inputs from things like HTML forms or request parameters. In the earliest days of CGI, shell scripts were sometimes used to do things like this, so the principles are not particularly advanced.
+
+== Configuration ==
+
+It can be an annoying experience getting the permissions just right on a script so that Web servers like Apache will run it, but the following checklist may be of some use:
+
+ 1. Find out which user runs the Web server - it's not often the same one as your own user, and it may be one with very limited permissions.
+ 1. Check the server configuration to see if it lets you run scripts in a particular directory. Make sure that if you're using a configuration file for a particular directory, the global configuration permits you to define CGI script directories in that directory-local configuration file - some sites stop their users from altering such settings in such a way.
+ 1. Check the permissions from the top of the filesystem down to the directory where the script resides. The Web server user must be able to read and open/execute all the directories from the top right down to the script.
+ 1. Make sure your script is readable and executable by the Web server user.
+ 1. Make sure that the first line of the script refers to an interpreter that the Web server user can run. Things like {{{/usr/bin/env python}}} might not have any meaning to the Web server user because the {{{python}}} program may not be on the user's {{{PATH}}}.
+
+== Sample Code ==
+
+The following code attempts to combine simple output of a Web page with the processing of input from users viewing the page. You may wish to choose the actual first line of the script based on one of the first two lines provided below - the first one will probably work only on Windows, whereas the second may only work on UNIX-like systems.
+
+{{{
+#!python
+#!/usr/bin/env python
+
+import cgi
+import cgitb; cgitb.enable()  # for troubleshooting
+
+print "Content-type: text/html"
+print
+
+print """
+<html>
+
+<head><title>Sample CGI Script</title></head>
+
+<body>
+
+  <h3> Sample CGI Script </h3>
+"""
+
+form = cgi.FieldStorage()
+message = form.getvalue("message", "(no message)")
+
+print """
+
+  <p>Previous message: %s</p>
+
+  <p>form:</p>
+
+  <form method="post" action="index.cgi">
+    <p>message: <input type="text" name="message"/></p>
+  </form>
+
+</body>
+
+</html>
+""" % message
+}}}
+
+== See Also ==
+
+ * ["WebProgramming"] - the natural next step beyond simple CGI scripts.
+ * [http://www.python.org/doc/current/lib/module-cgi.html cgi module documentation]
+ * [http://www.python.org/doc/current/lib/module-Cookie.html Cookie module documentation]
+ * [http://webpython.codepoint.net/ Python CGI tutorial] - setup in a shared host, forms, debug, shell commands, cookies, etc
+ * [http://www.cs.virginia.edu/~lab2q/lesson_7/ python CGI tutorial] - w/ hints about maintaining sessions either through forms or through cookies
+ * [http://gnosis.cx/publish/programming/feature_5min_python.html python CGI tutorial] - w/ hints about printing out tracebacks
+ * [http://www.python.org/doc/current/lib/internet.html other internet protocol module documentation]
+ * [http://www.devshed.com/index2.php?option=content&task=view&id=198&pop=1&page=0&hide_js=1 Writing CGI Scripts in Python]
+ * [http://www.voidspace.org.uk/python/cgi.shtml Voidspace Python CGI collection] - Working Python CGI scripts to use and/or study
+
 ----
-CategoryHomepage
+
+== Discussion ==
+
+  We need a good python CGI framework - Sridhar R
+    Nevow and [http://srid.bsdnerds.org/hacking/wallaby/ Wallaby]
+
+    Define "framework," though.  Do you mean something like a Django-type deal or something that just makes it easier to write CGI apps?
+----
+
+Yes.... 
+
+There are many frameworks for Python Web Application
+TurboGears Django Zope ModPython Pso Aquarium Cheetah ++++++...
+
+But it would be Nice if python provides native support for 
+Session Handling,
+JSON - like XML-RPC
+Standard Environment for RPC + WSGI
+and future technologies.... for Easy Web Development
+
+-Vinoth vinoth.3v@gmail.com
+
+CategoryPythonWebsite
