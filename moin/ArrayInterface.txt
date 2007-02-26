@@ -21,6 +21,7 @@ The buffer protocol allows different Python types to exchange a pointer to a seq
 = General Proposal =
 
   1. Get rid of the char-buffer and multiple-segment sections of the buffer-protocol.  
+  2. Unify the read/write versions of getting the buffer.
   2. Add a new function to the protocol that should be called when the consumer object is "done" with the view.
   3. Add a new function to allow the protocol to describe what is in memory (unifying what is currently done now in struct and array)
   4. Add a new function to allow the protocol to share shape information
@@ -31,22 +32,37 @@ The buffer protocol allows different Python types to exchange a pointer to a seq
 
 {{{
 typedef struct {
-     readbufferproc bf_getreadbuffer
-     writebufferproc bf_getwritebuffer
+     getbufferproc bf_getbuffer
      releasebufferproc bf_releasebuffer
      formatbufferproc bf_getbufferformat
-     shapebufferproc bf_getbuffershape       
+     shapebufferproc bf_getbuffershape 
 }
 }}}
 
-The signatures of these function pointers are:
+The signatures and purposes of these function pointers are provided here:
 
 {{{
-typedef Py_ssize_t (*readbufferproc)(PyObject *obj, void **buf)
+typedef Py_ssize_t (*getbufferproc)(PyObject *obj, void **buf, int writeable)
 }}}  
-A pointer to the the memory is returned in buf and the length of that memory buffer is returned in Py_ssize_t.  
+A pointer to the memory is returned in buf and the length of that memory buffer is the function return value.   If writeable is 1, then a writeable buffer is needed, otherwise a read-only buffer is sufficient.  A -1 is returned if an error occurs. 
+
+{{{
+typedef int (*releasebufferproc)(PyObject *obj)
+}}}
+This function is called when a view of memory previously acquired from the object is no longer needed.  It is up to the exporter of the API to make sure all views have been released before eliminating a reference to a previously returned pointer.    It is up to consumers of the API to call this function on the object whose view is obtained when it is no longer needed.  A -1 is returned on error and 0 on success. 
+
+{{{
+typedef char *(*formatbufferproc)(PyObject *obj)
+}}}
+Get the format-string of the memory using the struct-string syntax with the addition of 'g' to describe complex data, a prefix '&' to describe a pointer, '(' and ')' to describe a nested structure, and  'F','D','G' to describe complex-valued data.   If the implied size of this string is smaller than the length of the buffer then it is assumed that the string is repeated. 
+
+{{{
+typedef PyObject *(*shapebufferproc)(PyObject *obj)
+}}}
+Return a 3-tuple of lists containing shape information: (shape, strides, offsets).  The strides and offsets objects can be None if the memory is C-style contiguous with 0 offsets in each dimension).  
 
 Some C-API calls should also be made available. 
 
+All of these routines are optional (but the last three make no sense unless at least one of the first two is implemented). 
 
 = Questions =
