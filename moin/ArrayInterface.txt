@@ -6,17 +6,17 @@ This Wiki will serve as a place to record import points raised during the mailin
 
 The buffer protocol allows different Python types to exchange a pointer to a sequence of internal buffers.  This functionality is '''extremely''' useful for sharing large segments of memory between different high-level objects, but it's too limited and has issues.
 
-  1. There is the little used "sequence-of-segments" option.
-  2. There is no way for a consumer to tell the protocol-exporting object it is "finished" with its view of the memory and therefore no way for the object to be sure that it can reallocate the pointer to the memory that it owns (the array object reallocating its memory after sharing it with the buffer object led to the infamous buffer-object problem).
+  1. There is the little (never?) used "sequence-of-segments" option.
+  2. There is no way for a consumer to tell the protocol-exporting object it is "finished" with its view of the memory and therefore no way for the object to be sure that it can reallocate the pointer to the memory that it owns (the array object reallocating its memory after sharing it with the buffer object which held the original pointer led to the infamous buffer-object problem).
   3. Memory is just a pointer. There is no way to describe what's "in" the memory (float, int, C-structure, etc.)
-  4. There is no shape information provided for the memory.  But, several array-like Python types could make use of a standard way to describe the shape of the memory (!wxPython, GTK, CVXOPT, !PyVox, Audio and Video Libraries, ctypes, !NumPy)
+  4. There is no shape information provided for the memory.  But, several array-like Python types could make use of a standard way to describe the shape-interpretation of the memory (!wxPython, GTK, CVXOPT, !PyVox, Audio and Video Libraries, ctypes, !NumPy)
 
 = Proposal =
 
-  1. Replace the buffer protocol that allows sharing of a single pointer to memory
-  2. Have the protocol define a way to describe what's in the memory location (this should unify what is done now in struct, array, ctypes, and NumPy)
-  3. Have the protocol be able to share information about shape (and striding if any)
-  4. Allow exporting objects to define some function that should be called when the consumer object is "done" with the view.
+  1. Get rid of the char-buffer and multiple-segment sections of the buffer-protocol.  
+  2. Add a new function to the protocol that should be called when the consumer object is "done" with the view.
+  3. Add a new function to allow the protocol to describe what is in memory (unifying what is currently done now in struct and array)
+  4. Add a new function to allow the protocol to share shape information
 
 = Idea =
 
