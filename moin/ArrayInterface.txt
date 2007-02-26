@@ -6,7 +6,7 @@ This Wiki will serve as a place to develop the PEP until it is assigned a number
 
 This PEP proposes re-designing the buffer API (!PyBufferProcs function pointers) to improve the way Python allows memory sharing in Python 3.0 
 
-In particular, it is proposed that the multiple-segment and character buffer portions of the buffer API are eliminated and additional function pointers are provided to allow sharing any multi-dimensional character of the memory and what the memory contains. 
+In particular, it is proposed that the multiple-segment and character buffer portions of the buffer API are eliminated and additional function pointers are provided to allow sharing any multi-dimensional nature of the memory and what data-format the memory contains. 
 
 = Rationale =
 
@@ -28,7 +28,7 @@ The buffer protocol allows different Python types to exchange a pointer to a seq
 
 = Specification =
 
- Change the PyBufferProcs structure to
+Change the PyBufferProcs structure to
 
 {{{
 typedef struct {
@@ -44,7 +44,7 @@ The signatures and purposes of these function pointers are provided here:
 {{{
 typedef Py_ssize_t (*getbufferproc)(PyObject *obj, void **buf, int  *writeable)
 }}}  
-A pointer to the memory is returned in buf and the length of that memory buffer is the function return value.   If writeable is 1, then the buffer can be written to, otherwise it must only be read-from.  A -1 is returned if an error occurs. 
+A pointer to the memory is returned in buf and the length of that memory buffer is the function return value.   If the returned value of writeable is 1, then the buffer can be written to, otherwise it must only be read-from.  A -1 is returned if an error occurs. 
 
 {{{
 typedef int (*releasebufferproc)(PyObject *obj)
@@ -54,7 +54,7 @@ This function is called when a view of memory previously acquired from the objec
 {{{
 typedef char *(*formatbufferproc)(PyObject *obj)
 }}}
-Get the format-string of the memory using the struct-string syntax (see below for additions to the struct-string syntax).  If the implied size of this string is smaller than the length of the buffer then it is assumed that the string is repeated. 
+Get the format-string of the memory using the struct-module string syntax (see below for proposed additions to that syntax).  If the implied size of this string is smaller than the length of the buffer then it is assumed that the string is repeated. 
 
 {{{
 typedef PyObject *(*shapebufferproc)(PyObject *obj)
@@ -84,7 +84,21 @@ All of these routines are optional (but the last three make no sense unless the 
 
 Endian-specification is allowed inside the string so that it can change if needed. 
 
-I would also like to add a function to create a ctypes object from a struct description, and add long-double, and ucs-2 to ctypes. 
+I would also like to add a function to create a ctypes object from a struct description, and add long-double, and ucs-2 to ctypes.  
+
+Ideally, the struct module would be incorporated into the ctypes module which would also grow a C-API.
+
+= Objects to be affected =
+
+buffer object
+bytes object
+string object
+
+array object
+struct module
+
+anything else using the buffer API
+
 
 = Issues =
 
