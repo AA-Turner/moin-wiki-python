@@ -82,8 +82,10 @@ All of these routines are optional (but the last three make no sense unless the 
 || '(' || begin nested structure ||
 || ')' || end nested structure ||
 
-We should also allow an endian-specification inside the string so that it could change if needed. 
+Endian-specification is allowed inside the string so that it can change if needed. 
 
 I would also like to add a function to create a ctypes object from a struct description, and add long-double, and ucs-2 to ctypes. 
 
-= Questions =
+= Issues =
+
+The proposed locking mechanism relies entirely on the objects implementing the buffer interface to do there own thing.  Ideally an object that implements the buffer interface should keep at least a number indicating how many releases are extant. 
