@@ -54,7 +54,7 @@ This function is called when a view of memory previously acquired from the objec
 {{{
 typedef char *(*formatbufferproc)(PyObject *obj)
 }}}
-Get the format-string of the memory using the struct-string syntax with the addition of 'g' to describe complex data, a prefix '&' to describe a pointer, '(' and ')' to describe a nested structure, and  'F','D','G' to describe complex-valued data.   If the implied size of this string is smaller than the length of the buffer then it is assumed that the string is repeated. 
+Get the format-string of the memory using the struct-string syntax (see below for additions to the struct-string syntax).  If the implied size of this string is smaller than the length of the buffer then it is assumed that the string is repeated. 
 
 {{{
 typedef PyObject *(*shapebufferproc)(PyObject *obj)
@@ -64,5 +64,24 @@ Return a 3-tuple of lists containing shape information: (shape, strides, offsets
 Some C-API calls should also be made available. 
 
 All of these routines are optional (but the last three make no sense unless at least one of the first two is implemented). 
+
+= Additions to the struct string-syntax =
+
+||Character|| Description ||
+||'1' || bit (number before states how many bits) ||
+||'g' || long double    ||
+||'F' || complex float  ||
+||'D' || complex double ||
+||'G' || complex long double ||
+||'&' || pointer to (prefix before another charater) ||
+||'O' || pointer to Python Object ||
+||'X{}'|| pointer to a function (function signature inside of {})||
+|| 'c' || ucs-1 (latin-1) encoding ||
+|| 'u' || ucs-2 ||
+|| 'w' || ucs-4 ||
+|| '(' || begin nested structure ||
+|| ')' || end nested structure ||
+
+We should also allow an endian-specification inside the string so that it could change if needed. 
 
 = Questions =
