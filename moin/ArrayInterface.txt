@@ -25,19 +25,28 @@ The buffer protocol allows different Python types to exchange a pointer to a seq
   3. Add a new function to allow the protocol to describe what is in memory (unifying what is currently done now in struct and array)
   4. Add a new function to allow the protocol to share shape information
 
-= Idea =
+= Specification =
 
-All that is needed is to create a Python "memory_view" object that can contain all the information needed and be returned when the buffer protocol is called --- when it is garbage-collected, the "bp_release_view" function is called on the exporting object.
+ Change the PyBufferProcs structure to
 
-This "memory_view" is essentially the old Numeric C-structure (including the fact that the data-format is described by another C-structure). 
+{{{
+typedef struct {
+     readbufferproc bf_getreadbuffer
+     writebufferproc bf_getwritebuffer
+     releasebufferproc bf_releasebuffer
+     formatbufferproc bf_getbufferformat
+     shapebufferproc bf_getbuffershape       
+}
+}}}
 
-This object is what the buffer protocol should return. 
+The signatures of these function pointers are:
 
+{{{
+typedef Py_ssize_t (*readbufferproc)(PyObject *obj, void **buf)
+}}}  
+A pointer to the the memory is returned in buf and the length of that memory buffer is returned in Py_ssize_t.  
 
-= Details =
+Some C-API calls should also be made available. 
 
 
 = Questions =
-
-
-= Problems =
