@@ -1,17 +1,24 @@
 This pre-PEP proposes enhancing the buffer protocol in Python 3000 to implement the array interface (protocol).
 
-This Wiki will serve as a place to record import points raised during the mailing list discussion.
+This Wiki will serve as a place to develop the PEP until it is assigned a number and committed to the Python development tree. 
 
-= Overview =
+= Abstract =
+
+This PEP proposes re-designing the buffer API (PyBufferProcs function pointers) to improve the way Python allows memory sharing in Python 3.0 
+
+In particular, it is proposed that the multiple-segment and character buffer portions of the buffer API are eliminated and additional function pointers are provided to allow sharing any multi-dimensional character of the memory and what the memory contains. 
+
+= Rational =
 
 The buffer protocol allows different Python types to exchange a pointer to a sequence of internal buffers.  This functionality is '''extremely''' useful for sharing large segments of memory between different high-level objects, but it's too limited and has issues.
 
-  1. There is the little (never?) used "sequence-of-segments" option.
-  2. There is no way for a consumer to tell the protocol-exporting object it is "finished" with its view of the memory and therefore no way for the object to be sure that it can reallocate the pointer to the memory that it owns (the array object reallocating its memory after sharing it with the buffer object which held the original pointer led to the infamous buffer-object problem).
-  3. Memory is just a pointer. There is no way to describe what's "in" the memory (float, int, C-structure, etc.)
-  4. There is no shape information provided for the memory.  But, several array-like Python types could make use of a standard way to describe the shape-interpretation of the memory (!wxPython, GTK, CVXOPT, !PyVox, Audio and Video Libraries, ctypes, !NumPy)
+  1. There is the little (never?) used "sequence-of-segments" option (bf_getsegcount)
+  2. There is the apparently redundant character-buffer option (bf_getcharbuffer)
+  3. There is no way for a consumer to tell the buffer-API-exporting object it is "finished" with its view of the memory and therefore no way for the expoerting object to be sure that it is safe to reallocate the pointer to the memory that it owns (the array object reallocating its memory after sharing it with the buffer object which held the original pointer led to the infamous buffer-object problem).
+  4. Memory is just a pointer with a length. There is no way to describe what's "in" the memory (float, int, C-structure, etc.)
+  5. There is no shape information provided for the memory.  But, several array-like Python types could make use of a standard way to describe the shape-interpretation of the memory (!wxPython, GTK, pyQT, CVXOPT, !PyVox, Audio and Video Libraries, ctypes, !NumPy)
 
-= Proposal =
+= General Proposal =
 
   1. Get rid of the char-buffer and multiple-segment sections of the buffer-protocol.  
   2. Add a new function to the protocol that should be called when the consumer object is "done" with the view.
