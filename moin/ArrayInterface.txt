@@ -69,11 +69,12 @@ All of these routines are optional (but the last three make no sense unless the 
 
 ||Character|| Description ||
 ||'1' || bit (number before states how many bits) ||
+||'?' || platform _Bool type ||
 ||'g' || long double    ||
 ||'F' || complex float  ||
 ||'D' || complex double ||
 ||'G' || complex long double ||
-||'&' || pointer to (prefix before another charater) ||
+||'&' || specific pointer (prefix before another charater) ||
 ||'O' || pointer to Python Object ||
 ||'X{}'|| pointer to a function (optional function signature inside of parenthesis)||
 || 'c' || ucs-1 (latin-1) encoding ||
@@ -81,25 +82,30 @@ All of these routines are optional (but the last three make no sense unless the 
 || 'w' || ucs-4 ||
 || 'T{}' || structure (detailed layout inside of {}) ||
 || '(k1,k2,...,kn)' || multi-dimensional array of whatever follows ||
+|| ':name:' || If this follows a typecode then it is the name of the particular part of the structure. || 
 
 Endian-specification is allowed inside the string so that it can change if needed. 
+
+According to the struct-module, a number can preceed a character code to specify how many of that type there are.  These extensions also allow specifying if the data is supposed to be viewed as a multi-dimensional array of a particular value. 
 
 I would also like to add a function to create a ctypes object from a struct description, and add long-double, and ucs-2 to ctypes.  
 
 Ideally, the struct module would be incorporated into the ctypes module which would also grow a C-API.
 
-= Objects to be affected =
 
-buffer object
-bytes object
-string object
+= Code to be affected =
 
-array object
-struct module
+ * buffer object
+ * bytes object
+ * string object
+ * array module
+ * struct module
+ * mmap module
 
 anything else using the buffer API
-
 
 = Issues =
 
 The proposed locking mechanism relies entirely on the objects implementing the buffer interface to do their own thing.  Ideally an object that implements the buffer interface should keep at least a number indicating how many releases are extant. 
+
+Currently the struct module does not allow specification of nested structures.  It seems like specifying a nested structure should be allowed.  
