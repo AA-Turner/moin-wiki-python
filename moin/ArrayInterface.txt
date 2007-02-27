@@ -44,7 +44,7 @@ The signatures and purposes of these function pointers are provided here:
 {{{
 typedef Py_ssize_t (*getbufferproc)(PyObject *obj, void **buf, int  *writeable)
 }}}  
-A pointer to the memory is returned in buf and the length of that memory buffer is the function return value.   If the returned value of writeable is 1, then the buffer can be written to, otherwise it must only be read-from.  A -1 is returned if an error occurs. 
+A pointer to the memory is returned in buf and the length of that memory buffer is the function return value.   If the returned value of writeable is 1, then the buffer can be written to, otherwise it must only be read-from (writeable can be NULL).  A -1 is returned if an error occurs. 
 
 {{{
 typedef int (*releasebufferproc)(PyObject *obj)
