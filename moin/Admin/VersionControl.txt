@@ -1,0 +1,24 @@
+= Configuration File Version Control =
+
+== Initializing a new machine ==
+
+Here's how to set up the version control on a new system.
+
+1. Initialize the ``/etc`` directory as a Bazaar repository. {{{
+bzr init /etc
+}}}
+
+2. Make the 'add' and 'status' subcommands ignore all files by default. {{{
+bzr ignore '*'
+}}}
+
+3. Manually add the files you want to track: {{{
+bzr add /etc/network/interfaces
+bzr add /etc/apache2/httpd.conf
+ ...
+}}}
+
+4. Commit for the first time: {{{
+cd /etc
+bzr commit -m "Record configuration files"
+}}} 
