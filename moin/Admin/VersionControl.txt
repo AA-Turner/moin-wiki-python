@@ -1,5 +1,103 @@
 = Configuration File Version Control =
 
+== Bazaar Overview ==
+
+We are using Bazaar to track files in ``/etc`` on python.org machines.
+Bazaar, also known as BZR, is a version-control system written in Python. 
+
+The home page for Bazaar is at http://bazaar-vcs.org/.
+
+XXX 'bzr whoami'
+
+== Bazaar cheatsheet ==
+
+Its command-line interface resembles that of CVS, 
+but using the ``bzr`` executable instead.
+
+A more detailed introduction to Bazaar's basic features is part of the docs: http://doc.bazaar-vcs.org/bzr.dev/tutorial.htm
+
+To get a list of available subcommands, run ``bzr help``.
+
+To get more details about one particular subcommand, run ``bzr help <command-name>``.
+
+=== Making changes ===
+
+To commit a change: {{{bzr commit -m "Add new virtual host" /etc}}}
+
+If you omit the path name, committing takes the current working directory as its starting point, so you don't need to supply the path if you're currently in ``/etc``.  It's OK to commit only a portion of the tree; if you're in ``/etc/apache2`` and do a commit without specifying the path, you'll only commit changes in ``/etc/apache2`` and its subdirectories.
+
+=== What have I changed? ===
+
+``bzr status`` lists the names of files that are different from
+the last committed version: {{{
+root@matterhorn:/etc# bzr status
+removed:
+  nanorc
+added:
+  vnc.conf
+modified:
+  syslog.conf
+root@matterhorn:/etc#
+}}}
+
+To get a diff-style display of changes, use ``bzr diff``: {{{
+root@matterhorn:/etc# bzr diff |less
+=== removed file 'nanorc'
+--- nanorc
++++ /dev/null
+@@ -1,314 +0,0 @@
+-## Sample initialization file for GNU nano
+ ...
+=== modified file 'syslog.conf'
+--- syslog.conf
++++ syslog.conf
+@@ -56,16 +56,3 @@
+ #      *.=debug;*.=info;\
+ #      *.=notice;*.=warn       /dev/tty8
+
+-# The named pipe /dev/xconsole is for the `xconsole' utility.  To use it,
+-# you must invoke `xconsole' with the `-file' option:
+-#
+-#    $ xconsole -file /dev/xconsole [...]
+-#
+-#
+-daemon.*;mail.*;\
+-       news.crit;news.err;news.notice;\
+-       *.=debug;*.=info;\
+-       *.=notice;*.=warn       |/dev/xconsole
+-
+}}}
+
+The ``--diff-options`` switch can be used to change the output of the underlying ``diff`` program.
+
+=== Adding/removing files ===
+
+To begin tracking a new configuration file, 
+it must be added to the repository and then committed:
+{{{
+bzr add /etc/database.conf
+bzr commit -m "Add database config" /etc/
+}}}
+
+If you delete a tracked file using ``rm``, Bazaar will 
+notice it's gone and remove it from the repository when you commit:
+
+{{{
+root@matterhorn:/etc# rm database.conf
+root@matterhorn:/etc# bzr status
+removed:
+  database.conf
+root@matterhorn:/etc# bzr commit -m "Remove file"
+missing database.conf
+deleted database.conf
+Committed revision 9.
+root@matterhorn:/etc#
+}}}
+
+The ``bzr rm`` subcommand stops tracking a file, but does **not**
+remove the working copy in ``/etc``.
+
+
 == Initializing a new machine ==
 
 Here's how to set up the version control on a new system.
@@ -8,9 +106,15 @@ Here's how to set up the version control on a new system.
 bzr init /etc
 }}}
 
+This will create a directory called ``/etc/.bzr/`` that stores
+the history of changes.
+
 2. Make the 'add' and 'status' subcommands ignore all files by default. {{{
 bzr ignore '*'
 }}}
+
+This prevents a stray ``bzr add`` lacking arguments
+from adding lots and lots of files.
 
 3. Manually add the files you want to track: {{{
 bzr add /etc/network/interfaces
