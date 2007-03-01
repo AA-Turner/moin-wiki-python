@@ -7,8 +7,6 @@ Bazaar, also known as BZR, is a version-control system written in Python.
 
 The home page for Bazaar is at http://bazaar-vcs.org/.
 
-XXX 'bzr whoami' -- setting it
-
 == Bazaar cheatsheet ==
 
 The command-line interface resembles that of CVS, 
@@ -19,6 +17,20 @@ A more detailed introduction to Bazaar's basic features is part of the docs: htt
 To get a list of available subcommands, run `bzr help`.
 
 To get more details about one particular subcommand, run `bzr help <command-name>`.
+
+=== Setting your ID ===
+
+Bazaar remembers your ID and uses this ID when committing changes.
+If you're doing stuff as root, this means we won't know who made a particular change.
+
+`/usr/bin/bzr` is a wrapper script that checks that the ID has been set, reporting an error and stopping when it hasn't been.
+
+To set your ID: {{{
+bzr whoami <your-ID>
+
+e.g.
+bzr whoami amk
+}}}
 
 === Making changes ===
 
