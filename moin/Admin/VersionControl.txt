@@ -53,9 +53,9 @@ export BZREMAIL=admin-person@python.org
 
 To commit a change: {{{bzr commit -m "Add new virtual host" /etc}}}
 
-If you omit the path name, committing takes the current working directory as its starting point, so you don't need to supply the path if you're currently in `/etc`.  It's OK to commit only a portion of the tree; if you're in `/etc/apache2` and do a commit without specifying the path, you'll only commit changes in `/etc/apache2` and its subdirectories.
+If you omit the path name, committing will search the entire repository containing the current directory, so you don't need to supply the path if you're currently in `/etc`.  It's OK to commit only a portion of the tree; if you're in `/etc/apache2` and do a commit specifying the current directory ({{{bzr commit .}}}), you'll only commit changes in `/etc/apache2` and its subdirectories.
 
-To back out a change: {{{bzr revert /etc/database.conf}}}
+To back out an uncommitted change: {{{bzr revert /etc/database.conf}}}
 restores the last committed version of the file.
 
 The `revert`` subcommand works recursively on directories, 
