@@ -58,6 +58,12 @@ aren't part of the Python source tree.
  * Extend the CodeCoverage module to extend into os.fork() and os.exec('python') calls.  Fix Nose to facilitate this.
  * Write a [http://www.scipy.org scipy] module that implements black-box, [http://statistik.wu-wien.ac.at/projects/arvag/index.html automatic random number generation] algorithms for the numerous probability distributions defined in [http://www.scipy.org/doc/api_docs/scipy.stats.distributions.html scipy.stats] ([mailto:robert.kern@enthought.com contact]).
  * A more complete CD interface. [http://www.gnu.org/software/libcdio libcdio] is a library for Platform-dependent control and reading of a CD device. There is also some support for reading CD images (BIN/CUE CDRDAO, ISO) as though they were real devices.  [http://freshmeat.net/projects/libcdio/?branch_id=62870 Some work] has been done to extend the API to Python, via SWIG. However this OO wrapping is not complete. In particular handling MMC (Multi-media) commands is missing and a CD-Paranoia interface (OO or not) is missing. All of the OO API's are fairly new, so if you feel you want to improve on the API, that's okay too.
+ * A python interface to [http://www.rabbitmq.com/ rabbitmq]. They have a java interface right now (the engine itself is written in erlang) so you could use it for "inspiration".
+ * Convince/help Trevor Perrin to make a full ssl interface (i.e., make [http://sourceforge.net/projects/tlslite tlslite] feature complete).
+ * Implement [http://www.w3.org/TR/xmlenc-core/ Xml Encryption] and [http://www.w3.org/TR/xmldsig-core/ Xml Signature] '''using lxml'''
+    * First iterate on a "pure" python prototype (using tlslite or whatever) to create a clean API, and after that use pyrex to bind directly against Aleskey's xmlsec package for better performance (maybe both implementations could live together, a la ElementTree/cElementTree and StringIO/cStringIO). Another option is to use something from the [http://xmlsig.sourceforge.net/ xmlsig project].
+    * Another try on the quest for a clean API: Use [http://jcp.org/en/jsr/detail?id=105 jsr105] and [http://jcp.org/en/jsr/detail?id=106 jsr106] for a reference (obviously using python idioms instead of the java ones).
+ 
 
 -----
 
