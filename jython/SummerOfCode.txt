@@ -4,6 +4,7 @@ Some project ideas that might work for Google's summer of code.  The Python folk
 
 == Potential Mentors ==
 FrankWierzbicki
+JimBaker
 
 == Help System ==
 Note: This started as a weblog post from Brian Zimmer (His weblog disappeared a long time ago, but I dug it up again through the magic of the [http://www.archive.org/web/web.php wayback machine].
@@ -25,7 +26,7 @@ Of course, help() is not currently working at all in Jython -- so the first step
 
 == Jython unit testing ==
 
-Jython has two sets of unit tests -- one which is comprised of the CPython tests and a number of Jython specific tests written in a 
+Jython has two sets of unit tests -- one which is comprised of the CPython tests and a number of Jython specific tests written in a
 similar style.  The other is the "bugtests" directory -- which contains just short of 400 tests which are numbered test000.py to test394.py.  The bugtests are peculiar to Jython -- they do many things that just wouldn't make sense in a CPython context.  For example, the bugtests have support for compiling java source files as part of the testing.  I think a project could be made to migrate the bugtests (as well as the Jython specific unit tests under Lib/test) to a style closer to the modern CPython tests (for example, the bugtests should be an extension of unittest instead of being so custom).  Also, I wish the bugtests tests had descriptive names instead of the testXXX numbering.
 
 == Overhaul the documentation ==
@@ -97,3 +98,26 @@ and how it does exception handling. For inspiration, see:
   http://www.des.emory.edu/mfp/impossible.html
 
 --Paul Fernhout
+
+== Python 2.5 Language Support in the Jython Compiler ==
+
+JimBaker and Michael Taylor are currently working on adding 2.5+ *language* functionality to Jython. We are trying to limit the scope of this work, just as was done with the AST implementation in CPython 2.5:
+
+ * Write a generational grammar to build the desired AST in ANTLR 3. We may explore using a tree grammar to support enhanced visting. We think we might be able to just generate a comparable set of AST nodes as CPython, for enhanced compatibility. This is the easy part.
+
+ * Generate code using ASM; this would replace the current !CodeCompiler.java. This would be the bulk of the work. There's some interaction with the rest of Jython, but not too much (we think). More importantly, we need to identify some best practices on mapping Python constructs to JVM byte code, basically updating what JimHugunin worked out 10 years ago.
+
+We're also looking at two additional enhancements:
+
+ * Move to using nested classes to represent methods. This just seems to be the right way to do it. Issues of PermGen seem to be just a red herring. We may be wrong, but it's the approach being taken by JRuby.
+
+ * Favor "classworking" instead of reflection. ASM provides support here; JRuby is also looking at caching the necessary stubs.
+
+We would expect that there would be suitable subprojects in this that are suitable for the GSoC students. Some that come to mind:
+
+ * Facilitate Java calling Jython, via class/method decorators and possibly annotations.
+ * Construct translation, especially performance/correctness issues. (Subtle closure bugs still seem to be out there in CPython for example.)
+ * Stub cache
+ * Rolling up as part of the replacement to jythonc, using compileall, going to setuptools.
+
+All of these have the advantage that they can be completed to a certain implementation, and still be useful.
