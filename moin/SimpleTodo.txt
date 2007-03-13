@@ -6,11 +6,11 @@ The `Py_VISIT()` macro in `objimpl.h` was introduced to make coding of most `tp_
 
 == Use Py_CLEAR ==
 
-The `Py_CLEAR` macro in `object.h` was introduced to make coding of "decref and NULL out a containee pointer" operations safe.  The reasons for why this is important but tricky to achieve are explained in a comment block before that macro in current trunk source.  `tp_clear` and even `tp_dealloc` slot implementations should generally use `Py_CLEAR` now.
+The `Py_CLEAR` macro in `object.h` was introduced to make coding of "decref and NULL out a containee pointer" operations safe.  The reasons for why this is important but tricky to achieve are explained in a comment block before that macro in current trunk source.  `tp_clear` and even `tp_dealloc` slot implementations should generally use `Py_CLEAR` now. 
 
-== Clean up compiler warnings with icc ==
+== Clean up 64-bit compiler warnings ==
 
-There are many 64-bit warnings produced by icc when using the -Wp64 flag.  icc is freely available for a one month trial license.  NealNorwitz has a license and can make the warnings available on the web if anyone is interest in getting rid of these warnings.
+There are many 64-bit warnings produced by icc when using the -Wp64 flag.  icc is freely available for a one month trial license.  NealNorwitz has a license and can make the warnings available on the web if anyone is interest in getting rid of these warnings. In addition, there is a patch to gcc to produce such warnings.
 
 == Make modules Py_ssize_t clean ==
 
