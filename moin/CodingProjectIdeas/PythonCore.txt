@@ -2,13 +2,12 @@
  * Security audit of python.  Using as many automated processes as possible.
  * Clean up the porting ifdefs, including os and posixmodule
  * Python speed up.  Reduce memory usage, speedup startup time.  The two main speed regressions of the 2.0, 2.1,2.2,2.3,2.4 releases.  (438,453,499,771,880) syscalls vs 106 for latest perl.  0m0.031s, 0m0.029s, 0m0.037s, 0m0.059s, 0m0.057s  real time to start vs 0m0.007s for the latest perl.
- * Add a MemoryUsageProfiler to python. Currently it is almost impossible to figure out where memory is going in a large python program, especially if you have C extensions loaded. It'd be nice to know where the memory is going, if there are circular references, or if objects are being held too long.
+ * Add a MemoryUsageProfiler to python. Currently it is almost impossible to figure out where memory is going in a large python program, especially if you have C extensions loaded. It'd be nice to know where the memory is going, if there are circular references, or if objects are being held too long.  See the [http://svn.python.org/view/python/branches/bcannon-sandboxing/ bcannon-sandboxing] branch in svn for an attempt at a proof-of-concept.
  * math speedups or IO speedups (I think the string-in-base-10 to an int was recently sped up, but there may be other similar locations)
  * Unify and extend Python's import mechanisms, possibly by prototyping it with PyPy (much easier than messing with CPython's import.c). 
  * SpeedUpInterpreterStartup
  * ../PythonGarbageCollected
  * ../RegisterVirtualMachine
- * Revive restricted Python -- inspired by a recent thread on the py3k list (would be mentored by Brett Cannon: request that student who takes this on not use it as basis of work to be published because of competition with my dissertation).  See also SandboxedPython
  * Add regular code-coverage (both C and Python) to the build system (maybe even to Buildbot?)
   * Better introspection support for C functions: ability to expose arguments through inspect. Might require retrofitting existing extensions.
  * Provide more and better debugging of reference counting, garbage collection, and other memory issues for extension and embedding authors.
