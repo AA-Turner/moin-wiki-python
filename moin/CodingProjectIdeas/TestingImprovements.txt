@@ -1,0 +1,13 @@
+ * Update all old tests to use unittest or doctest; see the [http://svn.python.org/view/python/trunk/Lib/test/output/ output] directory in svn to see what old tests still exist (minus any conversions already in Python's issue tracker).
+
+ * Develop toolchain to make testing better and more helpful to non-CPython implementations.
+
+  * Function to specify what module is being tested.  This allows ImportErrors for modules required for testing to cause the test to fail, not skip the testing.
+
+  * Function to specify what OSs the module being tested is expected to work on.
+
+  * Function to specify if the module being tested is "optional" (i.e., reasonable to not have built).
+
+  * Decorators (method and class) to classify tests; OS, known failure, implementation detail or not, etc.  Helpful for PyPy et. al. so they know they don't need to test something (e.g., refcount specifics).
+
+  * Make unittest not print the docstring of a test instead of the method name when running a test.
