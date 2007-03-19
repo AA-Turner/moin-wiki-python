@@ -1,0 +1,96 @@
+= How To Edit Python Code =
+
+Python uses an indentation-based syntax for grouping statements into blocks. For example:
+
+{{{
+if some_condition and some_other_condition:
+    do_something()
+do_something_else()
+}}}
+
+However, beginners to Python programming are sometimes worried about this aspect of the language, asking questions like...
+
+ * How can I be sure that Python won't change its mind about my indentation?
+ * What happens if someone edits my code and mixes in tabs and spaces?
+ * Isn't Python susceptible to problems I've had with Makefiles?
+
+Whilst there is always a risk that someone with a badly behaved editor will start mixing tabs and spaces, potentially confusing Python, it should be remembered that such editing habits will probably confuse ''programmers'' working with such code in any language, as is shown by the following classic example in C-like languages:
+
+{{{
+if (some_condition && some_other_condition)
+    do_something();
+    do_something_else();
+}}}
+
+Although a C or C++ compiler will accept something like this, there may be a clear mismatch between what the programmer intended and the behaviour of the resulting code. Clearly, "sloppy" editing habits have an impact regardless of the role of indentation in a language's syntax.
+
+== Choosing a Text Editor ==
+
+You may have a favourite text editor in which you want to use to edit Python code. Hopefully, this editor will be slightly more sophisticated than the Notepad editor (on Windows) and will let you change its settings so that Python code can be edited effectively. Many text editors have support for syntax highlighting (so that different aspects of the text have different colours - keywords might be yellow, strings might be purple, and so on), and such things can be worthwhile benefits which can tempt you away from more primitive (if more familiar) programs. A list of Python-compatible editors can be found on the PythonEditors page.
+
+== Configuring a Text Editor ==
+
+Now that you've made a choice from the PythonEditors list, you'll want to make sure that it is set up properly. Below you'll find a guide for a number of different editors dealing with important Python issues such as indentation (tabs and spaces) as well as other more general issues like encodings and syntax highlighting/colouring.
+
+----
+
+== Vim (and relatives) ==
+
+See: http://www.vim.org/
+
+=== Indentation ===
+
+A useful addition to Python source files is this comment:
+
+{{{
+# vim: tabstop=4 expandtab shiftwidth=4
+}}}
+
+This tells Vim that when the file is loaded, tabs are always expanded to spaces and that the width of each tab is four characters. Type the following in command mode to achieve the same effect:
+
+{{{
+:set tabstop=4 expandtab shiftwidth=4
+}}}
+
+Or:
+
+{{{
+:set ts=4 et sw=4
+}}}
+
+=== Syntax Highlighting ===
+
+You may be lucky enough to have syntax highlighting already switched on in your version of Vim. If not, edit a `vimrc` file (either `/etc/vimrc` or `.vimrc` in your home directory) and add the following:
+
+{{{
+syntax on
+}}}
+
+If you use a dark background, this command may help adjust the colours:
+
+{{{
+set background=dark
+}}}
+
+=== A Simple Template ===
+
+You could copy the following simple template and save it to a file somewhere. Then, when you need to make a new source file, just copy it to the intended location with a name of your choice.
+
+{{{
+#!/usr/bin/env python
+
+"""
+Python source code - replace this with a description of the code and write the code below this text.
+"""
+
+# vim: tabstop=4 expandtab shiftwidth=4
+}}}
+
+----
+
+== Editorial Note ==
+
+Feel free to add notes about other editors in the section above, following the format already set out (unless you can think of a better one). Try and arrange the editor sections in ascending alphabetical order.
+
+----
+CategoryEditors
