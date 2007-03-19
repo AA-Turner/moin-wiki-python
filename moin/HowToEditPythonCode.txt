@@ -10,9 +10,27 @@ do_something_else()
 
 However, beginners to Python programming are sometimes worried about this aspect of the language, asking questions like...
 
- * How can I be sure that Python won't change its mind about my indentation?
+ * How should I add space at the beginning of a line? (In other words, how should I indent text?)
+ * How can I be sure that Python won't change its mind about the space I've added?
  * What happens if someone edits my code and mixes in tabs and spaces?
  * Isn't Python susceptible to problems I've had with Makefiles?
+
+This leads us to introduce the golden rule...
+
+----
+
+== Do Not Mix Tabs and Spaces! ==
+
+Now, this doesn't mean that you can't use the `Tab` key on your keyboard: it just means that your editor has to be set up properly so that tab characters aren't mixed in with space characters. Tab characters often appear as very wide spaces in text, typically making the cursor jump to a position further across in the editor window or terminal.
+
+This leads us to a simple choice:
+
+ * '''Either''' your editor should ''always'' add spaces when you press the `Tab` key...
+ * '''Or''' your editor should ''always'' add tabs when you press the `Tab` key, and you should yourself ''always'' use tabs when indenting.
+
+Many people recommend the first choice since you can use the `Tab` key as much as you like, and it does no harm to add spaces manually, although your indentation must always be consistent.
+
+----
 
 Whilst there is always a risk that someone with a badly behaved editor will start mixing tabs and spaces, potentially confusing Python, it should be remembered that such editing habits will probably confuse ''programmers'' working with such code in any language, as is shown by the following classic example in C-like languages:
 
@@ -85,6 +103,8 @@ Python source code - replace this with a description of the code and write the c
 
 # vim: tabstop=4 expandtab shiftwidth=4
 }}}
+
+This contains useful UNIX-related information on the first line, and a docstring which can be used to describe what your program or module is about.
 
 ----
 
