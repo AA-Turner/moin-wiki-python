@@ -5,7 +5,7 @@
 
  * Python speed up.  Reduce memory usage, speedup startup time.  The two main speed regressions of the 2.0, 2.1,2.2,2.3,2.4 releases.  (438,453,499,771,880) syscalls vs 106 for latest perl.  0m0.031s, 0m0.029s, 0m0.037s, 0m0.059s, 0m0.057s  real time to start vs 0m0.007s for the latest perl.
 
- * Add a MemoryUsageProfiler to python. Currently it is almost impossible to figure out where memory is going in a large python program, especially if you have C extensions loaded. It'd be nice to know where the memory is going, if there are circular references, or if objects are being held too long.  See the [http://svn.python.org/view/python/branches/bcannon-sandboxing/ bcannon-sandboxing] branch in svn for an attempt at a proof-of-concept.
+ * Add a MemoryUsageProfiler to python. Currently it is almost impossible to figure out where memory is going in a large python program, especially if you have C extensions loaded. It'd be nice to know where the memory is going, if there are circular references, or if objects are being held too long.  See the [http://svn.python.org/view/python/branches/bcannon-sandboxing/ bcannon-sandboxing] branch in svn for an attempt at a proof-of-concept.  There have been several attempts with varying success:  http://guppy-pe.sourceforge.net/ and http://pysizer.8325.org/
 
  * math speedups or IO speedups (I think the string-in-base-10 to an int was recently sped up, but there may be other similar locations)
 
