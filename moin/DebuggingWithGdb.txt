@@ -1,0 +1,89 @@
+Some types of bugs can be difficult to debug from within Python.  Some include:
+ * segfaults (not uncaught Python exceptions)
+ * hung processes (in cases where you can't get a Python traceback or debug with {{{pdb}}})
+ * out of control daemon processes
+
+In these cases, C level debugging with {{{gdb}}} can be helpful (it may be the only way to find out what is going on in some cases).  To gather the information, the following steps need to be performed:
+ 1. get a Python interpreter with debugging symbols
+ 2. install Python specific GDB macros
+ 3. run the program under GDB / attach to already running process.
+ 4. obtain backtrace.
+
+Even if the information obtained doesn't make sense to you, it may be able to help someone else track down the problem.  If you are trying to track down an intermittent problem, perform steps 1 and 2 right away and the last steps when the problem occurs.
+
+= Debugging Interpreter =
+
+Ubuntu Dapper provides detached debugging symbols in the {{{python2.4-dbg}}} package:
+
+    {{{sudo apt-get install python2.4-dbg}}}
+
+= GDB Macros =
+
+A set of GDB macros are distributed with Python that aid in debugging the Python process.  You can install them by copying  [http://svn.python.org/view/python/trunk/Misc/gdbinit?rev=39492&view=auto this script] to `~/.gdbinit` (or if the file already exists, by appending to it).
+
+Note that the new GDB commands this file adds will only work correctly if debugging symbols are available.
+
+= Attaching GDB To Python =
+
+There are two ways to attach {{{gdb}}} to a Python process:
+ 1. run the program under gdb from the start, wait for the problem
+ 2. attach to the running Python process.
+
+To run under {{{gdb}}} from the start, run the following commands:
+    {{{
+$ gdb python
+...
+(gdb) run <programname>.py <arguments>
+}}}
+
+This will run the program til it exits, segfaults or you manually stop execution (using ctrl+C).
+
+If the process is already running, you can attach to it provided you know the process ID.
+    {{{
+$ gdb python <pid of running process
+}}}
+
+Attaching to a running process like this will cause it to stop.  You can tell it to continue running 
+
+
+== Getting a Stack Trace ==
+
+If you are debugging a segfault, this is probably the first thing you want to do.
+
+At the {{{(gdb)}}} prompt, just run the following command:
+    {{{
+(gdb) bt
+#0  0x0000002a95b3b705 in raise () from /lib/libc.so.6
+#1  0x0000002a95b3ce8e in abort () from /lib/libc.so.6
+#2  0x00000000004c164f in posix_abort (self=0x0, noargs=0x0)
+    at ../Modules/posixmodule.c:7158
+#3  0x0000000000489fac in call_function (pp_stack=0x7fbffff110, oparg=0)
+    at ../Python/ceval.c:3531
+#4  0x0000000000485fc2 in PyEval_EvalFrame (f=0x66ccd8)
+    at ../Python/ceval.c:2163
+...
+}}}
+
+With luck, this will give some idea of where the problem is occurring and if it doesn't help you fix the problem, it can help someone else track down the problem.
+
+The quality of the results will depend greatly on the amount of debug information available.
+
+
+== Working With Hung Processes ==
+
+If a process appears hung, it will either be waiting on something (a lock, IO, etc), or be in a busy loop somewhere.  In either case, attaching to the process and getting a back trace can help.
+
+If the process is in a busy loop, you may want to continue execution for a bit (using the {{{cont}}} command), then break (ctrl+C) again and bring up a stack trace.
+
+
+== Getting Python Stack Traces From GDB ==
+
+At the gdb prompt, you can get a Python stack trace:
+    {{{
+(gdb) pystack
+}}}
+
+Alternatively, you can get a list of the Python locals along with each stack frame:
+    {{{
+(gdb) pystackv
+}}}
