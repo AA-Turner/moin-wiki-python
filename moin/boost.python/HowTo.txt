@@ -198,6 +198,23 @@ In that case use "make_function":
       make_function(&C::getA, return_value_policy<...>()),
       make_function(&C::setA, with_custodian_and_ward<...>())}}}
 
+=== named constructors / factories (as Python initializers) ===
+
+There is a poorly documented make_constructor() function for this purpose.  (The best available documentation seems to be in libs/python/test/injected.cpp of the boost source tree.)
+
+It may be used like this:
+
+{{{
+static boost::smart_ptr<MyClass> makeClass (const object& data)
+{
+  long val = extract<long>(data);
+  return boost::smart_ptr<MyClass>(new MyClass(val));
+}
+
+class_<MyClass, boost::smart_ptr<MyClass> >("MyClass")
+     :  .def("__init__", make_constructor(makeClass))
+}}}
+
 == How to get... ==
 
 === C++ object from Python ===
