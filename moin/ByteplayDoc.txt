@@ -75,6 +75,22 @@ original source code begins. Besides another special opcode defined by byteplay,
 which we will see later, all other opcodes are the real opcodes used by the
 Python interpreter.
 
+By the way, if you want to see the code list in a form which is
+easier to read, you can simply print it, like this::
+
+    >>> print c.code
+
+      2           1 LOAD_FAST            a
+                  2 LOAD_FAST            b
+                  3 BUILD_TUPLE          2
+                  4 PRINT_ITEM
+                  5 PRINT_NEWLINE
+                  6 LOAD_CONST           None
+                  7 RETURN_VALUE
+
+This is especially useful if the code contains jumps. See the
+description of the printcodelist function for another example.
+
 Ok, now let's play! Say we want to change the function, to print its arguments
 in reverse order. To do this, we will add a ROT_TWO opcode after the two
 arguments were loaded to the stack. See how simple it is::
@@ -107,6 +123,9 @@ Module Contents
 
 These are byteplay's public attributes, which are imported when ``from byteplay
 import *`` is done.
+
+``POP_TOP``, ``ROT_TWO``, etc.
+  All bytecode constants are imported by their names.
 
 ``opcodes``
   A set of all Opcode instances.
@@ -167,7 +186,7 @@ behaviour.
   opcodes always continue to the next opcode after finished, unless an exception
   was raised.
 
-The following are used in the opcode list.
+The following are the types of the first elements of the opcode list tuples.
 
 ``Opcode``
   The type of all opcode constants.
@@ -243,7 +262,10 @@ Here come some additional functions.
             >>   13 LOAD_CONST           None
                  14 RETURN_VALUE
 
-For your convinience, another class was defined:
+As you can see, all opcodes are marked by their index in the list,
+and jumps show the index of the target opcode.
+
+For your convenience, another class was defined:
 
 ``CodeList``
   This class is a list subclass, which only overrides the __str__ method to
@@ -521,10 +543,14 @@ END_FINALLY opcode. The END_FINALLY opcodes pops 1, 2 or 3 elements according to
 what it finds on stack, so we return to "consistent" state. How can we deal
 with that complexity?
 
-The solution is pretty simple. We will treat the region between the
-SETUP_FINALLY target and the END_FINALLY opcode as though 3 elements are always
-pushed into it, and treat the END_FINALLY opcode as though it always pops 3
-elements. That's all! Just be aware of that when you are playing with
+The solution is pretty simple. We will treat the SETUP_FINALLY opcode as
+if it pushes 1 element to its target - this makes it consistent with the 1
+element which is pushed if the target is reached by normal flow. However,
+we will calculate the stack state as if at the target line there was an opcode
+which pushed 2 elements to the stack. This is done so that the maximum stack
+size calculation will be correct. Those 2 extra elements will be popped by the
+END_FINALLY opcode, which will be treated as though it always pops 3 elements.
+That's all! Just be aware of that when you are playing with
 SETUP_FINALLY and END_FINALLY opcodes...
 
 
