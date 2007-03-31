@@ -15,12 +15,11 @@ Eclipse has a plugin to become a  SVN client and can be used to get the project 
  * Add a new SVN repository, URL: https://jython.svn.sourceforge.net/svnroot/jython
  * Select trunk/jython or branches/2.3 depending on your development desires from the repository tree and Checkout the project using the New Project Wizard.
  *Set up source folders for the project
-  You only want the `com` and `org` folders under `<yourProjectName>` to be set as source folder, otherwise things will be messy.  To do this, set up `Include` filters:
   *Access the properties of `<yourProjectName>` (Right-click on the project and select `Properties`)
   *Click on `Java Build Path` and select the `Source` tab
   *Leave only `<yourProjectName>/src` on the build path
   *Set the Default output folder to `<yourProjectName>/build`  This means Ant won't have to rebuild the compiles Eclipse makes.
-  *Click ok, and check for a few files that won't compile if you don't have the appropriate jars.  Unless you're working on them you can just right click       on those files, go to Build Path and exclude them.
+  *Click ok, and check for a few files that won't compile if you don't have the appropriate jars.  Unless you're working on them you can just right click on those files, go to Build Path and exclude them.
    *org.python.util.PyServlet depends on the servlet api jar
    *org.python.util.ReadlineConsole depends on the java-readline jar
    *com.ziclix.python.sql.handler depends on various db jars so I just exclude that package altogether.
