@@ -5,10 +5,10 @@ Pseudocode of {{{codecs.StreamRecoder}}} of the Python2.5 version:
 {{{
 #!python
 class StreamRecoder:
-    def __init__(self, stream, e, d, sr_class, sw_class):
+    def __init__(self, stream, e, d, class_sr, class_sw):
         # internal encoder, decoder^  ^external decoder, encoder
-        self.r = sr_class(stream)
-        self.w = sw_class(stream)
+        self.r = class_sr(stream)
+        self.w = class_sw(stream)
         ...
 
     def read(self):
