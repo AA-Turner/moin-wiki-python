@@ -1,0 +1,24 @@
+As of Python2.5, {{{StreamReader}}} wraps (contains) a stream.  It defines {{{read}}} and other respective methods to read the data from the stream and "decode" them.  The class exposes all other methods of the stream instance.
+
+Pseudocode of the {{{codecs.StreamReader}}} definition:
+
+{{{
+#!python
+class StreamReader(Codec):
+    def __init__(self, stream):
+        ....
+
+    def read(self):
+        return self.decode(stream.read())
+}}}
+
+
+The {{{decode}}} method normally converts values of type {{{str}}} to {{{unicode}}}.
+
+Codec modules will attach the {{{StreamReader.decode}}} method to the class definition derived from {{{StreamReader}}} during the initialization.  An excerpt from {{{encodings.utf_8.StreamReader}}}:
+
+{{{
+#!python
+class StreamReader(codecs.StreamReader):
+    decode = codecs.utf_8_decode
+}}}
