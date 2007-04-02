@@ -1,6 +1,7 @@
-StreamWriter wraps (contains) a stream.  It defines {{{write}}} and other respective methods to "encode" the data and pass the result to the stream.  It exposes all other methods of the stream instance.
 
-Pseudocode of the {{{codecs.StreamWriter}}} definition in Python2.5:
+As of Python2.5, {{{StreamWriter}}} wraps (contains) a stream.  It defines {{{write}}} and other respective methods to "encode" the data and pass the result to the stream.  It exposes all other methods of the stream instance.
+
+Pseudocode of the {{{codecs.StreamWriter}}} definition:
 
 {{{
 #!python
@@ -8,11 +9,14 @@ class StreamWriter(Codec):
     def __init__(self, stream):
         ....
 
-    def write(data):
+    def write(self, data):
         return stream.write(self.encode(data))
 }}}
 
-The {{{StreamWriter.encode}}} method is attached to the derived codec-specific class definitions at the time of the codec initialization.  An excerpt from {{{encodings.utf_8.StreamWriter}}}:
+
+The {{{encode}}} method normally converts values of type {{{unicode}}}  to {{{str}}}s.
+
+Codec modules will attach the {{{StreamWriter.encode}}} method to the class definition derived from StreamWriter during the initialization.  An excerpt from {{{encodings.utf_8.StreamWriter}}}:
 
 {{{
 #!python
