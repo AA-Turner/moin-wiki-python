@@ -1,0 +1,26 @@
+
+The {{{codecs.StreamRecoder}}} class re-encodes data between 2 character sets.  Its constructor specifies the 2 character sets in different ways.   The user should specify the internal character set as an encode, decode pair.  She should provide the external character set by supplying class definitions of a codec-specific {{{StreamReader}}} and {{{StreamWriter}}}.
+
+Pseudocode of {{{codecs.StreamRecoder}}} of the Python2.5 version:
+
+{{{
+#!python
+class StreamRecoder:
+    def __init__(self, stream, e, d, sr_class, sw_class):
+        # internal encoder, decoder^  ^external decoder, encoder
+        self.r = sr_class(stream)
+        self.w = sw_class(stream)
+        ...
+
+    def read(self):
+        return self.e(self.r.read())
+
+    def write(self, data):
+        return self.w.write(self.d(data))
+}}}
+
+
+----
+See also: StreamReader, StreamWriter, StreamReaderWriter.
+----
+CategoryUnicode
