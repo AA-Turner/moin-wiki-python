@@ -1,0 +1,22 @@
+
+StreamWriter wraps (contains) a stream.  Its {{{write}}} overrides will "encode" the data and pass the result to the stream.
+
+Pseudocode of the {{{codecs.StreamWriter}}} definition in Python2.5:
+
+{{{
+#!python
+class StreamWriter(Codec):
+    def __init__(self, stream):
+        ....
+
+    def write(data):
+        return stream.write(self.encode(data))
+}}}
+
+The {{{StreamWriter.encode}}} method is attached to the derived codec-specific class definitions at the time of the codec initialization.  An excerpt from {{{encodings.utf_8.StreamWriter}}}:
+
+{{{
+#!python
+class StreamWriter(codecs.StreamWriter):
+    encode = codecs.utf_8_encode
+}}}
