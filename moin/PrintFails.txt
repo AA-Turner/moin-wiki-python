@@ -112,7 +112,7 @@ The {{{write}}} call will execute {{{StreamWriter.write}}} which in turn invokes
 
 I (IL) believe reading from {{{stdin}}} does not involve coercion at all because the existing ways to read from {{{stdin}}} such as {{{"for line in sys.stdin"}}} do not convey the expected type of the returned value to the {{{stdin}}} handler.  A function that would complement the {{{print}}} statement might look like this:
 {{{
-  uline = typed_read(unicode)   # Generally, a list of input data types along with an optional parsing format line.
+  line = typed_read(unicode)   # Generally, a list of input data types along with an optional parsing format line.
 }}}
 
 {{{print}}} statement encodes {{{unicode}}} strings to {{{str}}} strings.  One can complement this with decoding of {{{str}} input data into {{{unicode}}} strings in {{{sys.stdin.read/readline}}}.  For this, we will wrap {{{sys.stdin}}} into a StreamReader instance:
