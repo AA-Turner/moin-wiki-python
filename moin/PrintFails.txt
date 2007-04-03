@@ -64,18 +64,20 @@ Since programmers need to display {{{unicode}}} strings, the designers of the {{
     UnicodeEncodeError: 'ascii' codec can't encode character u'\u0411' in position 0: ordinal not in range(128)
 }}}
 
-Here is my (IL's) understanding of the implementation of Python2.5's {{{print}}} statement.
+I (IL) understand the implementation of Python2.5's {{{print}}} statement as follows.
 {{{
   #!python
     # At Python startup.
-    eout = codecs.open(sys.stdout, "w+", encoding = tty_enc or None)
+    sys.stdout.encoding = tty_enc
+    if tty_enc is not None:
+      eout = codecs.getstreamwriter(tty_enc)(sys.stdout)
 
     # The implementation of the print statement:
     def print(*args):
       global eout
       for arg in args:
          sarg = stringify_to_str_or_unicode(arg)
-         if type(sarg) == str:
+         if type(sarg) == str or sys.stdout.encoding is None:
            # Avoid coercion to unicode in eout.write().
            sys.stdout.write(sarg)
          else:                # type(sarg) == unicode
@@ -83,7 +85,7 @@ Here is my (IL's) understanding of the implementation of Python2.5's {{{print}}}
 }}}
 
  * The {{{codecs.open()}}} call will return either the original {{{sys.stdout}}} or an instance of StreamWriter wrapping it, depending on the detection of the terminal's encoding at startup.  The {{{print}}} statement stringifies all its arguments to  narrow {{{str}}} and wide {{{unicode}}} strings based on the width of the original arguments.  Then {{{print}}} passes the strings to the {{{eout.write()}}} handler.  
- * If Python detects the encoding, {{{eout}}} is a {{{StreamWriter}}} that will call the respective codec's {{{encode}}} method on wide strings.
+ * If Python detects the encoding, it assigns an instance of {{{StreamWriter}}} to {{{eout}}} so that {{{eout.write()}}} will call the respective codec's {{{encode}}} method on wide strings.
  * Conversely, if Python does not detect the encoding at startup, {{{eout}}} would equal to {{{sys.stdout}}}, and its {{{.write()}}} method would ["Coercion" coerce] {{{unicode}}} values to {{{str}}}.
 
 Python file's {{{write}}} and {{{read}}} methods do not invoke codecs internally.  Python2.5's file {{{open}}} built-in sets the {{{.encoding}}} attribute of the resulting instance to {{{None}}}.  
@@ -103,7 +105,7 @@ Wrapping {{{sys.stdout}}} into an instance of StreamWriter will allow writing {{
   Б
 }}}
 
-The {{{write}}} call will execute {{{StreamWriter.write}}} which in turn invokes codec-specific {{{encode}}} and passes the result to the underlying file.  It appears that the {{{print}}} statement will not fail due to the argument type coercion when {{{sys.stdout}}} is wrapped.  One can explain this behaviour by assuming that {{{print}}} 
+The {{{write}}} call will execute {{{StreamWriter.write}}} which in turn invokes codec-specific {{{encode}}} and passes the result to the underlying file.  It appears that the {{{print}}} statement will not fail due to the argument type coercion when {{{sys.stdout}}} is wrapped.  My (IL's) understanding of {{{print}}}'s implementation above agrees with that.
 
 
 ===== read and Unicode in pre-3.0 Python =====
