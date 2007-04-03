@@ -70,15 +70,21 @@ I (IL) understand the implementation of Python2.5's {{{print}}} statement as fol
     # At Python startup.
     sys.stdout.encoding = tty_enc
     if tty_enc is not None:
-      eout = codecs.getstreamwriter(tty_enc)(sys.stdout)
+      class_tty_enc_sw = codecs.getstreamwriter(tty_enc)
+    else
+      class_tty_enc_sw = None
 
     # The implementation of the print statement:
     def print(*args):
-      global eout
+      global class_tty_enc_sw
+      if class_tty_enc_sw is not None:
+        eout = class_tty_enc_sw(sys.stdout)
+      else:
+        eout = None
       for arg in args:
          sarg = stringify_to_str_or_unicode(arg)
-         if type(sarg) == str or sys.stdout.encoding is None:
-           # Avoid coercion to unicode in eout.write().
+         if type(sarg) == str or eout is None:
+           # Avoid coercion to unicode in out.write().
            sys.stdout.write(sarg)
          else:                # type(sarg) == unicode
            eout.write(sarg)
