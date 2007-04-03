@@ -81,9 +81,10 @@ Here is my (IL's) understanding of the implementation of Python2.5's {{{print}}}
          else:                # type(sarg) == unicode
            eout.write(sarg)
 }}}
-* The {{{codecs.open()}}} call will return either the original {{{sys.stdout}}} or an instance of StreamReaderWriter wrapping it, depending on the detection of the terminal's encoding at startup.  The {{{print}}} statement stringifies all its arguments to  narrow {{{str}}} and wide {{{unicode}}} strings based on the width of the original arguments.  Then {{{print}}} passes the strings to the {{{eout.write()}}} handler.  
-* If Python detects the encoding, {{{eout}}} is a {{{StreamWriter}}} that will call the respective codec's {{{encode}}} method on wide strings.
-* Conversely, if Python does not detect the encoding at startup, {{{eout}}} would equal to {{{sys.stdout}}}, and its {{{.write()}}} method would ["Coercion" coerce] {{{unicode}}} values to {{{str}}}.
+
+ * The {{{codecs.open()}}} call will return either the original {{{sys.stdout}}} or an instance of StreamReaderWriter wrapping it, depending on the detection of the terminal's encoding at startup.  The {{{print}}} statement stringifies all its arguments to  narrow {{{str}}} and wide {{{unicode}}} strings based on the width of the original arguments.  Then {{{print}}} passes the strings to the {{{eout.write()}}} handler.  
+ * If Python detects the encoding, {{{eout}}} is a {{{StreamWriter}}} that will call the respective codec's {{{encode}}} method on wide strings.
+ * Conversely, if Python does not detect the encoding at startup, {{{eout}}} would equal to {{{sys.stdout}}}, and its {{{.write()}}} method would ["Coercion" coerce] {{{unicode}}} values to {{{str}}}.
 
 Python file's {{{write}}} and {{{read}}} methods do not invoke codecs internally.  Python2.5's file {{{open}}} built-in sets the {{{.encoding}}} attribute of the resulting instance to {{{None}}}.  
 
