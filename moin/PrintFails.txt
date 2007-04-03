@@ -84,9 +84,9 @@ I (IL) understand the implementation of Python2.5's {{{print}}} statement as fol
       for arg in args:
          sarg = stringify_to_str_or_unicode(arg)
          if type(sarg) == str or eout is None:
-           # Avoid coercion to unicode in out.write().
+           # Avoid coercion to unicode in eout.write().
            sys.stdout.write(sarg)
-         else:                # type(sarg) == unicode
+         else:
            eout.write(sarg)
 }}}
 
