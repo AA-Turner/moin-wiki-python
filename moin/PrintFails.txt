@@ -89,9 +89,8 @@ I (IL) understand the implementation of Python2.5's {{{print}}} statement as fol
            eout.write(sarg)
 }}}
 
- * The {{{codecs.open()}}} call will return either the original {{{sys.stdout}}} or an instance of StreamWriter wrapping it, depending on the detection of the terminal's encoding at startup.  The {{{print}}} statement stringifies all its arguments to  narrow {{{str}}} and wide {{{unicode}}} strings based on the width of the original arguments.  Then {{{print}}} passes the strings to the {{{eout.write()}}} handler.  
- * If Python detects the encoding, it assigns an instance of {{{StreamWriter}}} to {{{eout}}} so that {{{eout.write()}}} will call the respective codec's {{{encode}}} method on wide strings.
- * Conversely, if Python does not detect the encoding at startup, {{{print}}} will call {{{sys.stdout}}}'s {{{write}}} method.  If the user does not replace {{{sys.stdout}}} as shown below, the {{{write}}} method will coerce {{{unicode}}} values to {{{str}}} by invoking the ASCII codec (DefaultEncoding).
+ * At startup, Python will detect the encoding of the standard output and, probably, store the respective StreamWriter class definition.  The {{{print}}} statement stringifies all its arguments to narrow {{{str}}} and wide {{{unicode}}} strings based on the width of the original arguments.  Then {{{print}}} passes narrow strings to {{{sys.stdout}}} directly and wide strings to an instance of StreamWriter wrapped around {{{sys.stdout}}}.
+ * If the user does not replace {{{sys.stdout}}} as shown below and Python did not detect an output encoding, the {{{write}}} method will coerce {{{unicode}}} values to {{{str}}} by invoking the ASCII codec (DefaultEncoding).
 
 Python file's {{{write}}} and {{{read}}} methods do not invoke codecs internally.  Python2.5's file {{{open}}} built-in sets the {{{.encoding}}} attribute of the resulting instance to {{{None}}}.  
 
