@@ -353,6 +353,29 @@ for line in fileinput.input():
 }}}
 The fileinput module also allows inplace editing or editing with the creation of a backup of the files, and a different list of files can be given instead of taking the command line arguments. 
  
+In more recent python versions, files can act as iterators, so you would just write:
+
+{{{
+for line in open(filename):
+    ...                 # code to process each line
+}}}
+
+If you want to read from standard in, then use it as the filename:
+{{{
+import sys
+for line in open(sys.stdin):
+    ...                 # code to process each line
+}}}
+
+If you want to loop over several filenames given on the command line, then write an outer loop over the command line.
+
+{{{
+import sys
+for fname in sys.argv[1:]
+    for line in open(fname):
+        ...                 # code to process each line
+}}}
+
 == Some general comparisons ==
 
 This section is under construction; for the moment I am just putting
