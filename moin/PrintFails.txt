@@ -96,13 +96,19 @@ Python file's {{{write}}} and {{{read}}} methods do not invoke codecs internally
 
 Wrapping {{{sys.stdout}}} into an instance of StreamWriter will allow writing {{{unicode}}} data with {{{sys.stdout.write()}}} and {{{print}}}.
 {{{
-  $ python -c 'import sys, codecs, locale; print str(sys.stdout.encoding); sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout); line = u"\u0411\n"; print type(line), len(line); sys.stdout.write(line); print line'
+  $ python -c 'import sys, codecs, locale; print str(sys.stdout.encoding); \
+    sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout); \
+    line = u"\u0411\n"; print type(line), len(line); \
+    sys.stdout.write(line); print line'
   UTF-8
   <type 'unicode'> 2
   Б
   Б
 
-  $ python -c 'import sys, codecs, locale; print str(sys.stdout.encoding); sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout); line = u"\u0411\n"; print type(line), len(line); sys.stdout.write(line); print line' | cat
+  $ python -c 'import sys, codecs, locale; print str(sys.stdout.encoding); \
+    sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout); \
+    line = u"\u0411\n"; print type(line), len(line); \
+    sys.stdout.write(line); print line' | cat
   None
   <type 'unicode'> 2
   Б
@@ -121,11 +127,17 @@ I (IL) believe reading from {{{stdin}}} does not involve coercion at all because
 
 {{{print}}} statement encodes {{{unicode}}} strings to {{{str}}} strings.  One can complement this with decoding of {{{str}}} input data into {{{unicode}}} strings in {{{sys.stdin.read/readline}}}.  For this, we will wrap {{{sys.stdin}}} into a StreamReader instance:
 {{{
-  $ python -c 'import sys, codecs, locale; print str(sys.stdin.encoding); sys.stdin = codecs.getreader(locale.getpreferredencoding())(sys.stdin); line = sys.stdin.readline(); print type(line), len(line)' 2>&1
+  $ python -c 'import sys, codecs, locale; \
+    print str(sys.stdin.encoding); \
+    sys.stdin = codecs.getreader(locale.getpreferredencoding())(sys.stdin); \
+    line = sys.stdin.readline(); print type(line), len(line)' 2>&1
   UTF-8
   [TYPING: абв ENTER]
   <type 'unicode'> 4
-  $ echo "абв" | python -c 'import sys, codecs, locale; print str(sys.stdin.encoding); sys.stdin = codecs.getreader(locale.getpreferredencoding())(sys.stdin); line = sys.stdin.readline(); print type(line), len(line)'
+  $ echo "абв" | python -c 'import sys, codecs, locale; \
+    print str(sys.stdin.encoding); \
+    sys.stdin = codecs.getreader(locale.getpreferredencoding())(sys.stdin); \
+    line = sys.stdin.readline(); print type(line), len(line)'
   None
   <type 'unicode'> 4
 }}}
