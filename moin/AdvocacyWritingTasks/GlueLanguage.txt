@@ -113,21 +113,21 @@ as a Python module called ``word``.
 
 ::
 
-	// Define the SIP wrapper to the word library.
+ // Define the SIP wrapper to the word library.
 
-	%Module word 0
+ %Module word 0
 
-	class Word {
+ class Word {
 
-	%TypeHeaderCode
-	#include <word.h>
-	%End
+ %TypeHeaderCode
+ #include <word.h>
+ %End
 
-	public:
-	    Word(const char *w);
+ public:
+     Word(const char *w);
 
-	    char *reverse() const;
-	};
+     char *reverse() const;
+ };
 
 
 Python's C API
@@ -140,24 +140,24 @@ The following example from Python's source code wraps the
 ``is_term_resized()`` function provided by the ``curses`` screen-handling
 library::
 
-	static PyObject *
-	PyCurses_Is_Term_Resized(PyObject *self, PyObject *args)
-	{
-	  int lines;
-	  int columns;
-	  int result;
+ static PyObject *
+ PyCurses_Is_Term_Resized(PyObject *self, PyObject *args)
+ {
+   int lines;
+   int columns;
+   int result;
 
-	  if (!PyArg_ParseTuple(args,"ii:is_term_resized", &lines, &columns))
-	    return NULL;
-	  result = is_term_resized(lines, columns);
-	  if (result == TRUE) {
-	    Py_INCREF(Py_True);
-	    return Py_True;
-	  } else {
-	    Py_INCREF(Py_False);
-	    return Py_False;
-	  }
-	}
+   if (!PyArg_ParseTuple(args,"ii:is_term_resized", &lines, &columns))
+     return NULL;
+   result = is_term_resized(lines, columns);
+   if (result == TRUE) {
+     Py_INCREF(Py_True);
+     return Py_True;
+   } else {
+     Py_INCREF(Py_False);
+     return Py_False;
+   }
+ }
 
 
 Embedding Python
@@ -168,16 +168,16 @@ Legal
 
 Python\ |reg| is a registered trademark of the Python Software Foundation.
 
-Java
+Java is a registered trademark of Sun Microsystems, Inc. in the United States and other countries.
 
-MacOS X
+Mac OS is a trademark of Apple Inc., registered in the U.S. and other countries.
 
-Mono
+Mono is a trademark of Novell, Inc. in the United States and other countries.
 
 .NET 
 
-Qt
+Qt is a registered trademark of Trolltech ASA and/or its subsidiaries in the United States and other countries.
 
 Tcl
 
-Windows
+Windows is a registered trademark of Microsoft Corporation in the United States and other countries.
