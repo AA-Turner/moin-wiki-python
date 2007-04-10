@@ -1,0 +1,24 @@
+## page was renamed from How can I truly "protect" the python source code we create for a commercial product?
+Well. I think you mean '''proprietary''' product. The restriction is in the license you use, not on whether the code is visible or not. In any case, it is assumed that you want to hide the code from the user.
+
+There is a way to partially hide the source code, and only used the byte compiled code, which nevertheless can be imported and used.
+
+Imported modules can be supplied only in .pyc  byte compiled format. They can be imported by a main app in Python. Note that pyc files are not portable between python versions.
+
+Take a look at utilities which embed modules and a python interpreter together into an executable, like PyInstaller and py2exe.
+----
+This topic touches on several others frequently discussed.
+A common thread in comp.lang.python, for example, bounces
+between someone who sincerely claims to need some sort of
+["obfuscation"] to prevent others from taking or modifying
+his ideas, and a gang of the old guard who ask precisely
+what the ideas are, who might take them, what would be the
+harm in that, and so on.  One proposition often repeated is
+that the only safe code is that hosted on a remote machine.
+
+. . .
+
+[Futility of protection schemes--but equally for Java, 
+C, ...]
+
+Also see "["deployment"]".
