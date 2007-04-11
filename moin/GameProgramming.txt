@@ -112,6 +112,13 @@ I have programmed PyZX, an emulator of ZX Spectrum personal computer, fully in P
 
 Vadim Kataev  Sun Feb 19 17:08:05 CET 2006
 
-
 ----
 See also this [http://www.gamasutra.com/features/20020821/dawson_pfv.htm paper by Bruce Dawson].
+
+----
+
+A postscript to the above discussion, now that CPUs are probably an order of magnitude more capable than the 450 MHz stated above. My own experience with PyGame is that a scrolling map, refreshed once per frame at over 30 frames per second is easily possible on fast hardware (> 2 GHz) and will still run acceptably on old hardware (< 300 MHz). The trick, especially with older hardware is to convert images (convert_alpha) for the display surface - this speeds plotting up considerably.
+
+A convincing demonstration of Python's suitability can be seen in [http://www.pyweek.org/e/toba4/ this PyWeek 4 entry] which features parallax scrolling, albeit at a modest resolution. The developers of that game are PyGame experts, but even less experienced developers should be able to put together games which perform acceptably. Admittedly, effects like transparency over large surfaces can impose penalties, but libraries like Numeric (integrated with PyGame) may offer some solutions.
+
+-- PaulBoddie [[DateTime(2007-04-11T09:20:00Z)]]
