@@ -1,0 +1,17 @@
+
+Note: This started as a weblog post from Brian Zimmer (His weblog disappeared a long time ago, but I dug it up again through the magic of the [http://www.archive.org/web/web.php wayback machine].
+
+One of the best features of Python IMHO is the help() function. It’s the first place I turn if I need help before I open a web browser and read the docs.
+
+I think it would be cool if we could do this:
+{{{
+>>> from java.lang import String
+>>> help(String)
+}}}
+and see the full Javadoc documentation in help format.
+
+A good project would be to create a system that could turn Javadoc comments into a format that the Jython help system could consume (perhaps with a Doclet or xdoclet?) -- this will become especially nice for Sun's newly GPL'ed version) in the case of classes not already exposed with the special {{{__doc}}} string mechanism available in Jython already.
+
+This could be facilitated with an xdoclet like framework which when ran over a source file would produce something Jython could use at runtime.
+
+Of course, help() is not currently working at all in Jython -- so the first step would be to figure out why this is and fix it.  Also, we need a strategy for getting the help documentation from CPython into our new style classes.
