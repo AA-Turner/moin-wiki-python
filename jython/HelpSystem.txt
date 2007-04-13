@@ -2,13 +2,8 @@ RyanMorillo is adding the help function from CPython to Jython as a [http://code
 
 == Roughest of Plans ==
 
-Here's the lay of the land for this as envisiaged by Charlie.
-
   1. Add the help function to Jython
-      The help function in Python is implemented in site.py as a call into pydoc.help.  We'll need to add the helper function and pydoc to Jython.  The fact that pydoc isn't included in Jython currently could just mean a couple things: no one has tried it or, more ominously, that Jython is missing some functionality it needs. The scope for this heavily depends on how hard it is to get pydoc to work.
---Addendum for step 1.--
-  With the current Jython (2.2b1) the previous issues with future div (A//B) are gone, leaving just the need for the inclusion of opcode.py pydoc.py dis.py and inspect.py from $PYTHON_SRC/Lib/ and (The hard part) converting $Python_Src/Modules/operator.c to Java for attrgetter.  Further dependencies require research.
-
+      The help function in Python is implemented in site.py as a call into pydoc.help.  We'll need to add the helper function and pydoc to Jython.  With the current Jython (2.2b1) the previous issues with future div (A//B) are gone, leaving just the need for the inclusion of opcode.py, pydoc.py, dis.py and inspect.py and (The hard part) converting $Python_Src/Modules/operator.c to Java for attrgetter.  Further dependencies require research.
   1. Fill in the docs for builtin Jython types
       The builtin types from Python implemented in Java in Jython(str, list, dict and the like) are missing their docstrings.  We'll need  to add these to the templating system we're using(src/templates in a trunk checkout) to get the basic types look decent in help.
   1. Add functionality to help to get it to work on introspected Java classes
