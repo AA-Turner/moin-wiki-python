@@ -1,13 +1,15 @@
 == Where do I put assets? (images, files, html pages, etc)? ==
 
-In most cases, place them into the same location as the yml and html template files. Pyramid copies them into place automatically. For html trees, place them into a directory that contains a file called NOBUILD. This tells pyramid to just copy the html files instead of trying to process them.
+In most cases, place them into the same location as the yml and html template files.  The build copies them into place automatically. For html trees, place them into a directory that contains a file called NOBUILD. This tells the build system to just copy the html files instead of trying to process them.
 
 Site-wide and style related images go into in /images instead.
 
-== Migrating old Pages ==
-
-Some pages are still in the old website format and copied over from an instance of the old website automatically during the build process.  If you plan to migrate any of these pages to the new site, read the  PythonWebsitePyramidUsersGuide section on converting content with mkpydir and see also some older content migration notes we've saved in PythonWebsiteContentMigration.
-
 == Debugging in Wing IDE ==
 
-To debug pyramid in Wing IDE, set up a project, add pyramid (or a copy of it) as the main debug file and set the parameters and starting directory in the File Properties (right click on file or file's name in project view). This can help point at problems when running w/ -V doesn't provide enough info.
+To debug pyramid in Wing IDE, set up a project, add the build script as the main debug file and set the parameters and starting directory in the File Properties (right click on file or file's name in project view) to match those in the invocation in the Makefile. This can help with debugging build problems.
+
+== Migrating old Pages ==
+
+(This is increasingly uncommon)
+
+Some pages are still in the old website format and copied over from an instance of the old website automatically during the build process.  If you plan to migrate any of these pages to the new site, read the  PythonWebsitePyramidUsersGuide section on converting content with mkpydir and see also some older content migration notes we've saved in PythonWebsiteContentMigration.
