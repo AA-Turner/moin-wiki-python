@@ -25,104 +25,6 @@ What can you do with scripting access to an existing system?
 * Education and initial learning
  
 
-Jython for Java Components
------------------------------------
-
-For systems written in Java\ |tm|, Jython (http://www.jython.org) is an implementation of Python written in pure
-Java that provides automatic access to Java classes from 
-both scripts and an interactive prompt.
-
-The following small script demonstrates using Swing from Jython,
-and is taken from the first chapter of "Jython Essentials" by
-Samuele Pedroni and Noel Rappin, published by O'Reilly & Associates
-(http://www.oreilly.com/catalog/jythoness/)::
-
-    import java.lang as lang
-    import javax.swing as swing
-    import java.awt as awt
-
-    names = ["Groucho", "Chico", "Harpo"]
-    quotes = {"Groucho": "Say the secret word", 
-	    "Chico": "Viaduct?", "Harpo": "HONK!"}
-
-    def buttonPressed(event):
-	 field.text = quotes[event.source.text]
-
-    def exit(event):
-	lang.System.exit(0)
-
-    def createButton(name):
-	return swing.JButton(name, preferredSize=(100,20), 
-		actionPerformed=buttonPressed)
-
-    win = swing.JFrame("Welcome to Jython", size=(200, 200),windowClosing=exit)
-    win.contentPane.layout = awt.FlowLayout(  )
-
-    field = swing.JTextField(preferredSize=(200,20))
-    win.contentPane.add(field)
-
-    buttons = [createButton(each) for each in names]
-    for eachButton in buttons:
-	win.contentPane.add(eachButton)
-    win.pack()
-    win.show()
-
-
-IronPython for CLR Components
----------------------------------------------
-
-.. :: check terminology
-
-IronPython, an implementation of Python written in C#,
-provides automatic access to CLR/.NET assemblies. 
-IronPython runs on both Microsoft\ |reg| .NET and on Novell\ |reg| Mono.
-The IronPython web site is at http://www.codeplex.com/Wiki/View.aspx?ProjectName=IronPython.
-
-The following small script demonstrates using the Windows Forms API
-from IronPython, and is taken from Michael Foord's IronPython/Windows
-Forms tutorial at
-<http://www.voidspace.org.uk/ironpython/winforms/index.shtml>::
-
-    import sys
-    sys.path.append(r'C:\Python24\Lib')
-
-    import clr
-    clr.AddReference("System.Drawing")
-    clr.AddReference("System.Windows.Forms")
-
-    from System.Drawing import Point
-    from System.Windows.Forms import Application, Button, Form, Label
-
-    class HelloWorldForm(Form):
-	def __init__(self):
-	    self.Text = 'Hello World'
-
-	    self.label = Label()
-	    self.label.Text = "Please Click Me"
-	    self.label.Location = Point(50, 50)
-	    self.label.Height = 30
-	    self.label.Width = 200
-
-	    self.count = 0
-
-	    button = Button()
-	    button.Text = "Click Me"
-	    button.Location = Point(50, 100)
-
-	    button.Click += self.buttonPressed
-
-	    self.Controls.Add(self.label)
-	    self.Controls.Add(button)
-
-	def buttonPressed(self, sender, args):
-	    print 'The label *used to say* : %s' % self.label.Text
-	    self.count += 1
-	    self.label.Text = "You have clicked me %s times." % self.count
-
-
-    form = HelloWorldForm()
-    Application.Run(form)
-
 C/C++ Systems
 ---------------------------------------------
 
@@ -130,7 +32,7 @@ The most widely used Python interpreter is the C implementation
 available from http://www.python.org and included in Mac OS X\ |reg|
 and many Linux distributions.  A Microsoft Windows\ |reg|
 version is available from http://www.python.org/.
-A variety of tools exists to interface between Python and C code.
+There are a variety of tools to interface between Python and C code.
 
 
 ctypes
@@ -318,7 +220,191 @@ library::
 Embedding Python
 --------------------------
 
-XXX
+The most common approach for integrating Python into a system is to
+write extension modules that can then be used by Python scripts.  In
+this approach, the Python interpreter is the top-level component, the
+one that controls the overall logic of the application.
+
+It's also possible to embed Python within an application, leaving the
+application as the top level and calling Python functions or executing
+strings containing code as required by the application.  
+
+The following example is taken from the "Extending and Embedding the
+Python Interpreter", part of Python's documentation set
+(http://docs.python.org/ext/).  The example takes the filename of a
+Python file, a function name, and optional string arguments, and calls
+the function passing the provided arguments.
+
+::
+
+    #include <Python.h>
+
+    int
+    main(int argc, char *argv[])
+    {
+	PyObject *pName, *pModule, *pDict, *pFunc;
+	PyObject *pArgs, *pValue;
+	int i;
+
+	if (argc < 3) {
+	    fprintf(stderr,"Usage: call pythonfile funcname [args]\n");
+	    return 1;
+	}
+
+        /* Initialize interpreter */
+	Py_Initialize();
+
+	/* Error checking of pName left out */
+	pName = PyString_FromString(argv[1]);
+	pModule = PyImport_Import(pName);
+	Py_DECREF(pName);
+
+	if (pModule != NULL) {
+	    pFunc = PyObject_GetAttrString(pModule, argv[2]);
+	    /* pFunc is a new reference */
+
+	    if (pFunc && PyCallable_Check(pFunc)) {
+		pArgs = PyTuple_New(argc - 3);
+		for (i = 0; i < argc - 3; ++i) {
+		    pValue = PyInt_FromLong(atoi(argv[i + 3]));
+		    if (!pValue) {
+			Py_DECREF(pArgs);
+			Py_DECREF(pModule);
+			fprintf(stderr, "Cannot convert argument\n");
+			return 1;
+		    }
+		    /* pValue reference stolen here: */
+		    PyTuple_SetItem(pArgs, i, pValue);
+		}
+		pValue = PyObject_CallObject(pFunc, pArgs);
+		Py_DECREF(pArgs);
+		if (pValue != NULL) {
+		    printf("Result of call: %ld\n", PyInt_AsLong(pValue));
+		    Py_DECREF(pValue);
+		}
+		else {
+		    Py_DECREF(pFunc);
+		    Py_DECREF(pModule);
+		    PyErr_Print();
+		    fprintf(stderr,"Call failed\n");
+		    return 1;
+		}
+	    }
+	    else {
+		if (PyErr_Occurred())
+		    PyErr_Print();
+		fprintf(stderr, "Cannot find function \"%s\"\n", argv[2]);
+	    }
+	    Py_XDECREF(pFunc);
+	    Py_DECREF(pModule);
+	}
+	else {
+	    PyErr_Print();
+	    fprintf(stderr, "Failed to load \"%s\"\n", argv[1]);
+	    return 1;
+	}
+	Py_Finalize();
+	return 0;
+    }
+
+
+Jython for Java Components
+-----------------------------------
+
+For systems written in Java\ |tm|, Jython (http://www.jython.org) is an implementation of Python written in pure
+Java that provides automatic access to Java classes from 
+both scripts and an interactive prompt.
+
+The following small script demonstrates using Swing from Jython,
+and is taken from the first chapter of "Jython Essentials" by
+Samuele Pedroni and Noel Rappin, published by O'Reilly & Associates
+(http://www.oreilly.com/catalog/jythoness/)::
+
+    import java.lang as lang
+    import javax.swing as swing
+    import java.awt as awt
+
+    names = ["Groucho", "Chico", "Harpo"]
+    quotes = {"Groucho": "Say the secret word", 
+	    "Chico": "Viaduct?", "Harpo": "HONK!"}
+
+    def buttonPressed(event):
+	 field.text = quotes[event.source.text]
+
+    def exit(event):
+	lang.System.exit(0)
+
+    def createButton(name):
+	return swing.JButton(name, preferredSize=(100,20), 
+		actionPerformed=buttonPressed)
+
+    win = swing.JFrame("Welcome to Jython", size=(200, 200),windowClosing=exit)
+    win.contentPane.layout = awt.FlowLayout(  )
+
+    field = swing.JTextField(preferredSize=(200,20))
+    win.contentPane.add(field)
+
+    buttons = [createButton(each) for each in names]
+    for eachButton in buttons:
+	win.contentPane.add(eachButton)
+    win.pack()
+    win.show()
+
+
+IronPython for CLR Components
+---------------------------------------------
+
+.. :: check terminology
+
+IronPython, an implementation of Python written in C#,
+provides automatic access to CLR/.NET assemblies. 
+IronPython runs on both Microsoft\ |reg| .NET and on Novell\ |reg| Mono.
+The IronPython web site is at http://www.codeplex.com/Wiki/View.aspx?ProjectName=IronPython.
+
+The following small script demonstrates using the Windows Forms API
+from IronPython, and is taken from Michael Foord's IronPython/Windows
+Forms tutorial at
+<http://www.voidspace.org.uk/ironpython/winforms/index.shtml>::
+
+    import sys
+    sys.path.append(r'C:\Python24\Lib')
+
+    import clr
+    clr.AddReference("System.Drawing")
+    clr.AddReference("System.Windows.Forms")
+
+    from System.Drawing import Point
+    from System.Windows.Forms import Application, Button, Form, Label
+
+    class HelloWorldForm(Form):
+	def __init__(self):
+	    self.Text = 'Hello World'
+
+	    self.label = Label()
+	    self.label.Text = "Please Click Me"
+	    self.label.Location = Point(50, 50)
+	    self.label.Height = 30
+	    self.label.Width = 200
+
+	    self.count = 0
+
+	    button = Button()
+	    button.Text = "Click Me"
+	    button.Location = Point(50, 100)
+
+	    button.Click += self.buttonPressed
+
+	    self.Controls.Add(self.label)
+	    self.Controls.Add(button)
+
+	def buttonPressed(self, sender, args):
+	    print 'The label *used to say* : %s' % self.label.Text
+	    self.count += 1
+	    self.label.Text = "You have clicked me %s times." % self.count
+
+    form = HelloWorldForm()
+    Application.Run(form)
+
 
 Legal
 -----------------
