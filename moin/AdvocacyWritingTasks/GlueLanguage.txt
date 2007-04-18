@@ -157,6 +157,53 @@ the Subversion version control system (http://subversion.tigris.org/)::
     void apr_pool_clear(apr_pool_t *p);
 
 
+Boost.Python for C++ libraries
+------------------------------------
+
+Boost.Python (http://www.boost.org/libs/python/doc/) is a framework
+for wrapping C++ classes and functions as Python extensions without
+requiring any modifications to the original C++ code or headers.
+
+The following example, taken from the pyactivemq project
+(http://code.google.com/p/pyactivemq/), wraps the ``Message``
+class from the ActiveMQ-CPP library::
+
+    #include <boost/python.hpp>
+    #include <cms/Message.h>
+
+    using namespace boost::python;
+    using cms::Message;
+
+    void export_Message()
+    {
+	class_<Message, boost::noncopyable>("Message", no_init)
+	    .def("acknowledge", &Message::acknowledge)
+	    .def("clearBody", &Message::clearBody)
+	    .def("clearProperties", &Message::clearProperties)
+	    .add_property("propertyNames", &Message::getPropertyNames)
+	    .def("propertyExists", &Message::propertyExists)
+	    .def("getBooleanProperty", &Message::getBooleanProperty)
+	    .def("getByteProperty", &Message::getByteProperty)
+	    .def("getDoubleProperty", &Message::getDoubleProperty)
+	    .add_property("correlationID", &Message::getCMSCorrelationID, 
+                          &Message::setCMSCorrelationID)
+	    .add_property("deliveryMode", &Message::getCMSDeliveryMode, 
+                          &Message::setCMSDeliveryMode)
+	    .add_property("destination",
+			  make_function(&Message::getCMSDestination, 
+                                        return_internal_reference<>()),
+			  make_function(&Message::setCMSDestination, 
+                                        with_custodian_and_ward<1,2>()))
+	    .add_property("messageID", &Message::getCMSMessageID, 
+                          &Message::setCMSMessageID)
+	    .add_property("type", &Message::getCMSType, &Message::setCMSType)
+	    ;
+    }
+
+This wrapper can be compiled using the Boost tools to produce a 
+shared library that Python can import and use as a module.
+
+
 SIP for C++ libraries
 --------------------------
 
