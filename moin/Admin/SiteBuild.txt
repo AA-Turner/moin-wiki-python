@@ -37,8 +37,3 @@ The site-updating cron job is run
 as user tparkin, and  its output is appended to
 `build/status/postcommitlog.txt`.  If that log file doesn't exist, a new
 one is created, but only writable by tparkin.  
-
-Looking back at the logs, I realize that this was my fault (at least,
-my action caused this bug to surface).  postcommitlog.txt was getting
-big, so I renamed it to postcommitlog.txt.1, which allowed the cron
-job to initialize a new file with the wrong ownership/permissions.
