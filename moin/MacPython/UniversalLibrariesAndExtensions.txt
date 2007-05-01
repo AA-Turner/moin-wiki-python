@@ -64,3 +64,7 @@ Each library has its own tricks but there are some standard way of changing the 
  * For example we could have set the CFLAGS variable in our shell after the ''configure'' command but before the ''make'' command to compile and link libjpeg as Universal build. Of course if the make file also sets a value for that paramter in the make file, then setting our own value will mask that and the build operation may not go as planned. we would set it just for the shell session thus ''CFLAGS="--arch ppc -arch i386 " (note: the space at the end is important as these values may be followed by others for the individual make commands and without the space, the command line may become garbled.
 
  * Some build 'recipes' are just not easy to modify because they are inscrutable due to complexity or they were not deisgned to be built in optional ways without permanent changes. Freetype2, because it uses the Jam tool, is one such example.
+
+[Reader note:  Copying the files /usr/share/libtool/config.sub and config.guess into your 
+build directory will cause the ./configure script to work properly for
+jpeg-6a and freetype2]
