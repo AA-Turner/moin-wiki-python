@@ -20,13 +20,11 @@ A modern replacement to {{{aetools}}} and {{{gensuitemodule}}}, the ../Appscript
  
 == Python OSA language components ==
  
-There have been several attempts to develop a Python OSA language component, though to date none of them provide a complete replacement for !AppleScript.
+There have been several attempts to develop a Python OSA language component. The two options currently available are:
+
+ * [http://appscript.sourceforge.net/pyosa.html PyOSA] implements the majority of the OSA interface, including support for sending and receiving Apple events. The Python interpreter runs within the host process, providing good performance at the cost of limited insulation between client scripts. PyOSA is currently under development so some features may be unfinished or subject to change.
  
- * OSAPython implements much of the OSA interface, but is unfinished and is no longer being developed.
- 
- * MacPythonOSA is another attempt to implement the full OSA interface, but is also unfinished and currently inactive.
- 
- * PythonOSA provides a working implementation of the core OSA interface, allowing OSA scripts written in Python to be loaded, stored, compiled and executed. More advanced OSA features, such as the ability to send and receive !AppleEvents to and from the host process are not currently available.
+ * [http://homepage.mac.com/philip_aker/osa/osa.html PythonOSA] allows OSA scripts written in Python to be loaded, stored, compiled and executed as separate subprocesses. Only the core OSA interface is implemented; more advanced OSA features, such as the ability to send and receive !AppleEvents to and from the host process are not available.
  
 == Apple event handling ==
  
@@ -38,7 +36,7 @@ There are two modern, high-level options for implementing !AppleEvent handling i
  
  * aemreceive (bundled with the !AppscriptModule) can be used to install !AppleEvent handlers although it provides no assistance for resolving object references so is best suited for use in applications that don't implement an ../AppleEventObjectModel.
  
- * PyObjC-based applications can leverage the /AppKit framework's built-in Cocoa Scripting support to implement a full !AppleEventObjectModel.
+ * PyObjC-based applications can leverage the ../AppKit framework's built-in Cocoa Scripting support to implement a full !AppleEventObjectModel.
  
 == OSA API access ==
  
