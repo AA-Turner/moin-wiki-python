@@ -1,12 +1,12 @@
 === What is PyMite ===
 
-PyMite is a flyweight Python interpreter written from scratch to execute on 8-bit and larger microcontrollers with resources as limited as 32 KiB of program memory (flash) and 4 KiB of RAM. PyMite supports a subset of the Python syntax and can execute a subset of the Python bytecodes. PyMite can also be compiled, tested and executed on a desktop computer.
+PyMite is a flyweight Python interpreter written from scratch to execute on 8-bit and larger microcontrollers with resources as limited as 64 KiB of program memory (flash) and 4 KiB of RAM. PyMite supports a subset of the Python 2.5 syntax and can execute a subset of the Python 2.5 bytecodes. PyMite can also be compiled, tested and executed on a desktop computer.
 
-Considering PyMite is designed to run on embedded 8-bit architectures, one should not expect PyMite to do everything Python can do.  However, it's capability may surprise you.  Since PyMite is written from scratch, it has a few features that set it apart: stackless from the start; fast, easy, native C function support and a hybrid mark-sweep garbage collector.
+Considering PyMite is designed to run on embedded 8-bit architectures, one should not expect PyMite to do everything Python can do.  However, it's capability may surprise you.  Since PyMite is written from scratch, it has a few features that set it apart: stackless from the start and fast, easy, native C function support.
 
 === Availability ===
 
-PyMite r 04 was released 2006/12/14 and is available from http://pymite.python-hosting.com/
+The latest version of PyMite is available from http://pymite.python-hosting.com/
 
 ----
 
@@ -21,7 +21,7 @@ So please add questions/suggestions below;  for example:
 ----
 ''your question/comment here''
 
-Very Cool! I have an AVR board that is just itching to have this installed. I will definitely be in attendance! 
+Very Cool! I have an AVR board that is just itching to have this installed. I will definitely be in attendance!
 I'm especially interested in what kind of hardware interfaces you're providing (avr.porta.write(0x34)?) and what kind of
 simulation environment (if any) exists. -PyConBrianWarner
 
@@ -33,7 +33,7 @@ of typical devices you are targeting, so that we might familiarize ourselves wit
 
 I'm specifically interested in the [http://developer.axis.com/products/etrax100lx/ AxisETRAX] as an embedded
 system. It seems capable enough (runs linux) that it might run a standard python, given enough RAM and eliminating
-unecessary libraries. PyMite is exciting because it might run (and run fast) on the standard 
+unecessary libraries. PyMite is exciting because it might run (and run fast) on the standard
 [http://developer.axis.com/products/etrax100lx/ standard chip] or [http://developer.axis.com/products/mcm/index.html MCM]
 with no additional storage. -Jeff Kowalczyk
 
@@ -76,10 +76,10 @@ These first two porting targets are simply my preference.  This does not limit i
 someone takng the PyMite source and porting it to the processor of their choice.
 The only requirements so far are an ANSI C compiler, and a fair amount of porting effort.
 
-Jeff, you mention the Axis controller.  I find the "standard chip" to be more like a microprocessor 
-and the MCM to be more like a microcontroller (memory and peripherals are on-board).  
+Jeff, you mention the Axis controller.  I find the "standard chip" to be more like a microprocessor
+and the MCM to be more like a microcontroller (memory and peripherals are on-board).
 If linux (uCLinux?) runs on this device, PyMite would offer less resource consumption than
-running the full Python interpreter.  However, PyMite is still too early in development to 
+running the full Python interpreter.  However, PyMite is still too early in development to
 make any claims that it would be "better" for this environment.
 
 ----
