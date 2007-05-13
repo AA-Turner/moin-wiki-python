@@ -1,0 +1,137 @@
+= Getting Your Own python-dev Tracker =
+
+This page describes how to setup a roundup tracker instance that works
+exactly as the tracker for python-dev on http://bugs.python.org. The
+intended audience is people that want to help out with the tracker,
+developing new features etc.
+
+= Requirements =
+
+ * Roundup, from the vendor branch used for python-dev (see below).
+
+ * PostgreSQL for use as backend database.
+
+ * A checkout of the python-dev instance from python's subversion    repository.
+
+== Installing roundup ==
+
+For python-dev, we use a slighly modified version of roundup which has
+some features that are not yet in the core roundup. To keep track of
+the changes, we keep a vendor branch of roundup.
+
+Check out /tracker/roundup-src from the python subversion
+repository as documented on http://python.org/dev/tools/. For
+example, here's how to do anonymous checkout:
+
+{{{
+  svn co http://svn.python.org/projects/tracker/roundup-src
+}}}
+
+Install this roundup somewhere by running setup.py
+
+{{{
+  cd roundup-src
+  python setup.py install --prefix /opt/tracker-roundup/
+}}}
+
+== Install and configure PostgreSQL ==
+
+For the python-dev tracker instance we use PostgreSQL as backend
+database. Roundup has support for many different databases for backend
+(anydbm, metakit, MySQL, PostgreSQL, SQLite...), but for the python-dev
+instance, PostgreSQL was selected as it has the best performance for
+large installations. Also, for performance reasons, there is at least
+one place in the python-dev instance that has a hardcoded dependency
+on the backend being an SQL-based one, so you do need PostgreSQL even
+for development work (another SQL-based backend might work, but this
+has not been tested). I recommend that you run postgreSQL to make your
+development environment behave exactly like the environment the real
+tracker runs in.
+
+Details on how to install PostgreSQL is outside the scope of this Wiki
+Page. Both version 7.4 and 8.1 of PostgreSQL has been tested without
+any known problems.
+
+Access configuration of postgresql can be tricky. You need to make
+sure that the user you're running roundup as (your unix/windows user)
+has access to the postgresql database you intend to use for roundup,
+as the postgresql user you've configured in roundup's configuration.
+
+For a development environment with no demands on security, the easiest
+way to configure this is probably to allow all users to connect as any
+database user as long as the request originates from the local
+host. This can be accomplished by the following lines in pg_hba.conf:
+
+{{{
+local   all         all                                             trust
+host    all         all         127.0.0.1         255.255.255.255   trust
+}}}
+
+'''PLEASE NOTE''': This is not a secure configuration on a multi-user
+machine.
+
+After the change in pg_hba.conf, reload your postgreSQL database to
+make sure it knows about your new access
+configuration. Something similar to ''/etc/init.d/postgresql reload''
+should do the trick on Unix-like platforms.
+
+Create a database user that is allowed to create databases. This user
+will be used when roundup connects to the database.
+
+{{{
+# psql -U postgres
+postgres=# create user roundup;
+postgres=# alter user roundup with createdb;
+}}}
+
+== Checkout and Configure your Development Roundup Instance ==
+
+The python-dev tracker instance is version-controlled with subversion,
+and resides in the python subversion repository.
+
+{{{
+  svn co http://svn.python.org/projects/tracker/instances/python-dev
+}}}
+
+Now enter the python-dev directory, and create the 'db' directory (not
+in svn as it's just to much fuzz to keep it there - every time you run
+''roundup-admin init'' it is removed and recreated, confusing svn who
+wants to keep its .svn directory intact), as well as the
+db/backend_name file which decides which backend (i.e. database type)
+to use:
+
+{{{
+cd python-dev
+mkdir db
+echo postgresql > db/backend_name
+}}}
+
+Copy python-dev/config.ini.template into config.ini, and modify it
+according to your site. Pay special attention to settings marked with
+''NO DEFAULT''. However, if you've configure your PostgreSQL as above,
+most settings should be OK.
+
+If you need to do development on the busybody or tellteam detectors,
+copy detectors/config.ini.template into detectors/config.ini, and
+adjust the e-mail addresses accordingly.
+
+Initialize your roundup instance:
+
+{{{
+/opt/tracker-roundup/bin/roundup-admin -i <your python-dev directory> init
+}}}
+
+Provide a password for the 'admin' user when asked for.
+
+Start your roundup instance:
+
+{{{
+/opt/tracker-roundup/bin/roundup-server -p 9999 python-dev=<your python-dev directory>
+}}}
+
+You should now be able to browse http://localhost:9999/python-dev/ and
+get a roundup instance that looks just like http://bugs.python.org.
+
+== Getting Help ==
+
+Subscribe to and ask your question on the tracker-discuss mailing list. See http://mail.python.org/mailman/listinfo/tracker-discuss
