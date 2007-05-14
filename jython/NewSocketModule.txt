@@ -1,0 +1,166 @@
+= New Socket Module =
+
+[[TableOfContents()]]
+
+== Introduction ==
+
+This page descibes a new implementation of non-blocking sockets for jython. Hopefully, this new support should make possible the use of event-based server frameworks on jython. Examples of cpython event-based frameworks are [http://twistedmatrix.com/ Twisted], [http://www.zope.org/ Zope] and [http://www.amk.ca/python/code/medusa.html Medusa].
+
+The implementation currently resides in the jython sandbox because 
+
+ * The modules are new, and need testing on multiple Operating Systems and Java Virtual Machines (JVMs) before being committed to the core language.
+ * The version of jython in which they will be available, and the mechanism by which the support will be integrated, is yet to be decided.
+
+== Requirements ==
+
+Non-blocking support
+  * JVM version with [http://java.sun.com/j2se/1.4.2/docs/guide/nio/ java.nio] support, i.e. >= version 1.4 (> 1.4.2_13 highly recommended)
+  * Any jython version >= 2.1
+
+SSL support
+  * JVM version: any version on which jython runs.
+  * Any jython version >= 2.1
+
+== How to get these modules ==
+
+If you want to use these modules, then you should download them from Subversion at this location.
+
+https://svn.sourceforge.net/svnroot/jython/trunk/sandbox/kennedya/asynch_sockets
+
+Store them on your local system in some directory, named say '''/path/to/asynch_sockets'''.
+
+To ensure that jython finds the modules, you will have to set the '''python.path''' variable to include the '''asynch_sockets''' directory. You can do this at runtime by appending the directory name to the sys.path list, like this
+
+{{{
+import sys
+sys.path.append("/path/to/asynch_sockets")
+}}}
+
+Or you can set the python.path variable in the '''registry''' file in the jython home directory.
+
+Since jython finds modules in its '''Lib''' directory before modules on the python.path list, you will possibly need to delete or rename the '''socket.py''' module in the '''Lib''' directory so that it is not picked up first.
+
+== How to use these modules ==
+
+As before, the socket module is imported like this
+
+{{{
+import socket
+}}}
+
+However, the socket module is now a wrapper for two different modules, '''net_socket.py''' and '''nio_socket.py'''. The former is the old jython 2.1 socket module, and the latter is the new module with non-blocking support. 
+
+The socket module now simply imports all socket definitions from either one of these two modules, using the following code
+
+{{{
+try:
+    raise ImportError
+    from nio_socket import *
+except ImportError:
+    from net_socket import *
+}}}
+
+As you can see, the socket support will default to the old socket module (net_socket.py), because of the explicitly raised !ImportError. 
+
+If you remove or comment out the '''raise !ImportError''' command, then the new non-blocking socket module will be used instead. (But if you run this code on a pre-1.4 JVM, the lack of a java.nio module will raise an !ImportError exception, and the old net_socket.py module will still be used).
+
+The new socket module has been written to comply as closely as possible with the cpython 2.4 API for non-blocking sockets, therefore you should use the cpython socket documentation as your reference when writing code.
+
+http://www.python.org/doc/2.4/lib/module-socket.html
+
+If the new jython modules exhibit behaviour that differs from that described in the cpython documentation, then that should be considered a bug and reported as such.
+
+== SSL Support ==
+
+These modules include an implementation of client side SSL support, which is compatible with the cpython SSL API. The client side ssl example from the cpython documentation should just work.
+
+http://docs.python.org/lib/socket-example.html
+
+However, the cpython SSL API is extremely basic, and essentially only permits the formation of SSL wrapped sockets. It does NOT include support for any of the following
+
+ * Management of Certificates, i.e. loading, storing, manipulating certificates.
+ * Verification of Certificates, i.e. verifying the chain of trust.
+ * Non-blocking SSL support.
+ * Server side SSL support.
+
+All of the above are possible, but since no other python version includes that support in the base distribution, I'm not going to do it for jython either; trying to design an API would complex enough; implementing would be a lot of work beyond that.
+
+If you have serious SSL or crypto requirements, then I '''strongly''' recommend using the java crypto libraries, or one of the excellent third-party crypto libraries for java, such as that from the [http://www.bouncycastle.org Legion of the Bouncy Castle].
+
+== Jython versions ==
+
+These modules were developed on jython 2.1. They were tested on all available later versions, which at this time is 2.2beta2 and 2.3 (a0?).
+
+The modules should work identically on all versions, and have passed all available unit tests on all versions.
+
+== Cpython versions ==
+
+It is the intention that these modules be fully API compatible with cpython, as far as is possible or sensible. This means that any cpython socket code that is syntax compatible with your selected jython version should produce identical behaviour to the same code running on cpython.
+
+The unit-tests provided with these modules should also run on all versions of cpython. See below under unit-tests for more details.
+
+== Why two socket modules? ==
+
+In java version 1.3 and previous, the only socket support available was through the java.net package, which only provides support for blocking sockets. Support for timeouts was also provided. The existing jython socket module is written against the java.net API, and hence does not support non-blocking sockets.
+
+In java 1.4, the New I/O package java.nio was introduced. It provides support for non-blocking or asynchronous sockets. Therefore, non-blocking and multiplexing support can only be provided on JVMs >= 1.4.
+
+Since jython still supports JVM 1.3, it must retain socket support for that version.
+
+Initially, I tried to upgrade the existing jython 2.1 socket module to support non-blocking IO AND to support graceful degradation to blocking behaviour on JVMs where java.nio was not available. However, the code became too complex to manage, so I decided to abandon that approach.
+
+Instead, I decided to maintain two different versions of the socket module, the old java.net based module and a new java.nio based module, for these reasons
+
+  1. The old jython socket module is very stable, having been in the standard library for many years. It is desirable to retain this stability for users who require it. This module has been renamed '''net_socket.py'''.
+
+  1. The new socket module will need a significant amount of field-testing before it is ready for the prime time. Although it is fully passing the cpython test suites. This module is called '''nio_socket.py'''.
+
+  1. If and when jython ends support for JVM 1.3, as Sun have already done, the transition will be a simple case of deleting the old net_socket.py module and renaming nio_socket.py to socket.py.
+
+== JVM bug fixes ==
+
+The java.nio package was introduced in java in 200?. This implementation of non-blocking sockets for jython was written in 2004, and was essentially complete back then.
+
+However, whenever it was run against JVMs available at that time, and on JVMs up to and including version 1.4.2_09 (release date), it would hang when the unit tests were run (On Windows Server 2003 and Windows 2000 Server). The main symptom was that server sockets would remain in existence long after they had been closed, in CLOSE_WAIT and TIME_WAIT states which would time out after a long period of minutes.
+
+I tore my hair out for a long time trying to figure out what the problem was, and tried all kinds of approaches to fix the problem, i.e. adding, omitting or changing the various operations involved in closing a non-blocking socket. You can read more detail here
+
+http://www.nabble.com/Non-blocking-IO-update.-tf389917.html#a1074623
+
+But when I upgraded my JVM to jdk 1.4.2_13, and ran the tests on that, the whole problem disappeared! I still do not know why; possibilities include
+
+ * There was a bug in previous JVMs that caused the problem. 
+ * There was a bug in my development platform (Windows Server 2000 and 2003) that caused the problem.
+
+But you should know that if you use this non-blocking support on JVM versions prior to 1.4.2_13, it is quite possible that you will have the same problem with sockets not closing properly. Therefore, I recommend running this code only on JDK 1.4.2_13 or greater; if you successfully run it on previous versions, especially on different platforms, let me know about.
+
+== Other I/O ==
+
+The design of the cpython non-blocking API is derived from the UNIX C api, which deals with FILE DESCRIPTORS. Since file descriptors can describe any type of I/O channel on unix OSes, cpython can deal with selecting and polling on multiple channel types, such non-blocking files, pipes and named-pipes, fifos, etc.
+
+The java model for selecting on channels is much more restrictive. There is a java abstract class, java.nio.channels.SelectableChannel, which other channel classes must subclass if they are to be multiplexed. On 1.4 JVMs, only the following classes subclass [http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/SelectableChannel.html SelectableChannel].
+
+ * [http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/SocketChannel.html Socket channels]
+ * Pipe [http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/Pipe.SourceChannel.html source] and [http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/Pipe.SinkChannel.html sink] channels
+
+Specifically, [http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/FileChannel.html FileChannel's] do not subclass [http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/SelectableChannel.html SelectableChannel], and thus it is not possible to include files in non-blocking multiplex operations on Java platforms.
+
+Of the two channel types listed above, these modules only support socket channels. This is because it was necessary to rewrite all of the socket creation calls to return SelectableChannels. To do so for Pipes, which are used for communication with sub-processes, it would be necessary to rewrite the jython sub-process creation modules, i.e. popen, etc, to create SelectableChannels. Although it should be reasonably straightforward to implement this, I have no plans to do this work.
+
+== Unit tests ==
+
+If you plan to make use of these modules on any platform, I '''highly''' recommend running the unit tests first; they should flush out any problems you might have.
+
+There are four test modules in the '''test''' subdirectory
+
+  1. '''test_socket_from_cpython24.py'''. This module, as the name suggests, is ported from the cpython 2.4 code base; all tests in it pass on all available versions from 2.1 on. The ported module still runs on cpython, for compatibility checks. (Actually, it fixes a couple of small bugs in the original cpython test module).
+
+  1. '''test_select_from_cpython24.py'''. This module is the cpython '''test_select''' module, ported to work on jython. This modules does not use a unit test framework.
+
+  1. '''test_select_from24_as_unittest.py'''. This module contains the same tests as the module above, but rewritten so that they work with the unittest module.
+
+  1. '''test_select_new.py'''. This is a brand new module that I wrote to test the select API. It has been written to work on cpython and jython, and passes all tests on both.
+
+== Platform notes ==
+
+ * TBD
