@@ -6,10 +6,9 @@
 
 This page descibes a new implementation of non-blocking sockets for jython. Hopefully, this new support should make possible the use of event-based server frameworks on jython. Examples of cpython event-based frameworks are [http://twistedmatrix.com/ Twisted], [http://www.zope.org/ Zope] and [http://www.amk.ca/python/code/medusa.html Medusa].
 
-The implementation currently resides in the jython sandbox because 
+The implementation currently resides in the jython sandbox because the modules are new, and need testing on multiple Operating Systems and Java Virtual Machines (JVMs) before being committed to the core language.
 
- * The modules are new, and need testing on multiple Operating Systems and Java Virtual Machines (JVMs) before being committed to the core language.
- * The version of jython in which they will be available, and the mechanism by which the support will be integrated, is yet to be decided.
+Once we're satisfied that they are functional and reliable, they will be commited to the jython trunk, and will hopefully form part of the upcoming jython 2.2 release.
 
 == Requirements ==
 
@@ -48,27 +47,11 @@ As before, the socket module is imported like this
 import socket
 }}}
 
-However, the socket module is now a wrapper for two different modules, '''net_socket.py''' and '''nio_socket.py'''. The former is the old jython 2.1 socket module, and the latter is the new module with non-blocking support. 
-
-The socket module now simply imports all socket definitions from either one of these two modules, using the following code
-
-{{{
-try:
-    raise ImportError
-    from nio_socket import *
-except ImportError:
-    from net_socket import *
-}}}
-
-As you can see, the socket support will default to the old socket module (net_socket.py), because of the explicitly raised !ImportError. 
-
-If you remove or comment out the '''raise !ImportError''' command, then the new non-blocking socket module will be used instead. (But if you run this code on a pre-1.4 JVM, the lack of a java.nio module will raise an !ImportError exception, and the old net_socket.py module will still be used).
-
 The new socket module has been written to comply as closely as possible with the cpython 2.4 API for non-blocking sockets, therefore you should use the cpython socket documentation as your reference when writing code.
 
 http://www.python.org/doc/2.4/lib/module-socket.html
 
-If the new jython modules exhibit behaviour that differs from that described in the cpython documentation, then that should be considered a bug and reported as such.
+If the new jython module exhibits behaviour that differs from that described in the cpython documentation, then that should be considered a bug and reported as such.
 
 == SSL Support ==
 
@@ -98,24 +81,6 @@ The modules should work identically on all versions, and have passed all availab
 It is the intention that these modules be fully API compatible with cpython, as far as is possible or sensible. This means that any cpython socket code that is syntax compatible with your selected jython version should produce identical behaviour to the same code running on cpython.
 
 The unit-tests provided with these modules should also run on all versions of cpython. See below under unit-tests for more details.
-
-== Why two socket modules? ==
-
-In java version 1.3 and previous, the only socket support available was through the java.net package, which only provides support for blocking sockets. Support for timeouts was also provided. The existing jython socket module is written against the java.net API, and hence does not support non-blocking sockets.
-
-In java 1.4, the New I/O package java.nio was introduced. It provides support for non-blocking or asynchronous sockets. Therefore, non-blocking and multiplexing support can only be provided on JVMs >= 1.4.
-
-Since jython still supports JVM 1.3, it must retain socket support for that version.
-
-Initially, I tried to upgrade the existing jython 2.1 socket module to support non-blocking IO AND to support graceful degradation to blocking behaviour on JVMs where java.nio was not available. However, the code became too complex to manage, so I decided to abandon that approach.
-
-Instead, I decided to maintain two different versions of the socket module, the old java.net based module and a new java.nio based module, for these reasons
-
-  1. The old jython socket module is very stable, having been in the standard library for many years. It is desirable to retain this stability for users who require it. This module has been renamed '''net_socket.py'''.
-
-  1. The new socket module will need a significant amount of field-testing before it is ready for the prime time. Although it is fully passing the cpython test suites. This module is called '''nio_socket.py'''.
-
-  1. If and when jython ends support for JVM 1.3, as Sun have already done, the transition will be a simple case of deleting the old net_socket.py module and renaming nio_socket.py to socket.py.
 
 == JVM bug fixes ==
 
@@ -151,13 +116,11 @@ Of the two channel types listed above, these modules only support socket channel
 
 If you plan to make use of these modules on any platform, I '''highly''' recommend running the unit tests first; they should flush out any problems you might have.
 
-There are four test modules in the '''test''' subdirectory
+There are three test modules in the '''test''' subdirectory
 
-  1. '''test_socket_from_cpython24.py'''. This module, as the name suggests, is ported from the cpython 2.4 code base; all tests in it pass on all available versions from 2.1 on. The ported module still runs on cpython, for compatibility checks. (Actually, it fixes a couple of small bugs in the original cpython test module).
+  1. '''test_socket.py'''. This module is ported from the cpython 2.4 code base; all tests in it pass on all available jython versions from 2.1 on. The ported module still runs on cpython, for compatibility checks. (Actually, it fixes a couple of small bugs in the original cpython test module).
 
-  1. '''test_select_from_cpython24.py'''. This module is the cpython '''test_select''' module, ported to work on jython. This modules does not use a unit test framework.
-
-  1. '''test_select_from24_as_unittest.py'''. This module contains the same tests as the module above, but rewritten so that they work with the unittest module.
+  1. '''test_select.py'''. This module is ported from the cpython 2.4 code base, but rewritten so that they work with the unittest module. All tests in it pass on all available jython versions from 2.1 on. The ported module still runs on cpython, for compatibility checks. 
 
   1. '''test_select_new.py'''. This is a brand new module that I wrote to test the select API. It has been written to work on cpython and jython, and passes all tests on both.
 
