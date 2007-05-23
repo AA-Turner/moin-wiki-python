@@ -56,9 +56,10 @@ public class EmployeeFactory {
     }
 
     public EmployeeType create(String first, String last, String id) {
-        return (EmployeeType)jyEmployeeClass.__call__(new PyString(first),
-                                                      new PyString(last),
-                                                      new PyString(id));
+        PyObject employeeObj = jyEmployeeClass.__call__(new PyString(first),
+                                                        new PyString(last),
+                                                        new PyString(id));
+        return (EmployeeType)employeeObj.__tojava__(EmployeeType.class);
     }
 
     private PyObject jyEmployeeClass;
