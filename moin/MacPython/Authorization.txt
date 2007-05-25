@@ -1,30 +1,41 @@
-<a href='http://dietrinepatchcom.kos123.dtdns.net'>dietrinepatchcom</a> <br /> 
-<a href='http://dietrinepatch-com.kos123.dtdns.net'>dietrinepatch com</a> <br /> 
-<a href='http://wwwdietrinepatchcom.kos123.dtdns.net'>wwwdietrinepatchcom</a> <br /> 
-<a href='http://www-dietrinepatch-com.kos123.dtdns.net'>www dietrinepatch com</a> <br /> 
-<a href='http://wwwdietrinepatch.kos123.dtdns.net'>wwwdietrinepatch</a> <br /> 
-<a href='http://www-dietrinepatch.kos123.dtdns.net'>www dietrinepatch</a> <br /> 
-<a href='http://hoodiabalance.kos123.dtdns.net'>hoodiabalance</a> <br /> 
-<a href='http://hoodiabalancecom.kos123.dtdns.net'>hoodiabalancecom</a> <br /> 
-<a href='http://hoodiabalance-com.kos123.dtdns.net'>hoodiabalance com</a> <br /> 
-<a href='http://wwwhoodiabalancecom.kos123.dtdns.net'>wwwhoodiabalancecom</a> <br /> 
-<a href='http://www-hoodiabalance-com.kos123.dtdns.net'>www hoodiabalance com</a> <br /> 
-<a href='http://wwwhoodiabalance.kos123.dtdns.net'>wwwhoodiabalance</a> <br /> 
-<a href='http://www-hoodiabalance.kos123.dtdns.net'>www hoodiabalance</a> <br /> 
-<a href='http://hoodiachaser.kos123.dtdns.net'>hoodiachaser</a> <br /> 
-<a href='http://hoodiachasercom.kos123.dtdns.net'>hoodiachasercom</a> <br /> 
-<a href='http://hoodiachaser-com.kos123.dtdns.net'>hoodiachaser com</a> <br /> 
-<a href='http://wwwhoodiachasercom.kos123.dtdns.net'>wwwhoodiachasercom</a> <br /> 
-<a href='http://www-hoodiachaser-com.kos123.dtdns.net'>www hoodiachaser com</a> <br /> 
-<a href='http://wwwhoodiachaser.kos123.dtdns.net'>wwwhoodiachaser</a> <br /> 
-<a href='http://www-hoodiachaser.kos123.dtdns.net'>www hoodiachaser</a> <br /> 
-<a href='http://hoodiadietreview.kos123.dtdns.net'>hoodiadietreview</a> <br /> 
-<a href='http://hoodiadietreviewcom.kos123.dtdns.net'>hoodiadietreviewcom</a> <br /> 
-<a href='http://hoodiadietreview-com.kos123.dtdns.net'>hoodiadietreview com</a> <br /> 
-<a href='http://wwwhoodiadietreviewcom.kos123.dtdns.net'>wwwhoodiadietreviewcom</a> <br /> 
-<a href='http://www-hoodiadietreview-com.kos123.dtdns.net'>www hoodiadietreview com</a> <br /> 
-<a href='http://wwwhoodiadietreview.kos123.dtdns.net'>wwwhoodiadietreview</a> <br /> 
-<a href='http://www-hoodiadietreview.kos123.dtdns.net'>www hoodiadietreview</a> <br /> 
-<a href='http://hoodiagordoniiplus.kos123.dtdns.net'>hoodiagordoniiplus</a> <br /> 
-<a href='http://hoodiagordoniipluscom.kos123.dtdns.net'>hoodiagordoniipluscom</a> <br /> 
-<a href='http://hoodiagordoniiplus-com.kos123.dtdns.net'>hoodiagordoniiplus com</a> <br /> 
+#pragma section-numbers off
+= Authorization =
+ Authorization is a Python wrapper for Apple's Authorization API.  Basically, it allows you to spawn arbitrary processes as root after successfully authenticating as an administrator.  This is useful for installers, twiddling kernel settings (via sysctl or the like), etc. 
+
+= status =
+
+Authorization is currently at its first public release, 0.1.
+
+= examples =
+
+{{{
+#!python
+import os, sys, struct, tempfile
+from Authorization import Authorization, kAuthorizationFlagDestroyRights
+
+AUTHORIZEDTOOL = "#!%s\n%s" % (sys.executable,
+r"""
+import os
+print os.getuid(), os.geteuid()
+os.setuid(0)
+print "I'm root!"
+""")
+
+def main():
+    auth = Authorization(destroyflags=(kAuthorizationFlagDestroyRights,))
+    fd, name = tempfile.mkstemp('.py')
+    os.write(fd, AUTHORIZEDTOOL)
+    os.close(fd)
+    os.chmod(name, 0700)
+    try:
+        pipe = auth.executeWithPrivileges(name)
+        sys.stdout.write(pipe.read())
+        pipe.close()
+    finally:
+        os.unlink(name)
+
+if __name__=='__main__':
+    main()
+}}}
+
+= homepage =
