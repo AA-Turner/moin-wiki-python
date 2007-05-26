@@ -1,0 +1,80 @@
+These are 10 small Python programs.  Please keep programs ordered by size.
+
+    ------
+    print 'hello world'
+
+    ------
+    for name in ('peter', 'paul', 'mary'):
+        print name
+
+    ------
+    # This is a Python comment. \n is a newline
+    name = raw_input('What is your name?\n')
+    print 'Hi', name
+
+    ------
+    parent_rabbits, baby_rabbits = (1, 1)
+    while baby_rabbits < 100:
+        print 'This generation has %d rabbits' % baby_rabbits
+        parent_rabbits, baby_rabbits = (baby_rabbits, parent_rabbits + baby_rabbits)
+
+
+    ------
+    # def defines a method in Python
+    def tax(item_charge, g = 0.05):
+        return item_charge * g
+    print '%.2f' % tax(11.35)
+    print '%.2f' % tax(40.00, 0.08)
+
+
+    ------
+    import re
+    for test_string in [ '555-1212', 'ILL-EGAL']:
+        if re.match('\d\d\d-\d\d\d\d$', test_string):
+            print test_string, 'is a valid US local phone number'
+        else:
+            print test_string, 'rejected'
+
+    ------
+    prices = {'apple': 0.40, 'banana': 0.50}
+    my_purchase = {
+        'apple': 1,
+        'banana': 6}
+    grocery_bill = sum([prices[fruit] * my_purchase[fruit]
+        for fruit in my_purchase])
+    print 'I owe the grocer $%.2f' % grocery_bill
+
+
+    ------
+    class ShoppingCart:
+        def __init__(self): self.items = []
+        def buy(self, item): self.items.append(item)
+        def boughtItems(self): return self.items
+    my_cart = ShoppingCart()
+    my_cart.buy('apple')
+    my_cart.buy('banana')
+    print my_cart.boughtItems()
+
+
+    ------
+    # indent your Python code to put into an email
+    import glob
+    python_files = glob.glob('*.py')
+    python_files.sort()
+    for fn in python_files:
+        print '    ------'
+        for line in open(fn):
+            print '    ' + line.rstrip()
+        print
+
+    ------
+    import time
+    now = time.localtime()
+    hour = now.tm_hour
+    if hour < 8: print 'sleeping'
+    elif hour < 9: print 'commuting'
+    elif hour < 17: print 'working'
+    elif hour < 18: print 'commuting'
+    elif hour < 20: print 'eating'
+    elif hour < 22: print 'resting'
+    else: print 'sleeping'
