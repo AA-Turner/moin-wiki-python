@@ -1,4 +1,5 @@
-These are 10 small Python programs.  Please keep programs ordered by size.
+These Python examples follow the convention that each program gets one line longer than the one before it.  Please try to maintain this convention.  I also try to introduce at least one new feature in each program.
+
 
 {{{
     ------
@@ -47,14 +48,14 @@ These are 10 small Python programs.  Please keep programs ordered by size.
 
 
     ------
-    class ShoppingCart:
-        def __init__(self): self.items = []
-        def buy(self, item): self.items.append(item)
-        def bought_items(self): return self.items
-    my_cart = ShoppingCart()
-    my_cart.buy('apple')
-    my_cart.buy('banana')
-    print my_cart.bought_items()
+    #!/usr/local/bin/python
+    # This program adds up integers in the command line
+    import sys
+    try:
+        total = sum([int(arg) for arg in sys.argv[1:]])
+        print 'sum =', total
+    except:
+        print 'Please supply integer arguments'
 
 
     ------
