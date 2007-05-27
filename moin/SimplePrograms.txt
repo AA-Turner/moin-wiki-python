@@ -109,18 +109,18 @@ These examples assume version 2.4 or above of Python.
 
     ------ 13 Unit testing
     # Let's write reusable code, and unit test it.
-    def add_money_correctly(amounts):
+    def add_money(amounts):
         # do arithmetic in pennies so as not to accumulate float errors
         pennies = sum([round(int(amount * 100)) for amount in amounts])
         return float(pennies / 100.0)
     if __name__ == '__main__':
-        for test_args, result in (
-                ([0.13, 0.02], 0.15),
-                ([100.01, 99.99], 200),
-                ([0, -13.00, 13.00], 0)):
-            if add_money_correctly(test_args) != result:
-                print 'test failed'
-                break
+        import unittest
+        class TestAddMoney(unittest.TestCase):
+            def test_float_errors(self):
+                self.failUnlessEqual(add_money([0.13, 0.02]), 0.15)
+                self.failUnlessEqual(add_money([100.01, 99.99]), 200)
+                self.failUnlessEqual(add_money([0, -13.00, 13.00]), 0)
+        unittest.main() 
 
     ------ 14 Classes
     class BankAccount:
