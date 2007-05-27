@@ -108,4 +108,19 @@ These Python examples follow the convention that each program gets one line long
                     if num % divisor != 0]
     print sieve_of_eratosthenes(range(2,100))
 
+    ------ 13
+    # Let's write reusable code, and unit test it.
+    def add_money_correctly(amounts):
+        # do arithmetic in pennies so as not to accumulate float errors
+        pennies = sum([round(int(amount * 100)) for amount in amounts])
+        return float(pennies / 100.0)
+    if __name__ == '__main__':
+        for test_args, result in (
+                ([0.13, 0.02], 0.15),
+                ([100.01, 99.99], 200),
+                ([0, -13.00, 13.00], 0)):
+            if add_money_correctly(test_args) != result:
+                print 'test failed'
+                break
+
 }}}
