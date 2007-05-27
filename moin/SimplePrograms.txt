@@ -123,6 +123,22 @@ These Python examples follow the convention that each program gets one line long
                 print 'test failed'
                 break
 
+    ------ 14 Classes
+    class BankAccount:
+        def __init__(self, initial_balance = 0):
+            self.balance = initial_balance
+        def deposit(self, amount):
+            self.balance += amount
+        def withdraw(self, amount):
+            self.balance -= amount
+        def overdrawn(self):
+            return self.balance < 0
+    my_account = BankAccount()
+    my_account.deposit(15)
+    my_account.withdraw(5)
+    print my_account.balance
+    print my_account.overdrawn()
+
 }}}
 
 Hi, my name is Steve Howell, and I started this page in May 2007, and I provided the first 10+ or so examples (which may have changed since then).
