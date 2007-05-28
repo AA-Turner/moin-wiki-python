@@ -146,9 +146,9 @@ These examples assume version 2.4 or above of Python.
 
     This is the second.
     '''.splitlines()
-    def is_not_whitespace(string):
-        return bool(string.strip())
-    for has_chars, frags in itertools.groupby(lines, is_not_whitespace):
+    # Use itertools.groupby and bool to return groups of
+    # consecutive lines that either have content or don't.
+    for has_chars, frags in itertools.groupby(lines, bool):
         if has_chars:
             print ' '.join(frags)
     # PRINTS:
