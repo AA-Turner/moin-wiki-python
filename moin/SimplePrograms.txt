@@ -140,18 +140,18 @@ These examples assume version 2.4 or above of Python.
 
     ------ 15 itertools
     import itertools
-    lines = [line.strip() for line in '''
+    lines = '''
     This is the
     first paragraph.
 
     This is the second.
-    '''.split('\n')]
-
-    for has_chars, frags in itertools.groupby(lines, lambda x: len(x) > 0):
+    '''.splitlines()
+    def is_not_whitespace(string):
+        return bool(string.strip())
+    for has_chars, frags in itertools.groupby(lines, is_not_whitespace):
         if has_chars:
-            print ' '.join(list(frags))
-    # prints this:
-    #
+            print ' '.join(frags)
+    # PRINTS:
     # This is the first paragraph.
     # This is the second.
 
