@@ -1,3 +1,5 @@
+= Vi Improved =
+
 VI Improved (VIM) is an improved version of the editor "vi", one of the standard text editors on UNIX systems. It has all the features you'll ever need from an editor, and probably three times that many more that you'll never use ;-) The newer versions also include a 'vimdiff' mode that you can use to diff and merge file(s). Oh, I didn't mention it's also scriptable in Python, and there's a graphical version: GVIM. Get it from http://www.vim.org/.
 
 VIM is also available in your favourite OS. The new version 6.0 has folding. Folding makes your life easy when you have some long files.
@@ -5,10 +7,65 @@ VIM is also available in your favourite OS. The new version 6.0 has folding. Fol
 You can download many scripts and learn new tips from the site http://vim.sourceforge.net
 
 Vim 7.0 (released mid-2006) includes the Intellisense-like omni-completion for several languages. Here is the latest version of [http://www.vim.org/scripts/script.php?script_id=1542 pythoncomplete].
-----
+
+== Configuring Vim ==
+
 You can automatically enable syntax coloring and automatic indentation for Python code by adding the following lines to your ~/.vimrc file:
 
 {{{autocmd BufRead,BufNewFile *.py syntax on
 autocmd BufRead,BufNewFile *.py set ai}}}
+
+The following sections correspond to the guidelines from the HowToEditPythonCode page.
+
+=== Indentation ===
+
+A useful addition to Python source files is this comment:
+
+{{{
+# vim: tabstop=4 expandtab shiftwidth=4
+}}}
+
+This tells Vim that when the file is loaded, tabs are always expanded to spaces and that the width of each tab is four characters. Type the following in command mode to achieve the same effect:
+
+{{{
+:set tabstop=4 expandtab shiftwidth=4
+}}}
+
+Or:
+
+{{{
+:set ts=4 et sw=4
+}}}
+
+=== Syntax Highlighting ===
+
+You may be lucky enough to have syntax highlighting already switched on in your version of Vim. If not, edit a `vimrc` file (either `/etc/vimrc` or `.vimrc` in your home directory) and add the following:
+
+{{{
+syntax on
+}}}
+
+If you use a dark background, this command may help adjust the colours:
+
+{{{
+set background=dark
+}}}
+
+=== A Simple Template ===
+
+You could copy the following simple template and save it to a file somewhere. Then, when you need to make a new source file, just copy it to the intended location with a name of your choice.
+
+{{{
+#!/usr/bin/env python
+
+"""
+Python source code - replace this with a description of the code and write the code below this text.
+"""
+
+# vim: tabstop=4 expandtab shiftwidth=4
+}}}
+
+This contains useful UNIX-related information on the first line, and a docstring which can be used to describe what your program or module is about.
+
 ----
 CategoryEditors
