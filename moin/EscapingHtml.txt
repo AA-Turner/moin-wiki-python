@@ -74,6 +74,20 @@ as well as entity references.
 A more efficient implementation would simply parse the string for entity and character references directly
 (and would be a good candidate for the library, if there's really a need for it outside of HTML data).
 
+
+== Formal htmlentitydefs ==
+Yet another approach available with recent Python takes advantage 
+of htmlentitydefs:
+{{{
+import re
+from htmlentitydefs import name2codepoint
+def htmlentitydecode(s):
+    return re.sub('&(%s);' % '|'.join(name2codepoint), 
+            lambda m: chr(name2codepoint[m.group(1)]), s)
+}}}
+
 == See Also ==
 
+XML entities are different from, if related to, HTML entities.
+This page hints at the details:
  * EscapingXml
