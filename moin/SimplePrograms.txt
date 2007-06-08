@@ -119,13 +119,13 @@ These examples assume version 2.4 or above of Python.
     ------ 12 List slicing
 {{{
     def sieve_of_eratosthenes(candidates):
+        # calculate prime numbers using simple algorithm
         i = 0
         while True:
             divisor = candidates[i]
             if divisor * divisor > candidates[-1]:
                 return candidates
-            else:
-                i += 1
+            i += 1
             candidates = candidates[:i] + \
                 [num for num in candidates[i:]
                     if num % divisor != 0]
