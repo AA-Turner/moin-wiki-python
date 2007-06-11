@@ -149,6 +149,22 @@ if __name__ == '__main__':
     unittest.main()
 }}}
 
+    ------ 13 lines: Doctest-based unit testing
+{{{
+    # Same as above but including doctest-based tests.
+    def add_money(amounts):
+        """ do arithmetic in pennies so as not to accumulate float errors
+        >>> assert add_money([0.13, 0.02]) == 0.15
+        >>> assert add_money([100.01, 99.99]) == 200
+        >>> assert add_money([0, -13.00, 13.00]) == 0
+
+        """
+        pennies = sum([round(int(amount * 100)) for amount in amounts])
+        return float(pennies / 100.0)
+if __name__ == '__main__':
+        import doctest
+        doctest.testmod()
+}}}
     ------ 14 lines: Classes
 {{{
 class BankAccount:
