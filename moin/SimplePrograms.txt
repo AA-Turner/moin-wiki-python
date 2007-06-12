@@ -227,8 +227,8 @@ def iter_primes():
          prime = numbers.next()
          yield prime
 
-         # ponder this code for a bit, it will blow your
-         # mind, it's recursively setting up a chain of filters
+         # this code iteratively builds up a chain of
+         # filters...slightly tricky, but ponder it a bit
          numbers = itertools.ifilter(prime.__rmod__, numbers)
 
 for p in iter_primes():
