@@ -42,7 +42,7 @@ greet('Bob')
     ------ 6 lines: Import, regular expressions
 {{{
 import re
-for test_string in [ '555-1212', 'ILL-EGAL']:
+for test_string in ['555-1212', 'ILL-EGAL']:
     if re.match(r'^\d{3}-\d{4}$', test_string):
         print test_string, 'is a valid US local phone number'
     else:
@@ -168,7 +168,7 @@ if __name__ == '__main__':
     ------ 14 lines: Classes
 {{{
 class BankAccount:
-    def __init__(self, initial_balance = 0):
+    def __init__(self, initial_balance=0):
         self.balance = initial_balance
     def deposit(self, amount):
         self.balance += amount
@@ -253,42 +253,42 @@ def add_queen(queens):
 
 queens = add_queen([])
 print queens
-print "\n".join( ". "*q + "Q " + ". "*(BOARD_SIZE-q-1) for q in queens )
+print "\n".join(". "*q + "Q " + ". "*(BOARD_SIZE-q-1) for q in queens)
 
 }}}
 
     ------ 30 lines: generator function, list comprehension
 {{{
-def partition_generator(depth,width): # a generator (iterates comb(depth-1,width-1))
-    def move_col(c):                  # move item left 1 bin
+def partition_generator(depth, width): # a generator (iterates comb(depth - 1, width - 1))
+    def move_col(c):                   # move item left 1 bin
         sv[c-1] += 1
         sv[c] -= 1
-    def find_c():                     # find rightmost bin with >1 items
+    def find_c():                      # find rightmost bin with >1 items
         i = -1
-        while i<0:
-            if sv[i]>1:
+        while i < 0:
+            if sv[i] > 1:
                 return i
             i -= 1
-    def rollover(c):                  # move item and swap bins
+    def rollover(c):                   # move item and swap bins
         move_col(c)
         sv[-1] = sv[c]
         sv[c] = 1
-    if depth<width:                   # must have at least as many bins as items
-        print 'depth',depth,'must be greater than width',width
-        return                        # invalid depth, terminate generator
-    max_element = depth - width + 1   # largest amount held by a bin
-    sv = [1 for i in range(width)]    # list comprehension: init all bins to 1
-    sv[-1] = max_element              # start with max_element in right bin
-    yield sv                          # this initial condition is 1st partition
-    while sv[0]<max_element:          # terminate when all moveable items in leftmost bin
-        c = find_c()                  # find rightmost bin that has a moveable item
-        if c < -1:                    # if not THE rightmost bin, rollover
+    if depth < width:                  # must have at least as many bins as items
+        print 'depth', depth, 'must be greater than width', width
+        return                         # invalid depth, terminate generator
+    max_element = depth - width + 1    # largest amount held by a bin
+    sv = [1 for i in range(width)]     # list comprehension: init all bins to 1
+    sv[-1] = max_element               # start with max_element in right bin
+    yield sv                           # this initial condition is 1st partition
+    while sv[0] < max_element:         # terminate when all moveable items in leftmost bin
+        c = find_c()                   # find rightmost bin that has a moveable item
+        if c < -1:                     # if not THE rightmost bin, rollover
             rollover(c)
-            yield sv                  # and return as next partition
-        else:                         # otherwise, just need to move item
+            yield sv                   # and return as next partition
+        else:                          # otherwise, just need to move item
             move_col(c)
-            yield sv                  # and return as next partition
-for p in partition_generator(6,4): print p
+            yield sv                   # and return as next partition
+for p in partition_generator(6, 4): print p
 }}}
     ------
 
