@@ -1,5 +1,68 @@
-Pickle, 
-ZODB, 
-Durus
+= Other Persistent Storage Modules =
 
-Should put the contents of http://www.python.org/topics/database/persistence.html here.
+The modules listed on this page provide mechanisms for
+storing data on disk.  Some modules are simply the disk-based equivalent of
+dictionaries; others provide for persistent storage of arbitrary
+Python objects.
+
+== Disk-based Dictionaries ==
+
+[http://docs.python.org/lib/module-anydbm.html anydbm]
+Included with the standard Python distribution.  
+The {{{anydbm}}} module is a generic interface to all the
+DBM-like modules listed in the next two lines, selecting from 
+whichever modules are installed.
+
+[http://docs.python.org/lib/module-dbm.html DBM],[[BR]]
+[http://docs.python.org/lib/module-gdbm.html GDBM],[[BR]]
+[http://docs.python.org/lib/module-dbhash.html dbhash]
+Included with the standard Python distribution.  Each 
+of these modules is an interface to a specific library.
+
+[http://docs.python.org/lib/module-bsddb.html BSDDB]
+Included with the standard Python distribution.  In
+addition to dictionary-like behaviour, this module also supports
+B-trees, which allows traversing the keys in sorted order.
+
+[http://www.equi4.com/metakit/ Metakit]
+MetaKit is a C++ library  for storage, transport, and manipulation of
+structured objects and collections.  A Python
+interface is available.
+
+[http://www.lemburg.com/files/python/mxBeeBase.html mxBeeBase]
+mxBeeBase is a high performance construction kit for disk based
+indexed databases. It offers components which you can plug
+together to easily build your own custom mid-sized databases, up
+to around 2Gb on 32-bit platforms).
+
+== Persistent Objects ==
+
+[http://docs.python.org/lib/module-pickle.html pickle.py]
+Included with the standard Python distribution.  The 
+{{{pickle}}} module can convert Python objects to and from
+a string representation.  
+  
+[http://docs.python.org/lib/module-shelve.html shelve.py]
+Included with the standard Python distribution.
+Built on top of the {{{pickle}}} and {{{anydbm}}}
+modules, the {{{shelve}}} module behaves like a persistent
+dictionary whose values can be arbitrary Python objects.
+  
+[http://sourceforge.net/projects/pypersyst/ PyPerSyst]
+A portable object database management system (ODBMS)
+as well as a database application framework.  PyPerSyst works well
+with Pyro and Twisted.
+  
+[http://starship.python.net/crew/jmenzel/ PyVersant]
+A wrapper for the [http://www.versant.com Versant commercial OODBMS].
+  
+
+[http://www.zope.org/Wikis/ZODB/FrontPage ZODB]
+The Zope Object Database is a persistent-object
+system that provides transparent transactional object
+persistence to Python applications. 
+
+[http://www.mems-exchange.org/software/durus/ Durus]
+A simpler object persistence system than ZODB, developed at
+MEMS Exchange after substantial experience with ZODB.
+  
