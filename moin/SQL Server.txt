@@ -23,15 +23,21 @@
   licence:: LGPL
   platforms:: Windows and Unix
 
+=== mxODBC ===
 
+  URL:: http://www.egenix.com/
+  License:: eGenix.com Commercial License
+  Platforms:: Windows, Unix, Mac OSX, FreeBSD, Solaris
 
-==== Comments ====
+mxODBC requires an ODBC driver to talk to SQL Server. On Windows, this comes with SQL Server, on the other platforms, there are several commercial ODBC high quality drivers available. There's also a FreeTDS ODBC driver which is free.
 
-== Other Drivers ==
+Unicode is supported both for data and SQL statements. mxODBC supports both 32-bit and 64-bit platforms.
 
 === ODBC ===
 
 It is possible to connect to an SQL Server database using ODBC, either the mxODBC driver or the one included with Win32all. However, this is not recommended - adodbapi is a better solution, in part because it supports unicode.
+
+''Comment:'' This is actually not true at all: ODBC is the native API used for SQL Server and does support Unicode all the way. In fact, ODBC is the preferred way of accessing SQL Server if you care for performance. Microsoft has just released the [http://msdn2.microsoft.com/en-us/data/aa937733.aspx SQL Server Native Client] which is an extended ODBC driver for SQL Server. ADO is just a layer on top of the ODBC interface and a lot slower as a result. See e.g. [http://www.microsoft.com/technet/prodtechnol/windows2000serv/technologies/iis/reskit/iischp7.mspx  MS TechNet] for a comparison of ODBC, OLE DB and ADO, or [http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/389535 this cookbook entry].
 
 == Pros ==
 
@@ -40,4 +46,9 @@ SQL Server is a robust and fully-featured database, and it performs very well. M
 == Cons ==
 
  * Windows only
- * Not free
+
+ * SQL Server comes in various flavors. 
+
+ The SQL Server Express versions are free to download, use and can even be redistributed with products.
+
+ The regular version includes the GUI tools and also provides  advanced features which are not included in SQL Server Express.
