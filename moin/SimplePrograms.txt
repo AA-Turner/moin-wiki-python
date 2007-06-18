@@ -190,6 +190,26 @@ for has_chars, frags in itertools.groupby(lines, bool):
 # This is the second.
 }}}
 
+    ------ 17 lines: csv module, tuple unpacking, cmp() built-in
+{{{
+# writing/reading CSV files, tuple-unpacking, cmp() built-in
+import csv
+
+writer = csv.writer(open('stocks.csv', 'wb'))
+writer.writerows([
+    ('GOOG', 'Google, Inc.', 505.24, 0.47, 0.09),
+    ('YHOO', 'Yahoo! Inc.', 27.38, 0.33, 1.22),
+    ('CNET', 'CNET Networks, Inc.', 8.62, -0.13, -1.49)
+])
+
+stocks = csv.reader(open('stocks.csv', 'rb'))
+for ticker, name, price, change, pct in stocks:
+    print '%s is %s (%s%%)' % (
+        name,
+        {-1: 'down', 0: 'unchanged', 1: 'up'}[cmp(float(change), 0.0)],
+        pct
+    )
+}}}
     ------ 18 lines: 8-Queens Problem (recursion)
 {{{
 BOARD_SIZE = 8
