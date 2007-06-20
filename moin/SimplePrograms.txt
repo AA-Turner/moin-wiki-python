@@ -132,9 +132,9 @@ class BankAccount(object):
         self.balance -= amount
     def overdrawn(self):
         return self.balance < 0
-my_account = BankAccount()
-my_account.deposit(15)
+my_account = BankAccount(15)
 my_account.withdraw(5)
+print my_account.balance
 }}}
 
     ------ 13 lines: Unit testing with unittest
@@ -153,6 +153,7 @@ class TestMedian(unittest.TestCase):
 if __name__ == '__main__':
     unittest.main()
 }}}
+
 
     ------ 14 lines: Doctest-based testing
 {{{
