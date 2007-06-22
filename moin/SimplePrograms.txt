@@ -4,25 +4,26 @@ These examples assume version 2.4 or above of Python.
 You should be able to run them simply by copying/pasting the code into a file and running Python. Or by inserting this line (#!/bin/env python) at the beginning of your file (Unix/Linux), making the file executable (chmod u+x filename.py) and running it (./filename.py).
 
     ------ 1 line: Output
-{{{
+{{{#!python
 print 'hello world'
 }}}
 
     ------ 2 lines: Input, assignment, comments
-{{{
+
+{{{#!python
 name = raw_input('What is your name?\n') # \n is a newline
 print 'Hi', name
 }}}
 
     ------ 3 lines: For loop, builtin enumerate function
-{{{
+{{{#!python
 my_list = ['john', 'pat', 'gary', 'michael']
 for i, name in enumerate(my_list):
     print "iteration %i is %s" % (i, name)
 }}}
 
     ------ 4 lines: Fibonacci, tuple assignment
-{{{
+{{{#!python
 parents, babies = (1, 1)
 while babies < 100:
     print 'This generation has %d babies' % babies
@@ -30,7 +31,7 @@ while babies < 100:
 }}}
 
     ------ 5 lines: Functions
-{{{
+{{{#!python
 def greet(name):
     print 'hello', name
 greet('Jack')
@@ -39,7 +40,7 @@ greet('Bob')
 }}}
 
     ------ 6 lines: Import, regular expressions
-{{{
+{{{#!python
 import re
 for test_string in ['555-1212', 'ILL-EGAL']:
     if re.match(r'^\d{3}-\d{4}$', test_string):
@@ -49,7 +50,7 @@ for test_string in ['555-1212', 'ILL-EGAL']:
 }}}
 
     ------ 7 lines: Dictionaries, generator expressions
-{{{
+{{{#!python
 prices = {'apple': 0.40, 'banana': 0.50}
 my_purchase = {
     'apple': 1,
@@ -61,7 +62,7 @@ print 'I owe the grocer $%.2f' % grocery_bill
 
 
     ------ 8 lines: Command line arguments, exception handling
-{{{
+{{{#!python
 #!/usr/bin/env python
 # This program adds up integers in the command line
 import sys
@@ -74,7 +75,7 @@ except ValueError:
 
 
     ------ 9 lines: Opening files
-{{{
+{{{#!python
 # indent your Python code to put into an email
 import glob
 # glob supports Unix style pathname extensions
@@ -87,7 +88,7 @@ for fn in sorted(python_files):
 }}}
 
     ------ 10 lines: Time, conditionals
-{{{
+{{{#!python
 import time
 now = time.localtime()
 hour = now.tm_hour
@@ -101,7 +102,7 @@ else: print 'sleeping'
 }}}
 
     ------ 11 lines: Triple-quoted strings, while loop
-{{{
+{{{#!python
 REFRAIN = '''
 %d bottles of beer on the wall,
 %d bottles of beer,
@@ -116,7 +117,7 @@ while bottles_of_beer > 1:
 }}}
 
    ------ 12 lines: Classes
-{{{
+{{{#!python
 class BankAccount(object):
     def __init__(self, initial_balance=0):
         self.balance = initial_balance
@@ -132,7 +133,7 @@ print my_account.balance
 }}}
 
     ------ 13 lines: Unit testing with unittest
-{{{
+{{{#!python
 import unittest
 def median(pool):
     copy = sorted(pool)
@@ -150,7 +151,7 @@ if __name__ == '__main__':
 
 
     ------ 14 lines: Doctest-based testing
-{{{
+{{{#!python
 def median(pool):
     '''Statistical median to demonstrate doctest.
     >>> median([2, 9, 9, 7, 9, 2, 4, 5, 8])
@@ -168,7 +169,7 @@ if __name__ == '__main__':
 }}}
 
     ------ 15 lines: itertools
-{{{
+{{{#!python
 import itertools
 lines = '''
 This is the
@@ -187,7 +188,7 @@ for has_chars, frags in itertools.groupby(lines, bool):
 }}}
 
     ------ 16 lines: csv module, tuple unpacking, cmp() built-in
-{{{
+{{{#!python
 import csv
 
 # write stocks data as comma-separated values
@@ -206,7 +207,7 @@ for ticker, name, price, change, pct in stocks:
     print '%s is %s (%s%%)' % (name, status, pct)
 }}}
     ------ 18 lines: 8-Queens Problem (recursion)
-{{{
+{{{#!python
 BOARD_SIZE = 8
 
 def under_attack(col, queens):
@@ -228,7 +229,7 @@ for answer in solve(BOARD_SIZE): print answer
 }}}
 
     ------ 20 lines: Prime numbers sieve w/fancy generators
-{{{
+{{{#!python
 import itertools
 
 def iter_primes():
@@ -252,7 +253,7 @@ for p in iter_primes():
 }}}
 
     ------ 21 lines: XML/HTML parsing (using Python 2.5 or third-party library)
-{{{
+{{{#!python
 dinner_recipe = '''<html><body><table>
 <tr><th>amt</th><th>unit</th><th>item</th></tr>
 <tr><td>24</td><td>slices</td><td>baguette</td></tr>
@@ -277,7 +278,7 @@ for ingredient in tree.getiterator('tr'):
 }}}
 
     ------ 28 lines: 8-Queens Problem (define your own exceptions)
-{{{
+{{{#!python
 BOARD_SIZE = 8
 
 class BailOut(Exception):
@@ -334,7 +335,7 @@ It's easy to resolve this conflict.  Please clone this page, and you can make it
 Your point about foolishly counting lines is well received, apart from the "foolish" dig.  Again, it's easy to fix my foolishness by simply creating your own page.  You're welcome to borrow any code that you like from this page.  If you think the whole page needs to be better thought, needs more commentary, etc., then that's the perfect reason to create your own version. -- Steve'''
 
  30 lines: generator function, list comprehension
-{{{
+{{{#!python
 def partition_generator(depth, width): # a generator (iterates comb(depth - 1, width - 1))
     def move_col(c):                   # move item left 1 bin
         sv[c-1] += 1
@@ -371,7 +372,7 @@ The program below is more appropriate in a tutorial on truth/falseness IMHO than
 
 
     ------ 5 lines: Truth
-{{{
+{{{#!python
 for value in [True, False, 1, 0, 'foo', '', [0], [], (0,), (), {'a':1}, {}, None]:
     if value:
         print repr(value), 'evaluates to True'
