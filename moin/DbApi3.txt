@@ -82,6 +82,8 @@ Is this useful at all? If Oracle uses them simply as an indicator of 'pass by po
 
  * Connection and cursor objects gain a writable 'paramstyle' attribute for selecting the active parameter style. The default parameter style for a connection is implementation-defined. The default parameter style for a cursor is inherited from the connection at the time the cursor is created.
 
+ * Possible settings for the writable paramstyle are implementation-defined but must include at least 'qmark' and 'named'. Attempting to set an illegal paramstyle will raise a ValueError.
+
 = Additional Driver Objects =
 
 Prepared statements in addition to Connection and Cursor. Related is the idea of statement caching:
