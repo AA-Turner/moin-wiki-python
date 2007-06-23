@@ -76,6 +76,11 @@ Is this useful at all? If Oracle uses them simply as an indicator of 'pass by po
  native:: psycopg, psycopg2
  tokenize:: mxODBC, JDBC, SAP DB
 
+== Preliminary Consensus ==
+
+ * Every module implements at least 'qmark' and 'named' parameter styles. Additional parameter styles are allowed for backwards compatibility.
+
+ * Connection and cursor objects gain a writable 'paramstyle' attribute for selecting the active parameter style. The default parameter style for a connection is implementation-defined. The default parameter style for a cursor is inherited from the connection at the time the cursor is created.
 
 = Additional Driver Objects =
 
