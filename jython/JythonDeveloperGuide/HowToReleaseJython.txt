@@ -1,0 +1,30 @@
+These are just some rough notes on the steps I take to release Jython.
+
+1. Version bumps
+ 1. PySystemState.java
+ 1. build.xml
+ 1. NEWS
+ 1. README
+1. Tag release
+ 1. make svn tag dir
+ 1. svn cp trunk/jython into tag dir
+ 1. svn cp trunk/installer into tag dir
+1. build from tag
+ 1. svn co tag
+ 1. cp ant.properties into release checkout/jython
+ 1. ant full-build in release checkout/jython
+1. upload build
+ 1. go to Admin/File Release on sourceforge
+ 1. Click on Add release next to the jython package
+ 1. create with a name in line with the version like 2.2rc1
+ 1. ftp the built installer as on http://sourceforge.net/docman/display_doc.php?docid=6445&group_id=1#upload
+ 1. associate the uploaded file with the new release
+1. update site
+ 1. news.txt
+ 1. download.txt
+ 1. index.txt
+ 1. installation.txt
+ 1. userfaq.txt
+1. upload maven package
+ 1. ant -Dproject.version=2.2-rc1 in jython/maven
+ 1. scp dist/jython-2.2-rc1-bundle.jar shell.sf.net:/
