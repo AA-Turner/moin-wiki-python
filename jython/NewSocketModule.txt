@@ -1,6 +1,6 @@
 = New Socket Module =
 
-[[TableOfContents()]]
+[[TableOfContents(3)]]
 
 == Introduction ==
 
@@ -123,6 +123,45 @@ There are three test modules in the '''test''' subdirectory
   1. '''test_select.py'''. This module is ported from the cpython 2.4 code base, but rewritten so that they work with the unittest module. All tests in it pass on all available jython versions from 2.1 on. The ported module still runs on cpython, for compatibility checks. 
 
   1. '''test_select_new.py'''. This is a brand new module that I wrote to test the select API. It has been written to work on cpython and jython, and passes all tests on both.
+
+== Known issues and workarounds ==
+
+=== Deadlock problems with socket.makefile() ===
+
+==== Description ====
+
+This is a bug that has been reported on the [http://sourceforge.net/tracker/index.php?func=detail&aid=1744567&group_id=12867&atid=112867 bug tracker].
+
+If the user
+   1. Opens a socket
+   1. Obtains a file wrapper for that socket, using the makefile() method
+   1. Tries to simultaneously read and write on the file wrapper from different threads
+   1. A deadlock will ensue
+
+==== Cause ====
+
+This is because of the way that the InputStream and OutputStream for a socket are created under java.nio, i.e. by static methods on the [http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/Channels.html java.nio.channels.Channels] class. As you can see from these bug reports on the java bug database
+
+   * [http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4509080 Streams inhibit concurrent reading & writing]
+   * [http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4509080 Channels.newInputStream() and newOutputStream() synchronize too much]
+
+There is a lock shared between the resulting InputStream and OutputStream that prevents simultaneous read and write. If you do attempt to simultaneously read and write on the same socket/file from two different threads, you risk getting a deadlock.
+
+==== Fix ====
+
+Since the java bug report is nearly six years old, it is reasonable to assume that it will not be fixed promptly by Sun. There is a possible implementation pathway that can get around this problem, by creating a PyFile that can map read and write operations to channels instead of streams.
+
+However, the viability of this fix is unknown, and requires further research.
+
+==== Workaround ====
+
+Until a fix is delivered, there are several workarounds to the problem.
+
+   1. Do not use file wrappers around sockets. Instead, use the socket.send and socket.recv methods, which are not affected by this lock. In order to minimise code change, you need only adopt this strategy for reading or writing, but not both. So long as either reading-only or writing-only is carried out through the file wrapper, there should no lock contention or deadlock.
+
+   1. Use the select.select call to multiplex channels. The select.select function and select.poll objects have recently been added to jython; try them out.
+
+   1. Ensure that your code does not try to read and write simultaneously on the same socket file wrapper. You can do this by implementing your own exclusion (e.g. a semaphore), or perhaps using delays to ensure that the read and write operations happen at different times.
 
 == Platform notes ==
 
