@@ -22,22 +22,7 @@ SSL support
 
 == How to get these modules ==
 
-If you want to use these modules, then you should download them from Subversion at this location.
-
-https://svn.sourceforge.net/svnroot/jython/trunk/sandbox/kennedya/asynch_sockets
-
-Store them on your local system in some directory, named say '''/path/to/asynch_sockets'''.
-
-To ensure that jython finds the modules, you will have to set the '''python.path''' variable to include the '''asynch_sockets''' directory. You can do this at runtime by appending the directory name to the sys.path list, like this
-
-{{{
-import sys
-sys.path.append("/path/to/asynch_sockets")
-}}}
-
-Or you can set the python.path variable in the '''registry''' file in the jython home directory.
-
-Since jython finds modules in its '''Lib''' directory before modules on the python.path list, you will possibly need to delete or rename the '''socket.py''' module in the '''Lib''' directory so that it is not picked up first.
+The new socket and select modules have now been moved into the jython distribution, so any download of jython 2.2rc1 or more recent will contain the new modules.
 
 == How to use these modules ==
 
@@ -124,6 +109,27 @@ There are three test modules in the '''test''' subdirectory
 
   1. '''test_select_new.py'''. This is a brand new module that I wrote to test the select API. It has been written to work on cpython and jython, and passes all tests on both.
 
+== Differences between cpython and jython ==
+
+=== Error handling ===
+
+These modules have been coded so that the error handling is as close to the error handling of cpython as possible. So, ideally, cpython socket and select code run on jython should exhibit identical behaviour to cpython, in terms of exception types raised, error numbers returned, etc.
+
+However, due to the different semantics of java and C, there will be differences in the error handling, which will be documented here as they are discovered.
+
+=== Differences in the treatment of zero timeout values ===
+
+On cpython, when you specify a zero (i.e. 0 or 0.0) timeout value, the socket should behave the same as if the socket had been placed in non-blocking mode. See the [http://www.python.org/doc/lib/socket-objects.html cpython socket object documentation] for details.
+
+However, [http://java.sun.com/j2se/1.4.2/docs/api/java/net/Socket.html#setSoTimeout(int) Java interprets a zero timeout value as an infinite timeout], i.e. the socket is placed in blocking mode.
+
+To solve this conflict, I decided that the best thing to do with zero timeouts is to adjust them to the smallest possible timeout in java, which is 1 millisecond. So if you do socket.settimeout(0) with the new jython socket module, what you will really get is equivalent to the cpython call socket.settimeout(0.001).
+
+This means that you may get differing exception signatures when using zero timeouts under cpython and jython.
+
+   1. Cpython: socket operations with zero timeouts that fail will raise socket.error exceptions. This is equivalent to a -1 return from the C socket.recv call, with errno set to EAGAIN, meaning "The socket is marked non-blocking and the receive operation would block, or a receive timeout had been set and the timeout expired before data was received."
+   1. Jython: socket operations with zero timeouts that fail will generate socket.timeout exceptions.
+
 == Known issues and workarounds ==
 
 === Deadlock problems with socket.makefile() ===
@@ -162,7 +168,3 @@ Until a fix is delivered, there are several workarounds to the problem.
    1. Use the select.select call to multiplex channels. The select.select function and select.poll objects have recently been added to jython; try them out.
 
    1. Ensure that your code does not try to read and write simultaneously on the same socket file wrapper. You can do this by implementing your own exclusion (e.g. a semaphore), or perhaps using delays to ensure that the read and write operations happen at different times.
-
-== Platform notes ==
-
- * TBD
