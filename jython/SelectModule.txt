@@ -1,5 +1,28 @@
-I am in the process of making a jython select module ready for checkin, and am writing documentation.
+= New Select Module =
 
-I wanted to create this page as a placeholder for when the documentation is ready.
+[[TableOfContents(3)]]
 
-AlanKennedy
+== Introduction ==
+
+There is now select support in the [http://www.jython.org/Project/download.html jython distribution], as of version 2.2rc1.
+
+The new module presents an API which is as close as possible to the [http://www.python.org/doc/lib/module-select.html cpython select module], Jython supports both the
+
+   1. select.select function
+   1. [http://www.python.org/doc/lib/poll-objects.html select.poll objects].
+
+When using the select module, you should be guided by the cpython documentation: any deviation from the behaviour described in that documentation should be considered a bug and [http://www.jython.org/bugs reported] as such.
+
+== Differences between cpython and jython ==
+
+However, due to fundamental differences in the behaviour of java and C on various platforms, there are differences between the cpython and jython select modules which are not possible to code around. Those differences will be listed here.
+
+=== Only sockets in non-blocking mode can be multiplexed ===
+
+On cpython, when a socket is passed to select.select or select.poll, it can either be in blocking or non-blocking mode.
+
+However, [http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/SelectableChannel.html#register(java.nio.channels.Selector,%20int) java will only permit multiplex operations on sockets that are in non-blocking mode]; any attempt to pass a socket in blocking mode to either select.select or select.poll().register will fail with an exception.
+
+To summarise, you must set a socket in non-blocking mode before passing it to the select function or registering it with a poll object.
+
+Furthermore, if a socket has been set to non-blocking mode and already registered for multiplex operations, any attempt to set blocking mode on that socket will fail with an exception, unless it has been deregistered.
