@@ -1,0 +1,87 @@
+= EuroPython Conference Software Requirements =
+
+This page is derived from ["PyConPlanning/SoftwareRequirements"] but focuses on things that have proven more relevant to EuroPython. The requirements here do not directly address general conference Web site issues, such as http://www.europython.org/ which focuses on the publishing of general information about the conference.
+
+== Essentials ==
+
+These are things which have been central to the organisation of EuroPython and which have already been managed using conference software:
+
+ * Account management
+ * Registration
+ * Paper/talk submissions
+ * Scheduling
+
+== Extras ==
+
+These are things which could have been managed using conference software or which could have been made easier using such software:
+
+ * Feedback
+ * Sponsor management
+
+== Luxuries ==
+
+These are things which people seem to find interesting but which haven't been the focus of the EuroPython organisers:
+
+ * Mapping of attendee locations
+
+----
+
+== Account Management ==
+
+It is not generally a good idea to allow unauthenticated users to register for a conference - this tends to attract speculative registrations from people who seem not to be serious about attending. However, a few use-cases need to be supported for people logging in to...
+
+ * Register themselves
+ * Register other people
+ * Submit/edit materials created by themselves or collaborators
+ * Review paper/talk submissions
+ * Manage aspects of the conference
+
+One limitation of the Indico instance hosted at CERN was the insistence that registrants must have their own account. Creative workarounds include using distinct e-mail aliases belonging to one person.
+
+== Registration ==
+
+This combines some of the PyCon requirements for "users" with more general requirements:
+
+ * Identify registrants/users by e-mail
+ * Support registrant status information: participant, speaker, volunteer, session chair
+ * Collect geographic information (this is more relevant for EuroPython given the number of countries)
+ * Export/reports of registrant information including e-mail address, name, T-shirt size, food preferences (if any), include in delegate listing Y/N, permission to e-mail about the conference (Y/N), paid/unpaid (Y/N), registrant status (see above)
+ * Support e-payment and later payment (bank transfer being the norm in Europe)
+ * Must support different prices for students, non-students (and other classes of registrant)
+ * Keeps or can generate the total revenue for the conference
+ * Badges must be able to show name, class/status, organisation, origin and must obviously be exportable (as PDF, for example)
+ * Support tutorial registration and extra events
+ * Support capacity limits for tutorials and extra events
+ * Optional donations and/or extra items
+ * Support non-paying registrants (guests, invitees)
+ * Export conference materials for proceedings
+
+== Paper/Talk Submissions ==
+
+ * Users can submit proposals (see "Account Management")
+ * Some users have 'reviewer' status and can look at other people's proposals
+ * Some users have 'organizer' status and can mark proposals as 'accepted' or 'declined', and can set a scheduled time/location
+ * Proposals have: title, summary/abstract, description, category, length (30/45 min), difficulty level (beginner/intermediate/advanced), a list of 3 assigned reviewers, an accepted boolean, a list of reviewer comments, and a list of uploaded documents
+ * A mechanism must exist for reviewers to choose or be assigned submissions; PyCon requirements involve assigning 3 reviewers at random (excluding the author)
+ * Reviewer voting or the mechanisms to form a consensus
+ * Exports/reports showing the status of submissions and their scores
+ * Reviewers and users can comment, but some reviewer comments can be withheld from the user until a decision is made
+ * Notifications via e-mail about comments and decisions
+
+== Scheduling ==
+
+ * Produce online schedules with talk information, track/theme membership for each room
+ * Produce printable schedules for the entire conference, and for individual rooms for a given day
+ * Track session chairs for each session
+ * It can be nice to be able to edit the schedule interactively
+
+== Sponsors ==
+
+ * Sponsors can fill in a form with contact information that gets stored in a list and also e-mailed to the sponsorship coordinator
+ * The coordinator can enter sponsors who've committed: contact info, sponsorship level (platinum/gold/silver), invoice number, paid (Y/N), Web graphic, banner provided (Y/N), banner received (Y/N), comments on where the banner should be displayed
+
+== Feedback ==
+
+ * Forms for the entire conference, and for specific talks and tutorials (but not sprints since they're separate things)
+ * Report: feedback summary for the conference, summaries for individual talks
+ * E-mail authors with the results from their talk's feedback
