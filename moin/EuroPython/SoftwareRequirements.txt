@@ -32,7 +32,7 @@ It is not generally a good idea to allow unauthenticated users to register for a
 
  * Register themselves
  * Register other people
- * Submit/edit materials created by themselves or collaborators
+ * Submit/edit/withdraw materials created by themselves or collaborators
  * Review paper/talk submissions
  * Manage aspects of the conference
 
@@ -42,31 +42,43 @@ One limitation of the Indico instance hosted at CERN was the insistence that reg
 
 This combines some of the PyCon requirements for "users" with more general requirements:
 
- * Identify registrants/users by e-mail
- * Support registrant status information: participant, speaker, volunteer, session chair
- * Collect geographic information (this is more relevant for EuroPython given the number of countries)
- * Export/reports of registrant information including e-mail address, name, T-shirt size, food preferences (if any), include in delegate listing Y/N, permission to e-mail about the conference (Y/N), paid/unpaid (Y/N), registrant status (see above)
- * Support e-payment and later payment (bank transfer being the norm in Europe)
- * Must support different prices for students, non-students (and other classes of registrant)
- * Keeps or can generate the total revenue for the conference
+ * Support the following information:
+   * Name
+   * E-mail address
+   * Registrant status: participant, speaker, volunteer, session chair
+   * Registrant class: student, normal
+   * Payment class: paid, unpaid
+   * Geographic information (this is more relevant for EuroPython given the number of countries involved)
+   * Organisation
+   * Other contact details
+   * Privacy preferences (would (not) like name published in delegate listing, would (not) like e-mail notifications)
+   * T-shirt size (if appropriate)
+   * Food preferences (if any)
+ * Export/reports of registrant information
  * Badges must be able to show name, class/status, organisation, origin and must obviously be exportable (as PDF, for example)
+ * Payment:
+   * Support e-payment and later payment (bank transfer being the norm in Europe)
+   * Support non-paying registrants (guests, invitees)
+   * Must support different prices for students, non-students (and other classes of registrant)
+ * Keeps or can generate the total revenue for the conference
  * Support tutorial registration and extra events
  * Support capacity limits for tutorials and extra events
  * Optional donations and/or extra items
- * Support non-paying registrants (guests, invitees)
- * Export conference materials for proceedings
+ * Support editing and cancellation of registrations by both users (for their own registrations) and by administrators
 
 == Paper/Talk Submissions ==
 
- * Users can submit proposals (see "Account Management")
- * Some users have 'reviewer' status and can look at other people's proposals
- * Some users have 'organizer' status and can mark proposals as 'accepted' or 'declined', and can set a scheduled time/location
+See "Account Management" for some relevant criteria.
+
+ * Reviewers can look at other people's proposals
+ * Organisers can mark proposals as 'accepted' or 'declined', and can set a scheduled time/location
  * Proposals have: title, summary/abstract, description, category, length (30/45 min), difficulty level (beginner/intermediate/advanced), a list of 3 assigned reviewers, an accepted boolean, a list of reviewer comments, and a list of uploaded documents
  * A mechanism must exist for reviewers to choose or be assigned submissions; PyCon requirements involve assigning 3 reviewers at random (excluding the author)
  * Reviewer voting or the mechanisms to form a consensus
  * Exports/reports showing the status of submissions and their scores
  * Reviewers and users can comment, but some reviewer comments can be withheld from the user until a decision is made
  * Notifications via e-mail about comments and decisions
+ * Export conference materials for proceedings
 
 == Scheduling ==
 
@@ -74,14 +86,66 @@ This combines some of the PyCon requirements for "users" with more general requi
  * Produce printable schedules for the entire conference, and for individual rooms for a given day
  * Track session chairs for each session
  * It can be nice to be able to edit the schedule interactively
+ * Room management: desirable to be able to switch or rename rooms globally
 
 == Sponsors ==
 
  * Sponsors can fill in a form with contact information that gets stored in a list and also e-mailed to the sponsorship coordinator
- * The coordinator can enter sponsors who've committed: contact info, sponsorship level (platinum/gold/silver), invoice number, paid (Y/N), Web graphic, banner provided (Y/N), banner received (Y/N), comments on where the banner should be displayed
+ * Support the following information:
+   * Contact information
+   * Sponsorship level (platinum/gold/silver)
+   * Invoice number
+   * Paid (Y/N)
+   * Web graphic, banner provided (Y/N)
+   * Banner received (Y/N)
+   * Comments on where the banner should be displayed
 
 == Feedback ==
 
  * Forms for the entire conference, and for specific talks and tutorials (but not sprints since they're separate things)
  * Report: feedback summary for the conference, summaries for individual talks
  * E-mail authors with the results from their talk's feedback
+
+----
+
+== Experiences with Indico ==
+
+[http://cdsware.cern.ch/indico/ Indico] has been used to manage EuroPython 2007. Here's how it fares in the above criteria:
+
+||<#DDDDDD-2:>'''Account Management''' ||
+||<#EEEEEE>'''Register yourself''' ||<:> ''Yes'' ||
+||<#EEEEEE>'''Register others''' ||<:> ''Not at CERN'' ||
+||<#EEEEEE>'''Submit/edit/withdraw your own materials''' ||<:> ''Yes'' ||
+||<#EEEEEE>'''Submit/edit/withdraw materials for others''' ||<:> ''Only as administrator'' ||
+||<#EEEEEE>'''Review materials''' ||<:> ''Yes'' ||
+||<#EEEEEE>'''Administer conference''' ||<:> ''Yes'' ||
+||<#DDDDDD-2:>'''Registration''' ||
+||<#EEEEEE>'''Registrant information''' ||<:> ''Supported - can add arbitrary fields'' ||
+||<#EEEEEE>'''Export/reports of registrant information''' ||<:> ''Yes (PDF, CSV)'' ||
+||<#EEEEEE>'''Badges''' ||<:> ''Supported - interactive editor and PDF export'' ||
+||<#EEEEEE>'''e-payment''' ||<:> ''Yes'' ||
+||<#EEEEEE>'''Pay later''' ||<:> ''Yes'' ||
+||<#EEEEEE>'''Non-paying registrants''' ||<:> ''Yes (1)'' ||
+||<#EEEEEE>'''Different prices/rates''' ||<:> ''Yes'' ||
+||<#EEEEEE>'''Can generate total revenue''' ||<:> ''No - would need to include non-registration revenues'' ||
+||<#EEEEEE>'''Tutorials and extra events''' ||<:> ''Yes (2)'' ||
+||<#EEEEEE>'''Capacity limits on events''' ||<:> ''Yes'' ||
+||<#EEEEEE>'''Optional donations/extra items''' ||<:> ''Yes (2)'' ||
+||<#EEEEEE>'''Edit registrations yourself''' ||<:> ''Yes'' ||
+||<#EEEEEE>'''Edit other registrations''' ||<:> ''Only as administrator'' ||
+||<#EEEEEE>'''Cancel registrations yourself''' ||<:> ''No'' ||
+||<#EEEEEE>'''Cancel other registrations''' ||<:> ''Only as administrator'' ||
+||<#DDDDDD-2:>'''Paper/Talk Submissions''' ||
+||<#EEEEEE>'''Reviewer role''' ||<:> ''Yes'' ||
+||<#EEEEEE>'''Organiser role''' ||<:> ''Yes'' ||
+||<#EEEEEE>'''Submission information''' ||<:> ''Supported'' ||
+||<#EEEEEE>'''Reviewer assignment''' ||<:> ''Done manually'' ||
+||<#EEEEEE>'''Reviewer voting/consensus forming''' ||<:> ''Yes'' ||
+||<#EEEEEE>'''Export/reports showing submission status''' ||<:> ''Yes - filtering and export possible (XML, PDF)'' ||
+||<#EEEEEE>'''Reviewer comments (public and hidden''' ||<:> ''Yes'' ||
+||<#EEEEEE>'''User comments''' ||<:> ''Yes'' ||
+||<#EEEEEE>'''E-mail notifications''' ||<:> ''Yes'' ||
+||<#EEEEEE>'''Export as proceedings''' ||<:> ''Yes'' ||
+
+ 1. An "invitation code" feature would let people register without manual validation of non-paying registrants afterwards. Generally, some kind of validation mechanism would be required, anyway.
+ 1. Add chargeable items to the form for extra events and items.
