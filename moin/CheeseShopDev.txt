@@ -63,6 +63,10 @@ purposes both of searching and determining name uniqueness when registering.
 
 == Development Environment Hints ==
 
+Cheeseshop uses postgresql as a database, with a roll it yourself web framework based on different python modules.  It uses apache2 as the web server.
+
+It can run using cgi, fcgi and mod_python.
+
 Before restoring database, "pypi" role must exists:
 
 {{{
@@ -89,11 +93,12 @@ PageTemplates are obtained from:
   svn co svn://svn.zope.org/repos/main/zope.tales/trunk zope.tales
 }}}
 
+
 We also need to install ez_setup, celementtree and docutils.
 
 
 # For debian, this should get you most of the dependencies.
-apt-get install zope3 python-celementtree
+apt-get install zope3 python-celementtree python-psycopg
 
 
 Then go ahead and edit pypi.ini and this line in pypi.cgi:
