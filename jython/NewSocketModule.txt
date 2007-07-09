@@ -167,4 +167,4 @@ Until a fix is delivered, there are several workarounds to the problem.
 
    1. Use the select.select call to multiplex channels. The select.select function and select.poll objects have recently been added to jython; try them out.
 
-   1. Ensure that your code does not try to read and write simultaneously on the same socket file wrapper. You can do this by implementing your own exclusion (e.g. a semaphore), or perhaps using delays to ensure that the read and write operations happen at different times.
+   1. Ensure that your code does not try to read and write simultaneously on the same socket file wrapper. You can do this by implementing your own exclusion (e.g. a semaphore), or perhaps using delays to ensure that the read and write operations happen at different times, or by restricting all read and write operations on a socket file wrapper to a single thread.
