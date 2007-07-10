@@ -45,7 +45,19 @@ test_csv
 
 test_ctypes
 
-test_descr
+test_descr ChristianHeimes: The error is caused by a nasty inconsistence: {{{
+
+>>> class Letter(str):
+...     def __str__(self): return 'v'
+... 
+>>> Letter('w')
+'w'
+>>> str(Letter('w')) # Python 3k
+'w'
+>>> str(Letter('w')) # Python 2.5
+'v'
+}}}
+
 
 test_dl
 
