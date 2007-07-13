@@ -1,0 +1,15 @@
+Paradoxically, a {{{UnicodeDecodeError}}} happens when _encoding_.  The cause of it seems to be the encoding-specific {{{encode()}}} functions that normally expect a parameter of type {{{unicode}}}.  It appears that on seeing an {{{str}}} parameter, the {{{encode()}}} functions "up-convert" it into {{{unicode}}} before applying its own encoding.  It also appears that the "up-conversion" makes no assumption of {{{str}}} parameter's encoding, assuming it to be {{{ascii}}}.  Hence a decoding failure inside an encoder.
+
+{{{
+#!python
+>>> "a".encode("utf-8")
+'a'
+>>> u"\u0411".encode("utf-8")
+'\xd0\x91'
+>>> "\xd0\x91".encode("utf-8")
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+UnicodeDecodeError: 'ascii' codec can't decode byte 0xd0 in position 0: ordinal not in range(128)
+}}}
+----
+CategoryUnicode
