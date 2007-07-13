@@ -2,3 +2,19 @@
 according to its
 [http://www.python.net/crew/theller/ctypes/ home page].
 ["Python 2.5"] includes ctypes.
+
+=== CTypes FAQs ===
+
+'''FAQ: How do I copy bytes to Python from a ctypes.Structure?'''
+
+def send(self):
+	return buffer(self)[:]
+
+'''FAQ: How do I copy bytes to a ctypes.Structure from Python?'''
+
+def receiveSome(self, bytes):
+	ctypes.memmove(ctypes.addressof(self), bytes, ctypes.sizeof(self))
+
+'''FAQ: Why should I fear using ctypes.memmove?'''
+
+ctypes.memmove emulates the memmove of C with complete faithfulness. If you tell memmove to copy more bytes than sizeof(self), you will overwrite memory that you do not own, with indeterminate consequences, arbitrarily delayed.
