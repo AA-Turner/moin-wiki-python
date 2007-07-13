@@ -2,7 +2,7 @@ The {{{UnicodeDecodeError}}} normally happens when decoding an {{{str}}} string 
 
 Paradoxically, a {{{UnicodeDecodeError}}} may happen when _encoding_.  The cause of it seems to be the coding-specific {{{encode()}}} functions that normally expect a parameter of type {{{unicode}}}.  It appears that on seeing an {{{str}}} parameter, the {{{encode()}}} functions "up-convert" it into {{{unicode}}} before converting to their own coding.  It also appears that such "up-conversion" makes no assumption of {{{str}}} parameter's coding, choosing a default {{{ascii}}} decoder.  Hence a decoding failure inside an encoder.
 
-Unlike a similar case with UnicodeEncodeError, such a failure cannot be avoided.  This is because the {{{str}}} result of {{{encode()}}} must be a legal coding-specific sequence.  However, a more flexible treatment of an unexpected {{{str}}} argument might first validate the {{{str}}} argument by attempting to decode it, then return it unmodified if the validation was successful.  As of Python2.5, this is not implemented.
+Unlike a similar case with UnicodeEncodeError, such a failure cannot be always avoided.  This is because the {{{str}}} result of {{{encode()}}} must be a legal coding-specific sequence.  However, a more flexible treatment of an unexpected {{{str}}} argument might first validate the {{{str}}} argument by attempting to decode it, then return it unmodified if the validation was successful.  As of Python2.5, this is not implemented.
 
 {{{
 #!python
