@@ -6,13 +6,26 @@ Unlike a similar case with UnicodeEncodeError, such a failure cannot be always a
 
 {{{
 #!python
+r"""
+Decoding from str to unicode.
+
+>>> "a".decode("utf-8")
+u'a'
+>>> "\x81".decode("utf-8")
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "encodings/utf_8.py", line 16, in decode
+UnicodeDecodeError: 'utf8' codec can't decode byte 0x81 in position 0: unexpected code byte
+
+Encoding from unicode to str.
+
 >>> u"a".encode("utf-8")
 'a'
 >>> u"\u0411".encode("utf-8")
 '\xd0\x91'
->>> "a".encode("utf-8")
+>>> "a".encode("utf-8")         # Unexpected argument type.
 'a'
->>> "\xd0\x91".encode("utf-8")
+>>> "\xd0\x91".encode("utf-8")  # Unexpected argument type.
 Traceback (most recent call last):
   File "<stdin>", line 1, in <module>
 UnicodeDecodeError: 'ascii' codec can't decode byte 0xd0 in position 0: ordinal not in range(128)
