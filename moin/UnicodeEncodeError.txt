@@ -1,11 +1,5 @@
 The {{{UnicodeEncodeError}}} normally happens when encoding a {{{unicode}}} string into a certain coding.  Since codings map only a limited number of {{{unicode}}} characters to {{{str}}} strings, a non-presented character will cause the coding-specific {{{encode()}}} to fail.
 
-Paradoxically, a {{{UnicodeEncodeError}}} may happen when _decoding_.  The cause of it seems to be the coding-specific {{{decode()}}} functions that normally expect a parameter of type {{{str}}}.  It appears that on seeing a {{{unicode}}} parameter, the {{{decode()}}} functions "down-convert" it into {{{str}}}, then decode the result assuming it to be of their own coding.  It also appears that the "down-conversion" is performed using the {{{ASCII}}} encoder.  Hence a nencoding failure inside a decoder.
-
-The choice of the {{{ASCII}}} encoder for "down-conversion" might be considered wise because it is an intersection of all codings.  The subsequent decoding may only accept a coding-specific {{{str}}}.
-
-However, unlike a similar issue with UnicodeDecodeError while encoding, there would be not ambiguity if {{{decode()}}} simply returned the {{{unicode}}} argument unmodified.  There seems to be not such a shortcut in {{{decode()}}} functions as of Python2.5.
-
 {{{
 #!python
 r"""
@@ -18,8 +12,18 @@ Traceback (most recent call last):
   File "<stdin>", line 1, in <module>
   File "encodings/iso8859_15.py", line 12, in encode
 UnicodeEncodeError: 'charmap' codec can't encode character u'\u0411' in position 0: character maps to <undefined>
+"""
+}}}
 
+Paradoxically, a {{{UnicodeEncodeError}}} may happen when _decoding_.  The cause of it seems to be the coding-specific {{{decode()}}} functions that normally expect a parameter of type {{{str}}}.  It appears that on seeing a {{{unicode}}} parameter, the {{{decode()}}} functions "down-convert" it into {{{str}}}, then decode the result assuming it to be of their own coding.  It also appears that the "down-conversion" is performed using the {{{ASCII}}} encoder.  Hence a nencoding failure inside a decoder.
 
+The choice of the {{{ASCII}}} encoder for "down-conversion" might be considered wise because it is an intersection of all codings.  The subsequent decoding may only accept a coding-specific {{{str}}}.
+
+However, unlike a similar issue with UnicodeDecodeError while encoding, there would be not ambiguity if {{{decode()}}} simply returned the {{{unicode}}} argument unmodified.  There seems to be not such a shortcut in {{{decode()}}} functions as of Python2.5.
+
+{{{
+#!python
+r"""
 Decoding from str to unicode.
 
 >>> "a".decode("utf-8")
