@@ -13,10 +13,7 @@ Traceback (most recent call last):
   File "encodings/utf_8.py", line 16, in decode
 UnicodeDecodeError: 'utf8' codec can't decode byte 0x81 in position 0: unexpected code byte
 
->>> import codecs
->>> utf8_decoder = codecs.getdecoder("utf-8")
->>> decode_from_utf8 = lambda s, utf8_decoder=utf8_decoder, errors="strict": utf8_decoder(s, errors)[0]
->>> decode_from_utf8("a\x81b", errors="replace")
+>>> "a\x81b".decode("utf-8", "replace")
 u'a\ufffdb'
 """
 }}}
