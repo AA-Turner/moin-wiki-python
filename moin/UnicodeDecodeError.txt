@@ -17,7 +17,9 @@ UnicodeDecodeError: 'utf8' codec can't decode byte 0x81 in position 0: unexpecte
 
 Paradoxically, a {{{UnicodeDecodeError}}} may happen when _encoding_.  The cause of it seems to be the coding-specific {{{encode()}}} functions that normally expect a parameter of type {{{unicode}}}.  It appears that on seeing an {{{str}}} parameter, the {{{encode()}}} functions "up-convert" it into {{{unicode}}} before converting to their own coding.  It also appears that such "up-conversion" makes no assumption of {{{str}}} parameter's coding, choosing a default {{{ascii}}} decoder.  Hence a decoding failure inside an encoder.
 
-Unlike a similar case with UnicodeEncodeError, such a failure cannot be always avoided.  This is because the {{{str}}} result of {{{encode()}}} must be a legal coding-specific sequence.  However, a more flexible treatment of the unexpected {{{str}}} argument type might first validate the {{{str}}} argument by decoding it, then return it unmodified if the validation was successful.  As of Python2.5, this is not implemented.
+Unlike a similar case with UnicodeEncodeError, such a failure cannot be always avoided.  This is because the {{{str}}} result of {{{encode()}}} must be a legal coding-specific sequence.  However, a more flexible treatment of the unexpected {{{str}}} argument type might first validate the {{{str}}} argument by decoding it, then return it unmodified if the validation was successful.  As of Python2.5, this is not implemented.  
+
+Alternatively, a TypeError exception could be thrown on receiving an argument of unexpected type.
 
 {{{
 #!python
