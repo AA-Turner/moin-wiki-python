@@ -1,8 +1,6 @@
 The {{{UnicodeEncodeError}}} normally happens when encoding a {{{unicode}}} string into a certain coding.  Since codings map only a limited number of {{{unicode}}} characters to {{{str}}} strings, a non-presented character will cause the coding-specific {{{encode()}}} to fail.
 
 {{{
-#!python
-r"""
 Encoding from unicode to str.
 
 >>> u"a".encode("iso-8859-15")
@@ -19,7 +17,6 @@ UnicodeEncodeError: 'charmap' codec can't encode character u'\u0411' in position
 'a\\u0411b'
 >>> u"a\u0411b".encode("iso-8859-15", "xmlcharrefreplace")
 'a&#1041;b'
-"""
 }}}
 
 Paradoxically, a {{{UnicodeEncodeError}}} may happen when _decoding_.  The cause of it seems to be the coding-specific {{{decode()}}} functions that normally expect a parameter of type {{{str}}}.  It appears that on seeing a {{{unicode}}} parameter, the {{{decode()}}} functions "down-convert" it into {{{str}}}, then decode the result assuming it to be of their own coding.  It also appears that the "down-conversion" is performed using the {{{ASCII}}} encoder.  Hence a nencoding failure inside a decoder.
@@ -31,8 +28,6 @@ However, unlike a similar issue with UnicodeDecodeError while encoding, there wo
 Alternatively, a TypeError exception could always be thrown on receiving a {{{unicode}}} argument in {{{decode()}}} functions.  (This would require {{{stream.read()}}} to produce only {{{str}}} for StreamReader{{{.read()}}}.  The latter would only produce {{{unicode}}}).
 
 {{{
-#!python
-r"""
 Decoding from str to unicode.
 
 >>> "a".decode("utf-8")
@@ -46,7 +41,6 @@ Traceback (most recent call last):
   File "<stdin>", line 1, in <module>
   File "encodings/utf_8.py", line 16, in decode
 UnicodeEncodeError: 'ascii' codec can't encode character u'\u0411' in position 0: ordinal not in range(128)
-"""
 }}}
 ----
 CategoryUnicode
