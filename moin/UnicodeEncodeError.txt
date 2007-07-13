@@ -19,7 +19,7 @@ UnicodeEncodeError: 'charmap' codec can't encode character u'\u0411' in position
 'a&#1041;b'
 }}}
 
-Paradoxically, a {{{UnicodeEncodeError}}} may happen when _decoding_.  The cause of it seems to be the coding-specific {{{decode()}}} functions that normally expect a parameter of type {{{str}}}.  It appears that on seeing a {{{unicode}}} parameter, the {{{decode()}}} functions "down-convert" it into {{{str}}}, then decode the result assuming it to be of their own coding.  It also appears that the "down-conversion" is performed using the {{{ASCII}}} encoder.  Hence a nencoding failure inside a decoder.
+Paradoxically, a {{{UnicodeEncodeError}}} may happen when _decoding_.  The cause of it seems to be the coding-specific {{{decode()}}} functions that normally expect a parameter of type {{{str}}}.  It appears that on seeing a {{{unicode}}} parameter, the {{{decode()}}} functions "down-convert" it into {{{str}}}, then decode the result assuming it to be of their own coding.  It also appears that the "down-conversion" is performed using the {{{ASCII}}} encoder.  Hence an encoding failure inside a decoder.
 
 The choice of the {{{ASCII}}} encoder for "down-conversion" might be considered wise because it is an intersection of all codings.  The subsequent decoding may only accept a coding-specific {{{str}}}.
 
