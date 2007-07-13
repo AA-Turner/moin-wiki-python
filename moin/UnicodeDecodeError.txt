@@ -1,8 +1,6 @@
 The {{{UnicodeDecodeError}}} normally happens when decoding an {{{str}}} string from a certain coding.  Since codings map only a limited number of {{{str}}} strings to {{{unicode}}} characters, an illegal sequence of {{{str}}} characters will cause the coding-specific {{{decode()}}} to fail.
 
 {{{
-#!python
-r"""
 Decoding from str to unicode.
 
 >>> "a".decode("utf-8")
@@ -15,7 +13,6 @@ UnicodeDecodeError: 'utf8' codec can't decode byte 0x81 in position 0: unexpecte
 
 >>> "a\x81b".decode("utf-8", "replace")
 u'a\ufffdb'
-"""
 }}}
 
 Paradoxically, a {{{UnicodeDecodeError}}} may happen when _encoding_.  The cause of it seems to be the coding-specific {{{encode()}}} functions that normally expect a parameter of type {{{unicode}}}.  It appears that on seeing an {{{str}}} parameter, the {{{encode()}}} functions "up-convert" it into {{{unicode}}} before converting to their own coding.  It also appears that such "up-conversion" makes no assumption of {{{str}}} parameter's coding, choosing a default {{{ascii}}} decoder.  Hence a decoding failure inside an encoder.
@@ -25,8 +22,6 @@ Unlike a similar case with UnicodeEncodeError, such a failure cannot be always a
 Alternatively, a TypeError exception could always be thrown on receiving an {{{str}}} argument in {{{encode()}}} functions.  (This would require StreamWriter{{{.write()}}} to accept only {{{unicode}}}.  The underlying stream's {{{.write()}}} will receive only {{{str}}}'s).
 
 {{{
-#!python
-r"""
 Encoding from unicode to str.
 
 >>> u"a".encode("utf-8")
@@ -39,7 +34,6 @@ Encoding from unicode to str.
 Traceback (most recent call last):
   File "<stdin>", line 1, in <module>
 UnicodeDecodeError: 'ascii' codec can't decode byte 0xd0 in position 0: ordinal not in range(128)
-"""
 }}}
 ----
 CategoryUnicode
