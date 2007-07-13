@@ -1,4 +1,4 @@
-Paradoxically, a {{{UnicodeDecodeError}}} happens when _encoding_.  The cause of it seems to be the encoding-specific {{{encode()}}} functions that normally expect a parameter of type {{{unicode}}}.  It appears that on seeing an {{{str}}} parameter, the {{{encode()}}} functions "up-convert" it into {{{unicode}}} before applying its own encoding.  It also appears that the "up-conversion" makes no assumption of {{{str}}} parameter's encoding, assuming it to be {{{ascii}}}.  Hence a decoding failure inside an encoder.
+Paradoxically, a {{{UnicodeDecodeError}}} happens when _encoding_.  The cause of it seems to be the encoding-specific {{{encode()}}} functions that normally expect a parameter of type {{{unicode}}}.  It appears that on seeing an {{{str}}} parameter, the {{{encode()}}} functions "up-convert" it into {{{unicode}}} before applying their own encoding.  It also appears that the "up-conversion" makes no assumption of {{{str}}} parameter's encoding, assuming it to be {{{ascii}}}.  Hence a decoding failure inside an encoder.
 
 {{{
 #!python
