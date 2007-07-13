@@ -13,7 +13,9 @@ Traceback (most recent call last):
   File "encodings/iso8859_15.py", line 12, in encode
 UnicodeEncodeError: 'charmap' codec can't encode character u'\u0411' in position 0: character maps to <undefined>
 
->>> iso_8859_15_encoder = codecs.getencoder("iso-8859-15")>>> encode_to_iso_8859_15 = lambda s, iso_8859_15_encoder=iso_8859_15_encoder, errors="strict": iso_8859_15_encoder(s, errors)[0]
+>>> iso_8859_15_encoder = codecs.getencoder("iso-8859-15")
+>>> encode_to_iso_8859_15 = lambda s, iso_8859_15_encoder=iso_8859_15_encoder, errors="strict": \
+... iso_8859_15_encoder(s, errors)[0]
 >>> encode_to_iso_8859_15(u"a\u0411b", errors="backslashreplace")
 'a\\u0411b'
 >>> encode_to_iso_8859_15(u"a\u0411b", errors="replace")
