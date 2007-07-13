@@ -18,3 +18,12 @@ def receiveSome(self, bytes):
 '''FAQ: Why should I fear using ctypes.memmove?'''
 
 ctypes.memmove emulates the memmove of C with complete faithfulness. If you tell memmove to copy more bytes than sizeof(self), you will overwrite memory that you do not own, with indeterminate consequences, arbitrarily delayed.
+
+'''FAQ: How do I change the byte length of a ctypes.Structure?'''
+
+Declare the max length and allocate that much memory, but then copy less than all of the memory allocated. You change the byte length that you use, not the byte length that ctypes.sizeof reports. For example:
+
+class MaxByteString(ctypes.Structure):
+	_fields_ = [('Bytes'), 0xFF * ctypes.c_ubyte)]
+
+''Someone more Wiki literate than I should kill the false hot link at MaxByteString above.''
