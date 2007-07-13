@@ -19,7 +19,7 @@ Paradoxically, a {{{UnicodeDecodeError}}} may happen when _encoding_.  The cause
 
 Unlike a similar case with UnicodeEncodeError, such a failure cannot be always avoided.  This is because the {{{str}}} result of {{{encode()}}} must be a legal coding-specific sequence.  However, a more flexible treatment of the unexpected {{{str}}} argument type might first validate the {{{str}}} argument by decoding it, then return it unmodified if the validation was successful.  As of Python2.5, this is not implemented.  
 
-Alternatively, a TypeError exception could always be thrown on receiving an {{{str}}} argument in {{{encode}}}.  (This would require StreamWriter{{{.write()}}} to accept only {{{unicode}}}.  The underlying stream's {{{.write()}}} will receive only {{{str}}}'s).
+Alternatively, a TypeError exception could always be thrown on receiving an {{{str}}} argument in {{{encode()}}} functions.  (This would require StreamWriter{{{.write()}}} to accept only {{{unicode}}}.  The underlying stream's {{{.write()}}} will receive only {{{str}}}'s).
 
 {{{
 #!python
