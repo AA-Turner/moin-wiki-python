@@ -1,6 +1,6 @@
 The {{{UnicodeEncodeError}}} normally happens when encoding a {{{unicode}}} string into a certain coding.  Since codings map only a limited number of {{{unicode}}} characters to {{{str}}} strings, a non-presented character will cause the coding-specific {{{encode()}}} to fail.
 
-Paradoxically, a {{{UnicodeEncodeError}}} may happen when _decoding_.  The cause of it seems to be the coding-specific {{{decode()}}} functions that normally expect a parameter of type {{{str}}}.  It appears that on seeing a {{{unicode}}} parameter, the {{{decode()}}} functions "down-convert" it into {{{str}}}, then decode the result assuming it to be of their own coding.  It also appears that the "down-conversion" is performed using the {{{ASCII}}} encoder.  Hence a decoding failure inside an encoder.
+Paradoxically, a {{{UnicodeEncodeError}}} may happen when _decoding_.  The cause of it seems to be the coding-specific {{{decode()}}} functions that normally expect a parameter of type {{{str}}}.  It appears that on seeing a {{{unicode}}} parameter, the {{{decode()}}} functions "down-convert" it into {{{str}}}, then decode the result assuming it to be of their own coding.  It also appears that the "down-conversion" is performed using the {{{ASCII}}} encoder.  Hence a nencoding failure inside a decoder.
 
 The choice of the {{{ASCII}}} encoder for "down-conversion" might be considered wise because it is an intersection of all codings.  The subsequent decoding may only accept a coding-specific {{{str}}}.
 
