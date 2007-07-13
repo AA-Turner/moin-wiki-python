@@ -18,7 +18,7 @@ Example usage:
   Retrieve a list of the package names registered with the package index. Returns a list of name strings.
 
 '''package_releases(package name)'''
-  Retreive a list of the releases registered for the given package name. Returns a list of version strings.
+  Retrieve a list of the releases registered for the given package name. Returns a list of version strings.
 
 '''release_urls(package_name, version)'''
   Retrieve a list of download URLs for the given package release. Returns a list of dicts {'url': the url, 'packagetype': the download package type} where the packagetype is one of the setup.py package types ('sdist', 'bdist', etc).
@@ -44,3 +44,6 @@ Example usage:
 
 '''search(spec[, operator])'''
    Search the package database using the indicated search spec, combined using either "and" (the default) or "or". The spec may include any of the keywords described in the above list (except 'stable_version' and 'classifiers'), for example: {'description': 'spam'} will search description fields. The results are returned as a list of dicts {'name': package name, 'version': package release version, 'summary': package release summary}
+
+'''changelog(since)'''
+  Retrieve a list of four-tuples (name, version, timestamp, action) since the given timestamp. All timestamps are UTC values.
