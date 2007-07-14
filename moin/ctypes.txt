@@ -8,17 +8,18 @@ according to its
 
 '''FAQ: How do I copy bytes to Python from a ctypes.Structure?'''
 
+{{{
 def send(self):
-
 	return buffer(self)[:]
+}}}
 
 '''FAQ: How do I copy bytes to a ctypes.Structure from Python?'''
 
+{{{
 def receiveSome(self, bytes):
-
 	fit = min(len(bytes), ctypes.sizeof(self))
-
 	ctypes.memmove(ctypes.addressof(self), bytes, fit)
+}}}
 
 '''FAQ: Why should I fear using ctypes.memmove?'''
 
@@ -28,32 +29,39 @@ ctypes.memmove emulates the memmove of C with complete faithfulness. If you tell
 
 Declare the max length and allocate that much memory, but then copy less than all of the memory allocated. You change the byte length that you use, not the byte length that ctypes.sizeof reports. For example:
 
+{{{
 class MaxByteString(ctypes.Structure):
-
 	_fields_ = [('Bytes'), 0xFF * ctypes.c_ubyte)]
-
-''Someone more Wiki literate than I should kill the false hot link at MaxByteString above.''
+}}}
 
 '''FAQ: How do I say memcpy?'''
 
+{{{
 memmove
+}}}
 
 '''FAQ: How do I say offsetof?'''
 
 If the field is a member of an instance of a struct class or an array class, then:
 
+{{{
 def offsetof(self, field):
 	return ctypes.addressof(field) - ctypes.addressof(self)
+}}}
 
 Otherwise you have to sum up the aligned sizes of the _fields_ that precede the fieldname. If _pack_ is 1, then the aligned size of each field is merely its ctypes.sizeof, otherwise you have to work harder.
 
 '''FAQ: How do I say uchar?'''
 
+{{{
 ctypes.c_ubyte
+}}}
 
 '''FAQ: How do I say ((void *) -1)?'''
 
+{{{
 INVALID_HANDLE_VALUE = ctypes.c_void_p(-1).value
+}}}
 
 '''FAQ: How do I contribute to this CTypes FAQ?'''
 
