@@ -42,14 +42,14 @@ ctypes.memmove
 
 '''FAQ: How do I say offsetof?'''
 
-If the field is a member of an instance of a struct class or an array class, then:
-
 {{{
 def offsetof(self, field):
 	return ctypes.addressof(field) - ctypes.addressof(self)
 }}}
 
-Otherwise you have to sum up the aligned sizes of the _fields_ that precede the fieldname. If _pack_ is 1, then the aligned size of each field is merely its ctypes.sizeof, otherwise you have to work harder.
+That example of an offsetof method works when self is an instance of the structure, the field is a member of self, and the field is an instance of an array class or structure class.
+
+The offsetof macro of C works more often. The C macro works for any type of field and works when you have the class but no instance. Imitating the C macro with Python ctypes is possible but tedious: you begin by fetching the {{{_pack_}}} of the {{{self.__class__}}} and the {{{ctypes.sizeof}}} for each of the {{{_fields_}}}.
 
 '''FAQ: How do I say uchar?'''
 
