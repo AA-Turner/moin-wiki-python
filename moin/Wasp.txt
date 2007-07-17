@@ -1,23 +1,23 @@
 #pragma section-numbers off
 === Masthead ===
 
-   URL:: http://www.execulink.com/~robin/wasp/readme.html
-   version:: 1.33  (''[[Date(2002-09-05T00:00:00)]]'')
+   URL:: http://robinparmar.com/wasp.html
+   version:: 2.00 (''[[Date(2007-07-17T00:00:00)]]'')
    licence:: GPL
    platforms:: Linux, Windows
-   Python versions:: Python 2.2 and above
+   Python versions:: Python 2.5 and above
 
 === Deployment Platforms ===
 
-Wasp works in two modes: client and server. In client mode Wasp requires no deployment platform. In server mode it works through CGI with Apache Server.
+Wasp works in three modes. In client mode Wasp requires no deployment platform but compiles templates in batch mode. In CGI mode it works with an appropriate web server. In server mode it runs embedded in its own threaded web server.
 
 === Suitability ===
 
-Suitable in those cases where CGI gives reasonable performance, that is, 99% of web application tasks.
+Suitable for those who wish the conventional URL/file website paradigm. Not (as) suitable if you wish to code your entire site in an OOP fashion with virtual files. Not WSGI compatible.
 
 === Development Interfaces ===
 
-The file inclusion, macro expansion, and other features may be used as-is. However, Wasp is designed primarily for those who wish to code in Python to create dynamic web sites. A streamlined CGI environment is provided with easy access to forms, cookies, a session mechanism, date module, table browser, etc.
+Python code may be freely added as plugins with no special dependencies or restrictions. Code may also be inserted into page templates. A streamlined web environment is provided with easy access to CGI info, cookies, sessions, etc.
 
 === Environment Access ===
 
@@ -25,26 +25,24 @@ Wasp can access any Python modules, stored in shared or restricted locations. Th
 
 === Session, Identification and Authentication ===
 
-A robust database-independent server-side session mechanism is provided, which uses cookies to store unique keys. This can be used for Identification and Authentication as the designer wishes.
+A robust database-independent server-side session mechanism is provided, which uses cookies to store unique keys. This can be used for identification and authentication as the designer wishes.
 
 === Persistence Support ===
 
-Wasp can be linked to any database with a Python interface, and contains a module to simplify the handling of tabular data such as that contained in a cursor.
+None provided, so you can use your favourite. Wasp is database agnostic.
 
 === Presentation Support ===
 
-Wasp contains a simple templating system that encourages the separation of code and HTML. Python code is not allowed in template files, but template code is encouraged in Python files.
+Wasp contains a simple templating system that allows Python code in template files if you so wish.
 
 === InTheirOwnWords ===
 
-Wasp was developed when there were relatively few alternatives for Rapid Application Development in Python for the web. Now there are many templates and frameworks. Wasp distinguishes itself in its maturity (two years of active development), currency (still actively being improved), simplicity (installs as easy as any CGI handler), adherence to standard CGI model (no Zope here), ability to run in client mode (no web server required to get benefits of templating), remote debugging (really a life-saver), and thorough documentation. The inclusion of modules for tabular data and date handling rounds out the suite of tools.
+Wasp was developed when there were relatively few alternatives for Rapid Application Development in Python for the web. Now there are many such. Wasp distinguishes itself in its maturity (in development since 2001), currency (new version provides significant improvements), simplicity (installs easily with no dependencies), adherence to standard web paradigms (files are still files, URLs are still URLs), ability to run in command-line mode (no web server required to get the benefits of templating), remote debugging (really a life-saver), and thorough documentation.
 
-Wasp is not appropriate in cases where CGI itself is a limiting factor. However, the number of sites that really need to serve thousands of complex hits an hour are relatively few. 
-
-In the future, the example files will be expanded to include a full web site with sessions, cookies, etc. A module for connectivity with fastcgi is also proposed.
+Wasp may not be appropriate for high-traffic sites. Here the CGI mode might be a limiting factor, and the embedded web server mode is not (as of yet) sufficiently tested under duress to recommend.
 
 === Comments ===
 
 === Hosting ===
 
-Any Apache setup with Python 2.2
+Any Apache setup with Python 2.5
