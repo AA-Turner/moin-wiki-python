@@ -1,6 +1,6 @@
 = New Select Module =
 
-[[TableOfContents(3)]]
+[[TableOfContents(4)]]
 
 == Introduction ==
 
@@ -11,11 +11,39 @@ The new module presents an API which is as close as possible to the [http://www.
    1. select.select function
    1. [http://www.python.org/doc/lib/poll-objects.html select.poll objects].
 
-When using the select module, you should be guided by the cpython documentation: any deviation from the behaviour described in that documentation should be considered a bug and [http://www.jython.org/bugs reported] as such.
+When using the select module, you should be guided by the cpython documentation: any deviation from the behaviour described in that documentation, except for the the considerations mentioned below, should be considered a bug and [http://www.jython.org/bugs reported] as such.
+
+If you are starting a new project, it is recommended that you use select.poll objects, because
+
+   1. Poll objects are the most efficient mechanism to multiplex sockets on jython, being fairly much a direct mapping to [http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/Selector.html java.nio.channel.Selector objects].
+   1. The select.select function is implemented using a poll object, which means that sockets are de/registered every single time, which is slightly less efficient.
+
+== Usage notes ==
+
+=== Always close poll objects ===
+
+When a socket has been registered with a select.poll object, it remains registered until explicitly deregistered. This has the following implications 
+
+   1. Sockets cannot be placed in blocking mode while they are still registered with poll objects
+   1. The reference from the poll object to the socket might interfere with garbage collection
+
+Therefore, it is recommended that you always explicitly close poll objects, using an idiom such as
+
+{{{
+def my_polling_func(sockets):
+    poll_object = select.poll()
+    try:
+        for s in sockets:
+            poll_object.register(s)
+    finally:
+        poll_object.close()
+}}}
+
+Closing a poll object cancels all registrations of sockets.
 
 == Differences between cpython and jython ==
 
-However, due to fundamental differences in the behaviour of java and C on various platforms, there are differences between the cpython and jython select modules which are not possible to code around. Those differences will be listed here.
+Due to fundamental differences in the behaviour of java and C on various platforms, there are differences between the cpython and jython select modules which are not possible to code around. Those differences will be listed here.
 
 === Only sockets in non-blocking mode can be multiplexed ===
 
@@ -29,3 +57,56 @@ To summarise
    1. Any attempt to register a blocking socket for multiplex will raise a select.error exception, with an error code of errno.ESOCKISBLOCKING
    1. If a socket is currently registered with a select.poll object, an attempt to change it to blocking mode will give rise to the same exception.
    1. A socket can only be placed in blocking mode if it is '''not''' registered with a select.poll object.
+
+This issue could be problematic if you want to use a cpython module which relies on select, e.g. telnetlib. Such cpython modules do not set their sockets in non-blocking mode before passing them to select.select. In order to support such cpython modules, the following fix is proposed
+
+==== Possible solution for supporting cpython-compatible select ====
+
+One possible solution to this problem is to write a special version of the jython select function which provides compatibility with the cpython version. This would be achieved by
+
+   1. Recording the blocking mode of all sockets that are passed to the function
+   1. Setting non-blocking mode on all sockets
+   1. Calling the normal select.select function (which requires non-blocking sockets)
+   1. Restoring the previously-saved blocking mode for all sockets
+   1. Returning the results of the wrapped select function
+
+However, there is a clear problem with this approach: The called select function may not be the only thread of execution examining the socket. If the socket is being operating upon in a different thread, then it is very likely that changing the blocking mode of the socket will cause a failure of the operation in the other thread.
+
+==== Solution for jython 2.2 ====
+
+Based on the following points
+
+   1. It is unacceptable for a standard jython library function to change the blocking mode of a socket with the explicit consent of the user
+   1. The problem only arises when the user wishes to make use of select-dependent cpython modules, e.g. telnetlib, without modification.
+
+The following is the proposed solution for jython 2.2
+
+A special version of the select function will be written to provide cpython compatibility. This function will
+
+   1. Change the blocking mode of all sockets to non-blocking before passing to the "real" select function
+   1. Will restore the original blocking mode of all sockets before return to the user
+   1. Will be named in such a way that the name does not interfere with existing classes and functions
+   1. Will require explicit action from the user before it is enabled
+
+==== How to enable cpython compatible select processing ====
+
+If you want to use cpython compatible select function, follow these steps
+
+   1. Import the select module, i.e. '''import select'''
+   1. Reassign the select function to the cpython compatible version, i.e. '''select.select = select.cpython_compatible_select'''
+   1. Then import whatever cpython module you wish to use, e.g. '''import telnetlib'''
+
+Here is an example
+
+{{{
+import select
+select.select = select.cpython_compatible_select
+import telnetlib
+
+# Make use of telnetlib here
+}}}
+
+==== WARNING! ====
+
+   1. If using the cpython_compatible_select function, you must be aware of that the function will modify the blocking mode of your sockets for the duration of the call. If you are carrying out socket operations on that socket in another thread, then those socket operation may fail or raise exceptions.
+   2. This function will still not cover all possible uses of select.select by cpython modules. If a cpython module tries to multiplex the '''sys.stdin''' or '''sys.stdout''' streams, then registration of the channels will fail, because the !InputStream and !OutputStream representing sys.stdin and sys.stdout are '''not''' !SelectableChannels.
