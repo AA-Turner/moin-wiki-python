@@ -41,8 +41,6 @@ test_csv
 
 test_descr says: ['foo\u1234bar'] slots not caught
 
-test_datetime: pickling is broken since r56461.  MINE GvR.
-
 test_doctest
 
 test_email
@@ -126,6 +124,8 @@ test_cmd_line: FIXED IN SF http://www.python.org/sf/1751493 ChristianHeimes -- C
 test_ctypes: ThomasHeller: FIXED r56338.
 
 test_cProfile: FIXED IN SF http://www.python.org/sf/1755176 by Amaury Forgeot d'Arc COMMITTED r56406.
+
+test_datetime: pickling is broken since r56461, due to cPickle not understanding bytes. Decided the right solution is to stop using cPickle. COMMITTED r56462. GvR.
 
 test_descr GuidoVanRossum: FIXED r56252.
 
