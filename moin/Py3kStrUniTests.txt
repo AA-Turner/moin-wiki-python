@@ -39,7 +39,9 @@ test_cpickle: not worth it? (I think this may be killed.); Alexandre's SoC work 
 
 test_csv
 
-tet_descr says: ['foo\u1234bar'] slots not caught
+test_descr says: ['foo\u1234bar'] slots not caught
+
+test_datetime: pickling is broken since r56461.  MINE GvR.
 
 test_doctest
 
@@ -64,8 +66,6 @@ test_marshal: fails on CYGWIN only
 test_minidom
 
 test_old_mailbox
-
-test_pickle: started complaining about unhashable type: 'bytes' since MvL's checkin. MINE GvR.
 
 test_plistlib (OSX only)
 
@@ -139,6 +139,8 @@ test_mmap JoeGregorio FIXED IN SF http://www.python.org/sf/1752647
 COMMITTED r56400.
 
 test_pep263 ChristianHeimes FIXED IN WIKI. The fix isn't worth a patch. You have to convert two string to byte by putting a b in front of them. .encode() returns bytes.  COMMITTED by ThomasHeller.
+
+test_pickle: started complaining about unhashable type: 'bytes' since MvL's checkin. COMMITTED r56461 GvR.
 
 test_pickletools Pickle doesn't handle str vs. str8 vs. byte correctly. Do we pickle str as UNICODE or STRING?  FIXED by GvR.
 
