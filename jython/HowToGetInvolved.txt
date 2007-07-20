@@ -62,6 +62,149 @@ We're migrating information from the [http://wiki.python.org/moin/JythonSprint J
  * irc - irc.freenode.net #jython
  * In person in Preston Trail 3
 
+== Setting up Jython Environment ==
+=== Building and setting up Jython automatically ===
+Script  
+'''#/bin/bash'''
+echo -e "************Welcome to Jython Building******************"
+
+echo -e "This Script will Build Jython for you Automatically"
+
+echo -e "Tools Required \n 1.Apache Ant \n 2.JDK \n3.Any IDE (gvim,eclipse)" 
+
+echo  "Press Enter to download ANT TOOL...................." 
+
+read  
+
+'''# To get the Ant tool from the repo and install  '''
+
+wget http://apache.forthnet.gr/ant/binaries/apache-ant-1.7.0-bin.tar.gz 
+
+echo -e "\n\n Unzipping Ant ...................\n" 
+
+gzip -d apache-ant-1.7.0-bin.tar.gz 
+
+tar -xvf apache-ant-1.7.0-bin.tar 
+
+printf "%s\n" "Setting ant bin in the PATH variable" 
+
+echo "export ANT_HOME=$PWD/apache-ant-1.7.0" | cat >> ~/.bashrc 
+
+echo "PATH=$PWD/apache-ant-1.7.0/bin:\$PATH" | cat >> ~/.bashrc 
+
+echo -e "Executing Ant Command......" 
+
+export PATH=$PWD"/apache-ant-1.7.0/bin":$PATH 
+ 
+echo -e "\n************\n"
+
+ant -version
+
+echo -e "\n if you can able to see the Version of ANT then Ant is installed properly!!!"
+
+echo -e "\n Finished Installing ANT Tool\n"  
+
+
+printf "%s\n" "Press Enter for getting JYTHON  from the repository"
+ 
+svn co  https://jython.svn.sourceforge.net/svnroot/jython/ jython
+
+printf "%s\n" "\n Building Jython ................\n"
+
+cd $PWD"/jython/trunk/jython" && ant
+
+
+echo -e "\n Press Enter to get the Jython Installer from sourceforge.net..............." 
+
+read
+
+wget http://jaist.dl.sourceforge.net/sourceforge/jython/jython_installer-2.2rc2.jar
+
+echo -e "\n Now Installing jython Installer.. and follow the UI..."
+
+java -jar jython_installer-2.2rc2.jar
+
+'''# Upto this copy the above lines in build_jython.sh file '''
+
+
+=== Important Points To Remember Building Jython ===
+
+NOTE: if you are using the “build_jython” script then  
+	just you need to do the step 2 in Configuration  
+	and step3,4 and 5 in Building Jython Sources ,  
+	the script will do the remaining things for you.! 
+
+
+1. Getting the Jython Sources.(check out ) 
+	svn co https://svn.sourceforge.net/svnroot/jython/trunk/ 
+
+2.Get Ant tool and install it (build tool for jython) 
+
+3.Install java(1.4,1.5 or 1.6) 
+
+== Configuration ==
+----
+
+1. set ANT_HOME=/home/user/apache-ant (where we have installed the ant) 
+
+2. set JAVA_HOME = to JDK home	 
+
+3. add  ant bin and jdk bin to PATH variable  
+	PATH=/home/user/apache-ant/bin:$PATH 
+check out whether ant and java had set properly by 
+
+$> ant -version 
+	Apache Ant version 1.7.0 compiled on December 13 2006 
+
+$> javac -version 
+	javac 1.6.0_01 
+
+if u got the o/p correctly then we have configured ANT tool and java properly 
+
+== Now Building Jython Sources ==
+----
+
+1. go to the jython folder (where we have done svn check out) 
+	find whether there is “build.xml” is there or not.  
+at that dir  
+		a. create ant.properties for example checkout maven ant.properties  
+		and at the cmd   $> ant 
+
+then it will build the sources and will show the BUILD SUCCESSFULLY 
+
+2. then get the jython and install currently betat 2.2 
+
+3. Add jython bin to the PATH var. ( keep that in your .bashrc) 
+
+4. go to the jython dir where we have installed it. 
+
+'''5. Open jython file executable file, change the CP (class path variable to) jython.jar file(which will be in dist(folder) ) what we have build from the source.(/home/user/jython/dist/ '''
+<center>Now Jython is ready to HACK</center> 
+
+=== Configuring Jython using ECLIPSE ===
+----
+
+1.Install Eclipse (from eclipse.org)
+
+2.Install SVN plugin for eclipse 
+
+3.steps for svn plugin install are in this link ( http://dev2dev.bea.com/pub/a/2005/11/subclipse.html )
+
+4.Add the SVN repo to the ECLIPSE throught the svn plugin
+
+5.do “checkout” of the project from the repo into a new workspace
+
+6.create a ant.properties in the build.xml dir of jython
+
+7.Right Click on the buid.xml and build jython by selecting ANT tool
+
+8.The result will be shown in the inbuilt terminal.
+
+
+For any doubts, Suggestion and clarifications mail to '''rajesh.battala@yahoo.co.in''' 
+
+thanks
+
 
 ----
 CategoryContribute
