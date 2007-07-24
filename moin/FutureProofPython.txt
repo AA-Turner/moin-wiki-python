@@ -5,9 +5,11 @@ in five five years from now... See
 http://www.python.org/peps/pep-3000.html for more
 information.
 
-= Write Tests =
+= Unit Tests =
 
 Automated testing is generally better than debugging, and is your safety-net for any kind of refactoring, not only when migrating to a newer Python. Use PyUnit (unittest), DocTest or any alternative (see UnitTests) to help you.
+
+    '''Write unit tests for all new or refactored code'''
 
 = True Division =
 
@@ -56,7 +58,7 @@ class X(object):
 }}}
 
 
-= Let all exception classes inherit from Exception =
+= Exception class inheritance =
 
 Starting from Python 3.0, all exceptions must be derived from Base''''''Exception,
 which will be the base class for Keyboard''''''Interrupt, System''''''Exit and
@@ -68,33 +70,43 @@ Exception from Python 2.5. See http://www.python.org/peps/pep-0352.html
 class MyException(Exception): pass
 }}}
 
-= Use parentheses for Exception argument =
+= Arguments for raise statement =
 
-The syntax
+The {{{raise}}} statement currently accepts different syntaxes. This will be consolidated so that only one argument is allowed for {{{raise}}}: the exception object, created like any other object. Other syntaxes will be deprecated.
+
+    '''Write the {{{raise}}} statement with the exception object as the only argument'''
+
+Don't write:
 {{{
 raise MyException "A nasty error"
 }}}
-will be deprecated. Use
+
+Instead, write:
 {{{
 raise MyException("A nasty error")
 }}}
-instead.
 
-= Don't compare incompatible objects =
+= Comparison of incompatible types =
 
 In the future, x < y and friends (>, <=, >=) will raise an exception instead of an arbitrary result, if type(x) != type(y) unless the types explicitly define the behaviour for these comparisions.
 
-= Don't use <> =
+    '''Don't compare objects of different types with undefined comparison behaviour'''
+
+= Deprecation of little-used alternative operators =
 
 One obvious way to test for inequality already exists: the '!=' operator. The rarely-used '<>' will go away.
 
-= Don't use `` (backticks) =
+    '''Use only {{{!=}}} for inequality comparison'''
 
-The `backticks` for repr() will not exist in Python 3.0. Almost all code currently uses repr(foo) for this purpose, and many don't even know of `foo`. It is also harder to read. 
+The syntax {{{`foo`}}} for repr() will not exist in Python 3.0. Almost all code currently uses {{{repr(foo)}}} for this purpose, and the backtick syntax is little-known and less readable.
 
-= Don't assign to names that will become keywords =
+    '''Use only {{{repr(foo)}}} for the representation of an object'''
+
+= New keywords =
 
 All of the names {{{with}}}, {{{as}}}, {{{nonlocal}}}, {{{True}}} and {{{False}}} are becoming keywords. Code that attempts to assign to those names will generate an exception in Python 3.0.
+
+    '''Don't assign to names that will become keywords'''
 
 = See more =
 
