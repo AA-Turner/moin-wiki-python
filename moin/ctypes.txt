@@ -25,6 +25,10 @@ def receiveSome(self, bytes):
 
 ctypes.memmove emulates the memmove of C with complete faithfulness. If you tell memmove to copy more bytes than sizeof(self), you will overwrite memory that you do not own, with indeterminate consequences, arbitrarily delayed.
 
+'''FAQ: How do I start or stop reversing the bytes of each field?'''
+
+To decide the byte order of your fields, derive your class of {{{_fields_}}} from the {{{ctypes.LittleEndianStructure}}} class or from the {{{ctypes.BigEndianStructure}}} class rather than deriving your class from the local native {{{ctypes.Structure}}} class.
+
 '''FAQ: How do I change the byte length of a ctypes.Structure?'''
 
 Declare the max length and allocate that much memory, but then copy less than all of the memory allocated. You change the byte length that you use, not the byte length that ctypes.sizeof reports. For example:
