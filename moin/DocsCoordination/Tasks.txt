@@ -19,6 +19,49 @@ for those who want to develop the toolset
 The `doctools/TODO` file lists some things that should be done.
 At the moment, these are:
 
+'''discuss and debug comments system'''
+
+  The comments system is quite new and untested. How it deals with inline comments is not ideal.
+
+'''navigation links at the bottom too'''
+
+  Users should have a navigation bar at the bottom. This should be quite easy to do in the HTML templates.
+
+'''write new Makefile, handle automatic version info and checkout'''
+
+  We need a Makefile so that one just does
+{{{
+cd Doc
+make html
+}}}
+  to extract version info from the sources and build the documentation.
+
+'''write a "printable" (PDF) builder (export to latex, most probably)'''
+
+  Of course, printable output was trivial for LaTeX sources. The Docutils do have a latex writer (two in fact) -- if it is stable enough to be used, it has to be extended to support our extra node types.  Else, some other conversion must be devised.
+
+'''discuss the default role'''
+
+  The reST markup {{{`xyz`}}} currently means \var{xyz}. However, since this only produces italic output it may make more sense to just use {{{*xyz*}}} for that and use the {{{`xyz`}}} markup as a shortcut for something else, like a generic "object" cross reference.
+
+'''discuss lib -> ref section move'''
+
+  I've moved the "Builtin objects/functions/exceptions" sections from the library reference to the language reference.  It makes more sense to me, but remains to be discussed if it is generally a good thing.
+
+'''prepare for databases other than sqlite for comments'''
+
+  Does sqlite scale well enough for our comments? Though I think so, we should be prepared to make it easy to substitute something like postgres.
+
+'''look at the old tools/ scripts, what functionality should be rewritten'''
+
+  There were quite a few tools in `Doc/tools/`, e.g. looking which modules were documented.  Some of this functionality is obsolete now, some of it may be useful.
+
+'''Py-in-the-sky ideas'''
+
+  add search via Xapian?
+
+  optionally have a contents tree view in the sidebar (AJAX based)?
+
 
 == Conversion ==
 
