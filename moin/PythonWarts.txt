@@ -1,0 +1,31 @@
+= Python Warts =
+
+Python "warts" are things for which people have criticised Python, typically aspects of the language or mechanisms of its implementation, because such aspects either expose certain surprising inconsistencies, are regarded as omissions, or cause irritation for parts of the community in some sense. One goal of Python 3000 was to fix inconsistencies which could not have been fixed earlier due to the backwards compatibility constraints imposed on earlier releases of Python. This page summarises the unfixed warts, pitfalls and "gotchas" (which are not mere observations) from the following resources and lists Python 3000 remedies, if any:
+
+ * Andrew Kuchling's [http://web.archive.org/web/20031002184114/www.amk.ca/python/writing/warts.html Python Warts] - now archived
+ * Hans Nowak's [http://zephyrfalcon.org/labs/python_pitfalls.html 10 Python pitfalls]
+ * Steven Ferg's [http://www.ferg.org/projects/python_gotchas.html Python Gotchas]
+ * Mark Lutz's [http://www.onlamp.com/pub/a/python/2004/02/05/learn_python.html When Pythons Attack]
+
+In the table below, the following terminology is used:
+
+ * No remedy: while some believe this to be a shortcoming, a lack of wider consensus has resulted in no remedy being pursued
+ * Rejected: the shortcoming in question is regarded as a feature, typically because any attempt to remove it would arguably change the language in a way which would be even more confusing - see [http://www.python.org/dev/peps/pep-3099/ PEP 3099] for a list of such requested features
+
+||<#DDDDDD>'''Shortcoming''' ||<#EEEEEE> '''Source''' ||<#DDDDDD> '''Python 3000 Remedy''' ||
+|| No do statement ||<#F0F0F0> Kuchling || ''No remedy'' ||
+|| Local variables and scoping ||<#F0F0F0> Kuchling, Nowak, Lutz || ''No remedy'' ||
+|| Calling base class methods ||<#F0F0F0> Kuchling || [http://www.python.org/dev/peps/pep-3135/ New Super] ||
+|| Catching multiple exceptions ||<#F0F0F0> Kuchling, Nowak || [http://www.python.org/dev/peps/pep-3110/ Catching Exceptions in Python 3000] ||
+|| Explicit self in methods ||<#F0F0F0> Kuchling || ''Rejected'' - this would require name declarations ||
+|| Doubled underscores for private variables ||<#F0F0F0> Kuchling || ''No remedy'' ||
+|| The .join() string method ||<#F0F0F0> Kuchling || ''No remedy'' ||
+|| print >> ||<#F0F0F0> Kuchling || [http://www.python.org/dev/peps/pep-3105/ Make print a function] ||
+|| Inconsistent indentation ||<#F0F0F0> Nowak || ''Rejected'' - indentation is central to Python's syntax ||
+|| The += operator ||<#F0F0F0> Nowak || ''No remedy'' ||
+|| Class attributes vs instance attributes ||<#F0F0F0> Nowak || ''No remedy'' ||
+|| Mutable default arguments ||<#F0F0F0> Nowak, Ferg, Lutz || ''No remedy'' ||
+|| [http://www.ferg.org/projects/python_gotchas.html#contents_item_1 Backslashes are escape characters] ||<#F0F0F0> Ferg || ''No remedy'' ||
+|| [http://www.ferg.org/projects/python_gotchas.html#contents_item_4 Print and softspace] ||<#F0F0F0> Ferg || [http://www.python.org/dev/peps/pep-3105/ Make print a function] ||
+|| [http://www.ferg.org/projects/python_gotchas.html#contents_item_5 Omitting parentheses when invoking a method] ||<#F0F0F0> Ferg, Lutz || ''Rejected'' - taking a reference to a function/method is a feature ||
+|| Imports and reloading ||<#F0F0F0> Lutz || ''No remedy'' - improved reloading has been considered ||
