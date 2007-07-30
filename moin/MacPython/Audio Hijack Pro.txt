@@ -1,1 +1,55 @@
-Print a list of all scheduled timers with the dates and times for which they are scheduled. A description can be found [http://www.leancrew.com/all-this/2007/07/python_appscript_for_audio_hij.html here]
+Print a formatted, plain text list of all scheduled timers with the dates and times for which they are scheduled. A description can be found [http://www.leancrew.com/all-this/2007/07/python_appscript_for_audio_hij.html here]
+
+{{{
+#!/usr/bin/env python
+
+from appscript import *
+import datetime
+
+# Get a list of all the sessions.
+allsessions = app('Audio Hijack Pro').sessions.get()
+
+# Make a list with the sessions that have scheduled timers.
+timersessions = []
+for s in allsessions:
+    for t in s.timers.get():
+        if t.scheduled():
+          timersessions.append(s)
+          break # go to next session after finding a scheduled timer
+
+# Get the length of the longest name of a timersession.
+longest = max(len(s.name()) for s in timersessions)
+
+# Make a 7-character string with the days that the timer runs.
+def timerdays(t):
+  daylist = ['-'] * 7
+  if t.runs_Sunday():
+    daylist[0] = 'S'
+  if t.runs_Monday():
+    daylist[1] = 'M'
+  if t.runs_Tuesday():
+    daylist[2] = 'T'
+  if t.runs_Wednesday():
+    daylist[3] = 'W'
+  if t.runs_Thursday():
+    daylist[4] = 'T'
+  if t.runs_Friday():
+    daylist[5] = 'F'
+  if t.runs_Saturday():
+    daylist[6] = 'S'
+  return ''.join(daylist)
+
+# Print the info for all the sessions with enabled timers.
+for s in timersessions:
+  for t in s.timers.get():
+    if t.scheduled():
+      dur = t.duration()
+      durstr = '(%d min)' % (dur/60)
+      st = t.start_time()
+      et = st + datetime.timedelta(seconds = dur)
+      dow = timerdays(t)
+      ststr = st.strftime("%l:%M %p")
+      etstr = et.strftime("%l:%M %p")
+      fmtstr = "%" + str(longest) + "s: %s from %s to %s %s"
+      print fmtstr % (s.name(), dow, ststr, etstr, durstr.rjust(9))
+}}}
