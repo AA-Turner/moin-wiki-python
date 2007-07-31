@@ -1,20 +1,64 @@
 = Sprinting =
 
-The BoulderSprint is a regular activity of the FrontRangePythoneers. We plan to hold these sprints on a monthly basis in 2007.
+The BoulderSprint is a regular activity of the FrontRangePythoneers. We plan to hold these sprints on a monthly basis (more or less) in 2007.
 
 For more information about sprints in general, read the SprintIntroduction page. SteveHolden has a useful [http://www.onlamp.com/pub/a/python/2006/10/19/running-a-sprint.html article] in the [http://www.onlamp.com/python/ OnLamp Python DevCenter ] on how to run a sprint.
 
-= IPython1 Sprint =
+= Sprints =
 
-== Date/time ==
+== Jython Sprint ==
 
- * April 28, 2007 (Saturday), 9 AM - 6 PM
+ * Date/time: August 4, 2007 (Saturday), 9 AM - 5:30 PM. Time Zone: Americas/Denver (MDT)
 
-== Location ==
+ * Food/beverages: provided! Just show up, we will keep you going and as caffeinated as you need to be.
+ 
+ * Location: [http://www.bivio.biz/ bivio Software, Inc.], 28th and Iris. Above Hair Elite in Suite S. [http://maps.google.com/maps?f=q&hl=en&q=2701+Iris+Ave.,+Boulder+CO&ie=UTF8&z=15&om=1&iwloc=A Google Maps link]
 
-[http://www.bivio.biz/ bivio Software, Inc.], 28th and Iris. Above Hair Elite in Suite S. [http://maps.google.com/maps?f=q&hl=en&q=2701+Iris+Ave.,+Boulder+CO&ie=UTF8&z=15&om=1&iwloc=A Google Maps link]
+ * Topics: IPython on Jython and Jython 2.5 compiler work.
 
-== Project ==
+ * People planning to participate, either in person or via IRC on #jython-dev:
+
+   0. Charlie Groves
+   0. Damien Lejeune
+   0. Eric Dobbs
+   0. Fernando Perez
+   0. Frank Wierzbicki
+   0. Ian Kelly
+   0. Jim Baker
+   0. Kip Lehman
+   0. Matt Boersma
+   0. Tobias Ivarsson
+ '
+=== IPython on Jython ===
+
+For the Jython sprint on Aug 4, there's strong interest in getting IPython working on jython. Jython's ability to explore the large and complex ecosystem that is Java is one reason it's such a great tool. In particular, I (Jim Baker) like using Jython on Jython, as well as to explore functionality we are in the process of adding. It's much better to use an object shell than the alternatives (mostly painful).
+
+But IPython is a much better object shell, as we know in using it to explore Django and other projects. Hence the sprint.
+x
+IPython support: Getting IPython to run on Jython (ideally the upcoming 2.2 release). Fernando Perez will be attending as a domain expert we can tap, although he plans to squash bugs in the CPython version.
+ 
+ * Homework
+
+   0. Install Jython 2.2, including source. Will this be RC3? 
+   0. Get source code for IPython, and otherwise familiarize yourself with the shell.
+ 
+=== Jython 2.5 ===
+
+The upcoming Jython 2.2 release represents a huge milestone for the Jython community, but in the next step we want to catch up on 2.5 (or even 2.6) features. The principal reason is to enlarge the community: as long as there's such a lagging between CPython and Jython, it means that supporting even core packages is shouldered by Jython implementers instead of being shared across the Python community. In addition, certain 2.5 functionality addresses portability concerns. Resource Allocation is Initialization (RAII), as enabled by the with-statement, makes it much easier to do the right thing and have deterministic resource destruction instead of relying on reference counting doing this implicitly, but creating an incompatibility with non-refcounting GC as is the case with Java/Jython. 2.6's Class decorators and function annotations, in addition to 2.5's function decorators and 2.2's import hooking, make it possible for Jython to consume and produce annotation metadata and type signatures.
+
+Two of our Google Summer of Code students have confirmed their participation, Damien Lejeune and Tobias Ivarsson. Damien has been working on the new AST parser based on Antlr, and Tobias has been working on a new bytecode compiler based on ASM. In this sprint, we would like to help them out and especially help with their integration of the compilation pipeline. In addition one of us (Jim Baker) is planning on finally getting to work on support for Java annotation metadata.
+
+ * Homework.
+
+ To be filled in shortly.
+
+ 
+= Previous Sprints =
+
+== IPython1 Sprint ==
+
+ * Date/time: April 28, 2007 (Saturday), 9 AM - 6 PM
+ * Location: [http://www.bivio.biz/ bivio Software, Inc.], 28th and Iris. Above Hair Elite in Suite S. [http://maps.google.com/maps?f=q&hl=en&q=2701+Iris+Ave.,+Boulder+CO&ie=UTF8&z=15&om=1&iwloc=A Google Maps link]
 
 Summary:
 IPython1 is a beefed-up version of the python interactive interpreter that enables parallel computing.  It's the next generation of the indispensible IPython shell.
@@ -31,12 +75,10 @@ This shouldn't take more than an hour or two, and will ensure we all have a base
 
 In addition, Fernando plans to use Mercurial for distributed version control during the sprint, so you should install and familiarize yourself with that software if time permits.
 
-= Previous Sprints =
-
 == Jython Sprints ==
 
  * January 6, 2007 (Saturday), 9 AM - 6 PM
- * February ??, 2007 (Saturday), 9 AM - 6 PM
+ * February 3, 2007 (Saturday), 9 AM - 6 PM
 
 Update Jython. [http://wiki.python.org/jython/MovingJythonForward Brian Zimmer's proposal] is an useful outline of what needs to be done technically. Perhaps even more importantly, there are some key engineering challenges to be addressed to ensure overall project success. Because of the scope of the work, we are looking at this as preliminary to [http://us.pycon.org/TX2007/Sprints a 4-day sprint at PyCon]. More here at JythonSprint.
 
