@@ -65,7 +65,7 @@ H1 text
 
 Here's a `link to Python.org.`
 
-__ http://www.python.org/
+_ http://www.python.org/
 
 List items:
 
@@ -99,6 +99,22 @@ html = html[html.find('<body>')+6:html.find('</body>')].strip()
 }}}
 
 "It may feel wrong, but it works, and works reliably."
+
+=== The "Cool" Way ===
+MaxPa writes:
+
+"I'm not sure if this is as reliable as Ian's method (it ought to be) but it sure is a lot cooler and generates a nice and more kosher html fragment from the 'official' reST-to-html fragment example above."
+
+{{{
+#!python
+from docutils import core
+
+def reST_to_html_fragment(a_str):
+    parts = core.publish_parts(
+                          source=a_str,
+                          writer_name='html')
+    return parts['body_pre_docinfo']+parts['fragment']
+}}}
 
 === See Also: ===
 
