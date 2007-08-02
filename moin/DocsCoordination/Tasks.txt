@@ -23,11 +23,8 @@ At the moment, these are:
 
   The comments system is quite new and untested. How it deals with inline comments is not ideal.
 
-'''navigation links at the bottom too'''
 
-  Users should have a navigation bar at the bottom. This should be quite easy to do in the HTML templates.
-
-'''write new Makefile, handle automatic version info and checkout'''
+'''write new Makefile, handle automatic checkout'''
 
   We need a Makefile so that one just does
 {{{
@@ -39,14 +36,6 @@ make html
 '''write a "printable" (PDF) builder (export to latex, most probably)'''
 
   Of course, printable output was trivial for LaTeX sources. The Docutils do have a latex writer (two in fact) -- if it is stable enough to be used, it has to be extended to support our extra node types.  Else, some other conversion must be devised.
-
-'''discuss the default role'''
-
-  The reST markup {{{`xyz`}}} currently means \var{xyz}. However, since this only produces italic output it may make more sense to just use {{{*xyz*}}} for that and use the {{{`xyz`}}} markup as a shortcut for something else, like a generic "object" cross reference.
-
-'''discuss lib -> ref section move'''
-
-  I've moved the "Builtin objects/functions/exceptions" sections from the library reference to the language reference.  It makes more sense to me, but remains to be discussed if it is generally a good thing.
 
 '''prepare for databases other than sqlite for comments'''
 
@@ -63,11 +52,11 @@ make html
   optionally have a contents tree view in the sidebar (AJAX based)?
 
 
-== Conversion ==
+== Converted Trees ==
 
-When we find the toolset reasonably complete, we'll convert both the Python 2.6 and Python 3.0 SVN documentation branches to the new system.  The conversion itself is (should be, you'll see yourself) painless, but it can't do everything right.  For example, as the toplevel documents were completely separate until now, you couldn't directly link from, e.g. the library reference to a specific section of the language reference. These links will have to be corrected.
+Now that we have converted trees in `doctools/Doc-26` and `doctools/Doc-3k`, they must be cleaned up and completed before they can replace the LaTeX trees in the Python tree.
 
-All these tasks to do after conversion are listed in the ``doctools/converter/newfiles/TODO`` file, which is copied to the reST source tree on conversion.
+All these tasks are listed in the `doctools/Doc-26/TODO` file, which is copied to the reST source tree on conversion.
 
 All other tasks that are independent of the converter are collected in ``doctools/TODO``.
 
