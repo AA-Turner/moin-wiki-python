@@ -49,7 +49,7 @@ Due to fundamental differences in the behaviour of java and C on various platfor
 
 On cpython, when a socket is passed to select.select or select.poll, it can either be in blocking or non-blocking mode.
 
-However, [http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/SelectableChannel.html#register(java.nio.channels.Selector,%20int) java will only permit multiplex operations on sockets that are in non-blocking mode]; any attempt to pass a socket in blocking mode to either select.select or select.poll().register will fail with an exception.
+However, [http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/SelectableChannel.html#register(java.nio.channels.Selector,%20int) java will only permit multiplex operations on sockets that are in non-blocking mode]. Because jython must respect this java restriction, any attempt in jython to pass a socket in blocking mode to either select.select or select.poll().register will fail with an exception.
 
 To summarise
 
@@ -58,55 +58,31 @@ To summarise
    1. If a socket is currently registered with a select.poll object, an attempt to change it to blocking mode will give rise to the same exception.
    1. A socket can only be placed in blocking mode if it is '''not''' registered with a select.poll object.
 
-This issue could be problematic if you want to use a cpython module which relies on select, e.g. telnetlib. Such cpython modules do not set their sockets in non-blocking mode before passing them to select.select. In order to support such cpython modules, the following fix is proposed
+This issue could be problematic if you want to use a cpython module which relies on select. Such cpython modules do not set their sockets in non-blocking mode before passing them to select.select. In order to support such cpython modules, the following workaround is available.
 
-==== Possible solution for supporting cpython-compatible select ====
+==== The cpython-compatible select function ====
 
-One possible solution to this problem is to write a special version of the jython select function which provides compatibility with the cpython version. This would be achieved by
+A special version of the select function is provided, to provide cpython compatible select functionality. This function works by
 
    1. Recording the blocking mode of all sockets that are passed to the function
    1. Setting non-blocking mode on all sockets
-   1. Calling the normal select.select function (which requires non-blocking sockets)
+   1. Calling the normal jython select.select function (which requires non-blocking sockets)
    1. Restoring the previously-saved blocking mode for all sockets
    1. Returning the results of the wrapped select function
 
-However, there is a clear problem with this approach: The called select function may not be the only thread of execution examining the socket. If the socket is being operating upon in a different thread, then it is very likely that changing the blocking mode of the socket will cause a failure of the operation in the other thread.
-
-==== Solution for jython 2.2 ====
-
-Based on the following points
-
-   1. It is unacceptable for a standard jython library function to change the blocking mode of a socket with the explicit consent of the user
-   1. The problem only arises when the user wishes to make use of select-dependent cpython modules, e.g. telnetlib, without modification.
-
-The following is the proposed solution for jython 2.2
-
-A special version of the select function will be written to provide cpython compatibility. This function will
-
-   1. Change the blocking mode of all sockets to non-blocking before passing to the "real" select function
-   1. Will restore the original blocking mode of all sockets before return to the user
-   1. Will be named in such a way that the name does not interfere with existing classes and functions
-   1. Will require explicit action from the user before it is enabled
+This function should only be used when you are working with code that has been written for cpython select, i.e. when the code is passing blocking-sockets to the select function.
 
 ==== How to enable cpython compatible select processing ====
 
-If you want to use cpython compatible select function, follow these steps
-
-   1. Import the select module, i.e. '''import select'''
-   1. Reassign the select function to the cpython compatible version, i.e. '''select.select = select.cpython_compatible_select'''
-   1. Then import whatever cpython module you wish to use, e.g. '''import telnetlib'''
-
-Here is an example
+Here is a code sample which shows how to use the cpython-compatible select function as a replacement for the standard jython select function
 
 {{{
-import select
-select.select = select.cpython_compatible_select
-import telnetlib
+from select import cpython_compatible_select as select
 
-# Make use of telnetlib here
+# Make use of the select function here
 }}}
 
 ==== WARNING! ====
 
-   1. If using the cpython_compatible_select function, you must be aware of that the function will modify the blocking mode of your sockets for the duration of the call. If you are carrying out socket operations on that socket in another thread, then those socket operation may fail or raise exceptions.
+   1. If using the cpython_compatible_select function, you must be aware that the function will modify the blocking mode of your sockets for the duration of the call. If you are carrying out socket operations on that socket in another thread, then those socket operations may fail or raise exceptions.
    2. This function will still not cover all possible uses of select.select by cpython modules. If a cpython module tries to multiplex the '''sys.stdin''' or '''sys.stdout''' streams, then registration of the channels will fail, because the !InputStream and !OutputStream representing sys.stdin and sys.stdout are '''not''' !SelectableChannels.
