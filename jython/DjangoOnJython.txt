@@ -3,3 +3,4 @@
  * Jython does not have {{{__builtins__}}} as a module.  Django adds "_" as a convenience method for calling gettext in {{{django/conf/__init__.py}}}.  Jython should make {{{__builtins__}}} a module.
  * Jython does not have {{{sys.stdout.isatty}}}.  Jython should get added to the exclusions around that call in {{{django/core/management.py}}} (win32 and 'Pocket PC' are already excluded).
  * Jython does not have {{{os.W_OK}}} needed in {{{django/core/management.py}}}.  This probably will not be hard to add this since {{{java.io.File}}} has a {{{canWrite()}}}.
+ * Jython does not support non-str keys in {{{__dict__}}} right now.  If Groves' HashMap replacement works out maybe this issue will disappear.  Problem encountered in {{{django/utils/_threading_local.py}}}
