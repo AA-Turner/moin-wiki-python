@@ -1,0 +1,9 @@
+Setuptools needs:
+
+ * PEP 302 (added in Jython 2.2)
+ * PEP 273 (the zipimport module)
+  - Jython's ZipFileImporter is somewhat different that the CPython zipimport module -- it's not a module, and it does not maintain its own _zip_importer_cache (which setuptools utilizes) apart from sys.path_importer_cache
+  
+  - The Jython zipimport machinery is somewhat different: ZipFileImporter only imports zips if they're SyspathArchives: currently .zips and .jars
+ * distutils
+  - requires this small patch: http://pylonshq.com/pasties/390 (jython's sys.executable is None)
