@@ -7,7 +7,7 @@ We don't have:
  * PEP 273 (the zipimport module)
   - Jython's ZipFileImporter is somewhat different that the CPython zipimport module -- it's not a module, and it does not maintain its own _zip_importer_cache (which setuptools utilizes) apart from sys.path_importer_cache
   
-  - The Jython zipimport machinery is different: ZipFileImporter only imports zips if they're SyspathArchives: currently .zips and .jars. How does CPython zipimport identify .eggs as .zips (for the ez_setup bootstrap process)
+  - The Jython zipimport machinery is different: ZipFileImporter only imports zips if they're SyspathArchives: currently .zips and .jars. How does CPython zipimport identify .eggs in sys.path as .zips? (needed for the ez_setup bootstrap process)
  * distutils
   - requires this small patch: http://pylonshq.com/pasties/390 (jython's sys.executable is None)
  * tempfile.mkstemp
