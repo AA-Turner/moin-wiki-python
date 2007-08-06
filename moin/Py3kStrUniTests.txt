@@ -23,11 +23,11 @@ make
 
 == The Failing Tests ==
 
+**Only 11 left!**
+
 test_bsddb3
 
-test_coding: fails on CYGWIN only
-
-test_csv - Adam Hupp <firstname at lastname.org> 2007-07-21 
+test_ctypes (started failing again recently)
 
 test_email
 
@@ -37,25 +37,39 @@ test_email_renamed
 
 test_minidom (started failing again recently)
 
-test_marshal: fails on CYGWIN only
-
-test_plistlib (OSX only)
-
-test_scriptpackages (OSX only)
-
-test_shelve: Requires bsddb to be fixed (Brett Cannon); some work done in r56548.  (Now passes on Ubuntu)
-
-test_socket_ssl (only fails when called via regrtest)
-
 test_sqlite
 
 test_tarfile: A lot of TypeError: can't concat bytes to str and other  byte/str confusions. 
 
 test_urllib2_localnet: ISSUE bytes/str issues in BaseHTTPServer and httplib.  MINE Jeremy Hylton 08/03/07  (might cover the urllib2?net tests, too)
 
-test_urllib2net (add -uall): Broken by recent changes to httplib  MIN Jeremy Hylton 8/04/07
+test_urllib2net (add -uall): MINE Jeremy Hylton 8/04/07
 
 test_xml_etree_c
+
+
+
+== Tests Failing on Some Platforms Only ==
+
+
+=== Failing on CYGWIN only ===
+
+test_coding
+
+test_marshal
+
+
+=== Failing on OSX only ===
+
+(Some of these are OSX-specific modules.)
+
+test_plistlib
+
+test_scriptpackages
+
+test_shelve: Requires bsddb to be fixed (Brett Cannon); some work done in r56548.  (Abort trap in dbmmodile.c:107.)  MINE GvR
+
+
 
 == Previously Fixed Tests ==
 
@@ -80,6 +94,8 @@ test_cookielib FIXED IN SF http://www.python.org/sf/1762940 JoeGregorio. COMMITT
 test_cpickle: Deleted, with cPickle. Alexandre's SoC work should lead to cPickle becoming invisible (Brett Cannon).
 
 test_cProfile: FIXED IN SF http://www.python.org/sf/1755176 by Amaury Forgeot d'Arc COMMITTED r56406.
+
+test_csv - Adam Hupp <firstname at lastname.org> 2007-07-21. COMMITTED GvR.
 
 test_ctypes: ThomasHeller: FIXED r56338.
 
@@ -135,6 +151,8 @@ test_resource: fixed by a change to io.py (ignore errors from flush() in close()
 test_sgmllib (passes on Ubuntu, fails on OSX, and on CYGWIN) COMMITTED  r56585 GvR.
 
 test_socketserver (add -uall) FIXED IN SF http://python.org/sf/1764815 Paul Colomiets. COMMITTED r56708 GvR.
+
+test_socket_ssl (only fails when called via regrtest) (FIXED somehow)
 
 test_tcl: COMMITTED r56514 GvR.
 
