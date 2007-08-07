@@ -8,10 +8,25 @@ We don't have:
   - Jython's ZipFileImporter is somewhat different that the CPython zipimport module -- it's not a module, and it does not maintain its own _zip_importer_cache (which setuptools utilizes) apart from sys.path_importer_cache
   
   - The Jython zipimport machinery is different: ZipFileImporter only imports zips if they're SyspathArchives: currently .zips and .jars. How does CPython zipimport identify .eggs in sys.path as .zips? (needed for the ez_setup bootstrap process)
+  
+  '''''I've got a mostly working implementation of a CPython like zipimport (it would replace ZipFileImporter and possibly SyspathArchive'''''
+  
  * distutils
   - requires this small patch: http://pylonshq.com/pasties/390 (jython's sys.executable is None)
+  
+  - also requires a number of mappings for os.name == 'java' for file installation locations
+  
+  - also requires a jython spawn-like function: "error: don't know how to spawn programs on platform 'java'". Not sure what to use for that at this point
+  
  * tempfile.mkstemp
   - I've begun taking a look at implementing mkstemp/NamedTemporaryFile with Java's secure File.createTempFile
+  
+  '''''I have a mostly working implementation of this'''''
+  
  * os.open is used for a small hack having to do with usage of tempfile.mkstemp
   - This is somewhat problematic because even the best Jython mkstemp implementation won't return a file descriptor (No raw file descriptors in java), but setuptools can possibly be patched to use NamedTemporaryFile instead
+  
+  '''''Patched this for now. I think a reasonable patch can be integrated to setuptools to avoid using mkstemp'''''
+  
  * imp.acquire/release_lock
+  '''''Made this no-op for now -- is just a simple lock'''''
