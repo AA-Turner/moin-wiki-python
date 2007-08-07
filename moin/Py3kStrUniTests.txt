@@ -23,11 +23,9 @@ make
 
 = The Failing Tests =
 
-**Only 11 left!** on some platforms :-)
-
 test_bsddb3
 
-test_ctypes (started failing again recently)
+test_ctypes (one test started failing again recently)
 
 test_email
 
@@ -35,11 +33,28 @@ test_email_codecs
 
 test_email_renamed
 
+test_minidom (started failing again recently)
+
+test_sqlite (MINE GerhardHaering - I will take care of this the next days.)
+
+test_tarfile: MINE Lars Gustäbel (mostly fixed, 4 bz2-related tests still failing)
+
+test_urllib2_localnet: ISSUE bytes/str issues in BaseHTTPServer and httplib.  MINE Jeremy Hylton 08/03/07  (might cover the urllib2?net tests, too)
+
+test_urllib2net (add -uall): MINE Jeremy Hylton 8/04/07
+
+test_xml_etree_c **please help with this!**
+
+
+
+== Tests Failing on Some Platforms Only ==
+
+
+=== Failing on 64-bit Platforms Only ===
+
 test_io (64-bit: line 100, in read_ops b'hello world\n' != b'hello')
 
 test_largefile (64-bit: killed my box, no idea if it works or not)
-
-test_minidom (started failing again recently)
 
 test_ossaudiodev (64-bit: ???)
 
@@ -47,31 +62,17 @@ test_poll (64-bit: line 129, pipe seems to be closed, but still returns data)
 
 test_shelve (64-bit: ?)
 
-test_socket_ssl (65-bit: seems to hang)
-
-test_sqlite (GerhardHaering - I will take care of this the next days, Guido has broken SVN right now by killing intobject ...)
-
-test_tarfile: MINE Lars Gustäbel
-
-test_urllib2_localnet: ISSUE bytes/str issues in BaseHTTPServer and httplib.  MINE Jeremy Hylton 08/03/07  (might cover the urllib2?net tests, too)
-
-test_urllib2net (add -uall): MINE Jeremy Hylton 8/04/07
-
-test_xml_etree_c
+test_socket_ssl (64-bit: seems to hang)
 
 
-
-== Tests Failing on Some Platforms Only ==
-
-
-=== Failing on CYGWIN only ===
+=== Failing on CYGWIN Only ===
 
 test_coding
 
 test_marshal
 
 
-=== Failing on Mac only ===
+=== Failing on Mac OSX Only ===
 
 test_csv - I get tracebacks which others (at least Guido) can't reproduce:
 
@@ -87,7 +88,8 @@ Traceback (most recent call last):
 AssertionError: s'\x00' != ':'
 }}}
 
-Nobody else has reported this problem.  I'm assuming it's Mac-specific somehow, but it might be locale-dependent.
+I'm assuming it's Mac-specific somehow, but it might be locale-dependent.  (GvR has seen this too.)
+
 
 = Previously Fixed Tests =
 
