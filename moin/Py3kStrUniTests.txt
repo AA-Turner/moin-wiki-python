@@ -71,6 +71,24 @@ test_coding
 test_marshal
 
 
+=== Failing on Mac only ===
+
+test_csv - I get tracebacks which others (at least Guido) can't reproduce:
+
+{{{
+======================================================================
+FAIL: test_writer_kw_attrs (__main__.Test_Csv)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "Lib/test/test_csv.py", line 88, in test_writer_kw_attrs
+    self._test_kw_attrs(csv.writer, StringIO())
+  File "Lib/test/test_csv.py", line 75, in _test_kw_attrs
+    self.assertEqual(obj.dialect.delimiter, ':')
+AssertionError: s'\x00' != ':'
+}}}
+
+Nobody else has reported this problem.  I'm assuming it's Mac-specific somehow, but it might be locale-dependent.
+
 = Previously Fixed Tests =
 
 test_aepack (OSX only) FIXED IN SF (but somewhat hackily): http://python.org/sf/1761465 JeffreyYasskin 2007-07-26
