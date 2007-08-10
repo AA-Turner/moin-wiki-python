@@ -1,17 +1,25 @@
+== Python 2.x ==
+
 Python 2.x has two types to store a string:
  * str: bytes string procced as character string which is a mistake
  * unicode: character string (unicode)
 
 Both classes has same methods and are very similar.
 
+== Python 3000 ==
+
 Python 3000 use two very different types:
  * bytes: bytes string which can be see as a list of [0..255] integers
  * str: character string (unicode), exactly the same type than Python 2.x "unicode"
+
+== old str and new bytes ==
 
 Differences between Python 2.x "str" and Python 3000 "bytes":
  * str is immutable, bytes is mutable
  * bytes "lacks" many methods: strip, lstrip, rstrip, lower, upper, etc.
 
-When you migration from Python 2.x to Python 3000, you have to ask youself: do I manipulate characters or integers (bytes)? A is a character and 65 is an integer. Examples:
+== choose between bytes and str ==
+
+When you migration from Python 2.x to Python 3000, you have to ask youself: do I manipulate characters or bytes (integers)? "A" is a character and 65 is an integer. Examples:
  * a network socket manipulate bytes
  * a text parser manipulates characters (use lower, strip, etc. methods)
