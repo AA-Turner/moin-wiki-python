@@ -16,6 +16,7 @@ There are several ways to accomplish this but text will only cover distributing 
 There are really 2 main ways to accomplish distributing your code and like most things Jython, its pretty easy.
 
 '''Requirements'''
+
 For your script to run on another PC there isn't much in the way of requirements really only 2 that I can think of.
  * You need reasonably current JVM installed on the target machine, I've used every thing from Java 1.4.2 through Java 1.6
  * You need the standalone Jython Jar. 
@@ -29,7 +30,7 @@ that to java with -cp.  That's a pretty standard thing for command line
 Java tools to do, it isn't specific to Jython.  If you're going to do that,
 you can't use -jar though.  Just add the jython jar to the things you've added
 to the classpath and give Jython's main class, org.python.util.jython, explicitly.
-Optionally you can add a script as a parameter which would, as usual, be run.
+Optionally you can add a script as a parameter which would run as usual.
 
 So this would boil down to
  * having your scripts (*.py) outside the standalone jython.jar
@@ -37,8 +38,8 @@ So this would boil down to
  * start java with the appropriate -cp (-classpath) option using a command.
 
 for example:
-(Linux / Unix) java -cp /path/to/jython2.2/jython.jar:$CLASSPATH org.python.util.jython [file.py]
-(windows) java -cp "c:\jython2.2\jython.jar;%CLASSPATH%" org.python.util.jython [file.py]
+ *(Linux / Unix) java -cp /path/to/jython2.2/jython.jar:$CLASSPATH org.python.util.jython [file.py]
+ *(windows) java -cp "c:\jython2.2\jython.jar;%CLASSPATH%" org.python.util.jython [file.py]
 
 
 '''Using the Jar Method'''
@@ -67,38 +68,24 @@ java -jar jython.jar {optional .py file}
 you can manipulate .jar files with a tools like:
  * (on Linux) midnight commander
  * (on Windows) servant salamander or total commander
-    total commander: http://www.ghisler.com/index.htm
-    servant salamander: http://www.altap.cz/download.html#sal25
-    I've tried using winzip but had difficulty with it.
+    * total commander: http://www.ghisler.com/index.htm
+    * servant salamander: http://www.altap.cz/download.html#sal25
 
-Obviously the tools listed are just examples and you should use what ever works best for you.
-Maybe ant would work. if someone wants to post an ant script that would be wonderful because
-I'm hardly an ant expert.
+Obviously the tools listed are just examples, not endorsements(!). You should use what ever works best for you. I've tried using winzip but had difficulty with it. Maybe ant would be another way to do this. if someone wants to post an ant script that would be wonderful because I'm hardly an ant expert.
 
-for additional I would strongly suggest you review Odi's notes at http://jython.extreme.st/talk/talk.html
+for additional info I would strongly suggest you review Oti's notes at http://jython.extreme.st/talk/talk.html
 (search for Script Deployment)
 
-for me personally I found the jar method workd best for me. I had the supporting
-jars and scripts in the standalone jython and then the primary script seperatly.
-So I had 2 files that I distributed one .jar and one .py. Because the support files
-were pretty stable and didn't change this allowed me to easily improve and fix
-bugs in the main .py file
+for me personally I found the jar method worked best for me. I had the supporting jars and scripts in the standalone jython jar and then the primary script separately. So I had 2 files that I distributed one .jar and one .py. Because the support files were pretty stable and didn't change this allowed me to easily improve and fix bugs in the main .py file
 
-I could have only distributed a single jar file by renaming my main .py file
-to __run__.py and putting it into the /lib directory of the jar file. Then the command simply becomes
-java -jar jython.jar
-
-The main python file should be called __run__.py
-then bundle into a jar file and use:
-
-jython -jar mypthonfiles.jar
-
-Finally, as in all things YMMV. If you have different experences or just think I'm just crazy then
-dont just sit there and complain, contribute to the wiki!
+I could have only distributed a single jar file by renaming my main .py file to __run__.py and putting it into the /lib directory of the jar file. Then the command simply becomes java -jar jython.jar (or whatever I want to call the jar file.
 
 Ok maybe one mention of webstart:
 check out these postings to the mailing list (all from aug 2007):
  * http://article.gmane.org/gmane.comp.lang.jython.user/5821
  * http://article.gmane.org/gmane.comp.lang.jython.user/5820
+
+Finally, as in all things YMMV. If you have different experences or just think I'm just crazy then
+dont just sit there and complain, contribute to the wiki!
 
 I'd like to thank Oti H., Charlie G., Frank W., and all the others that have helped along the way.
