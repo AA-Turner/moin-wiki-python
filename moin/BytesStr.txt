@@ -23,3 +23,17 @@ Differences between Python 2.x "str" and Python 3000 "bytes":
 When you migration from Python 2.x to Python 3000, you have to ask youself: do I manipulate characters or bytes (integers)? "A" is a character and 65 is an integer. Examples:
  * a network socket manipulate bytes
  * a text parser manipulates characters (use lower, strip, etc. methods)
+
+== open issues ==
+
+=== hash(bytes) ===
+
+bytes is mutable and so it's not hashable. Hacks/Workaorounds:
+ * use buffer(value)
+ * use str8(value)
+
+Other solutions:
+ * create frozenbytes type
+ * avoid using hash
+
+Hash is used when bytes is a dictionary key.
