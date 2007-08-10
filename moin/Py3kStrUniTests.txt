@@ -49,11 +49,12 @@ A few tests pass normally but fail when run by a debug build using {{{regrtest.p
     * test_multibytecodec leaked [72, 72, 72] references, sum=216
     * test_parser leaked [5, 5, 5] references, sum=15
     * test_zipimport leaked [29, 29, 29] references, sum=87
+    * test_datetime leaked [5, 5, 5] references, sum=15
+       (the segfault was fixed in r56907, GvR)
 
   * Confirmed failing tests:
 
     * test_structmember
-    * test_datetime (segfaults when run together with others)
     * test_collections
     * test_runpy
     * test_asynchat (seems to hang in cleanup)
