@@ -17,12 +17,42 @@ Python 3000 use two very different types:
 Differences between Python 2.x "str" and Python 3000 "bytes":
  * str is immutable, bytes is mutable
  * bytes "lacks" many methods: strip, lstrip, rstrip, lower, upper, etc.
+ * getting an item of a bytes gives an integer and not a bytes object (b'xyz'[0] is the integer 120) where old str gives also str type
 
 == choose between bytes and str ==
 
 When you migration from Python 2.x to Python 3000, you have to ask youself: do I manipulate characters or bytes (integers)? "A" is a character and 65 is an integer. Examples:
  * a network socket manipulate bytes
  * a text parser manipulates characters (use lower, strip, etc. methods)
+
+== bytes and loops (for) ==
+
+The following code will display 97, 98, 99 since the bytes iterator generates integer and not character!
+{{{
+ for item in b'abc':
+    print item
+}}}
+
+== compare bytes ==
+
+{{{
+>>> b'xyz' == b'xyz'    # case 1
+True
+>>> b'xyz' == 'xyz'     # case 2
+False
+>>> b'xyz'[0] == b'x'   # case 3
+False
+>>> b'xyz'[0]
+120
+}}}
+Case 2 shows that bytes and unicode are never equals since they are different types. Case 3 shows an important point: getting an item of a bytes returns an integer (120) and not a bytes (len=1). This behaviour is different than Python 2.x:
+{{{
+# In Python 2.x
+>>> "xyz"[0]
+'x'
+>>> type("xyz"), type("xyz"[0])
+(<type 'str'>, <type 'str'>)
+}}}
 
 == open issues ==
 
