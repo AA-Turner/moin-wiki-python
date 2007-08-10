@@ -39,6 +39,32 @@ test_email_codecs
 test_email_renamed
 
 
+== Tests Failing Under Stress ==
+
+A few tests pass normally but fail when run by a debug build using {{{regrtest.py -R4:3:}}}.  This runs the test 7 times to detect leaks.  The following tests have problems under this mode:
+
+  * Tests that pass but report leaks:
+
+    * test_array leaked [11, 11, 11] references, sum=33
+    * test_multibytecodec leaked [72, 72, 72] references, sum=216
+    * test_parser leaked [5, 5, 5] references, sum=15
+    * test_zipimport leaked [29, 29, 29] references, sum=87
+
+  * Confirmed failing tests:
+
+    * test_structmember
+    * test_datetime (segfaults when run together with others)
+    * test_collections
+    * test_runpy
+    * test_asynchat (seems to hang in cleanup)
+
+  * Uncofirmed failures:
+
+    * test_shelve?
+    * test_gzip?
+    * test_poplib? (Neal reported that it pegged the CPU)
+
+
 == Tests Failing on Some Platforms Only ==
 
 
