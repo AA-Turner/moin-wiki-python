@@ -61,7 +61,6 @@ A few tests pass normally but fail when run by a debug build using {{{regrtest.p
 
   * Uncofirmed failures:
 
-    * test_shelve?
     * test_gzip?
     * test_poplib? (Neal reported that it pegged the CPU)
 
@@ -80,6 +79,10 @@ test_shelve (64-bit: ?)
 test_coding
 
 test_marshal
+
+=== Other Conditional Failures ===
+
+test_shelve fails when the default database chosen by anydby is bsddb. It works with dbm, gdbm and (presumably) with ndbm (all of which are very similar).
 
 ------
 
