@@ -43,8 +43,6 @@ A few tests pass normally but fail when run by a debug build using {{{regrtest.p
 
   * Tests that pass but report leaks:
 
-    * test_multibytecodec leaked [72, 72, 72] references, sum=216
-      caused by execfile(some_filename) where the file contains a coding line such as:  # coding:cp949
     * test_zipimport leaked [29, 29, 29] references, sum=87
     * test_datetime leaked [5, 5, 5] references, sum=15
        (the segfault was fixed in r56907, GvR)
@@ -82,7 +80,7 @@ test_shelve fails when the default database chosen by anydbm is bsddb. It works 
 
 = Other Code that is Failing =
 
-When python is run with the env't variable PYTHONDUMPREFS set to 1, there is a fatal error on shutdown due to import machinery.
+When python is run with the env't variable PYTHONDUMPREFS set to 1, there is a fatal error on shutdown due to import machinery. (Code had # coding: cp949)
 
 ------
 
