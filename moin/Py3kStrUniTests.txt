@@ -30,11 +30,11 @@ make
 
 = The Failing Tests =
 
-test_email (CosminStejerean - at least some problems seem to be caused by base64MIME, problems with splitting headers into multiple lines - 08/08/07)
+  * test_email (CosminStejerean - at least some problems seem to be caused by base64MIME, problems with splitting headers into multiple lines - 08/08/07)
 
-test_email_codecs
+  * test_email_codecs
 
-test_email_renamed
+  * test_email_renamed
 
 
 == Tests Failing Under Stress ==
@@ -63,24 +63,21 @@ A few tests pass normally but fail when run by a debug build using {{{regrtest.p
 
 == Tests Failing on Some Platforms Only ==
 
+  * test_ossaudiodev (64-bit)
 
-=== Failing on 64-bit Platforms Only ===
+  * test_coding (cygwin and some gentoo) - UnicodeDecodeError: 'ascii' codec can't decode byte 0xe1 in position 105: ordinal not in range(128)
 
-test_ossaudiodev (64-bit: ???)
+  * test_marshal (cygwin)
 
-=== Failing on CYGWIN Only ===
-
-test_coding
-
-test_marshal
+  * test_normalization (gentoo) - same as test_coding
 
 === Other Conditional Failures ===
 
-test_shelve fails when the default database chosen by anydbm is bsddb. It works with dbm, gdbm and (presumably) with ndbm (all of which are very similar).
+  * test_shelve fails when the default database chosen by anydbm is bsddb. It works with dbm, gdbm and (presumably) with ndbm (all of which are very similar).
 
 = Other Code that is Failing =
 
-When python is run with the env't variable PYTHONDUMPREFS set to 1, there is a fatal error on shutdown due to import machinery. (Code had # coding: cp949)
+  * When python is run with the env't variable PYTHONDUMPREFS set to 1, there is a fatal error on shutdown due to import machinery. (Code had # coding: cp949)
 
 ------
 
