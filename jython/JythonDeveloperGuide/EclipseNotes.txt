@@ -20,9 +20,15 @@ Eclipse has a plugin to become a  SVN client and can be used to get the project 
   *Leave only `<yourProjectName>/src` on the build path
   *Set the Default output folder to `<yourProjectName>/build`  This means Ant won't have to rebuild the compiles Eclipse makes.
   *Click ok, and check for a few files that won't compile if you don't have the appropriate jars.  Unless you're working on them you can just right click on those files, go to Build Path and exclude them.
-   *org.python.util.PyServlet depends on the servlet api jar
-   *org.python.util.ReadlineConsole depends on the java-readline jar
+   *org.python.util.Py``Servlet depends on the servlet api jar
+   *org.python.util.Readline``Console depends on the java-readline jar
    *com.ziclix.python.sql.handler depends on various db jars so I just exclude that package altogether.
+  *If you do not want to exclude files from being compiled, add the following `.jar` files to the java build path of your project:
+   *ant.jar (from http://ant.apache.org/)
+   *j2ee.jar (from http://java.sun.com/javaee/index.jsp)
+   *ojdbc14.jar (from http://www.oracle.com/technology/software/tech/java/sqlj_jdbc/htdocs/jdbc_10201.html, see also: http://forums.oracle.com/forums/ann.jspa?annID=201)
+   *libreadline.jar (see also ReadlineSetup)
+   *jline-0.9.91.jar (from http://jline.sourceforge.net/downloads.html)
 
 == Building the project using ANT ==
 [[Anchor(ANT)]]
