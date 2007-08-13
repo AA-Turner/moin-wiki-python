@@ -28,7 +28,7 @@ Eclipse has a plugin to become a  SVN client and can be used to get the project 
 [[Anchor(ANT)]]
 At this point, you should be able to build the project using Eclipse's `Java Builder`.  This will only compile the classes though --you'll want to use `<yourProjectName>/build.xml` to get the full ant build.  To do this:
  *First, set up an `ant.properties` file to supply "parameters" to `build.xml`
-  *Put the file directly under `<yourProjectName>/`.  It seems like it '''must''' be in the same directory as `build.xml`.  Eclipse seems to let you specify other locations, but I couldn't ever get it to work unless it was right along side `build.xml`.  If anyone knows why, please add details.
+  *Put the file directly under `<yourProjectName>/`.  It has to be in the same directory as `build.xml`, or in `user.home`. This is because build.xml explicitly searches two directories for `ant.properties`: `user.home` and the directory where `build.xml` is located (in this order). When in doubt, `ant -f build.xml usage` will tell you.
   *Put in info such as
 {{{
     build.compiler=modern
