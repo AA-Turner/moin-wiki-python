@@ -247,6 +247,25 @@ No, defining Vertex and Edge interfaces makes working with graphs just that much
 
 Well, the "Java way" can also be the "OO way" and thus could also be the "Python way". Theoretically a Graph G is defined a set of vertices and a set of Edges. '''G=(V,E)'''. (Nick V.)
 
+The only requirement on a vertex is that it can be represented in a set, which I think maps to supporting testing for equality and hashing.  In Python, this does not require a dedicated Vertex class or interface.
+
+I tend to prefer/develop graph implementations that support representing the nodes with arbitrary objects:
+
+g=Graph()
+
+some_object=SomeObject(*args1, **kwds1 )
+
+some_object2=SomeObject(*args2, **kwds2)
+
+g.add_vertex( some_object1 ) 
+
+g.add_vertex( some_object2 )
+
+new_edge=g.add_edge( some_object1, some_object2)
+
+So that I do not have to maintain a mapping from the objects (that I care about) to some integers that uniquely label the nodes (which I don't care about). (/David McNamara)
+  
+
 = Vertices and Edges as Separate Objects =
 
 1. I think a '''Vertex''' and an '''Edge''' as objects are meaninful and useful. One should be able to create v1=Vertex(1) and v2=Vertex(2) and then e12=Edge(v1,v2). Then do G.add_edge(e12), which should be no different than doing G.add_vertex(v1); G.add_vertex(v2); G.add_edge(e12).  In this respect this is a departure from the NetworkX idea of using integers as nodes and 2-tuples of integers as edges, having the user map back and forth between nodes and data.
@@ -281,5 +300,6 @@ As far as hypergraphs are concerned, a hypergraph is equivalent to a bi-partite 
   * Nick Vatamaniuc
   * Jose Antonio Martin H
   * Beracah Yankama
+  * David McNamara
 
 (See also the Usenet discussion above for more contributors.)
