@@ -6,19 +6,70 @@ The following platforms will not be supported in 3.0. Their code (conditional co
   * Tru64
 
 
-Is this the right place or is there another page with all py3000 removals of deprecated and obsolete things? (Nestor)
+Is this the right place or is there another page with all py3000 removals of deprecated and obsolete things? (Nestor) This is just by googling the docs.
 
 = String module =
+http://www.python.org/doc/2.3.5/lib/module-string.html
   *atof -> float
   *atoi -> int
   *atol -> int
   *capitalize, expandtabs, find, rfind, rfind, index, rindex, count, lower, split, rsplit, splitfields, join, joinfields, lstrip, rstrip, strip, swapcase, translate, upper, ljust, rejust, center, zfill, replace -> methods
-(http://www.python.org/doc/2.3.5/lib/module-string.html)
 
 = builtins =
 http://www.python.org/dev/peps/pep-3100/#built-in-namespace
+  *buffer (in progress)
+  *reduce -> functools.reduce [remove done] (was it already added to functools also?)
+  *compile (in progress)
 
-  *reduce -> functools.reduce (was moved?)
+= whole modules =
+(from http://www.python.org/dev/peps/pep-0004/ and http://www.python.org/dev/peps/pep-3100/#standard-library)
+buildtools
+mimetools
+mpz
+multifile
+posixfile
+regsub
+rfc822
+rgbimage
+rgbimgmodule
+sha
+statcache
+string
+sv
+TERMIOS
+timing
+new ('...new module can be deprecated in a future Python version, because you can now use the type objects...')http://www.python.org/doc/2.3/whatsnew/node17.html
 
-intern? (is that used? can we move that to a module?)
-buffer? (under construction, still builtin or its own module?)
+
+= email =
+Parser
+http://www.python.org/doc/2.5/lib/node150.html
+get_type 
+get_main_type
+get_type
+get_subtype
+(probably gone already? http://www.python.org/doc/2.4/lib/node562.html)
+dump_address_pair
+decode
+encode
+(probably gone already? http://www.python.org/doc/2.2.3/lib/module-email.Utils.html)
+
+
+
+= Already Accomplished =
+== builtins ==
+http://www.python.org/dev/peps/pep-3100/#built-in-namespace
+  *apply -> * and ** [done]
+  *callable [done]
+  *coerce [done]
+  *execfile  -> exec [done]
+  *reload -> exec [done]
+  *intern [done]
+  *xrange -> range [done]
+  *StandardError [done]
+
+= miscelaneous =
+
+  *dict.has_key -> x in dict [done]
+  *backticks -> repr() [done]
+  *<> -> != [done]
