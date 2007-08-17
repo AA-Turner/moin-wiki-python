@@ -43,10 +43,6 @@ make
 
 A few tests pass normally but fail when run by a debug build using {{{regrtest.py -R4:3:}}}.  This runs the test 7 times to detect leaks.  The following tests have problems under this mode:
 
-  * Tests that pass but report leaks:
-
-    * test_zipimport leaked [29, 29, 29] references, sum=87
-
   * Confirmed failing tests:
 
     * test_structmember
@@ -71,7 +67,7 @@ A few tests pass normally but fail when run by a debug build using {{{regrtest.p
 
   * test_normalization (gentoo) - same as test_coding.  On the machine they fail on, locale.getlocale() is (None, None)
 
-  * test_codecs (OSX PPC) - probably a byte order issue in the new UTF-32 codec
+  * test_codecs (OSX PPC) - probably a byte order issue in the new UTF-32 codec MINE Walter D.
 
 === Other Conditional Failures ===
 
