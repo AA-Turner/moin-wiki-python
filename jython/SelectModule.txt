@@ -86,3 +86,10 @@ from select import cpython_compatible_select as select
 
    1. If using the cpython_compatible_select function, you must be aware that the function will modify the blocking mode of your sockets for the duration of the call. If you are carrying out socket operations on that socket in another thread, then those socket operations may fail or raise exceptions.
    2. This function will still not cover all possible uses of select.select by cpython modules. If a cpython module tries to multiplex the '''sys.stdin''' or '''sys.stdout''' streams, then registration of the channels will fail, because the !InputStream and !OutputStream representing sys.stdin and sys.stdout are '''not''' !SelectableChannels.
+
+
+== Known Issues ==
+
+=== Receiving urgent data can cause select to lie (Windows implementation) ===
+
+Bug 1773955 describes the scenario. It is caused by a bug in the Sun Java implementation and there is no known Jython fix. A partial workaround is to call setOOBInline(True) on the jsocket within the Jython socket. This will cause the urgent data to be merged into the regular stream and will keep from confusing select() however you will have to ignore the urgent data at the application level.
