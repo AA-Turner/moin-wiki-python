@@ -58,6 +58,11 @@ A few tests pass normally but fail when run by a debug build using {{{regrtest.p
 
     * test_tcl - _tkinter.TclError: Calling Tk_Init again after a previous call failed might deadlock
 
+  * Leaking tests:
+
+    * test_urllib2_localnet
+    * test_os - leak when run after doing "echo 3 > /proc/sys/vm/drop_caches" to get cold-cache behaviour.
+
 
 == Tests Failing on Some Platforms Only ==
 
