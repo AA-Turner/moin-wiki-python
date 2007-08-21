@@ -43,16 +43,9 @@ A few tests pass normally but fail when run by a debug build using {{{regrtest.p
 
   * Confirmed failing tests:
 
+    * test_gzip
     * test_structmember
-    * test_collections - (avassalotti) py3k-r57265 runs this test fine on my machine.
     * test_runpy
-    * test_asynchat (seems to hang in cleanup)
-
-  * Intermittent failures:
-
-    * test_gzip?
-    * test_poplib? (Neal reported that it pegged the CPU)
-    * test_mmap got a bus error when running -R 4:3: (also some test failures b/c I was running other tests and TESTFN was removed)
 
   * Unconfirmed failing tests:
 
@@ -60,7 +53,8 @@ A few tests pass normally but fail when run by a debug build using {{{regrtest.p
 
   * Leaking tests:
 
-    * test_urllib2_localnet
+    * test_poplib - leaked [0, -7, -111] references, sum=-118 ?!?!
+    * test_urllib2_localnet (leaks random amounts)
     * test_os - leak when run after doing "sync; echo 3 > /proc/sys/vm/drop_caches" to get cold-cache behaviour.
 
 
