@@ -17,36 +17,56 @@ Python 3000 uses two very different types:
 Differences between Python 2.x's {{{str}}} and Python 3000's {{{bytes}}}include:
  * {{{str}}} is immutable, whereas {{{bytes}}} is mutable.
  * {{{bytes}}} "lacks" many methods present in {{{str}}}: {{{strip()}}}, {{{lstrip()}}}, {{{rstrip()}}}, {{{lower()}}}, {{{upper()}}}, {{{splitlines()}}}, etc.
- * indexing an item of a {{{bytes}}} object yields an ''integer'', not a bytes object--for instance, {{{b'xyz'[0]}}} is the integer 120. On the other hand, indexing an item of a Python 2.x {{{str}}} yields another {{{str}}} instance.
+ * indexing an item of a {{{bytes}}} object yields an ''integer'', not a bytes object, whereas indexing an item of a Python 2.x {{{str}}} yields another {{{str}}} instance.
 
 == Choosing Between "bytes" and "str" ==
 
 When you migrate from Python 2.x to Python 3000, you have to ask yourself: do I manipulate characters or bytes (integers)? "A" is a character and 65 is an integer. Examples:
+
  * a network socket manipulates bytes
  * a text parser manipulates characters (use lower, strip, etc. methods)
 
-== bytes and loops (for) ==
+== Iterating over "bytes" ==
 
-The following code will display 97, 98, 99 since the bytes iterator generates integer and not character!
+It's important to note that the {{{bytes}}} iterator generates integers and not characters:
 
 {{{
- for item in b'abc':
-    print item
+>>> for item in b'abc':
+...   print item
+97
+98
+99
 }}}
 
-== compare bytes ==
+== Comparing "bytes" ==
+
+Comparing one {{{bytes}}} object to another works as expected:
 
 {{{
->>> b'xyz' == b'xyz'    # case 1
+>>> b'xyz' == b'xyz'
 True
->>> b'xyz' == 'xyz'     # case 2
+>>> b'xyz' == b'abc'
 False
->>> b'xyz'[0] == b'x'   # case 3
+}}}
+
+However, it is important to note that the {{{bytes}}} type is completely distinct from the {{{str}}} type in Python 3000, and comparisons between them do ''not'' work:
+
+{{{
+>>> b'xyz' == 'xyz'
+False
+}}}
+
+As mentioned earlier, getting an item of a bytes returns an integer, not a bytes object:
+
+{{{
+>>> b'xyz'[0] == b'x'
 False
 >>> b'xyz'[0]
 120
 }}}
-Case 2 shows that bytes and unicode are never equals since they are different types. Case 3 shows an important point: getting an item of a bytes returns an integer (120) and not a bytes (len=1). This behaviour is different than Python 2.x:
+
+This behaviour is different than Python 2.x:
+
 {{{
 # In Python 2.x
 >>> "xyz"[0]
@@ -55,16 +75,14 @@ Case 2 shows that bytes and unicode are never equals since they are different ty
 (<type 'str'>, <type 'str'>)
 }}}
 
-== open issues ==
+=== Hashing "bytes" ===
 
-=== hash(bytes) ===
+{{{bytes}}} is mutable, and as a result, it's not hashable.  Among other things, this means that {{{bytes}}} objects can't be used as keys in dictionaries.
 
-bytes is mutable and so it's not hashable. Hacks/Workaorounds:
- * use buffer(value)
- * use str8(value)
+Hacks and workarounds for this include:
+ * use {{{buffer(value)}}}
+ * use {{{str8(value)}}}
 
-Other solutions:
- * create frozenbytes type
+Other solutions include:
+ * create an immutable {{{frozenbytes}}} type
  * avoid using hash
-
-Hash is used when bytes is a dictionary key.
