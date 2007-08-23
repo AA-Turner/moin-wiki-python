@@ -1,23 +1,26 @@
 '''Contents''' [[TableOfContents]]
 
+
 == Installation ==
 
-To start the 2.2a1 installation, please proceed as follows:
- * download the jython_Release_2_2alpha1.jar file and save it locally ([http://sourceforge.net/project/showfiles.php?group_id=12867 Download from sourceforge])
- * double-click the file jython_Release_2_2alpha1.jar, or type: `java -jar jython_Release_2_2alpha1.jar`    
-This will bring up the GUI installer ([http://homepage.sunrise.ch/mysunrise/ohumbel/22a1/install-22a1.html Screen shots]).
+To start the installation, please proceed as follows:
+ * download the installer .jar file and save it locally ([http://www.jython.org/Project/download.html Download])
+ * double-click this .jar file , or type: `java -jar jython_installer-2.2.jar`    
+This will bring up the GUI installer ([http://homepage.sunrise.ch/mysunrise/ohumbel/HEAD/install-HEAD.html a bit older Screen shots]).
 
 On true headless systems, the installer will automatically switch to console mode.
-You can force console mode using the `-console` switch:
- * `java -jar jython_Release_2_2alpha1.jar -console`
- 
+You can force console mode using the `--console` switch:
+ * `java -jar jython_installer-2.2.jar --console`
+
+For command line aficionados, there is also a silent mode, which requires at least the target directory:
+ * `java -jar jython_installer-2.2.jar -s -d /usr/lib/jython-22`
+
 
 == Generation of start scripts ==
 
-On Windows, the installer creates a `jython.bat` and a `jythonc.bat` file. On all other platforms, it creates a `jython` and `jythonc` file, which are unix like shell scripts.
-If these scripts are not executable, please grant the permission on os system level.
+On Windows, the installer creates a `jython.bat` and a `jythonc.bat` file. On all other platforms, it creates a `jython` and `jythonc` file, which are unix like shell scripts. If you have installed a shell on Windows (like cygwin, for example), the installer in addition will create unix like shell scripts.
 
-Please let us know if you need different scripts on different platforms.
+These scripts have been tested on a wide range of platforms. Please let us know if you need different scripts on a specific platform.
 
  
 == Troubleshooting ==
@@ -26,74 +29,24 @@ If one of the GUI steps should appear empty, or with no text visible: Please try
 
 The GUI which appears when pressing the '''Browse''' button in selecting the target directory might be a bit confusing. Some tips and tricks:
 
- * it uses the standard {{{javax.swing.JFileChooser}}}
- * opening and selecting of a directory: there are different looks and feels on different platforms - just play a little to get used to yours
- * the icon for creation of a new directory is sometimes greyed out, although java would have the rights to create one. If this happens, select the parent directory and then try to type in the name of the new directory in the input field. The installer then will create the new directory, if possible
+ * It uses the standard {{{javax.swing.JFileChooser}}}
+ * Open / select of a directory: There are different L&F's on different platforms - just play a little to get used to yours
+ * The icon for creation of a new directory is sometimes greyed out, although java would have the rights to create one. If this happens, select the parent directory and then try to type in the name of the new directory in the input field. The installer then will create the new directory, if possible
 
-If all else fails, try using  console mode.
+If all else fails, try using silent or console mode.
 
 
-== A sample console session ==
-
-This is a transcript from a Windows XP machine, using MKS Korn Shell in Emacs. It doesn't look much different when using cmd.exe:
+== A list of all the options ==
 {{{
-$ java -jar jython_Release_2_2alpha1.jar -console
-Welcome to Jython !
-You are about to install Jython version Release_2_2alpha1.
-(at any time, answer c to cancel the installation)
-For the installation process, the following languages are available: English, German
-Please select your language [e/g] >>> e
-The following installation types are available:
-  1. All (everything, including sources)
-  2. Standard (core, library modules, demos and examples)
-  3. Minimum (core)
-Please select the installation type [1/2/3] >>> 1
-Your operation system version is: Windows XP / 5.1
-Please press Enter to proceed >>> 
-Your java version is: Sun Microsystems Inc. / 1.5.0_06
-Please press Enter to proceed >>> 
-Do you want to read the license agreement now ? [y/n] >>> n
-Do you accept the license agreement ? [y/n] >>> y
-Please enter the target directory >>> c:/temp/jython2.2a1
-Unable to find directory C:\Temp\jython2.2a1, create it ? [y/n] >>> y
-Please confirm copying of files to directory C:\Temp\jython2.2a1 [y/n] >>> y
- 10 %
- 20 %
- 30 %
- 40 %
- 50 %
- 60 %
- 70 %
- 80 %
- 90 %
-Generating start scripts ...
- 100 %
-Do you want to show the contents of README ? [y/n] >>> n
-Congratulations! You successfully installed Jython Release_2_2alpha1 to directory C:\Temp\jython2.2a1.
-$ 
-}}}
-
-
-== What will be different on the HEAD version ==
-
- * enables silent installation, without user interaction
- * enables selection of a different java runtime for the start scripts
- * start scripts are made executable by the installer
- * better help and usage
- * standalone installation (not yet implemented)
-
-([http://homepage.sunrise.ch/mysunrise/ohumbel/HEAD/install-HEAD.html Screen shots])
-
-A preview of the usage:
-{{{
+$ java -jar jython_installer-2.2.jar --help
 usage:
-       java -jar jython_version.jar [-c | -s | -A] [-d dir] [-t type] [-i part(s)]
-       [-e part(s)] [-j dir] [-v] [-h | -?]
+       java -jar jython_installer-2.2.jar [-c | -s | -A] [-d dir] [-t type] [-i
+       part(s)] [-e part(s)] [-j dir] [-v] [-h | -?]
 
-no option at all will start the interactive GUI installer, except:
-options respected in GUI mode are 'directory' and 'jre': the values provided
-for these serve as defaults;
-in non GUI mode the following options are available:
+No option at all will start the interactive GUI installer, except:
+Options respected in GUI mode are 'directory' and 'jre', which serve as
+default values in the wizard.
+In non-GUI mode the following options are available:
 .
  -c,--console             console based installation (user interaction)
                           any other options will be ignored (except 'verbose')
@@ -108,9 +61,11 @@ in non GUI mode the following options are available:
                           one of the following types is possible
                           (see also include/exclude parts):
                           - all: everything (including src)
-                          - standard: core, mod, demo, doc
+                          - standard: core, mod, demo, doc,
+                          standard is the default
                           - minimum: core
-                          - standalone: (not yet implemented)
+                          - standalone: install a single, executable .jar,
+                          containing all the modules
  -i,--include <part(s)>   finer control over parts to install
                           more than one of the following is possible:
                           - mod: library modules
@@ -134,20 +89,24 @@ in non GUI mode the following options are available:
  -?                       print this help (overrides any other options)
 
 example of a GUI installation:
-	java -jar jython_version.jar
+	java -jar jython_installer-2.2.jar
 
 example of a console installation:
-	java -jar jython_version.jar -c
+	java -jar jython_installer-2.2.jar -c
 
 example of a silent installation:
-	java -jar jython_version.jar -s -d targetDirectory
+	java -jar jython_installer-2.2.jar -s -d targetDirectory
 
 examples of a silent installation with more options:
-	java -jar jython_version.jar -s -d targetDirectory -t minimum -i src -j javaHome
-	java -jar jython_version.jar -s -d targetDirectory -t standard -e demo doc
+	java -jar jython_installer-2.2.jar -s -d targetDirectory -t minimum -i src -j javaHome
+	java -jar jython_installer-2.2.jar -s -d targetDirectory -t standard -e demo doc
 		 -i src -j javaHome -v
 
 example of an autotest installation into temporary directories:
-	java -jar jython_version.jar -A
+	java -jar jython_installer-2.2.jar -A
+	(make sure you do NOT touch mouse NOR keyboard after hitting enter/return!)
+
+example of an autotest installation, using a different jre for the start scripts:
+	java -jar jython_installer-2.2.jar -A -j javaHome -v
 	(make sure you do NOT touch mouse NOR keyboard after hitting enter/return!)
 }}}
