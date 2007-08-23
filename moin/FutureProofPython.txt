@@ -34,6 +34,14 @@ You can enable the new behaviour in Python 2.x as follows:
 1
 }}}
 
+= Absolute imports =
+
+In Python 2.x, imports are implicitly relative.  For instance, if you're editing the file {{{foo/__init__.py}}} and want to import the module at {{{foo/bar.py}}}, you could use {{{import bar}}}.
+
+In Python 3.0, this won't work, as all imports will be absolute by default.  You should instead use {{{from foo import bar}}}; if you want to import a specific function or variable from {{{bar}}}, you can use relative imports, such as {{{from .bar import myfunction}}}).  See [http://www.python.org/dev/peps/pep-0328/ PEP 328] for more information.
+
+    '''Use absolute imports in new code.'''
+
 = New style classes =
 
 Currently, there are two kinds of classes in Python. The 'classic'
@@ -112,7 +120,7 @@ All of the names {{{with}}}, {{{as}}}, {{{nonlocal}}}, {{{True}}} and {{{False}}
 
 Here are some more tips on writing Python code to be future proof with Python 3.0.
 
- * Collin Winter have some tips in: [http://oakwinter.com/code/porting-setuptools-to-py3k/]
+ * Collin Winter has some tips in: [http://oakwinter.com/code/porting-setuptools-to-py3k/]
 
 = More changes in the future? =
 
