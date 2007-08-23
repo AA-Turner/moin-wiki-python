@@ -86,7 +86,7 @@ $s5 = qq/a string with '" both kinds of quotes/;
 $s6 = "another string with '\" both kinds of quotes";
 $s7 = 'a stri\ng that au\tomatically escapes backslashes';
 
-for $i ($s1, $s2, $s3, $s4, $s5, $s6, $s7)
+for my $i ($s1, $s2, $s3, $s4, $s5, $s6, $s7)
 {
   print "$i\n";
 }
@@ -613,7 +613,7 @@ Thanks to Adam Krolnik for help with the Perl syntax here.
 
 
 {{{
-for $i ( 0 .. 9 ) {
+for my $i ( 0 .. 9 ) {
     $LoL[$i] = [ somefunc $i ];
 }
 printLoL("filled with somefunc:", \@LoL);
@@ -870,8 +870,8 @@ Note: Perl uses a closed interval, while Python uses a closed-open interval. You
 
 
 {{{
-for $i ( 0 .. $#LoL ) {
-    for $j ( 0 .. $#{$LoL[$i]} ) {
+for my $i ( 0 .. $#LoL ) {
+    for my $j ( 0 .. $#{$LoL[$i]} ) {
         print "elt $i $j is $LoL[$i][$j]\n";
     }
 }
@@ -989,7 +989,7 @@ sub printSep { print "=" x 60, "\n" }
 sub printHoL {
   my ($s, $hol) = @_;
   print "$s\n";
-  for $k (sort keys (%$hol))
+  for my $k (sort keys (%$hol))
   {
     my ($v) = $hol->{$k};
     print "$k: @$v\n")
@@ -1231,7 +1231,7 @@ variable (where it could be modified, for example).
 
 {{{
 my %HoL;
-for $group (qw/simpsons jetsons flintstones/) {
+for my $group (qw/simpsons jetsons flintstones/) {
     my @members = get_family $group;
     $HoL{$group} = [@members];
 }
@@ -1356,7 +1356,7 @@ family2: member2-1 member2-2...
 
 
 {{{
-for $family ( sort keys %HoL ) {
+for my $family ( sort keys %HoL ) {
     print "$family: @{ $HoL{$family} }\n";
 }
 printSep();
@@ -1374,9 +1374,9 @@ printSep()
 ==== Print with indices ====
 
 {{{
-for $family ( sort keys %HoL ) {
+for my $family ( sort keys %HoL ) {
     print "family: ";
-    foreach $i ( 0 .. $#{ $HoL{$family}} ) {
+    for my $i ( 0 .. $#{ $HoL{$family}} ) {
         print " $i = $HoL{$family}[$i]";
     }
     print "\n";
@@ -1404,8 +1404,8 @@ printSep()
 
 {{{
 
-push (@{$HoL{'simpsons'}}, 'Lisa');
-foreach $family ( sort { @{$HoL{$b}} <=> @{$HoL{$a}} } keys %HoL ) {
+push (@{$HoL{simpsons}}, 'Lisa');
+for my $family ( sort { @{$HoL{$b}} <=> @{$HoL{$a}} } keys %HoL ) {
     print "$family: @{ $HoL{$family} }\n"
 }
 
@@ -1443,7 +1443,7 @@ for surname, members in k:
 
 {{{
 
-foreach $family ( sort { @{$HoL{$b}} <=> @{$HoL{$a}} } keys %HoL ) {
+for my $family ( sort { @{$HoL{$b}} <=> @{$HoL{$a}} } keys %HoL ) {
     print "$family: @{[ sort @{ $HoL{$family}} ]}\n";
 }
 
@@ -1485,7 +1485,7 @@ sub printLoH
   for my $h (@$loh)
   {
     print "[\n";
-    for $k (sort keys %$h)
+    for my $k (sort keys %$h)
     {
       print "  $k => $h->{$k}\n";
     }
@@ -1600,7 +1600,7 @@ my @LoH;
 open my $f, "cooktest.4" or die $!;
 while ( <$f> ) {
     my $rec = {};
-    for $field ( split ) {
+    for my $field ( split ) {
         ($key, $value) = split /=/, $field;
         $rec->{$key} = $value;
     }
@@ -1863,9 +1863,9 @@ printSep()
 
 {{{
 
-for $href ( @LoH ) {
+for my $href ( @LoH ) {
     print "{ ";
-    for $role ( sort keys %$href ) {
+    for my $role ( sort keys %$href ) {
         print "$role=$href->{$role} ";
     }
     print "}\n";
@@ -1893,9 +1893,9 @@ Note the comma after the print in the python segment -- this means
 
 
 {{{
-for $i ( 0 .. $#LoH ) {
+for my $i ( 0 .. $#LoH ) {
     print "$i is { ";
-    for $role ( sort keys %{ $LoH[$i] } ) {
+    for my $role ( sort keys %{ $LoH[$i] } ) {
         print "$role=$LoH[$i]{$role} ";
     }
     print "}\n";
@@ -1924,8 +1924,8 @@ Note the comma after the print in the python segment -- this means
 
 {{{
 
-for $i ( 0 .. $#LoH ) {
-    for $role ( sort keys %{ $LoH[$i] } ) {
+for my $i ( 0 .. $#LoH ) {
+    for my $role ( sort keys %{ $LoH[$i] } ) {
         print "elt $i $role is $LoH[$i]{$role}\n";
     }
 }
