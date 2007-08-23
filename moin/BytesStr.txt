@@ -1,33 +1,34 @@
 == Python 2.x ==
 
-Python 2.x has two types to store a string:
- * str: bytes string procced as character string which is a mistake
- * unicode: character string (unicode)
+Python 2.x has two types that can be used to store a string:
+ * {{{str}}}: raw byte data; each element represents a single byte, which can range in value from 0-255.  This is the default type for string literals, which is widely considered to be a mistake due to the encoding problems it raises (for more information, see Joel Spolsky's [http://www.joelonsoftware.com/articles/Unicode.html The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode and Character Sets]).
+ * {{{unicode}}}: a string in which each element represents a unicode character.
 
-Both classes has same methods and are very similar.
+Both classes have the same methods and are very similar.
 
 == Python 3000 ==
 
-Python 3000 use two very different types:
- * bytes: bytes string which can be see as a list of [0..255] integers
- * str: character string (unicode), exactly the same type than Python 2.x "unicode"
+Python 3000 uses two very different types:
+ * {{{bytes}}}: similar, but not identical, to Python 2.x's {{{str}}} type.  It is intended to represent raw byte data.  For more information on this type, please consult [http://www.python.org/dev/peps/pep-0358/ PEP 358].
+ * {{{str}}}: a unicode character string which is exactly the same type as Python 2.x's {{{unicode}}} type.
 
-== old str and new bytes ==
+== Differences Between Python 2.x's "str" and Python 3000's "bytes" ==
 
-Differences between Python 2.x "str" and Python 3000 "bytes":
- * str is immutable, bytes is mutable
- * bytes "lacks" many methods: strip(), lstrip(), rstrip(), lower(), upper(), splitlines(), etc.
- * getting an item of a bytes gives an integer and not a bytes object (b'xyz'[0] is the integer 120) where old str gives also str type
+Differences between Python 2.x's {{{str}}} and Python 3000's {{{bytes}}}include:
+ * {{{str}}} is immutable, whereas {{{bytes}}} is mutable.
+ * {{{bytes}}} "lacks" many methods present in {{{str}}}: {{{strip()}}}, {{{lstrip()}}}, {{{rstrip()}}}, {{{lower()}}}, {{{upper()}}}, {{{splitlines()}}}, etc.
+ * indexing an item of a {{{bytes}}} object yields an ''integer'', not a bytes object--for instance, {{{b'xyz'[0]}}} is the integer 120. On the other hand, indexing an item of a Python 2.x {{{str}}} yields another {{{str}}} instance.
 
-== choose between bytes and str ==
+== Choosing Between "bytes" and "str" ==
 
-When you migration from Python 2.x to Python 3000, you have to ask youself: do I manipulate characters or bytes (integers)? "A" is a character and 65 is an integer. Examples:
- * a network socket manipulate bytes
+When you migrate from Python 2.x to Python 3000, you have to ask yourself: do I manipulate characters or bytes (integers)? "A" is a character and 65 is an integer. Examples:
+ * a network socket manipulates bytes
  * a text parser manipulates characters (use lower, strip, etc. methods)
 
 == bytes and loops (for) ==
 
 The following code will display 97, 98, 99 since the bytes iterator generates integer and not character!
+
 {{{
  for item in b'abc':
     print item
