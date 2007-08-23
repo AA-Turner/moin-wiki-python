@@ -88,7 +88,7 @@ $s7 = 'a stri\ng that au\tomatically escapes backslashes';
 
 for $i ($s1, $s2, $s3, $s4, $s5, $s6, $s7)
 {
-  print ("$i\n");
+  print "$i\n";
 }
 }}}
 
@@ -124,9 +124,9 @@ Quoting is definitely one of the areas where Perl excels.
 
 
 {{{
-$name = "Fred";
+$name    = "Fred";
 $header1 = "Dear $name,";
-$title = "Dr.";
+$title   = "Dr.";
 $header2 = "Dear $title $name,";
 
 print "$header1\n$header2\n";
@@ -153,10 +153,10 @@ Perl has a function `sprintf` that behaves similarly to
 Python's `%` operator; the above lines could have been
 written:
 {{{
-$name = "Fred";
-$header1 = sprintf ("Dear %s,", $name);
-$title = "Dr.";
-$header2 = sprintf ("Dear %s %s,", $name, $title);
+$name    = "Fred";
+$header1 = sprintf "Dear %s,", $name;
+$title   = "Dr.";
+$header2 = sprintf "Dear %s %s,", $name, $title;
 }}}
 
 
@@ -204,9 +204,9 @@ substitution mode as an alternative to {{{"%(var)s" % locals()}}}, but was rejec
 {{{
 $s1 = "new string";        # change to new string
 $s2 =~ s/\n/[newline]/g;   # substitute newlines with the text "[newline]"
-substr($s2, 0, 3) = 'X';   # replace the first 3 chars with an X
+substr $s2, 0, 3, 'X';     # replace the first 3 chars with an X
 
-print ("$s1\n$s2\n");
+print "$s1\n$s2\n";
 }}}
 
 {{{
@@ -308,9 +308,9 @@ module, you have to explicitly qualify the name, as shown.
 
 
 {{{
-$filename = "cooktest1.1-1";
-open (F, $filename) or die ("can't open $filename: $!\n");
-@lines = <F>;
+my $filename = "cooktest1.1-1";
+open my $f, $filename or die "can't open $filename: $!\n";
+@lines = <$f>;
 }}}
 
 {{{
@@ -337,7 +337,7 @@ creates an empty array `a`, `d = {}` creates an
 empty dictionary.
 
 === looping over files given on the command line or stdin ===
-The useful perl idiom of:
+The useful Perl idiom of:
 {{{
 while (<>) {
     ...			# code for each line
@@ -396,7 +396,7 @@ random notes here.  I will organize them later.
 
 == Lists of lists ==
 
-The perl code in this section is taken, with permission, almost directly
+The Perl code in this section is taken, with permission, almost directly
 from Tom Christiansen's [http://www.perl.com/perl/pdsc/ Perl Data Structures Cookbook], part 1, release 0.1, with a few typos
 fixed.
 
@@ -408,34 +408,32 @@ fixed.
 
 
 {{{
-sub printSep {   print ("=" x 60, "\n"); }
+sub printSep { print "=" x 60, "\n" }
 
 sub printLoL
 {
   my ($s, $lol) = @_;
-  print ("$s\n");
-  for $l (@$lol)
-  {
-    print (join (" ", @$l));
-    print ("\n");
+  print "$s\n";
+  for my $l (@$lol) {
+    print "@{$l}\n";
   }
   printSep();
 }
 
 # which is longhand for:
 sub printLoL {
-        print $_[0] . "\n";
-        print join(" ", @$_) . "\n" foreach (@{$_[1]});
-        printSep();
+  print "$_[0]\n";
+  print "@$_\n" for @{$_[1]};
+  printSep();
 }
 
 # or even:
 sub printLoL {
-        print $_[0] . "\n", map(join(" ", @$_) . "\n" , @{$_[1]}), "=" x 60 . "\n";
+  print "$_[0]\n", map("@$_\n" , @{$_[1]}), "=" x 60, "\n";
 }
 
 # return numeric (or other) converted to string
-sub somefunc {  my ($i) = shift;  "$i";  }
+sub somefunc { "". shift }
 }}}
 
 {{{
@@ -502,7 +500,7 @@ import the `re` module.
      );
 @LoLsave = @LoL; # for later
 
-printLoL ('Families:', \@LoL);
+printLoL 'Families:', \@LoL;
 }}}
 
 {{{
@@ -566,13 +564,12 @@ print a[0][0]   # prints 1
 
 
 {{{
-open (F, "cookbook.data1");
-@LoL = ();
-while ( <F> ) {
-    push @LoL, [ split ];
+open my $f, "cookbook.data1" or die $!;
+my @LoL;
+while (<$f>) {
+  push @LoL, [ split ];
 }
-
-printLoL ("read from a file: ", \@LoL);
+printLoL "read from a file: ", \@LoL;
 }}}
 
 {{{
@@ -596,11 +593,9 @@ read, and the call evaluates to a list of the lines in the file.
 
 
 {{{
-open (F, "cookbook.data1");
-
-@LoL = map { chop; [split]; } <F>;
-
-printLoL ("slurped from a file: ", \@LoL);
+open my $f, "cookbook.data1" or die $!;
+@LoL = map [split], <$f>;
+printLoL "slurped from a file: ", \@LoL;
 
 }}}
 
@@ -610,7 +605,7 @@ printLoL("slurped from a file: ", LoL)
 }}}
 
 
-Thanks to Adam Krolnik for help with the perl syntax here.
+Thanks to Adam Krolnik for help with the Perl syntax here.
 
 
 
@@ -619,7 +614,7 @@ Thanks to Adam Krolnik for help with the perl syntax here.
 
 {{{
 for $i ( 0 .. 9 ) {
-    $LoL[$i] = [ somefunc($i) ];
+    $LoL[$i] = [ somefunc $i ];
 }
 printLoL("filled with somefunc:", \@LoL);
 
@@ -657,8 +652,8 @@ In python:
 
 
 {{{
-for $i ( 0 .. 9 ) {
-    @tmp = somefunc($i);
+for my $i (0..9) {
+    @tmp = somefunc $i;
     $LoL[$i] = [ @tmp ];
 }
 
@@ -676,8 +671,8 @@ printLoL('filled with somefunc via temps:', LoL)
 
 
 {{{
-@LoL = map { [ somefunc($_) ] } 0..9;
-printLoL ('filled with map', \@LoL);
+@LoL = map [ somefunc $_ ], 0..9;
+printLoL 'filled with map', \@LoL;
 }}}
 
 {{{
@@ -700,15 +695,15 @@ debugging, use loops.
 Tom Christiansen suggests that it is often better to make it clear that
 a function is being defined, by writing:
 {{{
-@LoL = map { [ somefunc($_) ] }, 0..9;
+@LoL = map {[ somefunc($_) ]} 0..9;
 }}}
-Rather than
+rather than
 {{{
-@LoL = map ({[ somefunc($_) ]}, 0..9);
+@LoL = map [ somefunc($_) ], 0..9;
 }}}
 or
 {{{
-@LoL = map ( [ somefunc($_) ] , 0..9);
+@LoL = map ([ somefunc($_)], 0..9);
 }}}
 
 
@@ -721,7 +716,7 @@ or
 
 {{{
 @LoL = @LoLsave;  # start afresh
-push @{ $LoL[0] }, "wilma", "betty";
+push @{$LoL[0]}, "wilma", "betty";
 printLoL ('after appending to first element:', \@LoL);
 }}}
 
@@ -771,10 +766,10 @@ printSep()
 {{{
 # upcase the first letter of each word
 # s/(\w)/\u$1/ is equivalent to Python .capitalize()
-$LoL[1][1] =~  s{\b([\w])}{\u$1}g;
+
+$LoL[1][1] =~ s{\b(\w)}{\u$1}g;
 print ("element 1, 1 is now $LoL[1][1]\n");
 printSep();
-
 }}}
 
 {{{
@@ -788,7 +783,7 @@ especially the new syntax for comments and whitespace inside regular
 expressions.
 Python replaced its original regular expression module some years ago with one that closely matches the capabilities of Perls, including being able to do advanced RE tasks such as calling a function to provide the data for an RE substitution, and the optional inclusion of whitespace and comments in REs. 
 
-In Python, string methods are often used where perl would use a
+In Python, string methods are often used where Perl would use a
 regex.  Among these string methods are `title()` and `capitalize()`.  
 
 In the context of names, `title()` will be used as it correctly
@@ -800,7 +795,7 @@ would produce "Smith-jones".
 Python's `str2 = str1.title()` is equivalent to Perl's:
 {{{
 $str2 = $str1;
-$str2 =~ s{\b([\w])}{\u$1}g;
+$str2 =~ s{\b(\w)}{\u$1}g;
 }}}
 
 This is because regular expression search and replace operations
@@ -813,7 +808,7 @@ modify the string in place (Perl strings are mutable).
 ==== Print a list of lists using references ====
 
 {{{
-for $aref ( @LoL ) {
+for my $aref ( @LoL ) {
     print "\t [ @$aref ],\n";
 }
 printSep();
@@ -833,7 +828,7 @@ printSep()
 
 
 {{{
-for $i ( 0 .. $#LoL ) {
+for my $i ( 0 .. $#LoL ) {
     print "\t [ @{$LoL[$i]} ],\n";
 }
 printSep();
@@ -895,8 +890,8 @@ printSep()
 ==== Print a list of lists using map ====
 
 {{{
-sub printLine { print (join (" ", @{shift()}), "\n"); }
-map (printLine ($_), @LoL);
+sub printLine { print "@{shift()}\n" }
+map printLine($_), @LoL;
 printSep();
 }}}
 
@@ -916,7 +911,7 @@ printSep()
 ==== Print a list of lists using map and anonymous functions ====
 
 {{{
-print map { join (' ', @$_), "\n" } @LoL;
+print map "@$_\n", @LoL;
 printSep();
 }}}
 
@@ -945,29 +940,24 @@ def lolprint(LoL):
 
 # Achieving the same in Perl
 sub lolprint {
-   my @LoL = (@_);
-
    # Private function 
    # (function reference stored in a lexically scoped variable)
    my $lprint = sub {
       my $list = shift;
-      print join(" ", (@{$list}) );
+      print "@$list";
    };
-
-   map { $lprint->($_) } (@LoL);
+   map $lprint->($_), @_;
 }
 
 # In Perl, if you did this, the function is no longer private.
 sub lolprint {
-   my @LoL = (@_);
-   
    # This is not a private function
    sub lprint {
       my $list = shift;
-      print join(" ", (@{$list}) );
+      print "@$list";
    };
 
-   map { lprint($_) } (@LoL);
+   map lprint($_), @_;
 }
 
 }}}
@@ -976,7 +966,7 @@ sub lolprint {
 
 == Hashes/dictionaries of lists ==
 
-The perl code in this section is taken, with permission, almost directly
+The Perl code in this section is taken, with permission, almost directly
 from Tom Christiansen's [http://www.perl.com/perl/pdsc/ Perl Data Structures Cookbook], part 2, release 0.1, with a few typos
 fixed.
 
@@ -994,26 +984,25 @@ Smalltalk), or hashes (Perl).
 
 
 {{{
-sub printSep {   print ("=" x 60, "\n"); }
+sub printSep { print "=" x 60, "\n" }
 
-sub printHoL
-{
+sub printHoL {
   my ($s, $hol) = @_;
-  print ("$s\n");
+  print "$s\n";
   for $k (sort keys (%$hol))
   {
     my ($v) = $hol->{$k};
-    print ("$k : ", join (" ", @$v), "\n")
+    print "$k: @$v\n")
   }
   printSep();
 }
 
-sub get_family{
-  my ($group) = shift;
+sub get_family {
+  my ($group) = @_;
   $group =~ s/s$//;
   $group = "\u$group";
   return ("Mr-$group", "Mrs-$group", "$group-Jr");
-  }
+}
 
 }}}
 
@@ -1059,7 +1048,7 @@ pairs in the list are unpacked and used.
        simpsons           => [ "homer", "marge", "bart" ],
      );
 
-printHoL ('names', \%HoL);
+printHoL 'names', \%HoL;
 }}}
 
 {{{
@@ -1087,7 +1076,7 @@ print "%s: %s" % (k, " ".join(v))
 
 to avoid the space before the colon.
 
-Note that both perl and python let you have a comma after the last
+Note that both Perl and python let you have a comma after the last
 element of a list.  This is especially useful for automatically
 generated lists, where you don't want to have to worry about a special
 case at the end.
@@ -1101,9 +1090,9 @@ Larry Wall says:
 
 {{{
 $HoL = {
-       flintstones        => [ "fred", "barney" ],
-       jetsons            => [ "george", "jane", "elroy" ],
-       simpsons           => [ "homer", "marge", "bart" ],
+       flintstones => [ "fred", "barney" ],
+       jetsons     => [ "george", "jane", "elroy" ],
+       simpsons    => [ "homer", "marge", "bart" ],
 
 };
 printHoL (\'names\', $HoL);
@@ -1130,13 +1119,13 @@ flintstones: fred barney wilma dino
 
 
 {{{
-%HoL = ();
-open (F, "cookTest.2");
-while ( <F> ) {
+my %HoL;
+open my $f, "cookTest.2" or die $!;
+while ( <$f> ) {
     next unless s/^(.*?):\s*//;
     $HoL{$1} = [ split ];
 }
-printHoL ('read from file cookTest.2', \%HoL);
+printHoL 'read from file cookTest.2', \%HoL;
 }}}
 
 {{{
@@ -1152,28 +1141,23 @@ printHoL('read from file cookTest.2', HoL)
 }}}
 
 
-Note that the perl hash is initialized with an empty ''list'', not
-an empty hash reference (`{ }`).  Writing
-{{{
-%HoL = {}
-}}}
-
+Note that the Perl hash doesn't need to be initialized.
 
 ==== Reading into a hash of lists from a file with temporaries ====
 
 
 {{{
 # flintstones: fred barney wilma dino
-open (F, "cookTest.3");
-%HoL = {};
-while ( $line = <F> ) {
+open my $f, "cookTest.3" or die $!;
+my %HoL;
+while ( defined(my $line = <$f>) ) {
     next unless $line =~ /:/;
     ($who, $rest) = split /:\s*/, $line, 2;
     @fields = split ' ', $rest;
     $HoL{$who} = [ @fields ];
 }
 
-printHoL ('read from cookTest.3', \%HoL);
+printHoL 'read from cookTest.3', \%HoL;
 }}}
 
 {{{
@@ -1199,12 +1183,12 @@ associate the key with this list.
 
 
 {{{
-%HoL = {};
-for $group ( "simpsons", "jetsons", "flintstones" ) {
-    $HoL{$group} = [ get_family($group) ];
+my %HoL;
+for my $group (qw/simpsons jetsons flintstones/) {
+    $HoL{$group} = [get_family $group];
 }
 
-printHoL ('filled by get_family', \%HoL);
+printHoL 'filled by get_family', \%HoL;
 }}}
 
 {{{
@@ -1227,11 +1211,11 @@ printHoL ('filled by get_family', HoL)
 }}}
 
 
-The perl section could have been written:
+The Perl section could have been written:
 
 {{{
-%Hol = {};
-map { $HoL{$_} = [ get_family($_) ] } "simpsons", "jetsons", "flintstones";
+my %Hol;
+map {$HoL{$_} = [ get_family $_ ]} qw/simpsons jetsons flintstones/;
 }}}
 
 
@@ -1246,17 +1230,17 @@ variable (where it could be modified, for example).
 
 
 {{{
-%LoL = {};
-for $group ( "simpsons", "jetsons", "flintstones" ) {
-    @members = get_family($group);
-    $HoL{$group} = [ @members ];
+my %HoL;
+for $group (qw/simpsons jetsons flintstones/) {
+    my @members = get_family $group;
+    $HoL{$group} = [@members];
 }
 
-printHoL ('by get_family with temps', \%HoL);
+printHoL 'by get_family with temps', \%HoL;
 }}}
 
 {{{
-LoL = {}
+HoL = {}
 for group in ("simpsons", "jetsons", "flintstones"):
     members = get_family(group)
     HoL[group] = members
@@ -1276,7 +1260,7 @@ We want to add two strings to the list of strings indexed by the name
 
 {{{
 push @{ $HoL{flintstones} }, "wilma", "betty";
-print (join (" ", @{$HoL{flintstones}}), "\n");
+print "@{$HoL{flintstones}}\n");
 printSep();
 }}}
 
@@ -1309,7 +1293,7 @@ Assign to the first element of the list indexed by
 
 {{{
 $HoL{flintstones}[0] = "Fred";
-print ($HoL{flintstones}[0], "\n");
+print $HoL{flintstones}[0], "\n";
 printSep();
 }}}
 
@@ -1321,7 +1305,7 @@ printSep()
 
 
 Tom Christiansen explains when you don't need quotes around strings in
-perl:
+Perl:
 
 	It's whenever you have a bareword (identifier token) in braces.
         Thus
@@ -1347,7 +1331,7 @@ by `simpsons`.
 {{{
 $HoL{simpsons}[1] =~ s/(\w)/\u$1/;
 
-printHoL ('after modifying an element', \%HoL);
+printHoL 'after modifying an element', \%HoL;
 }}}
 
 {{{
@@ -1372,7 +1356,7 @@ family2: member2-1 member2-2...
 
 
 {{{
-foreach $family ( sort keys %HoL ) {
+for $family ( sort keys %HoL ) {
     print "$family: @{ $HoL{$family} }\n";
 }
 printSep();
@@ -1390,7 +1374,7 @@ printSep()
 ==== Print with indices ====
 
 {{{
-foreach $family ( sort keys %HoL ) {
+for $family ( sort keys %HoL ) {
     print "family: ";
     foreach $i ( 0 .. $#{ $HoL{$family}} ) {
         print " $i = $HoL{$family}[$i]";
@@ -1460,7 +1444,7 @@ for surname, members in k:
 {{{
 
 foreach $family ( sort { @{$HoL{$b}} <=> @{$HoL{$a}} } keys %HoL ) {
-    print "$family: ", join(", ", sort @{ $HoL{$family}}), "\n";
+    print "$family: @{[ sort @{ $HoL{$family}} ]}\n";
 }
 
 }}}
@@ -1480,7 +1464,7 @@ for surname, members in families:
 
 == Lists of hashes/dictionaries ==
 
-The perl code in this section is taken, with permission, almost directly
+The Perl code in this section is taken, with permission, almost directly
 from Tom Christiansen's [http://www.perl.com/perl/pdsc/ Perl Data Structures Cookbook], part 3, release 0.1, with a few typos
 fixed.
 
@@ -1492,20 +1476,20 @@ fixed.
 
 
 {{{
-sub printSep {   print ("=" x 60, "\n"); }
+sub printSep { print "=" x 60, "\n" }
 
 sub printLoH
 {
   my ($s, $loh) = @_;
-  print ("$s\n");
-  for $h (@$loh)
+  print "$s\n";
+  for my $h (@$loh)
   {
-    print ("[\n");
-    for $k (sort (keys %$h))
+    print "[\n";
+    for $k (sort keys %$h)
     {
-      print ("  $k => $h->{$k}\n");
+      print "  $k => $h->{$k}\n";
     }
-    print ("]\n");
+    print "]\n";
   }
   printSep();
 }
@@ -1532,9 +1516,9 @@ def printLoH(s,loh):
 
 
 The only reason I sort the keys here is to make sure that python and
-perl print the elements of the dictionary in the same order.
+Perl print the elements of the dictionary in the same order.
 
-Note that sorting in perl generates a new list, while in python sorting
+Note that sorting in Perl generates a new list, while in python sorting
 is done in-place.  This means that you can avoid making a copy while
 sorting in python.  The disadvantage is a clumsier syntax for the common
 case where you ''do'' want a copy.  Larry Wall says that in Perl,
@@ -1612,10 +1596,10 @@ LEAD=homer WIFE=marge
 
 
 {{{
-@LoH = ();
-open (F, "cooktest.4");
-while ( <F> ) {
-    my ($rec) = {};
+my @LoH;
+open my $f, "cooktest.4" or die $!;
+while ( <$f> ) {
+    my $rec = {};
     for $field ( split ) {
         ($key, $value) = split /=/, $field;
         $rec->{$key} = $value;
@@ -1623,7 +1607,7 @@ while ( <F> ) {
     push @LoH, $rec;
 }
 
-printLoH ('after reading from file cooktest.4', LoH);
+printLoH 'after reading from file cooktest.4', LoH;
 
 }}}
 
@@ -1645,9 +1629,9 @@ printLoH ('after reading from file cooktest.4', LoH)
 
 {{{
 
-@LoH = ();
-open (F, "cooktest.4");
-while ( <F> ) {
+my @LoH;
+open my $f, "cooktest.4" or die $!;
+while ( <$f> ) {
     push @LoH, { split /[\s=]+/ };
 }
 
@@ -1688,8 +1672,9 @@ printLoH ('direct read from file', LoH)
 
 For convenience, these functions and variables are global.
 getnextpairset returns the elements of the array _getnextpairsetdata.  I
-don't know why Tom chose to make this return a list in perl, rather than
-a reference to a hash.  In python, returning a dictionary is definitely
+don't know why Tom chose to make this return a list in Perl, rather than
+a reference to a hash. Perhaps to keep the order. You can still initialize a hash with the result.
+In python, returning a dictionary is definitely
 the way to go.
 
 
@@ -1706,8 +1691,8 @@ sub getnextpairset{
 }
 
 sub parsepairs{
-my ($line) = shift;
-chop ($line);
+my $line = shift;
+chomp $line;
 return split (/[= ]/, $line);
 }
 
@@ -1741,15 +1726,15 @@ def parsepairs(line):
 `getnextpairset`: Note the unwieldiness in python due to the fact
 that it does not have increment operators.
 
-This would be much more elegant as a class, both in python and perl.
+This would be much more elegant as a class, both in python and Perl.
 [add a pointer to classes when we get there]
 
 
 
 ===== Generation =====
 
-Call a function returning a list (in perl) or a dictionary (in python).
-In perl, the list is of the form
+Call a function returning a list (in Perl) or a dictionary (in python).
+In Perl, the list is of the form
 `("lead","fred","daughter","pebbles")`; in python, the
 dictionary is of the form `{"lead" : "fred", "daughter" : "pebbles"}`.
 
@@ -1757,7 +1742,7 @@ dictionary is of the form `{"lead" : "fred", "daughter" : "pebbles"}`.
 {{{
 # calling a function  that returns a key,value list, like
 
-@LoH = ();
+my @LoH;
 while ( %fields = getnextpairset() ) {
    push @LoH, { %fields };
 }
@@ -1785,13 +1770,13 @@ printLoH ('filled with getnextpairset', LoH)
 
 {{{
 
-@LoH = ();
-open (F, "cooktest.4");
-while (<F>) {
-        push @LoH, { parsepairs($_) };
-    }
+my @LoH;
+open my $f, "cooktest.4" or die $!;
+while (<$f>) {
+    push @LoH, { parsepairs($_) };
+}
 
-printLoH ('generated from function calls with no temps', \@LoH);
+printLoH 'generated from function calls with no temps', \@LoH;
 
 
 }}}
@@ -1813,8 +1798,8 @@ printLoH ('generated from function calls with no temps', LoH)
 
 {{{
 
-$LoH[0]{"PET"} = "dino";
-$LoH[2]{"PET"} = "santa's little helper";
+$LoH[0]{PET} = "dino";
+$LoH[2]{PET} = "santa's little helper";
 
 printLoH ('after addition of key/value pairs', \@LoH);
 
@@ -1841,10 +1826,10 @@ printLoH ('after addition of key/value pairs', LoH)
 {{{
 
 $LoH[0]{LEAD} = "fred";
-print ("$LoH[0]{LEAD}\n");
+print $LoH[0]{LEAD}, "\n";
 
-$LoH[1]{LEAD} =~ s/(\w)/\u$1/;
-print ("$LoH[1]{LEAD}\n");
+s/(\w)/\u$1/, print "$_\n"
+  for $LoH[1]{LEAD};
 
 printSep();
 
@@ -1959,12 +1944,12 @@ for i, elem in enumerate(LoH):
 
 = Interface to the Tk GUI toolkit =
 
-The perl versions of this code have not been tested, as we don't
-currently have a working version of perl and tk.
+The Perl versions of this code have not been tested, as we don't
+currently have a working version of Perl and Tk.
 
 [Links to tkinter doc]
 
-[Links to perl/tk doc (is there any yet?)]
+[Links to Perl/Tk doc (is there any yet?)]
 
 
 
@@ -1989,8 +1974,10 @@ import sys
 
 {{{
 $top = MainWindow->new;
-$hello = $top->Button('-text' => 'Hello, world',
-                      '-command' => sub {print STDOUT "Hello, world\n";exit;});
+$hello = $top->Button(
+    '-text'    => 'Hello, world',
+    '-command' => sub {print STDOUT "Hello, world\n";exit 0;}
+);
 $hello->pack;
 MainLoop;
 }}}
