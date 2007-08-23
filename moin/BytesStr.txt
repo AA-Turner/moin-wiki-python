@@ -1,4 +1,4 @@
-== Python 2.x ==
+== Strings in Python 2.x ==
 
 Python 2.x has two types that can be used to store a string:
  * {{{str}}}: raw byte data; each element represents a single byte, which can range in value from 0-255.  This is the default type for string literals, which is widely considered to be a mistake due to the encoding problems it raises (for more information, see Joel Spolsky's [http://www.joelonsoftware.com/articles/Unicode.html The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode and Character Sets]).
@@ -6,7 +6,7 @@ Python 2.x has two types that can be used to store a string:
 
 Both classes have the same methods and are very similar.
 
-== Python 3000 ==
+== Strings in Python 3000 ==
 
 Python 3000 uses two very different types:
  * {{{bytes}}}: similar, but not identical, to Python 2.x's {{{str}}} type.  It is intended to represent raw byte data.  For more information on this type, please consult [http://www.python.org/dev/peps/pep-0358/ PEP 358].
@@ -19,7 +19,7 @@ Differences between Python 2.x's {{{str}}} and Python 3000's {{{bytes}}}include:
  * {{{bytes}}} "lacks" many methods present in {{{str}}}: {{{strip()}}}, {{{lstrip()}}}, {{{rstrip()}}}, {{{lower()}}}, {{{upper()}}}, {{{splitlines()}}}, etc.
  * indexing an item of a {{{bytes}}} object yields an ''integer'', not a bytes object, whereas indexing an item of a Python 2.x {{{str}}} yields another {{{str}}} instance.
 
-== Choosing Between "bytes" and "str" ==
+== Choosing Between "bytes" and "str" in Python 3000 ==
 
 When you migrate from Python 2.x to Python 3000, you have to ask yourself: do I manipulate characters or bytes (integers)? "A" is a character and 65 is an integer. Examples:
 
@@ -81,7 +81,6 @@ This behaviour is different than Python 2.x:
 
 Hacks and workarounds for this include:
  * use {{{buffer(value)}}}
- * use {{{str8(value)}}}
 
 Other solutions include:
  * create an immutable {{{frozenbytes}}} type
