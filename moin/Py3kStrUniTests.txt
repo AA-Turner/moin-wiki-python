@@ -31,7 +31,7 @@ make
   * test_email (CosminStejerean - at least some problems seem to be caused by base64MIME, problems with splitting headers into multiple lines - 08/08/07) (VictorStinner - imghdr and sndhdr, related modules, are now fixed) (MINE Barry Warsaw)
   * test_email_codecs
   * test_email_renamed (should we get rid of this, as it's about an old renaming?)
-
+  * test_unicodedata - test_function_checksum fail
 
 == Tests Failing Under Stress ==
 
@@ -44,6 +44,7 @@ A few tests pass normally but fail when run by a debug build using {{{regrtest.p
   * Unconfirmed failing tests:
 
     * test_tcl - _tkinter.TclError: Calling Tk_Init again after a previous call failed might deadlock
+    * test_pkg - test_6 and test_7 fail on the second run of "./python Lib/test/regrtest.py --verbose -R:: test_pkg"
 
   * Leaking tests:
 
@@ -53,7 +54,11 @@ A few tests pass normally but fail when run by a debug build using {{{regrtest.p
     * test_ftplib
     * test_ctypes - [0, 33, -33] references, sum=0
     * test_datetime - [49, 49, 49] references, sum=147
-
+    * test_io - [62, 62, 62] references, sum=186
+    * test_strptime - [2132, 2132, 2132] references, sum=6396
+    * test_string - [5, 5, 5] references, sum=15
+    * test_urllib - [122, 122, 122] references, sum=366
+    * test_xmlrpc - [26, 26, 26] references, sum=78
 
 == Tests Failing on Some Platforms Only ==
 
