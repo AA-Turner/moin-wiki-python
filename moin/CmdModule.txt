@@ -457,3 +457,7 @@ That way, I could pass in instructions, scripts, and get back the results on std
 Something like "-c" for Python, where you can pass in a line, and get back the result, without seeing the intro text.
 
 -- LionKimbro [[DateTime(2006-03-06T19:06:56Z)]]
+
+The {{{onecmd()}}} function may be what you're after.  Write your interpreter as you normally would.  Then, in main, parse the command line for a '-c' option.  If you find it, call {{{onecmd()}}} with the string following the '-c' as the parameter, else call {{{cmdloop()}}}.
+
+-- Mark Workman [[DateTime()]]
