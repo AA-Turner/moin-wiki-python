@@ -1,32 +1,35 @@
 Setuptools requirements:
 
- * PEP 302: added in Jython 2.2
+ * PEP 302 style zipimport module '''''Added in r3463'''''
+ 
+ * number of misc. Jython bug fixes '''''most already committed'''''
 
 We don't have:
 
- * PEP 273 (the zipimport module)
-  - Jython's ZipFileImporter is somewhat different that the CPython zipimport module -- it's not a module, and it does not maintain its own _zip_importer_cache (which setuptools utilizes) apart from sys.path_importer_cache
+ * tarfile module. This requires a small patch to PyString to work
+
+ * a valid sys.executable. required by setuptools and distutils for spawning subprocesses. It's impossible to determine argv[0] from java: I'm thinking the jython executable should pass this information along to Jython (java -Dpython.executable=$0)
+
+ * distutils: requires a number of small patches:
   
-  - The Jython zipimport machinery is different: ZipFileImporter only imports zips if they're SyspathArchives: currently .zips and .jars. How does CPython zipimport identify .eggs in sys.path as .zips? (needed for the ez_setup bootstrap process)
-  
-  '''''I've got a mostly working implementation of a CPython like zipimport (it would replace ZipFileImporter and possibly SyspathArchive'''''
-  
- * distutils
-  - requires this small patch: http://pylonshq.com/pasties/390 (jython's sys.executable is None)
-  
-  - also requires a number of mappings for os.name == 'java' for file installation locations
-  
-  - also requires a jython spawn-like function: "error: don't know how to spawn programs on platform 'java'". Not sure what to use for that at this point
+  - distutils metadata for the os.name == 'java' (like path names, default bdist type, etc)
+    
+  - a jython spawn-like function: "error: don't know how to spawn programs on platform 'java'". os.system works as a replacement
+
+  - a valid sys.executable    
   
  * tempfile.mkstemp
-  - I've begun taking a look at implementing mkstemp/NamedTemporaryFile with Java's secure File.createTempFile
-  
-  '''''I have a mostly working implementation of this'''''
-  
- * os.open is used for a small hack having to do with usage of tempfile.mkstemp
-  - This is somewhat problematic because even the best Jython mkstemp implementation won't return a file descriptor (No raw file descriptors in java), but setuptools can possibly be patched to use NamedTemporaryFile instead
-  
-  '''''Patched this for now. I think a reasonable patch can be integrated to setuptools to avoid using mkstemp'''''
-  
+  - I have patch #1783692 implementing mkstemp/NamedTemporaryFile with Java's secure File.createTempFile
+    
  * imp.acquire/release_lock
-  '''''Made this no-op for now -- is just a simple lock'''''
+  This is just a simple lock, but may have to be called by internal imp operations. I'm not sure
+
+ * A few small upstream patches to setuptools, this includes:
+ 
+  - use tempfile.NamedTemporaryFile instead of tempfile.mkstemp (Java/Jython doesn't allow usage of file descriptors). This will also remove a usage of os.open
+  
+  - wrap uses of os.chmod in hasattr(os, 'chmod')
+  
+  - sandbox may assume os.open (and maybe others) exist
+  
+  - setuptools cut and pasted shutil's rmtree from CPython 2.3, which uses lstat to check for directories. This may need to change to os.path.isdir (Jython might be able to do lstat, though)
