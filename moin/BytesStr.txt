@@ -53,8 +53,23 @@ However, it is important to note that the {{{bytes}}} type is completely distinc
 
 {{{
 >>> b'xyz' == 'xyz'
-False
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: can't compare bytes and str
 }}}
+
+This should make clearly evident some incomplete transitions. But you also means that you really cant mix then very well:
+
+{{{
+>>> L = ["1", b"1"]
+>>> "1" in L
+True
+>>> "2" in L
+Traceback (most recent call last):
+ File "<stdin>", line 1, in <module>
+TypeError: can't compare str and bytes
+}}}
+
 
 As mentioned earlier, getting an item of a bytes returns an integer, not a bytes object:
 
