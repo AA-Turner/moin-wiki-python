@@ -83,6 +83,9 @@ jythonc doesn't handle generators and is difficult to debug and improve.  The cu
 
 Jython adds to Python's import system to handle loading from Java's classpath and to load from jar files.  It's not exactly clear what modifications are in place and what techniques are best for adding jar files to the path at runtime and things like that.  An informational JEP explaining what's been added and how things relate to both the Python and Jython sides would be nice.  
 
+Brett Cannon has been working on rewriting all of Python's import machinery in Python; see http://svn.python.org/view/sandbox/trunk/import_in_py/
+for the code.
+
 = Complete Java to Python naming integration =
 
 Java allows a method and field of the same name to exist in the same class.  Python only has a single namespace for these items.  This leads to methods being hidden in a Java instance in Jython if the instance has a field of the same name.  In addition, the bean convenience methods that map object.getField() in Java to  object.field in Jython lead to collisions.  See http://thread.gmane.org/gmane.comp.lang.jython.user/4919/ and http://jython.org/bugs/1509095.  A standard system for renaming fields and methods to avoid collisions and a JEP explaining the whole thing would be most welcome.
