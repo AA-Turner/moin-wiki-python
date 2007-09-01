@@ -28,6 +28,10 @@ We don't have:
  * imp.acquire/release_lock
   This is just a simple lock, but may have to be used by internal imp operations. I'm not sure
   
+ * setuptools runs a test to ensure .pth files work by running "sys.executable -E -c pass". -E is ignore environment on CPython, but is different on Jython (takes an argument):
+ 
+  -E codec : Use a different codec the reading from the console.
+   
  * a site-packages dir (jython needs to include it on sys.path by default)
 
  * A few small upstream patches to setuptools, this includes so far:
