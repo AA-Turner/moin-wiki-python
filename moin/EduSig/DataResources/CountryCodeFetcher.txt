@@ -1,0 +1,32 @@
+{{{
+#!/usr/bin/env python                                                                                                                                
+                                                                                                                                                     
+import urllib2                                                                                                                                       
+from BeautifulSoup import BeautifulSoup                                                                                                              
+                                                                                                                                                     
+def FetchCountryCodes():                                                                                                                             
+    """Country Code List: ISO 3166-1993 (E)                                                                                                          
+                                                                                                                                                     
+      This international standard provides a two-letter alphabetic code for                                                                          
+      representing the names of countries, dependencies, and other areas of                                                                          
+      special geopolitical interest. The source of this code set is the Codes                                                                        
+      for the Representation of Names of Countries (ISO 3166-1993 (E)).                                                                              
+    """                                                                                                                                              
+                                                                                                                                                     
+    page = urllib2.urlopen("http://xml.coverpages.org/country3166.html")                                                                             
+    soup = BeautifulSoup(page)                                                                                                                       
+    page.close()                                                                                                                                     
+                                                                                                                                                     
+    countries = []                                                                                                                                   
+    for listrow in soup.html.body.table.findAll('tr')[1:]:                                                                                           
+        col1, col2 = listrow.findAll('td')                                                                                                           
+        code = col1.renderContents()                                                                                                                 
+        name = col2.renderContents()                                                                                                                 
+        countries.append( (code, name) )                                                                                                             
+    return countries                                                                                                                                 
+                                                                                                                                                     
+codes = FetchCountryCodes()                                                                                                                          
+print codes                                                                                                                                          
+}}}
+----
+CategoryPythonInEducation
