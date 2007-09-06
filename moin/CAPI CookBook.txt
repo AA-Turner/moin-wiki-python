@@ -1,0 +1,96 @@
+Describe CAPI CookBook here.
+
+Functions for returning an error with one call.
+{{{#!c
+PyObject *EXPP_ReturnPyObjError( PyObject * type, char *error_msg )
+{				/* same as above, just to change its name smoothly */
+	PyErr_SetString( type, error_msg );
+	return NULL;
+}
+}}}
+
+{{{
+int EXPP_ReturnIntError( PyObject * type, char *error_msg )
+{
+	PyErr_SetString( type, error_msg );
+	return -1;
+}
+}}}
+
+{{{
+PyObject *EXPP_incr_ret( PyObject * object )
+{
+	Py_INCREF( object );
+	return ( object );
+}
+}}}
+
+{{{
+/*****************************************************************************/
+/* Description: Checks whether all objects in a PySequence are of a same  */
+/*		given type.  Returns 0 if not, 1 on success.		 */
+/*****************************************************************************/
+int EXPP_check_sequence_consistency( PyObject * seq, PyTypeObject * against )
+{
+	PyObject *ob;
+	int len = PySequence_Length( seq );
+	int i, result = 1;
+
+	for( i = 0; i < len; i++ ) {
+		ob = PySequence_GetItem( seq, i );
+		if( ob == Py_None )
+			result = 2;
+		else if( ob->ob_type != against ) {
+			Py_DECREF( ob );
+			return 0;
+		}
+		Py_DECREF( ob );
+	}
+	return result;		/* 1 if all of 'against' type, 2 if there are (also) Nones */
+}
+}}}
+
+
+{{{
+/*
+ * Helper function for subtypes that what the base types methods.
+ * The command below needs to have args modified to have 'self' added at the start
+ * ret = PyObject_Call(PyDict_GetItemString(PyList_Type.tp_dict, "sort"), newargs, keywds);
+ * 
+ * This is not easy with the python API so adding a function here,
+ * remember to Py_DECREF the tuple after
+ */
+PyObject * EXPP_PyTuple_New_Prepend(PyObject *tuple, PyObject *value)
+{
+	PyObject *item;
+	PyObject *new_tuple;
+	int i;
+	
+	i = PyTuple_Size(tuple);
+	new_tuple = PyTuple_New(i+1);
+	PyTuple_SetItem(new_tuple, 0, value);
+	Py_INCREF(value);
+	while (i) {
+		i--;
+		item = PyTuple_GetItem(tuple, i);
+		PyTuple_SetItem(new_tuple, i+1, item);
+		Py_INCREF(item);
+	}
+	return new_tuple;
+}
+}}}
+
+
+{{{
+/* this function adds methods to a dictionary, in cases where the methods do not go into a module as is useual - for instance if you want to add methods to a type */
+void EXPP_PyMethodsToDict(PyObject *dict, struct PyMethodDef *meth)
+{
+	PyObject *value;
+	while (meth->ml_name) {
+		value = PyCFunction_New(meth, NULL);
+		PyDict_SetItemString(dict, meth->ml_name, value);
+		Py_DECREF(value);
+		meth++;
+	}
+}
+}}}
