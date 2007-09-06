@@ -1,9 +1,16 @@
 '''Gaps between Jython and Django'''
 
  * Jython does not have {{{__builtins__}}} as a module.  Django adds "_" as a convenience method for calling gettext in {{{django/conf/__init__.py}}}.  Jython needs an explicit import of {{{__builtin__}}} to achieve the same effect - django has been patched recently for this.
+    * According to the Python docs, {{{__builtins__}}} is a implementation detail and shouldn't be used by portable applications. -- LeonardoSoto
  * Jython does not have {{{sys.stdout.isatty}}}.  Jython should get added to the exclusions around that call in {{{django/core/management.py}}} (win32 and 'Pocket PC' are already excluded).
+   * Fixed in [http://code.djangoproject.com/changeset/6032 Django changeset 6032]
  * Jython does not have {{{os.W_OK}}} needed in {{{django/core/management.py}}}.  This probably will not be hard to add this since {{{java.io.File}}} has a {{{canWrite()}}}.
- * Jython does not support non-str keys in {{{__dict__}}} right now.  If Groves' HashMap replacement works out maybe this issue will disappear.  Problem encountered in {{{django/utils/_threading_local.py}}}
+   * {{{os.chmod}}} should be implemented too (After checking for write permissions, Django will try to change them if necessary).
+     * That's hard. Maybe Django shouldn't check for permissions if running on Jython.
+ * Jython does not support non-str keys in {{{__dict__}}} right now.  If Groves' HashMap replacement works out maybe this issue will disappear.  Problem encountered in {{{django/utils/_threading_local.py}}}.
  * Something goes wrong with {{{re.compile(u"([\u0080-\uffff])")}}} in {{{django/utils/text.py}}} I think it is a lacking in our array implementation but this needs more investigation.
+   * See [http://sourceforge.net/tracker/index.php?func=detail&aid=1544953&group_id=12867&atid=112867 bug 1544953]
  * stringmap (or the {{{__dict__}}} implementation) needs a {{{pop(o)}}} method.
  * func's and classes need {{{__module__}}}
+ * metaclasses need to know the {{{__module__}}} of its classes  [http://sourceforge.net/tracker/index.php?func=detail&aid=1781500&group_id=12867&atid=112867 bug] [http://sourceforge.net/tracker/index.php?func=detail&aid=1789137&group_id=12867&atid=312867 patch]
+ * inspect.isclass(time) shouldn't return True [http://sourceforge.net/tracker/index.php?func=detail&aid=1786009&group_id=12867&atid=112867 bug]
