@@ -57,8 +57,8 @@ int EXPP_check_sequence_consistency( PyObject * seq, PyTypeObject * against )
 /*
  * Helper function for subtypes that use the base types methods.
  * The command below needs to have args modified to have 'self' added at the start
- * ret = PyObject_Call(PyDict_GetItemString(PyList_Type.tp_dict, "sort"), newargs, keywds);
- * 
+ * ret = PyObject_Call(PyDict_GetItemString(PyList_Type.tp_dict, "sort"), args, keywds);
+ *
  * This is not easy with the python API so adding a function here,
  * remember to Py_DECREF the tuple after
  */
@@ -67,7 +67,7 @@ PyObject * EXPP_PyTuple_New_Prepend(PyObject *tuple, PyObject *value)
 	PyObject *item;
 	PyObject *new_tuple;
 	int i;
-	
+
 	i = PyTuple_Size(tuple);
 	new_tuple = PyTuple_New(i+1);
 	PyTuple_SetItem(new_tuple, 0, value);
@@ -116,6 +116,6 @@ typedef struct {
 
 int EXPP_Anonymous_compare( BPyAnonymousObject * a, BPyAnonymousObject * b )
 {
-	return ( a->pointer == b->pointer) ? 0 : -1;	
+	return ( a->pointer == b->pointer) ? 0 : -1;
 }
 }}}
