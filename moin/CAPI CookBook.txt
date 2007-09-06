@@ -55,7 +55,7 @@ int EXPP_check_sequence_consistency( PyObject * seq, PyTypeObject * against )
 == Tuple Prepend ==
 {{{
 /*
- * Helper function for subtypes that what the base types methods.
+ * Helper function for subtypes that use the base types methods.
  * The command below needs to have args modified to have 'self' added at the start
  * ret = PyObject_Call(PyDict_GetItemString(PyList_Type.tp_dict, "sort"), newargs, keywds);
  * 
@@ -94,5 +94,28 @@ void EXPP_PyMethodsToDict(PyObject *dict, struct PyMethodDef *meth)
 		Py_DECREF(value);
 		meth++;
 	}
+}
+}}}
+
+== Anonymous Pointer Comparison ==
+'''add to the header...'''
+{{{
+/* for anonymous comparisons */
+typedef struct {
+	PyObject_HEAD
+	void * pointer;
+} BPyAnonymousObject;
+}}}
+
+'''comparison function...'''
+{{{
+/*
+ * This is to compare any 2 types that have a pointer directly after the
+ * PyObject in their struct, this covers quite a few cp
+ * */
+
+int EXPP_Anonymous_compare( BPyAnonymousObject * a, BPyAnonymousObject * b )
+{
+	return ( a->pointer == b->pointer) ? 0 : -1;	
 }
 }}}
