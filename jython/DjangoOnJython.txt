@@ -14,3 +14,11 @@
  * func's and classes need {{{__module__}}}
  * metaclasses need to know the {{{__module__}}} of its classes  [http://sourceforge.net/tracker/index.php?func=detail&aid=1781500&group_id=12867&atid=112867 bug] [http://sourceforge.net/tracker/index.php?func=detail&aid=1789137&group_id=12867&atid=312867 patch]
  * inspect.isclass(time) shouldn't return True [http://sourceforge.net/tracker/index.php?func=detail&aid=1786009&group_id=12867&atid=112867 bug]
+ * {{{PyBoolean.__tojava__}}} returns an {{{Integer}}}
+   * It affects zxJDBC unless a DataHandler set the right type of boolean parameters. Fortunately, JDBC30DataHandler does right thing, at least on my limited tests -- LeonardoSoto
+ * {{{inspect.getargs()}}} doesn't work. 
+   * That's because {{{co_code}}} isn't supported by {{{PyTableCode}}}.
+     * '''But''', {{{co_code}}} is used by {{{getargs()}}} only to discover anonymous tuple arguments. Commenting such section seems to be enough to get the other cases working.
+ * Unicode string interpolation doesn't work in the general case.
+   * There is also a problem with the algorithm deciding whether to call {{{__str__}}} or {{{__unicode__}}}. More research is needed, but it affects the lazy string evaluation on which the Django i18n system relies.
+ * slice should be a type, not a function.
