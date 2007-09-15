@@ -21,6 +21,7 @@
  * Jython does not have {{{os.W_OK}}} needed in {{{django/core/management.py}}}.  This probably will not be hard to add this since {{{java.io.File}}} has a {{{canWrite()}}}.
    * {{{os.chmod}}} should be implemented too (After checking for write permissions, Django will try to change them if necessary).
      * That's hard. Maybe Django shouldn't check for permissions if running on Jython.
+ * Jython does not have {{{os.getpid()}}}.
  * Jython does not have {{{__builtins__}}} as a module.  Django adds "_" as a convenience method for calling gettext in {{{django/conf/__init__.py}}}.
     * According to the Python docs, {{{__builtins__}}} is a implementation detail and shouldn't be used by portable applications, so it's a Django problem.  (See note about {{{__builtins__}}} here: http://docs.python.org/ref/naming.html)
 
