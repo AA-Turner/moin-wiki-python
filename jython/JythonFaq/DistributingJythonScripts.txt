@@ -19,24 +19,20 @@ There are really 2 main ways to accomplish distributing your code and like most 
 '''Requirements'''
 
 For your script to run on another PC there isn't much in the way of requirements really only 2 that I can think of.
- * You need reasonably current JVM installed on the target machine, I've used every thing from Java 1.4.2 through Java 1.6
+ * You need reasonably current JVM installed on the target machine, I've used every thing from Java 1.4.2 through Java 1.6.
  * You need the standalone Jython Jar. 
-What I did is install Jython twice. Once as a regular installation (not standalone) and then once as standalone. then I renamed the standalone jyhton jar file to jythonStandalone.jar, moved it into my original Jython2.2 directory and deleted the other one.
+What I did is install Jython twice. Once as a regular installation (not standalone) and then once as standalone. Then I renamed the standalone jyhton jar file to jythonStandalone.jar, moved it into my original Jython2.2 directory and deleted the other one.
+[[BR]]__''Note:''__ ''you don't have to call it 'jythonStandalone' it is simply the name I chose you can use any name you like as long as it ends in .jar.
 
 
 '''Using the Class Path.'''
 
-Just set up the classpath with all the jars needed and passes
-that to java with -cp.  That's a pretty standard thing for command line
-Java tools to do, it isn't specific to Jython.  If you're going to do that,
-you can't use -jar though.  Just add the jython jar to the things you've added
-to the classpath and give Jython's main class, org.python.util.jython, explicitly.
-Optionally you can add a script as a parameter which would run as usual.
+Just set up the classpath with all the jars needed and passes that to java with -cp.  That's a pretty standard thing for command line Java tools to do, it isn't specific to Jython.  If you're going to do that, you can't use -jar though.  Just add the jython jar to the things you've added to the classpath and give Jython's main class, org.python.util.jython, explicitly. Optionally you can add a script as a parameter which would run as usual. This does not use jythonc in any way.
 
 So this would boil down to
  * having your scripts (*.py) outside the standalone jython.jar
  * having all the .jars you need on the classpath (including standalone jython.jar)
- * start java with the appropriate -cp (-classpath) option using a command.
+ * start java with the appropriate -cp (-classpath) option and package name.
 
 for example:
  *(Linux / Unix) java -cp /path/to/jython2.2/jython.jar:$CLASSPATH org.python.util.jython [file.py]
@@ -45,17 +41,11 @@ for example:
 
 '''Using the Jar Method'''
 
-This is my favorite method of distribution. Its less hassle for you,
-the developer, with fewer files to keep track of and easier for your end users to use.
+This is my favorite method of distribution. Its less hassle for you, the developer, with fewer files to keep track of and easier for your end users to use. This does not use jythonc in any way.
 
-If you are not using any 3rd party jar files the very simplest way is to add them
-to the standalone jython.jar, in the /Lib folder
+If you are not using any 3rd party jar files the very simplest way is to add them to the standalone jython.jar, in the /Lib folder
 
-if you ARE using 3rd party jars such as dom4j or maybe Apache Commons jars; what worked
-very well for me is to explode the jar files, delete the meta_inf directory since
-you wont need it and copy the the org or com directory into the standalone Jython jar file
-into the /org directory.  If you do that, you don't have to mess with python.path and the like.
-Imports should just work.
+if you ARE using 3rd party jars such as dom4j or maybe Apache Commons jars; what worked very well for me is to explode the jar files, delete the meta_inf directory since you wont need it and copy the the org or com directory into the standalone Jython jar file into the root directory. If you do that, you don't have to mess with python.path and the like. Imports should just work. For example, the dom4j directory extracts in to a directory structure that starts org/dom4j/*. The entire org directory structure should be copied into the standalone Jython jar file into the root directory so that the jar now contains /org/pyhton and/org/dom4j. 
 
 So this would boil down to
  * having your scripts (*.py) inside standalone jython.jar in the /lib directory
@@ -72,12 +62,12 @@ you can manipulate .jar files with a tools like:
     * total commander: http://www.ghisler.com/index.htm
     * servant salamander: http://www.altap.cz/download.html#sal25
 
-Obviously the tools listed are just examples, not endorsements(!). You should use what ever works best for you. I've tried using winzip but had difficulty with it. Maybe ant would be another way to do this. if someone wants to post an ant script that would be wonderful because I'm hardly an ant expert.
+Obviously the tools listed are just examples, __not endorsements(!)__. You should use what ever works best for you. I've tried using winzip but had difficulty with it. Maybe ant would be another way to do this. if someone wants to post an ant script that would be wonderful because I'm hardly an ant expert.
 
-for additional info I would strongly suggest you review Oti's notes at http://jython.extreme.st/talk/talk.html
-(search for Script Deployment)
+For additional info I would strongly suggest you review Oti's notes at http://jython.extreme.st/talk/talk.html
+(search for Script Deployment).
 
-for me personally I found the jar method worked best for me. I had the supporting jars and scripts in the standalone jython jar and then the primary script separately. So I had 2 files that I distributed one .jar and one .py. Because the support files were pretty stable and didn't change this allowed me to easily improve and fix bugs in the main .py file
+For me personally I found the jar method worked best for me. I had the supporting jars and scripts in the standalone jython jar and then the primary script separately. So I had 2 files that I distributed one .jar and one .py. Because the support files were pretty stable and didn't change this allowed me to easily improve and fix bugs in the main .py file.
 
 I could have only distributed a single jar file by renaming my main .py file to `__run__.py` and putting it into the /lib directory of the jar file. Then the command simply becomes java -jar jython.jar (or whatever I want to call the jar file).
 
@@ -87,8 +77,7 @@ check out these postings to the mailing list (all from aug 2007):
  * http://article.gmane.org/gmane.comp.lang.jython.user/5820
  * and David Huebel recommends http://seanmcgrath.blogspot.com/JythonWebAppTutorial.html the first part looks pretty good.
 
-Finally, as in all things YMMV. If you have different experences or just think I'm just crazy then
-dont just sit there and complain, contribute to the wiki!
+Finally, as in all things [http://en.wiktionary.org/wiki/your_mileage_may_vary YMMV]. If you have different experences or just think I'm just crazy then dont just sit there and complain, contribute to the wiki!
 
 I'd like to thank Oti H., Charlie G., Frank W., and all the others that have helped along the way.
 
