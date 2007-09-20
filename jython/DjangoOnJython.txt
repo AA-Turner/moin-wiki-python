@@ -4,6 +4,7 @@
 
  * Jython does not support non-str keys in {{{__dict__}}} right now.  If Groves' {{{HashMap}}} replacement works out maybe this issue will disappear.  Problem encountered in {{{django/utils/_threading_local.py}}}.
  * Unicode string interpolation doesn't work in the general case.
+   * {{{u'%s' % CustomClassThatImplementsStrAndUnicode() }}} raises unsupported operand type(s) for %
    * There is also a problem with the algorithm deciding whether to call {{{__str__}}} or {{{__unicode__}}}. More research is needed, but it affects the lazy string evaluation on which the Django i18n system relies ({{{django/utils/functional.py}}}).
  * Something goes wrong with {{{re.compile(u"([\u0080-\uffff])")}}} in {{{django/utils/text.py}}} I think it is a lacking in our array implementation but this needs more investigation.
    * See [http://sourceforge.net/tracker/index.php?func=detail&aid=1544953&group_id=12867&atid=112867 bug 1544953]
@@ -12,6 +13,7 @@
    * That's because {{{co_code}}} isn't supported by {{{PyTableCode}}}.
      * '''But''', {{{co_code}}} is used by {{{getargs()}}} only to discover anonymous tuple arguments. Commenting such section seems to be enough to get the other cases working.
  * inspect.isclass(time) shouldn't return True [http://sourceforge.net/tracker/index.php?func=detail&aid=1786009&group_id=12867&atid=112867 bug]
+   * Django [http://code.djangoproject.com/changeset/6194 works around this] until it's fixed.
  * {{{time}}} module lacks {{{strptime()}}}. 
 
 === Minor annoyances ===
@@ -19,13 +21,10 @@
  * slice should be a type, not a function. [http://sourceforge.net/tracker/index.php?func=detail&aid=1791931&group_id=12867&atid=112867 bug]
  * {{{PyBoolean.__tojava__}}} returns an {{{Integer}}}
    * It affects zxJDBC unless a DataHandler sets the right type of boolean parameters. Fortunately, JDBC30DataHandler does this thing, at least on my limited tests -- LeonardoSoto
- * Jython does not have {{{os.W_OK}}} needed in {{{django/core/management.py}}}.  This probably will not be hard to add this since {{{java.io.File}}} has a {{{canWrite()}}}.
-   * {{{os.chmod}}} should be implemented too (After checking for write permissions, Django will try to change them if necessary).
-     * That's hard. Maybe Django shouldn't check for permissions if running on Jython.
- * Jython does not have {{{os.getpid()}}}.
+   * 
  * Jython does not have {{{__builtins__}}} as a module.  Django adds "_" as a convenience method for calling gettext in {{{django/conf/__init__.py}}}.
     * According to the Python docs, {{{__builtins__}}} is a implementation detail and shouldn't be used by portable applications, so it's a Django problem.  (See note about {{{__builtins__}}} here: http://docs.python.org/ref/naming.html)
- * Jython methods are not descriptors. It seems a implementation datail. [https://hg.leosoto.com/django.jythonport/diff/50371f2df15a/django/dispatch/saferef.py Here] is the relevant code and a potential fix from the Django side.
+ * Jython methods are not descriptors. It seems a implementation detail. [https://hg.leosoto.com/django.jythonport/diff/50371f2df15a/django/dispatch/saferef.py Here] is the relevant code and a potential fix from the Django side.
 
 === Already Fixed ===
 
@@ -34,3 +33,9 @@
  * stringmap (or the {{{__dict__}}} implementation) needs a {{{pop(o)}}} method.
  * Jython lists and tuples don't have {{{__iter__}}} . 
    * Fixed in [http://code.djangoproject.com/changeset/6211 Django changeset 6211]
+ * Jython does not have {{{os.getpid()}}}.
+   * Django workarounds it now.
+ * Jython does not have {{{os.W_OK}}} needed in {{{django/core/management.py}}}.  This probably will not be hard to add this since {{{java.io.File}}} has a {{{canWrite()}}}.
+   * {{{os.chmod}}} should be implemented too (After checking for write permissions, Django will try to change them if necessary).
+     * That's hard. Maybe Django shouldn't check for permissions if running on Jython.
+   * Django don't tries to check or change file permissions when running on Jython now
