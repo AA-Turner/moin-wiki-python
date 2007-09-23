@@ -1012,9 +1012,7 @@ def printSep():
 
 def printHoL(s, hol):
     print s
-    items = hol.items();
-    items.sort()
-    for key, value in items:
+    for key, value in sorted(hol.items()):
         print key, ':', " ".join(value)
     printSep()
 
@@ -1364,8 +1362,7 @@ printSep();
 
 
 {{{
-families = HoL.items();
-families.sort()
+families = sorted(HoL.items());
 for surname, members in families:
     print '%s: %s' % (surname, " ".join(members))
 printSep()
@@ -1386,9 +1383,7 @@ printSep();
 }}}
 
 {{{
-k = HoL.keys();
-k.sort()
-for surname in k:
+for surname in sorted(HoL.keys()):
     print 'surname: ',
     for (i, member) in enumerate(HoL[surname]):
         print '%d = %s' % (i, member),
