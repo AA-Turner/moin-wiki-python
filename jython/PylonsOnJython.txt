@@ -1,0 +1,34 @@
+The things/steps needed to get Pylons running on Jython:
+
+* The ability to install Pylons and all its dependencies:
+
+  - distutils and setuptools (See SetuptoolsOnJython)
+
+Ensure all dependencies' tests pass:
+
+* Paste, PasteDeploy and PasteScript
+
+* Routes
+
+  - (I actually tested routes on Jython over a year ago and all the tests passed after one small change)
+
+* Beaker
+
+* WebHelpers
+
+* FormEncode
+
+* simplejson
+
+* decorator
+
+  - Note: decorators aren't currently supported in Jython, however the decorator module doesn't actually use decorators (works on CPython 2.3)
+
+* nose
+  - nose requires the optparse (easy) and the compiler module (sort of easy -- compiler requires the parser module, which isn't easy to get). nose only needs the compiler module to use compiler.consts.CO_GENERATOR, maybe jython could provide a broken compiler module that doesn't import parser.
+
+* Mako
+
+Later down the road:
+
+* SQLAlchemy. The [http://www.sqlalchemy.org/trac/ticket/672 Dialect Refactor II] ticket will need to be implemented to properly support using SQLAlchemy via Jython's DBAPI jdbc driver, [http://jython.org/Project/userguide.html#database-connectivity-in-jython zxJDBC]. Frank Wierzbicki has done some preliminary work on using SQLAlchemy with Jython, info [http://groups.google.com/group/sqlalchemy/browse_frm/thread/d60db24fe1683a41/09320033f406d78b?hl=en&lnk=gst here]
