@@ -2,7 +2,7 @@
 
 === Major problems ===
 
- * Jython does not support non-str keys in {{{__dict__}}} right now.  If Groves' {{{HashMap}}} replacement works out maybe this issue will disappear.  Problem encountered in {{{django/utils/_threading_local.py}}}.
+ * Jython does not support non-str keys in {{{__dict__}}} right now.  Jim Baker replaced the custom dictionary in {{{PyStringMap}}} with a {{{HashMap}}} (along Groves' earlier work). This change should resolve this problem.  Try the [https://jython.svn.sourceforge.net/svnroot/jython/branches/modern/ modern] branch. Problem encountered in {{{django/utils/_threading_local.py}}}. 
  * There is a problem with the algorithm deciding whether to call {{{__str__}}} or {{{__unicode__}}}. More research is needed, but it affects the lazy string evaluation on which the Django i18n system relies ({{{django/utils/functional.py}}}), among other things.
    * I found that {{{object.__unicode__}}} doesn't exist in CPython, and if it's removed from jython this works as expected. [https://sourceforge.net/tracker/?func=detail&atid=112867&aid=1800378&group_id=12867 bug] [https://sourceforge.net/tracker/?func=detail&atid=312867&aid=1800381&group_id=12867 patch] -- TristanKing
  * Something goes wrong with {{{re.compile(u"([\u0080-\uffff])")}}} in {{{django/utils/text.py}}} I think it is a lacking in our array implementation but this needs more investigation.
