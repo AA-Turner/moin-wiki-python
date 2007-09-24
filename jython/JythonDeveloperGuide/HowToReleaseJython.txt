@@ -6,14 +6,11 @@ These are just some rough notes on the steps needed to make a full release of Jy
   1. NEWS
   1. README
  1. Run regrtest and the bugtests
- 1. Copy trunk and installer to a tag
-  1. svn mkdir https://jython.svn.sourceforge.net/svnroot/jython/tags/Release_2_2rc2
-  1. svn cp https://jython.svn.sourceforge.net/svnroot/jython/trunk/jython https://jython.svn.sourceforge.net/svnroot/jython/tags/Release_2_2rc2
-  1. svn cp https://jython.svn.sourceforge.net/svnroot/jython/trunk/installer https://jython.svn.sourceforge.net/svnroot/jython/tags/Release_2_2rc2
+ 1. Copy maint to a tag
+  1. svn cp https://jython.svn.sourceforge.net/svnroot/jython/branches/Release_2_2maint https://jython.svn.sourceforge.net/svnroot/jython/tags/Release_2_2_1
  1. build from tag
-  1. svn co tag release_checkout
-  1. cp ant.properties into release_checkout/jython
-  1. ant full-build in release_checkout/jython
+  1. set svn.main.dir to tags/Release_2_2_1 in ant.properties
+  1. ant full-build
  1. upload installer
   1. go to Admin/File Release on sourceforge
   1. Click on Add release next to the jython package
