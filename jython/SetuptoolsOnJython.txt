@@ -6,15 +6,15 @@ Setuptools requirements:
 
 We don't have:
 
- * the kicker, a working os.chdir. I hacked together a really quick version of this, and setuptools was able to get pretty far at installing Pylons. Pylons itself and a number of its dependencies installed fine, but the process died installing the decorator module due to marshal raising a KeyError
+ * the kicker, a working os.chdir. I hacked together [http://hg.underboss.org/jython-pjenvey/rev/51246729a616 a really quick version of this ], and setuptools was able to get pretty far at installing Pylons. Pylons itself and a number of its dependencies installed fine, but the process died installing the decorator module due to marshal raising a KeyError
  
  * working marshal. setuptools uses marshal.load, and there's some bugs with our current marshaller
 
- * tarfile module. This requires a small patch to PyString to work for setuptools. I believe it may require some additions to the os module for test_tarfile.py to pass
+ * tarfile module. This requires [http://hg.underboss.org/jython-pjenvey/rev/3507a9b953fa a small patch to PyString] to work for setuptools. I believe it may require some additions to the os module for test_tarfile.py to pass
 
  * a valid sys.executable. required by setuptools and distutils for spawning subprocesses. It's impossible to determine argv[0] from java: I'm thinking the jython executable should pass this information along to Jython (java -Dpython.executable=$0)
 
- * distutils: requires a number of small patches:
+ * distutils: requires [http://hg.underboss.org/jython-pjenvey/rev/1026fe32c01c a number of small patches]:
   
   - distutils metadata for the os.name == 'java' (like path names, default bdist type, etc)
     
@@ -23,7 +23,7 @@ We don't have:
   - a valid sys.executable    
   
  * tempfile.mkstemp
-  - I have patch #1783692 implementing mkstemp (without a valid file descriptor) and NamedTemporaryFile with Java's secure File.createTempFile '''* See below'''
+  - I have [http://jython.org/patches/1783692 patch #1783692] implementing mkstemp (without a valid file descriptor) and NamedTemporaryFile with Java's secure File.createTempFile '''* See below'''
     
  * imp.acquire/release_lock
   This is just a simple lock, but may have to be used by internal imp operations. I'm not sure
