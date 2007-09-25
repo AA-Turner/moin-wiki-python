@@ -538,3 +538,73 @@ if __name__ == '__main__':
     Example()
 
 }}}
+
+=== JDesktopPane and JInternalFrame Demo ===
+{{{#!python
+from javax.swing import JFrame, JDesktopPane, JInternalFrame, JMenuBar, JMenu, JMenuItem, JScrollPane
+
+class DesktopPaneAndInternalFrameDemo(JFrame):
+    """
+
+    A demonstration of JDesktopPane() and JInternalFrame()
+    By: astigmatik, Sept 2007
+
+    """
+    def __init__(self):
+        """
+        The JFrame.__init__ lines below don't have to be written in multiple lines.
+        This is just for readability.
+        """
+        JFrame.__init__(self,
+                        'JDesktopPane and JInternalFrame Demo',
+                        size=(500, 500),
+                        defaultCloseOperation=JFrame.EXIT_ON_CLOSE)
+
+        self.internalFrameCounter = 0
+        self.createDesktop()
+        self.createMenus()
+
+    def createDesktop(self):
+        self.desktop = JDesktopPane()
+        """
+        Normally, it's not allowed to do a "self.object = value" inside the class
+        if the self.object has not been instantiated. However, in this case, since we are
+        calling self.createDesktopPane() on __init__(), then it is ok.
+        """
+
+        self.contentPane.add(JScrollPane(self.desktop)) # This is the same as self.getContentPane().add(...)
+
+    def createMenus(self):
+
+        menu = JMenu('File')
+        menu.add(JMenuItem('Create new JInternalFrame', actionPerformed=self.createInternalFrame))
+
+        menubar = JMenuBar()
+        menubar.add(menu)
+
+        self.setJMenuBar(menubar)
+
+    def createInternalFrame(self, event):
+        """
+        event has to be supplied whenever there is an event generated, viz. from a menu being clicked,
+        mouse button being clicked, or keypresses, etc.
+        """
+        self.internalFrameCounter += 1
+
+        iframeName = 'JInternalFrame %s' % self.internalFrameCounter
+        iframe     = JInternalFrame(iframeName, 1, 1, 1, 1, size=(400, 400), visible=1)
+        """
+        The 1's refer to boolean resizable, closable, maximizable, and iconifiable.
+        Jython's True and False are 1 and 0 respectively. So all the 1's above can be replaced with True.
+        """
+
+        self.desktop.add(iframe)
+        iframe.setSelected(1)
+        iframe.moveToFront()
+
+
+if __name__ == '__main__':
+    demo = DesktopPaneAndInternalFrameDemo()
+    demo.setLocation(30, 30)
+    demo.show()
+}}}
