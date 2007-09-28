@@ -28,6 +28,7 @@
  * Jython does not have {{{__builtins__}}} as a module.  Django adds "_" as a convenience method for calling gettext in {{{django/conf/__init__.py}}}.
     * According to the Python docs, {{{__builtins__}}} is a implementation detail and shouldn't be used by portable applications, so it's a Django problem.  (See note about {{{__builtins__}}} here: http://docs.python.org/ref/naming.html)
  * Jython methods are not descriptors. It seems a implementation detail. [https://hg.leosoto.com/django.jythonport/diff/50371f2df15a/django/dispatch/saferef.py Here] is the relevant code and a potential fix from the Django side.
+ * Jython classes which extend dict cannot be compared to a dict. [https://sourceforge.net/tracker/index.php?func=detail&aid=1804011&group_id=12867&atid=112867 bug] [https://dev.archer.edu.au/projects/kepler/changeset/149?format=diff&new=149 django patch]
 
 === Already Fixed ===
 
