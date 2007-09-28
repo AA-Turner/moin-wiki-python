@@ -82,7 +82,7 @@ I could have only distributed a single jar file by renaming my main .py file to 
 $ java org.python.util.jython -jar myapp.jar
 }}}
 
-If you use this method, you may have to add you jar file (myapp.jar in the above example command line) to your CLASSPATH environment variable.
+If you use this method, you may have to add your jar file (myapp.jar in the above example command line) to your CLASSPATH environment variable.
 
 
 == Building jars - some samples ==
@@ -94,7 +94,7 @@ The following example scripts were developed on Linux (and the bash shell), but 
 
 === Add Jython install stuff to our jar ===
 
-To build our jar, we first make a copy of jython.jar, then add the Lib/ directory to it:
+To build our jar, we first make a copy of jython.jar, then add the contents of the Lib/ directory to it:
 
 {{{
 $ cd $JYTHON_HOME
@@ -179,8 +179,17 @@ $ cp mymainscript.py __run__.py
 # Add your start-up script (__run__.py) ot the jar.
 $ zip myapp.jar __run__.py
 # Add path to main jar to the CLASSPATH environment variable.
-$ export CLASSPATH=$MYAPP_PATH:$CLASSPATH
+$ export CLASSPATH=/path/to/my/app/myapp.jar:$CLASSPATH
 }}}
+
+On MS Windows, that last line, setting the {{{CLASSPATH}}} environment variable, would look something like this:
+
+{{{
+set CLASSPATH=C:\path\to\my\app\myapp.jar;%CLASSPATH%
+}}}
+
+Or, again on MS Windows, use the Control Panel and the System properties to set the CLASSPATH environment variable.
+
 
 Run the application:
 
