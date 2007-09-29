@@ -27,9 +27,65 @@ set CLASSPATH=C:\Jython\Jython2.2\rome-0.9.jar;%CLASSPATH%
 set CLASSPATH=C:\Jython\Jython2.2\jdom.jar;%CLASSPATH%
 }}}
 
-MAC:
 
 == Parsing Feeds ==
+
+Parsing feeds is easy with ROME.  Using ROME with Jython makes it even easier with the elegant Jython syntax.  I am not a professional Python or Jython programmer, I am a professional Java programmer and DBA by profession, so my Jython interpretation may be even  ''wordier'' than it should be.
+
+I took the FeedReader example from the ROME site and translated it into Jython below.  You can copy and paste the following code into your own FeedReader.py module and run it to parse feeds.  However, the output is unformatted and ugly...creating a good looking front end is up to you.
+
+''FeedReader.py''
+{{{
+########################################
+# File:  FeedReader.py
+# Author: J. Juneau 
+# 
+# This module can be used to parse an RSS feed
+########################################
+from java.net import URL
+from java.io import InputStreamReader
+from java.lang import Exception
+from java.lang import Object
+from com.sun.syndication.feed.synd import SyndFeed
+from com.sun.syndication.io import SyndFeedInput
+from com.sun.syndication.io import XmlReader
+
+class FeedReader(Object):
+   def __init__(self, url):
+      self.inUrl = url
+
+   def readFeed(self):
+      ok = False
+      #####################################
+      # If url passed in is blank, then use a default
+      #####################################
+      if self.inUrl != '':
+         rssUrl = self.inUrl
+      else:
+         rssUrl = "http://www.dzone.com/feed/frontpage/java/rss.xml"
+      #####################################
+      # Parse feed located at given URL
+      #####################################
+      try:
+         feedUrl = URL(rssUrl)
+         input = SyndFeedInput()
+         feed = input.build(XmlReader(feedUrl))
+         ####################################
+         # Do something here with feed data
+         ####################################
+         print(feed)
+         ok = True
+      except Exception, e:
+         print 'An exception has occurred', e
+      if ok != True:
+         print 'An error has occurred in this reader'
+
+if __name__== "__main__":
+    reader = FeedReader('')
+    reader.readFeed()
+    print '*******************Command Complete...RSS has been parsed***********************'    
+
+}}}
 
 == Creating Feeds ==
 
