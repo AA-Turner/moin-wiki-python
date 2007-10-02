@@ -5,7 +5,6 @@
 === Major problems ===
 
  * Jython does not support non-str keys in {{{__dict__}}} right now.  Jim Baker replaced the custom dictionary in {{{PyStringMap}}} with a {{{HashMap}}} (along Groves' earlier work). This change should resolve this problem.  Try the [https://jython.svn.sourceforge.net/svnroot/jython/branches/modern/ modern] branch. Problem encountered in {{{django/utils/_threading_local.py}}}. 
- * There is a problem with the algorithm deciding whether to call {{{__str__}}} or {{{__unicode__}}}. More research is needed, but it affects the lazy string evaluation on which the Django i18n system relies ({{{django/utils/functional.py}}}), among other things.
    * I found that {{{object.__unicode__}}} doesn't exist in CPython, and if it's removed from jython this works as expected. [https://sourceforge.net/tracker/?func=detail&atid=112867&aid=1800378&group_id=12867 bug] [https://sourceforge.net/tracker/?func=detail&atid=312867&aid=1800381&group_id=12867 patch] -- TristanKing
  * Something goes wrong with {{{re.compile(u"([\u0080-\uffff])")}}} in {{{django/utils/text.py}}} I think it is a lacking in our array implementation but this needs more investigation.
    * See [http://sourceforge.net/tracker/index.php?func=detail&aid=1544953&group_id=12867&atid=112867 bug 1544953]
@@ -27,8 +26,10 @@
    * It affects zxJDBC unless a DataHandler sets the right type of boolean parameters. Fortunately, JDBC30DataHandler does this thing, at least on my limited tests -- LeonardoSoto
  * Jython does not have {{{__builtins__}}} as a module.  Django adds "_" as a convenience method for calling gettext in {{{django/conf/__init__.py}}}.
     * According to the Python docs, {{{__builtins__}}} is a implementation detail and shouldn't be used by portable applications, so it's a Django problem.  (See note about {{{__builtins__}}} here: http://docs.python.org/ref/naming.html)
- * Jython methods are not descriptors. It seems a implementation detail. [https://hg.leosoto.com/django.jythonport/diff/50371f2df15a/django/dispatch/saferef.py Here] is the relevant code and a potential fix from the Django side.
+ * Jython methods are not descriptors. It seems a implementation detail. [http://code.djangoproject.com/ticket/5664 django patch]
  * Jython classes which extend dict cannot be compared to a dict. [https://sourceforge.net/tracker/index.php?func=detail&aid=1804011&group_id=12867&atid=112867 bug] [https://dev.archer.edu.au/projects/kepler/changeset/149?format=diff&new=149 django patch]
+ * Jython doesn't recognize {{{__unicode__}}} methods assigned to instances. 
+    * But, this is the only {{{__*__}}} method where CPython allows this, and it's not documented anywhere. So, it's a implementation detail and should be fixed on Django. [http://code.djangoproject.com/ticket/5560 django patch]
 
 === Already Fixed ===
 
