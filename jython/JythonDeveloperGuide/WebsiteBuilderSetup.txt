@@ -2,15 +2,24 @@ CharlieGroves, incept: 2006-08-27
 
 Jython uses reStructuredText and a custom writer to build its site.  This describes how to set it up.
 
-1. Download and install [http://docutils.sourceforge.net/ docutils].  Either grab it from the site and go through the normal 'python setup.py install' deal or  just run 'easy_install docutils' if you've already got [http://peak.telecommunity.com/DevCenter/EasyInstall EasyInstall].
-
-2. Grab the site builder out of svn and install it.
+  1. Download and install [http://docutils.sourceforge.net/ docutils].  Either grab it from the site and go through the normal 'python setup.py install' deal or  just run 'easy_install docutils' if you've already got [http://peak.telecommunity.com/DevCenter/EasyInstall EasyInstall].
+  1. Grab the site builder out of svn and install it.
    {{{
-   svn co https://svn.sourceforge.net/svnroot/jython/trunk/sandbox/wierzbicki/jysite
-   cd jysite
-   python setup.py install}}}
+svn co https://svn.sourceforge.net/svnroot/jython/trunk/sandbox/wierzbicki/jysite
+cd jysite
+python setup.py install}}}
+  1. Checkout the actual website code from https://svn.sourceforge.net/svnroot/jython/trunk/website
 
-3. Checkout the actual website code from https://svn.sourceforge.net/svnroot/jython/trunk/website
-
-Now you can build the site using ant.  Change into your checkout directory and run ant with no target to build the site and a .tgz file with its contents for easy uploading.  For just making changes and looking at them I run 'ant clean generate'.  The rst that comprises most of the site is in Project.
+Now you can build the site using ant.  Change into your checkout directory and run ant with no target to build the site.  The rst that comprises most of the site is in Project.
    
+
+To deploy the site:
+
+ 1.  Run ant copy2sf to build a tar.bz2 of the site and scp it to sourceforge
+ 1.  ssh to sourceforge
+ 1.  Unpack the site
+{{{
+cd /home/groups/j/jy/jython/htdocs
+tar xfj ../website.tar.bz2}}}
+
+You'll want to have `umask 002` and `newgrp jython` in your .bash_login so the site is updatable by others as well.  
