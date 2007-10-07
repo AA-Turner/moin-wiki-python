@@ -13,6 +13,18 @@ In this first article, let's look at a common scripting task in which one has to
 
 In this case, one has a directory of data about a list of clients. Within the directory are an arbitrary number of text files with a .dat extension. Each file contains a number of lines including such information as the business name, current advertising slogan, etc.
 
+An example of such a file (with descriptive comment per line):
+
+{{{
+39762                      # client ID number
+Shamus Banjo Supply        # client location name
+123 Algo Lugar             # street address
+Nadie, NV 98765            # city, state, zip
+We beat your best deal!    # marketing slogan
+Julio Shamus               # manager name
+123-456-7890               # phone number
+}}}
+
 The task at hand is to produce a file in which each line contains the contents of one of the client information files, with each line in that file written out one of a series of tab-delimited columns. For good measure, the programmer adds an additional column containg a readable timestamp of when the record was inserted into the file.
 
 === Implementation ===
