@@ -25,36 +25,44 @@ Julio Shamus               # manager name
 123-456-7890               # phone number
 }}}
 
-The task at hand is to produce a file in which each line contains the contents of one of the client information files, with each line in that file written out one of a series of tab-delimited columns. For good measure, the programmer adds an additional column containg a readable timestamp of when the record was inserted into the file.
+The task at hand is to produce a file in which each line contains the contents of one of the client information files, with each line in the source file written out as one of a series of tab-delimited fields in the created file. Additionally, the programmer appends a readable timestamp of when the record was inserted into the file.
 
 === Implementation ===
 
 Let's look at the code:
 
 {{{#!python
+# import of modules from standard library
 import time, glob
 
+# working directory and output file name
 demographicsDir = 'C:/demographics/'
-
 clientListFile = 'customers.xls'
 
+# iterate through list of *.dat files in the folder
 for clientInfoFilename in glob.glob(demographicsDir+'*.dat'):
+
+  # read from one file and append to another
   inputFile = open(clientInfoFilename,'r')
   outputFile = open(demographicsDir+clientListFile,'a')
 
+  # no special syntax for nested 'for' loop
   for line in inputFile:
     outputFile.write(line.replace('\n','\t'))
 
+  # append time stamp
   outputFile.write(time.ctime()+'\n')
+
+  # not safe to assume files will always close automatically
   inputFile.close()
   outputFile.close()
 }}}
 
 === Avoiding Headaches ===
 
-Notice in the creation of the demographicsDir variable that '/' is used instead of '\', despite the fact that the 'C:' suggests this is taking place on a computer running Windows. It is possible, and not amazingly difficult to write code using the typical Windows '\' character, but doing so introduces some potentially fussy details involving raw strings and having to escape one '\' with another, so that '\\' produces the result one would expect from '\'.
+Notice in the creation of the demographicsDir variable that '/' is used instead of '\', despite the fact that the 'C:' suggests this is taking place on a computer running Windows. It is possible, and not amazingly difficult, to write code using the typical Windows '\' character, but doing so introduces some potentially fussy details involving raw strings and/or having to escape one '\' with another, so that '\\' produces the result one would expect from '\'. 
 
-I also opted to wrap file and directory names in variables for a few different reasons. First off, doing so enables the programmer to change the name of a file or directory in one place instead of having to track down each place that file or directory is referenced and change it there. In programs of any meaningful size and sophistication, this can be a real headache.
+I also opted to wrap file and directory names in variables for a few different reasons. First off, doing so enables the programmer to change the name of a file or directory in one place instead of having to track down each reference to the file or directory and change it there. In programs of any meaningful size and sophistication, this can be a real headache.
 
 Secondly, and of equal importance, is that using meaningful variable names in your code will make it easier to read and understand later. Someone (and that someone may well be you) will have to maintain that code sooner or later, and far fewer tears will be shed if good names were chosen right from the start. 
 
@@ -72,19 +80,21 @@ One of the basic ideas involved in this use of whitespace is that well-written c
 
 === Reading, Writing, and Looping Through Contents of Multiple Files ===
 
-Notice that inside the first 'for' loop, new statements are indented a certain amount, and each is indented the same amount as all other statements in the loop.
+Inside the first 'for' loop, new statements are indented a certain amount, and each is indented the same amount as all other statements in the loop.
 
-Also, one of the statements in the 'for' loop is the initiation of an additional 'for' loop. So statements within that loop will be indented further and consistently (even though this particular) 'for' loop only contains one statement.
+Also, one of the statements in the 'for' loop is the initiation of an additional 'for' loop. So statements within that loop will be indented further and consistently (even though this particular) 'for' loop only contains one statement).
 
-If you look closely at the single line within that nested 'for' loop, you may notice that it writes each line of the input file to the output file, but replaces the newline character ('\n') with a tab ('\t'). This ensures that each line of the output file will be a tab-delimited grid of information from the various input files.
+The single line (line 17) within that nested 'for' loop writes each line of the input file to the output file, but replaces the newline character ('\n') with a tab ('\t'). Each line of the output file will be one record in a tab-delimited grid of information from the various input files.
 
-In the main 'for' loop, each input file is opened once with the 'r' argument to the file opening statement, so that the script may read its data. The output file is opened with the 'a' argument, so new information from the input files is appended to it, or tacked onto the end.
+Each output file line ends with the newline character inserted after the timestamp on line 20 in the code. If the indentation of line 20 were increased one level, it would belong to the nested 'for' loop resulting in a significantly altered output file.
+
+In the main 'for' loop, each input file is opened once with the 'r' argument to the file opening statement, so that the script may read its data. The output file is opened with the 'a' argument, so new information from the input files is appended to it, or tacked onto the end. Of course, 'read' and 'append' are only two among various options for file opening.
 
 So we start off with multiple input files, but only create one output file. And if the output file already exists, neither the file nor its current contents are over-written.
 
 === Looking Ahead ===
 
-In future articles, we can build on these an other basic ideas to introduce exception handling to deal with potential snags your scripts may encounter, various ways of obtaining variable data from outside the script's source file (shell arguments, raw user input, GUI form data, etc.), more sophisticated string formatting operations, incorporating java resources, etc.
+In future articles, we can build on these an other basic ideas, such as exception handling to deal with potential snags your scripts may encounter, various ways of obtaining variable data from outside the script's source file (shell arguments, raw user input, GUI form data, etc.), more sophisticated string formatting operations, incorporating java resources, etc.
 
 I hope these articles will make jython more approachable to new users and welcome both comment and correction.
 
