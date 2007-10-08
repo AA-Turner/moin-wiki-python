@@ -39,12 +39,14 @@ import time, glob
 demographicsDir = 'C:/demographics/'
 clientListFile = 'customers.xls'
 
+# a single file to display a grid of the combined contents of the .dat files
+outputFile = open(demographicsDir+clientListFile,'a')
+
 # iterate through list of *.dat files in the folder
 for clientInfoFilename in glob.glob(demographicsDir+'*.dat'):
 
-  # read from one file and append to another
+  # read from each .dat file
   inputFile = open(clientInfoFilename,'r')
-  outputFile = open(demographicsDir+clientListFile,'a')
 
   # no special syntax for nested 'for' loop
   for line in inputFile:
@@ -55,7 +57,8 @@ for clientInfoFilename in glob.glob(demographicsDir+'*.dat'):
 
   # not safe to assume files will always close automatically
   inputFile.close()
-  outputFile.close()
+
+outputFile.close()
 }}}
 
 === Avoiding Headaches ===
@@ -88,7 +91,7 @@ The single line (line 17) within that nested 'for' loop writes each line of the 
 
 Each output file line ends with the newline character inserted after the timestamp on line 20 in the code. If the indentation of line 20 were increased one level, it would belong to the nested 'for' loop resulting in a significantly altered output file.
 
-In the main 'for' loop, each input file is opened once with the 'r' argument to the file opening statement, so that the script may read its data. The output file is opened with the 'a' argument, so new information from the input files is appended to it, or tacked onto the end. Of course, 'read' and 'append' are only two among various options for file opening.
+In the main 'for' loop, each input file is opened once with the 'r' argument to the file opening statement, so that the script may read its data. The output file has, by this point, been opened with the 'a' argument, so new information from the input files is appended to it, or tacked onto the end. Of course, 'read' and 'append' are only two among various options for file opening.
 
 So we start off with multiple input files, but only create one output file. And if the output file already exists, neither the file nor its current contents are over-written.
 
