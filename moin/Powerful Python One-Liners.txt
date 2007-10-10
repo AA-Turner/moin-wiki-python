@@ -43,6 +43,14 @@ import sys,os,re,fileinput;a=[i[2] for i in os.walk('.') if i[2]] [0];[sys.stdou
 Clearer is:
 {{{import os.path; a=[f for f in os.listdir('.') if not os.path.isdir(f)]}}}
 
+=== Reimplementing cut ===
+
+Print every line from an input file but remove the first two fields.
+
+{{{
+python -c "import sys;[sys.stdout.write(' '.join(line.split(' ')[2:])) for line in sys.stdin.read().splitlines(True)]" < input.txt 
+}}}
+
 === Cramming Python into Makefiles ===
 A related issue is embedding Python into a Makefile.  I had a really long script
 that I was trying to cram into a makefile so I automated the process:
