@@ -3,7 +3,7 @@ In CPython, the '''global interpreter lock''', or '''GIL''', is a mutex that pre
 
 CPython extensions must be GIL-aware in order to avoid defeating threads.  For an explanation, see [http://docs.python.org/api/threads.html Global interpreter lock].
 
-The GIL is controversial because it prevents multi-threaded CPython programs from taking full advantage of multiprocessor systems in certain situations.  Note that potentially blocking or long-running operations, such as I/O, image processing, and NumPy number crunching, happen ''outside'' the GIL.   Therefore it is only in multi-threaded programs that spend a lot of time inside the GIL, interpreting CPython bytecode, that the GIL becomes a bottleneck.
+The GIL is controversial because it prevents multithreaded CPython programs from taking full advantage of multiprocessor systems in certain situations.  Note that potentially blocking or long-running operations, such as I/O, image processing, and NumPy number crunching, happen ''outside'' the GIL.   Therefore it is only in multithreaded programs that spend a lot of time inside the GIL, interpreting CPython bytecode, that the GIL becomes a bottleneck.
 
 
 == Non-CPython implementations ==
@@ -25,7 +25,7 @@ Getting rid of the GIL is an occasional topic on the python-dev mailing list.  N
 
  * '''Features.'''  The proposal must support existing CPython features including `__del__` and weak references.
 
- * '''Source compatibility.'''  The proposal must be source-compatible with the macros used by all existing CPython extensions (`Py_INCREF` and friends).  See [http://docs.python.org/api/countingRefs.html Python/C API Reference Manual: Reference Counting].
+ * '''Source compatibility.'''  The proposal should be source-compatible with the macros used by all existing CPython extensions (`Py_INCREF` and friends).  See [http://docs.python.org/api/countingRefs.html Python/C API Reference Manual: Reference Counting].
 
  * '''Prompt destruction''' (nice to have?).  The existing reference-counting scheme destroys objects as soon as they become unreachable, except for objects in reference cycles.  Those are collected later by Python's cycle collector.  Some CPython programs depend on this, e.g. to close `file`s promptly, so it would be nice to keep this feature.
 
