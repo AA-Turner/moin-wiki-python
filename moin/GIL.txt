@@ -16,6 +16,8 @@ Jython and IronPython have no GIL and can fully exploit multiprocessor systems.
 
 Getting rid of the GIL is an occasional topic on the python-dev mailing list.  No one has managed it yet.  The following properties are all highly desirable for any potential GIL replacement; some are hard requirements.
 
+ * '''Simplicity.'''  The proposal must be implementable and maintainable in the long run.
+
  * '''Concurrency.'''  The point of eliminating the GIL would be to improve the performance of multithreaded programs.  So any proposal must show that it actually does so in practice.
 
  * '''Speed.'''  The ["BDFL"] has said he will reject any proposal in this direction that slows down single-threaded programs. (citation needed)
@@ -27,5 +29,3 @@ Getting rid of the GIL is an occasional topic on the python-dev mailing list.  N
  * '''Prompt destruction''' (nice to have?).  The existing reference-counting scheme destroys objects as soon as they become unreachable, except for objects in reference cycles.  Those are collected later by Python's cycle collector.  Some CPython programs depend on this, e.g. to close `file`s promptly, so it would be nice to keep this feature.
 
  * '''Ordered destruction''' (nice to have?).  Barring cycles, Python currently always destroys an unreachable object ''X'' before destroying any other objects referenced by ''X''.  This means all the object's attributes are still there when `__del__` runs.  (Many garbage collection schemes don't guarantee this.)
-
- * '''Simplicity.'''  The proposal must be implementable and maintainable in the long run.
