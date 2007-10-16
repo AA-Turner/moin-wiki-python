@@ -4,10 +4,28 @@ CPython extensions must be GIL-aware in order to avoid defeating threads.  For a
 
 The GIL is controversial because it prevents multi-threaded CPython programs from taking full advantage of multiprocessor systems in certain situations.  Note that potentially blocking or long-running operations, such as I/O, image processing, and NumPy number crunching, happen ''outside'' the GIL.   Therefore it is only in multi-threaded programs that spend a lot of time inside the GIL, interpreting CPython bytecode, that the GIL becomes a bottleneck.
 
-----
 
-One of IronPython's delights is that it works around
-the GIL; IronPython-based applications can be fully-threaded
-in the sense that they properly exploit multi-core CPUs.
+== Non-CPython implementations ==
+
+Jython and IronPython have no GIL and can fully exploit multiprocessor systems.
 
 [Mention place of GIL in StacklessPython.]
+
+
+== Eliminating the GIL ==
+
+Getting rid of the GIL is an occasional topic on the python-dev mailing list.  No one has managed it yet.  The following properties are all highly desirable for any potential GIL replacement; some are hard requirements.
+
+ * '''Concurrency.'''  The point of eliminating the GIL would be to improve the performance of multithreaded programs.  So any proposal must show that it actually does so in practice.
+
+ * '''Speed.'''  The ["BDFL"] has said he will reject any proposal in this direction that slows down single-threaded programs. (citation needed)
+
+ * '''Features.'''  The proposal must support existing CPython features including `__del__` and weak references.
+
+ * '''Source compatibility.'''  The proposal must be source-compatible with the macros used by all existing CPython extensions (`Py_INCREF` and friends).  See [http://docs.python.org/api/countingRefs.html Python/C API Reference Manual: Reference Counting].
+
+ * '''Prompt destruction''' (nice to have?).  The existing reference-counting scheme destroys objects as soon as they become unreachable, except for objects in reference cycles.  Those are collected later by Python's cycle collector.  Some CPython programs depend on this, e.g. to close `file`s promptly, so it would be nice to keep this feature.
+
+ * '''Ordered destruction''' (nice to have?).  Barring cycles, Python currently always destroys an unreachable object ''X'' before destroying any other objects referenced by ''X''.  This means all the object's attributes are still there when `__del__` runs.  (Many garbage collection schemes don't guarantee this.)
+
+ * '''Simplicity.'''  The proposal must be implementable and maintainable in the long run.
