@@ -1,4 +1,6 @@
-"[http://docs.python.org/api/threads.html Global interpreter lock]" [explain]
+In CPython, the '''global interpreter lock''', or '''GIL''', is a mutex that prevents multiple native threads from running Python code at once.  This lock is necessary mainly because CPython's memory management is not thread-safe.  (However, since the GIL exists, other features have grown to depend on the guarantees that it enforces.)
+
+CPython extensions must be GIL-aware in order to avoid defeating threads.  For an explanation, see [http://docs.python.org/api/threads.html Global interpreter lock].
 
 ... [much to say]
 
