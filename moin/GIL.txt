@@ -1,8 +1,10 @@
-In CPython, the '''global interpreter lock''', or '''GIL''', is a mutex that prevents multiple native threads from running Python code at once.  This lock is necessary mainly because CPython's memory management is not thread-safe.  (However, since the GIL exists, other features have grown to depend on the guarantees that it enforces.)
+In CPython, the '''global interpreter lock''', or '''GIL''', is a mutex that prevents multiple native threads from executing Python bytecodes at once.  This lock is necessary mainly because CPython's memory management is not thread-safe.  (However, since the GIL exists, other features have grown to depend on the guarantees that it enforces.)
 
 CPython extensions must be GIL-aware in order to avoid defeating threads.  For an explanation, see [http://docs.python.org/api/threads.html Global interpreter lock].
 
-... [much to say]
+The GIL is controversial because it prevents multi-threaded CPython programs from taking full advantage of multiprocessor systems in certain situations.  Note that potentially blocking or long-running operations, such as I/O, image processing, and NumPy number crunching, happen ''outside'' the GIL.   Therefore it is only in multi-threaded programs that spend a lot of time inside the GIL, interpreting CPython bytecode, that the GIL becomes a bottleneck.
+
+----
 
 One of IronPython's delights is that it works around
 the GIL; IronPython-based applications can be fully-threaded
