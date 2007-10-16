@@ -5,6 +5,7 @@ CPython extensions must be GIL-aware in order to avoid defeating threads.  For a
 
 The GIL is controversial because it prevents multithreaded CPython programs from taking full advantage of multiprocessor systems in certain situations.  Note that potentially blocking or long-running operations, such as I/O, image processing, and NumPy number crunching, happen ''outside'' the GIL.   Therefore it is only in multithreaded programs that spend a lot of time inside the GIL, interpreting CPython bytecode, that the GIL becomes a bottleneck.
 
+Another issue with removing the GIL is the current ease of incorporating external libraries without having to worry about threading; libraries that wish to deal with a threaded environment must explicitly choose to do so.
 
 == Non-CPython implementations ==
 
