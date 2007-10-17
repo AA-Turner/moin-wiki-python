@@ -315,11 +315,11 @@ open my $f, $filename or die "can't open $filename: $!\n";
 
 {{{
 filename = "cooktest1.1-1"
-try:
-  f = open(filename)
-except IOError:
-  sys.stderr.write("can't open %s: %s %s\n" %
-                                   (filename, sys.exc_type, sys.exc_value))
+f = open(filename) # Python has exceptions with somewhat-easy to 
+                   # understand error messages. If the file could
+                   # not be opened, it would say "No such file or 
+                   # directory: %filename" which is as
+                   # understandable as "can't open $filename:"
 lines = f.readlines()
 }}}
 
