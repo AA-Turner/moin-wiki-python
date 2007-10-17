@@ -26,18 +26,18 @@ Getting rid of the GIL is an occasional topic on the python-dev mailing list.  N
 
  * '''Features.'''  The proposal must support existing CPython features including `__del__` and weak references.
 
- * '''Source compatibility.'''  The proposal should be source-compatible with the macros used by all existing CPython extensions (`Py_INCREF` and friends).  See [http://docs.python.org/api/countingRefs.html Python/C API Reference Manual: Reference Counting].
+ * '''API compatibility.'''  The proposal should be source-compatible with the macros used by all existing CPython extensions (`Py_INCREF` and friends).  See [http://docs.python.org/api/countingRefs.html Python/C API Reference Manual: Reference Counting].
 
  * '''Prompt destruction''' (nice to have?).  The existing reference-counting scheme destroys objects as soon as they become unreachable, except for objects in reference cycles.  Those are collected later by Python's cycle collector.  Some CPython programs depend on this, e.g. to close `file`s promptly, so it would be nice to keep this feature.
 
  * '''Ordered destruction''' (nice to have?).  Barring cycles, Python currently always destroys an unreachable object ''X'' before destroying any other objects referenced by ''X''.  This means all the object's attributes are still there when `__del__` runs.  (Many garbage collection schemes don't guarantee this.)
 
-Source compatibility is an especially difficult problem.  All concurrent memory management schemes we've found rely on one or more of the following techniques, all of which are non-source-compatible with existing CPython extensions.
+API compatibility is an especially difficult problem.  All concurrent memory management schemes we've found rely on one or more of the following techniques, all of which are incompatible with the existing Python/C API.
 
  * '''Tracing.'''  Most garbage collectors need to be able to start with an object and enumerate all the objects that it points to.  The builtin CPython pointer-containing types, like `PyList` and `PyDict`, all have a `tp_traverse` method that can do this, but not all extension types have that method.
 
  * '''Write barriers.'''  A write barrier is a small piece of code that executes whenever a pointer variable is modified.  Alas, no matter how you hack the `Py_INCREF` etc. macros, you can't make a write barrier hook out of them.  Even if you could, many schemes require a different write barrier for stack variables vs. global variables vs. object fields that point to other objects; nothing in the Python/C API makes that distinction.
 
- * '''Exact stack information.'''  Exact garbage collection schemes need to be able to mark all objects reachable from local C variables.  To do this, some schemes need to know where such variables are located on the C stack (and/or registers)--something CPython does not currently track.
+ * '''Exact stack information.'''  Exact garbage collection schemes need to be able to mark all objects reachable from local C variables.  To do this, some schemes need to know where such variables are located on the C stack (and/or registers)--something the Python/C API does not require extensions to track.
 
 It is barely credible that CPython might someday make `tp_traverse` mandatory for pointer-carrying types; adding support for write barriers or stack bookkeeping to the Python/C API seems extremely unlikely.
