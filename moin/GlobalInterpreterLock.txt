@@ -22,7 +22,7 @@ Getting rid of the GIL is an occasional topic on the python-dev mailing list.  N
 
  * '''Concurrency.'''  The point of eliminating the GIL would be to improve the performance of multithreaded programs.  So any proposal must show that it actually does so in practice.
 
- * '''Speed.'''  The ["BDFL"] has said he will reject any proposal in this direction that slows down single-threaded programs. (citation needed)
+ * '''Speed.'''  The ["BDFL"] has said he will reject any proposal in this direction that slows down single-threaded programs. (citation needed)  Note that this is harder than it looks.  The existing reference count mechanism is very fast in the non-concurrent case, but means that almost any reference to an object is a modification (at least to the refcount); many concurrent GC algorithms assume that modifications are rare.
 
  * '''Features.'''  The proposal must support existing CPython features including `__del__` and weak references.
 
