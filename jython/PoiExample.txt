@@ -33,13 +33,13 @@ wb = HSSFWorkbook();
 fileOut = FileOutputStream("POIOut2.xls");
 
 
-#// Create 3 sheets
+# Create 3 sheets
 sheet1 = wb.createSheet("Sheet1");
 sheet2 = wb.createSheet("Sheet2");
 sheet3 = wb.createSheet("Sheet3");
 sheet3 = wb.createSheet("Sheet4");
 
-#// Create a header style
+# Create a header style
 styleHeader = wb.createCellStyle();
 fontHeader = wb.createFont();
 fontHeader.setBoldweight(2);
@@ -47,59 +47,59 @@ fontHeader.setFontHeightInPoints(14);
 fontHeader.setFontName("Arial");
 styleHeader.setFont(fontHeader);
 
-#/ Create a style used for the first column
+# Create a style used for the first column
 style0 = wb.createCellStyle();
 font0 = wb.createFont();
 font0.setColor(HSSFColor.RED.index);
 style0.setFont(font0);
 
 
-#// Create the style used for dates.
+# Create the style used for dates.
 styleDates = wb.createCellStyle();
 styleDates.setDataFormat(HSSFDataFormat.getBuiltinFormat("m/d/yy h:mm"));
 
 
-#// create the headers
+# create the headers
 rowHeader = sheet1.createRow(1);
-#// String value
+# String value
 cell0 = rowHeader.createCell(0);
 cell0.setCellStyle(styleHeader);
 cell0.setCellValue("Name");
 
 
-#// numbers
+# numbers
 for i in range(0, 8, 1):
     cell = rowHeader.createCell((i + 1));
     cell.setCellStyle(styleHeader);
     cell.setCellValue("Data " + str( (i + 1)) );
 
 
-#// Date
+# Date
 cell10 = rowHeader.createCell(9);
 cell10.setCellValue("Date");
 cell10.setCellStyle(styleHeader);
 
 for i in range(0, 100, 1):
-    #// create a new row
+    # create a new row
     row = sheet1.createRow(i + 2);
     for j in range(0, 10, 1):
-        #// create each cell
+        # create each cell
         cell = row.createCell(j);
-        #// Fill the first column with strings
+        # Fill the first column with strings
         if (j == 0):
             cell.setCellValue("Product " + str(i));
             cell.setCellStyle(style0);
 
-        #// Fill the next 8 columns with numbers.
+        # Fill the next 8 columns with numbers.
         elif (j < 9):
             cell.setCellValue( (Math.random() * 100));
 
-            #// Fill the last column with dates.
+            # Fill the last column with dates.
         else:
             cell.setCellValue(Date());
             cell.setCellStyle(styleDates);
 
-#// Summary row
+# Summary row
 rowSummary = sheet1.createRow(102);
 sumStyle = wb.createCellStyle();
 sumFont = wb.createFont();
@@ -115,8 +115,8 @@ cellSum0.setCellValue("TOTALS:");
 cellSum0.setCellStyle(sumStyle);
 
 
-#// numbers
-#// B
+# numbers
+# B
 cellB = rowSummary.createCell( 1);
 cellB.setCellStyle(sumStyle);
 cellB.setCellFormula("SUM(B3:B102)");
