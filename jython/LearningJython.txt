@@ -8,15 +8,15 @@ Jython Course Outline
 :address: dkuhlman@rexx.com
     http://www.rexx.com/~dkuhlman
 
-:revision: 1.0a
-:date: June 30, 2006
+:revision: 1.1a
+:date: Oct. 18, 2007
 
 :copyright: Copyright (c) 2006 Dave Kuhlman.  All Rights Reserved.
     This software is subject to the provisions of the MIT License
     http://www.opensource.org/licenses/mit-license.php.
 
 :abstract: This document provides an outline of an introductory
-    course on programming in Jython.
+    course on programming in Jython and connecting Jython to Java
 
 .. sectnum::
 
@@ -24,2776 +24,69 @@ Jython Course Outline
 
 
 
-Introductions Etc
-=================
+How-to Write Jython Code
+========================
 
-Introductions
+Jython is Python.  That's one of its big advantages: you get two for
+the price of one.  If your learn Python, then you have also learned
+Jython, and vice versa.  If you already know Python, then you know
+Jython.
 
-Practical matters
+But, if you do know know Python **or** Jython, then here are good
+training aids:
 
-Starting the Python interactive interpreter.  Also look at IPython.
+- `Python documentation --
+  http://python.org/doc/
+  <http://python.org/doc/>`_
 
-Running scripts
+- `Python tutorial --
+  http://docs.python.org/tut/tut.html
+  <http://docs.python.org/tut/tut.html>`_
 
-Editors -- Choose an editor which you can configure so that it uses indent 4
-spaces, not tab characters.  For a list of editors for Python,
-see: http://wiki.python.org/moin/PythonEditors.
+- `BeginnersGuide/NonProgrammers --
+  http://wiki.python.org/moin/BeginnersGuide/NonProgrammers
+  <http://wiki.python.org/moin/BeginnersGuide/NonProgrammers>`_
 
-Interactive interpreters:
+- `BeginnersGuide/Programmers --
+  http://wiki.python.org/moin/BeginnersGuide/Programmers
+  <http://wiki.python.org/moin/BeginnersGuide/Programmers>`_
 
-- ``jython``
 
-- ``python``
-
-- `ipython <http://ipython.scipy.org/>`_: http://ipython.scipy.org/
-
-- `Jython Console with Code Completion
-  <http://don.freeshell.org/jython/>`_
-
-- The mini-IDE in `Python for Windows Extensions
-  <http://starship.python.net/crew/mhammond/win32/>`_
-
-
-Resources
----------
-
-Where else to get help:
-
-- `The Python home page <http://www.python.org>`_
-
-- `The Jython home page <http://www.jython.org/>`_
-
-- Python standard documentation -- http://www.python.org/doc/.
-
-  You will also find links to tutorials there.
-
-- FAQs -- http://www.python.org/doc/faq/.
-
-- Special interest groups (SIGs) -- http://www.python.org/sigs/
-
-- The Jython email list --
-  http://lists.sourceforge.net/lists/listinfo/jython-users
-
-- USENET -- comp.lang.python
-
-- `The Python Wiki <http://wiki.python.org/moin/>`_
-
-- `Python editors <http://wiki.python.org/moin/PythonEditors>`_ -- A
-  list of editors suitable for editing Jython/Python code.
-
-
-What is Python?
-===============
-
-A general description of Python:
-
-- A scripting language
-
-- Interpreted, but also compiled to byte-code.  Modules are
-  automatically compiled (to .pyc) when imported, but may also be
-  explicitly compiled.
-
-- Access to interactive command line and interpreter.  In fact, there
-  are several interactive interfaces to Python.
-
-- Dynamic -- For example:
-
-  - Types are bound to values, not to variables.
-
-  - Function and method lookup is done at runtime.
-
-  - Values are inspect-able.
-
-  - There is an interactive interpreter, more than one, in fact.
-
-  - You can list the methods supported by any given object.
-
-- Reasonably high level -- High level built-in data types; high
-  level structures (for walking lists and iterators, for example).
-
-- Object-oriented -- Simple object definition.  Data hiding by
-  agreement.  Multiple inheritance.  Interfaces by convention.
-
-- Highly structured -- Statements, functions, classes, modules,
-  and packages enable us to write large, well-structured
-  applications.  Why structure?  Readability, locate-ability,
-  modifiability.
-
-- Explicitness
-
-- First-class objects:
-
-  - Definition: Can (1) pass to function; (2) return from function;
-    (3) stuff into a data structure.
-
-  - Operators can be applied to *values*.  Example: ``f(x)[3]``
-
-- Indented block structure -- "Python is pseudo-code that runs."
-
-- Embedding and extending Python -- Python provides a
-  well-documented and supported way (1) to embed the Python
-  interpreter in C/C++ applications and (2) to extend Python with
-  modules and objects implemented in C/C++.
-
-  - In some cases, SWIG can generate wrappers for existing C/C++
-    code automatically (see http://www.swig.org/).
-
-  - Pyrex enables us to generate C code from Python (see
-    http://www.cosc.canterbury.ac.nz/~greg/python/Pyrex/).
-
-  - To embed and extend Python with Java, there is Jython (see
-    http://www.jython.org/).
-
-- Also see `The Zen of Python
-  <http://www.python.org/peps/pep-0020.html>`_.
-
-
-What is Jython?
-===============
-
-Jython is Python:
-
-- Jython has Python lexical conventions, syntax, statements, etc.
-
-- Jython has Python's built-in data types, for example, strings,
-  ints, floats, tuples, list, dictionaries, etc.
-
-- Jython is interpreted, compiled to byte-code, interactive,
-  dynamic, and can also be used for large applications.
-
-Jython is Java:
-
-- Jython is Python implemented on top of the Java VM.
-
-- Jython can be embedded into a Java application.  The Jython
-  interpreter can be embedded into a Java application.  Scripts
-  written by end-users of the Java application can be run from within
-  the Java application.
-
-- Jython code can use Java classes.  Jython can be thought of as a
-  Python harness for testing, running, and controlling Java
-  classes and applications.
-
-- Jython code can be compiled to Java source (``.java``) and Java
-  class (``.class``) files.  Jython can be used as an extension
-  language for Java.
-
-- Java code can be written in a way that makes its use from Jython
-  more convenient and "Jython-ic".  For example: (1) we can emulate
-  and extend built-in Jython data types (dictionaries, lists, etc);
-  (2) we can add doc strings; (3) we can make an object respond to
-  Python/Jython operators.
-
-Why and when we should use Jython -- Use Jython, instead of
-Python, when:
-
-- You need to use Java classes.
-
-- You want to embed a scripting language into a Java application.
-
-- You want to be able to "extend" Java with classes written in
-  Python.  Jython/Python classes are arguably easier to write than
-  Java classes.  Why?
-
-- You want a high-level scripting language from which to call,
-  use, and control Java code.
-
-
-How Jython compares with Java:
-
-- Jython/Python has a simple syntax.  Jython/Python is
-  "pseudo-code that runs".
-
-- Jython/Python uses dynamic typing.  Java uses strict typing.
-
-- Jython is interpreted.  So is Java, but Jython can compile
-  "on-the-fly".  When a file is imported, it compiles to a Java
-  ``.class`` file.
-
-How Jython compares with Python:
-
-- Jython code runs on top of the JVM (Java virtual machine).
-  Standard (C)Python runs on top of the Python virtual machine.
-
-- Jython does not have all the features of the latest Python
-  language.  *But*, the new alpha version (2.2a) is very close.
-
-- Jython is slower than Python, *but* when Jython is used to call
-  into Java code, that code runs at the speed of Java.  Three
-  levels: (1) Jython code, (2) Java code generated by ``jythonc``,
-  (3) Java code.
-
-A comparison of Java and Python is here:
-`Python & Java: a Side-by-Side Comparison
-<http://www.ferg.org/projects/python_java_side-by-side.html>`_.
-
-
-Differences between Jython and CPython
-======================================
-
-- Jython runs on the Java virtual machine (JVM).  CPython runs on
-  the Python VM, which is written in C.
-
-- Jython can call Java.  And, no wrappers are required.  CPython can
-  only do this with difficulty.
-
-- Python can call code written in C/C++ (and even FORTRAN) **if**
-  that code has been wrapped for Python.
-
-- Jython can use only Python modules that are implemented in
-  *pure* Python, i.e. that are not implemented in C and do not
-  call modules implemented in C.  See the following for modules
-  in the Python standard library that are available for Jython.
-
-- Jython 2.1 is roughly equivalent to Python 2.1.
-
-- Jython 2.2 is roughly equivalent to Python 2.2 +.
-
-- Some things that are missing from Jython 2.1, but which are in
-  Python 2.4:
-
-  - New-style classes -- The unification of classes and built-in
-    types; ability to sub-class built-in types; properties;
-    ``staticmethod``; ...
-
-  - List comprehensions
-
-  - Iterators, generators, ...
-
-  Some of these features are in Jython 2.2a.  But, in some cases, you
-  will need to use something like the following::
-
-      from __future__ import generators
-
-
-Lexical matters
-===============
-
-Lines
------
-
-- Python does what you want it to do *most* of the time so that you
-  only have to add extra characters *some* of the time.
-
-- Statement separator is a semicolon, but is only needed when
-  there is more than one statement on a line.
-
-- Continuation lines -- Use a back-slash at the end of the line.  But,
-  note that an opening bracket (or parenthesis) make the back-slash
-  unnecessary.
-
-- Comments -- Everything after "#" on a line is ignored.  No block
-  comments, but doc strings are a comment in triple quotes at the
-  beginning of a module, class, method or function.
-
-
-Names and tokens
-----------------
-
-- Allowed characters: a-z A-Z 0-9 underscore, and must begin with a
-  letter or underscore.
-
-- Case is significant in names and identifiers.
-
-- Identifiers can be of unlimited length. 
-
-- Special names, customizing, etc. -- Usually begin and end in
-  double underscores.
-
-- Special name classes -- Single and double underscores.
-
-  - Leading double underscores -- Name mangling for method names.
-
-  - Leading single underscore -- Suggests a "private" method name.
-    Not imported by "from module import \*".
-
-- Naming conventions -- Not rigid, but:
-
-  - Modules and packages -- All lower case.
-
-  - Globals and constants -- All upper case.
-
-  - Classes -- Bumpy caps with initial upper.
-
-  - Methods and functions -- All lower case with words separated by
-    underscores.
-
-  - Local variables -- Lower case or bumpy caps with initial lower or
-    your choice.
-
-
-Blocks and indentation
-----------------------
-
-Python represents block structure and nested block structure with
-indentation, not with begin and end brackets.
-
-Benefits of the use of indentation to indicate structure:
-
-- Reduces the need for a coding standard.  Only need to specify that
-  indentation is 4 spaces and no hard tabs.
-
-- Reduces inconsistency.  Code from different sources follow the
-  same indentation style.  They have to.
-
-- Reduces work.  Only need to get the indentation correct, not
-  *both* indentation and brackets.
-
-- Reduces clutter.  Eliminates all those curly brackets.
-
-- If it looks correct, it is correct.  Indentation cannot fool
-  the reader.
-
-Editor considerations -- The standard is 4 spaces (no tabs) for each
-indentation level.  You will need a text editor that helps you respect
-that.  There is a list of suitable text editors at:
-`PythonEditors <http://wiki.python.org/moin/PythonEditors>`_.
-
-
-Doc strings
------------
-
-Doc strings are like comments, but they are carried with executing
-code.  Doc strings can be viewed with several tools, e.g. ``help()``
-(standard Python only?), ``obj.__doc__``, and, in IPython, ``?``.
-
-We can use triple-quoting to create doc strings that span multiple
-lines.
-
-There are also tools that extract and format doc strings, for example:
-
-- `5.1 pydoc -- Documentation generator and online help system
-  <http://docs.python.org/lib/module-pydoc.html>`_
-
-- `epydoc`_
-
-
-Program structure
------------------
-
-- Statements, data structures, functions, classes, modules,
-  packages.
-
-- Execution -- def, class, etc are executable statements that add
-  something to the current name-space.  Modules can be both
-  executable and import-able.
-
-
-Operators
----------
-
-- See: http://docs.python.org/ref/operators.html.  Python defines
-  the following operators::
-
-    +       -       *       **      /       //      %
-
-    <<      >>      &       |       ^       ~
-
-    <       >       <=      >=      ==      !=      <>
-
-  The comparison operators ``<>`` and ``!=`` are alternate spellings of
-  the same operator. ``!=`` is the preferred spelling; ``<>`` is
-  obsolescent.
-
-- Since these operators can be defined in each object type and class,
-  the meaning of each operator depends on the type of the object to
-  which it is applied.
-
-- There are also (1) the dot operator, (2) the subscript
-  operator ``[]``, and the function/method call operator ``()``.
-
-- Here is a demonstration of the relationship between some of the
-  operators and the methods that define them::
-
-      class B:
-          def __init__(self):
-              self.val = 'aaa'
-          def __add__(self, val1):
-              """Operator: + """
-              return '%s||%s' % (self.val, val1,)
-          def __neg__(self):
-              """Operator: - """
-              return 'neg<%s>' % self.val
-          def __pow__(self, p):
-              """Operator: ** """
-              return 'pow<%s||%s>' % (self.val, p, )
-          def __invert__(self):
-              """Operator: ~ """
-              return 'invert<%s>' % self.val
-          def __lshift__(self, count):
-              """Operator: << """
-              return 'lshift<%s||%s>' % (self.val, count, )
-          def __and__(self, x):
-              """Operator: & """
-              return 'and<%s||%s>' % (self.val, x, )
-          def __or__(self, x):
-              """Operator: | """
-              return 'or<%s||%s>' % (self.val, x, )
-          def __xor__(self, x):
-              """Operator: ^ """
-              return 'xor<%s||%s>' % (self.val, x, )
-          def __mod__(self, x):
-              """Operator: % """
-              return 'mod<%s||%s>' % (self.val, x, )
-          def __contains__(self, x):
-              """Operator: in """
-              if len(x) == len(self.val):
-                  return True
-              else:
-                  return False
-
-
-      def test():
-          b = B()
-          print b + 'bbb'         # __add__       Addition
-          print - b               # __neg__       Negation
-          print b ** 'ccc'        # __pow__       Power (a raised to the power b)
-          print ~ b               # __invert__    Bitwise invert
-          print b << 3            # __lshift__    Left shift
-          print b & 3             # __and__       Bitwise and
-          print b | 3             # __or__        Bitwise or
-          print b ^ 3             # __xor__       Exclusive bitwise or
-          print b % 3             # __xor__       a modulo b
-          print 'abc' in b        # __contains__  b in a (note reversed operands)
-          print 'ab' in b
-
-      test()
-
-  Running the above code produces the following output::
-
-      aaa||bbb
-      neg<aaa>
-      pow<aaa||ccc>
-      invert<aaa>
-      lshift<aaa||3>
-      and<aaa||3>
-      or<aaa||3>
-      xor<aaa||3>
-      mod<aaa||3>
-      True
-      False
-
-
-
-Later, we will see how these operators can be emulated in classes
-that you define yourself.
-
-
-Code evaluation
----------------
-
-Creating names/variables -- The following all create names
-(variables): (1) assignment, (2) function definition, (3) class
-definition, (4) module import, ...
-
-First class objects -- Almost all objects in Python are first class.
-Definition: An object is first class if: (1) we can put it in a
-structured object; (2) we can pass it to a function; (3) we can return
-it from a function.
-
-References -- Objects (or references to them) can be shared.
-What does this mean?
-
-- The object(s) satisfy the identity test operator ``is``.
-
-- The built-in function ``id()`` returns the same value.
-
-- The consequences for mutable objects are different from those for
-  immutable objects.
-
-- ``del()`` -- The built-in function ``del()`` removes a reference,
-  not (necessarily) the object itself.
-
-
-Built-in datatypes
-==================
-
-Numeric types
--------------
-
-The numeric types are:
-
-- Plain integers -- Same precision as a C long, usually a 32-bit
-  binary number.
-
-- Long integers -- Define with ``100L``.  But, plain integers are
-  automatically promoted when needed.
-
-- Floats -- Implemented as a C double.  Precision depends on your
-  machine.
-
-- Complex numbers -- Define with, for example, ``3j`` or
-  ``complex(3.0, 2.0)``.
-
-See `2.3.4 Numeric Types -- int, float, long, complex
-<http://docs.python.org/lib/typesnumeric.html>`_.
-
-Python does mixed arithmetic.
-
-Integer division truncates.
-
-
-
-Tuples and lists
-----------------
-
-Tuples and lists are sequences.
-
-Tuple constructor -- ``()``.
-
-List constructor -- ``[]``.
-
-Tuples are like lists, but are not mutable.
-
-Notes on sequence constructors:
-
-- To construct a tuple with a single element, use ``(x,)``; a
-  tuple with a single element requires a comma.
-
-- You can spread elements across multiple lines (and no need for
-  continuation character "\").
-
-- A comma can follow the last element.
-
-Length -- Get the length of a sequence with the built-in function
-``len()``.
-
-Subscription:
-
-- Indexing into a sequence
-
-- Negative indexes -- Effectively, length of sequence plus index.
-
-- Slicing -- Example: ``data[2:5]``.
-
-- Slicing with strides -- Example: ``data[::2]``.
-
-Operations on tuples -- No operations that change the tuple, since
-tuples are immutable.  We can do iteration.  And, we can do
-subscription (access only).
-
-Operations on lists -- Operations similar to tuples plus:
-
-- Insert -- ``mylist.insert(index, newitem)``.
-  
-- Append -- ``mylist.append(newitem)``.
-
-- Remove -- ``mylist.remove(item)`` and ``mylist.pop()``.  Note
-  that ``append()`` together with ``pop()`` implements a stack.
-
-- Delete -- ``del mylist[index]``.
-
-Use the built-in function ``len()`` to get the length of a sequence.
-It works on tuples, lists, strings, dictionaries, etc.
-
-Exercises:
-
-- Create an empty list.  Append 4 strings to the list.  Then pop
-  one item off the end of the list.  Solution::
-
-      In [25]: a = []
-      In [26]: a.append('aaa')
-      In [27]: a.append('bbb')
-      In [28]: a.append('ccc')
-      In [29]: a.append('ddd')
-      In [30]: print a
-      ['aaa', 'bbb', 'ccc', 'ddd']
-      In [31]: a.pop()
-      Out[31]: 'ddd'
-
-
-- Use the ``for`` statement to print the items in the list.
-  Solution::
-
-      In [32]: for item in a:
-         ....:         print item
-         ....:
-      aaa
-      bbb
-      ccc
-
-- Use the string ``join`` operation to concatenate the items in
-  the list.  Solution::
-
-      In [33]: '||'.join(a)
-      Out[33]: 'aaa||bbb||ccc'
-
-
-Strings
--------
-
-Strings are sequences.  They are immutable.  They are indexable.
-
-Constructors/literals:
-
-- Quotes:  single and double.  Escape quotes and other special
-  characters with a back-slash.
-
-- Triple quoting -- Multi-line quotes.
-
-- ``str()`` -- The constructor and the name of the type/class.
-
-- String escape sequences: ``\t``, ``\n``, ``\'``, ``\"``, ``\ooo``
-  (octal), ``\xhh`` (hex), etc.  For more escape sequences, see `2.4.1
-  String literals <http://docs.python.org/ref/strings.html>`_:
-  http://docs.python.org/ref/strings.html.
-
-String methods:
-
-- To list the string methods, type the following at the Jython
-  interactive prompt::
-
-      >>> dir("".__class__)
-
-- For documentation on string methods, see `2.3.6.1 String Methods
-  <http://www.python.org/doc/lib/string-methods.html>`_:
-  http://www.python.org/doc/lib/string-methods.html in the
-  "Library Reference".
-
-String formatting -- See: `2.3.6.2 String Formatting Operations
-<http://docs.python.org/lib/typesseq-strings.html>`_:
-http://docs.python.org/lib/typesseq-strings.html.  Examples::
-
-    In [18]: name = 'dave'
-    In [19]: size = 25
-    In [20]: factor = 3.45
-    In [21]: print 'Name: %s  Size: %d  Factor: %3.4f' % (name, size, factor, )
-    Name: dave  Size: 25  Factor: 3.4500
-    In [25]: print 'Name: %s  Size: %d  Factor: %08.4f' % (name, size, factor, )
-    Name: dave  Size: 25  Factor: 003.4500
-
-If the right-hand argument to the formatting operator is a
-dictionary, then you can (actually, must) use the names of keys in
-the dictionary in your format strings.  Examples::
-
-    In [115]: values = {'vegetable': 'chard', 'fruit': 'nectarine'}
-    In [116]: 'I love %(vegetable)s and I love %(fruit)s.' % values
-    Out[116]: 'I love chard and I love nectarine.'
-
-Also consider using the right justify and left justify operations.
-Examples: ``mystring.rjust(20)``, ``mystring.ljust(20, ':')``.
-
-Exercises:
-
-- Use a literal to create a string containing (1) a single quote,
-  (2) a double quote, (3) both a single and double quote.
-  Solutions::
-  
-      "Some 'quoted' text."
-      'Some "quoted" text.'
-      'Some "quoted" \'extra\' text.'
-
-- Write a string literal that spans multiple lines.  Solution::
-
-      """This string
-      spans several lines
-      because it is a little long.
-      """
-
-- Use the string ``join`` operation to create a string that
-  contains a colon as a separator.  Solution::
-
-
-      >>> content = []
-      >>> content.append('finch')
-      >>> content.append('sparrow')
-      >>> content.append('thrush')
-      >>> content.append('jay')
-      >>> contentstr = ':'.join(content)
-      >>> print contentstr
-      finch:sparrow:thrush:jay
-
-- Use string formatting to produce a string containing your last
-  and first names, separated by a comma.  Solution::
-
-      >>> first = 'Dave'
-      >>> last = 'Kuhlman'
-      >>> full = '%s, %s' % (last, first, )
-      >>> print full
-      Kuhlman, Dave
-
-Incrementally building up large strings from lots of small strings
--- Since strings in Python are immutable, appending to a string
-requires a reallocation.  So, it is faster to append to a list,
-then use ``join``.  Example::
-
-    In [25]: strlist = []
-    In [26]: strlist.append('Line #1')
-    In [27]: strlist.append('Line #2')
-    In [28]: strlist.append('Line #3')
-    In [29]: str = '\n'.join(strlist)
-    In [30]: print str
-    Line #1
-    Line #2
-    Line #3
-
-
-Dictionaries
-------------
-
-A dictionary is a sequence, whose values are accessible by key.
-Another view: A dictionary is a set of name-value pairs.
-
-Keys may be any *non-mutable* type.
-
-The order of elements in a dictionary is undefined.  But, we can
-iterate over (1) the keys, (2) the values, and (3) the items
-(key-value pairs) in a dictionary.
-
-Literals for constructing dictionaries::
-
-    {key1: value1, key2: value2, }
-
-Constructor for dictionaries: ``dict()`` (Jython 2.2 and later).
-
-For operations on dictionaries, see
-http://docs.python.org/lib/typesmapping.html or use::
-
-    >>> help({})        # Python, but not Jython.
-
-Or::
-
-    >>> dir({})
-
-Some of the operations produce the keys, the values, and the items
-(name-value pairs) in a dictionary.  Examples::
-
-    >>> d = {'aa': 111, 'bb': 222}
-    >>> d.keys()
-    ['aa', 'bb']
-    >>> d.values()
-    [111, 222]
-    >>> d.items()
-    [('aa', 111), ('bb', 222)]
-
-
-Exercises:
-
-- Write a literal that defines a dictionary using both string
-  literals and variables containing strings.  Solution::
-
-      >>> first = 'Dave'
-      >>> last = 'Kuhlman'
-      >>> name_dict = {first: last, 'Elvis': 'Presley'}
-      >>> print name_dict
-      {'Dave': 'Kuhlman', 'Elvis': 'Presley'}
-
-- Write statements that iterate over (1) the keys, (2) the values,
-  and (3) the items in a dictionary.  (Note: Requires introduction
-  of the ``for`` statement.)  Solutions::
-
-      >>> d = {'aa': 111, 'bb': 222, 'cc': 333}
-      >>> for key in d.keys():
-      ...   print key
-      ...
-      aa
-      cc
-      bb
-      >>> for value in d.values():
-      ...   print value
-      ...
-      111
-      333
-      222
-      >>> for item in d.items():
-      ...   print item
-      ...
-      ('aa', 111)
-      ('cc', 333)
-      ('bb', 222)
-      >>> for key, value in d.items():
-      ...   print key, '::', value
-      ...
-      aa :: 111
-      cc :: 333
-      bb :: 222
-
-Additional notes on dictionaries:
-
-- Iterators are supported Jython 2.2a, but not by Jython 2.1.
-
-- You can use ``iterkeys()``, ``itervalues()``, iteritems()`` to
-  obtain iterators over keys, values, and items.
-
-  In Jython 2.1, use ``mydict.keys()``, ``mydict.values()``, and
-  ``mydict.items()``.
-
-- A dictionary itself is iterable: it iterates over its keys.  So,
-  the following two lines are equivalent::
-
-    for k in myDict: print k
-    for k in myDict.iterkeys(): print k
-
-  But, in Jython 2.1, use::
-
-    for k in myDict.keys(): print k
-
-- The ``in`` operator tests for a key in a dictionary (but not in
-  Jython 2.1).  Example::
-
-      In [52]: mydict = {'peach': 'sweet', 'lemon': 'tangy'}
-      In [53]: key = 'peach'
-      In [54]: if key in mydict:
-         ....:     print mydict[key]
-         ....:
-      sweet
-
-  In Jython 2.1, use ``mydict.has_key(key)``.
-
-
-Files
------
-
-Open a file with the ``open`` factory method.  Example::
-
-    In [28]: f = open('mylog.txt', 'w')
-    In [29]: f.write('message #1\n')
-    In [30]: f.write('message #2\n')
-    In [31]: f.write('message #3\n')
-    In [32]: f.close()
-    In [33]: f = open('mylog.txt', 'r')
-    In [34]: for line in f:
-       ....:     print line,
-       ....:
-    message #1
-    message #2
-    message #3
-    In [35]: f.close()
-
-Notes:
-
-- A file object supports the iterator protocol and, therefore, can
-  be used in a ``for`` statement.  This is true of Jython 2.2a1, but
-  in Jython 2.1 you will need to use ``myfile.readlines()``.
-
-- You will sometimes see the use of ``file()`` instead of ``open()``.
-  The newer form is ``file``.  But, ``open`` is still recommended.
-  With built-in types, we can use the type name as the constructor.
-
-- Lines read from a text file have a newline character.  Strip it off
-  with something like: ``b.rstrip('\n')``.
-
-- Learn more about file objects and the methods they provide at:
-  `2.3.9 File Objects
-  <http://docs.python.org/lib/bltin-file-objects.html>`_.
-
-You can also append to an existing file.  In order to do so, open the
-file in "append" mode.  Example::
-
-    In [39]: f = open('mylog.txt', 'a')
-    In [40]: f.write('message #4\n')
-    In [41]: f.close()
-    In [42]: f = open('mylog.txt', 'r')
-    In [43]: for line in f:
-       ....:     print line,
-       ....:
-    message #1
-    message #2
-    message #3
-    message #4
-    In [44]: f.close()
-
-Exercises:
-
-- Read all of the lines of a file into a list.  Print the 3rd and
-  5th lines in the file/list.  Solution::
-
-      In [55]: f = file('tmp1.txt', 'r')
-      In [56]: lines = f.readlines()
-      In [57]: f.close()
-      In [58]: lines
-      Out[58]: ['the\n', 'big\n', 'brown\n', 'dog\n', 'had\n', 'long\n', 'hair\n']
-      In [59]: print lines[2]
-      brown
-
-      In [61]: print lines[4]
-      had
-
-More notes:
-
-- Strip newlines (and other whitespace) from a string with methods
-  ``strip()``, ``lstrip()``, and ``rstrip()``.
-
-
-Statements Part 1
-=================
-
-Assignment
-----------
-
-Form -- ``target = expression``.
-
-Possible targets:
-
-- Identifier
-
-- Tuple or list -- Can be nested.  Left and right sides must have
-  equivalent structure.  Example::
-
-      >>> x, y, z = 11, 22, 33
-      >>> [x, y, z] = 111, 222, 333
-
-  This feature can be used to simulate an enum::
-
-      In [22]: LITTLE, MEDIUM, LARGE = range(1, 4)
-      In [23]: LITTLE
-      Out[23]: 1
-      In [24]: MEDIUM
-      Out[24]: 2
-
-- Subscription of a sequence, dictionary, etc.  Example::
-
-      >>> x = range(5)
-      >>> print x
-      [0, 1, 2, 3, 4]
-      >>> x[2] = 10
-      >>> print x
-      [0, 1, 10, 3, 4]
-
-- A slice of a sequence -- Note that the sequence must be mutable.
-  Example::
-
-      >>> x = range(5)
-      >>> print x
-      [0, 1, 2, 3, 4]
-      >>> x[2:4] = (11, 12)
-      >>> print x
-      [0, 1, 11, 12, 4]
-
-- Attribute reference -- Example::
-
-      >>> class MyClass:
-      ...     pass
-      ...
-      >>> anObj = MyClass()
-      >>> anObj.desc = 'pretty'
-      >>> print anObj.desc
-      pretty
-
-
-There is also augmented assignment.  Examples::
-
-    >>> index = 0
-    >>> index += 1
-    >>> index += 5
-    >>> index += f(x)
-    >>> index -= 1
-    >>> index *= 3
-
-Things to note:
-
-- Assignment creates a new variable (if it does not exist in the
-  namespace) and a binding.  Specifically, it binds a value to the
-  (possibly new) name.  Calling a function also does this to the
-  (formal) parameters.
-
-- In Python, a language with dynamic typing, the data type is
-  associated with the value, not the variable, as in statically
-  typed languages.
-
-- Assignment can also cause sharing of an object.  Example::
-
-      >>> obj1 = A()
-      >>> obj2 = obj1
-
-  Check to determine that the same object is shared with
-  ``id(obj)``.
-
-- You can also do multiple assignment in a single statement.
-  Example::
-
-      a = b = 3
-
-- Jython/Python does not have the concept of constants.  Use global
-  variables and assignment instead.  Examples::
-
-      NOCOLOR, RED, GREEN, BLUE = range(4)
-      DEFAULT_CONFIG_NAME = 'defaults.config'
-
-
-import
-------
-
-Make module available.
-
-What ``import`` does:
-
-- Evaluate the content of a module.
-
-- Likely to create variables in the local (module) namespace.
-
-- Evaluation only happens once during a given run of the program.
-
-- A module is evaluated from top to bottom.  Later statements can
-  replace values created earlier.  This is true of functions and
-  classes, as well as (other) variables.
-
-- Which statements are evaluated?  Assignment, ``class``, ``def``,
-  ...
-
-Where ``import`` looks for modules:
-
-- The current directory.
-
-- CPython (not Jython): directories in PYTHONPATH environment
-  variable.
-
-- Jython (not Python): directories in ``python.path`` in the Jython
-  registry.
-
-- ``sys.path`` shows where it looks.  A script can modify and add to
-  ``sys.path``, but that is *usually* not the way to make directories
-  available to ``import``.
-
-- Packages need a file named ``__init__.py``.  If a directory is not
-  directly in ``sys.path`` but is *under* a directory in sys.path,
-  then it will need a ``__init__.py`` so that modules can be imported
-  from it.
-
-
-Forms of the ``import`` statement:
-
-- ``import A`` -- Names in the local (module) namespace are
-  accessible with the dot operator.
-
-- ``import A1, A2`` -- Not recommended
-
-- ``from A import B``
-
-- ``from A import B1, B2``
-
-- ``from A import B as C``
-
-- ``from A import *`` -- Not recommended: mixes name-spaces.
-
-- ``from A import B as C``
-
-The import statement and packages -- ``__init__.py``.  What is
-made available when you do ``import aPackage``?
-
-The use of ``if __name__ == "__main__":`` -- Makes a module both
-import-able and executable.
-
-Exercises:
-
-- Import a module from the standard library, for example ``re``.
-
-- Import an element from a module from the standard library, for
-  example import ``compile`` from the ``re`` module.
-
-- Create a simple Python package with a single module in it.
-  Solution:
-
-  1. Create a directory in the current directory.
-
-  2. Create an (empty) ``__init__.py`` in the new directory.
-
-  3. Create an ``simple.py`` in the new directory.
-
-  4. Add a simple function or class in ``simple.py``.
-
-Jython can import Java "modules" from jar files.  The jar file must be
-on your classpath.
-
-CPython can import modules stored in a Zip file.  Here are a few
-notes:
-
-- Add modules to a zip file with any zip tool.
-
-- The zip file can contain other file types in addition to
-  Jython/Python modules.
-
-- Add the zip file to ``PYTHONPATH`` or to ``sys.path``.  Example::
-
-      import sys
-      sys.path.append('~/Modules/myzippedmodules.zip')
-
-- Import the module in the normal way.
-
-- See `3.22 zipimport -- Import modules from Zip archives
-  <http://docs.python.org/lib/module-zipimport.html>`_.  The
-  functionality described there is built-in to Jython and Python.
-
-
-print
------
-
-Arguments to ``print``:
-
-- Multiple items -- Separated by commas.
-
-- End with comma to suppress carriage return.
-
-- Use string formatting for more control over output.
-
-- Also see various "pretty-printing" functions and methods, in
-  particular, ``pprint``.  See
-  http://docs.python.org/lib/module-pprint.html.
-
-String formatting -- Arguments are a tuple.  Reference:
-http://docs.python.org/lib/typesseq-strings.html.
-
-Can also use ``sys.stdout``.  Note that a carriage return is *not*
-automatically added.  Example::
-
-    >>> import sys
-    >>> sys.stdout.write('hello\n')
-
-Controlling the destination and format of print -- Replace
-``sys.stdout`` with an instance of any class that implements the
-method ``write`` taking one parameter.  Example::
-
-    import sys
-
-    class Writer:
-        def __init__(self, file_name):
-            self.out_file = file(file_name, 'a')
-        def write(self, msg):
-            self.out_file.write('[[%s]]' % msg)
-        def close(self):
-            self.out_file.close()
-
-    def test():
-        writer = Writer('outputfile.txt')
-        save_stdout = sys.stdout
-        sys.stdout = writer
-        print 'hello'
-        print 'goodbye'
-        writer.close()
-        # Show the output.
-        tmp_file = file('outputfile.txt')
-        sys.stdout = save_stdout
-        content = tmp_file.read()
-        tmp_file.close()
-        print content
-
-    test()
-
-See the documentation on ``sys.stdout`` and ``sys.stdin``:
-`3.1 sys -- System-specific parameters and functions
-<http://docs.python.org/lib/module-sys.html>`_
-(http://docs.python.org/lib/module-sys.html).
-
-
-if: elif: else:
----------------
-
-Conditions -- Expressions -- Anything that returns a value.
-Compare with ``eval()`` and ``exec``.
-
-Truth values:
-
-- False -- ``False``, None, numeric zero, the empty string, an
-  empty list or tuple.
-
-- True -- ``True`` and everything else.
-
-Operators:
-
-- ``and`` and ``or``
-
-- ``not``
-
-- ``is`` -- The identical object.  Cf. ``a is b`` and
-  ``id(a) == id(b)``.  Useful to test for ``None``, for example::
-
-      if x is None:
-          ...
-
-- ``in`` -- Test for existence in a container and in particular in a
-  dictionary.  Example::
-
-      >>> a = {'aa': 11, 'bb': 22}
-      >>> 'bb' in a
-      1
-      >>> if 'aa' in a and a['aa']:
-      ...   print 'good'
-      ...
-      good
-
-  Note that Jython/Python uses short-circuit evaluation in
-  conditions.  See `5.10 Boolean operations
-  <http://docs.python.org/ref/Booleans.html>`_
-  (http://docs.python.org/ref/Booleans.html).
-
-
-Exercises:
-
-- Write an ``if`` statement with an ``and`` operator.
-
-- Write an ``if`` statement with an ``or`` operator.
-
-- Write an ``if`` statement containing both ``and`` and ``or``
-  operators.
-
-
-try: except:
-------------
-
-Caught and un-caught exceptions.
-
-The ``try:`` statement catches an exception.
-
-Tracebacks -- Also see the ``traceback`` module:
-http://docs.python.org/lib/module-traceback.html
-
-Exceptions are classes.  They are sub-classes of class ``Exception``.
-
-Exception classes -- Sub-classing, args.
-
-An exception class in an ``except:`` clause catches instances of
-that exception class and all sub-classes, but *not* super-classes.
-
-Built-in exception classes -- See:
-
-- Module ``exceptions``.
-
-- Built-in exceptions -- http://docs.python.org/lib/module-exceptions.html.
-
-User defined exception classes -- Sub-classes of ``Exception``.
-
-Example::
-
-    try:
-        raise RuntimeError('this silly error')
-    except RuntimeError, e:
-        print "[[[%s]]]" % e
-
-Reference: http://docs.python.org/lib/module-exceptions.html
-
-Why would you define your own exception class?  One answer:  You
-want a user of your code to catch your exception and no others.
-
-Exercises:
-
-- Write a *very* simple, empty exception sub-class.  Solution::
-
-      class MyE(Exception):
-          pass
-
-- Write a ``try:except:`` statement that raises your exception and
-  also catches it.  Solution::
-
-      try:
-          raise MyE('hello there dave')
-      except MyE, e:
-          print e
-
-
-raise
------
-
-Throw or raise an exception.
-
-Forms:
-
-- ``raise instance``
-
-- ``raise MyExceptionClass, value``
-
-- ``raise MyExceptionClass(value)``
-
-The ``raise`` statement takes:
-
-- An instance of class ``Exception`` or
-
-- An instance of a built-in sub-class of class ``Exception`` or
-
-- An instance of a user-defined sub-class of class ``Exception`` or
-
-- One of the above classes and (optionally) a value (for example,
-  a string or a tuple).
-
-A few examples::
-
-    In [29]: class MyException(Exception):
-       ....:     pass
-       ....:
-    In [30]: raise MyException, 'this is a test'
-    ------------------------------------------------------------
-    Traceback (most recent call last):
-      File "<ipython console>", line 1, in ?
-    MyException: this is a test
-
-
-See http://docs.python.org/ref/raise.html.
-
-For a list of built-in exceptions, see
-http://docs.python.org/lib/module-exceptions.html.
-
-The following example defines an exception sub-class and throws an
-instance of that sub-class.  It also shows how to pass and catch
-multiple arguments to the exception::
-
-    class NotsobadError(Exception):
-        pass
-
-    def test(x):
-        try:
-            if x == 0:
-                raise NotsobadError('a moderately bad error', 'not too bad')
-        except NotsobadError, e:
-            print 'Error args: %s' % (e.args, )
-
-    test(0)
-
-The following example does a small amount of processing of the
-arguments::
-
-    class NotsobadError(Exception):
-        """An exception class.
-        """
-        def get_args(self):
-            return '::::'.join(self.args)
-
-    def test(x):
-        try:
-            if x == 0:
-                raise NotsobadError('a moderately bad error', 'not too bad')
-        except NotsobadError, e:
-            print 'Error args: {{{%s}}}' % (e.get_args(), )
-
-    test(0)
-
-
-Statements Part 2
-=================
-
-for
----
-
-Iterate over a sequence or an "iterator" object.
-
-Form -- ``for x in y:``.
-
-**Note:** Iterators are supported by Jython 2.2a, but *not* Jython 2.1.
-
-Iterators:
-
-- Sequences are iterators.
-
-- Instances of classes that obey the iterator protocol are
-  iterators.  See http://docs.python.org/lib/typeiter.html.
-
-- Can create an iterator with ``iter()``.
-
-- An iterable implements the iterator interface and satisfies the
-  iterator protocol.  The
-  iterator protocol: ``__iter__()`` and ``next()`` methods.  See
-  `2.3.5 Iterator Types
-  <http://docs.python.org/lib/typeiter.html>`_.
-
-Some ways to produce iterators (see
-http://docs.python.org/lib/built-in-funcs.html):
-
-- ``iter()``
-
-- ``enumerate()``
-
-- ``some_dict.iterkeys()``, ``some_dict.itervalues()``,
-  ``some_dict.iteritems()``.
-
-- Sequences are iterable, for example, lists, tuples,
-  dictionaries, strings, 
-
-- Generator expressions -- Latest Python only.  Syntactically like
-  list comprehensions (surrounded by parens instead of square
-  brackets), but use lazy evaluation.
-
-
-Helpful functions with ``for``:
-
-- ``enumerate(iterable)`` -- Returns an iterable that produces a
-  pair (tuple) containing count and value.  Example::
-
-
-      for count, value in enumerate([11,22,33]):
-          print count, value
-
-- ``range([start,] stop[, step])`` and ``xrange([start,] stop[, step])``.
-
-
-List comprehensions revisited -- Since list comprehensions create
-lists, they are useful in ``for`` statements, although you should
-consider using a generator expression instead.  Two forms:
-
-- ``[f(x) for x in iterable]``
-
-- ``[f(x) for x in iterable if t(x)]``
-
-Exercises:
-
-- Write a list comprehension that returns all the keys in a
-  dictionary whose associated values are greater than zero.
-
-  - The dictionary: ``{'aa': 11, 'cc': 33, 'dd': -55, 'bb': 22}``
-
-  - Solution: ``[x[0] for x in my_dict.iteritems() if x[1] > 0]``
-
-- Write a list comprehension that produces even integers from 0 to
-  10.  Use a ``for`` statement to iterate over those values.
-  Solution::
-
-      for x in [y for y in range(10) if y % 2 == 0]:
-          print 'x: %s' % x
-
-But, note that in the previous exercise, a generator expression
-would be better.  A generator expression is like a list
-comprehension, except that, instead of creating the entire list,
-it produces a generator that can be used to produce all the
-elements.
-
-
-while
------
-
-Form::
-
-    while condition:
-        block
-
-Exercises:
-
-- Write a ``while`` statement that prints integers from zero to 5.
-  Solution::
-
-      count = 0
-      while count < 5:
-          count += 1
-          print count
-
-
-
-continue and break
-------------------
-
-The ``break`` statement exits from a loop.
-
-The ``continue`` statement causes execution to immediately
-continue at the start of the loop.
-
-Can be used in ``for`` and ``while``.
-
-Exercises:
-
-- Using ``break``, write a ``while`` statement that prints
-  integers from zero to 5.  Solution::
-
-      count = 0
-      while True:
-          count += 1
-          if count > 5:
-              break
-          print count
-
-
-- Using ``continue``, write a ``while`` statement that processes
-  only even integers from 0 to 10.  Note: ``%`` is the modulo
-  operator.  Solution::
-
-      count = 0
-      while count < 10:
-          count += 1
-          if count % 2 == 0:
-              continue
-          print count
-
-
-del
----
-
-What ``del`` does:
-
-- Removes names from namespace.
-
-- Removes an item from a collection, for example, a list or
-  dictionary.
-
-- Remove an attribute from on object.
-
-If name is listed in a ``global`` statement, then ``del`` removes
-name from the global namespace.
-
-Names can be a (nested) list.  Examples::
-
-    >>> del a
-    >>> del a, b, c
-
-We can also delete items from a list or dictionary.  Examples::
-
-    In [9]:d = {'aa': 111, 'bb': 222, 'cc': 333}
-    In [10]:print d
-    {'aa': 111, 'cc': 333, 'bb': 222}
-    In [11]:del d['bb']
-    In [12]:print d
-    {'aa': 111, 'cc': 333}
-    In [13]:
-    In [13]:a = [111, 222, 333, 444]
-    In [14]:print a
-    [111, 222, 333, 444]
-    In [15]:del a[1]
-    In [16]:print a
-    [111, 333, 444]
-
-And, we can delete an attribute from an instance.  Example::
-
-    In [17]:class A:
-       ....:    pass
-       ....:
-    In [18]:a = A()
-    In [19]:a.x = 123
-    In [20]:dir(a)
-    Out[20]:['__doc__', '__module__', 'x']
-    In [21]:print a.x
-    123
-    In [22]:del a.x
-    In [23]:dir(a)
-    Out[23]:['__doc__', '__module__']
-    In [24]:print a.x
-    ----------------------------------------------
-    exceptions.AttributeError     Traceback (most recent call last)
-
-    /home/dkuhlman/a1/Python/Test/<console>
-
-    AttributeError: A instance has no attribute 'x'
-
-
-Functions
-=========
-
-Arguments
----------
-
-Default values -- Example::
-
-    In [53]: def t(max=5):
-       ....:     for val in range(max):
-       ....:         print val
-       ....:
-       ....:
-    In [54]: t(3)
-    0
-    1
-    2
-    In [55]: t()
-    0
-    1
-    2
-    3
-    4
-
-Note: If a function has an argument with a default value, then all
-subsequent arguments for that function must have default values.
-
-List arguments -- ``*args``.  It's a tuple.  Example::
-
-    >>> def f(x, *args):
-    ...   print 'x:', x
-    ...   print 'args:', args
-    ...
-    >>> f(11,22,33,44)
-    x: 11
-    args: (22, 33, 44)
-
-
-Keyword arguments and default values -- ``**kwargs``.  It's a
-dictionary::
-
-    >>> def f(x, **kwargs):
-    ...   print 'x:', x
-    ...   print 'kwargs:', kwargs
-    ...
-    >>> f(11, arg1=22, arg2=33, arg3=44)
-    x: 11
-    kwargs: {'arg3': 44, 'arg2': 33, 'arg1': 22}
-
-Passing lists to a function as multiple arguments --
-``some_func(*aList)``.  Effectively, this syntax causes Python to
-unroll the arguments.  Example::
-
-    >>> def f(x, *rest):
-    ...   print 'x:', x
-    ...   print 'rest:', rest
-    ...
-    >>>
-    >>>
-    >>> f(11, a)
-    x: 11
-    rest: ([0, 1, 2, 3, 4],)
-    >>> f(11, *a)
-    x: 11
-    rest: (0, 1, 2, 3, 4)
-
-
-Return values:
-
-- The default return value, if no return statement is executed, is
-  ``None``.
-
-- Use the ``return`` statement to return with a value.
-
-- You can return multiple values.  A tuple is handy for this.
-  Example::
-
-    >>> def split_name(fullname):
-    ...     names = fullname.split()
-    ...     firstname = names[0]
-    ...     lastname = names[1]
-    ...     return firstname, lastname
-    ...
-    >>>
-    >>> first, last = split_name('Dave Kuhlman')
-    >>> print first
-    Dave
-    >>> print last
-    Kuhlman
-
-Local variables:
-
-- Creating local variables.  Contrast with accessing a variable.
-
-- Variable look-up.
-
-- The ``global`` statement -- Must use ``global`` when we want to
-  *set* the value of a global variable.
-
-Things to know about functions:
-
-- Functions are first-class -- You can store them in a structure,
-  pass them to a function, and return them from a function.
-
-- Functions can take keyword arguments.
-
-- You can "capture" remaining arguments with ``*args``, and
-  ``**kwargs``.
-
-- A function that does not explicitly return a value, returns
-  ``None``.
-
-- In order to *set* the value of a global variable, declare the
-  variable with ``global``.
-
-Exercises:
-
-- Write a function that takes a single argument, prints the value
-  of the argument, and returns the argument as a string.  Solution::
-
-      >>> def t(x):
-      ...     print 'x: %s' % x
-      ...     return '[[%s]]' % x
-      ...
-      >>> t(3)
-      x: 3
-      '[[3]]'
-
-- Write a function that takes a variable number of arguments and
-  prints them all.  Solution::
-
-      >>> def t(*args):
-      ...     for arg in args:
-      ...         print 'arg: %s' % arg
-      ...
-      >>> t('aa', 'bb', 'cc')
-      arg: aa
-      arg: bb
-      arg: cc
-
-- Write a function that prints the names and values of keyword
-  arguments passed to it.  Solution::
-
-      >>> def t(**kwargs):
-      ...     for key in kwargs.keys():
-      ...         print 'key: %s  value: %s' % (key, kwargs[key], )
-      ...
-      >>> t(arg1=11, arg2=22)
-      key: arg1  value: 11
-      key: arg2  value: 22
-
-
-Global variables and the global statement
------------------------------------------
-
-By default, assignment in a function or method creates local
-variables.
-
-Reference (not assignment) to a variable, accesses a local
-variable if it has already been created, else accesses a global
-variable.
-
-In order to assign a value to a global variable, declare the
-variable as global at the beginning of the function or method.
-
-If in a function or method, you both reference and assign to a
-variable, then you must either:
-
-1. Assign to the variable first, or
-
-2. Declare the variable as global.
-
-The ``global`` statement declares one or more variables, separated
-by commas, to be global.
-
-
-Some examples::
-
-    ->> X = 3
-    />> def t():
-    |..   print X
-    \__
-    ->> t()
-    3
-    #
-    # No effect on global X.
-    />> def s():
-    |..   X = 4
-    \__
-    ->> s()
-    ->> t()
-    3
-    />> def u():
-    |..   global X
-    |..   X = 5
-    \__
-    ->> u()
-    ->> t()
-    5
-    #
-    # Error
-    # Must assign value before reference or declare as global.
-    />> def v():
-    |..   x = X
-    |..   X = 6
-    |..   return x
-    \__
-    ->> v()
-    Traceback (most recent call last):
-      File "<input>", line 2, in ?
-      File "<input>", line 3, in v
-    UnboundLocalError: local variable 'X' referenced before assignment
-    #
-    # This time, declare X as global.
-    />> def w():
-    |..   global X
-    |..   x = X
-    |..   X = 7
-    |..   return x
-    \__
-    ->> w()
-    5
-    ->> X
-    7
-
-
-Doc strings for functions
-.........................
-
-Add docstrings as a triple-quoted string beginning with the first line
-of a function or method.  Access the documentation for a function
-through the ``__doc__`` attribute.  Example::
-
-    >>> def w():
-    ...     """This is documentation on w.
-    ...     It is simple.
-    ...     """
-    ...     print 'hi'
-    ...
-    >>> w()
-    hi
-    >>> print w.__doc__
-    This is documentation on w.
-        It is simple.
-
-See `epydoc`_ for a suggested format.
-
-
-
-lambda
-------
-
-Use a lambda, as a convenience, when you need a function that both:
-
--  is anonymous and
-
-- contains only an expression and no statements.
-
-Suggestion: In some cases, a lambda may be useful as an event
-handler.
-
-Example::
-
-    class Test:
-        def __init__(self, first='', last=''):
-            self.first = first
-            self.last = last
-        def test(self, formatter):
-            """
-            Test for lambdas.
-            formatter is a function taking 2 arguments, first and last
-              names.  It should return the formatted name.
-            """
-            msg = 'My name is %s' % (formatter(self.first, self.last),)
-            print msg
-
-    def test():
-        t = Test('Dave', 'Kuhlman')
-        t.test(lambda first, last: '%s %s' % (first, last, ))
-        t.test(lambda first, last: '%s, %s' % (last, first, ))
-
-    test()
-
-Reference: http://docs.python.org/ref/lambdas.html
-
-
-Iterators and generators
-------------------------
-
-Concepts:
-
-iterator
-    And iterator is something that satisfies the iterator protocol.
-
-generator
-    A generator is a class or function that implements an
-    iterator, i.e. that implements the iterator protocol.
-
-the iterator protocol
-    An object satisfies the iterator protocol if it does the
-    following:
-
-    - It implements a ``__iter__`` method, which returns an iterator
-      object.
-
-    - It implements a ``next`` function, which returns the next item
-      from the collection, sequence, stream, etc of items to be
-      iterated over
-
-    - It raises the ``StopIteration`` exception when the items are
-      exhausted and the ``next()`` method is called.
-
-For more information on iterators, see `the section on iterator
-types in the Python Library Reference
-<http://docs.python.org/lib/typeiter.html>`_.
-
-A function or method containing a ``yield`` statement implements a
-generator.  Adding the ``yield`` statement to a function or method
-turns that function or method into one which, when called, returns
-a generator, i.e. an object that implements the iterator protocol.
-
-An instance of a class which implements the ``__iter__`` method,
-returning an iterator, is iterable.  For example, it can be used
-in a ``for`` statement or in a list comprehension, or in a
-generator expression, or as an argument to the ``iter()`` built-in
-method.  But, notice that the class most likely implements a
-generator method which can be called directly.
-
-Examples -- The following code implements an iterator that
-produces all the objects in a tree of objects::
-
-    class Node:
-        def __init__(self, data, children=None):
-            self.initlevel = 0
-            self.data = data
-            if children is None:
-                self.children = []
-            else:
-                self.children = children
-        def set_initlevel(self, initlevel): self.initlevel = initlevel
-        def get_initlevel(self): return self.initlevel
-        def addchild(self, child):
-            self.children.append(child)
-        def get_data(self):
-            return self.data
-        def get_children(self):
-            return self.children
-        def show_tree(self, level):
-            self.show_level(level)
-            print 'data: %s' % (self.data, )
-            for child in self.children:
-                child.show_tree(level + 1)
-        def show_level(self, level):
-            print '   ' * level,
-        #
-        # Generator method #1
-        # This generator turns instances of this class into iterable objects.
-        #
-        def walk_tree(self, level):
-            yield (level, self, )
-            for child in self.get_children():
-                for level1, tree1 in child.walk_tree(level+1):
-                    yield level1, tree1
-        def __iter__(self):
-            return self.walk_tree(self.initlevel)
-
-
-    #
-    # Generator method #2
-    # This generator uses a support function (walk_list) which calls
-    #   this function to recursively walk the tree.
-    # If effect, this iterates over the support function, which
-    #   iterates over this function.
-    #
-    def walk_tree(tree, level):
-        yield (level, tree)
-        for child in walk_list(tree.get_children(), level+1):
-            yield child
-
-    def walk_list(trees, level):
-        for tree in trees:
-            for tree in walk_tree(tree, level):
-                yield tree
-
-
-    #
-    # Generator method #3
-    # This generator is like method #2, but calls itself (as an iterator),
-    #   rather than calling a support function.
-    #
-    def walk_tree_recur(tree, level):
-        yield (level, tree,)
-        for child in tree.get_children():
-            for level1, tree1 in walk_tree_recur(child, level+1):
-                yield (level1, tree1, )
-
-
-    def show_level(level):
-        print '   ' * level,
-
-
-    def test():
-        a7 = Node('777')
-        a6 = Node('666')
-        a5 = Node('555')
-        a4 = Node('444')
-        a3 = Node('333', [a4, a5])
-        a2 = Node('222', [a6, a7])
-        a1 = Node('111', [a2, a3])
-        initLevel = 2
-        a1.show_tree(initLevel)
-        print '=' * 40
-        for level, item in walk_tree(a1, initLevel):
-            show_level(level)
-            print 'item:', item.get_data()
-        print '=' * 40
-        for level, item in walk_tree_recur(a1, initLevel):
-            show_level(level)
-            print 'item:', item.get_data()
-        print '=' * 40
-        a1.set_initlevel(initLevel)
-        for level, item in a1:
-            show_level(level)
-            print 'item:', item.get_data()
-        iter1 = iter(a1)
-        print iter1
-        print iter1.next()
-        print iter1.next()
-        print iter1.next()
-        print iter1.next()
-        print iter1.next()
-        print iter1.next()
-        print iter1.next()
-    ##    print iter1.next()
-        return a1
-
-    if __name__ == '__main__':
-        test()
-
-Notes:
-
-- An instance of class ``Node`` is "iterable".  It can be used
-  directly in a ``for`` statement, a list comprehension, etc.  So,
-  for example, when an instance of ``Node`` is used in a ``for``
-  statement, it produces an iterator.
-
-- We could also call the ``Node.walk_method`` directly to obtain
-  an iterator.
-
-- Method ``Node.walk_tree`` and functions ``walk_tree`` and
-  ``walk_tree_recur`` are generators.  When called, they return an
-  iterator.  They do this because they each contain a ``yield``
-  statement.
-
-- These methods/functions are recursive.  They call themselves.
-  Since they are generators, they must call themselves in a context
-  that uses an iterator, for example in a ``for`` statement.
-
-
-
-Classes
-=======
-
-Classes model the behavior of objects in the "real" world. Methods
-implement the behaviors of these types of objects.  Member
-variables hold (current) state.
-
-A simple class
---------------
-
-::
-
-    In [104]: class A:
-       .....:     pass
-       .....:
-    In [105]: a = A()
-
-
-Creating instances
-------------------
-
-Call the class as though it were a function.  Apply the function call
-operator ``()`` to the class.  Example::
-
-    >>> anObj = MyNewClass()
-
-You will need to add parameters to match the signature of the
-constructor.  See below.
-
-
-Defining methods
-----------------
-
-A method is a function defined in class scope and with first
-parameter ``self``::
-
-    In [106]: class B:
-       .....:     def show(self):
-       .....:         print 'hello from B'
-       .....:
-    In [107]: b = B()
-    In [108]: b.show()
-    hello from B
-
-
-The constructor
----------------
-
-The constructor is a method named ``__init__``.
-
-Exercise:  Define a class with a member variable ``name`` and a
-``show`` method.  Use ``print`` to show the name.  Solution::
-
-    In [109]: class A:
-       .....:       def __init__(self, name):
-       .....:         self.name = name
-       .....:   def show(self):
-       .....:         print 'name: "%s"' % self.name
-       .....:
-    In [111]: a = A('dave')
-    In [112]: a.show()
-    name: "dave"
-
-Notes:
-
-- The ``self`` variable is explicit.
-
-
-Member variables
-----------------
-
-Defining member variables -- Member variables are created with
-assignment.  Example::
-
-    class A:
-        def __init__(self, name):
-            self.name = name
-
-A small gotcha -- Do this::
-
-
-    In [28]: class A:
-       ....:     def __init__(self, items=None):
-       ....:         if items is None:
-       ....:             self.items = []
-       ....:         else:
-       ....:             self.items = items
-
-Do *not* do this::
-
-    In [29]: class B:
-       ....:     def __init__(self, items=[]):   # wrong.  list ctor evaluated only once.
-       ....:         self.items = items
-
-In the second example, the ``def`` statement and the list
-constructor are evaluated only once.  Therefore, the item member
-variable of all instances of class B, will share the same value,
-which is most likely *not* what you want.
-
-
-Methods
--------
-
-Defining methods -- Define methods as functions nested inside a
-class.  The first argument is always ``self``.
-
-Calling methods:
-
-- Use the instance and the dot operator.
-
-- Calling a method defined in the same class or a super-class.  Same
-  class: use ``self``.  Super-class: use the class (name).  Examples::
-
-      >>> self.calculate(maximum)
-      >>> MySuperClass.calculate(maximum)
-
-
-Adding inheritance
-------------------
-
-Referencing super-classes -- Use the name of the super-class, for
-example::
-
-      In [39]: class B(A):
-         ....:     def __init__(self, name, size):
-         ....:         A.__init__(self, name)
-         ....:         self.self = size
-
-
-Note how we call the constructor of the super-class.
-
-You can also use multiple inheritance.  Example::
-
-      class C(A, B):
-          ...
-
-Python searches super-classes in left-to-right depth-first order.
-
-For more information on inheritance, see the tutorial in the
-standard Python documentation set: `9.5 Inheritance
-<http://docs.python.org/tut/node11.html#SECTION0011500000000000000000>`_
-and `9.5.1 Multiple Inheritance
-<http://docs.python.org/tut/node11.html#SECTION0011510000000000000000>`_.
-
-Watch out for problems with inheriting from classes that have a
-common base class.
-
-
-Class variables
----------------
-
-- All instances of a class share the same class variable and its
-  value.
-
-- Also called static data.
-
-- Define at class level with assignment.  Example::
-
-      class A:
-          size = 5
-          def get_size(self):
-              return A.size
-
-- Reference with ``classname.variable``.
-
-- Caution: ``self.variable = x`` creates a new member variable.
-
-Class methods
--------------
-
-- Also called static methods.
-
-An alternative way to implement static methods (without new-style
-classes).  Use a "plain", module-level function.  For example::
-
-    >>> class A:
-    ...   count = 0
-    ...
-    >>> def inc_count():
-    ...   A.count = A.count + 1
-    ...
-    >>> def dec_count():
-    ...   A.count = A.count - 1
-    ...
-    >>> a = A()
-    >>> a.count
-    0
-    >>> inc_count()
-    >>> a.count
-    1
-    >>> b = A()
-    >>> b.count
-    1
-    >>> inc_count()
-    >>> inc_count()
-    >>> inc_count()
-    >>> a.count
-    4
-    >>> b.count
-    4
-
-
-
-Interfaces
-----------
-
-- Interfaces are not enforced.
-
-- A class does not have to implement *all* of an interface.
-
-- Use a class definition with methods that each have a doc string but
-  no executable code as a means of documenting an interface.
-
-- For more notes on interfaces see:
-  `Interfaces
-  <http://www.rexx.com/~dkuhlman/python_comments.html#interfaces>`_:
-  http://www.rexx.com/~dkuhlman/python_comments.html#interfaces.
-
-Other special names/methods -- __call__(), __getitem__(),
-setitem(), __cmp__(), __le__(), etc.  See
-http://docs.python.org/ref/specialnames.html.
-
-
-New-style classes
------------------
-
-Not yet available in Jython 2.1.
-
-For information on new style classes see:
-`Introduction To New-Style Classes In Python
-<http://www.geocities.com/foetsch/python/new_style_classes.htm>`_:
-http://www.geocities.com/foetsch/python/new_style_classes.htm.
-
-
-
-Doc strings
------------
-
-Add docstrings as a triple-quoted string beginning with the first
-executable line of a module, class, method, or function.  See
-`epydoc`_ for a suggested format.
-
-.. _`epydoc`: http://epydoc.sourceforge.net/
-
-
-
-Modules, Packages, and Debugging
-================================
-
-Modules
--------
-
-A module is a Python source code file.
-
-A module can be imported.
-
-A module can be run.
-
-To make a module both import-able and run-able, use the following
-idiom (at the end of the module)::
-
-    def main():
-        o
-        o
-        o
-
-    if __name__ == '__main__':
-        main()
-
-
-Doc strings for functions
-.........................
-
-Add docstrings as a triple-quoted string at or near the top of the
-file. See `epydoc`_ for a suggested format.
-
-
-
-Packages
---------
-
-A package is a directory on the file system which contains a file
-named ``__init__.py``.
-
-The ``__init__.py`` file:
-
-- Why is it there? -- It makes modules in the directory
-  "import-able".
-
-- Can ``__init__.py`` be empty? -- Yes.  Or, just include a
-  comment.
-
-- When is it evaluated? -- It is evaluated the first time that an
-  application imports anything from that directory/package.
-
-- What can you do with it? -- Any code that should be executed
-  exactly once and during import.  For example:
-
-  - Perform initialization needed by the package.
-
-  - Make variables, functions, classes, etc available.  For
-    example, when the *package* is imported rather than modules in
-    the package.  You can also expose objects defined in modules
-    contained in the package.
-
-- Define a variable named ``__all__`` to specify the list of names
-  that will be imported by ``from my_package import *``.  For
-  example, if the following is present in
-  ``my_package/__init__.py``::
-
-      __all__ = ['func1', 'func2',]
-
-  Then, ``from my_package import *`` will import ``func1`` and
-  ``func2``, but not other names defined in ``my_package``.
-
-  Note that ``__all__`` can be used at the module level, as well
-  as at the package level.
-  
-
-Debugging tools
----------------
-
-``pdb`` -- The Python debugger:
-
-- Start the debugger by running an expression::
-
-      pdb.run('expression')
-
-  Example::
-
-      import pdb
-      pdb.run('main()')
-
-- Start up the debugger at a specific location with the following::
-
-      import pdb; pdb.set_trace()
-
-- Get help from within the debugger.  For example::
-
-      (Pdb) help
-      (Pdb) help next
-
-
-Miscellaneous tools:
-
-- ``id(obj)``
-
-- ``globals()``, ``locals()``.
-
-- ``type(obj)``
-
-- ``dir(obj)`` -- Returns interesting names, but list is not
-  necessarily complete.
-
-- ``cls.__bases__``
-
-- ``obj.__class__``
-
-- ``obj.__doc__``
-
-- ``obj.__class__.__doc__``
-
-- Customize the representation of your class.  Define the
-  following methods in your class:
-
-
-  - ``__repr__()`` -- Called by (1) ``repr()``, (2) interactive
-    interpreter when representation is needed.
-
-  - ``__str__()`` -- Called by (1) ``str()``, (2) string
-    formatting.
-
-
-
-Special Tasks
-=============
-
-File input and output
-----------------------
-
-Create a file object.  Use ``file()`` (or ``open()`` in Jython
-prior to Jython 2.2).  However, ``open`` is a factory function, and,
-according to some, is preferred over ``file``.
-
-This example reads and prints each line of a file::
-
-    def test():
-        f = file('tmp.py', 'r')
-        for line in f:
-            print 'line:', line.rstrip()
-        f.close()
-
-    test()
-
-Notes:
-
-- A text file is an iterable (Jython 2.2a or later).  It iterates over
-  the lines in a file.  The following is a common idiom::
-
-      infile = file(filename, 'r')
-      for line in infile:
-          process_a_line(line)
-      infile.close()
-
-- ``string.rstrip()`` strips new-line and other whitespace from
-  the right side of each line.  To strip new-lines only, but not
-  other whitespace, try ``rstrip('\n')``.
-
-- Other ways of reading from a file/stream object:
-  ``my_file.read()``, ``my_file.readline()``, ``my_file.readlines()``, 
-
-This example writes lines of text to a file::
-
-    def test():
-        f = file('tmp.txt', 'w')
-        for ch in 'abcdefg':
-            f.write(ch * 10)
-            f.write('\n')
-        f.close()
-
-    test()
-
-Notes:
-
-- The ``write`` method, unlike the ``print`` statement, does not
-  automatically add new-line characters.
-
-- Must close file in order to flush output.  Or, use
-  ``my_file.flush()``.
-
-
-Unit tests
-----------
-
-For more information, see `5.3 unittest -- Unit testing framework
-<http://docs.python.org/lib/module-unittest.html>`_
-(http://docs.python.org/lib/module-unittest.html).
-
-
-Here is a simple example::
-
-    #!/usr/bin/env python
-
-    import sys, popen2
-    import getopt
-    import unittest
-
-
-    class GenTest(unittest.TestCase):
-
-        def test_1_generate(self):
-            cmd = 'python ../generateDS.py -f -o out2sup.py -s out2sub.py people.xsd'
-            outfile, infile = popen2.popen2(cmd)
-            result = outfile.read()
-            outfile.close()
-            infile.close()
-            self.failUnless(len(result) == 0)
-
-        def test_2_compare_superclasses(self):
-            cmd = 'diff out1sup.py out2sup.py'
-            outfile, infile = popen2.popen2(cmd)
-            outfile, infile = popen2.popen2(cmd)
-            result = outfile.read()
-            outfile.close()
-            infile.close()
-            #print 'len(result):', len(result)
-            # Ignore the differing lines containing the date/time.
-            #self.failUnless(len(result) < 130 and result.find('Generated') > -1)
-            self.failUnless(check_result(result))
-
-        def test_3_compare_subclasses(self):
-            cmd = 'diff out1sub.py out2sub.py'
-            outfile, infile = popen2.popen2(cmd)
-            outfile, infile = popen2.popen2(cmd)
-            result = outfile.read()
-            outfile.close()
-            infile.close()
-            # Ignore the differing lines containing the date/time.
-            #self.failUnless(len(result) < 130 and result.find('Generated') > -1)
-            self.failUnless(check_result(result))
-
-
-    def check_result(result):
-        flag1 = 0
-        flag2 = 0
-        lines = result.split('\n')
-        len1 = len(lines)
-        if len1 <= 5:
-            flag1 = 1
-        s1 = '\n'.join(lines[:4])
-        if s1.find('Generated') > -1:
-            flag2 = 1
-        return flag1 and flag2
-
-
-    # Make the test suite.
-    def suite():
-        # The following is obsolete.  See Lib/unittest.py.
-        #return unittest.makeSuite(GenTest)
-        loader = unittest.TestLoader()
-        # or alternatively
-        # loader = unittest.defaultTestLoader
-        testsuite = loader.loadTestsFromTestCase(GenTest)
-        return testsuite
-
-
-    # Make the test suite and run the tests.
-    def test():
-        testsuite = suite()
-        runner = unittest.TextTestRunner(sys.stdout, verbosity=2)
-        runner.run(testsuite)
-
-
-    USAGE_TEXT = """
-    Usage:
-        python test.py [options]
-    Options:
-        -h, --help      Display this help message.
-    Example:
-        python test.py
-    """
-
-    def usage():
-        print USAGE_TEXT
-        sys.exit(-1)
-
-
-    def main():
-        args = sys.argv[1:]
-        try:
-            opts, args = getopt.getopt(args, 'h', ['help'])
-        except:
-            usage()
-        relink = 1
-        for opt, val in opts:
-            if opt in ('-h', '--help'):
-                usage()
-        if len(args) != 0:
-            usage()
-        test()
-
-
-    if __name__ == '__main__':
-        main()
-        #import pdb
-        #pdb.run('main()')
-
-
-Notes:
-
-- ``GenTest`` is our test suite class.  It inherits from
-  ``unittest.TestCase``.
-
-- Each method in ``GenTest`` whose name begins with "test" will be
-  run as a test.
-
-- The tests are run in alphabetic order by method name.
-
-- Defaults in class ``TestLoader`` for the test name prefix and
-  sort comparison function can be overridden. See
-  `5.3.8 TestLoader Objects
-  <http://docs.python.org/lib/testloader-objects.html>`_.
-
-- A test case class may also implement methods named ``setUp()``
-  and ``tearDown()`` to be run before and after tests.  See
-  `5.3.5 TestCase Objects
-  <http://docs.python.org/lib/testcase-objects.html>`_.
-  Actually, the first test method in our example should, perhaps,
-  be a ``setUp()`` method.
-
-- The tests use calls such as ``self.failUnless()`` to report
-  errors.  These are inherited from class ``TestCase``.  See
-  `5.3.5 TestCase Objects
-  <http://docs.python.org/lib/testcase-objects.html>`_.
-
-- Function ``suite()`` creates an instance of the test suite.
-
-- Function ``test()`` runs the tests.
-
-Why should we use unit tests?  Many reasons, including:
-
-- Without unit tests, corner cases may not be checked.  This is
-  especially important, since Python does relatively little
-  compile time error checking.
-
-- Unit tests facilitate a frequent and short design and implement
-  and release development cycle.  See `ONLamp.com -- Extreme Python
-  <http://www.onlamp.com/pub/a/python/2001/03/28/pythonnews.html>`_
-  and `What is XP <http://www.xprogramming.com/what_is_xp.htm>`_.
-
-- Designing the tests before writing the code is "a good idea".
-
-
-doctest
--------
-
-For simple test harnesses, consider using ``doctest``.  With
-``doctest`` you can (1) run a test at the Python interactive
-prompt, then (2) copy and paste that test into a doc string in
-your module, and then (3) run the tests automatically from within
-your module under ``doctest``.
-
-There are examples and explanation in the standard Python
-documentation set: `5.2 doctest -- Test interactive Python
-examples <http://docs.python.org/lib/module-doctest.html>`_.
-
-A simple way to use ``doctest`` in your module:
-
-1. Run several tests in the Python interactive interpreter.  Note that
-   because ``doctest`` looks for the interpreter's ">>>" prompt, you
-   must use the standard python interpreter or an interpreter that
-   produces the same prompts.  Note that IPython does *not* produce
-   those prompts by default, but can be configured to do so.  Also,
-   make sure that you include a line with the ">>>" prompt after each
-   set of results; this enables ``doctest`` to determine the extent of
-   the test results.
-
-2. Use copy and paste, to insert the tests and their results from
-   your interactive session into the docstrings.
-
-3. Add code similar to the following at the bottom of your module::
-
-       def _test():
-           import doctest
-           doctest.testmod()
-
-       if __name__ == "__main__":
-           _test()
-
-
-Installing Python packages
---------------------------
-
-Python packages
-...............
-
-Simple::
-
-    $ python setup.py build
-    $ python setup.py install    # as root
-
-More complex:
-
-- Look for a ``README`` or ``INSTALL`` file at the root of the
-  package.
-
-- Type the following for help::
-
-      $ python setup.py cmd --help
-      $ python setup.py --help-commands
-      $ python setup.py --help [cmd1 cmd2 ...]
-
-- And, for even more details, see `Installing Python Modules
-  <http://docs.python.org/inst/inst.html>`_.
-
-
-Jython packages
-...............
-
-Some Jython packages will be distributed as a Java jar file.  If that
-is the case, add the jar file somewhere on your classpath.
-
-If the package is distributed as a standard Python package with a
-``setup.py`` installer file and *if* there are no C/C++ files in the
-package, then you might try something like the following::
-
-    $ python setup.py install --prefix /path/to/install/directory
-
-And, then put that install directory on your classpath.
-
-
-More Python Features and Exercises
-==================================
-
-[As time permits, explain more features and do more exercises as
-requested by class members.]
 
 
 Installing and Running Jython
 =============================
 
-Install Python
---------------
-
-If it is not already installed on your system, you are likely to
-want Python.  It is *not* necessary for running Jython code.  But,
-you are likely to want to do at least some of your work and tests
-with Python.
-
-
-MS Windows
-..........
-
-You can find the latest Python at http://www.python.org.
-Currently, the latest is Python 2.4.2.
-
-If you are on MS Windows, you will likely also want to install
-`Python for Windows Extensions
-<http://starship.python.net/crew/mhammond/win32/>`_.
-
-
-
 Install Jython
 --------------
 
-You will need Java installed, of course.  And, since you are like to
+You will need Java installed, of course.  And, since you are likely to
 want to use Jython class libraries from Jython, it is also likely that
 you will want the Java SDK.  **Important**: If more than one version
 of Java is installed on your machine, make sure that when you install
 Jython using the version of Java for which the SDK is installed and
 the version of Java that you will be using when you run Jython.
 
-Follow the instructions at http://www.jython.org/install.html.
+Download the Jython installation jar file -- You can file the Jython
+distribution here: `Jython downloads --
+http://jython.org/Project/download.html
+<http://jython.org/Project/download.html>`_.
 
-To install Jython 2.1 from the Java class file:
+Install Jython -- Follow the instructions at:
+`Jython installation --
+http://jython.org/Project/installation.html
+<http://jython.org/Project/installation.html>`_::
 
-1. Download ``jython_21.class``: `Download Jython
-   <http://www.jython.org/download.html>`_.
+    $ java -jar jython_installer-2.2.jar
 
-2. Follow the installation instructions: `Installing Jython
-   <http://www.jython.org/install.html>`_
-   (http://www.jython.org/install.html).
-   You are likely to do something like this::
+Command line history -- On MS Windows, command line history for the
+Jython interactive interpreter comes built-in.  On Linux, 
+to get command line history, command line editing, and readline
+support, follow the instructions here:
+`ReadlineSetup --
+http://wiki.python.org/jython/ReadlineSetup
+<http://wiki.python.org/jython/ReadlineSetup>`_.
 
-       $ java -cp . jython_21 -o Jython-2.1
-
-   Where ``java`` runs the version of Java that you will be using when
-   you run Jython.
-
-Jython 2.1 is the latest stable version.  Jython 2.2a is also
-available, and seems quite usable and stable to me.  To install it,
-first down-load it from http://www.jython.org/.  Then use something
-like the following (depending on the version)::
-
-    $ java -jar jython_Release_2_2alpha1.jar
-
-Command line editing and command line history -- Note that at the time
-of this writing, on Linux, the Jython 2.2a interactive shell does not
-have readline support (command-line editing, command history) built
-in. (Some versions of Jython 2.1 have it.)  But, on UNIX/Linux
-machines, ``rlwrap`` will fill this need. You can get ``rlwrap`` here:
-
-- http://www.maumae.net/yorick/doc/environ.php
-- http://www.maumae.net/yorick/rlwrap-0.18.tar.gz
-
-In order to build ``rlwrap``, you will need `The GNU Readline
-Library
-<http://cnswww.cns.cwru.edu/php/chet/readline/rltop.html>`_. For
-Linux, there are likely to be binary installers for ``rlwrap`` for
-specific Linux platform.
-
-Run ``rlwrap`` with the following::
-
-    $ rlwrap -r path-to-jython/jython
-
-The ``-r`` command-line flag gives some word completion (using the
-TAB key) for previously seen words.
-
-There is also a FAQ entry.  Visit `Jython FAQ Index
-<http://www.jython.org/cgi-bin/faqw.py?req=index>`_
-(http://www.jython.org/cgi-bin/faqw.py?req=index) and then look for
-"2.4. Why no command-line history in Jython?".  The suggestion to use
-``Demo/swing/Console.py`` in the Jython distribution is a fairly
-useful one.
-
-Also, there is `JythonConsole 
-<http://don.freeshell.org/jython/>`_
-(http://don.freeshell.org/jython/),
-which, in addition to command line history and editing, provides
-additional features such as code completion and method (tip)
-information.
-
-For more on consoles and interactive shells for Jython, see the
-Wiki page: `ReadlineSetup 
-<http://wiki.python.org/jython/ReadlineSetup>`_
-(http://wiki.python.org/jython/ReadlineSetup).
 
 
 Configuration
@@ -2802,31 +95,28 @@ Configuration
 There are several places to configure Jython.
 
 Command-line options
-....................
+~~~~~~~~~~~~~~~~~~~~
 
 To display the options for ``jython``, type::
 
     $ jython --help
 
-And::
-
-    $ jythonc --help
 
 
 Jython configuration files
-..........................
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 For explanation of configuration options and values, see:
 
 - The comments in the (default) registry file.
 
-- `The Jython Registry 
-  <http://www.jython.org/docs/registry.html>`_
-  (http://www.jython.org/docs/registry.html).
+- `The Jython Registry --
+  http://www.jython.org/docs/registry.html
+  <http://www.jython.org/docs/registry.html>`_.
 
 
 Checking configuration values
-.............................
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 From within the Jython interactive interpreter or from within your
 Jython application, you can display the values of configuration
@@ -2868,7 +158,7 @@ inspecting system properties::
 
 
 Classpath and python path
-.........................
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Jython can pick up Java class files from locations on either the
 Jython/Python path (see ``sys.path``) or the Java classpath.  Set
@@ -2894,8 +184,9 @@ A few rules about CLASSPATH and python.path:
   from Java classes (.java), Java class libraries (.jar), and
   Jython/Python (.py).
 
-- CLASSPATH -- Add here to enable importing from Java classes (.java)
-  and Java class libraries (.jar), but not Jython/Python (.py).
+- CLASSPATH -- Add paths to this environment variable in order to
+  enable importing from Java classes (.java) and Java class
+  libraries (.jar), but not Jython/Python (.py).
 
 
 Running Jython
@@ -2906,7 +197,7 @@ The Jython interactive, command-line interpreter: ``jython``.
 Jython IDEs (interactive development environments) -- There is a
 Jython plug-in for Eclipse.  See: http://pydev.sourceforge.net/.
 
-Exercise -- Start the Jython interpreter.  Then do each of the
+Exercises -- Start the Jython interpreter.  Then do each of the
 following:
 
 - Print "hello".
@@ -2939,6 +230,7 @@ Running Jython scripts:
       pdb.run('main()')
 
   Or::
+
       import pdb
       pdb.set_trace()
 
@@ -2960,15 +252,14 @@ Running Jython scripts:
 
   For more information on the Python debugger, see `The Python
   Debugger <http://docs.python.org/lib/module-pdb.html>`_ in the
-  Python standard documentation.
+  Python standard documentation, or while in the debugger, type
+  ``help``.
 
 - To make a script both "run-able" and "import-able", use the
   following idiom::
 
       if __name__ == '__main__':
           main()
-          #import pdb
-          #pdb.run('main()')
 
 Don't forget to include a doc string at the top of your module for
 documentation.
@@ -2983,43 +274,44 @@ Exercise -- Create a small Jython script:
 - From the Jython interpreter, import the script and create an instance
   of the class.
 
-- Import ``pdb``, then use it to debug and run your script.
-
 - From the command line, use ``jython`` to run the script.
 
 - Add ``pdb`` debugging to your script.  Run the script again from
   the command line.  Step through several lines of code.
 
 
-Running jythonc
----------------
+Installing Jython/Python packages
+---------------------------------
 
+Some Jython packages will be distributed as a Java jar file.  If that
+is the case, add the jar file to your classpath.
 
-``jythonc`` is the Jython compiler.  It compiles Jython code to
-Java byte-code for the JVM.
+If the package is distributed as a standard Python package with a
+``setup.py`` installer file and *if* there are no C/C++ files in the
+package, then you might try something like the following::
 
-What jythonc does:
+    $ python setup.py install --prefix /path/to/install/directory
 
-- Generates ``.java`` source code files.
-
-- Compiles: ``.java`` --> ``.class``.
-
-The class files generated by ``jythonc`` can be used from standard
-Java.  But, must also make the Jython jar file available.
-
-Learn more about ``jythonc`` in the section
-`Compiling Jython to and for Java`_.
+And, then put that install directory on your classpath.
 
 
 
-Calling Java from Jython
-========================
+Intergrating Java into Jython/Python
+====================================
 
 Calling existing Java code
 --------------------------
 
-Import the Java module and call functions and objects in it.  It
-works the way you would hope and expect it to.  Here is an example::
+In order to call Java code from Jython do the following:
+
+1. Import the Java module.
+
+2. Use the Java module to create an instance/object.
+
+3. Call functions and objects in it.
+
+It works the way you would hope and expect it to.  Here is an
+example::
 
     >>> from java.util import Vector
     >>> v = Vector()
@@ -3040,7 +332,11 @@ works the way you would hope and expect it to.  Here is an example::
 In some cases you will need to pass Java objects to Java methods.
 
 Special treatment for some overloaded Java methods -- Explicitly
-create and pass Jython objects.
+create and pass Jython objects.  For more on this, see:
+`Overloaded Java Method Signatures
+<http://www.jython.org/Project/userguide.html#overloaded-java-method-signatures>`_
+-- http://www.jython.org/Project/userguide.html#overloaded-java-method-signatures.
+
 
 Often you can use Python/Jython style and idioms to process Java
 objects.  For example: the Jython ``for`` statement can be applied
@@ -3059,6 +355,120 @@ and their values.  Solution::
     ...
     python is implemented in c
     jython is implemented in java
+
+
+Extending a Java class in Jython
+--------------------------------
+
+You can import and then extend (sub-class) a Java class.
+
+Example -- This sample extends the Java filestream class by adding a
+method that converts all characters to upper case::         ::
+
+    import sys
+    from java.io import FileOutputStream
+
+    class UppercaseFileOutputStream(FileOutputStream):
+        def write_upper(self, text):
+            text = text.upper()
+            self.write(text)
+
+    def test(outfilename):
+        fos = UppercaseFileOutputStream(outfilename)
+        for idx in range(10):
+            fos.write_upper('This is line # %d\n' % idx)
+        fos.close()
+        infile = open(outfilename, 'r')
+        for line in infile:
+            line = line.rstrip()
+            print 'Line: %s' % line
+
+    def main():
+        args = sys.argv[1:]
+        if len(args) != 1:
+            print 'usage: extend_fileoutputstream.py <infilename>'
+            sys.exit(1)
+        test(args[0])
+
+    if __name__ == '__main__':
+        main()
+
+
+
+Emulating Jython classes in Java
+--------------------------------
+
+You can make a Java class "act like" one of the built-in Jython
+classes.  In order to do so, you would implement one or more of
+Jython's special methods.  You can find descriptions of the special
+methods in the "Python Reference Manual":
+`3.4 Special method names --
+http://docs.python.org/ref/specialnames.html
+<http://docs.python.org/ref/specialnames.html>`_.
+
+Example: This module implements a class that acts like a sequence in
+certain ways, specifically (1) it responds to the ``len()`` operator
+by returning a length; (2) it supports an ``append`` method; and (3)
+it supports the use of the ``[]`` operator to get a value::
+
+    import java.util.Vector;
+
+    // Implement selected part of the Jython container interface.
+    public class CustomContainer {
+
+        private Vector data;
+
+        public CustomContainer() {
+            data = new Vector();
+        }
+
+        // Implement the len() operator.
+        public int __len__() {
+            return data.size();
+        }
+
+        // Implement the append() method.
+        public int append(String item) {
+            data.add(item);
+            return 1;
+        }
+
+        // Implement the [] operator.
+        public String __getitem__(int index) {
+            return (String)data.elementAt(index);
+        }
+    }
+
+
+And here is an example of the use of this custom container class::
+
+    $ jython
+    Jython 2.2.1rc1 on java1.4.2_10
+    Type "copyright", "credits" or "license" for more information.
+    >>>
+    >>> import CustomContainer as cc
+    >>> container = cc()
+    >>> container.append('item number one')
+    1
+    >>> container.append('item number two')
+    1
+    >>> container.append('item number three')
+    1
+    >>> len(container)
+    3
+    >>> for index in range(len(container)):
+    ...     print container[index]
+    ...
+    item number one
+    item number two
+    item number three
+
+Notes:
+
+- A more powerful solution, depending on your needs, would be for
+  ``CustomContainer`` to inherit from ``java.util.Vector``.  See
+  section `Emulating Jython Dictionaries, Sequences, Etc.`_ for an
+  example.
 
 
 
@@ -3080,11 +490,13 @@ For additional help, see:
   `with frames <http://www.jython.org/docs/javadoc/index.html>`_ or
   `without frames <http://www.jython.org/docs/javadoc/overview-summary.html>`_.
 
+You can also customize a Java class to make it more "Jythonic".
 
-A simple class, doc strings, etc
-................................
 
-A first, simple example::
+Adding doc strings to a Java class
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This first, simple example adds doc strings::
 
     // Showme.java
 
@@ -3136,13 +548,13 @@ Notes:
 
 
 Working with Jython arguments
-.............................
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The ``ArgParser`` class helps us handle Jython keyword arguments.
 If helps us support the analog of Jython's ``*args`` and
 ``**kwargs`` in Java methods.
 
-How to do it -- And overview:
+How to do it -- An overview:
 
 1. Define your Java method with the following prototype::
 
@@ -3243,9 +655,14 @@ Notes:
   length of these arrays and can throw an exception if, for
   example, too few arguments are passed.
 
+Also see the Jython FAQ:
+`5.3   Supporting *args and **kw in Java methods --
+http://jython.org/Project/userfaq.html#supporting-args-and-kw-in-java-methods
+<http://jython.org/Project/userfaq.html#supporting-args-and-kw-in-java-methods>`_.
+
 
 Sub-classing a Java class
-.........................
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Notice that, in Jython, we can extend a class written in Java::
 
@@ -3275,7 +692,7 @@ When you run the above, you should see something like the following::
 
 
 Emulating Jython Dictionaries, Sequences, Etc.
-..............................................
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Extend class org.python.core.PyObject and its sub-classes.  See:
 `org.python.core Class PyObject
@@ -3298,8 +715,11 @@ Implement the following methods::
   not ``getitem()``.  See: `org.python.core Class PyObject
   <http://www.jython.org/docs/javadoc/org/python/core/PyObject.html>`_.
 
-See `3.3.5 Emulating container types
-<http://docs.python.org/ref/sequence-types.html>`_ in the Python
+See 
+`3.3.5 Emulating container types --
+http://docs.python.org/ref/sequence-types.html
+<http://docs.python.org/ref/sequence-types.html>`_ 
+in the Python
 Reference Manual for more information on customizing dictionaries
 and sequences.
 
@@ -3308,8 +728,12 @@ Jython dictionary.  (2) In addition, each access method should
 print a message. (3) Test your Java class from Jython by creating
 an instance of it, then setting and retrieving a key-value pair.
 
-Solution #1 -- This solution is for educational purposes only (see
-solution #2)::
+
+Solution #1 -- Emulating a dictionary
++++++++++++++++++++++++++++++++++++++
+
+This solution is for educational purposes only (see
+`Solution #2 -- Extending PyDictionary`_)::
 
     // TestDict.java
 
@@ -3377,9 +801,51 @@ Notes:
       ...
       *** error: The key does not exit.
 
-Solution #2 -- This solution shows how you most likely would start
-if you wanted to extend the dictionary type or implement a custom
-dictionary type::
+- The Jython FAQ recommends that your Jython class extends
+  PyObject. (see `5. Extending Jython --     
+  http://jython.org/Project/userfaq.html#extending-jython
+  <http://jython.org/Project/userfaq.html#extending-jython>`_)
+  I've found that it is not strictly necessary to extend ``PyObect``
+  in your Java class (the one that emulates a Jython built-in).
+  **But, if you do**, you will need to follow the signature of the
+  methods that implement operators (for example ``__setitem__``,
+  ``__getitem__``, etc) exactly.  To learn those signatures, see the
+  API documentation in the ``Doc/`` directory under your Jython
+  installation.
+
+Here is an example that uses the above solution::
+
+    # test_TestDict.py
+
+    import TestDict
+
+    def test():
+        d = TestDict()
+        d['aa'] = 'AAAA'
+        d['bb'] = 'BBBB'
+        d['cc'] = 'CCCC'
+        print d.data
+        if 'bb' in d:
+            print 'present'
+
+    test()
+
+And, here is the result of running this test::
+
+    $ jython test_TestDict.py
+    Added key "aa"  value: "AAAA"
+    Added key "bb"  value: "BBBB"
+    Added key "cc"  value: "CCCC"
+    {aa=AAAA, bb=BBBB, cc=CCCC}
+    Found key "bb"
+    present
+
+
+Solution #2 -- Extending PyDictionary
++++++++++++++++++++++++++++++++++++++
+
+This solution shows how you most likely would start if you wanted to
+extend the dictionary type or implement a custom dictionary type::
 
     // TestDictSub.java
 
@@ -3419,9 +885,15 @@ Notes:
 - The Java class could also extend the dictionary type by
   implementing additional, new methods.
 
+Also see the Jython FAQ: 
+`5.1   Java classes that emulate Jython Dictionaries and Sequences --
+http://jython.org/Project/userfaq.html#java-classes-that-emulate-jython-dictionaries-and-sequences
+<http://jython.org/Project/userfaq.html#java-classes-that-emulate-jython-dictionaries-and-sequences>`_.
+
+
 
 Emulating Jython object attribute access
-........................................
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We can implement and override object attribute access in a Java
 class:
@@ -3472,7 +944,7 @@ Notes:
 
 - Test this solution with the following::
 
-      $ rlwrap -r ./jython
+      $ jython
       Jython 2.2a1 on java1.4.2 (JIT: null)
       Type "copyright", "credits" or "license" for more information.
       >>>
@@ -3491,318 +963,456 @@ Notes:
   interned strings.  Literal strings are automatically interned.
   For other strings, use ``intern(s)``.
 
-
-Compiling Jython to and for Java
-================================
-
-Another view: Jython is the extension language for Java.
-
-Use ``jythonc``.
-
-You can extend Java classes.
-
-You can add (J)Python protocols to Java classes.
-
-You will need to describe the signature of methods in order to
-make them callable from Java (in addition to Jython).
-
-What ``jythonc`` does -- ``jythonc`` translates ``.py`` files into
-``.java`` source code files, then compiles these to ``.class``
-files.
-
-With ``jythonc``, you can also:
-
-- Compile Jython (.py) to Java class files (.class).
-
-- Compile Jython to Java source, then stop without compiling to
-  ``.class`` files.
-
-- Use a Java compiler different from the default: ``javac``. See
-  the help from ``jythonc``::
-
-    --compiler path
-    -C path
-        Use a different compiler than `standard' javac.  If this is set to
-        `NONE' then compile ends with .java.  Alternatively, you can set the
-        property python.jpythonc.compiler in the registry.
-
-  This option can also be set in your Jython registry file.
-
-Java compatible classes - In order to implement a Java compatible
-class (that is, one that acts like a native Java class and can be
-called from Java), your Jython code must follow these rules:
-
-- Inherit from a Java class or interface.
-
-- Include only one class per module.
-
-- Give the Jython class and the source file that contains it the same
-  name.
-
-- Place all code inside that Jython class.
-
-- Include method signature hints (called sig-strings) -- Add a ``@sig``
-  line in the doc-string for each method.
-
-How to use jythonc:
-
-- Type ``jythonc --help`` for help.
-
-- Compile your Jython code with::
-
-      jythonc mymodule.py
-
-- To get help for ``jythonc``, type::
-
-      $ jythonc --help
-
-Some notes:
-
-- When your run ``jythonc``, by default, the ``.java`` files are placed
-  in a sub-directory ``./jpywork``.  You can override this with the
-  ``--workdir`` command line option.  From ``jythonc --help``::
-
-      --workdir directory
-      -w directory
-          Specify working directory for compiler (default is ./jpywork)
-
-- When you run this resulting code from Java, the directory
-  ``./jpywork`` and the Jython jar file must be on your classpath.
+Also see the Jython FAQ:
+`5.2   Emulating Jython object attribute access with a Java class --
+http://jython.org/Project/userfaq.html#emulating-jython-object-attribute-access-with-a-java-class
+<http://jython.org/Project/userfaq.html#emulating-jython-object-attribute-access-with-a-java-class>`_.
 
 
-Example -- The following Jython code extends a Java class.
-Compile it with ``jythonc``::
+Extending a built-in Jython class in Java
+-----------------------------------------
 
-    # Foo.py
+In Java, you can inherit from an extend the built-in Jython classes.
 
-    import java
+Some of the classes that you can consider extending are:
 
-    class Foo(java.util.Date):
-        def __init__(self):
-            self.count = 0
-        def bar(self, incr=1):
-            """@sig void bar(int incr)"""
-            self.count += incr
-            return self.count
-        def toString(self):
-            cnt = self.bar()
-            return "Foo[" + java.util.Date.toString(self) + " " + `cnt` + "]"
+- PyDictionary
 
-Example, continued -- Here is Java code to test the above.
-Compile it with ``javac`` and run it::
+- PyInteger
 
-    // FooTest.java
+- PyList
 
-    import Foo;
+- PyString
 
-    public class FooTest {
-         public static void main(String[] args) {
-             Foo foo = new Foo();
-             System.out.println(foo);
-             foo.bar();
-             foo.bar(43);
-             System.out.println(foo);
-         }
+- PyStringMap
+
+- PyTuple
+
+An example that extends the ``PyDictionary`` class is in
+section `Solution #2 -- Extending PyDictionary`_.
+
+
+Integrating Jython/Python into Java
+===================================
+
+Calling Jython from Java
+------------------------
+
+Run Jython code on an interpreter embedded in Java
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``jythonc`` is currently unsupported and is deprecated, although it
+might reappear in some future version of Jython.  So, using
+``jythonc`` to compile your Jython code to Java for use in your Java
+code may not appeal to you.  An embedded Jython interpreter may be a
+solution.
+
+Overview -- Here is the general approach:
+
+1. Create a Jython interpreter object.
+
+2. Insert (set) values in your embedded interpreter, if needed.
+
+3. Use that interpreter to either:
+
+   1. Run several lines of code that import and use your Jython
+      module, *or*
+
+   2. Run a small wrapper script that imports and uses your Jython
+      modules. 
+
+4. Retrieve values from your embedded interpreter, if necessary.
+
+Each of these topics has been covered above.
+
+Disadvantages of this approach:
+
+- It's a little clumsy.  Requires a small amount of Java code.
+
+Advantages of this approach:
+
+- ``jythonc`` is not required.  ``jythonc`` is deprecated and is not
+  planned for Jython 2.3.
+
+- No need for a separate compile step.
+
+- No need to *re-compile* your script each time it is modified.
+
+
+How to run Jython code on an interpreter embedded in Java
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Resources -- For instructions on how to call Jython code from Java,
+see:
+
+- `Accessing Jython from Java Without Using jythonc
+  http://wiki.python.org/jython/JythonMonthly/Articles/September2006/1
+  <http://wiki.python.org/jython/JythonMonthly/Articles/September2006/1>`_
+
+- `Simple and Efficient Jython Object Factories
+  http://wiki.python.org/jython/JythonMonthly/Articles/October2006/3
+  <http://wiki.python.org/jython/JythonMonthly/Articles/October2006/3>`_
+  -- Note that the example that follow was developed from this
+  document.
+
+
+Description -- In order to implement this approach, here is what
+you will do:
+
+- Implement one or more Jython/Python modules containing one or more
+  classes.
+
+- Create a Java interface for each Jython class that you want to
+  expose to Java.  The interface should describe each method that
+  you wish to expose to Java.
+
+- Create a single Java "factory" class:
+
+  - The constructor (1) creates a Jython interpreter; (2) runs a
+    script that imports the Jython modules containing the Jython
+    classes; (3) retrieve and save the Jython classes from the
+    intrepreter.
+
+  - Implement one "createX" method for each Jython/Python class/type
+    to be used from Java.
+
+- Implement the Java code that uses the Jython classes: (1) create a
+  factory object; (2) call the "createX" methods to create Java
+  objects that give access to the Jython classes; (3) call the
+  Jython methods through the Jython "proxies".
+
+Example -- a possible organization on disk
+++++++++++++++++++++++++++++++++++++++++++
+
+::
+
+    |-- Employee.py                     # The Jython classes
+    |-- jyinterface
+    |   |-- Main.java                   # The client code
+    |   |-- factories
+    |   |   |-- EmployeeFactory.java    # The factory
+    |   `-- interfaces
+    |       |-- DependentType.java      # The Java interface
+    |       `-- EmployeeType.java       # The Java interface
+
+Notes:
+
+- The Jython classes (in this case, Employee.py) can go anywhere on
+  your Jython/Python path.  See ``python.path``.in your registry
+  file: `The Jython Registry --
+  http://jython.org/Project/userguide.html#the-jython-registry
+  <http://jython.org/Project/userguide.html#the-jython-registry>`_.
+
+- Layout for the Java code follows normal Java rules for packages.
+
+Example -- the Jython classes
++++++++++++++++++++++++++++++
+
+These are the Jython classes that we wish to expose to and call from
+Java::
+
+    # Employee.py
+
+    from jyinterface.interfaces import EmployeeType
+    from jyinterface.interfaces import DependentType
+
+
+    class Employee(EmployeeType):
+        def __init__(self, first, last, id):
+            self.first = first
+            self.last  =  last
+            self.id = id
+            deps = self.create_dependents()
+            self.deps = deps
+
+        def create_dependents(self):
+            d1 = Dependent('Sally', 'Serious', 11)
+            d2 = Dependent('Larry', 'Lighthearted', 12)
+            return [d1, d2]
+
+        def getEmployeeFirst(self):
+            return self.first
+
+        def getEmployeeLast(self):
+            return self.last
+
+        def getEmployeeId(self):
+            return self.id
+
+        def getDependents(self):
+            return self.deps
+
+        def addDependent(self, dependent):
+            self.deps.append(dependent)
+
+
+    class Dependent(DependentType):
+        def __init__(self, first, last, id):
+            self.first = first
+            self.last  =  last
+            self.id = id
+
+        def getDependentFirst(self):
+            return '<<%s>>' % self.first
+
+        def getDependentLast(self):
+            return '<<%s>>' % self.last
+
+        def getDependentId(self):
+            return self.id * 4
+
+
+Example -- A Java interface class
++++++++++++++++++++++++++++++++++
+
+This (jyinterface/interfaces/EmployeeType.java) describes the
+interface to our Java (client) code::
+
+    // EmployeeType.java
+
+    package jyinterface.interfaces;
+    import org.python.core.PyList;
+    import jyinterface.interfaces.DependentType;
+
+
+    public interface EmployeeType {
+        public String getEmployeeFirst();
+        public String getEmployeeLast();
+        public String getEmployeeId();
+        public PyList getDependents();
+        public void addDependent(DependentType dependent);
+    }
+
+
+Example -- another interface class
+++++++++++++++++++++++++++++++++++
+
+This (jyinterface/interfaces/DependentType.java) is another
+interface.  It describes and helps to expose another Jython class.
+
+::
+
+    // DependentType.java
+
+    package jyinterface.interfaces;
+
+    public interface DependentType {
+    	    public String getDependentFirst();
+    	    public String getDependentLast();
+    	    public Integer getDependentId();
     }
 
 Notes:
 
-- Compile and run::
-
-      $ javac FooTest.java
-      $ java FooTest
-
-- You will need ``jpywork`` on your classpath.  So, you can
-  compile and run it as follows::
-
-      $ ../../Jython-2.2a/jythonc Foo.py
-      $ javac -classpath ../../Jython-2.2a/jython.jar:./jpywork FooTest.java
-      $ java -classpath ../../Jython-2.2a/jython.jar:./jpywork FooTest
-
-In order to implement a Java compatible class (that is, one that acts
-like a native Java class and can be called from Java), your Jython
-code must follow these rules:
-
-- Inherit from a Java class or interface.
-
-- Include method signature hints (called sig-strings).
-
-- Give the Jython class and the source file it is in the same name.
+- We only describe the portions of the interface that we wish to
+  expose to Java.  It is likely that this will be a proper subset of
+  the methods in our Jython class.
 
 
-Here is another simple example::
+Example -- the factory class
+++++++++++++++++++++++++++++
 
-    """simpleclass.py
+This (jyinterface/factories/EmployeeFactory.java) is the factory
+that creates (proxy) instances of our Jython classes.  These
+instances are Java instances with an underlying Jython
+implementation::
 
-    This is a simple class to demonstrate the use of jythonc.
-    """
+    // EmployeeFactory.java
 
-    import java.lang.Object
+    package jyinterface.factory;
 
-    class simpleclass(java.lang.Object):
-        def __init__(self, name='The Horse With No Name'):
-	    """public simpleclass(String name)
-	    """
-	    self.name = name
-	    self.size = -1
-        def set_name(self, name):
-            """@sig public void set_name(String name)
-            """
-            self.name = name
-        def set_size(self, size):
-            """@sig public void set_size(int size)
-            """
-            self.size = size
-        def show(self):
-            """@sig public String show()
-            """
-            return 'name: %s  size: %s' % (self.name, self.size, )
+    import jyinterface.interfaces.EmployeeType;
+    import jyinterface.interfaces.DependentType;
+    import org.python.core.PyObject;
+    import org.python.core.PyString;
+    import org.python.core.PyInteger;
+    import org.python.util.PythonInterpreter;
 
+    public class EmployeeFactory {
 
-And, a Java test harness for this simple example::
+        public EmployeeFactory() {
+            String cmd = "from Employee import Employee\nfrom Employee import Dependent";
+            PythonInterpreter interpreter = new PythonInterpreter();
+            //interpreter.exec("from Employee import Employee");
+            //interpreter.exec("from Employee import Dependent");
+            interpreter.exec(cmd);
+            jyEmployeeClass = interpreter.get("Employee");
+            jyDependentClass = interpreter.get("Dependent");
+        }
 
-    // simpleclasstest.java
+        public EmployeeType createEmployee(String first, String last, String id) {
+            PyObject employeeObj = jyEmployeeClass.__call__(
+                new PyString(first),
+                new PyString(last),
+                new PyString(id));
+            return (EmployeeType)employeeObj.__tojava__(EmployeeType.class);
+        }
 
-    import simpleclass;
+        public DependentType createDependent(String first, String last, int id) {
+            PyObject dependentObj = jyDependentClass.__call__(
+                new PyString(first),
+                new PyString(last),
+                new PyInteger(id));
+            return (DependentType)dependentObj.__tojava__(DependentType.class);
+        }
 
-    public class simpleclasstest {
+        private PyObject jyEmployeeClass;
+        private PyObject jyDependentClass;
+    }
+
+Notes:
+
+- The Jython interpreter is created only once, when the factory
+  object is created.
+
+- The Java classes that are proxies for the Jython classes exposed
+  to Java (jyEmployeeClass amd jyDependentClass) are also only
+  created once.
+
+- Each "creater" method (createEmployee and createDependent) uses
+  the ``__call__`` method to create an instance.  This is the same
+  as using ``obj = Employee()``, for example, in Jython.  Then the
+  result is converted to a Java object and returned.
+
+Example -- the Java consumer code
++++++++++++++++++++++++++++++++++
+
+This (jyinterface/Main.java) is the Java code that uses our Jython
+classes::
+
+    // Main.java
+
+    package jyinterface;
+
+    import jyinterface.factories.EmployeeFactory;
+    import jyinterface.interfaces.EmployeeType;
+    import jyinterface.interfaces.DependentType;
+    import org.python.core.PyObject;
+    import org.python.core.PyList;
+
+    public class Main {
+
+        private static void printEmployee(EmployeeType employee) {
+            System.out.println("Name: " + employee.getEmployeeFirst() + " "
+                    + employee.getEmployeeLast());
+            System.out.println("Id: " + employee.getEmployeeId());
+            PyList deplist = employee.getDependents();
+            int count = deplist.__len__();
+            System.out.println("count: " + Integer.toString(count));
+            for (int idx = 0; idx < count; idx++) {
+                PyObject obj = deplist.__getitem__(idx);
+                DependentType dep = (DependentType)obj.__tojava__(DependentType.class);
+                printDependent(dep);
+            }
+        }
+
+        private static void printDependent(DependentType dependent) {
+            System.out.println("Dep Name: " + dependent.getDependentFirst() + " "
+                    + dependent.getDependentLast());
+            System.out.println("Dep Id: " + dependent.getDependentId().toString());
+        }
+
         public static void main(String[] args) {
-    	String s1;
-    	simpleclass sc = new simpleclass();
-    	s1 = sc.show();
-    	System.out.println("1. " + s1);
-    	sc.set_name("dave");
-    	sc.set_size(4321);
-    	s1 = sc.show();
-    	System.out.println("2. " + s1);
+            EmployeeFactory factory = new EmployeeFactory();
+            EmployeeType emp = factory.createEmployee("Josh", "Juneau", "1");
+            printEmployee(emp);
+            printEmployee(factory.createEmployee("Charlie", "Groves", "2"));
+            System.out.println("------------------");
+            DependentType dependent = factory.createDependent(
+                "Dave", "Kuhlman", 4);
+            printDependent(dependent);
+            System.out.println("------------------");
+            emp.addDependent(dependent);
+            printEmployee(emp);
         }
     }
 
 
 Notes:
 
-- In order to produce a Java compatible class, our Jython class must
-  inherit from a Java class.  In this case, we use
-  ``java.lang.Object``, because we do not need to inherit any behavior.
+- This client code creates a factory object, then uses that factory
+  object to create several Java objects that are proxies for the
+  Jython Employee and Dependent objects.
 
-- The methods ``set_name``, ``set_size``, and ``show`` each have
-  sig-strings.
+- Then the client code calls several of the methods that are
+  implemented in the Jython code and exposed to Java through the
+  Java interfaces.
 
-Put ``jpywork`` on your ``CLASSPATH``, then use the following to
-compile and test the above::
+- On the Java side, we apply operators to a list object (and other
+  Jython built-in types) by calling their methods directly, for
+  example:
 
-    $ jythonc simpleclass.py
-    $ javac simpleclasstest.java
-    $ java simpleclasstest
-    1. name: The Horse With No Name  size: -1
-    2. name: dave  size: 4321
+  - ``len()`` -- ``obj.__len__()``
 
+  - ``obj[idx]`` -- ``obj.__getitem__(idx)``
 
-In the following example, we create a stand-alone Jar file, that is,
-one that can be executed as a script on a machine where Jython is not
-installed.  Here is the Jython script::
+  For descriptions of these "special" methods, see the following
+  section in the Python language reference:
+  `3.4 Special method names --
+  http://docs.python.org/ref/specialnames.html
+  <http://docs.python.org/ref/specialnames.html>`_.
 
-    # test_jythonc.py
+- On the Java side, we use a Jython object by
 
-    import sys
+  1. Retrieving it as a generic ``PyObject``.
 
-    def test(words):
-        msgs = ['hi', 'bye']
-        for word in words:
-            msgs.append(word)
-        for msg in msgs:
-            print msg
+  2. Converting it to a Java object with::
 
-    def main():
-        args = sys.argv[1:]
-        test(args)
+         obj.__tojava__(XXType.class)
 
-    if __name__ == '__main__':
-        main()
+     where ``XXType`` is the Java interface that describes the
+     Jython object.
 
+  3. Casting the object to the appropriate Java type.
 
-Compile and build a Jar file with the following::
+  4. Calling its "Java" methods.
 
-    $ jythonc --all --jar mytest.jar test_jythonc.py
-
-Run it as follows::
-
-    $ java -jar mytest.jar hello goodbye
-    hi
-    bye
-    hello
-    goodbye
-
-Notes:
-
-- Note that our Jython script contains no class.  ``jythonc`` will
-  create a public class and a public static main function for us.
-
-- The ``--jar`` flag tells ``jythonc`` that we want the results placed
-  in a Jar file (as opposed to placing it in the work directory
-  ``./jpywork``).
-
-- The ``--all`` flag tells ``jythonc`` to include all Jython support
-  in the Jar file, making it stand-alone.  This enables us to run it
-  on a system where Java is installed but Jython is not.
+- We can pass a Jython object back to Jython from Java.  Notice the
+  call to method ``addDependent()``.
 
 
-Calling Jython Code from Jython
--------------------------------
+Additional support for running Jython code on an interpreter embedded in Java
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-From Jython, you can run Jython and Python code.  When you do so,
-you may run *Java* code that is in a super-class or is used by the
-Jython code.
+In what follows, we provide and describe scripts that assist in
+using the above strategy.
 
-But, notice that, from Jython, you cannot call Python code that
-has been extended with C.
+- ``generate_interfaces.py`` -- Does some of the work of generating
+  the Java interface files and the Java factory.  You will still
+  have to edit the generated files (for example, to fill in type
+  information).  But, it may save you a good deal of typing.  You
+  can find it here:
+  `Jython/Java interface generator --
+  http://www.rexx.com/~dkuhlman/JythonInterfaceGenerator-1.0a.tar.gz
+  <http://www.rexx.com/~dkuhlman/JythonInterfaceGenerator-1.0a.tar.gz>`_.
 
 
 
-Calling Jython Code from Java
------------------------------
-
-Must compile Jython/Python to Java with ``jythonc``.
-
-Must pay attention to method signatures.  Define method signature
-in Jython in a doc string with ``@sig``.  Then look at the
-generated ``.java`` file.
-
-Other things to be aware of:
-
-- Must set classpath to include ``jpywork``.
-
-- Must write a Java compatible class.  See above.
+Embedding Jython into Java
+--------------------------
 
 
-Another example -- Jython-2.2a/Demo/javaclasses
------------------------------------------------
+Why embedded Jython
+~~~~~~~~~~~~~~~~~~~
 
-What this example shows:
+There are several reasons and purposes for embedding the Jython
+interpreter into your Java application:
 
-- How to write a class that can be compiled (with ``jythonc``) and
-  then called from Java.
+- You want to offer your users the flexibility and power of
+  customizing and extending your application.  An embedded Jython
+  interpreter enables them to run Jython scripts in your application
+  and to communicate with it.
 
-- How to write method signatures for Jython methods.
-
-- How to compile the the Jython code and the Java code.
-
-For example, I compiled and ran the example in
-Jython-2.2a/Demo/javaclasses with the following::
-
-    $ rm -rf jpywork/
-    $ ../../jythonc --package pygraph Graph.py
-    $ javac -classpath .:../../jython.jar pygraph/PythonGraph.java
-    $ java -classpath .:../../jython.jar:jpywork pygraph.PythonGraph
-
-For more information, see Jython-2.2a/Demo/javaclasses/readme.txt.
+- You have existing Jython code, and you want to use that code in
+  your Java application.  Note that this is a capability that might
+  have been handled by using the ``jythonc`` compiler to compile
+  your Jython script into Java code, but ``jythonc`` is deprecated.
+  For an example of this technique and information on how to do it,
+  see section `Calling Jython from Java`_.
 
 
-Embedding the Jython Interpreter
-================================
-
-It's simple
------------
+Embedding Jython into Java is simple
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Embedding the Jython interpreter can be as simple as this::
 
@@ -3813,22 +1423,22 @@ Embedding the Jython interpreter can be as simple as this::
 
     public class SimpleEmbedded
     {
-        public static void main (String[]args) throws PyException, IOException
+        public static void main(String[]args) throws PyException, IOException
         {
             BufferedReader terminal;
             PythonInterpreter interp;
-            terminal = new BufferedReader (new InputStreamReader (System.in));
+            terminal = new BufferedReader(new InputStreamReader(System.in));
             System.out.println ("Hello");
-            interp = new PythonInterpreter ();
-            interp.exec ("import sys");
-            interp.exec ("print sys");
-            interp.set ("a", new PyInteger (42));
-            interp.exec ("print a");
-            interp.exec ("x = 2+2");
-            PyObject x = interp.get ("x");
-            System.out.println ("x: " + x);
-            PyObject localvars = interp.getLocals ();
-            interp.set ("localvars", localvars);
+            interp = new PythonInterpreter();
+            interp.exec("import sys");
+            interp.exec("print sys");
+            interp.set("a", new PyInteger(42));
+            interp.exec("print a");
+            interp.exec("x = 2+2");
+            PyObject x = interp.get("x");
+            System.out.println("x: " + x);
+            PyObject localvars = interp.getLocals();
+            interp.set("localvars", localvars);
             String codeString = "";
             String prompt = ">> ";
             while (true)
@@ -3836,28 +1446,166 @@ Embedding the Jython interpreter can be as simple as this::
                 System.out.print (prompt);
                 try
                 {
-                    codeString = terminal.readLine ();
-                    if (codeString.compareTo ("exit") == 0)
+                    codeString = terminal.readLine();
+                    if (codeString.compareTo("exit") == 0)
                     {
-                        System.exit (0);
+                        System.exit(0);
                         break;
                     }
-                    interp.exec (codeString);
+                    interp.exec(codeString);
                 }
                 catch (IOException e)
                 {
-                    e.printStackTrace ();
+                    e.printStackTrace();
                 }
             }
-            System.out.println ("Goodbye");
+            System.out.println("Goodbye");
         }
     }
 
 
-But, there are a few complexities
----------------------------------
+Passing values into a Jython script
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You will want to *selectively* expose capabilities in your
+Notice the call ``interp.set("a", new PyInteger (42));`` in the
+above example.
+
+You can also retrieve the dictionary object representing the
+namespace for the interpreter, then retrieve objects from that
+dictionary.  Example::
+
+    PyDictionary namespace = interp.getLocals();
+    PyObject obj = namespace.__getitem__("x");
+    Integer x = obj.__tojava__(Integer.class);
+
+
+Initializing the interpreter
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can also create a Jython interpreter with an initial global
+namespace::
+
+    // File: TestInterp01.java
+
+    import org.python.util.PythonInterpreter;
+    import org.python.core.*;
+    import java.io.*;
+
+    public class TestInterp01
+    {
+        public static void main(String[]args) throws PyException, IOException
+        {
+            PythonInterpreter interp;
+            PyString key;
+            PyInteger value;
+            System.out.println ("Hello");
+            PyDictionary table = new PyDictionary();
+            key = new PyString("aaa");
+            value = new PyInteger(111);
+            table.__setitem__(key, value);
+            key = new PyString("bbb");
+            value = new PyInteger(222);
+            table.__setitem__(key, value);
+            interp = new PythonInterpreter(table);
+            interp.exec("print 'aaa:', aaa");
+            interp.exec("print 'bbb:', bbb");
+        }
+    }
+
+And, you can create an interpreter with an initial system state::
+
+    // File: TestInterp02.java
+
+    import org.python.util.PythonInterpreter;
+    import org.python.core.*;
+    import java.io.*;
+
+    public class TestInterp02
+    {
+        public static void main(String[]args) throws PyException, IOException
+        {
+            PythonInterpreter interp;
+            PyString key;
+            PyInteger value;
+            System.out.println ("Hello");
+            PyDictionary table = new PyDictionary();
+            key = new PyString("aaa");
+            value = new PyInteger(111);
+            table.__setitem__(key, value);
+            key = new PyString("bbb");
+            value = new PyInteger(222);
+            table.__setitem__(key, value);
+            PySystemState state = new PySystemState();
+            interp = new PythonInterpreter(table, state);
+            interp.exec("print 'aaa:', aaa");
+            interp.exec("print 'bbb:', bbb");
+        }
+    }
+
+This is of interest because the system state can be used to provide
+a custom class loader::
+
+    PyDictionary table = new PyDictionary();
+    MyClassLoader classLoader = new MyClassLoader();
+    PySystemState state = new PySystemState();
+    state.setClassLoader(classLoader);
+    PythonInterpreter interp = new PythonInterpreter(table, state);
+
+And here is a sample class loader.  This one merely restricts the
+classes that can be loaded to a small set::
+
+    // RestrictedClassLoader.java
+
+    import java.util.Vector;
+    import java.util.Enumeration;
+    import java.lang.ClassNotFoundException;
+     
+    class RestrictedClassLoader extends ClassLoader {
+        Vector goodnames;
+        public RestrictedClassLoader () {
+            goodnames = new Vector();
+            goodnames.add("Goodclass1");
+            goodnames.add("Goodclass2");
+            goodnames.add("Goodclass3");
+            goodnames.add("Goodclass4");
+        }
+        
+        public Class findClass(String name)  throws ClassNotFoundException {
+            Enumeration items = goodnames.elements();
+            while (items.hasMoreElements())
+            {
+                String item = (String)items.nextElement();
+                if (item.compareTo(name) == 0)
+                {
+                    return super.findClass(name);
+                }
+            }
+            throw new ClassNotFoundException("class loading restricted. " +
+                name + " not allowed.");
+        }
+    }
+
+
+
+Retrieving values from a Jython script
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Notice the call ``PyObject x = interp.get("x");`` in the
+above example.
+
+You can also retrieve the dictionary object representing the
+namespace for the interpreter, then add and modify the names and
+their values in that dictionary.  Example::
+
+    PyDictionary namespace = interp.getLocals();
+    PyInteger value = new PyInteger(144);
+    namespace.__setitem__("x", value);
+
+
+There are also a few complexities
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You will want to *selectively* expose capabilities from your Java
 application to scripts run by/on the embedded Jython interpreter.
 
 You will want to protect your application from malicious or
@@ -3880,11 +1628,10 @@ Here are a few suggestions:
 
 
 Exposing transparent objects
-----------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Java application objects and values can be passed through to
 scripts executed or evaluated by the embedded interpreter.
-
 
 Some mechanisms for passing objects:
 
@@ -3901,7 +1648,7 @@ Some mechanisms for passing objects:
 
 
 Exposing opaque objects
------------------------
+~~~~~~~~~~~~~~~~~~~~~~~
 
 This is similar to the strategy for transparent objects, except
 that you must implement wrapper classes, then provide instances of
@@ -3909,7 +1656,7 @@ these classes instead of instances of transparent objects.
 
 
 Type conversion
----------------
+~~~~~~~~~~~~~~~
 
 Mostly, Jython takes care of this for you.
 
@@ -3919,30 +1666,196 @@ performed.
 And, you can also perform explicit conversions.
 
 
-Embedding and Extending -- A Summary
-====================================
+Using a custom class loader
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can control access to Java classes with a custom class loader.
+Here is an example::
+
+    xxxx
+
+
+
+
+Deployment and Distribution
+===========================
+
+Suppose we would like to package our Jython application in a Java
+jar file, then deploy our application by distributing that jar file
+so that our users can run it.  And, furthermore, suppose we would
+like our users to be able to run our Jython application on machines
+where Jython is *not* installed.
+
+This section explains how to do that.  This explanation is also at:
+`Distributing Jython Scripts --
+http://wiki.python.org/jython/JythonFaq/DistributingJythonScripts
+<http://wiki.python.org/jython/JythonFaq/DistributingJythonScripts>`_.
+
+So, this boils down to: 
+
+- Having your scripts (``*.py``) inside standalone jython.jar in the
+  /lib directory
+
+- Having all the classes (``*.class``) in the /org or /com directory
+
+- Having all the jar files you need on the classpath (including
+  standalone ``jython.jar``)
+
+- Start java with the ``-jar`` option. For example::
+
+      $ java -jar jython.jar {optional .py file}
+
+
+Building jars - some samples
+----------------------------
+
+The following examples assume that you want to build and run your
+Jython application from a jar file in a way that is '''not'''
+dependent on files in your Jython installation.  This will enable
+your users to run your Jython application (packaged in a jar file)
+without installing Jython.  They will, of course, need Java
+installed on their machines.
+
+The following example scripts were developed on Linux (and the bash
+shell), but with minor modifications, you should be able to do the
+same thing in an MS DOS box on MS Windows.  I use the zip/unzip
+tools available from Info-Zip (http://www.info-zip.org/), but other
+tools that support the zip format should also work.
+
+
+Add Jython install stuff to our jar
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To build our jar, we first make a copy of jython.jar, then add the
+contents of the ``Lib/`` directory to it::
+
+    $ cd $JYTHON_HOME
+    $ cp jython.jar jythonlib.jar
+    $ zip -r jythonlib.jar Lib
+
+
+Add modules and paths to the jar file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Then we copy this expanded jar file, and add modules that are
+specific to our application.  I'm also going to add a path to an
+additional jar file to the manifest::
+
+    $ cd $MY_APP_DIRECTORY
+    $ cp $JYTHON_HOME/jythonlib.jar myapp.jar
+    $ zip myapp.jar Lib/showobjs.py
+    # Add path to additional jar file.
+    $ jar ufm myapp.jar othermanifest.mf
+
+Where, othermanifest.mf contains the following::
+
+    Class-Path: ./otherjar.jar
+
+Run the script/jar
+~~~~~~~~~~~~~~~~~~
+
+Now I have a self-contained jar file that I can run by executing the
+following::
+
+    $ java -jar myapp.jar testmyapp.py
+
+The file ``testmyapp.py`` imports modules that I have added to
+``myapp.jar`` and ``otherjar.jar``, then starts my application.
+
+
+A more self-contained jar file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now suppose you want to package your "start-up" script in the (main)
+jar itself.  In order to do so, follow the above instructions plus:
+
+- Rename (or copy) your start-up script to ``__run__.py``.  Add it
+  to the (main) jar file at the root.  (On Linux/UNIX you could also
+  do this by using the ``ln -s`` command to create a symbolic
+  link.)  For example, you might do something like this::
+
+      $ zip myapp.jar __run__.py
+
+- Add the path to your jar to your CLASSPATH environment variable.
+
+Now you can run your application with the following::
+
+    $ java org.python.util.jython -jar myapp.jar
+
+Notice how, when we start the application, we specify the jython
+class (``org.python.util.jython``) on the command line.  That
+starts the Jython interpreter, which looks for and runs our
+``__run__.py`` script.
+
+
+A summary
+~~~~~~~~~
+
+Create the basic jar::
+
+    $ cd $JYTHON_HOME
+    $ cp jython.jar jythonlib.jar
+    $ zip -r jythonlib.jar Lib
+
+Add other modules to the jar::
+
+    $ cd $MY_APP_DIRECTORY
+    $ cp $JYTHON_HOME/jythonlib.jar myapp.jar
+    $ zip myapp.jar Lib/showobjs.py
+    # Add path to additional jar file.
+    $ jar ufm myapp.jar othermanifest.mf
+
+For a more self-contained jar, add the {{{__run__.py}}} module::
+
+    # Copy or rename your start-up script.
+    $ cp mymainscript.py __run__.py
+    # Add your start-up script (__run__.py) ot the jar.
+    $ zip myapp.jar __run__.py
+    # Add path to main jar to the CLASSPATH environment variable.
+    $ export CLASSPATH=/path/to/my/app/myapp.jar:$CLASSPATH
+
+On MS Windows, that last line, setting the ``CLASSPATH``
+environment variable, would look something like this::
+
+    set CLASSPATH=C:\path\to\my\app\myapp.jar;%CLASSPATH%
+
+Or, again on MS Windows, use the Control Panel and the System
+properties to set the CLASSPATH environment variable.
+
+
+Run the application::
+
+    $ java -jar myapp.jar mymainscript.py arg1 arg2
+
+Or, if you have added your start-up script to the jar::
+
+    $ java org.python.util.jython -jar myapp.jar arg1 arg2
+
+
+
+Integrating, Embedding, and Extending -- A Summary
+==================================================
 
 Here is what we have learned to do:
 
-- Implement a class in Jython/Python.  Compile the class to Java
-  and to a Java class file.  Use the class in Java code.  The Java
-  code uses the code generated by ``jythonc``.
+- Import and use Java classes in Jython.
 
 - Extend a Java class in Jython.
 
-- Import and use the Jython class in Java code compiled with
-  javac.  We are actually calling into the .java/.class file
-  generated and compiled by ``jythonc``.
+- Implement Java classes that are more "Jythonic" and that expose
+  Jython features such as doc-strings, inherit and extend Jython
+  classes (for example, PyList, PyDict, etc.).
 
-- Import and use the Jython class in Jython code.  We are actually
-  calling into the Jython/Python code, which extends the Java class.
+- Call Jython code from Java.
 
-- Import and use a Jython class in Jython code.  The Jython
-  class uses code written in Java.
+- Embed a Jython interpreter in a Java application.
+
+- Package and deploy a Jython application as a jar file.
 
 
-Advanced Topics
-===============
+
+Jython+Java -- Other Advanced Topics
+====================================
 
 Event handling
 --------------
@@ -3972,7 +1885,7 @@ XML
 ---
 
 jaxp
-....
+~~~~
 
 Note: Tested with jython-2.2a.
 
@@ -4086,7 +1999,7 @@ Resources:
 
 
 Xerces
-......
+~~~~~~
 
 Xerces is an implementation of XML parsers and a lot more.  The JAXP
 API is also implemented in Xerces2.
@@ -4239,7 +2152,7 @@ Resources:
 
 
 dom4j
-.....
+~~~~~
 
 Example::
 
@@ -4319,7 +2232,7 @@ Database access
 ---------------
 
 JDBC
-....
+~~~~
 
 JDBC is Java classes.  It is, therefore, usable from Jython.
 
@@ -4329,7 +2242,7 @@ But, JDBC is not very Pythonic.
 
 
 zxJDBC
-......
+~~~~~~
 
 zxJDBC *is* Pythonic.  zxJDBC implements the Python DB API on top
 of JDBC.  For more on the Python DB API, see
@@ -4535,4 +2448,3 @@ a careful reading:
    sentence-end-double-space: t
    fill-column: 68
    End:
-
