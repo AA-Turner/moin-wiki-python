@@ -1512,6 +1512,10 @@ namespace::
         }
     }
 
+
+An interpreter with an initial system state
++++++++++++++++++++++++++++++++++++++++++++
+
 And, you can create an interpreter with an initial system state::
 
     // File: TestInterp02.java
@@ -1542,11 +1546,14 @@ And, you can create an interpreter with an initial system state::
         }
     }
 
+A system state and a custom class loader
+++++++++++++++++++++++++++++++++++++++++
+
 This is of interest because the system state can be used to provide
 a custom class loader::
 
     PyDictionary table = new PyDictionary();
-    MyClassLoader classLoader = new MyClassLoader();
+    RestrictedClassLoader classLoader = new RestrictedClassLoader();
     PySystemState state = new PySystemState();
     state.setClassLoader(classLoader);
     PythonInterpreter interp = new PythonInterpreter(table, state);
@@ -1670,9 +1677,7 @@ Using a custom class loader
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can control access to Java classes with a custom class loader.
-Here is an example::
-
-    xxxx
+There is an example in section `A system state and a custom class loader`_.
 
 
 
