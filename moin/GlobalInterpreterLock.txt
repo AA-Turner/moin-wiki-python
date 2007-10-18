@@ -26,11 +26,15 @@ Getting rid of the GIL is an occasional topic on the python-dev mailing list.  N
 
  * '''Features.'''  The proposal must support existing CPython features including `__del__` and weak references.
 
+    `__del__` isn't thread-safe, becoming a large problem if any sort of locking becomes commonplace.  My CPython fork will provide a safer and more reliable replacement. ~~~ Rhamphoryncus
+
  * '''API compatibility.'''  The proposal should be source-compatible with the macros used by all existing CPython extensions (`Py_INCREF` and friends).  See [http://docs.python.org/api/countingRefs.html Python/C API Reference Manual: Reference Counting].
 
  * '''Prompt destruction''' (nice to have?).  The existing reference-counting scheme destroys objects as soon as they become unreachable, except for objects in reference cycles.  Those are collected later by Python's cycle collector.  Some CPython programs depend on this, e.g. to close `file`s promptly, so it would be nice to keep this feature.
 
  * '''Ordered destruction''' (nice to have?).  Barring cycles, Python currently always destroys an unreachable object ''X'' before destroying any other objects referenced by ''X''.  This means all the object's attributes are still there when `__del__` runs.  (Many garbage collection schemes don't guarantee this.)
+
+    I'd say this is necessary for Python.  There's very little you can usefully do with a half-destroyed object.  That which you can do, you could also do without being exposed to half-destroyed objects.  ~~~ Rhamphoryncus 
 
 API compatibility is an especially difficult problem.  All concurrent memory management schemes we've found rely on one or more of the following techniques, all of which are incompatible with the existing Python/C API.
 
