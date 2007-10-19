@@ -7,13 +7,13 @@
 back to OtherExamples
 
 ----
+Below are a few Poi examples. These examples requires Apache Poi installed and on the classpath.
 
+
+=== Create Spreadsheet ===
 This is from the Jython mailing list and was posted September 2007
 
 This is based on Java code at http://officewriter.softartisans.com/OfficeWriter-306.aspx and converted to Jython by Alfonso Reyes 
-
-
-This example requires Apache Poi installed and on the classpath.
 
 {{{#!python
 #jython poi example. from Jython mailing list
@@ -121,5 +121,60 @@ cellB = rowSummary.createCell( 1);
 cellB.setCellStyle(sumStyle);
 cellB.setCellFormula("SUM(B3:B102)");
 }}}
+
+
+=== Read an Excel file ===
+
+Posted to the Jython-users mailing list by Alfonso Reyes on October 14, 2007
+This Jython code will open and read an existant Excel file you can download the file at http://www.nabble.com/file/p13199712/Book1.xls
+
+To do: 
+- create the excel file if it doesn't exist 
+- a nicer printing method 
+- a method to print values or formulas in the cells 
+
+{{{
+"""    read.py
+Read an existant Excel file (Book1.xls) and show it on the screen
+
+"""   
+from org.apache.poi.hssf.usermodel import *
+from java.io import FileInputStream;
+
+file = "H:Book1.xls"
+print file
+fis = FileInputStream(file)
+wb = HSSFWorkbook(fis);
+sheet = wb.getSheetAt(0);
+
+# get No. of rows
+rows = sheet.getPhysicalNumberOfRows();
+print wb, sheet, rows
+
+cols = 0; # No. of columns
+tmp = 0;
+
+# This trick ensures that we get the data properly even if it
+# doesn’t start from first few rows
+for i in range(0, 10,1):
+    row = sheet.getRow(i);
+    if(row != None):
+        tmp = sheet.getRow(i).getPhysicalNumberOfCells();
+        if(tmp > cols): cols = tmp;
+print cols
+
+for r in range(0, rows, 1):
+    row = sheet.getRow(r);
+    print r
+    if(row != None):
+        for c in range(0, cols, 1):
+            cell = row.getCell(c);
+            if(cell != None):
+                print cell
+
+#wb.close()
+fis.close();
+}}}
+
 
 back to OtherExamples
