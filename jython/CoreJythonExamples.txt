@@ -17,3 +17,45 @@ Print Hello world
 {{{ print 'Hello World' 
 print "Hello World"
 }}}
+
+=== JArray ===
+
+I was curious on how to work with jarray and move the arrays between classes after being filled with values and operated. I think this example explains some of the basics. Of course, there are more pythonic ways to do this. Cheers! Alfonso Reyes 
+
+{{{#!python
+from java.lang import Math
+from jarray import array, zeros
+import java.util.Random;
+
+class ArrayClass:
+    """    This class will fill an array with random numbers
+    and then return the array for further operations
+    """
+    def __init__(self, elems):
+        self.N = elems
+        systemEnergy = 0.0025
+        self.v = zeros(self.N, "d")     # array of zeros, double type
+        v0 = Math.sqrt(2.0 * systemEnergy / self.N)
+        for i in range(0, self.N, 1):
+            r = java.util.Random()
+            self.v[i] = v0 * r.nextInt(self.N)  # same velocity for all particles
+
+    def out(self):
+        for i in range(0, self.N, 1):
+            print i, self.v[i]
+
+    def get(self):
+        return self.v
+
+n = 100
+uarr = zeros(n, "d")    # array of double to store some operations
+ac = ArrayClass(n)      
+ac.out()                # print the array
+arr = ac.get()          # get the array to start doing some work on it
+
+# get a first third of the array members and times 10
+print "Get a first third of the array members"
+for i in range(0, n/3, 1):
+    uarr[i] = arr[i] * 10
+    print i, arr[i], uarr[i]
+}}}
