@@ -14,16 +14,19 @@ Note that the readme.txt file is also insufficient and leaves legwork to be done
 
 To start with, you have to download a number of pieces of software from Microsoft:
 
- * The Visual C++ Toolkit Compiler (from [http://msdn.microsoft.com/visualc/vctoolkit2003/ here])
- * A recent Platform SDK (from [http://www.microsoft.com/downloads/details.aspx?FamilyId=0BAF2B35-C656-4969-ACE8-E4C0C0716ADB&displaylang=en here]).  The components that need to be installed to build Python are:
-   * Microsoft Windows Core SDK > Tools > Tools (Intel 64-bit)
-   * Microsoft Windows Core SDK > Build Environment > Build Environment (x86 32-bit)
-   * Microsoft Windows Core SDK > Redistributable Components
-   * Microsoft Data Access Services (MDAC) > Build Environment > Build Environment (x86 32-bit)
-   * Microsoft Windows Installer SDK > Build Environment > Build Environment (x86 32-bit)
-  All other components can be left uninstalled.
-   
- * The .NET 1.1 SDK (from [http://www.microsoft.com/downloads/details.aspx?FamilyID=9b3a2ca6-3647-4070-9f41-a333c6b9181d here])
+ * Required:
+   * The Visual C++ Toolkit Compiler (from [http://msdn.microsoft.com/visualc/vctoolkit2003/ here])
+   * A recent Platform SDK (from [http://www.microsoft.com/downloads/details.aspx?FamilyId=0BAF2B35-C656-4969-ACE8-E4C0C0716ADB&displaylang=en here]).  The components that need to be installed to build Python are:
+     * Microsoft Windows Core SDK > Tools > Tools (Intel 64-bit)
+     * Microsoft Windows Core SDK > Build Environment > Build Environment (x86 32-bit)
+     * Microsoft Windows Core SDK > Redistributable Components
+     * Microsoft Data Access Services (MDAC) > Build Environment > Build Environment (x86 32-bit)
+     * Microsoft Windows Installer SDK > Build Environment > Build Environment (x86 32-bit)
+
+     All other components can be left uninstalled.
+   * The .NET 1.1 SDK (from [http://www.microsoft.com/downloads/details.aspx?FamilyID=9b3a2ca6-3647-4070-9f41-a333c6b9181d here])
+ * Optional:
+   * The Visual Studio .NET 2003 merge modules (from [http://support.installshield.com/kb/view.asp?articleid=Q108671 here]) 
 
 You need the Visual C++ Toolkit Compiler 2003, as this is the version compatible with the Visual Studio version used to build Python. This is an optimising compiler, unlike the compiler supplied with the .NET SDK.
 
@@ -32,6 +35,8 @@ You need the Visual C++ Toolkit Compiler 2003, as this is the version compatible
 The platform SDK is needed to provide the Windows header files and libraries - these are not included in the Toolkit Compiler package.
 
 The .NET SDK is needed to provide a version of msvcrt.lib which links with the msvcr71.dll C runtime. It is '''critical''' that you get the version 1.1 SDK - the .NET 2.0 SDK links to msvcr80.dll, which is not compatible with the standard Python build.
+
+You only need the merge modules if you are going to be building an MSI installer using the scripts in `Tools\msi`.
 
 == Installation ==
 
