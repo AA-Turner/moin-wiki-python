@@ -2,10 +2,13 @@
 
 These instructions are largely based on a Usenet posting by David Murmann, to whom most of the credit should go.
 
-'''Update''': These instructions have now been incorporated into the Python sources, as part of file [http://svn.python.org/view/*checkout*/python/trunk/PCbuild/readme.txt PCBuild/readme.txt]. Read that version for more up to date details. Some particular changes:
+'''Update''': These instructions have now been incorporated into the Python sources, as part of file [http://svn.python.org/view/*checkout*/python/trunk/PCbuild/readme.txt PCBuild/readme.txt]. Read that version for more up to date details.
+Some particular changes:
  * The nant `python.build` file is now included in the PCBuild directory.
  * The build command is slightly modified as a result: `nant -buildfile:python.build all`.
  * There are instructions for building bsddb included.
+
+Note that the readme.txt file is also insufficient and leaves legwork to be done by the user.  For now, some updates have been done to this document.  It should be possible to use it as a point of reference to bolster what the readme.txt file does not cover.
 
 == What You Need ==
 
@@ -151,11 +154,15 @@ include32 	=
 
 === SSL ===
 
-To build openssl, you need the object library setargv.obj, which is not supplied in the platform SDK. However, the sources for it are. So you need to build it by hand:
+To build openssl there are two things you need to obtain.  You need the object library setargv.obj and the ml.exe command, both of which are not supplied in the platform SDK.
+
+However, the sources for setargv.obj are. So you need to build it by hand:
 
  * Copy setargv.c, cruntime.h and internal.h from %SDK%\src\crt to a temporary directory
  * Compile setargv.c using the command line `cl /c /I. /MD /D_CRTBLD setargv.c`
  * Move the resulting setargv.obj to somewhere on your LIB environment variable (%SDK%\lib is a reasonable place)
+
+Obtaining a version of ml.exe requires another download.  Namely the [http://msdn2.microsoft.com/en-us/vstudio/aa718349.aspx Visual C++ 6.0 Processor Pack].  It will not install unless Visual C++ 6.0 is installed, but you can open it with a good archiving tool like [http://www.7-zip.org/download.html 7zip] and extract both ml.exe and ml.err.  Now place them somewhere in your path (%SDK%\bin is a reasonable place)
 
 With that in place, the build should be fine.
 
