@@ -1,0 +1,69 @@
+#format wiki
+#language en
+#pragma section-numbers off
+
+= Swing Examples in Jython =
+
+DocumentationAndEducation
+
+[[TableOfContents]]
+
+----
+
+=== Array ===
+Posted to the Jython-users mailing list by Alfonso Reyes on October 14, 2007[[BR]]
+
+Here is an example of a 3D array. I am not fully satisfied with this implementation but to anybody starting with Jython and Java arrays will clarify lots of things. 
+
+To do:[[BR]]
+- the class should automatically instantiate and return the array[[BR]]
+- a print method that can print the class or any arrays operating outside the class 
+
+{{{#!python
+"""     3D array with class
+
+"""
+from java.lang.reflect import Array
+import java
+
+class multi:
+    def __init__(self, i, j, k):
+        self.m = i; self.n = j; self.p = k
+        self.arr = Array.newInstance(java.lang.Double.TYPE, [self.m, self.n, self.p] )
+
+    def get(self):
+        return self.arr
+
+    def out(self):
+        print "printing multidimensional array inside class"
+        for i in range(0, self.m, 1):
+            for j in range(0, self.n, 1):
+                for k in range(0, self.p,1):
+                    print self.arr[i][j][k],
+                print
+            print
+        print
+
+
+def out(arr,m,n,p):
+    # TO-DO: one method that can print a class-array and a bare array
+    print "printing multidimensional array"
+    for i in range(0, m, 1):
+        for j in range(0, n, 1):
+            for k in range(0, p,1):
+                print arr[i][j][k],
+            print
+        print
+    print
+
+
+tArr = multi(4,3,5)
+uArr = tArr.get()
+
+print uArr
+tArr.out()
+uArr[0][0][0] = 7.77
+uArr[3][2][4] = 7.77
+out(uArr,4,3,5)        # read what the array contains
+
+}}}
