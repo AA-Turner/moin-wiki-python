@@ -104,12 +104,35 @@ Go to the `PCBuild` directory in your Python source tree, and put the following 
 
 You'll see that I've excluded all of the projects which depend on external libraries. Be patient, we'll get to these!
 
-OK, you should now be able to simply run
+OK, you should now be able to run and get the build started, but don't be disappointed, there is a little more work to come!
 {{{
-nant python
+nant -buildfile:python.build all
 }}}
 
-Easy as that!
+It will go off and compile for a while and eventually, you will get an error along the lines of:
+{{{
+[link] LINK : fatal error LNK1181: cannot open input file '...\PCbuild\make_buildinfo.lib'
+
+BUILD FAILED
+}}}
+
+This is easily fixed with a manual command:
+{{{
+lib /def: x86-temp-release\make_buildinfo\make_buildinfo.obj
+}}}
+
+While you are at it, preemptively deal with the next error by doing:
+{{{
+lib /def: x86-temp-release\make_versioninfo\make_versioninfo.obj
+}}}
+
+Now restart the build process and it should finish stating that it successfully completed:
+{{{
+...\PCbuild> nant -buildfile:python.build all
+<output removed>
+
+BUILD SUCCEEDED
+}}}
 
 You can now run the Python tests, using rt.bat, and you should see something like
 {{{
