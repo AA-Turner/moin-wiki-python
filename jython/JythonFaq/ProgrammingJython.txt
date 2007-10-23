@@ -169,3 +169,35 @@ It is true that jythonc __in its current implementation__ will be gone in the ne
 [from: FrankW on jython-users 7/12/07] 
 
 for more info on jythonc see http://www.jython.org/Project/jythonc.html
+
+
+----
+
+== How can catch a Java exception thrown from within Jython? ==
+How do I distinguish between different Java exceptions thrown 
+from within jython if the `interp.exec` method only throws a `PyException` ?
+
+{{{
+ PythonInterpreter interp = new PythonInterpreter();
+ String jythonCodeString = "from com.example import MyJavaException\n" +
+   "raise MyJavaException('special condition occurred.')"; 
+
+ try {
+      interp.exec(jythonCodeString);
+    } catch (org.python.core.PyException e) {
+      if (e.value instanceof PyJavaInstance) {
+        Object javaError = e.value.__tojava__(Throwable.class);
+        if (javaError != null && javaError != jy.NoConversion) {
+          if (javaError instanceof MyJavaException ){
+            throw (MyJavaException)javaError;
+          }
+        }
+      }
+
+      if (Py.matchException(e, Py.KeyboardInterrupt)) {
+        throw new InterruptedException(
+            "Interupted while executing Jython script.");
+      }
+      throw e;
+    } 
+}}}
