@@ -151,3 +151,174 @@ comparison function that embodies the key-generating logic:
 {{{
 >>> a = "This is a test string from Andrew".split()
 >>> a.sort(lambda x, y: cmp(x.lower(), y.lower()))
+>>> print a
+['a', 'Andrew', 'from', 'is', 'string', 'test', 'This']
+}}}
+
+This goes through the overhead of converting a word to lower case
+every time it must be compared, roughly O(n lg n) times.
+Python 2.4's {{{key}}} parameter is called once for each item in the list, which is O(n) and therefore more efficient.
+You can manually perform the same optimization by
+computing the keys once
+and using those values to control the sort order:
+
+{{{
+>>> words = "This is a test string from Andrew.".split()
+>>> deco = [ (word.lower(), i, word) for i, word in enumerate(words) ]
+>>> deco.sort()
+>>> new_words = [ word for _, _, word in deco ]
+>>> print new_words
+['a', 'Andrew.', 'from', 'is', 'string', 'test', 'This']
+}}}
+
+This idiom is called Decorate-Sort-Undecorate after its three steps:
+  * First, the initial list is decorated with new values that control the sort order.
+  * Second, the decorated list is sorted.
+  * Finally, the decorations are removed, creating a list that contains only the initial values in the new order.
+
+This idiom works because tuples are compared lexicographically; the first items are compared; if they are the same then the second items are compared, and so on.
+
+It is not strictly necessary in all cases to include the index {{{i}}} in the decorated list. Including it gives two benefits:
+  * The sort is stable - if two items have the same key, their order will be preserved in the sorted list.
+  * The original items do not have to be comparable because the ordering of the decorated tuples will be determined by at most the first two items. So for example the original list could contain {{{complex}}} numbers which cannot be sorted directly.
+
+Another name for this idiom is [http://en.wikipedia.org/wiki/Schwartzian_transform Schwartzian transform], after Randal L. Schwartz, who popularized it among Perl programmers.
+
+For large lists and lists where the comparison information
+is expensive to calculate, and Python versions < 2.4, DSU is likely to be the
+fastest way to sort the list.
+
+== Comparing classes ==
+
+The comparison for two basic data types, like ints to ints or string to
+string, is built into Python and makes sense.  There is a default way
+to compare class instances, but the default manner isn't usually very
+useful.  You can define your own comparison with the {{{__cmp__}}} method,
+as in:
+
+{{{
+>>> class Spam:
+>>>     def __init__(self, spam, eggs):
+>>>         self.spam = spam
+>>>         self.eggs = eggs
+>>>     def __cmp__(self, other):
+>>>         return cmp(self.spam+self.eggs, other.spam+other.eggs)
+>>>     def __str__(self):
+>>>         return str(self.spam + self.eggs)
+>>>
+>>> a = [Spam(1, 4), Spam(9, 3), Spam(4, 6)]
+>>> a.sort()
+>>> for spam in a:
+>>>   print str(spam)
+5
+10
+12
+}}}
+
+Sometimes you may want to sort by a specific attribute of a class.  If
+appropriate you should just define the {{{__cmp__}}} method to compare
+those values, but you cannot do this if you want to compare between
+different attributes at different times.
+
+Python 2.4 has an {{{operator.attrgetter()}}} function
+that makes this easy:
+{{{
+>>> import operator
+>>> a = [Spam(1, 4), Spam(9, 3), Spam(4, 6)]
+>>> a.sort(key=operator.attrgetter('eggs'))
+>>> for spam in a:
+>>>   print spam.eggs, str(spam)
+3 12
+4 5
+6 10
+}}}
+
+In Python 2.4 if you don't want to import the operator module you can:
+{{{
+>>> a = [Spam(1, 4), Spam(9, 3), Spam(4, 6)]
+>>> a.sort(key=lambda obj:obj.eggs)
+>>> for spam in a:
+>>>   print spam.eggs, str(spam)
+3 12
+4 5
+6 10
+}}}
+
+Again, earlier Python version require you to go
+back to passing a comparison function to sort, as in:
+
+{{{
+>>> a = [Spam(1, 4), Spam(9, 3), Spam(4, 6)]
+>>> a.sort(lambda x, y: cmp(x.eggs, y.eggs))
+>>> for spam in a:
+>>>   print spam.eggs, str(spam)
+3 12
+4 5
+6 10
+}}}
+
+If you want to compare two arbitrary attributes (and aren't overly
+concerned about performance) you can even define your own comparison
+function object.  This uses the ability of a class instance to emulate
+an function by defining the {{{__call__}}} method, as in:
+
+{{{
+>>> class CmpAttr:
+>>>     def __init__(self, attr):
+>>>         self.attr = attr
+>>>     def __call__(self, x, y):
+>>>         return cmp(getattr(x, self.attr), getattr(y, self.attr))
+>>>
+>>> a = [Spam(1, 4), Spam(9, 3), Spam(4,6)]
+>>> a.sort(CmpAttr("spam"))  # sort by the "spam" attribute
+>>> for spam in a:
+>>>    print spam.spam, spam.eggs, str(spam)
+1 4 5
+4 6 10
+9 3 12
+
+>>> a.sort(CmpAttr("eggs"))   # re-sort by the "eggs" attribute
+>>> for spam in a:
+>>>    print spam.spam, spam.eggs, str(spam)
+9 3 12
+1 4 5
+4 6 10
+}}}
+
+Of course, if you want a faster sort you can extract the attributes
+into an intermediate list and sort that list.
+
+
+So, there you have it; about a half-dozen different ways to define how
+to sort a list:
+
+ 1. sort using the default method
+ 1. sort using a comparison function
+ 1. reverse sort not using a comparison function
+ 1. sort on an intermediate list (two forms)
+ 1. sort using class defined __cmp__ method
+ 1. sort using a sort function object
+
+== Topics to be covered ==
+
+ * Rich comparisons
+   * With custom comparisons, it is possible to create
+   insane combinations, such as {{{((x<y) and (x==y))}}}
+   or {{{((x<y) and not (x<=y))}}}.
+   * The most important comparisons are __eq__ (but be
+   sure to update __hash__ as well), and __lt__ (which
+   is used by the sorting algorithms in practice).
+ * Sorting stability
+   * Python sorts are stable.  Guido has indicated that
+   this is a promise of the language.  Therefore, if
+   x == y, sorted ([x, y]) returns [x, y] but 
+   sorted([y, x]) returns [y, x].
+ * The sorted() function
+   * It takes any iterable, and returns a sorted version.
+   If the items in the iterable are not sensibly compared,
+   it will still return a canonical ordering, unless 
+   someone went out of their way to prevent one.
+
+== See Also ==
+
+ * SortingListsOfDictionaries
