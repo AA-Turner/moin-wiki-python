@@ -37,11 +37,8 @@ To build a Universal PIL, we must first build Universal versions of its depedent
  6. find the make file created by the ''configure'' command: ''./Makefile'' and opeon in the text editor
  7. change the line: ''CFLAGS= -O2 -I$(srcdir)'' to ''CFLAGS= -arch ppc -arch i386 -O2 -I$(srcdir)''
  8. build the library: ''make''
- 9. Install it in the default location (/usr/local): ''sudo make install''
- 10. copy the manifest files to a standard'include' directory: ''sudo cp jconfig.h jmorecfg.h jpeglib.h /usr/local/include''
- 11. copy the static library to the standard library directory for add-ons: ''sudo cp libjpeg.a /usr/local/lib/''
- 12. use 'ranlib' to ensure a proper table of contents is generated for the library: ''sudo ranlib /usr/local/lib/libjpeg.a''
- 11. return to the original directory: ''popd''
+ 9. Install it in the default location (/usr/local): ''sudo make install-lib'' (this will install the header files and libjpeg.a)
+ 10. return to the original directory: ''popd''
 === Universal PIL ===
  1. first get the source and put it a working directory you choose: http://effbot.org/downloads/Imaging-1.1.5.tar.gz -o Imaging-1.1.5.tar.gz
  2. open a Terminal window and change your working directory to the local of the archive file: ''pushd <you directory path here>''
