@@ -11,19 +11,129 @@ These are reasonably well documented in the online material, but I have not so f
 
 == datetime ==
 
-The datetime module defines three classes:
+The datetime module defines five classes:
 
  * date - a date (year, month, day)
  * time - a time within a day (hour, minute, second)
  * datetime - combines a datetime.date and datetime.time
+ * timedelta - different between two datetime objects
+ * tzinfo - "abstract base class for time zone info objects" [1]
 
 == time ==
 
 The time module defines one class:
 
- * time - access to system time
+ * time - access to system time with some formatting support
 
 I found myself confused by a couple of aspects of these modules:
 
  * datetime.time and time.time are completely different despite sharing a name.
- * 'datetime' is 
+ * 'datetime' is the name of both a module and a class.
+
+From time.time, we can get the system time. We can then pass that information into an object of one of the datetime classes for more sophisticated formatting and date/time arithmetic. Some examples:
+
+=== What time is it? ===
+{{{
+>>> import time
+>>> now = time.time()
+>>> now
+1194011556.6974411
+>>> int(now)
+1194011556
+>>> import datetime
+>>> today = datetime.datetime.now()
+>>> today
+datetime.datetime(2007, 11, 2, 10, 33, 35, 713125)
+>>> print today
+2007-11-02 10:33:35.713125
+}}}
+
+=== How about in human-friendly format? ===
+{{{
+>>> import time
+>>> time.asctime()
+'Fri Nov  2 09:55:28 2007'
+}}}
+
+=== I don't like that format. How can I roll my own? ===
+{{{
+>>> import time
+>>> time.strftime("%Y/%m/%d %H:%M:%S")
+'2007/11/02 09:58:30'
+}}}
+
+The various format specifiers are described in the documentation for the time module at http://docs.python.org/lib/module-time.html.
+
+=== What was the date 24 hours ago? ===
+{{{
+>>> import time
+>>> now = time.time()
+>>> now = now - 24 * 60 * 60
+>>> time.strftime("%Y/%m/%d %H:%M:%S", time.localtime(now))
+'2007/11/01 10:00:32'
+}}}
+
+=== I have a string representing a date/time. How do I turn it into something I can do computations on? ===
+{{{
+>>> import time
+>>> then_str = "7 March 2000 4:38"
+>>> time.strptime(then_str, "%d %B %Y %H:%M")
+(2000, 3, 7, 4, 38, 0, 1, 67, -1)
+>>> (y, m, d, h, min, sec, wd, julian, dst) = time.strptime(then_str, "%d %B %Y %H:%M")
+>>> x = []
+>>> x = time.strptime(then_str, "%d %B %Y %H:%M")
+>>> x
+(2000, 3, 7, 4, 38, 0, 1, 67, -1)
+...
+}}}
+
+=== How do I turn the tuple into a timestamp? ===
+{{{
+...
+>>> time.mktime(x)
+952421880.0
+}}}
+
+=== How do I turn a timestamp into a datetime object? ===
+{{{
+>>> import time
+>>> import datetime
+>>> d = datetime.datetime.fromtimestamp(time.time())
+>>> d
+datetime.datetime(2007, 11, 2, 10, 25, 35, 947082)
+}}}
+
+=== How long between date/time A and date/time B? ===
+{{{
+>>> import time
+>>> import datetime
+>>> atup = (2000, 3, 7, 0, 0, 0, 0, 0, 0)
+>>> btup = (2000, 12, 15, 0, 0, 0, 0, 0, 0)
+>>> diff = time.mktime(btup) - time.mktime(atup)
+>>> diff
+24451200.0
+>>> # or, using datetime....
+>>> a = datetime.datetime.fromtimestamp(time.mktime(atup))
+>>> b = datetime.datetime.fromtimestamp(time.mktime(btup))
+>>> c = b - a
+>>> c
+datetime.timedelta(283)
+>>> print c
+283 days, 0:00:00
+}}}
+
+=== What was the date or timestamp of last Friday? ===
+{{{
+>>> import time
+>>> now = time.time()
+>>> tup = time.localtime()
+>>> then = now - 24*60*60(tup[6] - 4
+
+=== Can I give the datetime module a less cumbersome alias? ===
+{{{
+>>> import datetime as dt
+}}}
+
+== References ==
+
+[1] $ pydoc datetime.tzinfo
