@@ -3,7 +3,8 @@ The permissions in the table are as follows:
  * r: View if it is not classified as spam (full read to fields creation, creator, actor, activity, name, spambayes_score, spambayes_misclassified, author, recipients, date, files, messageid, inreplyto, type, description; no access if spam to content, summary)
  * C: Create
  * E: Edit
- * e: Edit one's own record
+ * e: Edit one's own data
+ * v: view one's own data
 
 The classes can be roughly divided into enumerations (issue_type, severity, component, version, priority, status, resolution, keyword), content (issue, msg, file), and administration (user, query).
 
@@ -19,7 +20,9 @@ The classes can be roughly divided into enumerations (issue_type, severity, comp
 ||issue            ||   R     || RC ||   RCE   ||    RCE    ||
 ||file             ||   r     || RC ||   RCE   ||    RCE    ||
 ||msg              ||   r     || RC ||   RCE   ||    RCE    ||
-||user             ||         || R  ||   R     ||    RE     ||
+||user             ||   C     || Rv ||   Rv    ||    RE     ||
+||query            ||         || vCe||   vCe   ||    vCe    ||
+||public query     ||         || RC ||   RC    ||    RC     ||
 ||issue.title      ||         || E  ||         ||           ||
 ||issue.type       ||         || E  ||         ||           ||
 ||issue.components ||         || E  ||         ||           ||
@@ -40,5 +43,5 @@ The classes can be roughly divided into enumerations (issue_type, severity, comp
 
 
 In addition, the following permissions are granted:
+- Anonymous: Web access
 - User, Developer, Coordinator: Web and Email access, May Report Misclassified
-- Users, Developers and Coordinators may view their own records (which appears to be redundant with the full read access they already have)
