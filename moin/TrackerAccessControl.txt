@@ -1,0 +1,28 @@
+The permissions in the table are as follows:
+ * R: View
+ * r: View if it is not classified as spam (full read to fields creation, creator, actor, activity, name, spambayes_score, spambayes_misclassified, author, recipients, date, files, messageid, inreplyto, type, description; no access if spam to content, summary)
+ * C: Create
+ * E: Edit
+
+The classes can be roughly divided into enumerations (issue_type, severity, component, version, priority, status, resolution, keyword) and content (issue, msg, file).
+
+|Class.Field |Anonymous|User|Developer|Coordinator|
+|issue_type  |   R     | R  |         |           |
+|severity    |   R     | R  |         |           |
+|component   |   R     | R  |         |           |
+|version     |   R     | R  |         |           |
+|priority    |   R     | R  |         |           |
+|status      |   R     | R  |         |           |
+|resolution  |   R     | R  |         |           |
+|keyword     |   R     | R  |         |           |
+|issue       |   R     | RC |         |           |
+|file        |   r     | RC |         |           |
+|msg         |   r     | RC |         |           |
+|issue.title |         | E  |         |           |
+|issue.type  |         | E  |         |           |
+|issue.components |         | E  |         |           |
+|issue.versions |         | E  |         |           |
+|issue.severity |         | E  |         |           |
+|issue.messages |         | E  |         |           |
+|issue.files |         | E  |         |           |
+|issue.nosy |         | E  |         |           |
