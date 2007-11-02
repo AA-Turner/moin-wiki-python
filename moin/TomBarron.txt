@@ -127,7 +127,29 @@ datetime.timedelta(283)
 >>> import time
 >>> now = time.time()
 >>> tup = time.localtime()
->>> then = now - 24*60*60(tup[6] - 4
+>>> then = now - 24*60*60((7 + tup[6] - 4 - 1)%7 + 1)
+>>> # or, using datetime
+>>> import datetime
+>>> today = datetime.datetime.now()
+>>> today
+datetime.datetime(2007, 11, 2, 11, 27, 50, 37655)
+>>> diff = datetime.timedelta((7 + today.weekday() - 4 - 1)%7 + 1, 0, 0)
+>>> last_friday = today - diff
+>>> last_friday
+datetime.datetime(2007, 10, 26, 11, 27, 50, 37655)
+}}}
+
+In general, to compute the date of last Z, 
+
+    today - (7 + weekday - Z - 1) % 7 + 1
+
+To compute the date of next Z,
+
+    today + (7 + Z - weekday - 1) % 7 + 1
+
+This assumes that Monday = 0, Tuesday = 1, ..., Sunday = 6, as is the case in python.
+
+Note that the computation must be carried out in units of days.
 
 === Can I give the datetime module a less cumbersome alias? ===
 {{{
