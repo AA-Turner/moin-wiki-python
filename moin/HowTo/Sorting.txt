@@ -236,9 +236,9 @@ that makes this easy:
 In Python 2.4 if you don't want to import the operator module you can:
 {{{
 >>> a = [Spam(1, 4), Spam(9, 3), Spam(4, 6)]
->>> a.sort(key=lambda obj:obj.eggs)
+>>> a.sort(key=lambda obj:obj.eggs())
 >>> for spam in a:
->>>   print spam.eggs, str(spam)
+>>>   print spam.eggs(), str(spam)
 3 12
 4 5
 6 10
@@ -249,9 +249,9 @@ back to passing a comparison function to sort, as in:
 
 {{{
 >>> a = [Spam(1, 4), Spam(9, 3), Spam(4, 6)]
->>> a.sort(lambda x, y: cmp(x.eggs, y.eggs))
+>>> a.sort(lambda x, y: cmp(x.eggs(), y.eggs()))
 >>> for spam in a:
->>>   print spam.eggs, str(spam)
+>>>   print spam.eggs(), str(spam)
 3 12
 4 5
 6 10
@@ -272,14 +272,14 @@ an function by defining the {{{__call__}}} method, as in:
 >>> a = [Spam(1, 4), Spam(9, 3), Spam(4,6)]
 >>> a.sort(CmpAttr("spam"))  # sort by the "spam" attribute
 >>> for spam in a:
->>>    print spam.spam, spam.eggs, str(spam)
+>>>    print spam.spam(), spam.eggs(), str(spam)
 1 4 5
 4 6 10
 9 3 12
 
 >>> a.sort(CmpAttr("eggs"))   # re-sort by the "eggs" attribute
 >>> for spam in a:
->>>    print spam.spam, spam.eggs, str(spam)
+>>>    print spam.spam(), spam.eggs(), str(spam)
 9 3 12
 1 4 5
 4 6 10
