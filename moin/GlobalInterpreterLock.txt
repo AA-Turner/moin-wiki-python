@@ -32,9 +32,15 @@ Getting rid of the GIL is an occasional topic on the python-dev mailing list.  N
 
  * '''Ordered destruction''' (nice to have?).  Barring cycles, Python currently always destroys an unreachable object ''X'' before destroying any other objects referenced by ''X''.  This means all the object's attributes are still there when `__del__` runs.  (Many garbage collection schemes don't guarantee this.)
 
-    I'd say this is necessary for Python.  There's very little you can usefully do with a half-destroyed object.  That which you can do, you could also do without being exposed to half-destroyed objects.  ~~~ Rhamphoryncus 
+    I'd say this is necessary for Python.  There's very little you can usefully do with a half-destroyed object.  That which you can do, you could also do without being exposed to half-destroyed objects.  --Rhamphoryncus 
 
         The [http://docs.python.org/ref/customization.html language reference] doesn't require this. I doubt Jython or IronPython provides it.  --jorendorff
+
+            They seem deliberately vague.  Java distinguishes finalized from non-finalized objects, and a single finalizer is ordered with regard to non-finalized objects.  The catch is that it's not ordered with regard to other finalizers, so you need to program as if they may already be deleted.  In practise this means avoiding finalizers unless absolutely necessary, and if necessary they must not depend on each other.
+
+            CPython uses low-level finalizers extensively, so it must have stronger guarantees.  Because of this, it refuses to delete cycles involving `__del__`.
+
+            The interesting realization is that, although finalizers in java are run even in the face of reference cycles, they cannot be correct unless you eliminate finalizer cycles.  Finding ways to tell the GC implementation of this key distinction lets you have your cake and eat it too.  --Rhamphoryncus
 
 === API compatibility in detail ===
 
