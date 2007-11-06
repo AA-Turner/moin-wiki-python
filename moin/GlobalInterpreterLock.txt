@@ -42,6 +42,9 @@ Getting rid of the GIL is an occasional topic on the python-dev mailing list.  N
 
             The interesting realization is that, although finalizers in java are run even in the face of reference cycles, they cannot be correct unless you eliminate finalizer cycles.  Finding ways to tell the GC implementation of this key distinction lets you have your cake and eat it too.  --Rhamphoryncus
 
+                I don't subscribe to "it must have stronger guarantees".  CPython uses C-level finalizers mostly for memory management and occasionally (as with `file` objects) for some non-order-dependent cleanup.  --jorendorff
+
+
 === API compatibility in detail ===
 
 API compatibility is an especially difficult aspect of the problem.  All concurrent memory management schemes we've found rely on one or more of the following techniques, all of which are incompatible with the existing Python/C API.
