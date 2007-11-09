@@ -1,7 +1,7 @@
 #format rst
 
 =====================
-Learning Jython
+Jython Course Outline
 =====================
 
 :Author: Dave Kuhlman
@@ -9,7 +9,7 @@ Learning Jython
     http://www.rexx.com/~dkuhlman
 
 :revision: 1.1a
-:date: Oct. 18, 2007
+:date: Nov 9, 2007
 
 :copyright: Copyright (c) 2006 Dave Kuhlman.  All Rights Reserved.
     This software is subject to the provisions of the MIT License
@@ -1052,7 +1052,7 @@ see:
 - `Simple and Efficient Jython Object Factories
   http://wiki.python.org/jython/JythonMonthly/Articles/October2006/3
   <http://wiki.python.org/jython/JythonMonthly/Articles/October2006/3>`_
-  -- Note that the example that follow was developed from this
+  -- Note that the following examples were developed from this
   document.
 
 
@@ -1060,7 +1060,7 @@ Description -- In order to implement this approach, here is what
 you will do:
 
 - Implement one or more Jython/Python modules containing one or more
-  classes.
+  classes.  Or, perhaps this code already exists.
 
 - Create a Java interface for each Jython class that you want to
   expose to Java.  The interface should describe each method that
@@ -1070,16 +1070,22 @@ you will do:
 
   - The constructor (1) creates a Jython interpreter; (2) runs a
     script that imports the Jython modules containing the Jython
-    classes; (3) retrieve and save the Jython classes from the
+    classes; (3) retrieves and saves the Jython classes from the
     intrepreter.
 
   - Implement one "createX" method for each Jython/Python class/type
     to be used from Java.
 
-- Implement the Java code that uses the Jython classes: (1) create a
-  factory object; (2) call the "createX" methods to create Java
-  objects that give access to the Jython classes; (3) call the
-  Jython methods through the Jython "proxies".
+- Implement the Java code that uses the Jython classes.  This Java
+  code will typically do the following:
+
+  1. Create a factory object.
+
+  2. Call the "createX" methods to create Java objects that give
+     access to the Jython classes.
+
+  3. Call the Jython methods through these Jython "proxies".
+
 
 Example -- a possible organization on disk
 ++++++++++++++++++++++++++++++++++++++++++
@@ -1092,18 +1098,19 @@ Example -- a possible organization on disk
     |   |-- factories
     |   |   |-- EmployeeFactory.java    # The factory
     |   `-- interfaces
-    |       |-- DependentType.java      # The Java interface
-    |       `-- EmployeeType.java       # The Java interface
+    |       |-- DependentType.java      # A Java interface
+    |       `-- EmployeeType.java       # A Java interface
 
 Notes:
 
 - The Jython classes (in this case, Employee.py) can go anywhere on
-  your Jython/Python path.  See ``python.path``.in your registry
+  your Jython/Python path.  See ``python.path`` in your registry
   file: `The Jython Registry --
   http://jython.org/Project/userguide.html#the-jython-registry
   <http://jython.org/Project/userguide.html#the-jython-registry>`_.
 
 - Layout for the Java code follows normal Java rules for packages.
+
 
 Example -- the Jython classes
 +++++++++++++++++++++++++++++
@@ -1273,6 +1280,7 @@ Notes:
   the ``__call__`` method to create an instance.  This is the same
   as using ``obj = Employee()``, for example, in Jython.  Then the
   result is converted to a Java object and returned.
+
 
 Example -- the Java consumer code
 +++++++++++++++++++++++++++++++++
@@ -1593,7 +1601,6 @@ classes that can be loaded to a small set::
     }
 
 
-
 Retrieving values from a Jython script
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1679,6 +1686,44 @@ Using a custom class loader
 You can control access to Java classes with a custom class loader.
 There is an example in section `A system state and a custom class loader`_.
 
+Embedding a Jython console
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This example shows how to embed a Jython interactive console into a
+Java program::
+
+    import org.python.util.InteractiveConsole;
+    import java.util.Properties;
+    import java.io.*;
+
+    public class interactive_console1 {
+        protected InteractiveConsole interp;
+
+        public interactive_console1() {
+            if (System.getProperty("python.home") == null) {
+                System.setProperty("python.home", "");
+            }
+            InteractiveConsole.initialize(System.getProperties(),
+                                          null, new String[0]);
+            interp = new InteractiveConsole();
+        }
+
+        public static void main(String[] args) {
+            interactive_console1 con = new interactive_console1();
+            con.startConsole();
+        }
+
+        public void startConsole() {
+            interp.interact("Hello from console.");
+        }
+    }
+
+Notes:
+
+- For more information see:
+  `API information on Class InteractiveConsole --
+  http://jython.org/docs/javadoc/org/python/util/InteractiveConsole.html
+  <http://jython.org/docs/javadoc/org/python/util/InteractiveConsole.html>`_.
 
 
 
@@ -2159,18 +2204,39 @@ Resources:
 dom4j
 ~~~~~
 
-Example::
+Installation and setup
+++++++++++++++++++++++
+
+- Download ``dom4j`` from:
+  `dom4j: the flexible XML framework for Java --
+  http://www.dom4j.org/
+  <http://www.dom4j.org/>`_
+
+- Add the ``dom4j`` jar file to your ``CLASSPATH``.
+
+- In order to get some features to work, I also had to install
+  the ``jaxen`` XPath engine. Add that to your ``CLASSPATH``, too.
+  See: `jaxen: universal Java XPath engine --
+  http://jaxen.codehaus.org/
+  <http://jaxen.codehaus.org/>`_.
 
 
-    """
+Examples etc
+++++++++++++
 
-    To run this example, add the following to your CLASSPATH:
+There are examples at:
 
-        ${path-to-dom4j}/dom4j-1.6.1.jar
+- `dom4j - Quick Start Guide --
+  http://www.dom4j.org/guide.html
+  <http://www.dom4j.org/guide.html>`_
 
+- `dom4j cookbook --
+  http://www.dom4j.org/cookbook.html
+  <http://www.dom4j.org/cookbook.html>`_
 
-    """
-
+Example 1a -- This example parses an XML document (file), then walks
+the ``dom4j`` DOM element tree and prints out information on each
+node::
 
     import sys
     from org.dom4j.io import SAXReader
@@ -2183,46 +2249,172 @@ Example::
         """
         if node.getNodeType() == node.ELEMENT_NODE:
             name = node.getName()
-            print '%sNode: %s' % (show_indent(level), name, )
+            print '%sElement node: %s' % (show_indent(level), name, )
             attrs = node.attributes()
             for attr in attrs:
                 aName = attr.getQualifiedName()
                 aValue = attr.getValue()
-                print '  %sAttr -- %s: %s' % (show_indent(level), aName, aValue,)
-        if node.getName() == 'interest':
-            val = node.getText()
-            print '%sinterest: "%s"' % (show_indent(level+1), val, )
-        elif node.getName() == 'name':
-            val = node.getText()
-            print '%sname    : "%s"' % (show_indent(level+1), val, )
-        #
-        # Note that there are *no* TEXT_NODE's.
-        # dom4j does not seem to produce any.
-        #
-        if node.getNodeType() == node.TEXT_NODE:
-            print '**** text node'
-
+                print '    %sAttr -- %s: %s' % (show_indent(level), aName, aValue,)
+            if node.text:
+                print '    %sText: "%s"' % (show_indent(level), node.text,)
 
     def show_tree(node, level):
         show_node(node, level)
         level1 = level + 1
-        children = node.elements()
-        for child in children:
-            show_tree(child, level1)
+        if node.getNodeType() == node.ELEMENT_NODE:
+            children = node.elements()
+            for child in children:
+                show_tree(child, level1)
 
-    def test():
+    def test(infilename):
         print 'Version: %s' % (sys.version, )
         reader = SAXReader()
-        doc = reader.read('file:///home/dkuhlman/a1/Python/Jython/Test/people.xml')
+        doc = reader.read(infilename)
         root = doc.getRootElement()
         show_tree(root, 0)
 
     def main():
-        test()
+        args = sys.argv[1:]
+        if len(args) != 1:
+            print 'usage: test_dom4j_2.py in_xml_file'
+            sys.exit(1)
+        test(args[0])
 
     if __name__ == '__main__':
         #import pdb; pdb.set_trace()
         main()
+
+Notes:
+
+- We use ``node.elements()`` to get all children that are
+  *elements*, but not, for example, text nodes.
+
+
+Example 1b -- This example also parses an XML document (file), then
+walks the ``dom4j`` DOM element tree and prints out information on
+each node.  However, at each node it iterates over *all* the content
+nodes, including text nodes::
+
+    import sys
+    from org.dom4j.io import SAXReader
+
+    def show_indent(level):
+        return '    ' * level
+
+    def show_node(node, level):
+        """Display one node in the DOM tree.
+        """
+        if node.getNodeType() == node.ELEMENT_NODE:
+            name = node.getName()
+            print '%sElement node: %s' % (show_indent(level), name, )
+            attrs = node.attributes()
+            for attr in attrs:
+                aName = attr.getQualifiedName()
+                aValue = attr.getValue()
+                print '    %sAttr -- %s: %s' % (show_indent(level), aName, aValue,)
+        elif node.getNodeType() == node.TEXT_NODE:
+            print '%sText node: "%s"' % (show_indent(level), node.text, )
+
+    def show_tree(node, level):
+        show_node(node, level)
+        level1 = level + 1
+        if node.getNodeType() == node.ELEMENT_NODE:
+            children = node.content()
+            for child in children:
+                show_tree(child, level1)
+
+    def test(infilename):
+        print 'Version: %s' % (sys.version, )
+        reader = SAXReader()
+        doc = reader.read(infilename)
+        root = doc.getRootElement()
+        show_tree(root, 0)
+
+    def main():
+        args = sys.argv[1:]
+        if len(args) != 1:
+            print 'usage: test_dom4j_2.py in_xml_file'
+            sys.exit(1)
+        test(args[0])
+
+    if __name__ == '__main__':
+        #import pdb; pdb.set_trace()
+        main()
+
+Notes:
+
+- We use ``node.content()`` to get *all* child nodes, *including*
+  text nodes.
+
+- Use tests such as the following to determine whether a node is an
+  element node or a text node::
+
+      if node.getNodeType() == node.ELEMENT_NODE:
+          o
+          o
+          o
+      elif node.getNodeType() == node.TEXT_NODE:
+          o
+          o
+          o
+
+Example 2 -- This example creates an ``dom4j`` document object and
+adds element objects to it::
+
+    import sys
+    import org.dom4j.DocumentHelper
+    import org.dom4j.io.OutputFormat
+    from org.dom4j.io import XMLWriter
+    from org.dom4j.io import OutputFormat
+
+    def test():
+        # 1.
+        # Create a new document and add a few elements to it.
+        doc = org.dom4j.DocumentHelper.createDocument()
+        root = doc.addElement('specs')
+        e1 = root.addElement('class1')
+        e1.addAttribute('name', 'dave')
+        e1.addAttribute('category', 'medium')
+        e1.addText('some simple content')
+        e1 = root.addElement('class2')
+        e1.addAttribute('name', 'mona')
+        e1.addAttribute('category', 'good')
+        e1.addText('more content')
+        # 2.
+        # Print a text representation of the DOM tree.
+        text = doc.asXML()
+        print text
+        print '\n', '-' * 40, '\n'
+        # 3.
+        # Print a formatted (pretty-print) representation.
+        format = OutputFormat.createPrettyPrint()
+        writer = XMLWriter(sys.stdout, format)
+        writer.write(doc)
+        print '\n', '-' * 40, '\n'
+        print 'root:', root, '\n'
+        # 4.
+        # Iterate over the children of the root.
+        # Print child and parent names, etc.
+        itr = root.elementIterator()
+        for idx, child in enumerate(itr):
+            print idx, child
+            parent = child.getParent()
+            print 'parent:', parent.getName()
+            print 'child:', child.getName()
+            print 'text: "%s"' % child.getText()
+            print
+
+    test()
+
+Notes -- What this example does:
+
+1. Creates a new document and adds a few elements to it.
+
+2. Produces and prints a text representation of the DOM tree.
+   
+3. Prints a formatted (pretty-print) representation.
+
+4. Iterates over the children of the root.  Prints child and parent names, etc.
 
 
 Resources:
@@ -2295,7 +2487,7 @@ Here is the example implementation::
     For this test, add the JDBC driver to your CLASSPATH.  For example,
     in my case I added:
 
-        postgresql-8.1-407.jdbc3.jar
+        postgresql-8.2-506.jdbc4.jar
 
     """
 
@@ -2347,21 +2539,21 @@ the following::
 
 Resources:
 
-- Python Tabular Databases SIG: Status
-  <http://www.python.org/community/sigs/current/db-sig/status/>`_
-  (http://www.python.org/community/sigs/current/db-sig/status/).
-
-- The Python `Database Topic Guide
-  <http://www.python.org/doc/topics/database/>`_
-  (http://www.python.org/doc/topics/database/).
-
 - More information on zxJDBC:
-  http://sourceforge.net/projects/zxjdbc
+  http://jython.org/Project/userguide.html#database-connectivity-in-jython
 
 - The JDBC driver for PostgreSQL: http://jdbc.postgresql.org/
 
 - The JDBC driver for MySQL:
   http://www.mysql.com/products/connector/j/
+
+- `Python Tabular Databases SIG: Status --
+  http://www.python.org/community/sigs/current/db-sig/status/
+  <http://www.python.org/community/sigs/current/db-sig/status/>`_
+
+- The Python `Database Topic Guide --
+  http://www.python.org/doc/topics/database/
+  <http://www.python.org/doc/topics/database/>`_
 
 
 Additional Exercises
