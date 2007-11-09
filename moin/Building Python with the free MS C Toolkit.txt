@@ -8,6 +8,12 @@ Some particular changes:
  * The build command is slightly modified as a result: `nant -buildfile:python.build all`.
  * There are instructions for building bsddb included.
 
+'''Update 2''': I've created three bat files that take care of most problems including make_*info.lib and setargv.obj.
+ * `build_env.bat` opens a shell with the necessary environment vars set.
+ * `env.bat` is called by `build_env.bat` to set the environment vars. You have to modify this bat file if you have different installation paths. 
+ * Call `build.bat` to build Python. It also copies sqlite3.dll and takes care of make_*info.lib. `build.bat setargv` compiles and installs setargv.obj for OpenSLL and `build clean` removes all files.
+I've added the three files to the py3k branch: http://svn.python.org/view?rev=58917&view=rev
+
 Note that the readme.txt file is also insufficient and leaves legwork to be done by the user.  For now, some updates have been done to this document.  It should be possible to use it as a point of reference to bolster what the readme.txt file does not cover.
 
 == What You Need ==
@@ -57,14 +63,14 @@ Now add the extra bits you need to your environment, to pick up the Toolkit comp
 {{{
 @echo off
 rem Set these values according to where you installed the software
-set TOOLKIT=C:\Program Files\Microsoft Visual C++ Toolkit 2003
-set SDK=C:\Program Files\Microsoft Platform SDK
-set NET=C:\Program Files\Microsoft Visual Studio .NET 2003
-set NANT=C:\Utils\Nant
+set TOOLKIT=%ProgramFiles%\Microsoft Visual C++ Toolkit 2003
+set SDK=%ProgramFiles%\Microsoft Platform SDK for Windows Server 2003 R2
+set NET=%ProgramFiles%\Microsoft Visual Studio .NET 2003
+set NANT=%ProgramFiles%\Nant
 
-set PATH=%TOOLKIT%\bin;%PATH%;%SDK%\Bin\win64;%NANT%\bin
-set INCLUDE=%TOOLKIT%\include;%INCLUDE%
-set LIB=%TOOLKIT%\lib;%NET%\VC7\lib;%LIB%
+set PATH=%TOOLKIT%\bin;%PATH%;%SDK%\Bin\Win64;%NANT%\bin;%SDK%\bin
+set INCLUDE=%TOOLKIT%\include;%SDK%\Include;%INCLUDE%
+set LIB=%TOOLKIT%\lib;%NET%\VC7\lib;%SDK%\lib;%LIB%
 }}}
 
 The "win64" directory from the SDK is added to supply executables such as "cvtres" and "lib", which are not available elsewhere. The versions in the "win64" directory are 32-bit programs, so they are fine to use here.
