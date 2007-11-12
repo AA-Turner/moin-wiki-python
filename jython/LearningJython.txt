@@ -9,7 +9,7 @@ Jython Course Outline
     http://www.rexx.com/~dkuhlman
 
 :revision: 1.1a
-:date: Nov 9, 2007
+:date: Nov 12, 2007
 
 :copyright: Copyright (c) 2006 Dave Kuhlman.  All Rights Reserved.
     This software is subject to the provisions of the MIT License
@@ -2423,6 +2423,212 @@ Resources:
 
 - http://www.dom4j.org/dom4j-1.4/apidocs/index.html
 
+
+XMLBeans
+~~~~~~~~
+
+XMLBeans provides the ability to generate Java bindings for an XML
+document type from an XML Schema.  Roughly speaking, XMLBeans
+generates a Java class for each element type defined in an XML
+Schema.
+
+When used with Jython, those Java bindings become quite Jythonic.
+
+You can read about XMLBeans here:
+
+- `Welcome to XMLBeans --
+  http://xmlbeans.apache.org/index.html
+  <http://xmlbeans.apache.org/index.html>`_.
+
+- `XMLBeans at Wikipedia --
+  http://en.wikipedia.org/wiki/XMLBeans
+  <http://en.wikipedia.org/wiki/XMLBeans>`_.
+
+
+Installation
+++++++++++++
+
+You can find XMLBeans at:
+`Welcome to XMLBeans --
+http://xmlbeans.apache.org/index.html
+<http://xmlbeans.apache.org/index.html>`_.
+
+To install XMLBeans, follow the instructions at:
+`Installing XMLBeans --
+http://xmlbeans.apache.org/documentation/conInstallGuide.html
+<http://xmlbeans.apache.org/documentation/conInstallGuide.html>`_.
+
+After unrolling the binary distribution, I added the following to my
+``CLASSPATH``:
+
+- $XMLBEANS_HOME/lib/xbean.jar
+- $XMLBEANS_HOME/lib/jsr173_1.0_api.jar
+
+And, I added the following to my ``PATH``:
+
+- $XMLBEANS_HOME/bin
+
+where XMLBEANS_HOME is the directory in which XMLBeans is installed.
+
+
+An example
+++++++++++
+
+This example is copied from `XMLBeans at Wikipedia --
+http://en.wikipedia.org/wiki/XMLBeans
+<http://en.wikipedia.org/wiki/XMLBeans>`_ and adapted to Jython.
+
+The XML Schema::
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <xs:schema targetNamespace="http://www.openuri.org/domain/country/v1"
+               xmlns:tns="http://www.openuri.org/domain/country/v1"
+               xmlns:xs="http://www.w3.org/2001/XMLSchema"
+               elementFormDefault="qualified"
+               attributeFormDefault="unqualified"
+               version="1.0">
+      <xs:element name="Country" type="tns:Country"/>
+      <xs:complexType name="Country">
+        <xs:sequence>
+          <xs:element name="Name" type="xs:string"/>
+          <xs:element name="Population" type="xs:int"/>
+          <xs:element name="Iso" type="tns:Iso"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Iso">
+        <xs:annotation><xs:documentation>ISO 3166</xs:documentation></xs:annotation>
+        <xs:sequence>
+          <xs:element name="Alpha2" type="tns:IsoAlpha2"/>
+          <xs:element name="Alpha3" type="tns:IsoAlpha3"/>
+          <xs:element name="CountryCode" type="tns:IsoCountryCode"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="IsoCountryCode">
+        <xs:restriction base="xs:int">
+          <xs:totalDigits value="3"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="IsoAlpha2">
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[A-Z]{2}"/>
+          <xs:whiteSpace value="collapse"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="IsoAlpha3">
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[A-Z]{3}"/>
+          <xs:whiteSpace value="collapse"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:schema>
+
+Supposing that you name the above schema ``country.xsd``, you can
+compile this with XMLBeans using something like the following::
+
+    $ scomp -out country.jar country.xsd
+
+Here is a bit of Java code, copied from Wikipedia, that uses the
+generated Java classes::
+
+    import org.openuri.domain.country.v1.Country;
+    import org.openuri.domain.country.v1.Iso;
+    public class CountrySample 
+    {
+      public static void main(String[] args) {
+        Country country = Country. Factory.newInstance();
+        country.setName("Denmark");
+        country.setPopulation(5450661);  // from wikipedia :-)
+        // print out country XMLBean as XML
+        System.out.println(country.xmlText());
+        // check if document is valid - will print "Document is invalid"
+        // because required Iso child element in not in the object
+        System.out.println ("Document is " + (country.validate() ? "valid" : "invalid"));
+        // add child with complex type Iso to make the document valid
+        Iso iso = country.addNewIso();
+        iso.setAlpha2("DK");
+        iso.setAlpha3("DNK");
+        iso.setCountryCode(208);
+        // print out country XMLBean as XML
+        System.out.println(country.xmlText());
+        // check if document is valid - will print "Document is valid"
+        System.out.println ("Document is " + (country.validate() ? "valid" : "invalid"));
+      }
+    }
+
+After translation to Jython, here is the equivalent code.  Note that
+it uses the same generated Java classes as the above Java code::
+
+    from org.openuri.domain.country.v1 import Country
+    from org.openuri.domain.country.v1 import Iso
+    from org.apache.xmlbeans import XmlOptions
+
+    class CountrySample(object):
+
+        def main(self, args):
+            country = Country. Factory.newInstance()
+            country.setName("Denmark")
+            country.setPopulation(5450661);    # from wikipedia :-)
+            # Print out country XMLBean as XML.
+            print country.xmlText()
+            # Print out country XMLBean as XML with indentation.
+            opts = XmlOptions()
+            opts.setSavePrettyPrint()
+            opts.setSavePrettyPrintIndent(4)
+            print country.xmlText(opts)
+            # Check if document is valid - will print "Document is invalid"
+            # because required Iso child element in not in the object.
+            if country.validate():
+                condition = "valid"
+            else:
+                condition = "invalid"
+            print "Document is", condition
+            # Add child with complex type Iso to make the document valid.
+            iso = country.addNewIso();
+            iso.setAlpha2("DK")
+            iso.setAlpha3("DNK")
+            iso.setCountryCode(208)
+            # Print out country XMLBean as XML.
+            print country.xmlText(opts)
+            # Check if document is valid - will print "Document is valid".
+            if country.validate():
+                condition = "valid"
+            else:
+                condition = "invalid"
+            print "Document is", condition
+
+    def test():
+        country_sample = CountrySample()
+        country_sample.main([])
+
+    test()
+
+Add the generated jar file to your CLASSPATH.  In Linux, I can do
+that with the following::
+
+    $ export CLASSPATH=$CLASSPATH:./country.jar
+
+Now run it::
+
+    $ jython test_xml.py
+
+And, that prints out::
+
+    <xml-fragment><v1:Name xmlns:v1="http://www.openuri.org/domain/country/v1">Denmark</v1:Name><v1:Population xmlns:v1="http://www.openuri.org/domain/country/v1">5450661</v1:Population></xml-fragment>
+    <xml-fragment>
+        <v1:Name xmlns:v1="http://www.openuri.org/domain/country/v1">Denmark</v1:Name>
+        <v1:Population xmlns:v1="http://www.openuri.org/domain/country/v1">5450661</v1:Population>
+    </xml-fragment>
+    Document is invalid
+    <xml-fragment>
+        <v1:Name xmlns:v1="http://www.openuri.org/domain/country/v1">Denmark</v1:Name>
+        <v1:Population xmlns:v1="http://www.openuri.org/domain/country/v1">5450661</v1:Population>
+        <v1:Iso xmlns:v1="http://www.openuri.org/domain/country/v1">
+            <v1:Alpha2>DK</v1:Alpha2>
+            <v1:Alpha3>DNK</v1:Alpha3>
+            <v1:CountryCode>208</v1:CountryCode>
+        </v1:Iso>
+    </xml-fragment>
+    Document is valid
 
 
 Database access
