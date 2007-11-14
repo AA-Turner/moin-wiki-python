@@ -51,6 +51,17 @@ self& staticmethod(char const* name)
 }}}
 To create overloaded staticmethods in python, you overload first, then you make it static.
 
+If you want to expose a static function that returns a pointer to an already exposed C++ type, you have to specify a return policy. This is because python needs to know what to do with that pointer and how to track it after it is returned. The return policy specified what to do with the pointer, such as whether or not to free the memory after exiting. Like so:
+
+{{{
+    class_<foo>("foo")
+        .def("f", &foo::f, return_value_policy<manage_new_object>())
+        .staticmethod("f")  // **
+        ;
+}}}
+
+This has told python that a pointer returned from foo:f() must be managed as a new object and is to be deleted when out of scope or at exit. There are more return policies. Return policies are all subtypes of ResultConverterGenerator, check it out in the docs.
+
 === module level objects ===
 ==== at module creation time ====
 First, create those objects like
