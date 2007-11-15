@@ -13,6 +13,8 @@ Notes:
 
 * The few anomalies in the smaller benchmarks are probably due to hotspot kicking in. Ideally we would run more preparations
 
+* why is read slower than iter?
+
 Reading:
 
 {{{#!python
@@ -20,39 +22,39 @@ Reading:
         fp.read()
     test_read = bench(test_read)
 }}}
-http://underboss.org/~pjenvey/jython/pyfile-nio/small/test_read.jpg
-http://underboss.org/~pjenvey/jython/pyfile-nio/big/test_read.jpg
+[http://underboss.org/~pjenvey/jython/pyfile-nio/small/test_read.jpg]
+[http://underboss.org/~pjenvey/jython/pyfile-nio/big/test_read.jpg]
 
 {{{#!python
     def test_iter(self, fp):
         for line in fp:
             pass
 }}}
-http://underboss.org/~pjenvey/jython/pyfile-nio/small/test_iter.jpg
-http://underboss.org/~pjenvey/jython/pyfile-nio/big/test_iter.jpg
+[http://underboss.org/~pjenvey/jython/pyfile-nio/small/test_iter.jpg]
+[http://underboss.org/~pjenvey/jython/pyfile-nio/big/test_iter.jpg]
 
 {{{#!python
     def test_readline(self, fp):
         while fp.readline():
             pass
 }}}
-http://underboss.org/~pjenvey/jython/pyfile-nio/small/test_readline.jpg
-http://underboss.org/~pjenvey/jython/pyfile-nio/big/test_readline.jpg
+[http://underboss.org/~pjenvey/jython/pyfile-nio/small/test_readline.jpg]
+[http://underboss.org/~pjenvey/jython/pyfile-nio/big/test_readline.jpg]
 
 {{{#!python
     def test_readline_with_tell(self, fp):
         while fp.readline():
             fp.tell()
 }}}
-http://underboss.org/~pjenvey/jython/pyfile-nio/small/test_readline_with_tell.jpg
-http://underboss.org/~pjenvey/jython/pyfile-nio/big/test_readline_with_tell.jpg
+[http://underboss.org/~pjenvey/jython/pyfile-nio/small/test_readline_with_tell.jpg]
+[http://underboss.org/~pjenvey/jython/pyfile-nio/big/test_readline_with_tell.jpg]
 
 {{{#!python
     def test_readlines(self, fp):
         fp.readlines()
 }}}
-http://underboss.org/~pjenvey/jython/pyfile-nio/small/test_readlines.jpg
-http://underboss.org/~pjenvey/jython/pyfile-nio/big/test_readlines.jpg
+[http://underboss.org/~pjenvey/jython/pyfile-nio/small/test_readlines.jpg]
+[http://underboss.org/~pjenvey/jython/pyfile-nio/big/test_readlines.jpg]
 
 Writing:
 
@@ -68,12 +70,12 @@ MSG = ('abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz123456789'
             write(MSG)
 }}}
 [http://underboss.org/~pjenvey/jython/pyfile-nio/small/test_write.jpg]
-http://underboss.org/~pjenvey/jython/pyfile-nio/big/test_write.jpg
+[http://underboss.org/~pjenvey/jython/pyfile-nio/big/test_write.jpg]
 
 {{{#!python
     def test_writelines(self, fp, lines):
         lines = [MSG for i in range(lines)]
         fp.writelines(lines)
 }}}
-http://underboss.org/~pjenvey/jython/pyfile-nio/small/test_writelines.jpg
-http://underboss.org/~pjenvey/jython/pyfile-nio/big/test_writelines.jpg
+[http://underboss.org/~pjenvey/jython/pyfile-nio/small/test_writelines.jpg]
+[http://underboss.org/~pjenvey/jython/pyfile-nio/big/test_writelines.jpg]
