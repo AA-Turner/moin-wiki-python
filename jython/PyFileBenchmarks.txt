@@ -1,19 +1,24 @@
-Some PyFile benchmarks, mostly to show off the PyFile nio rewrite
+Some PyFile benchmarks, mostly to show off the PyFile nio
 
 Tests done on FreeBSD 6.2-RELEASE, Java 1.5.0_13 in server mode and Python 2.5.1
 
 (If anyone's worried about FreeBSD Java, the times are in line with OS X's Java 1.5)
 
 Preparations: 100
-Iterations: 5
+
+Test iterations (average taken of): 5
 
 Notes:
 
-* jython's file iter is roughly equivalent to its readline, whereas CPython's readline is not as optimized as its iter
+* This page is made for a larger browser window so that the small and big graphs lie on the same row
 
-* The few anomalies in the smaller benchmarks are probably due to hotspot kicking in. Ideally we would run more preparations
+* jython's file iter is roughly the same code as its readline, whereas CPython's readline is not as optimized as its iter. So the fact that our readline speed is very close to CPython's isn't totally fair, CPython's iter still beats us
 
-* why is read slower than iter? seems like a lot of time is spent in allocating the ByteBuffer whereas iter uses a pre-allocated, small one.
+* The few anomalies in the smaller benchmarks are probably due to JIT kicking in. Ideally we would run more preparations and iterations
+
+* why is read slower than iter? profiling showed a lot of time being spent in allocating read's ByteBuffer, whereas iter uses a pre-allocated, smaller ByteBuffer. This still surprises me a bit, though. A PyString backed by bytes would help this particular benchmark a lot
+
+* i don't have text mode benchmarks because they're only applicable to windows. their read times would be a little slower than 'U' mode. write times would probably lag behind CPython's
 
 Reading:
 
