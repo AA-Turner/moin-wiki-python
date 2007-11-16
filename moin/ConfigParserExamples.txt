@@ -18,8 +18,8 @@ Route: 66
 }}}
 
 {{{
->>> from ConfigParser import ConfigParser
->>> Config = ConfigParser()
+>>> import ConfigParser
+>>> Config = ConfigParser.ConfigParser()
 >>> Config
 <ConfigParser.ConfigParser instance at 0x00BA9B20>
 >>> Config.read("c:\\tomorrow.ini")
@@ -28,5 +28,35 @@ Route: 66
 ['Others', 'SectionThree', 'SectionOne', 'SectionTwo']
 >>> 
 }}}
+
+Explanation: We first import the configparser, tell it to read the file, and get a listing of the sections. Sections are listed in square brackets [].
+
+Next, we are going to get some settings, after defining a helper function.
+
+The Function:
+{{{
+def ConfigSectionMap(section):
+    dict1 = {}
+    options = Config.options(section)
+    for option in options:
+        try:
+            dict1[option] = Config.get(section, option)
+            if dict1[option] == -1:
+                DebugPrint("skip: %s" % option)
+        except:
+            Print("exception on %s!" % option)
+            dict1[option] = None
+    return dict1
+}}}
+
+Now the code:
+{{{
+>>>Name = ConfigSectionMap("SectionOne")['name']
+>>>Age = ConfigSectionMap("SectionOne")['age']
+>>>print "Hello %s. You are %s years old." % (Name, Age)
+Hello Derek. You are 29 years old.
+}}}
+
+
 ----
 CategoryDocumentation
