@@ -1,1 +1,100 @@
-Coming soon..
+Some PyFile benchmarks, mostly to show off the PyFile nio
+
+Tests done on OS X 10.4.10 Java 1.5.0_07 in server mode
+
+Preparations: 10
+
+Test iterations (average taken of): 5
+
+Notes:
+
+* This page is made for a larger browser window so that the small and big graphs lie on the same row
+
+* jython's file iter is roughly the same code as its readline, whereas CPython's readline is not as optimized as its iter. So the fact that our readline speed is very close to CPython's isn't totally fair, CPython's iter still beats us
+
+* The few anomalies in the smaller benchmarks are due to JIT kicking in. Ideally we would run more preparations and iterations
+
+* i don't have text mode benchmarks because they're only applicable to windows. their read times would be a little slower than 'U' mode. write times would probably lag behind CPython's
+
+* The write times show both writing to a ram disk and writing to a hard disk to show how much slower Jython's old PyFile really is
+
+Reading:
+
+{{{#!python
+    def test_read(self, fp):
+        fp.read()
+    test_read = bench(test_read)
+}}}
+[http://underboss.org/~pjenvey/jython/pyfile-nio/osx-ramdisk/small/test_read.jpg]
+[http://underboss.org/~pjenvey/jython/pyfile-nio/osx-ramdisk/big/test_read.jpg]
+
+{{{#!python
+    def test_iter(self, fp):
+        for line in fp:
+            pass
+}}}
+[http://underboss.org/~pjenvey/jython/pyfile-nio/osx-ramdisk/small/test_iter.jpg]
+[http://underboss.org/~pjenvey/jython/pyfile-nio/osx-ramdisk/big/test_iter.jpg]
+
+{{{#!python
+    def test_readline(self, fp):
+        while fp.readline():
+            pass
+}}}
+[http://underboss.org/~pjenvey/jython/pyfile-nio/osx-ramdisk/small/test_readline.jpg]
+[http://underboss.org/~pjenvey/jython/pyfile-nio/osx-ramdisk/big/test_readline.jpg]
+
+{{{#!python
+    def test_readline_with_tell(self, fp):
+        while fp.readline():
+            fp.tell()
+}}}
+[http://underboss.org/~pjenvey/jython/pyfile-nio/osx-ramdisk/small/test_readline_with_tell.jpg]
+[http://underboss.org/~pjenvey/jython/pyfile-nio/osx-ramdisk/big/test_readline_with_tell.jpg]
+
+{{{#!python
+    def test_readlines(self, fp):
+        fp.readlines()
+}}}
+[http://underboss.org/~pjenvey/jython/pyfile-nio/osx-ramdisk/small/test_readlines.jpg]
+[http://underboss.org/~pjenvey/jython/pyfile-nio/osx-ramdisk/big/test_readlines.jpg]
+
+Writing:
+
+{{{#!python
+MSG = ('abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz123456789'
+       '0abcdefgh\r\n')
+}}}
+
+{{{#!python
+    def test_write(self, fp, lines):
+        write = fp.write
+        for i in range(lines):
+            write(MSG)
+}}}
+
+To a ramdisk:
+
+[http://underboss.org/~pjenvey/jython/pyfile-nio/osx-ramdisk/small/test_write.jpg]
+[http://underboss.org/~pjenvey/jython/pyfile-nio/osx-ramdisk/big/test_write.jpg]
+
+To disk:
+
+[http://underboss.org/~pjenvey/jython/pyfile-nio/osx-disk/small/test_write.jpg]
+[http://underboss.org/~pjenvey/jython/pyfile-nio/osx-disk/big/test_write.jpg]
+
+{{{#!python
+    def test_writelines(self, fp, lines):
+        lines = [MSG for i in range(lines)]
+        fp.writelines(lines)
+}}}
+
+To a ramdisk:
+
+[http://underboss.org/~pjenvey/jython/pyfile-nio/osx-ramdisk/small/test_writelines.jpg]
+[http://underboss.org/~pjenvey/jython/pyfile-nio/osx-ramdisk/big/test_writelines.jpg]
+
+To disk:
+
+[http://underboss.org/~pjenvey/jython/pyfile-nio/osx-disk/small/test_writelines.jpg]
+[http://underboss.org/~pjenvey/jython/pyfile-nio/osx-disk/big/test_writelines.jpg]
