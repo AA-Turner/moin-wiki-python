@@ -1,9 +1,32 @@
-These are some examples on using ConfigParser...
+These are some examples on using ConfigParser, assuming the following INI file...
 
-{{{#!python
-import ConfigParser
-import sys
-ConfigFileName="c:\\tomorrow.ini"
+{{{
+[SectionOne]
+Status: Single
+Name: Derek
+Value: Yes
+Age: 29
+Single: True
+
+[SectionTwo]
+FavoriteColor=Green
+[SectionThree]
+FamilyName: Johnson
+
+[Others]
+Route: 66
+}}}
+
+{{{
+>>> from ConfigParser import ConfigParser
+>>> Config = ConfigParser()
+>>> Config
+<ConfigParser.ConfigParser instance at 0x00BA9B20>
+>>> Config.read("c:\\tomorrow.ini")
+['c:\\tomorrow.ini']
+>>> Config.sections()
+['Others', 'SectionThree', 'SectionOne', 'SectionTwo']
+>>> 
 }}}
 ----
 CategoryDocumentation
