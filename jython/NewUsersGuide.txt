@@ -479,6 +479,15 @@ A quick example::
     b = array([], URL)
     print b
 
+You can use array to create multidimensional arrays from nested lists.  The second argument to array determines what type the returned array contains, so in the case of an array of arrays of java.lang.Strings, the second argument is the class instance that represents the String[] type::
+
+    nestedList = [ ['hi', 'there'], ['silly', 'person'] ]
+    containedType = java.lang.Class.forName('[Ljava.lang.String;')
+    multiArray = array(nestedList, containedType)
+    # multiArray can be passed to Java methods that expect String[][]
+
+('[Ljava.lang.String;' is the name of the String[] class.  More information about array class names can be found in the API documentation for Class.forName().)
+
 ----------------------------------
 Subclassing Java Classes in Jython
 ----------------------------------
