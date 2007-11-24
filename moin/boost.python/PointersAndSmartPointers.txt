@@ -25,7 +25,7 @@ A sample python program:
 {{{
 from pointer import *
 an_A = A.create()
-print A.hello()
+print an_A.hello()
 }}}
 
 === Smart pointers ===
@@ -39,8 +39,8 @@ handle shared_ptr objects in Python, introducing the notation
 using namespace boost;
 
 struct A {
-  shared_ptr<A> create () { return shared_ptr<A>(new A); }
-  std::string   hello  () { return "Just nod if you can hear me!"; }
+    shared_ptr<A> create () { return shared_ptr<A>(new A); }
+    std::string   hello  () { return "Just nod if you can hear me!"; }
 };
 
 BOOST_PYTHON_MODULE(shared_ptr)
