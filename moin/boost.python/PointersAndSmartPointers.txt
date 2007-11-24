@@ -1,0 +1,65 @@
+== Pointers and smart pointers ==
+
+Since Python handles memory allocation and garbage collection automatically, the concept "pointer" is not meaningful within Python. However, many C++ API exposes either raw pointers or shared pointers, and to wrap such APIs one would need to deal with pointers.
+
+=== Pointers (raw C++ pointers) ===
+
+The life time of C++ objects created by "new A" kan be handled by Pythons garbage collection by using the {{{manage_new_object}}} storage policy: 
+
+{{{struct A {
+    static A*   create () { return new A; }
+    std::string hello  () { return "Hello, is there anybody in there?"; }
+};
+
+BOOST_PYTHON_MODULE(shared_ptr)
+{
+    class_<A>("A",no_init)
+        .def("create",&A::create,return_value_policy<manage_new_object>())
+        .staticmethod("create")
+        .def("hello",&A::hello)
+        ;
+}
+}}}
+
+A sample python program:
+{{{
+from pointer import *
+an_A = A.create()
+print A.hello()
+}}}
+
+=== Smart pointers ===
+
+Smart pointers, e.g. boost::shared_ptr<T>, is another common way to
+give away ownership of objects in C++. The following suggests a way to
+handle shared_ptr objects in Python, introducing the notation
+{{{(+ptr).foo()}}} in python to immitate C++'s {{{(*ptr).foo()}}}:
+
+{{{#include <boost/shared_ptr.h>
+using namespace boost;
+
+struct A {
+  shared_ptr<A> create () { return shared_ptr<A>(new A); }
+  std::string   hello  () { return "Just nod if you can hear me!"; }
+};
+
+BOOST_PYTHON_MODULE(shared_ptr)
+{
+    class_<A>("A",init<>())
+        .def("create",&A::create,return_value_policy<return_by_value>())
+        .staticmethod("create")
+        .def("hello",&A::hello)
+        ;
+
+    class_< shared_ptr<A> >("A_ptr", init<const shared_ptr<A>& >())
+        .def("__pos__",&boost::shared_ptr<A>::get,return_internal_reference<>())
+        ;
+}
+}}}
+
+A sample python program:
+{{{
+from shared_ptr import *
+an_A = A_ptr.create()
+print (+an_A).hello()
+}}}
