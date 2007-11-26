@@ -158,6 +158,10 @@ Also: I missed a type of graph, the multigraph, where more than one type of rela
 
 (Multigraphs are mentioned. - Magnus)
 
+I'm new here, so here goes: I would like to see a standard api for Graph ''objects'', concentrating on two dimensional graphs. Hyper-graphs, multi-graphs, two-structures, etc shouldn't really be considered, imo, as they're much too esoteric and don't really map to many common usages (I'm sure I'll get argument here from the graph researchers). Also, I don't want to define ''what'' a graph or a vertex or an edge actually is, other than the standard mathematical definition that an edge is some dort of a ''relationship'' between vertices.
+
+The graph api should be graph-class agnositc. That is, it should not care if the graph is a connected, disconnected, directed, undirected, etc. It should only care about vertex and edge properties, other than adjacency, where a callback can be provided to account for the property's selection. I'll provide a proposal in the section below. (jconnor)
+
 === Specifics ===
 
 ''Put potential specifics here, that is, what functionality an API must cover. For now, it is completely
@@ -265,6 +269,31 @@ new_edge=g.add_edge( some_object1, some_object2)
 
 So that I do not have to maintain a mapping from the objects (that I care about) to some integers that uniquely label the nodes (which I don't care about). (/David McNamara)
   
+Proposal for Graph interface:
+
+I think that algorithms should assume that a graph is immutable, so if it needs to add an artificial vertex or delete edges, etc, it should take care of all that accounting behind the scenes. As a result, I do not propose any interface that would alter the graph, though, perhaps, standard names may be in order (e.g. add_vertex(v))
+
+ * size(): return the # of edges in the graph
+ * order(): return the # of vertices in the graph
+ * edges(): return an iterable of all edges in the graph as tuples
+ * vertices(): return an iterable of all vertices in the graph
+ * is_adjacent(u, v): returns True iff ''u'' is adjacent to ''v''
+ * adjacent_vertices(v): return an iterable of all vertices adjacent to ''v''
+ * inbound_edges(v): return an iterable of all inbound edges incident to ''v''
+ * outbound_edges(v): return an iterable of all outbound edges from ''v''
+ * extrema_inbound_edge(v, cmp): return an inbound edge with an ''extreme'' property that is incident to ''v'' using the comparison callable, ''cmp'', as a tuple (e.g. a minimal edge)
+ * extrema_outbound_edge(v, cmp): return an outbound edge with an ''extreme'' property that is incident to ''v'' using the comparison callable, ''cmp'', as a tuple (e.g. a minimal edge)
+
+Some notes: 
+ 1. The calls size and order would be optional or could return None in the case that the graph is being computed on the fly.
+ 1. The calls edges and vertices would be optional or could return None in the case the graph is being computed on the fly.
+ 1. The iterable returned by adjacent_verticves would be ordered for certain classes of graph (e.g. ordered left to right for some trees).
+ 1. The 'edges' would be returned as tuples, (''u'', ''v''). And the tuples would be ordered in the case of directed graphs and unordred in the case of undirected graphs.
+ 1. The inbound/outbound edge calls would return identical results in the case of undirected graphs, and, potentially, different in the case of directed.
+
+I would leave it to the graph implementors to provide a set of comparison callables that would be passed into a graph algorithm. Perhaps some standardization of names may be in order, but I don't see the need right now.
+
+I believe that the majority of graph algorithms can be implemented with this interface. (jconnor)
 
 = Vertices and Edges as Separate Objects =
 
@@ -301,5 +330,6 @@ As far as hypergraphs are concerned, a hypergraph is equivalent to a bi-partite 
   * Jose Antonio Martin H
   * Beracah Yankama
   * David McNamara
+  * Jason Connor
 
 (See also the Usenet discussion above for more contributors.)
