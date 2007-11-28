@@ -45,7 +45,7 @@ This page is divided in four sections: Music software written in python, Music s
 
 = Music programming in python =
 
-== Libraries ==
+== Playing & creating sound ==
 
  * '''PySndObj''' - The Sound Object Library is an object-oriented audio processing library. It provides objects for synthesis and processing of sound that can be used to build applications for computer-generated music. The core code, including soundfile and text input/output, is fully portable across several platforms. Platform-specific code includes realtime audio IO and MIDI input support for Linux (OSS,ALSA and Jack), Windows (MME and ASIO), MacOS X (CoreAudio, but no MIDI at moment), Silicon Graphics (Irix) machines and any Open Sound System-supported UNIX. The SndObj library also exists as python module, aka PySndObj. The programming principles for Python SndObj programming are similar to the ones used in C++. It is also possible to use the python interpreter for on-the-fly synthesis programming. [http://sndobj.sourceforge.net/ >]
 
@@ -63,7 +63,7 @@ This page is divided in four sections: Music software written in python, Music s
 
  *  '''Snack'''  -  The Snack Sound Toolkit is designed to be used with a scripting language such as Tcl/Tk or Python. Using Snack you can create powerful multi-platform audio applications with just a few lines of code. Snack has commands for basic sound handling, such as playback, recording, file and socket I/O. Snack also provides primitives for sound visualization, e.g. waveforms and spectrograms. It was developed mainly to handle digital recordings of speech (being developped at the KTH music&speech department), but is just as useful for general audio. Snack has also successfully been applied to other one-dimensional signals. The combination of Snack and a scripting language makes it possible to create sound tools and applications with a minimum of effort. This is due to the rapid development nature of scripting languages. As a bonus you get an application that is cross-platform from start. It is also easy to integrate Snack based applications with existing sound analysis software. [http://www.speech.kth.se/snack/ >]
 
- *  '''pkaudio''' -  Asynchronous daemon/client library for running realtime C++ dsp in python. It has a simple Qt-like API, and an extremley simple C++ plugin framework. [http://www.patrickkidd.com/pk/trac >]
+
 
 == Community ==
 
@@ -124,20 +124,20 @@ This page is divided in four sections: Music software written in python, Music s
  * '''PyChoReLib''' - Python Chord Recognition Library. This is a library that implements the transformation from a list of notenames to a chord name. The system can be taught new chords by example: tell it that ['c', 'e', 'g'] is called a 'C' chord, and using its built-in music knowledge it immediately recognizes all major triads in all keys and all inversions/permutations.  Comes with a real-time midi-input demo program (needs PyPortMidi). [http://chordrecognizer.sourceforge.net/ >]
 
 
-== Protocols ==
+== Other protocols ==
 
  *  '''OSC.py'''  -  Python classes for [http://cnmat.cnmat.berkeley.edu/OpenSoundControl/ OpenSoundControl] library client functionality. The OSC homepage is at  [http://v00d00.k-hornz.de/pub/OSC.py >]
 
  *  '''PyJack'''  -  This is a Python C extension module which provides an interface to the Jack Audio Server. It is possible to access the Jack graph to perform port connections/disconnections, monitor graph change events, and to perform realtime audio capture and playback using Numeric Python arrays. This is released under the GPL. [http://www.a2hd.com/software/ >]
 
-== Communicating with other music tools ==
+ *  '''pkaudio''' - pkaudio is a collection of python-based modules for midi input, osc communication with supercollider, and pyqt functionality. [http://www.assembla.com/wiki/show/pkaudio >]
+
+== MAX/MSP & PureData ==
  *  '''mxdublin'''  -  mxdublin is an object oriented framework to generate events in pd and [http://www.cycling74.com/products/maxmsp.html max]. pd, short for [http://iem.kug.ac.at/pd/ Pure Data], a graphical Computer Music System written by [http://crca.ucsd.edu/~msp/ Miller S. Puckette]. mxdublin is a real time python user environment working within pd/max. It is designed to put logic into a sequence of events. Python has been chosen has the interface language to build and run sequencing objects. Has a prerequisites, the users needs to know a minimal of python and pd/max. [http://www.le-son666.com/software/mxdublin/ >]
 
  * '''Py/pyext''' - Python script objects is an object library providing a full integration of the python scripting language into the PD (and in the future Max/MSP) real-time system. With the py object you can load python modules and execute the functions therein. With pyext you can use python classes to represent full-featured pd/Max message objects. Multithreading (detached methods) is supported for both objects. You can send messages to named objects or receive (with pyext) with python methods. [http://grrrr.org/ext/py/ >]
 
  * '''OpenExposition''' - OpenExposition is a library aimed at automatic generation of user interfaces. The programmer only needs to specify what parts of the application need to be exposed to the user, and OpenExposition does the rest. At present, OpenExposition allows access to variables (either directly or through a pair of set/get methods), and class methods. It can construct the user interface graphically (using either the multi-platform FLTK library or Cocoa on Mac OS X), programatically (through Python), aurally (using the speech synthesis and recognition capabilities on Mac OS X), and by building MAX/MSP externals that can then be used in MAX/MSP. [http://dancinghacker.com/code/openexposition/index.html >] 
-
- *  '''blue'''  -  blue is a java program for use with Csound. It's interface is much like a digital multitrack, but differs in that there timelines within timelines (polyObjects). This allows for a compositional organization in time that seems to me to be very intuitive, informative, and flexible. soundObjects are the building blocks within blue's score timeline. soundObjects can be lists of notes, algorithmic generators, python script code, csound instrument definitions, and whatever plugins that are developed for blue. these soundObjects may be text based, but they can be completely GUI based as well. [http://csounds.com/stevenyi/blue/index.html >]
 
 = Music software supporting python =
 
@@ -146,3 +146,5 @@ This page is divided in four sections: Music software written in python, Music s
  * '''Ableton Live''' - Award-winning commercial music creation, production and performance platform for Mac OS and Windows. Live is far and away one of the most interesting and groundbreaking audio recording and sequencing tools to come along in the past five years. Live uses python internally and the API has been exposed at [http://liveapi.org LiveAPI.org].  [http://www.ableton.com >]
 
  * '''Jokosher''' - Jokosher is a simple yet powerful multi-track studio. With it you can create and record music, podcasts and more, all from an integrated simple environment. Jokosher is written in Python and uses the GNOME platform and the GTK widget set. The audio engine is powered by GStreamer, and we use Cairo for some of the graphics. [http://www.jokosher.org/ >]
+
+ *  '''blue'''  -  blue is a java program for use with Csound. It's interface is much like a digital multitrack, but differs in that there timelines within timelines (polyObjects). This allows for a compositional organization in time that seems to me to be very intuitive, informative, and flexible. soundObjects are the building blocks within blue's score timeline. soundObjects can be lists of notes, algorithmic generators, python script code, csound instrument definitions, and whatever plugins that are developed for blue. these soundObjects may be text based, but they can be completely GUI based as well. [http://csounds.com/stevenyi/blue/index.html >]
