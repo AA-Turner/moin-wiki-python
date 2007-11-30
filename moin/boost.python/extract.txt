@@ -25,5 +25,39 @@ corresponding Python objects:
     }
 }}}
 
+Example:
+  In order to extract elements out of complex structures such as lists and tuples, we must nest extraction calls. The reason for this example is that it may not be immediately obvious to do this. Let's say you have a C++ class that contains a python-usable boost::python::list:
+
+{{{
+class A {
+public:
+  boost::python::list list;
+  void listOperation(list& l);
+};
+}}}
+
+Then you expose the class to python as:
+{{{
+class_<A>("A")
+  .def_readwrite("b", &A::list)
+  .def("op", &A::listOperation)
+;
+}}}
+
+It is completely reasonable for python script to do something like this:
+{{{
+a = A()
+a.b = [(1,2),(3,4),(5,6)]
+a.op(a.b)
+}}}
+
+In order for you to extract the elements of tuples within the list, we use the index operator of the list:
+
+{{{
+void A::listOperation(list& l) {
+   // Extract first element of first tuple in the list.
+   extract<int>(extract<tuple>(list[0])())();
+}
+}}}
 2. In the implementation of sequence from_python converters (e.g. Python
 tuple/list -> std::vector)
