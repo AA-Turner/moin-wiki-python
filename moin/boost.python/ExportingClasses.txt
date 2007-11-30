@@ -88,3 +88,46 @@ Pretty cool! You can't do that with an ordinary Python extension type! Of course
 }}}
 After all, ''invite'' calls ''hello::greet()'', and you reimplemented that in your Python subclass, ''wordy''.
 In [:boost.python/OverridableVirtualFunctions:the next section] we'll make ''greet'' virtual, and we'll see how to make C++ code see our overrides from Python.
+
+It is important to note that boost::python will not allow you to make dynamic type casts (through polymorphism) if the function/method is considered "unsafe". That means that an appropriate method-wrapper will not be created for functions that execute potentially exception-generating code where exceptions do not have python mappings. Let's have a look at an example:
+
+We make a base class we can derive from:
+{{{
+class Base {
+public:
+  boost::python::list list;
+  virtual void x() = 0;
+};
+}}}
+
+And derive from that in the classic way, implementing the function x() in such a way that it uses unprotected boost::python::extract instances without catching potential exceptions:
+
+{{{
+class Derive : public Base {
+public:
+  virtual void x() {
+    int y = boost::python::extract<int>(list[0])();
+  }
+};
+}}}
+
+Exporting the classes like this:
+
+{{{
+class BaseWrap : public Base, public wrapper<Base> {
+public:
+  virtual void x() { this->get_override("x")(); }
+};
+
+class_<BaseWrap, boost::noncopyable>("Base")
+  .def("x", boost::python::pure_virtual(&Base::x))
+  ;
+
+class_<Derive, bases<Base> >("Derive");
+}}}
+
+Will generate the following error whenever you try to cast an instance of Derive to Base*:
+{{{
+TypeError: No registered converter was able to produce a C++ rvalue of type int from this Python object of type method-wrapper
+}}}
+What to do? Simply use try{}catch(){} blocks around any boost::python code that can produce an exception, such as the extract operation.
