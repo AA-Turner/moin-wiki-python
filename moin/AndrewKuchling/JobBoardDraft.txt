@@ -1,0 +1,65 @@
+Title: Automating the python.org job board
+
+The python.org website includes a job board at http://www.python.org/community/jobs/
+that is currently updated manually by volunteers in response to emails from companies.
+
+The tasks done manually include:  
+* Adding a job upon request
+* Rejecting a posting with
+a reason (it may be non-Python or needs to be reformatted)
+* Dropping a posting without reply if it's spam
+* Reformatting a received posting or updating a posting on request
+* Removing a posting on request when the job is filled
+* Removing a posting because it has expired (say, when it's 3 months old).  
+
+When processing a request, one of several form emails are used (job has been posted, rejected w/ reason, job has been removed, or job has been updated).
+
+For this task, we seek to partially automate this process so that jobs are submitted
+using a web form and placed in a queue for processing.  The volunteers can then easily
+take the actions listed above from an admin web page that lists the pending requests.
+
+The system should maintain a list of currently active jobs as files in a directory and can generate the resulting output page
+for the python.org build system and send out the necessary form emails.
+(Bonus feature: 
+automatically invoke the python.org build system to update the community/jobs page)
+Expired postings should be removed automatically
+whenever the jobs page is recreated.
+
+The poster should be able to submit reStructured Text 
+using a web form, see a preview of their posting,
+and should be emailed a unique posting number they can later use to refer to it or
+ask for changes.  A bonus would be to provide the posters with a secure url that
+can be used to later update the posting.  This should of course put the posting
+back into the queue for review, and not immediately publish the update.
+
+The system needs to be resistant to spam bots, which is best accomplished by emailing
+a confirmation and requiring the user to click on a link in the confirmation before
+the posting is actually placed into the queue seen by the volunteers.  Unconfirmed
+submissions would be stored and automatically removed after about a week.
+
+This system will probably be maintained and used for a long time.  
+You aren't signing up to maintain the code long-term (though it's great if you're willing to do so), but the code will need to be nicely modular and clear; the reviewer will be fairly strict about this. 
+
+Some technical details:  This should be implemented using Python running as a CGI.
+No database should be used; rather there should be a directory structure that can
+be accessed by the CGI and which contains the submitted but unconfirmed postings,
+the pending queue seen by the job board volunteers, and a directory for the active
+postings.  
+
+Additional packages can be installed on python.org if necessary, within reason.  The pydotorg build system uses 
+[http://www.makotemplates.org/ Mako templates] for formatting,
+and you must use Mako for the HTML templating required for this CGI.
+
+There is more information on the required format for the job postings
+at http://www.python.org/community/jobs/howto/ and you can obtain a a complete
+copy of the python.org website and its build system from Subversion as described
+at http://www.python.org/dev/pydotorg/website/  You will need to figure out how
+to get CGIs and some form of email working on your local machine, so you can
+develop and test the system.  There are modules in Python's standard library for
+doing basic CGI web development and sending email.  
+
+One potential issue is that
+data submitted on the web forms will be text encoded in a certain character set.  The jobs
+page is encoded as utf-8 now, so it will be easiest to encode the new form pages
+used with the CGI as utf-8 (this is specified in the html header) so that incoming
+data will also be utf-8.  Stored files can also be in that encoding.
