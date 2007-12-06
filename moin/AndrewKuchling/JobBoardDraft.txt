@@ -63,3 +63,30 @@ data submitted on the web forms will be text encoded in a certain character set.
 page is encoded as utf-8 now, so it will be easiest to encode the new form pages
 used with the CGI as utf-8 (this is specified in the html header) so that incoming
 data will also be utf-8.  Stored files can also be in that encoding.
+
+== Possible way to split this up into smaller tasks ==
+
+This is a fair amount of work and could be split into reasonable parts that can be done one at a time, as separate tasks.
+Possibly as follows:
+
+  (a) Form to add submit new job, with preview + submit
+
+  (b) Add emailing of submit confirmation + moving into queue
+
+  (c) Implement admin queue with actions drop, reject (w/ reason), and accept posting.
+
+  (d) Add emailing notices to admin queue functionality
+
+  (e) Add admin page for removing postings from "live" set
+
+  (f) Add task that can be run periodically to prune unconfirmed submissions and automatically expire live postings
+
+  (g) Write code to convert the directory of live postings into the http://www.python.org/community/jobs web page
+
+Some "bonus" features:
+
+  (h) Add email message to send when postings expire automatically with a way to ask it to be posted again in its current form.  This could happen automatically or be subject to review in which case it should be flagged as an extension request so reviewers know it's not a new requests and the content hasn't changed.
+
+  (i) Implement a way for authors to remove their posting (by going to a url emailed to them when their posting was accepted).  The removal can be immediate w/o confirmation if the url is sufficiently hard to guess or stumble upon.
+
+  (j) Implement a way for authors to re-submit a posting with changes, so it goes back into review queue perhaps with easy to read diffs shown, and when published replaces the previously submitted version if it's still live by the time the change is reviewed and accepted.
