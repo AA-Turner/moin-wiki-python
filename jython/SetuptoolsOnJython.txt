@@ -4,9 +4,9 @@ Setuptools requirements:
  
  * number of misc. Jython bug fixes '''''most already committed'''''
 
- * file descriptor support for tempfile.mkstemp and os.open ''''''Added in r3711''''''
+ * file descriptor support for tempfile.mkstemp, os.open and tarfile '''''Added in r3711'''''
   
- * tempfile.mkstemp ''''''Added in r3712''''''
+ * tempfile.mkstemp '''''Added in r3712'''''
 
 We don't have:
 
@@ -14,7 +14,7 @@ We don't have:
  
  * working marshal. setuptools uses marshal.load, and there's some bugs with our current marshaller
 
- * tarfile module. This requires [http://hg.underboss.org/jython-pjenvey/rev/3507a9b953fa a small patch to PyString] to work for setuptools. I believe it may require some additions to the os module for test_tarfile.py to pass
+ * tarfile module. This requires [http://hg.underboss.org/jython-pjenvey/rev/3507a9b953fa a small patch to PyString] to work for setuptools
 
  * a valid sys.executable. required by setuptools and distutils for spawning subprocesses. It's impossible to determine argv[0] from java: I'm thinking the jython executable should pass this information along to Jython (java -Dpython.executable=$0)
 
@@ -27,7 +27,7 @@ We don't have:
   - a valid sys.executable    
     
  * imp.acquire/release_lock
-  This is just a simple lock, but may have to be used by internal imp operations. I'm not sure
+  This is just a simple lock, but probably needs to be used by internal imp operations. I'm not sure
   
  * setuptools runs a test to ensure .pth files work by running "sys.executable -E -c pass". -E is ignore environment on CPython, but is different on Jython (takes an argument):
  
@@ -36,6 +36,5 @@ We don't have:
  * a site-packages dir (jython needs to include it on sys.path by default)
 
  * os.chmod. This can be implemented with JNA. We can still support setuptools on deployments lacking JNA if we submit a patch back to setuptools to only use chmod if it exists
-Possibly a small upstream patch to setuptools, this includes so far:
   
- * os.lstat setuptools cut and pasted shutil's rmtree from CPython 2.3, which uses lstat to check for directories. We can support an os.stat that fills in st_mode's directory bit, but what about lstat? We may want to submit a patch to setuptools to avoid lstat
+ * os.lstat. setuptools cut and pasted shutil's rmtree from CPython 2.3, which uses lstat to check for directories. We can support an os.stat that fills in st_mode's directory bit, but can we do lstat (we could with JNA)? We may want to submit a patch to setuptools to avoid lstat (it could avoid it if it used os.path.isdir)
