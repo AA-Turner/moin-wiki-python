@@ -4,6 +4,10 @@ Setuptools requirements:
  
  * number of misc. Jython bug fixes '''''most already committed'''''
 
+ * file descriptor support for tempfile.mkstemp and os.open ''''''Added in r3711''''''
+  
+ * tempfile.mkstemp ''''''Added in r3712''''''
+
 We don't have:
 
  * the kicker, a working os.chdir. I hacked together [http://hg.underboss.org/jython-pjenvey/rev/51246729a616 a really quick version of this ], and setuptools was able to get pretty far at installing Pylons. Pylons itself and a number of its dependencies installed fine, but the process died installing the decorator module due to marshal raising a KeyError
@@ -21,9 +25,6 @@ We don't have:
   - a jython spawn-like function: "error: don't know how to spawn programs on platform 'java'". os.system works as a replacement
 
   - a valid sys.executable    
-  
- * tempfile.mkstemp
-  - I have [http://jython.org/patches/1783692 patch #1783692] implementing mkstemp (without a valid file descriptor) and NamedTemporaryFile with Java's secure File.createTempFile '''* See below'''
     
  * imp.acquire/release_lock
   This is just a simple lock, but may have to be used by internal imp operations. I'm not sure
@@ -34,14 +35,7 @@ We don't have:
    
  * a site-packages dir (jython needs to include it on sys.path by default)
 
- * A few small maybe upstream patches to setuptools, this includes so far:
- 
-  - use tempfile.NamedTemporaryFile instead of tempfile.mkstemp (Java/Jython doesn't allow usage of file descriptors). This will also remove a usage of os.open '''* See below'''
+ * os.chmod. This can be implemented with JNA. We can still support setuptools on deployments lacking JNA if we submit a patch back to setuptools to only use chmod if it exists
+Possibly a small upstream patch to setuptools, this includes so far:
   
-  - wrap uses of os.chmod in hasattr(os, 'chmod') '''* See below'''
-  
-  - sandbox may assume os.open (and maybe others) exist '''* See below'''
-  
-  - setuptools cut and pasted shutil's rmtree from CPython 2.3, which uses lstat to check for directories. This may need to change to os.path.isdir (Jython might be able to do lstat, though)
-
-  - '''*I'm looking into faking file descriptors in Jython, allowing the os.open and mkstemp APIs to work -pjenvey'''
+ * os.lstat setuptools cut and pasted shutil's rmtree from CPython 2.3, which uses lstat to check for directories. We can support an os.stat that fills in st_mode's directory bit, but what about lstat? We may want to submit a patch to setuptools to avoid lstat
