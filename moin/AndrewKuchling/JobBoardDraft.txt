@@ -14,81 +14,41 @@ The tasks done manually include:
 
 When processing a request, one of several form emails are used (job has been posted, rejected w/ reason, job has been removed, or job has been updated).
 
-For this task, we seek to partially automate this process so that jobs are submitted
-using a web form and placed in a queue for processing.  The volunteers can then easily
-take the actions listed above from an admin web page that lists the pending requests.
+For this task, we seek to partially automate this process using Roundup.  While Roundup is best-known as a bug tracker, 
+it's very flexible and the schema can be adapted to different 
+uses.
 
-The system should maintain a list of currently active jobs as files in a directory and can generate the resulting output page
-for the python.org build system and send out the necessary form emails.
-(Bonus feature: 
-automatically invoke the python.org build system to update the community/jobs page)
-Expired postings should be removed automatically
-whenever the jobs page is recreated.
+First, you need to setup the schema - change the "issue" class to
+"joboffer", add fields for "company name", "address", "country",
+"posted-on".
+Set the "status" values to "submitted", "reviewed", "closed",
+"rejected".
 
-The poster should be able to submit reStructured Text 
-using a web form, see a preview of their posting,
-and should be emailed a unique posting number they can later use to refer to it or
-ask for changes.  A bonus would be to provide the posters with a secure url that
-can be used to later update the posting.  This should of course put the posting
-back into the queue for review, and not immediately publish the update.
+Then create roles "Submitter", "Reviewer", and give the Submitter
+role to all people who have an account. Submitters can do anything
+to their job description until it's reviewed, when they can only
+close it. Reviewers can see all job offers; Submitters only their
+own ones. We *could* allow anonymous submissions, but then
+submitters cannot close or review them.
 
-The system needs to be resistant to spam bots, which is best accomplished by emailing
-a confirmation and requiring the user to click on a link in the confirmation before
-the posting is actually placed into the queue seen by the volunteers.  Unconfirmed
-submissions would be stored and automatically removed after about a week.
+Either allow editing messages (which I'm not sure whether it's
+supported), or declare that the last message on each job offer
+is the one that gets posted. As yet another alternative, a
+"post-this" field could be added to the msg class, to be set
+by the reviewer.
 
-This system will probably be maintained and used for a long time.  
-You aren't signing up to maintain the code long-term (though it's great if you're willing to do so), but the code will need to be nicely modular and clear; the reviewer will be fairly strict about this. 
+Edit the issue template page to incorporate the new fields, and
+drop the fields that we don't need (such as keyword, priority,
+status - or start with the "minimal" schema in the first place).
 
-Some technical details:  This should be implemented using Python running as a CGI.
-No database should be used; rather there should be a directory structure that can
-be accessed by the CGI and which contains the submitted but unconfirmed postings,
-the pending queue seen by the job board volunteers, and a directory for the active
-postings.  
+Write a "react"
+hook that gets invoked every time a joboffer changes to "reviewed"
+or "closed" state; this hook would probably generate a page 
+So only the submitters and reviewers would see
+the roundup interface.
 
-Additional packages can be installed on python.org if necessary, within reason.  The pydotorg build system uses 
-[http://www.makotemplates.org/ Mako templates] for formatting,
-and you must use Mako for the HTML templating required for this CGI.
-
-There is more information on the required format for the job postings
-at http://www.python.org/community/jobs/howto/ and you can obtain a a complete
-copy of the python.org website and its build system from Subversion as described
-at http://www.python.org/dev/pydotorg/website/  You will need to figure out how
-to get CGIs and some form of email working on your local machine, so you can
-develop and test the system.  There are modules in Python's standard library for
-doing basic CGI web development and sending email.  
-
-One potential issue is that
-data submitted on the web forms will be text encoded in a certain character set.  The jobs
-page is encoded as utf-8 now, so it will be easiest to encode the new form pages
-used with the CGI as utf-8 (this is specified in the html header) so that incoming
-data will also be utf-8.  Stored files can also be in that encoding.
-
-== Possible way to split this up into smaller tasks ==
-
-This is a fair amount of work and could be split into reasonable parts that can be done one at a time, as separate tasks.
-Possibly as follows:
-
-  (a) Form to add submit new job, with preview + submit
-
-  (b) Add emailing of submit confirmation + moving into queue
-
-  (c) Implement admin queue with actions drop, reject (w/ reason), and accept posting.
-
-  (d) Add emailing notices to admin queue functionality
-
-  (e) Add admin page for removing postings from "live" set
-
-  (f) Add task that can be run periodically to prune unconfirmed submissions and automatically expire live postings
-
-  (g) Write code to convert the directory of live postings into the http://www.python.org/community/jobs web page
-
-Some "bonus" features:
-
-  (h) Add email message to send when postings expire automatically with a way to ask it to be posted again in its current form.  This could happen automatically or be subject to review in which case it should be flagged as an extension request so reviewers know it's not a new requests and the content hasn't changed.
-
-  (i) Implement a way for authors to remove their posting (by going to a url emailed to them when their posting was accepted).  The removal can be immediate w/o confirmation if the url is sufficiently hard to guess or stumble upon.
-
-  (j) Implement a way for authors to re-submit a posting with changes, so it goes back into review queue perhaps with easy to read diffs shown, and when published replaces the previously submitted version if it's still live by the time the change is reviewed and accepted.
-
-'''Order of Tasks:'''  Of the above, (a), (b), and (c) are initial tasks that would probably happen one at a time, and would probably be done by the same person.  Tasks (d), (e), (f), and (g) can happen concurrently after that (provided there is some coordination and a revision control system is used).  The bonus tasks would come after those.
+The common "nosy" react hook would send messages to the job board
+every time a new job offer is added, and send messages to the submitter
+whenever a job is posted or rejected (for rejection, there probably
+should be an explicit message also; for posting, we could arrange for
+some standard message).
