@@ -1,5 +1,6 @@
 = mssqlDataset =
 
+{{{
 import pymssql
 
 class mssqlDatarow(object):
@@ -11,8 +12,10 @@ class mssqlDatarow(object):
 		
 	def getValue(self,fieldName):
 		fieldName=fieldName.upper()
-		if self.__fields.has_key(fieldName): return self.__fields[fieldName]
-		else: return None
+		if self.__fields.has_key(fieldName): 
+			return self.__fields[fieldName]
+		else: 
+			return None
 
 class mssqlDataset(object):
 	def __init__(self,cnt):
@@ -28,11 +31,13 @@ class mssqlDataset(object):
 		sqlSelect=sqlSelect[asIndex+len(asFix):]
 		return sqlSelect
 
-	def query(self,sqlSelect,sqlFrom,sqlWhere=None,sqlOrder=None,sqlGroup=None,sqlPre=None):
+	def query(self,sqlSelect,sqlFrom,sqlWhere=None
+			,sqlOrder=None,sqlGroup=None,sqlPre=None):
 		s=sqlSelect.strip()
 		s=s.split(",")
 		self.fieldNames=map(self.getFieldNameOnSelectAs,s)
-		ssql="select %s%s "%(sqlPre+" " if sqlPre else "",sqlSelect if sqlSelect else "")
+		ssql="select %s%s "%(sqlPre+" " if sqlPre else ""
+				,sqlSelect if sqlSelect else "")
 		ssql+="\nfrom %s "%(sqlFrom if sqlFrom else "",)
 		ssql+="\n%s "%("where "+sqlWhere if sqlWhere else "",)
 		ssql+="\n%s "%("order by "+sqlOrder if sqlOrder else "",)
@@ -44,3 +49,5 @@ class mssqlDataset(object):
 		self.rows=list()
 		for fetch in fetches:
 			self.rows.append(mssqlDatarow(self.fieldNames,fetch))
+
+}}}
