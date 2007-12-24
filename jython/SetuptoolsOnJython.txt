@@ -16,8 +16,6 @@ We don't have:
  
  * working marshal? setuptools uses marshal.load in a couple places, which either needs to be avoided or possibly some work done to Jython's marshal module
 
- * tarfile module. This requires [http://hg.underboss.org/jython-pjenvey/rev/3507a9b953fa a small patch to PyString] to work for setuptools
-
  * a valid sys.executable. required by setuptools and distutils for spawning subprocesses. It's impossible to determine argv[0] from java: I'm thinking the jython executable should pass this information along to Jython (java -Dpython.executable=$0)
 
  * distutils: requires [http://hg.underboss.org/jython-pjenvey/rev/1026fe32c01c a number of small patches]:
