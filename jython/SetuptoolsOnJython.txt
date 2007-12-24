@@ -8,11 +8,13 @@ Setuptools requirements:
   
  * tempfile.mkstemp '''''Added in r3712'''''
 
-We don't have:
-
- * the kicker, a working os.chdir. I hacked together [http://hg.underboss.org/jython-pjenvey/rev/51246729a616 a really quick version of this ], and setuptools was able to get pretty far at installing Pylons. Pylons itself and a number of its dependencies installed fine, but the process died installing the decorator module due to marshal raising a KeyError
+ * os.chdir (also needed for distutils) '''''Added in r3844'''''
  
- * working marshal. setuptools uses marshal.load, and there's some bugs with our current marshaller
+ * tarfile module '''''Added in r3850'''''
+
+We don't have:
+ 
+ * working marshal? setuptools uses marshal.load in a couple places, which either needs to be avoided or possibly some work done to Jython's marshal module
 
  * tarfile module. This requires [http://hg.underboss.org/jython-pjenvey/rev/3507a9b953fa a small patch to PyString] to work for setuptools
 
