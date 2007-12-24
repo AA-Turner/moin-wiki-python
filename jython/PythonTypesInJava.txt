@@ -24,13 +24,13 @@ Adding @ExposedType and generating bytecode
 The first step in exposing a class is to use the
 ``org.python.expose.ExposedType`` annotation on the actual class to indicate that
 it should be exposed at all.  This annotation goes on the class itself and has
-two optional fields.  The first, name, defines what the type will be called in
+two optional fields.  The first, ``name``, defines what the type will be called in
 Python.  If it isn't specified, the type's name is just assumed to be the same
-as the Java class name.  The second field, base, indicates the base type this
+as the Java class name.  The second field, ``base``, indicates the base type this
 type extends.  It must be another Java class that's likewise been annotated
 with ``@ExposedType`` and just sets up the type hierarchy in Python.  If
 unspecified, it's assumed that this type extends from the base newstyle Python
-type, object.  Unlike classes defined in Python code, types defined in Java can
+type, ``object``.  Unlike classes defined in Python code, types defined in Java can
 only use single inheritance.
 
 Once the class has ``@ExposedType`` on it, it can be fed into the type bytecode
@@ -50,7 +50,7 @@ To actually add methods to the type, they need to be exposed with
 ``@ExposedMethod``.  ``@ExposedMethod`` can be applied to non-static public,
 protected or package protected method on the class.  When the bytecode
 processor encounters an ``@ExposedMethod``, it generates a new inner class
-extending PyMethodDescriptor that simply calls this method when bound.  Because
+extending PyMethodDescriptor that simply calls the annotated method when bound.  Because
 it's being called from a method descriptor, and Python method descriptors are
 available on types regardless of their location in the inheritance hierarchy,
 its generally a good idea to make exposed methods final.  This ensures that
@@ -67,8 +67,8 @@ If the PyObject can't be coerced to that type, a TypeException will be raised.
 If the method arguments aren't String, boolean or int, they must be a regular
 PyObject and the method will do its own type checking.  
 
-The return type from the method can be coerced in a similar fashion.  If the a
-returns of String will be wrapped in a PyString, int in PyInteger and boolean
+The return type from the method can be coerced in a similar fashion.  Returns of 
+String will be wrapped in a PyString, int in PyInteger and boolean
 in PyBoolean.  If the method returns void, PyNone will be returned in its
 place.  If it doesn't return any of these types, it must return PyObject.
 
@@ -83,7 +83,7 @@ will be exposed as.  If the name starts with the type name followed by an
 underscore, the method will be exposed as the portion of its name following the
 underscore.  This allows final, package protected methods to be specified for
 types that on PyObject as well without requiring setting the name on all of
-them.  For example, ``PyInteger`` has an exposed method ``int___add__`` which
+them.  For example, ``PyInteger``'s exposed method ``int___add__`` doesn't set names, so it
 appears in its type dict as ``__add__``.  If the method name doesn't start with
 the type name and an underscore, it's just exposed as the full method name.
 
@@ -108,25 +108,22 @@ integer
 boolean
   if the method takes a boolean in the default's position, ``true`` or ``false`` can be specified
 
-Also like argument coercion, they can only be used on methods taking up to four
-arguments.  
-
 The final field on ``@ExposedMethod`` is ``type``.  This field takes one of three
 MethodType enums.  The aptly named default value, ``DEFAULT``, indicates that the
 method descriptor should simply call the exposed method and return using the
 normal coercion directly.  ``BINARY`` indicates that the method is a binary
 operation like ``__add__`` or ``__sub__``.  For these types, the descriptor checks
-if the method returned null, and if so, it raises a NotImplemented exception.
+if the method returned null, and if so, it raises a NotImplemented exception.  This is generally used in the case where the binary method doesn't handle the passed in type.
 The ``CMP`` type is only for ``__cmp__`` methods.  If used, it checks if the method
-returns ``-2``, and if so, raises a TypeException.
+returns ``-2``, and if so, raises a TypeException.  This is the same sort of type check that ``BINARY`` is doing with null.
 
 Exposing fields with @ExposedGet, @ExposedSet and @ExposedDelete
 ======================================================================
 
-A trio of annotations are used to expose a field on a type.  Each handles a
+A trio of annotations are used to expose a field on a type,  each handling a
 different aspect of accessing the field.  ``@ExposedGet`` takes care of read
 access.  It can be applied to a method that takes no arguments and returns a
-non-primitive value or to a non-primitive field.  If on a method, that method
+non-primitive value, or to a non-primitive field.  If on a method, that method
 will called every time read access is made on that field on instances of the
 type.  If on a field, the descriptor will just directly access that field on
 the instance and return it.  ``@ExposedSet`` can also be applied to a field or a
@@ -159,7 +156,7 @@ In the simple form, ``@ExposedNew`` is applied to an instance method that takes
 the standard Jython call arguments, ``PyObject[] args, String[] keywords``. In
 this form, the basic new functionality is handled by
 ``org.python.core.PyOverridableNew`` and the method annotated with ``@ExposedNew``
-is called as __init__ as part of that process. This allows subtypes to
+is called as __init__ as part of that process for instantiating the defined type directly. This allows subtypes to
 completely redefine new and create objects however they like.
 
 In the more complex form, ``@ExposedNew`` must be applied to a static method that
