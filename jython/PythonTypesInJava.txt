@@ -10,9 +10,9 @@ Introduction
 =============
 
 Starting in Jython 2.5, Python type are exposed from Java code by adding
-several types of annotations to the Java fields and methods to define the
+several different annotations to fields and methods on the Java class to define the
 fields and methods that will be visible on the resulting Python type.  A
-bytecode processor then adds code to the compiled classes to build the type's dict and descriptors.  An
+bytecode processor then adds code to the compiled class to build the type's dict and descriptors.  An
 Ant task, ``org.python.expose.generate.ExposeTask``, handles finding the classes
 to expose, running the processor on them, and writing them back out.  This
 document describes how to use this type exposing system. 
@@ -23,12 +23,12 @@ Adding @ExposedType and generating bytecode
 
 The first step in exposing a class is to use the
 ``org.python.expose.ExposedType`` annotation on the actual class to indicate that
-it should be exposed at all.  This annotation goes on the class itself and has
+it should be exposed.  This annotation goes on the class itself and has
 two optional fields.  The first, ``name``, defines what the type will be called in
 Python.  If it isn't specified, the type's name is just assumed to be the same
 as the Java class name.  The second field, ``base``, indicates the base type this
 type extends.  It must be another Java class that's likewise been annotated
-with ``@ExposedType`` and just sets up the type hierarchy in Python.  If
+with ``@ExposedType`` and sets up the type hierarchy in Python.  If
 unspecified, it's assumed that this type extends from the base newstyle Python
 type, ``object``.  Unlike classes defined in Python code, types defined in Java can
 only use single inheritance.
@@ -47,13 +47,13 @@ Exposing methods with @ExposedMethod
 ====================================
 
 To actually add methods to the type, they need to be exposed with
-``@ExposedMethod``.  ``@ExposedMethod`` can be applied to non-static public,
-protected or package protected method on the class.  When the bytecode
+``org.python.expose.ExposedMethod``.  ``@ExposedMethod`` can be applied to non-static methods on the class that are public,
+protected or package protected.  When the bytecode
 processor encounters an ``@ExposedMethod``, it generates a new inner class
 extending PyMethodDescriptor that simply calls the annotated method when bound.  Because
 it's being called from a method descriptor, and Python method descriptors are
 available on types regardless of their location in the inheritance hierarchy,
-its generally a good idea to make exposed methods final.  This ensures that
+it's generally a good idea to make exposed methods final.  This ensures that
 subclasses won't override the behavior of the method, so the descriptor always
 calls the same code when accessed directly off of the type.  
 
@@ -62,10 +62,10 @@ actual exposed method.  Like ``__call__``, it will pass up to four arguments
 directly to the method.  If more than four arguments are required, the method
 must take the generic ``__call__`` arguments, ``PyObject[], String[]``.  For
 methods with four or less arguments, the descriptor will also coerce its
-PyObject argument into a String, boolean or int if the method takes that type.
+PyObject arguments into Strings, booleans or ints if the method takes that type.
 If the PyObject can't be coerced to that type, a TypeException will be raised.
 If the method arguments aren't String, boolean or int, they must be a regular
-PyObject and the method will do its own type checking.  
+PyObject and the method must do its own type checking.  
 
 The return type from the method can be coerced in a similar fashion.  Returns of 
 String will be wrapped in a PyString, int in PyInteger and boolean
@@ -74,7 +74,7 @@ place.  If it doesn't return any of these types, it must return PyObject.
 
 As with ``@ExposeType``, there are several fields on ``@ExposedMethod`` that
 control how it appears in Python.  The ``names`` field operates similarly to the
-``name`` field on @ExposedType, except that it accepts multiple values in case
+``name`` field on ``@ExposedType``, except that it accepts multiple values in case
 the method needs to appear under multiple names in the type.  For instance, the
 method ``int_toString`` on ``PyInteger`` is exposed with ``names = {"__repr__",
 "__str__"}`` as it works as both ``__repr__`` and ``__str__`` for int.  If ``names``
@@ -87,14 +87,14 @@ them.  For example, ``PyInteger``'s exposed method ``int___add__`` doesn't set n
 appears in its type dict as ``__add__``.  If the method name doesn't start with
 the type name and an underscore, it's just exposed as the full method name.
 
-The next field, ``defaults``, allows the method to specify that some of its later
+The next field, ``defaults``, allows the method to specify that some of its
 arguments are optional, and if they aren't supplied, what values fill in.  If
 the Java method takes three arguments, and two defaults are given in the
 annotation,  it can be called from Python with anywhere from one to three
 arguments.  If only one argument is given, the first default is used for the
 second argument, and the second default for the third argument.  If two
 arguments are given, the second default is again used for the third argument.
-If three argumetns are given, the defaults are ignored.  If only a single
+If three arguments are given, the defaults are ignored.  If only a single
 default is given, it will only be used for the final argument.  As with
 argument coercion, defaults can only be used with methods taking up to four
 arguments.  The defaults can take four types of values: 
@@ -124,18 +124,18 @@ A trio of annotations are used to expose a field on a type,  each handling a
 different aspect of accessing the field.  ``@ExposedGet`` takes care of read
 access.  It can be applied to a method that takes no arguments and returns a
 non-primitive value, or to a non-primitive field.  If on a method, that method
-will called every time read access is made on that field on instances of the
+will be called every time read access is made on that field on instances of the
 type.  If on a field, the descriptor will just directly access that field on
 the instance and return it.  ``@ExposedSet`` can also be applied to a field or a
 method.  If used on a method, the method must take a single argument of the
 same type as the ``@ExposedGet`` with the same name.  ``@ExposedDelete`` is only
 allowed on methods that return void and take no arguments.  If specified, when
 ``del typeinstance.fieldname`` is invoked in Python, that delete method will be
-called.  The method must return void.  Neither ``@ExposedDelete`` or
+called.  Neither ``@ExposedDelete`` or
 ``@ExposedSet`` can be used if an ``@ExposedGet`` of the same doesn't exist on the
 type.  The names of the exposed field can be specified as ``name`` in the
 annotation, or if that isn't specified the name is taken directly from the name
-of the field or the method. 
+of the field or method. 
 
 
 Making the type instantiable with @ExposedNew
@@ -164,7 +164,7 @@ takes the arguments ``PyNewWrapper new_, boolean init, PyType subtype,
 PyObject[] args, String[] keywords``.  In this case, the method has full
 responsibility for creating and initting the object and will be invoked for
 every subtype of this exposed type.  Essentially it's for object instantation
-that must be called for every instance of that object. See PyInteger's int_new
+that must be called for every instance of that object. See PyInteger's ``int_new``
 for an example of this type of ``@ExposedNew``.
 
 With either form, there can be only one ``@ExposedNew`` per class.
