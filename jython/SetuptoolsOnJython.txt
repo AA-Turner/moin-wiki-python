@@ -12,11 +12,10 @@ Setuptools requirements:
  
  * tarfile module '''''Added in r3850'''''
 
-We don't have:
- 
- * working marshal? setuptools uses marshal.load in a couple places, which either needs to be avoided or possibly some work done to Jython's marshal module
+ * a valid sys.executable. required by setuptools and distutils for spawning subprocesses. '''''Added in r3867, enabled via -Dpython.executable (see http://article.gmane.org/gmane.comp.lang.jython.devel/4068 )'''''
 
- * a valid sys.executable. required by setuptools and distutils for spawning subprocesses. It's impossible to determine argv[0] from java: I'm thinking the jython executable should pass this information along to Jython (java -Dpython.executable=$0)
+
+We don't have:
 
  * distutils: requires [http://hg.underboss.org/jython-pjenvey/rev/1026fe32c01c a number of small patches]:
   
@@ -24,7 +23,11 @@ We don't have:
     
   - a jython spawn-like function: "error: don't know how to spawn programs on platform 'java'". os.system works as a replacement
 
-  - a valid sys.executable    
+  - a valid sys.executable '''''Added in r3867'''''
+
+  - compile .py files to $py.class instead of .pyc
+
+ * working marshal? setuptools uses marshal.load in a couple places, which either needs to be avoided or possibly some work done to Jython's marshal module
     
  * imp.acquire/release_lock
   This is just a simple lock, but probably needs to be used by internal imp operations. I'm not sure
