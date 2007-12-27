@@ -1,7 +1,20 @@
-== Coding Standards for Java Code in Jython ==
-When in doubt follow the Sun Java standards:
+== Python Code ==
 
-http://java.sun.com/docs/codeconv/
+In general, follow [http://www.python.org/dev/peps/pep-0008/ PEP 8].  When importing Java code, always use fully qualified class names, not package names ie ``from java.lang import String`` instead of ``from java import lang``.  
+
+== Java Code ==
+
+ * Javadoc on any publicly exposed method or field.
+ * 4 spaces for indentation, no tabs.
+ * No nested ternary statements.
+ * A luxurious 100 characters per line.
+ * No copy and pasted, repeated code: if you're doing the same thing twice, make a method.
+ * Braces on all loops and if else statements.
+ * Method longer than 10 lines should have whitespace and comments describing each of the sections, though perhaps they should also be broken up into submethods.
+ * Descriptive names for fields and methods.
+
+Beyond these rules, follow the [http://java.sun.com/docs/codeconv/ Sun Java standards].
+
 
 === Example (adapted from Sun document) ===
 {{{
@@ -12,7 +25,6 @@ import org.jython.blah.BlahBlah;
 
 /**
  * Class description goes here.
- * @author 	Firstname Lastname
  */
 public class Blah extends SomeClass {
     /* A class implementation comment can go here. */
