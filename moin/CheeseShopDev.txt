@@ -1,50 +1,32 @@
-This page documents the development of the Python Cheese Shop:
+This page documents the development of the Python Package Index (formerly known as Cheeseshop):
 
-  http://pypi.python.org
-
+ . http://pypi.python.org
 = How to submit packages =
-
 This page isn't about submitting packages. You want to see CheeseShopTutorial instead.
 
-
 = Requests for new Trove categories =
-
-Python frameworks with plugins or packages that target the framework 
-can get their own category.  The category should only be added *after* 
-such packages exist.  Complimentary packages can link to each other 
-from their descriptions, they do not need a category to link them 
-together; only when packages are provided by different people does a 
-category need to be created.  To ask for a category email 
-catalog-sig@python.org.
+Python frameworks with plugins or packages that target the framework  can get their own category.  The category should only be added *after*  such packages exist.  Complimentary packages can link to each other  from their descriptions, they do not need a category to link them  together; only when packages are provided by different people does a  category need to be created.  To ask for a category email  catalog-sig@python.org .
 
 = XML-RPC Interface =
-
 The Cheese Shop has an XML-RPC interface which may be used by any 3rd-party application developer. See CheeseShopXmlRpc for details.
 
 = Developing the Cheese Shop =
-
 This information is for developers working on the PyPI code. The PyPI (packages index, Cheese Shop web interface) code resides in SVN at:
 
-  https://svn.python.org/packages/ (trunk,features,branches)
-
+ . https://svn.python.org/packages/ (trunk,features,branches)
 Developers with access may use this URL:
 
-  svn+ssh://svn.python.org/data/repos/packages/trunk/pypi
-
+ . svn+ssh://svn.python.org/data/repos/packages/trunk/pypi
 Patches and bug reports should be submitted to:
 
-  http://sourceforge.net/tracker/?group_id=66150&atid=513503
-
+ . http://sourceforge.net/tracker/?group_id=66150&atid=513503
 Discussion about the Cheese Shop should be had on the Catalog SIG mailing list:
 
-  http://mail.python.org/mailman/listinfo/catalog-sig
-
+ . http://mail.python.org/mailman/listinfo/catalog-sig
 Package Index API used by easy_install:
 
-  http://peak.telecommunity.com/DevCenter/EasyInstall#package-index-api
-
+ . http://peak.telecommunity.com/DevCenter/EasyInstall#package-index-api
 == TO-DO list ==
-
  * [http://www.python.org/peps/pep-0345.html PEP for metadata 1.2] -- not finished and needs more catalog-sig discussion)
  * command-line tool to query pypi and fetch entries
  * documented procedures for "taking over" entries should the original owner of the entry go away (and any required system support)
@@ -53,16 +35,11 @@ Package Index API used by easy_install:
  * moderated user reviews and ratings (this would require quite a lot of support from volunteers though)
  * per-classifier "wiki" content to allow description and discussion around each classifier (perhaps what packages are available and how they relate to one another)
  * screenshot images (with thumbnailing and a "latest screenshot" on the front page?) - or perhaps icons instead of thumbnails for some packages?
-
-Something that's been requested, but needs much more thought and analysis to see whether it causes any problems: the ability to treat project names and versions as case-insensitive, while removing extraneous characters (as in pkg_resources.safe_name()) for 
-purposes both of searching and determining name uniqueness when registering.
+Something that's been requested, but needs much more thought and analysis to see whether it causes any problems: the ability to treat project names and versions as case-insensitive, while removing extraneous characters (as in pkg_resources.safe_name()) for  purposes both of searching and determining name uniqueness when registering.
 
 == Not Going TO-DO ==
-
  * Edit [http://www.python.org/peps/pep-0243.html PEP 243] to reflect reality. The interface is implemented in the distutils register and upload commands. This code is good enough for documentation, especially because it's the only implementation necessary.
-
 == Development Environment Hints ==
-
 Cheeseshop uses postgresql as a database, with a roll it yourself web framework based on different python modules.  It uses apache2 as the web server.
 
 It can run using cgi, fcgi and mod_python.
@@ -72,7 +49,6 @@ Before restoring database, "pypi" role must exists:
 {{{
   createuser pypi
 }}}
-
 These are notes so we can remember how to dump / restore the packages database:
 
 {{{
@@ -80,7 +56,6 @@ These are notes so we can remember how to dump / restore the packages database:
   createdb packages
   pg_restore -O -d packages -Fc packages-20060706.dump
 }}}
-
 Ask RichardJones if you need a database dump.
 
 PageTemplates are obtained from:
@@ -92,21 +67,15 @@ PageTemplates are obtained from:
   svn co svn://svn.zope.org/repos/main/zope.i18nmessageid/trunk zope.i18nmessageid
   svn co svn://svn.zope.org/repos/main/zope.tales/trunk zope.tales
 }}}
-
-
 We also need to install ez_setup, celementtree and docutils.
 
-
-# For debian, this should get you most of the dependencies.
-apt-get install zope3 python-celementtree python-psycopg
-
+# For debian, this should get you most of the dependencies. apt-get install zope3 python-celementtree python-psycopg
 
 Then go ahead and edit pypi.ini and this line in pypi.cgi:
 
 {{{
   cfg = config.Config('/tmp/pypi.ini', 'webui')
 }}}
-
 if your config.ini isn't in /tmp/pypi.ini.  You can leave it as 'config.ini' if it's in the same directory as pypi.py.
 
 You will need to add cheesecake_password=yourpasshere into the config.ini in the webui section.
@@ -115,14 +84,11 @@ If you wish to test functionality that requires login, then you will need to con
 
 {{{
   RewriteCond %{HTTP:Authorization}  ^(.+)$
-
   RewriteRule ^/cgi-bin/pypi.cgi(.*) /Library/WebServer/CGI-Executables/pypi.cgi$1 [e=HTTP_CGI_AUTHORIZATION:%1,t=application/x-httpd-cgi,l]
 }}}
-
 If this doesn't work, then you can use these lines to debug:
 
 {{{
   RewriteLog /var/log/httpd/rewrite.log
-
   RewriteLogLevel 9
 }}}
