@@ -1,0 +1,18 @@
+= Building Python Statically =
+
+/!\ '''This page is a placeholder until MicahElliott (or anyone) figures out all the steps to make this work.'''
+
+This page describes the steps required to build Python statically, derived from [http://groups.google.com/group/comp.lang.python/browse_thread/thread/eba7c323a0221b97?hl=en#3314cbe8234de6c5 this thread].  It presently covers Linux, but many of the same steps apply to other OSs.  The goal is to get `ldd` to say:
+
+{{{
+$ ldd /path/to/bin/python
+not a dynamic executable
+}}}
+
+{i} Note that the `--disable-shared` option is not related to building Python statically.
+
+There is a file called `Modules/Setup.local` which is designed for customizing how modules are built.
+
+GCC (and LD) offer a `-static` option to create static executables.
+
+It would be nice to have a `--enable-all-static` option in the `configure` script which would take care of all this for you.  For an example, try building [http://subversion.tigris.org Subversion].
