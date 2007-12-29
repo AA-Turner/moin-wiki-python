@@ -29,17 +29,16 @@ Setuptools requirements:
   * compile .py files to $py.class instead of .pyc '''''distutils and these last 3 modifications were added in r3888'''''
 
 We don't have:
-
-
- * working marshal? setuptools uses marshal.load in a couple places, which either needs to be avoided or possibly some work done to Jython's marshal module
-    
- * imp.acquire/release_lock
-  This is just a simple lock, but probably needs to be used by internal imp operations. I'm not sure
   
  * setuptools runs a test to ensure .pth files work by running "sys.executable -E -c pass". -E is ignore environment on CPython, but is different on Jython (takes an argument):
  
-  * -E codec : Use a different codec the reading from the console.
+  -E codec : Use a different codec the reading from the console.
    
+ * imp.acquire/release_lock
+  This is just a simple lock, but probably needs to be used by internal imp operations. I'm not sure
+
  * os.chmod. This can be implemented with JNA. We can still support setuptools on deployments lacking JNA if we submit a patch back to setuptools to only use chmod if it exists
   
- * os.lstat. setuptools cut and pasted shutil's rmtree from CPython 2.3, which uses lstat to check for directories. We can support an os.stat that fills in st_mode's directory bit, but can we do lstat (we could with JNA)? We may want to submit a patch to setuptools to avoid lstat (it could avoid it if it used os.path.isdir)
+ * os.lstat. setuptools cut and pasted shutil's rmtree from CPython 2.3, which uses lstat to check for a directory vs a symlink to a directory. We now support an os.stat that fills in st_mode's directory bit, but can we support lstat? (We definitely can with JNA)? Can setuptools avoid lstat completely (requiring a patch)? I don't think Java can safely determine a sym link yet. Java 1.7's JSR 203 (nio part 2) should address this as well as chmod, but we obviously need a solution for Java 1.5
+
+ * working marshal? setuptools uses marshal.load in a couple places, which either needs to be avoided or possibly some work done to Jython's marshal module
