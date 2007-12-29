@@ -14,18 +14,22 @@ Setuptools requirements:
 
  * a valid sys.executable. required by setuptools and distutils for spawning subprocesses. '''''Added in r3867, enabled via -Dpython.executable (see http://article.gmane.org/gmane.comp.lang.jython.devel/4068 )'''''
 
-
-We don't have:
+ * a site-packages dir (jython needs to include it on sys.path by default). required by setuptools and distutils '''''Added in r3886'''''
 
  * distutils: requires [http://hg.underboss.org/jython-pjenvey/rev/1026fe32c01c a number of small patches]:
   
-  - distutils metadata for the os.name == 'java' (like path names, default bdist type, etc)
+  * a valid sys.executable '''''Added in r3867'''''
+
+  * getpass module '''''Added in r3876'''''
+
+  * distutils metadata for the os.name == 'java' (like path names, default bdist type, etc)
     
-  - a jython spawn-like function: "error: don't know how to spawn programs on platform 'java'". os.system works as a replacement
+  * a jython spawn-like function: "error: don't know how to spawn programs on platform 'java'". os.system works as a replacement
 
-  - a valid sys.executable '''''Added in r3867'''''
+  * compile .py files to $py.class instead of .pyc '''''distutils and these last 3 modifications were added in r3888'''''
 
-  - compile .py files to $py.class instead of .pyc
+We don't have:
+
 
  * working marshal? setuptools uses marshal.load in a couple places, which either needs to be avoided or possibly some work done to Jython's marshal module
     
@@ -34,10 +38,8 @@ We don't have:
   
  * setuptools runs a test to ensure .pth files work by running "sys.executable -E -c pass". -E is ignore environment on CPython, but is different on Jython (takes an argument):
  
-  -E codec : Use a different codec the reading from the console.
+  * -E codec : Use a different codec the reading from the console.
    
- * a site-packages dir (jython needs to include it on sys.path by default)
-
  * os.chmod. This can be implemented with JNA. We can still support setuptools on deployments lacking JNA if we submit a patch back to setuptools to only use chmod if it exists
   
  * os.lstat. setuptools cut and pasted shutil's rmtree from CPython 2.3, which uses lstat to check for directories. We can support an os.stat that fills in st_mode's directory bit, but can we do lstat (we could with JNA)? We may want to submit a patch to setuptools to avoid lstat (it could avoid it if it used os.path.isdir)
