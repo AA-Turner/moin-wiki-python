@@ -28,14 +28,13 @@ Setuptools requirements:
 
   * compile .py files to $py.class instead of .pyc '''''distutils and these last 3 modifications were added in r3888'''''
 
+ * imp.acquire/release_lock (and the accompanying lock_held which we don't actually need). Exposes the import machinery's lock via the imp module '''''Added in r3894'''''
+
 We don't have:
   
  * setuptools runs a test to ensure .pth files work by running "sys.executable -E -c pass". -E is ignore environment on CPython, but is different on Jython (takes an argument):
  
   -E codec : Use a different codec the reading from the console.
-   
- * imp.acquire/release_lock
-  This is just a simple lock, but probably needs to be used by internal imp operations. I'm not sure
 
  * os.chmod. This can be implemented with JNA. We can still support setuptools on deployments lacking JNA if we submit a patch back to setuptools to only use chmod if it exists
   
