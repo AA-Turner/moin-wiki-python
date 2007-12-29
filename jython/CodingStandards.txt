@@ -1,76 +1,61 @@
 When contributing code or patches to Jython, please try to follow these guidelines.
 
 == Python Code ==
-
-In general, follow [http://www.python.org/dev/peps/pep-0008/ PEP 8].  When importing Java code, always use fully qualified class names, not package names ie from java.lang import String instead of from java import lang.  
+In general, follow [http://www.python.org/dev/peps/pep-0008/ PEP 8].  When importing Java code, always use fully qualified class names, not package names ie from java.lang import String instead of from java import lang.
 
 == Java Code ==
-
  * Javadoc on any publicly exposed method or field.
  * 4 spaces for indentation, no tabs.
  * No nested ternary statements.
  * A luxurious 100 characters per line.
  * No copy and pasted, repeated code: if you're doing the same thing twice, make a method.
  * Braces on all loops and if else statements.
- * Method longer than 10 lines should have whitespace and comments describing each of the sections, though perhaps they should be broken up into submethods instead.
+ * Methods longer than 10 lines should have whitespace and comments breaking them up into coherent operations.
  * Descriptive names for fields and methods.
  * No @author tags in code.
  * Any field on an object that isn't modified after construction should be final.
-
 Beyond these rules, follow the [http://java.sun.com/docs/codeconv/ Sun Java standards].
-
 
 === Example (adapted from Sun document) ===
 {{{
-
 package org.jython.blah;
-
 import org.jython.blah.BlahBlah;
-
 /**
  * Class description goes here.
  */
 public class Blah extends SomeClass {
     /* A class implementation comment can go here. */
-
     /** classVar1 documentation comment */
     public static int classVar1;
-
-    /** 
+    /**
      * classVar2 documentation comment that happens to be
      * more than one line long
      */
     private static Object classVar2;
-
     /** instanceVar1 documentation comment */
     public Object instanceVar1;
-
     /** instanceVar2 documentation comment */
     protected int instanceVar2;
-
     /** instanceVar3 documentation comment */
     private Object[] instanceVar3;
-
-    /** 
+    /**
      * ...constructor Blah documentation comment...
      */
     public Blah() {
         // ...implementation goes here...
     }
-
     /**
      * ...method doSomething documentation comment...
      */
     public void doSomething() {
-        // ...implementation goes here... 
+        // ...implementation goes here...
     }
-
     /**
      * ...method doSomethingElse documentation comment...
      * @param someParam description
      */
     public void doSomethingElse(Object someParam) {
-        // ...implementation goes here... 
+        // ...implementation goes here...
     }
 }
-}}} 
+}}}
