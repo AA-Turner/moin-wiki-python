@@ -519,7 +519,7 @@ number of items on stack. However, life isn't that simple. In real life, there
 are *blocks*. Blocks allow us to break from a loop, regardless of exactly how
 many items we have in stack. How? Simple. Before the loop starts, the
 SETUP_LOOP opcode is executed. This opcode records in a block the number of operands(items)
-currently in stack, and also a position in the code. When the POP_BLOCK is executed, the stack is restored to the state recorded by poping extra items, and the corresponding block is
+currently in stack, and also a position in the code. When the POP_BLOCK is executed, the stack is restored to the recorded state by poping extra items, and the corresponding block is
 discarded. But if the BREAK_LOOP opcode is
 executed instead of POP_BLOCK, one more thing happens. The
 execution jumps to the position specified by the SETUP_LOOP opcode. 
