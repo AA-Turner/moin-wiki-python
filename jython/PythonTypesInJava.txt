@@ -97,16 +97,14 @@ arguments are given, the second default is again used for the third argument.
 If three arguments are given, the defaults are ignored.  If only a single
 default is given, it will only be used for the final argument.  As with
 argument coercion, defaults can only be used with methods taking up to four
-arguments.  The defaults can take four types of values: 
+arguments.  The defaults can take three types of values: 
 
 null
   the String ``null`` produces a Java null
 Py.None
   the String ``Py.None`` produces the Python None value
-integer
-  if the method takes an int in the default's position, the string will be parsed to yield an int value
-boolean
-  if the method takes a boolean in the default's position, ``true`` or ``false`` can be specified
+primitive
+  if the method takes a Java primitive(boolean, byte, short, char, int, long, float or double) in the default's position, the string will be parsed using the primtive type's Java wrapper(ie java.lang.Boolean for boolean)
 
 The final field on ``@ExposedMethod`` is ``type``.  This field takes one of three
 MethodType enums.  The aptly named default value, ``DEFAULT``, indicates that the
