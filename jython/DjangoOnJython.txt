@@ -2,7 +2,38 @@
 
 [http://pipes.yahoo.com/pipes/pipe.info?_id=jroxOD1f3BGgvtiIqGIyXQ RSS Aggregator for blog posts about Django on Jython]
 
-=== Major problems ===
+To run Django on Jython, with a PostgreSQL backend, the following steps are necessary:
+
+ * Use the [https://jython.svn.sourceforge.net/svnroot/jython/branches/modern/ Modern branch] of Jython. This consolidated the bugs, workarounds, and patches found below -- plus a bunch more -- in a stable, almost-ready-to-be-merged-into-trunk version of Jython. The most important aspect is that we have tried to make Jython conform more to CPython, using Django as our guide, although there are some gaps - especially if Django already had incorporated fixes. Our driving goal is to converge on these gaps over time.
+
+ * Use the Django trunk (tested with rev 6992, later should be OK too).
+
+ * Apply these two patches, [https://jython.svn.sourceforge.net/svnroot/jython/trunk/sandbox/jbaker/django/dispatch/robustapply.py django.dispatch.robustapply] ([https://hg.leosoto.com/django.jythonport/rev/bb2b9048ed14f72e99c5c133c7ecaaeb0a5c425c diff]) and [https://jython.svn.sourceforge.net/svnroot/jython/trunk/sandbox/jbaker/django/views/debug.py django.views.debug] ([https://hg.leosoto.com/django.jythonport/rev/663bcf5efc31409899fcdc10009bc92df3e1f6b9 diff]) due to Leo Soto. These should be in Django trunk soon.
+
+ * Copy these three files from CPythonLib to Lib: gettext.py, locale.py, optparse.py. Please note that these files are only partially working on Jython, that's why they haven't been promoted yet (gettext.py actually works, as verified by test_gettext.py, but depends on still failing locale.py). But they are very close, and they appear to be fine for Django. Certainly fine for this round of development!
+ 
+ * Use the backend [https://jython.svn.sourceforge.net/svnroot/jython/trunk/sandbox/jbaker/django/db/backends/postgresql_zxjdbc/ zxjdbc_postgresql], which was contributed by Leo Soto.
+
+Here's what works:
+
+syncdb and the very cool Django admin run; many unit tests pass. You can run with internationalization enabled. You do need to run the dev server with --noreload for now. We need to document here how to run with [http://www.xhaus.com/modjy/ modjy], which is Alan Kennedy's servlet container for WSGI apps.
+
+In running the model unit tests, here are the things we seem to be missing, accounting for most of the approximately 75 failures:
+
+ * Many doctests are fragile, because they depend on the dict traversal ordering; in Jython, this is different that CPython, and if we adopt !ConcurrentHashMap, it's not even repeatable. This is a pervasive bug in Django.
+
+* We still have some encoding problems, again seen in doctests. An example where output is expected to be lower case hex, not upper case. I fixed the problem in !PyUnicode, but there are more places.
+
+ * Problem with the !ManagerDescriptor handling, in django.db.models.manager.
+
+ * No decorators yet! (But they are coming soon, even available experimentally for Jython.) 
+
+There may be some other rough categories, we need to look at the failures more systematically. All that doctest noise is certainly annoying!
+
+
+=== Former Major problems ===
+
+(Preserved to show how much we had to go through...)
 
  * Jython does not support non-str keys in {{{__dict__}}} right now.  Jim Baker replaced the custom dictionary in {{{PyStringMap}}} with a {{{HashMap}}} (along Groves' earlier work). This change should resolve this problem.  Try the [https://jython.svn.sourceforge.net/svnroot/jython/branches/modern/ modern] branch. Problem encountered in {{{django/utils/_threading_local.py}}}. 
  * Something goes wrong with {{{re.compile(u"([\u0080-\uffff])")}}} in {{{django/utils/text.py}}} I think it is a lacking in our array implementation but this needs more investigation.
@@ -17,7 +48,7 @@
  * inspect.isclass(time) shouldn't return True [http://sourceforge.net/tracker/index.php?func=detail&aid=1786009&group_id=12867&atid=112867 bug]
    * Django [http://code.djangoproject.com/changeset/6194 works around this] until it's fixed.
 
-=== Minor annoyances ===
+=== Former Minor annoyances ===
 
  * slice should be a type, not a function. [http://sourceforge.net/tracker/index.php?func=detail&aid=1791931&group_id=12867&atid=112867 bug] [http://sourceforge.net/tracker/index.php?func=detail&aid=1798544&group_id=12867&atid=312867 patch]
  * {{{PyBoolean.__tojava__}}} returns an {{{Integer}}}
@@ -30,6 +61,8 @@
     * But, this is the only {{{__*__}}} method where CPython allows this, and it's not documented anywhere. So, it's a implementation detail and should be fixed on Django. [http://code.djangoproject.com/ticket/5560 django patch]
 
 === Already Fixed ===
+
+(And many more!)
 
  * Jython does not have {{{sys.stdout.isatty}}}.  Jython should get added to the exclusions around that call in {{{django/core/management.py}}} (win32 and 'Pocket PC' are already excluded).
    * Fixed in [http://code.djangoproject.com/changeset/6032 Django changeset 6032]
