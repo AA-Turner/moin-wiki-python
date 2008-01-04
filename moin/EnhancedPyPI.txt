@@ -1,0 +1,182 @@
+= Abstract =
+
+This document provides:
+
+ * a list of enhancement to make Disutils packaging system supports several index servers;
+ * changes to be made in the central server index implemetation, a.k.a PyPI;
+ * a guideline for implementing a PyPI-compatible server.
+
+= Rationale =
+
+The PyPI is playing a very important role in the standardization of 
+Python package distribution since Python 2.4. Together with Distutils
+and the third-party library Setuptools, most Python programmers are 
+releasing their packages in eggs, and are making them avaible in PyPI.
+
+Web frameworks such as Plone and the underlying framework, are
+now entirely distributed in eggs, and use PyPI as the main place to
+publish them. Some tools like zc.buildout automates the build of
+Python application by looking for eggs in PyPI and downloading them.
+
+This central approach is great for Python advocacy, and for the cohesion
+of the community of developers, but brings a few issues:
+
+ * when PyPI is down or slow, many developers are unable to build their 
+   application, unless they have a local PyPI cache;
+ * when people from a sub-community, like Plone, want to promote their
+   work, they need to shout it out in several places, to make sure
+   it has reach people focused on the given framework. These places
+   are acting a bit like the PyPI, so a common releasing standard 
+   make thing easier to automate.
+
+This PEP provides a solution to transparently support several index
+servers. It is a very low risk and very simple to implement. It is also
+finalizing a feature that was primarily intended by Distutils and PyPI, 
+but not easy to use as-is: making it a central server, but allowing 
+people to register and upload their package elsewhere.
+
+The rest of the document presents the actions to take, and the work 
+to be done for it:
+* making .pypirc supports multiple servers
+* making PyPI permissive for Trove classification
+* providing a base layer for PyPI-like servers implementation 
+
+= Making .pypirc supports multiple servers = 
+
+Right now, the .pypirc file is intended to keep username and password
+for registering a package. The file looks like
+
+{{{
+  [server-login]
+  username:tarek
+  password:secret
+
+}}}
+
+The default repository is PyPI, and when another repository has to be used,
+there are two options. 
+
+Either adding the repository url in the command line::
+
+
+{{{
+  $ python setup.py register -r http://example.com/repository
+}}}
+
+Either adding it in the .pypirc file::
+
+
+{{{
+  [server-login]
+  username:tarek2
+  password:secret
+  repository:http://example.com/repository
+}}}
+
+In both cases, it is not possible when your username differs from a server to 
+another, to keep a username/password for each server. Furthermore the realm
+associated with the server is hardcoded to "pypi".
+
+== Several sections in .pypirc ==
+
+A simple way to enhance it, is to be able to add several sections in .pypirc.
+
+For instance::
+
+
+{{{
+  [server-login]
+  username:tarek2
+  password:secret
+
+  [my-other-server]
+  username:tarek2
+  password:secret
+  repository:http://example.com/repository
+
+  [my-other-server-with-its-own-realm]
+  username:tarek3
+  password:secret3
+  repository:http://example2.com/repository
+  realm:acme
+}}}
+
+This will allow backward-compatibility, and make register and upload able 
+to interact with several servers when they are called.
+
+== Asking the user at the prompt ==
+
+When a user call register or uplad with such a file, it will be asked
+for each server wheter he wants to perform the action over it.
+
+XXX to be completed if if accepted, until then, iw.dist is a 
+working prototype available at the cheeseshop.
+
+see: http://www.nabble.com/enhancing-.pypirc-file-for-multiple-servers-handling-to14504516.html#a14527503
+
+== Making PyPI permissive for Trove classification ==
+
+PyPI is based on a Trove classification, see http://www.python.org/dev/peps/pep-0301/#distutils-trove-classification.
+Another server may have its own trove classification though, that differs from PyPI. 
+This is intended because the server provide a "package center" that has its own domain-specific categories. 
+
+For example, a package might have this classification:
+
+{{{
+  Development Status :: 5 - Production/Stable
+  Intended Audience :: Developers
+}}}
+
+But a slightly different one in another server. Let's say, the ACME company
+
+{{{
+  ACME :: Visibility :: Public
+  Development Status :: 5 - Production/Stable
+  Intended Audience :: Developers
+}}}
+
+A permissive Trove classification would allow the registering of the package
+in both servers, even if the categories does not exist. For each unkown category
+a warning is popped at the prompt::
+
+When registering it to several servers, the expected output would be::
+
+{{{
+	$ python setup.py register
+
+	Do you want to register at PyPI (y/N) ? y
+	...
+	Warning "ACME :: Visibility :: Public" classifier not found on the server
+	200 - OK
+
+	
+	Do you want to register at ACME (y/N) ? y	
+
+        ...
+	Warning "Development Status :: 5 - Production/Stable" classifier not found on the server
+  	Warning "Intended Audience :: Developers" classifier not found on the server
+	200 - OK
+}}}
+
+This will allow visual checking when a typo is made. 
+
+XXX code the patch for PyPI code if accepted
+
+== Providing a base layer for PyPI-like servers implementation ==
+
+The PyPI current implementation is done in a cgi-like Python application,
+that works with a Postgres database. The code though, is not based on an abstract
+layer. For instance, when a package is uploaded, the request's form is checked
+then the data are pushed into the Database through SQL query. 
+
+This means that everytime Disutils wants to change its behavior, PyPI has
+to change too.
+
+A base server-side layer could be added in Distutils itself, to provide:
+* a model for the storage;
+* a base class for the API the server has to provide.
+
+With such a layer, it would also facilitate the standardization
+of all PyPI-like servers.
+
+This section presents this base layer: XXX to be completed if accepted
