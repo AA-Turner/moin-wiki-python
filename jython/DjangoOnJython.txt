@@ -1,10 +1,14 @@
-== Gaps between Jython and Django ==
-
 [http://pipes.yahoo.com/pipes/pipe.info?_id=jroxOD1f3BGgvtiIqGIyXQ RSS Aggregator for blog posts about Django on Jython]
+
+== Summary of Django on Jython: The Gaps ==
+
+The most important thing to know about Django on Jython is that we are almost there, and with clean code. End-to-end functionality is demonstrated by the admin tool running in full CRUD, along with a substantial number of unit tests. But this has been achieved by so far requiring only 6 lines of code in changes to Django trunk. (There will be more, however, see below.)
+
+== Running on Jython ==
 
 To run Django on Jython, with a PostgreSQL backend, the following steps are necessary:
 
- * Use the [https://jython.svn.sourceforge.net/svnroot/jython/branches/modern/ Modern branch] of Jython. This consolidated the bugs, workarounds, and patches found below -- plus a bunch more -- in a stable, almost-ready-to-be-merged-into-trunk version of Jython. The most important aspect is that we have tried to make Jython conform more to CPython, using Django as our guide, although there are some gaps - especially if Django already had incorporated fixes. Our driving goal is to converge on these gaps over time.
+ * Use the [https://jython.svn.sourceforge.net/svnroot/jython/branches/modern/ Modern branch] of Jython. This consolidated the bugs, workarounds, and patches found below -- plus a bunch more -- in a stable, almost-ready-to-be-merged-into-trunk version of Jython. The most important aspect is that we have tried to make Jython conform more to CPython, using Django as our guide, although there are some gaps - especially if Django already had incorporated fixes. Our driving goal is to converge on these gaps over time. Please note that is intended to be stable, performant code.
 
  * Use the Django trunk (tested with rev 6992, later should be OK too).
 
@@ -12,7 +16,9 @@ To run Django on Jython, with a PostgreSQL backend, the following steps are nece
 
  * Copy these three files from CPythonLib to Lib: gettext.py, locale.py, optparse.py. Please note that these files are only partially working on Jython, that's why they haven't been promoted yet (gettext.py actually works, as verified by test_gettext.py, but depends on still failing locale.py). But they are very close, and they appear to be fine for Django. Certainly fine for this round of development!
  
- * Use the database backend [https://jython.svn.sourceforge.net/svnroot/jython/trunk/sandbox/jbaker/django/db/backends/postgresql_zxjdbc/ zxjdbc_postgresql], which was contributed by Leo Soto.
+ * Use the database backend [https://jython.svn.sourceforge.net/svnroot/jython/trunk/sandbox/jbaker/django/db/backends/postgresql_zxjdbc/ zxjdbc_postgresql], which was contributed by Leo Soto. Frank Wierzbicki has an experimental backend for !MySQL, this should be incorporated soon.
+
+== Status ==
 
 Here's what works:
 
@@ -20,7 +26,7 @@ syncdb and the very cool Django admin run; many unit tests pass. You can run wit
 
 In running the model unit tests, here are the things we seem to be missing, accounting for most of the approximately 75 failures:
 
- * Many doctests are fragile, because they depend on the dict traversal ordering; in Jython, this is different that CPython, and if we adopt {{{ConcurrentHashMap}}}, it's not even repeatable. This is a pervasive bug in Django.
+ * Many doctests are fragile, because they depend on the dict traversal ordering; in Jython, this is different that CPython, and if we adopt {{{ConcurrentHashMap}}}, it's not even repeatable. This would seem to be a pervasive bug in Django.
 
  * We still have some encoding problems, again seen in doctests. An example where output is expected to be lower case hex, not upper case. I fixed the problem in {{{PyUnicode}}}, but there are more places.
 
@@ -30,19 +36,25 @@ In running the model unit tests, here are the things we seem to be missing, acco
 
 There may be some other rough categories, we need to look at the failures more systematically. All that doctest noise is certainly annoying!
 
----- 
+== Next Steps ==
+
+On the Django front, get more of the unit tests running!
 
 Before we can push modern into trunk, the following needs to be done:
 
- * The test_extcall unit test currently fails. This appears to be a dependency on the dict traversal being the same. However, it's a mind bending test. The 2.3 version is particularly problematic because it's not modular at all. Google's GHOP has produced an improved version for Python 2.6 - we will look at this as a starting point.
+ * The test_extcall unit test currently fails. This appears to be a dependency on {{{dict traversal}}} being repeatable. However, it's a mind bending test. The 2.3 version is particularly problematic because it's not modular at all. Google's GHOP has just produced an improved version for Python 2.6 - we will look at this as a starting point.
 
- * Tristan King provided a near complete subset of the functionality for {{{time.strptime}}}, as implemented in org.python.modules.time.Time. This needs to be enhanced. All unit tests in the CPythonLib version of test_time now pass except for {{{strptime}}} -- specifically the conversion specifier {{{'%c'}}} -- so we can also move to that, and discard our Jython version, when this is completed. That should be soon!
+ * Tristan King provided a near complete subset of the functionality for {{{time.strptime}}}, as implemented in {{{org.python.modules.time.Time}}}. This needs to be enhanced. All unit tests in the CPythonLib version of test_time now pass except for {{{strptime}}} -- specifically the conversion specifier {{{'%c'}}} -- so we can also move to that, and discard our Jython version, when this is completed. That should be soon!
 
- * Decide whether we should use {{{ConcurentHashMap}}} or not as the backing hash map for {{{dict}}} and {{{__dict__}}}.
+ * Decide whether we should use {{{ConcurentHashMap}}} or not as the backing hash map for {{{dict}}} and {{{__dict__}}}. CHM introduces creation overhead, but it should prove to be far more scalable on multicore systems. The programming model is also far nicer with respect to Jython.
 
-=== Former Major problems ===
+----
+
+== Historical Notes ==
 
 (Preserved to show how much we had to go through...)
+
+=== Formed Major Problems ===
 
  * Jython does not support non-str keys in {{{__dict__}}} right now.  Jim Baker replaced the custom dictionary in {{{PyStringMap}}} with a {{{HashMap}}} (along Groves' earlier work). This change should resolve this problem.  Try the [https://jython.svn.sourceforge.net/svnroot/jython/branches/modern/ modern] branch. Problem encountered in {{{django/utils/_threading_local.py}}}. 
  * Something goes wrong with {{{re.compile(u"([\u0080-\uffff])")}}} in {{{django/utils/text.py}}} I think it is a lacking in our array implementation but this needs more investigation.
