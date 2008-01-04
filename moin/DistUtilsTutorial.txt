@@ -28,10 +28,9 @@ top
  * package/things - This is where I will keep all my things. Here I have some image files, but you can put anything your module may need here. Naturally you can use any folder name you like.
  * The other files are all in the root and will be described soon.
 
-''HELP''
- * I recently tried to append a new directory under 'things' and I could not get setup.py to create it when "setup.py install" was run. The tar file contained it all correctly (thanks to the MANIFEST.in file), but setup.py could not create the things/help directory. Anyone have any idea how to handle that?
+== UPDATE: How to add other files, other data and directories ==
+I have a tentative solution for when you need extra files and folders in your distributed tarball. This is surprisingly tricky to do. Please see the section at the end titled "Other Files"
 
-No update a year later, I wonder about the Internet sometimes :(
 
 == The files ==
 === runner ===
@@ -288,6 +287,146 @@ distutils:$ python setup.py sdist upload --sign
 }}}
 
 TODO: need a sample output here
+
+== Other Files ==
+Jan 4 2008.
+When you need ''other'' stuff in your tarball (.py files included) and distutils is causing your brain to segfault, this may help you. Robin Dunn (he of wxPython fame) pointed me at his source code and I spent a little time hacking it. 
+
+I'll use Fonty Python as the example - I'll show you the tree and explain it a little, then I'll follow that with the code that does the job.
+
+=== The tree ===
+Here's the Fonty Python tree (as it stands, leaning wildly, right now). 'trunk' is the '''distribution root'''. I have trimmed it somewhat.
+{{{
+trunk:$ tree
+|-- COPYING
+|-- README
+|-- fontypython
+|-- fontypythonmodules
+|   |-- __init__.py
+|   |-- cli.py
+|   |-- help
+|   |   |-- README
+|   |   |-- common
+|   |   |   |-- README
+|   |   |   |-- fp_ticking.png
+|   |   |   `-- logo_dec_2007.png
+|   |   |-- en
+|   |   |   |-- README
+|   |   |   |-- fp_1to8.png
+|   |   |   `-- help.html
+|   |   `-- fr
+|   |       |-- README
+|   |       |-- fp_1to8.png
+|   |       `-- help.html
+|   |-- i18n.py
+|   |-- locale
+|   |   |-- fr
+|   |   |   `-- LC_MESSAGES
+|   |   |       `-- all.mo
+|   |   `-- it
+|   |       `-- LC_MESSAGES
+|   |           `-- all.mo
+|   |-- pofiles
+|   |   |-- README
+|   |   |-- fp_all.po
+|   |   |-- fr_all.merged.po
+|   |   |-- it_all.merged.po
+|   |   `-- who_did_what
+|   |-- things
+|   |   |-- README
+|   |   `-- tick.png
+|   `-- wxgui.py
+|-- fp
+`-- setup.py
+}}}
+So, there are .py files, text files, locale files, images and html files. I want them '''all''' in the tarball in the right order.
+
+=== The MANIFEST.in file ===
+{{{
+include fontypython fp README COPYING
+recursive-include fontypythonmodules/pofiles *
+recursive-include fontypythonmodules/things *
+recursive-include fontypythonmodules/locale *
+recursive-include fontypythonmodules/help *
+}}}
+I tell it to recurse all those subfolders. I include 'fp', 'fontypython', 'README' and 'COPYING' because they are in the root - perhaps there's a better way to do it, but this works.
+
+=== The Magic Code ===
+The magic stuff is in the two functions called '''opj''' and '''find_data_files'''. They work together to build a list of all the files in a given path. This list is in the right shape for distutils to swallow. You pass it in via the data_files variable in the setup() call.
+
+(Ignore all my fontypythonmodules.stuff - that's just getting strings from another module.)
+
+After making these changes, a normal '''python setup.py sdist''' works without oddball errors and the tarball has all the files you'd expect it to.
+{{{
+import os, sys, glob, fnmatch
+
+## Code borrowed from wxPython's setup and config files
+## Thanks to Robin Dunn for the suggestion.
+## I am not 100% sure what's going on, but it works!
+def opj(*args):
+    path = os.path.join(*args)
+    return os.path.normpath(path)
+def find_data_files(srcdir, *wildcards, **kw):
+    # get a list of all files under the srcdir matching wildcards,
+    # returned in a format to be used for install_data
+    def walk_helper(arg, dirname, files):
+        if '.svn' in dirname:
+            return
+        names = []
+        lst, wildcards = arg
+        for wc in wildcards:
+            wc_name = opj(dirname, wc)
+            for f in files:
+                filename = opj(dirname, f)
+
+                if fnmatch.fnmatch(filename, wc_name) and not os.path.isdir(filename):
+                    names.append(filename)
+        if names:
+            lst.append( (dirname, names ) )
+
+    file_list = []
+    recursive = kw.get('recursive', True)
+    if recursive:
+        os.path.walk(srcdir, walk_helper, (file_list, wildcards))
+    else:
+        walk_helper((file_list, wildcards),
+                    srcdir,
+                    [os.path.basename(f) for f in glob.glob(opj(srcdir, '*'))])
+    return file_list
+
+## This is a list of files to install, and where:
+## Make sure the MANIFEST.in file points to all the right 
+## directories too.
+files = find_data_files('fontypythonmodules/', '*.*')
+
+from distutils.core import setup
+
+setup(name = "fontypython",
+    version = fontypythonmodules.fpversion.version,
+    description = fontypythonmodules.strings.description,
+    author = "Donn.C.Ingle",
+    author_email = fontypythonmodules.strings.contact,
+    license = "GNU GPLv3",
+    url = "https://savannah.nongnu.org/projects/fontypython/",
+    packages = ['fontypythonmodules'],
+    data_files = files,
+    #'fontypython' and 'fp' are in the root.
+    scripts = ["fontypython", "fp"],
+long_description = fontypythonmodules.strings.long_description,
+    classifiers=[
+      'Development Status :: 4 - Beta',
+      'Environment :: X11 Applications :: GTK',
+      'Intended Audience :: End Users/Desktop',
+      'Intended Audience :: Developers',
+      'License :: OSI Approved :: GNU General Public License (GPL)',
+      'Operating System :: POSIX :: Linux',
+      'Programming Language :: Python',
+      'Topic :: Desktop Environment',
+      'Topic :: Text Processing :: Fonts'
+      ]
+)
+}}}
+
 
 == Fin ==
 I hope this helps someone.
