@@ -12,7 +12,7 @@ To run Django on Jython, with a PostgreSQL backend, the following steps are nece
 
  * Copy these three files from CPythonLib to Lib: gettext.py, locale.py, optparse.py. Please note that these files are only partially working on Jython, that's why they haven't been promoted yet (gettext.py actually works, as verified by test_gettext.py, but depends on still failing locale.py). But they are very close, and they appear to be fine for Django. Certainly fine for this round of development!
  
- * Use the backend [https://jython.svn.sourceforge.net/svnroot/jython/trunk/sandbox/jbaker/django/db/backends/postgresql_zxjdbc/ zxjdbc_postgresql], which was contributed by Leo Soto.
+ * Use the database backend [https://jython.svn.sourceforge.net/svnroot/jython/trunk/sandbox/jbaker/django/db/backends/postgresql_zxjdbc/ zxjdbc_postgresql], which was contributed by Leo Soto.
 
 Here's what works:
 
@@ -20,16 +20,25 @@ syncdb and the very cool Django admin run; many unit tests pass. You can run wit
 
 In running the model unit tests, here are the things we seem to be missing, accounting for most of the approximately 75 failures:
 
- * Many doctests are fragile, because they depend on the dict traversal ordering; in Jython, this is different that CPython, and if we adopt !ConcurrentHashMap, it's not even repeatable. This is a pervasive bug in Django.
+ * Many doctests are fragile, because they depend on the dict traversal ordering; in Jython, this is different that CPython, and if we adopt {{{ConcurrentHashMap}}}, it's not even repeatable. This is a pervasive bug in Django.
 
- * We still have some encoding problems, again seen in doctests. An example where output is expected to be lower case hex, not upper case. I fixed the problem in !PyUnicode, but there are more places.
+ * We still have some encoding problems, again seen in doctests. An example where output is expected to be lower case hex, not upper case. I fixed the problem in {{{PyUnicode}}}, but there are more places.
 
- * Problem with the !ManagerDescriptor handling, in django.db.models.manager.
+ * Problem with the {{{ManagerDescriptor}}} handling, in {{{django.db.models.manager}}}.
 
- * No decorators yet! (But they are coming soon, even available experimentally for Jython.) 
+ * No decorators yet! (But they are coming soon, and are now available experimentally for Jython.) 
 
 There may be some other rough categories, we need to look at the failures more systematically. All that doctest noise is certainly annoying!
 
+---- 
+
+Before we can push modern into trunk, the following needs to be done:
+
+ * The test_extcall unit test currently fails. This appears to be a dependency on the dict traversal being the same. However, it's a mind bending test. The 2.3 version is particularly problematic because it's not modular at all. Google's GHOP has produced an improved version for Python 2.6 - we will look at this as a starting point.
+
+ * Tristan King provided a near complete subset of the functionality for {{{time.strptime}}}, as implemented in org.python.modules.time.Time. This needs to be enhanced. All unit tests in the CPythonLib version of test_time now pass except for {{{strptime}}} -- specifically the conversion specifier {{{'%c'}}} -- so we can also move to that, and discard our Jython version, when this is completed. That should be soon!
+
+ * Decide whether we should use {{{ConcurentHashMap}}} or not as the backing hash map for {{{dict}}} and {{{__dict__}}}.
 
 === Former Major problems ===
 
