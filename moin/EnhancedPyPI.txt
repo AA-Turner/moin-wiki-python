@@ -37,9 +37,10 @@ people to register and upload their package elsewhere.
 
 The rest of the document presents the actions to take, and the work 
 to be done for it:
-* making .pypirc supports multiple servers
-* making PyPI permissive for Trove classification
-* providing a base layer for PyPI-like servers implementation 
+
+ * making .pypirc supports multiple servers
+ * making PyPI permissive for Trove classification
+ * providing a base layer for PyPI-like servers implementation 
 
 = Making .pypirc supports multiple servers = 
 
@@ -56,15 +57,14 @@ for registering a package. The file looks like
 The default repository is PyPI, and when another repository has to be used,
 there are two options. 
 
-Either adding the repository url in the command line::
+Either adding the repository url in the command line:
 
 
 {{{
   $ python setup.py register -r http://example.com/repository
 }}}
 
-Either adding it in the .pypirc file::
-
+Either adding it in the .pypirc file:
 
 {{{
   [server-login]
@@ -81,8 +81,7 @@ associated with the server is hardcoded to "pypi".
 
 A simple way to enhance it, is to be able to add several sections in .pypirc.
 
-For instance::
-
+For instance:
 
 {{{
   [server-login]
@@ -118,7 +117,7 @@ see: http://www.nabble.com/enhancing-.pypirc-file-for-multiple-servers-handling-
 
 PyPI is based on a Trove classification, see http://www.python.org/dev/peps/pep-0301/#distutils-trove-classification.
 Another server may have its own trove classification though, that differs from PyPI. 
-This is intended because the server provide a "package center" that has its own domain-specific categories. 
+This is intended because the server can provide a "package center" that has its own domain-specific categories. 
 
 For example, a package might have this classification:
 
@@ -127,7 +126,7 @@ For example, a package might have this classification:
   Intended Audience :: Developers
 }}}
 
-But a slightly different one in another server. Let's say, the ACME company
+But a slightly different one in another server. Let's say, the ACME company:
 
 {{{
   ACME :: Visibility :: Public
@@ -137,7 +136,7 @@ But a slightly different one in another server. Let's say, the ACME company
 
 A permissive Trove classification would allow the registering of the package
 in both servers, even if the categories does not exist. For each unkown category
-a warning is popped at the prompt::
+a warning is popped at the prompt.
 
 When registering it to several servers, the expected output would be::
 
@@ -162,7 +161,7 @@ This will allow visual checking when a typo is made.
 
 XXX code the patch for PyPI code if accepted
 
-== Providing a base layer for PyPI-like servers implementation ==
+= Providing a base layer for PyPI-like servers implementation =
 
 The PyPI current implementation is done in a cgi-like Python application,
 that works with a Postgres database. The code though, is not based on an abstract
@@ -173,8 +172,8 @@ This means that everytime Disutils wants to change its behavior, PyPI has
 to change too.
 
 A base server-side layer could be added in Distutils itself, to provide:
-* a model for the storage;
-* a base class for the API the server has to provide.
+ * a model for the storage;
+ * a base class for the API the server has to provide.
 
 With such a layer, it would also facilitate the standardization
 of all PyPI-like servers.
