@@ -21,13 +21,8 @@ Python application by looking for eggs in PyPI and downloading them.
 This central approach is great for Python advocacy, and for the cohesion
 of the community of developers, but brings a few issues:
 
- * when PyPI is down or slow, many developers are unable to build their 
-   application, unless they have a local PyPI cache;
- * when people from a sub-community, like Plone, want to promote their
-   work, they need to shout it out in several places, to make sure
-   it has reach people focused on the given framework. These places
-   are acting a bit like the PyPI, so a common releasing standard 
-   make thing easier to automate.
+ * when PyPI is unreachable, developers are unable to build their application, unless they have a local PyPI cache;
+ * when people from a sub-community, like Plone, want to promote their work, they need to shout it out in several places, to make sure it has reach people focused on the given framework. These places are acting a bit like the PyPI, so a common releasing standard make thing easier to automate.
 
 This document provides a solution to transparently support several index
 servers. It is a very low risk and very simple to implement. It is also
@@ -42,7 +37,7 @@ to be done for it:
  * making PyPI permissive for Trove classification
  * providing a base layer for PyPI-like servers implementation 
 
-= Making .pypirc supports multiple servers = 
+= Making .pypirc supports multiple servers =
 
 Right now, the .pypirc file is intended to keep username and password
 for registering a package. The file looks like
@@ -103,13 +98,37 @@ For instance:
 This will allow backward-compatibility, and make register and upload able 
 to interact with several servers when they are called.
 
-== Asking the user at the prompt ==
+== How sections in .pypirc are used ==
 
-When a user call register or uplad with such a file, it will be asked
-for each server wheter he wants to perform the action over it.
+When a user call the register or the upload command with such a file, it will
+loop through every section, and ask the used at the prompt if he wants to
+perform the action over the given server.
 
-XXX to be completed if if accepted, until then, iw.dist is a 
-working prototype available at the cheeseshop.
+For example:
+
+{{{
+$ python setup.py register sdist upload
+running mregister
+running egg_info
+...
+Using PyPI login from /Users/tziade/.pypirc
+Do you want to register the package metadata at http://www.python.org/pypi (y/N)? n
+Do you want to register the package metadata at http://example.com/repository (y/N)? y
+Server at http://example.com/repository response (200): OK
+Do you want to register the package metadata at http://example2.com/repository (y/N)? n
+running sdist
+...
+running upload
+Using PyPI login from /Users/tziade/.pypirc
+Do you want to upload the package at http://pypi.python.org/pypi (y/N)? n
+Do you want to upload the package at http://example.com/repository (y/N)? y
+Submitting dist/iw.releaser-0.1.tar.gz to http://example.com/repository
+Server response (200): OK
+Do you want to upload the package at http://example2.com/repository (y/N)? n
+}}} 
+
+
+XXX to be completed if if accepted, until then, iw.dist is a working prototype available at the cheeseshop.
 
 see: http://www.nabble.com/enhancing-.pypirc-file-for-multiple-servers-handling-to14504516.html#a14527503
 
@@ -136,46 +155,76 @@ But a slightly different one in another server. Let's say, the ACME company:
 
 A permissive Trove classification would allow the registering of the package
 in both servers, even if the categories does not exist. For each unkown category
-a warning is popped at the prompt.
+a warning is popped at the prompt. The unknown category is not created on the server:
+each server keeps its own classifiers.
 
 When registering it to several servers, the expected output would be::
 
 {{{
 	$ python setup.py register
-
 	Do you want to register at PyPI (y/N) ? y
 	...
 	Warning "ACME :: Visibility :: Public" classifier not found on the server
 	200 - OK
 
-	
 	Do you want to register at ACME (y/N) ? y	
-
         ...
 	Warning "Development Status :: 5 - Production/Stable" classifier not found on the server
   	Warning "Intended Audience :: Developers" classifier not found on the server
 	200 - OK
 }}}
 
-This will allow visual checking when a typo is made. 
+This will allow visual checking when a typo is made. The package will then be available
+in each server, but only under the categories the server has.
 
 XXX code the patch for PyPI code if accepted
 
 = Providing a base layer for PyPI-like servers implementation =
 
 The PyPI current implementation is done in a cgi-like Python application,
-that works with a Postgres database. The code though, is not based on an abstract
-layer. For instance, when a package is uploaded, the request's form is checked
-then the data are pushed into the Database through SQL query. 
+that works with a Postgres database. For example, when a package is 
+uploaded, the request's form is checked, then the data are pushed 
+into the database through an SQL query. 
 
-This means that everytime Disutils wants to change its behavior, PyPI has
-to change too.
+Another server could have another storage strategy. So extracting an abstract
+layer from PyPI implementation could facilitate implementing any server.
 
-A base server-side layer could be added in Distutils itself, to provide:
- * a model for the storage;
- * a base class for the API the server has to provide.
+A module could be added to provide:
+ * an abstract class for the storage, that works with a backend.
+ * an abstract class for the API the web server has to provide.
 
-With such a layer, it would also facilitate the standardization
-of all PyPI-like servers.
 
-This section presents this base layer: XXX to be completed if accepted
+This module could be named interfaces.py and contain the exposed API.
+In this example, zope.interface is used to define these abstract class::
+
+{{{
+from zope.interface import Interface
+
+
+class IPyPIServer(Interface):
+    """Interface for the web server"""
+
+    def file_upload(response=True):
+        """uploads a file"""
+
+    def list_classifiers():
+        """returns list of classifiers"""
+
+    ... more details ...        
+
+class IPyPIStorage(Interface):
+    """Defines a storage"""
+
+    def get_classifiers():
+        """returns the classifiers"""
+
+    ... more details ...
+
+}}}
+
+Then each server could implement these interfaces. With such a layer, it 
+would facilitate the standardization of all PyPI-like servers, that
+could all used the same base.
+
+
+XXX to be completed if accepted
