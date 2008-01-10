@@ -40,7 +40,7 @@ We don't have:
 
  * os.chmod. This can be implemented with JNA. We can still support setuptools on deployments lacking JNA if we submit a patch back to setuptools to only use chmod if it exists
 
- * setuptools' use of marshal: setuptools uses marshal.load in two places -- to get a code object from a .pyc file, so it can scan the code object's co_names and co_consts (basically to read a module's variables without importing it). 
+ * setuptools' use of marshal: setuptools uses marshal.load in two places -- to get a code object from a .pyc file, so it can scan the code object's co_names and co_consts (basically to read a module's variables without importing it). This isn't portable: Jython's compiled .pys (actually Java .class files) can't be read via marshal, nor do Jython's code objects support co_names and co_consts 
 
   the two places this is used:
 
