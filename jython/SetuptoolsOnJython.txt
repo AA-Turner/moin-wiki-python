@@ -30,14 +30,27 @@ Setuptools requirements:
 
  * imp.acquire/release_lock (and the accompanying lock_held which we don't actually need). Exposes the import machinery's lock via the imp module '''''Added in r3894'''''
 
-We don't have:
-  
  * setuptools runs a test to ensure .pth files work by running "sys.executable -E -c pass". -E is ignore environment on CPython, but is different on Jython (takes an argument):
  
-  -E codec : Use a different codec the reading from the console.
+  -E codec : Use a different codec the reading from the console. '''''-E codec renamed to -C codec in r4013. -E is now a noop (but valid) command line arg'''''
+
+ * os.lstat. setuptools cut and pasted shutil's rmtree from CPython 2.4, which uses lstat to check for a directory vs a symlink to a directory. We now support an os.stat that fills in st_mode's directory bit, but can we support lstat? (We definitely can with JNA)? Can setuptools avoid lstat completely (requiring a patch)? I don't think Java can safely determine a sym link yet. Java 1.7's JSR 203 (nio part 2) should address this as well as chmod, but we obviously need a solution for Java 1.5 '''''Turned out we can implement a simple lstat in pure Java, added in r4014'''''
+
+We don't have:
 
  * os.chmod. This can be implemented with JNA. We can still support setuptools on deployments lacking JNA if we submit a patch back to setuptools to only use chmod if it exists
-  
- * os.lstat. setuptools cut and pasted shutil's rmtree from CPython 2.3, which uses lstat to check for a directory vs a symlink to a directory. We now support an os.stat that fills in st_mode's directory bit, but can we support lstat? (We definitely can with JNA)? Can setuptools avoid lstat completely (requiring a patch)? I don't think Java can safely determine a sym link yet. Java 1.7's JSR 203 (nio part 2) should address this as well as chmod, but we obviously need a solution for Java 1.5
 
- * working marshal? setuptools uses marshal.load in a couple places, which either needs to be avoided or possibly some work done to Jython's marshal module
+ * setuptools' use of marshal: setuptools uses marshal.load in two places -- to get a code object from a .pyc file, so it can scan the code object's co_names and co_consts (basically to read a module's variables without importing it). 
+
+  the two places this is used:
+
+  1. when a package doesn't mark itself as zip_safe, setuptools will scan it for special variable names (like '__file__') to determine zip_safetyness.
+  
+  2. setuptools.depend.get_module_constant: a generic way to grab the value of a module variable. currently only used by Require.get_version
+ 
+ 
+In Jython, in some cases the zip_safe check will avoid the marshal.load code path because there won't be any .pyc or .pyos in the package (because jython's distutils compiles .py to $py.class instead). Though there may be cases where Jython installs a .egg that already includes .pycs (they aren't pruned).
+ 
+Unfortunately setuptools is defaulting zip_safe to True unless proved otherwise (and it won't be proved otherwise no .pycs exist). So even if marshal.load is avoided in some cases, those cases can be incorrectly marked as being zip_safe when they are not.
+ 
+We'll probably need setuptools patched to just assume zip_safe=False under jython when a package doesn't define it, and to avoid marshal.load completely when scanning for zip_safety under Jython. I'm not sure how to workaround issue #2
