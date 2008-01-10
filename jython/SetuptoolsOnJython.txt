@@ -54,3 +54,148 @@ In Jython, in some cases the zip_safe check will avoid the marshal.load code pat
 Unfortunately setuptools is defaulting zip_safe to True unless proved otherwise (and it won't be proved otherwise no .pycs exist). So even if marshal.load is avoided in some cases, those cases can be incorrectly marked as being zip_safe when they are not.
  
 We'll probably need setuptools patched to just assume zip_safe=False under jython when a package doesn't define it, and to avoid marshal.load completely when scanning for zip_safety under Jython. I'm not sure how to workaround issue #2
+
+setuptools-0.6 (from svn) tests: the first 3 failures are related to marshal.load, the 4th test also fails on CPython, and the final two failures are due to assuming CPython dict ordering
+{{{
+testExtractConst (setuptools.tests.DependsTests) ... ERROR
+testFindModule (setuptools.tests.DependsTests) ... ok
+testModuleExtract (setuptools.tests.DependsTests) ... ERROR
+testRequire (setuptools.tests.DependsTests) ... ERROR
+testContents (setuptools.tests.DistroTests) ... ok
+testDistroType (setuptools.tests.DistroTests) ... ok
+testEmpty (setuptools.tests.DistroTests) ... ok
+testExcludePackage (setuptools.tests.DistroTests) ... ok
+testExcludePackages (setuptools.tests.DistroTests) ... ok
+testIncludeExclude (setuptools.tests.DistroTests) ... ok
+testInvalidIncludeExclude (setuptools.tests.DistroTests) ... ok
+testAvailability (setuptools.tests.FeatureTests) ... ok
+testDefaults (setuptools.tests.FeatureTests) ... ok
+testFeatureOptions (setuptools.tests.FeatureTests) ... ok
+testFeatureWithInvalidRemove (setuptools.tests.FeatureTests) ... ok
+testUseFeatures (setuptools.tests.FeatureTests) ... ok
+testConflictingOptions (setuptools.tests.TestCommandTests) ... ok
+testDefaultSuite (setuptools.tests.TestCommandTests) ... ok
+testDefaultWModuleOnCmdLine (setuptools.tests.TestCommandTests) ... ok
+testLongOptSuiteWNoDefault (setuptools.tests.TestCommandTests) ... ok
+testNoSuite (setuptools.tests.TestCommandTests) ... ok
+testTestIsCommand (setuptools.tests.TestCommandTests) ... ok
+Doctest: api_tests.txt ... ok
+test_bad_urls (setuptools.tests.test_packageindex.TestPackageIndex) ... FAIL
+testCollection (setuptools.tests.test_resources.DistroTests) ... ok
+testDistroBasics (setuptools.tests.test_resources.DistroTests) ... ok
+testDistroDependsOptions (setuptools.tests.test_resources.DistroTests) ... ok
+testDistroDependsSimple (setuptools.tests.test_resources.DistroTests) ... ok
+testDistroMetadata (setuptools.tests.test_resources.DistroTests) ... ok
+testDistroParse (setuptools.tests.test_resources.DistroTests) ... ok
+testResolve (setuptools.tests.test_resources.DistroTests) ... ok
+testBasics (setuptools.tests.test_resources.EntryPointTests) ... ok
+testParse (setuptools.tests.test_resources.EntryPointTests) ... ok
+testParseList (setuptools.tests.test_resources.EntryPointTests) ... FAIL
+testParseMap (setuptools.tests.test_resources.EntryPointTests) ... FAIL
+testRejects (setuptools.tests.test_resources.EntryPointTests) ... ok
+testEmptyParse (setuptools.tests.test_resources.ParseTests) ... ok
+testSafeName (setuptools.tests.test_resources.ParseTests) ... ok
+testSafeVersion (setuptools.tests.test_resources.ParseTests) ... ok
+testSimpleRequirements (setuptools.tests.test_resources.ParseTests) ... ok
+testSplitting (setuptools.tests.test_resources.ParseTests) ... ok
+testVersionEquality (setuptools.tests.test_resources.ParseTests) ... ok
+testVersionOrdering (setuptools.tests.test_resources.ParseTests) ... ok
+testYielding (setuptools.tests.test_resources.ParseTests) ... ok
+testAdvancedContains (setuptools.tests.test_resources.RequirementsTests) ... ok
+testBasicContains (setuptools.tests.test_resources.RequirementsTests) ... ok
+testBasics (setuptools.tests.test_resources.RequirementsTests) ... ok
+testOptionsAndHashing (setuptools.tests.test_resources.RequirementsTests) ... ok
+testOrdering (setuptools.tests.test_resources.RequirementsTests) ... ok
+testVersionEquality (setuptools.tests.test_resources.RequirementsTests) ... ok
+
+======================================================================
+ERROR: testExtractConst (setuptools.tests.DependsTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/pjenvey/src/java/jython-trunk/dist/Lib/unittest.py", line 229, in __call__
+    testMethod()
+  File "/Users/pjenvey/src/python/setuptools-0.6/setuptools/tests/__init__.py", line 59, in testExtractConst
+    self.assertEqual(extract_constant(f1.func_code,'q', -1), None)
+  File "/Users/pjenvey/src/python/setuptools-0.6/setuptools/depends.py", line 220, in extract_constant
+    if symbol not in code.co_names:
+AttributeError: 'tablecode' object has no attribute 'co_names'
+
+======================================================================
+ERROR: testModuleExtract (setuptools.tests.DependsTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/pjenvey/src/java/jython-trunk/dist/Lib/unittest.py", line 229, in __call__
+    testMethod()
+  File "/Users/pjenvey/src/python/setuptools-0.6/setuptools/tests/__init__.py", line 80, in testModuleExtract
+    )
+  File "/Users/pjenvey/src/python/setuptools-0.6/setuptools/depends.py", line 182, in get_module_constant
+    code = marshal.load(f)
+  File "/Users/pjenvey/src/java/jython-trunk/dist/Lib/marshal.py", line 323, in load
+    return Unmarshaller(f).load()
+  File "/Users/pjenvey/src/java/jython-trunk/dist/Lib/marshal.py", line 187, in load
+    return self.dispatch[c](self)
+KeyError: 
+
+======================================================================
+ERROR: testRequire (setuptools.tests.DependsTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/pjenvey/src/java/jython-trunk/dist/Lib/unittest.py", line 229, in __call__
+    testMethod()
+  File "/Users/pjenvey/src/python/setuptools-0.6/setuptools/tests/__init__.py", line 99, in testRequire
+    self.assertEqual(req.get_version(), __version__)
+  File "/Users/pjenvey/src/python/setuptools-0.6/setuptools/depends.py", line 62, in get_version
+    v = get_module_constant(self.module,self.attribute,default,paths)
+  File "/Users/pjenvey/src/python/setuptools-0.6/setuptools/depends.py", line 182, in get_module_constant
+    code = marshal.load(f)
+  File "/Users/pjenvey/src/java/jython-trunk/dist/Lib/marshal.py", line 323, in load
+    return Unmarshaller(f).load()
+  File "/Users/pjenvey/src/java/jython-trunk/dist/Lib/marshal.py", line 187, in load
+    return self.dispatch[c](self)
+KeyError: 
+
+======================================================================
+FAIL: test_bad_urls (setuptools.tests.test_packageindex.TestPackageIndex)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/pjenvey/src/java/jython-trunk/dist/Lib/unittest.py", line 229, in __call__
+    testMethod()
+  File "/Users/pjenvey/src/python/setuptools-0.6/setuptools/tests/test_packageindex.py", line 19, in test_bad_urls
+    self.assert_(False)
+  File "/Users/pjenvey/src/java/jython-trunk/dist/Lib/unittest.py", line 278, in failUnless
+    if not expr: raise self.failureException, msg
+AssertionError
+
+======================================================================
+FAIL: testParseList (setuptools.tests.test_resources.EntryPointTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/pjenvey/src/java/jython-trunk/dist/Lib/unittest.py", line 229, in __call__
+    testMethod()
+  File "/Users/pjenvey/src/python/setuptools-0.6/setuptools/tests/test_resources.py", line 274, in testParseList
+    self.checkSubMap(EntryPoint.parse_group("xyz", self.submap_str))
+  File "/Users/pjenvey/src/python/setuptools-0.6/setuptools/tests/test_resources.py", line 264, in checkSubMap
+    )
+  File "/Users/pjenvey/src/java/jython-trunk/dist/Lib/unittest.py", line 302, in failUnlessEqual
+    raise self.failureException, \
+AssertionError: "{'feature3': EntryPoint.parse('feature3 = this.module [something]'), 'feature2': EntryPoint.parse('feature2 = another.module:SomeClass [extra1,extra2]'), 'feature1': EntryPoint.parse('feature1 = somemodule:somefunction')}" != "{'feature2': EntryPoint.parse('feature2 = another.module:SomeClass [extra1,extra2]'), 'feature3': EntryPoint.parse('feature3 = this.module [something]'), 'feature1': EntryPoint.parse('feature1 = somemodule:somefunction')}"
+
+======================================================================
+FAIL: testParseMap (setuptools.tests.test_resources.EntryPointTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/pjenvey/src/java/jython-trunk/dist/Lib/unittest.py", line 229, in __call__
+    testMethod()
+  File "/Users/pjenvey/src/python/setuptools-0.6/setuptools/tests/test_resources.py", line 281, in testParseMap
+    self.checkSubMap(m['xyz'])
+  File "/Users/pjenvey/src/python/setuptools-0.6/setuptools/tests/test_resources.py", line 264, in checkSubMap
+    )
+  File "/Users/pjenvey/src/java/jython-trunk/dist/Lib/unittest.py", line 302, in failUnlessEqual
+    raise self.failureException, \
+AssertionError: "{'feature3': EntryPoint.parse('feature3 = this.module [something]'), 'feature2': EntryPoint.parse('feature2 = another.module:SomeClass [extra1,extra2]'), 'feature1': EntryPoint.parse('feature1 = somemodule:somefunction')}" != "{'feature2': EntryPoint.parse('feature2 = another.module:SomeClass [extra1,extra2]'), 'feature3': EntryPoint.parse('feature3 = this.module [something]'), 'feature1': EntryPoint.parse('feature1 = somemodule:somefunction')}"
+
+----------------------------------------------------------------------
+Ran 50 tests in 2.342s
+
+FAILED (failures=3, errors=3)
+}}}
