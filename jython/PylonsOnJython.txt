@@ -9,6 +9,16 @@ Getting Pylons (0.9.6.1) to run on Jython
 
 Ensure all dependencies' tests pass:
 
+* nose. Pylons projects require nose, but most packages (including Pylons) use nose as their own test runners.
+
+  requires:
+
+  - the optparse module (added in r4018)
+
+  - compiler modules (compiler requires the parser module which Jython lacks). nose only needs the compiler module to use compiler.consts.CO_GENERATOR; until there's a parser, maybe jython could provide a broken compiler module that doesn't import parser
+
+  - a fix for the cell variable (variables used in closures) bug here: http://pylonshq.com/pasties/667
+
 * Paste, PasteDeploy and PasteScript
 
 * Mako
@@ -16,14 +26,6 @@ Ensure all dependencies' tests pass:
   - mako uses the compiler module to parse Python code into AST. The compiler module is mostly pure Python code, but its guts are really the native parser module (which Jython lacks)
 
 * Beaker
-
-* nose
-
-  requires:
-
-  - the optparse module (added in r4018)
-
-  - compiler modules (compiler requires the parser module which Jython lacks). nose only needs the compiler module to use compiler.consts.CO_GENERATOR; until there's a parser, maybe jython could provide a broken compiler module that doesn't import parser
 
 * Routes
 
