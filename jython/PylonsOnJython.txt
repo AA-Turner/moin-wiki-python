@@ -36,6 +36,8 @@ requires:
 
   * subprocess module: if it doesn't exist (Python 2.3) it uses a version copied over from CPython 2.4 (paste.util.subprocess24). paste.util.subprocess24 dies on attempting to import fcntl, so Jython needs to provide subprocess
 
+  * webbrowser module: paste.fixture imports it. Jython doesn't include it. It's a pretty simple module -- though it doesn't seem to work right on Jython when launching a console browser (like lynx or links). I think it's an os.system problem
+
 Mako
 ----
 requires:
