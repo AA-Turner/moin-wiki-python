@@ -23,7 +23,8 @@ This is based on Java code at http://officewriter.softartisans.com/OfficeWriter-
 
 from java.io import FileOutputStream
 from java.util import Date
-from java.lang import System, Math
+from java.lang import System
+from java.lang import Math
 
 from org.apache.poi.hssf.usermodel import *
 from org.apache.poi.hssf.util import HSSFColor
@@ -88,12 +89,12 @@ for i in range(0, 100, 1):
         # create each cell
         cell = row.createCell(j)
         # Fill the first column with strings
-        if (j == 0):
+        if j == 0:
             cell.setCellValue("Product " + str(i))
             cell.setCellStyle(style0)
 
         # Fill the next 8 columns with numbers.
-        elif (j < 9):
+        elif j < 9:
             cell.setCellValue( (Math.random() * 100))
 
             # Fill the last column with dates.
@@ -152,7 +153,7 @@ sheet = wb.getSheetAt(0)
 rows = sheet.getPhysicalNumberOfRows()
 print wb, sheet, rows
 
-cols = 0; # No. of columns
+cols = 0 # No. of columns
 tmp = 0
 
 # This trick ensures that we get the data properly even if it
@@ -161,7 +162,8 @@ for i in range(0, 10,1):
     row = sheet.getRow(i)
     if(row != None):
         tmp = sheet.getRow(i).getPhysicalNumberOfCells()
-        if(tmp > cols): cols = tmp
+        if tmp > cols:
+            cols = tmp
 print cols
 
 for r in range(0, rows, 1):
@@ -170,7 +172,7 @@ for r in range(0, rows, 1):
     if(row != None):
         for c in range(0, cols, 1):
             cell = row.getCell(c)
-            if(cell != None):
+            if cell != None:
                 print cell
 
 #wb.close()
