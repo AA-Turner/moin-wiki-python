@@ -1,41 +1,55 @@
 #format rst
 
-Getting Pylons (0.9.6.1) to run on Jython
-=========================================
+Pylons (0.9.6.1) on Jython Requirements/TODO
+============================================
 
-* The ability to install Pylons and all its dependencies:
+Installing Pylons and its dependencies
+--------------------------------------
 
-  * distutils and setuptools (Mostly finished, See `SetuptoolsOnJython`_)
+  * distutils and setuptools **(Mostly finished, See** `SetuptoolsOnJython`_ **)**
 
-Ensure all dependencies' tests pass:
+  * Ensure all dependencies' tests pass
 
-* nose. Pylons projects require nose, but most packages (including Pylons) use nose as their own test runners.
+nose
+----
 
-  requires:
+Pylons projects require nose, but most packages (including Pylons) use nose as their own test runners.
 
-  - the optparse module (added in r4018)
+requires:
 
-  - compiler modules (compiler requires the parser module which Jython lacks). nose only needs the compiler module to use compiler.consts.CO_GENERATOR; until there's a parser, maybe jython could provide a broken compiler module that doesn't import parser
+  * the optparse module **(added in r4018)**
 
-  - a fix for the cell variable (variables used in closures) bug here: http://pylonshq.com/pasties/667
+  * a fix for the cell variable (variables used in closures) bug here: http://pylonshq.com/pasties/667 **(fixed in r4038)**
 
-* Paste, PasteDeploy and PasteScript
+  * compiler modules (compiler requires the parser module which Jython lacks). nose only needs the compiler module to use compiler.consts.CO_GENERATOR; until there's a parser, maybe jython could provide a broken compiler module that doesn't import parser
 
-* Mako
+Routes
+------
+Pretty much all tests pass: though some tests require Paste's paste.fixture, which is troublesome to import
 
-  - mako uses the compiler module to parse Python code into AST. The compiler module is mostly pure Python code, but its guts are really the native parser module (which Jython lacks)
 
-* Beaker
+Paste, PasteDeploy and PasteScript
+----------------------------------
+requires:
 
-* Routes
+  * modulefinder module
 
-  - I got all of routes' tests to pass on Jython well over a year ago so I don't expect too much trouble here -pjenvey
+Mako
+----
 
-* WebHelpers
+  * mako uses the compiler module to parse Python code into AST. The compiler module is mostly pure Python code, but its guts are really the native parser module (which Jython lacks)
 
-* FormEncode
+Beaker
+------
 
-* simplejson
+WebHelpers
+----------
+
+FormEncode
+----------
+
+simplejson
+----------
 
   * `SetuptoolsOnJython`_ currently has trouble installing simplejson, because it attempts to compile its optional C extensions (that help performance). It expects to catch a distutils.errors.CCompilerError if the compilation fails, but Jython dies much earlier:
 
@@ -43,13 +57,20 @@ Ensure all dependencies' tests pass:
 
   TypeError: cannot concatenate 'str' and 'NoneType' objects
 
-* decorator
+decorator
+---------
 
-  - Note: decorators aren't currently supported in Jython, however the decorator module doesn't actually use decorators (works on CPython 2.3)
+  * Note: decorators aren't currently supported in Jython, however the decorator module doesn't actually use decorators (works on CPython 2.3)
 
-Later down the road:
+Later down the road
+===================
 
-* SQLAlchemy
 
-  - The [http://www.sqlalchemy.org/trac/ticket/672 Dialect Refactor II] ticket will need to be implemented to properly support using SQLAlchemy via Jython's DBAPI jdbc driver, [http://jython.org/Project/userguide.html#database-connectivity-in-jython zxJDBC]. 
+SQLAlchemy
+----------
+
+  - The [http://www.sqlalchemy.org/trac/ticket/672 Dialect Refactor II] ticket will need to be implemented to properly support using SQLAlchemy via Jython's DBAPI jdbc driver, [http://jython.org/Project/userguide.html#database-connectivity-in-jython zxJDBC].
   - Frank Wierzbicki has done some preliminary work on using SQLAlchemy with Jython, info [http://groups.google.com/group/sqlalchemy/browse_frm/thread/d60db24fe1683a41/09320033f406d78b?hl=en&lnk=gst here], and is scheduled to give a talk at PyCon 2008: "Database development with Jython, SQLAlchemy, and Hibernate"
+
+.. |svn| replace:: http://fisheye3.cenqua.com/changelog/jython/?cs=
+.. _svn: http://fisheye3.cenqua.com/changelog/jython/?cs=
