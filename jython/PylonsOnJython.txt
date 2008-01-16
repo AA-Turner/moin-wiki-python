@@ -17,11 +17,11 @@ Pylons projects require nose, but most packages (including Pylons) use nose as t
 
 requires:
 
-  * the optparse module **(added in r4018)**
+  * optparse module **(added in r4018)**
 
   * a fix for the cell variable (variables used in closures) bug here: http://pylonshq.com/pasties/667 **(fixed in r4038)**
 
-  * compiler modules (compiler requires the parser module which Jython lacks). nose only needs the compiler module to use compiler.consts.CO_GENERATOR; until there's a parser, maybe jython could provide a broken compiler module that doesn't import parser
+  * compiler package (and compiler requires the parser module which Jython lacks). nose only needs the compiler module to use compiler.consts.CO_GENERATOR; until there's a parser, maybe jython could provide a broken compiler module that doesn't import parser
 
 Routes
 ------
@@ -32,21 +32,35 @@ Paste, PasteDeploy and PasteScript
 ----------------------------------
 requires:
 
-  * modulefinder module
+  * modulefinder module (imported in paste/__init__.py). Jython currently lacks it, and modulefinder relies on reading code objects via marshal.load
+
+  * subprocess module: if it doesn't exist (Python 2.3) it uses a version copied over from CPython 2.4 (paste.util.subprocess24). paste.util.subprocess24 dies on attempting to import fcntl, so Jython needs to provide subprocess
 
 Mako
 ----
+requires:
 
-  * mako uses the compiler module to parse Python code into AST. The compiler module is mostly pure Python code, but its guts are really the native parser module (which Jython lacks)
+  * compiler module: to parse Python code into AST. The compiler module is mostly pure Python code, but its guts are really the native parser module (which Jython lacks)
 
 Beaker
 ------
+requires:
+
+  * Paste (for paste.fixture)
+  * base64.b64encode: might die on an attempting to import b64encode in beaker.crypto.PBKDF2 (at least it does when the tests are run)
 
 WebHelpers
 ----------
+requires:
+
+  * routes
+  * simplejson
 
 FormEncode
 ----------
+requires:
+
+  * gettext (which requires the locale module, which Jython lacks)
 
 simplejson
 ----------
@@ -65,12 +79,9 @@ decorator
 Later down the road
 ===================
 
-
 SQLAlchemy
 ----------
 
-  - The [http://www.sqlalchemy.org/trac/ticket/672 Dialect Refactor II] ticket will need to be implemented to properly support using SQLAlchemy via Jython's DBAPI jdbc driver, [http://jython.org/Project/userguide.html#database-connectivity-in-jython zxJDBC].
-  - Frank Wierzbicki has done some preliminary work on using SQLAlchemy with Jython, info [http://groups.google.com/group/sqlalchemy/browse_frm/thread/d60db24fe1683a41/09320033f406d78b?hl=en&lnk=gst here], and is scheduled to give a talk at PyCon 2008: "Database development with Jython, SQLAlchemy, and Hibernate"
-
-.. |svn| replace:: http://fisheye3.cenqua.com/changelog/jython/?cs=
-.. _svn: http://fisheye3.cenqua.com/changelog/jython/?cs=
+  * The `Dialect Refactor II <http://www.sqlalchemy.org/trac/ticket/672>`_ ticket will need to be implemented to properly support using SQLAlchemy via Jython's DBAPI jdbc driver, `zxJDBC <http://jython.org/Project/userguide.html#database-connectivity-in-jython>`_.
+  
+  * Frank Wierzbicki has done some preliminary work on using SQLAlchemy with Jython, info `here <http://groups.google.com/group/sqlalchemy/browse_frm/thread/d60db24fe1683a41/09320033f406d78b?hl=en&lnk=gst>`_, and is scheduled to give a talk at PyCon 2008: "Database development with Jython, SQLAlchemy, and Hibernate"
