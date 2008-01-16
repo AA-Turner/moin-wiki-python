@@ -21,108 +21,107 @@ This is based on Java code at http://officewriter.softartisans.com/OfficeWriter-
 {{{#!python
 #jython poi example. from Jython mailing list
 
-from java.io import FileOutputStream;
-from java.util import Date;
-from java.lang import System
-from java.lang import Math
+from java.io import FileOutputStream
+from java.util import Date
+from java.lang import System, Math
 
 from org.apache.poi.hssf.usermodel import *
-from org.apache.poi.hssf.util import HSSFColor;
+from org.apache.poi.hssf.util import HSSFColor
 
-startTime = System.currentTimeMillis();
+startTime = System.currentTimeMillis()
 
 
-wb = HSSFWorkbook();
-fileOut = FileOutputStream("POIOut2.xls");
+wb = HSSFWorkbook()
+fileOut = FileOutputStream("POIOut2.xls")
 
 
 # Create 3 sheets
-sheet1 = wb.createSheet("Sheet1");
-sheet2 = wb.createSheet("Sheet2");
-sheet3 = wb.createSheet("Sheet3");
-sheet3 = wb.createSheet("Sheet4");
+sheet1 = wb.createSheet("Sheet1")
+sheet2 = wb.createSheet("Sheet2")
+sheet3 = wb.createSheet("Sheet3")
+sheet3 = wb.createSheet("Sheet4")
 
 # Create a header style
-styleHeader = wb.createCellStyle();
-fontHeader = wb.createFont();
-fontHeader.setBoldweight(2);
-fontHeader.setFontHeightInPoints(14);
-fontHeader.setFontName("Arial");
-styleHeader.setFont(fontHeader);
+styleHeader = wb.createCellStyle()
+fontHeader = wb.createFont()
+fontHeader.setBoldweight(2)
+fontHeader.setFontHeightInPoints(14)
+fontHeader.setFontName("Arial")
+styleHeader.setFont(fontHeader)
 
 # Create a style used for the first column
-style0 = wb.createCellStyle();
-font0 = wb.createFont();
-font0.setColor(HSSFColor.RED.index);
-style0.setFont(font0);
+style0 = wb.createCellStyle()
+font0 = wb.createFont()
+font0.setColor(HSSFColor.RED.index)
+style0.setFont(font0)
 
 
 # Create the style used for dates.
-styleDates = wb.createCellStyle();
-styleDates.setDataFormat(HSSFDataFormat.getBuiltinFormat("m/d/yy h:mm"));
+styleDates = wb.createCellStyle()
+styleDates.setDataFormat(HSSFDataFormat.getBuiltinFormat("m/d/yy h:mm"))
 
 
 # create the headers
-rowHeader = sheet1.createRow(1);
+rowHeader = sheet1.createRow(1)
 # String value
-cell0 = rowHeader.createCell(0);
-cell0.setCellStyle(styleHeader);
-cell0.setCellValue("Name");
+cell0 = rowHeader.createCell(0)
+cell0.setCellStyle(styleHeader)
+cell0.setCellValue("Name")
 
 
 # numbers
 for i in range(0, 8, 1):
-    cell = rowHeader.createCell((i + 1));
-    cell.setCellStyle(styleHeader);
-    cell.setCellValue("Data " + str( (i + 1)) );
+    cell = rowHeader.createCell((i + 1))
+    cell.setCellStyle(styleHeader)
+    cell.setCellValue("Data " + str( (i + 1)) )
 
 
 # Date
-cell10 = rowHeader.createCell(9);
-cell10.setCellValue("Date");
-cell10.setCellStyle(styleHeader);
+cell10 = rowHeader.createCell(9)
+cell10.setCellValue("Date")
+cell10.setCellStyle(styleHeader)
 
 for i in range(0, 100, 1):
     # create a new row
-    row = sheet1.createRow(i + 2);
+    row = sheet1.createRow(i + 2)
     for j in range(0, 10, 1):
         # create each cell
-        cell = row.createCell(j);
+        cell = row.createCell(j)
         # Fill the first column with strings
         if (j == 0):
-            cell.setCellValue("Product " + str(i));
-            cell.setCellStyle(style0);
+            cell.setCellValue("Product " + str(i))
+            cell.setCellStyle(style0)
 
         # Fill the next 8 columns with numbers.
         elif (j < 9):
-            cell.setCellValue( (Math.random() * 100));
+            cell.setCellValue( (Math.random() * 100))
 
             # Fill the last column with dates.
         else:
-            cell.setCellValue(Date());
-            cell.setCellStyle(styleDates);
+            cell.setCellValue(Date())
+            cell.setCellStyle(styleDates)
 
 # Summary row
-rowSummary = sheet1.createRow(102);
-sumStyle = wb.createCellStyle();
-sumFont = wb.createFont();
-sumFont.setBoldweight( 5);
-sumFont.setFontHeightInPoints(12);
-sumStyle.setFont(sumFont);
-sumStyle.setFillPattern(HSSFCellStyle.FINE_DOTS);
-sumStyle.setFillForegroundColor(HSSFColor.GREEN.index);
+rowSummary = sheet1.createRow(102)
+sumStyle = wb.createCellStyle()
+sumFont = wb.createFont()
+sumFont.setBoldweight( 5)
+sumFont.setFontHeightInPoints(12)
+sumStyle.setFont(sumFont)
+sumStyle.setFillPattern(HSSFCellStyle.FINE_DOTS)
+sumStyle.setFillForegroundColor(HSSFColor.GREEN.index)
 
 
-cellSum0 = rowSummary.createCell( 0);
-cellSum0.setCellValue("TOTALS:");
-cellSum0.setCellStyle(sumStyle);
+cellSum0 = rowSummary.createCell( 0)
+cellSum0.setCellValue("TOTALS:")
+cellSum0.setCellStyle(sumStyle)
 
 
 # numbers
 # B
-cellB = rowSummary.createCell( 1);
-cellB.setCellStyle(sumStyle);
-cellB.setCellFormula("SUM(B3:B102)");
+cellB = rowSummary.createCell( 1)
+cellB.setCellStyle(sumStyle)
+cellB.setCellFormula("SUM(B3:B102)")
 }}}
 
 
@@ -139,44 +138,43 @@ To do:
 {{{#!python
 """    read.py
 Read an existant Excel file (Book1.xls) and show it on the screen
-
 """   
 from org.apache.poi.hssf.usermodel import *
-from java.io import FileInputStream;
+from java.io import FileInputStream
 
 file = "H:Book1.xls"
 print file
 fis = FileInputStream(file)
-wb = HSSFWorkbook(fis);
-sheet = wb.getSheetAt(0);
+wb = HSSFWorkbook(fis)
+sheet = wb.getSheetAt(0)
 
 # get No. of rows
-rows = sheet.getPhysicalNumberOfRows();
+rows = sheet.getPhysicalNumberOfRows()
 print wb, sheet, rows
 
 cols = 0; # No. of columns
-tmp = 0;
+tmp = 0
 
 # This trick ensures that we get the data properly even if it
 # doesn’t start from first few rows
 for i in range(0, 10,1):
-    row = sheet.getRow(i);
+    row = sheet.getRow(i)
     if(row != None):
-        tmp = sheet.getRow(i).getPhysicalNumberOfCells();
-        if(tmp > cols): cols = tmp;
+        tmp = sheet.getRow(i).getPhysicalNumberOfCells()
+        if(tmp > cols): cols = tmp
 print cols
 
 for r in range(0, rows, 1):
-    row = sheet.getRow(r);
+    row = sheet.getRow(r)
     print r
     if(row != None):
         for c in range(0, cols, 1):
-            cell = row.getCell(c);
+            cell = row.getCell(c)
             if(cell != None):
                 print cell
 
 #wb.close()
-fis.close();
+fis.close()
 }}}
 
 
