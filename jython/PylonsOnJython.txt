@@ -21,7 +21,9 @@ requires:
 
   * a fix for the cell variable (variables used in closures) bug here: http://pylonshq.com/pasties/667 **(fixed in r4038)**
 
-  * fix for new.instancemethod not allowing a PyType as its class argument **(fixed in r4051)*
+  * fix for new.instancemethod not allowing a PyType as its class argument **(fixed in r4051)**
+
+  * fix for inspect.argspec not working (also needed for Pylons, among other things) **(fixed in r4053)**
 
   * compiler package (and compiler requires the parser module which Jython lacks). nose only needs the compiler module to use compiler.consts.CO_GENERATOR; until there's a parser, maybe jython could provide a broken compiler module that doesn't import parser
 
@@ -69,7 +71,7 @@ requires:
 simplejson
 ----------
 
-  * `SetuptoolsOnJython`_ currently has trouble installing simplejson, because it attempts to compile its optional C extensions (that help performance). It expects to catch a distutils.errors.CCompilerError if the compilation fails, but Jython dies much earlier:
+  * `SetuptoolsOnJython`_ (actually distutils) currently has trouble installing simplejson, because it attempts to compile its optional C extensions (that help performance). It expects to catch a distutils.errors.CCompilerError if the compilation fails, but Jython dies much earlier:
 
   File "/Users/pjenvey/src/java/jython-trunk/dist/Lib/distutils/command/build_ext.py", line 598, in get_ext_filename
 
