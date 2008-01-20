@@ -1,0 +1,31 @@
+## page was renamed from JythonDeveloperGuide/HowToReleaseJython
+These are just some rough notes on the steps needed to make a full release of Jython.  I generally run ant full-build as a test beforehand, as well as testing many of these steps throughout, but since that isn't strictly necessary I'm not including it here.  full-build requires all of the optional jars for the build be available and named in ant.properties.  See build.xml for more information.
+
+ 1. Update files in trunk that have information on the current version
+  1. Py``System``State.java - version and PY_RELEASE_SERIAL at least.  Also PY_RELEASE_LEVEL, PY_MICRO_VERSION, PY_MINOR_VERSION and PY_MAJOR_VERSION depending on the level of version bumpage.
+  1. build.xml - <property name="jython.version", and make values in <target name="version" match Py``System``State.
+  1. NEWS
+  1. README
+ 1. Run regrtest and the bugtests
+ 1. Copy maint to a tag
+  1. svn cp https://jython.svn.sourceforge.net/svnroot/jython/branches/Release_2_2maint https://jython.svn.sourceforge.net/svnroot/jython/tags/Release_2_2_1
+ 1. build from tag
+  1. set svn.main.dir to tags/Release_2_2_1 in ant.properties
+  1. ant full-build
+ 1. upload installer
+  1. go to Admin/File Release on sourceforge
+  1. Click on Add release next to the jython package
+  1. create with a name in line with the version like 2.2rc1
+  1. ftp the built installer as on http://sourceforge.net/docman/display_doc.php?docid=6445&group_id=1#upload
+  1. associate the uploaded file with the new release
+  1. also update the Source``Forge News page (announcement can be added in Admin/News/Submit)
+ 1. update files in the website that reference the current release
+  1. constants.txt
+  1. news.txt
+  1. download.txt - checksums
+  1. index.txt - version number
+  1. userfaq.txt - current status
+ 1. upload maven package
+  1. ant -Dproject.version=2.2-rc1 in jython/maven
+  1. scp dist/jython-2.2-rc1-bundle.jar shell.sf.net:/home/groups/j/jy/jython/htdocs
+  1. File a jira issue for the upload as described in "Posting the request" on http://maven.apache.org/guides/mini/guide-central-repository-upload.html
