@@ -3,14 +3,33 @@
 
 [[TableOfContents]]
 
-Python lists have a built-in {{{sort()}}} method.  There are many
-ways to use it to sort a list and there doesn't appear to be a single,
-central place in the various manuals describing them, so I'll do so
-here.
+Python lists have a built-in {{{sort()}}} method that modifies the list in-place 
+and a {{{sorted()}}} built-in function that builds a new sorted list from an iterable.
+
+There are many ways to use them to sort data and there doesn't appear 
+to be a single, central place in the various manuals describing them, 
+so I'll do so here.
+
+== Backward compatibility note ==
+
+Many constructs given in the HOWTO assume Python 2.4.  
+Before that, there was no {{{sorted()}}} builtin and 
+{{{list.sort()}}} took no keyword arguments.
 
 == Sorting basic data types ==
 
-A simple ascending sort is easy; just call the {{{sort()}}} method of a list.
+A simple ascending sort is very easy: just call the 
+{{{sorted()}}} function.  It returns a new sorted list:
+
+{{{
+>>> print sorted([5, 2, 3, 1, 4])
+[1, 2, 3, 4, 5]
+}}}
+
+You can also use the {{{sort()}}} method of a list.  
+It modifies the list in-place (and returns None to avoid confusion).
+Usually it's less convenient than {{{sorted()}}} - but if you don't 
+need the original list, it's slightly more effecient.
 
 {{{
 >>> a = [5, 2, 3, 1, 4]
@@ -19,14 +38,11 @@ A simple ascending sort is easy; just call the {{{sort()}}} method of a list.
 [1, 2, 3, 4, 5]
 }}}
 
-
 Sort takes an optional function which can be called for doing the
-comparisons.  The default sort routine is equivalent to:
+comparisons.  The default sort routine is equivalent to using {{{cmp}}}:
 
 {{{
->>> a = [5, 2, 3, 1, 4]
->>> a.sort(cmp)
->>> print a
+>>> print sorted([5, 2, 3, 1, 4], cmp)
 [1, 2, 3, 4, 5]
 }}}
 
