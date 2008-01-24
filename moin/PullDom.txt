@@ -1,0 +1,24 @@
+= The pulldom Module =
+
+The `xml.dom.pulldom` module [http://docs.python.org/lib/module-xml.dom.pulldom.html (API)] provides a "pull parser" which can also be asked to produce DOM-accessible fragments of the document where necessary. The basic concept involves pulling "events" from a stream of incoming XML and processing them, although in contrast to [wiki:self:Sax SAX] which also employs an event-driven processing model together with callbacks, the user of a pull parser is responsible for explicitly pulling events from the stream, looping over those events until either processing is finished or an error condition occurs.
+
+The example below corresponds to the "Find Elements" example in the MiniDom introduction.
+
+{{{
+#!python
+from xml.dom.pulldom import START_ELEMENT, parse
+
+doc = parse("foo.xml")
+for event, node in doc:
+    if event == START_ELEMENT and node.localName == "bar":
+        doc.expandNode(node)
+        print node.toxml()
+}}}
+
+Since the document is treated as a "flat" stream of events, the document "tree" is implicitly traversed and the desired elements are found regardless of their depth in the tree. In other words, one need not consider hierarchical issues such as recursive searching of the document nodes, although if the context of elements were important, one would either need to maintain some context-related state (ie. remembering where one is in the document at any given point) or to make use of the `expandNode` method and switch to DOM-related processing.
+
+== Resources ==
+
+ * [http://www.ibm.com/developerworks/library/x-tipulldom.html Tip: Using pull-based DOMs] - a description of the concept plus an example using the module
+ * [http://www.idealliance.org/papers/dx_xml03/papers/06-02-03/06-02-03.html#pulldom Python Paradigms for XML: pulldom] - an example amongst a wider treatment of Python XML processing (as of 2003)
+ * [http://www.prescod.net/python/pulldom.html About PullDOM and MiniDOM] - a concise description of the benefits of the module, although some details are now out-of-date
