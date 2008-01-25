@@ -1,0 +1,288 @@
+#format wiki
+#language en
+#pragma section-numbers off
+
+= SwingWorker Examples in Jython =
+
+DocumentationAndEducation
+
+[[TableOfContents]]
+
+----
+
+The SwingExamples page shows some good examples of using Swing components from Jython.
+
+However, all of the examples perform the majority of their processing on the Swing Event Dispatch Thread and this
+is not a good technique to use in a real world application which needs to do any significant processing.
+
+Very briefly, a Swing program normal comprises of three different types of thread:
+ * ''Initial Threads'' which execute the intial application code
+ * ''Event Dispatch Thread'' which executes all the event-handling code 
+ * ''Worker Threads'' which execute time-consuming background tasks
+
+Only the Event Dispatch Thread should access Swing components (with certain exceptions).
+Swing components should not even be created by other threads -- including the Initial Threads.
+
+A good description of these threads is given in the
+[http://java.sun.com/docs/books/tutorial/uiswing/concurrency/index.html Concurrency in Swing] lesson in the Swing Tutorial]
+
+The SwingWorker class described in the above lesson is only available in Java 6.
+However, it has been backported to earlier versions see https://swingworker.dev.java.net/
+
+The remainder of this section shows a translation of two of the examples from the Swing Tutorial to Jython.
+ * [#flipper Flipper.py] -- this is an example where the the worker thread has intermediate results which should be reflected in the GUI. The operation of this example is given [http://java.sun.com/docs/books/tutorial/uiswing/concurrency/interim.html here]
+ * [#progress ProgressBarDemo.py] -- this is an example showing how the worker thread can communicate with the Event Dispatch Thread using Property Change Listeners. For a description of the example see [http://java.sun.com/docs/books/tutorial/uiswing/concurrency/bound.html here]
+
+[[Anchor(Flipper.py)]]
+{{{#!python
+# Flipper.py
+
+from java.lang import Runnable
+from java.util import Random
+from java.util.concurrent import ExecutionException
+from javax.swing import SwingWorker, SwingUtilities
+from javax.swing import BorderFactory
+from javax.swing import JButton, JFrame, JTextField
+from java.awt import GridBagLayout as awtGridBagLayout
+from java.awt import GridBagConstraints as awtGridBagConstraints
+from java.awt import Insets as awtInsets
+
+
+###########################################################################
+class FlipTask(SwingWorker):
+    "Class implementing long running task as a SwingWorker thread"
+
+    #######################################################################
+    def __init__(self, gui):
+        self.gui = gui
+        SwingWorker.__init__(self)
+
+
+    def doInBackground(self):
+        heads = 0
+        total = 0
+        random = Random()
+        while not self.isCancelled():
+            total += 1
+            if random.nextBoolean():
+                heads += 1
+            #publish the number of heads and total tosses
+            self.super__publish([(heads, total)])
+
+
+    def process(self, pairs):
+        pair = pairs[len(pairs)-1]
+        self.gui.headsText.text = "%d" % pair[0]
+        self.gui.totalText.text = "%d" % pair[1]
+        self.gui.devText.text = "%f" % ((1.0*pair[0]/pair[1]) - 0.5)
+
+
+    def done(self):
+        try:
+            self.get()  #raise exception if abnormal completion
+        except ExecutionException, e:
+            raise SystemExit, e.getCause()
+
+###########################################################################
+class Flipper(JFrame):
+
+    def __init__(self):
+        JFrame.__init__(self, "Flipper",
+                    defaultCloseOperation=JFrame.EXIT_ON_CLOSE,
+                    layout=awtGridBagLayout(),
+                    )
+
+        self.constraints = awtGridBagConstraints(
+                    insets=awtInsets(3, 10, 3, 10)
+                    )
+
+        self.border = BorderFactory.createLoweredBevelBorder()
+
+        #Make text boxes
+        self.headsText = self.makeText()
+        self.totalText = self.makeText()
+        self.devText = self.makeText()
+
+        #Make buttons
+        self.startButton = self.makeButton("Start", self.startPressed)
+        self.stopButton = self.makeButton("Stop", self.stopPressed)
+        self.stopButton.enabled = False
+
+        #Display the window.
+        self.pack()
+        self.visible = True
+
+
+    def makeText(self):
+        t = JTextField(
+                20,
+                editable=False,
+                horizontalAlignment=JTextField.RIGHT,
+                border = self.border,
+                )
+        self.add(t, self.constraints)
+        return t
+
+
+    def makeButton(self, caption, action):
+        b = JButton(caption, actionPerformed=action)
+        self.add(b, self.constraints)
+        return b
+
+
+    def _setButtonStates(self, started):
+        self.stopButton.enabled = started
+        self.startButton.enabled = not started
+
+
+    def stopPressed(self, e):
+        self._setButtonStates(started=False)
+        self.flipTask.cancel(True)
+        self.flipTask = None
+
+
+    def startPressed(self, e):
+        self._setButtonStates(started=True)
+        self.flipTask = FlipTask(self)
+        self.flipTask.execute()
+        
+
+###########################################################################
+class Runnable(Runnable):
+    def __init__(self, runFunction):
+        self._runFunction = runFunction
+
+
+    def run(self):
+        self._runFunction()
+
+###########################################################################
+if __name__ == '__main__':
+    SwingUtilities.invokeLater(Runnable(Flipper))
+}}}
+
+
+[[Anchor(ProgressBarDemo.py)]]
+{{{#!python
+# ProgressBarDemo.py
+
+from java.lang import InterruptedException, Runnable, Thread
+from java.beans import PropertyChangeListener
+from java.util import Random
+from java.util.concurrent import ExecutionException
+from javax.swing import SwingWorker, SwingUtilities
+from javax.swing import BorderFactory
+from javax.swing import JButton, JFrame, JPanel, JProgressBar, \
+                    JScrollPane, JTextArea
+from java.awt import Toolkit as awtToolkit
+from java.awt import BorderLayout as awtBorderLayout
+from java.awt import Cursor as awtCursor
+from java.awt import Insets as awtInsets
+
+###########################################################################
+class Task(SwingWorker):
+
+    def __init__(self, gui):
+        self.gui = gui
+        SwingWorker.__init__(self)
+
+    def doInBackground(self):
+        random = Random()
+        progress = 0
+        #Initialize progress property.
+        self.super__setProgress(progress)
+        while progress < 100:
+            #Sleep for up to one second.
+            try:
+                Thread.sleep(random.nextInt(1000))
+            except InterruptedException, e:
+                pass
+
+            #Make random progress.
+            progress += random.nextInt(10)
+            self.super__setProgress(min(progress, 100))
+
+
+    def done(self):
+        try:
+            self.get()  #raise exception if abnormal completion
+            awtToolkit.getDefaultToolkit().beep()
+            self.gui.taskOutput.append("Done!\n")
+            self.gui.startButton.enabled = True
+            self.gui.cursor = None  #turn off the wait cursor
+        except ExecutionException, e:
+            raise SystemExit, e.getCause()
+
+
+
+###########################################################################
+class ProgressBarDemo(JPanel, PropertyChangeListener):
+    def __init__(self):
+        JPanel.__init__(self, awtBorderLayout(),
+                        border = BorderFactory.createEmptyBorder(20, 20, 20, 20)
+                        )
+
+        #Create the demo's UI.
+        self.startButton = JButton("Start", actionPerformed=self.startPressed)
+
+        self.progressBar = JProgressBar(0, 100, value=0, stringPainted=True)
+
+        self.taskOutput = JTextArea(5, 20,
+                            margin=awtInsets(5,5,5,5),
+                            editable=True
+                            )
+
+        panel = JPanel()
+        panel.add(self.startButton)
+        panel.add(self.progressBar)
+
+        self.add(panel, awtBorderLayout.PAGE_START)
+        self.add(JScrollPane(self.taskOutput), awtBorderLayout.CENTER)
+
+
+    def startPressed(self, e):
+        "Invoked when the user presses the start button"
+        self.startButton.enabled = False
+        self.cursor = awtCursor.getPredefinedCursor(awtCursor.WAIT_CURSOR)
+        #Instances of javax.swing.SwingWorker are not reusuable, so
+        #we create new instances as needed.
+        task = Task(self)
+        task.addPropertyChangeListener(self)
+        task.execute()
+
+
+    def propertyChange(self, e):
+        # Invoked when task's progress property changes.
+        if e.propertyName == "progress":
+            self.progressBar.value = e.newValue
+            self.taskOutput.append("Completed %d%% of task\n"% e.newValue)
+
+
+def createAndShowGUI():
+    # Create the GUI and show it. As with all GUI code, this must run
+    # on the event-dispatching thread.
+    frame = JFrame("ProgressBarDemo",
+                    defaultCloseOperation = JFrame.EXIT_ON_CLOSE,
+                    )
+    #Create and set up the content pane.
+    newContentPane = ProgressBarDemo()
+    newContentPane.setOpaque(True)      #content panes must be opaque
+    frame.contentPane = newContentPane
+
+    #Display the window.
+    frame.pack()
+    frame.visible = True
+
+###########################################################################
+class Runnable(Runnable):
+    def __init__(self, runFunction):
+        self._runFunction = runFunction
+
+
+    def run(self):
+        self._runFunction()
+
+###########################################################################
+if __name__ == '__main__':
+    SwingUtilities.invokeLater(Runnable(createAndShowGUI))
+}}}
