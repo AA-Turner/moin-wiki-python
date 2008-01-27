@@ -410,12 +410,14 @@ In standard Java, the event handlers for a widget are specified by passing in an
 
 The standard Java style for setting an event listener is shown below:
 
+::
+
   class action(awt.event.ActionListener):
       def actionPerformed(self,event):
           java.lang.System.exit(0)
 
-button = awt.Button("Close Me!")
-button.addActionListener(action())
+  button = awt.Button("Close Me!")
+  button.addActionListener(action())
 
 This can be written in a more Pythonesque (and compact) style by using event properties as follows:
 
@@ -424,7 +426,7 @@ This can be written in a more Pythonesque (and compact) style by using event pro
   def exit(event):
       java.lang.System.exit(0)
 
-button = awt.Button("Close Me!", actionPerformed=exit)
+  button = awt.Button("Close Me!", actionPerformed=exit)
 
 Methods, Properties and Event Properties
 ========================================
