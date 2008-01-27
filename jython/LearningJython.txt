@@ -9,7 +9,7 @@ Jython Course Outline
     http://www.rexx.com/~dkuhlman
 
 :revision: 1.1a
-:date: Nov 12, 2007
+:date: Dec. 17, 2007
 
 :copyright: Copyright (c) 2006 Dave Kuhlman.  All Rights Reserved.
     This software is subject to the provisions of the MIT License
@@ -24,6 +24,7 @@ Jython Course Outline
 
 
 
+
 How-to Write Jython Code
 ========================
 
@@ -32,7 +33,7 @@ the price of one.  If your learn Python, then you have also learned
 Jython, and vice versa.  If you already know Python, then you know
 Jython.
 
-But, if you do not know Python **or** Jython, then here are good
+But, if you do know know Python **or** Jython, then here are good
 training aids:
 
 - `Python documentation --
@@ -60,12 +61,13 @@ Installing and Running Jython
 Install Jython
 --------------
 
-You will need Java installed, of course.  And, since you are likely to
-want to use Jython class libraries from Jython, it is also likely that
-you will want the Java SDK.  **Important**: If more than one version
-of Java is installed on your machine, make sure that when you install
-Jython using the version of Java for which the SDK is installed and
-the version of Java that you will be using when you run Jython.
+You will need Java installed, of course.  And, since you are likely
+to want to use Jython class libraries from Jython, it is also likely
+that you will want the Java SDK.  **Important**: If more than one
+version of Java is installed on your machine, make sure that when
+you install Jython, you use the version of Java for which the SDK is
+installed and the version of Java that you will be using when you
+run Jython.
 
 Download the Jython installation jar file -- You can file the Jython
 distribution here: `Jython downloads --
@@ -77,7 +79,7 @@ Install Jython -- Follow the instructions at:
 http://jython.org/Project/installation.html
 <http://jython.org/Project/installation.html>`_::
 
-    $ java -jar jython_installer-2.2.jar
+    $ java -jar jython_installer-2.2.1.jar
 
 Command line history -- On MS Windows, command line history for the
 Jython interactive interpreter comes built-in.  On Linux, 
@@ -87,6 +89,12 @@ support, follow the instructions here:
 http://wiki.python.org/jython/ReadlineSetup
 <http://wiki.python.org/jython/ReadlineSetup>`_.
 
+Standalone mode -- You can also create a self-contained Jython jar
+file.  Run the standard installer (above), then you come to the
+"Installation type" page, select "Standalone".  For more on this, see: 
+`Standalone mode --
+http://www.jython.org/Project/installation.html#standalone-mode
+<http://www.jython.org/Project/installation.html#standalone-mode>`_
 
 
 Configuration
@@ -551,8 +559,8 @@ Working with Jython arguments
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The ``ArgParser`` class helps us handle Jython keyword arguments.
-If helps us support the analog of Jython's ``*args`` and
-``**kwargs`` in Java methods.
+If helps us write Java methods that support the analog of Jython's
+``*args`` and ``**kwargs`` in Java methods.
 
 How to do it -- An overview:
 
@@ -570,7 +578,9 @@ How to do it -- An overview:
    number of arguments actually passed with ``args.length`` and
    ``keywords.length``.
 
-For more information, see: `org.python.core Class ArgParser
+For more information, see: 
+`Jython API Documentation: org.python.core Class ArgParser --
+http://www.jython.org/docs/javadoc/org/python/core/ArgParser.html
 <http://www.jython.org/docs/javadoc/org/python/core/ArgParser.html>`_.
 
 Exercise -- (1) Write a Java class containing a method that
@@ -896,23 +906,82 @@ Emulating Jython object attribute access
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We can implement and override object attribute access in a Java
-class:
+class.  And, we can emulate other Jython built-in types.
 
 Extend class org.python.core.PyObject and its sub-classes.
 
-Implement the following methods::
+Implement the following methods, among others::
 
     __findattr__()
     __setattr__()
     __delattr__()
+    __finditem__()
+    Etc.
 
 ``__findattr__()`` is called *only if* an attribute is not found
 in an object.
 
-Exercise -- (1) Write a Java class class that supports access to
+Exercise -- (1) Write a Java class that supports access to
 attributes.  (2) In addition, each access method should print a
 message.  (3) Test your Java class from Jython by creating an
 instance of it, then setting and getting an attribute.
+
+Solution::
+
+    // TestAttrAccess.java
+
+    import org.python.core.*;
+    import java.util.*;
+
+    public class TestAttrAccess extends PyObject
+    {
+        PyDictionary localdict = new PyDictionary();
+
+        public PyObject __findattr__(String name)
+        {
+            PyString pyname = new PyString(name);
+            System.out.println("Finding attr for: \"" + name + "\"");
+            if (localdict.has_key(pyname)) {
+                return localdict.__getitem__(pyname);
+            }
+            else
+            {
+                return new PyString("[no attr]");
+            }
+        }
+        public void __setattr__(String name, PyObject value)
+        {
+            PyString pyname = new PyString(name);
+            System.out.println("Setting attr for: \"" + name + "\"");
+            localdict.__setitem__(pyname, value);
+        }
+    }
+
+
+Notes:
+
+- Test this solution with the following::
+
+    import TestAttrAccess
+
+    def test():
+        a = TestAttrAccess()
+        a.bbb = 3344
+        print a.bbb
+        # Try to access a nonexistent attribute.
+        print a.ccc
+
+    test()
+
+
+- Arguments to ``__findattr__`` and ``__finditem__`` must be
+  interned strings.  Literal strings are automatically interned.
+  For other strings, use ``intern(s)``.
+
+
+Exercise -- (1) Write a Java class that emulates a Jython
+dictionary, but intercepts key access to items in the dictionary.
+Print a message when each access is attempted.
 
 Solution::
 
@@ -921,47 +990,49 @@ Solution::
     import org.python.core.*;
     import java.util.*;
 
-    public class TestDictAttr extends PyDictionary
+    public class TestDictSub extends PyDictionary
     {
-        public PyObject __findattr__(String key)
+        public PyObject __finditem__(PyObject key)
         {
-            PyString objkey = new PyString(key);
+            System.out.println("Getting item for: \"" + key + "\"");
+            PyObject objkey = key;
             if (super.has_key(objkey))
             {
-                PyObject value = super.__getitem__(objkey);
-                System.out.println("Found attr \"" + key + "\"  value: \"" +
-                               value + "\"");
+                PyObject value = super.__finditem__(objkey);
+                System.out.println(
+    		"Found key \"" + key + "\"  value: \"" +
+                    value + "\"");
                 return value;
             }
             else
             {
-                throw new PyException(Py.KeyError, "The attr does not exist.");
+                throw new PyException(Py.KeyError,
+    		"The key does not exit.");
             }
         }
     }
 
 Notes:
 
-- Test this solution with the following::
+- Here is a test for the above code::
 
-      $ jython
-      Jython 2.2a1 on java1.4.2 (JIT: null)
-      Type "copyright", "credits" or "license" for more information.
-      >>>
-      >>> import TestDictAttr
-      >>> a = TestDictAttr()
-      >>> print a.dave
-      Traceback (innermost last):
-        File "<console>", line 1, in ?
-      KeyError: The attr does not exist.
-      >>> a['dave'] = 'some little value'
-      >>> print a.dave
-      Found attr "dave"  value: "some little value"
-      some little value
+      import TestDictSub as TDS
 
-- Arguments to ``__findattr__`` and ``__finditem__`` must be
-  interned strings.  Literal strings are automatically interned.
-  For other strings, use ``intern(s)``.
+      def test():
+          a = TDS()
+          a['aaa'] = 123
+          a['bbb'] = 456
+          print a['aaa']
+          print a['ccc']
+
+      test()
+
+- We implement ``__finditem__()`` rather than ``__getitem__()``.
+  See the notes for Class PyObject in the
+  `Jython API documentation --
+  http://jython.org/docs/javadoc/index.html
+  <http://jython.org/docs/javadoc/index.html>`_
+
 
 Also see the Jython FAQ:
 `5.2   Emulating Jython object attribute access with a Java class --
@@ -990,6 +1061,195 @@ Some of the classes that you can consider extending are:
 
 An example that extends the ``PyDictionary`` class is in
 section `Solution #2 -- Extending PyDictionary`_.
+
+
+jarray -- Creating and passing Java arrays to Java
+--------------------------------------------------
+
+Why you might want to do this -- Suppose that you want to pass an
+array to a Java method.  Furthermore, suppose that Java method is
+going to modify the contents of your array.  If you pass in a Jython
+list, Jython creates a wrapper for your list, and any modifications
+made by Java will not be return to Jython.
+
+In this situation, you will want to use ``jarray`` to create Java
+arrays.  For more on Java arrays, see:
+`Jython User Guide: Java Arrays --
+http://jython.org/Project/userguide.html#java-arrays
+<http://jython.org/Project/userguide.html#java-arrays>`_.
+
+Here is an example of a Java class that modifies the contents of an
+array.  You can use it to demonstrate the need for jarry::
+
+    import java.util.Vector;
+    //import java.lang.Integer;
+
+    public class TestJarray {
+
+    	private Integer data[];
+
+    	public void setdata(Integer newdata[]) {
+    		data = newdata;
+    	}
+
+    	public void changedata() throws ArrayIndexOutOfBoundsException {
+    		data[0] = new Integer(99);
+    	}
+
+    	public Integer[] getdata() {
+    		return data;
+    	}
+    		
+    }
+
+And, here is a Jython program that tests it::
+
+    import jarray
+    import java.lang.Integer
+    import TestJarray
+
+    def test():
+        print '1.', '-' * 30
+        a1 = TestJarray()
+        b1 = [11, 22, 33]
+        a1.setdata(b1)
+        a1.changedata()
+        c1 = a1.getdata()
+        print 'a1:', a1
+        print 'b1:', b1
+        print 'c1:', c1
+        print '2.', '-' * 30
+        a2 = TestJarray()
+        b2 = [11, 22, 33]
+        b2j = jarray.array(b2, java.lang.Integer)
+        a2.setdata(b2j)
+        a2.changedata()
+        c2 = a2.getdata()
+        print 'a2:', a2
+        print 'b2:', b2
+        print 'b2j:', b2j
+        print 'c2:', c2
+
+    test()
+
+This is the output from running the above Jython script::
+
+    $ jython test_jarray.py
+    1. ------------------------------
+    a1: TestJarray@7e9a288b
+    b1: [11, 22, 33]
+    c1: array(java.lang.Integer,[99, 22, 33])
+    2. ------------------------------
+    a2: TestJarray@1cb5c12e
+    b2: [11, 22, 33]
+    b2j: array(java.lang.Integer,[99, 22, 33])
+    c2: array(java.lang.Integer,[99, 22, 33])
+
+Notes:
+
+- The Jython list (``b1``) that we pass to Java remains unchanged,
+  because it is "wrapped" by Jython.
+
+- The ``jarray`` (``b2j``) that we pass to Java is modified.
+
+Here are a few examples.
+
+A simple array of ints::
+
+    >>> jarray.array([11, 22, 33], 'i')
+    array('i',[11, 22, 33])
+
+An array of floats::
+
+    >>> jarray.array([11.0, 22.0, 33.0], 'f')
+    array('f',[11.0, 22.0, 33.0])
+
+An array of strings::
+
+    >>> jarray.array(['aaa', 'bbb', 'ccc'], java.lang.String)
+    array(java.lang.String,['aaa', 'bbb', 'ccc'])
+
+
+The following examples create two-dimensional arrays.
+
+An array of arrays of ints::
+
+    >>> jarray.array([[11, 22], [33, 44]], java.lang.Class.forName("[I"))
+    array([I,[array('i',[11, 22]) , array('i',[33, 44]) ])
+
+An array of arrays of strings::
+
+    >>> jarray.array([ ['aaa', 'bbb'], ['ccc', 'ddd'] ], java.lang.Class.forName('[Ljava.lang.String;'))
+    array([Ljava.lang.String;,[array(java.lang.String,['aaa', 'bbb']) , array(java.lang.String,['ccc', 'ddd']) ])
+
+It is also possible to create 3-D arrays -- A three dimensional
+array of ints and another of floats::
+
+    >>> a = [[11, 22], [33, 44]]
+    >>> b = [[55, 66], [77, 88]]
+    >>> c = [a, b]
+    >>> c
+    [[[11, 22], [33, 44]], [[55, 66], [77, 88]]]
+    >>> jarray.array(c, java.lang.Class.forName("[[I"))
+    array([[I,[array([I,[array('i',[11, 22]) , array('i',[33, 44]) ]) , array([I,[array('i',[55, 66]) , array('i',[77, 88]) ]) ])
+    >>> jarray.array(c, java.lang.Class.forName("[[F"))
+    array([[F,[array([F,[array('f',[11.0, 22.0]) , array('f',[33.0, 44.0]) ]) , array([F,[array('f',[55.0, 66.0]) , array('f',[77.0, 88.0]) ]) ])
+
+
+Here are a few notes:
+
+    From the language spec, 3rd edition:
+
+       Every array also has a class; the method getClass, when invoked
+       for an array object, will return a class object (of class Class)
+       that represents the class of the array.
+
+       The classes for arrays have strange names that are not valid
+       identifiers; for example, the class for an array of int components
+       has the name "[I" and so the value of the expression:
+
+         new int[10].getClass().getName()
+
+       is the string "[I"; see the specification of Class.getName for
+       details.
+
+    From API spec for Class.getName:
+
+       If this class object represents a class of arrays, then the
+       internal form of the name consists of the name of the element
+       type preceded by one or more '[' characters representing the
+       depth of the array nesting. The encoding of element type names
+       is as follows::
+
+         Element Type         Encoding
+         boolean              Z
+         byte                 B
+         char                 C
+         class or interface   Lclassname;
+         double               D
+         float                F
+         int                  I
+         long                 J
+         short                S
+
+       The class or interface name classname is the binary name of the
+       class specified above.
+
+References:
+
+- `Jython User Guide: Java Arrays --
+  http://jython.org/Project/userguide.html#java-arrays
+  <http://jython.org/Project/userguide.html#java-arrays>`_
+
+- `The Java Language Specification, Third Edition: 
+  Types, Values, and Variables --
+  http://java.sun.com/docs/books/jls/third_edition/html/typesValues.html
+  <http://java.sun.com/docs/books/jls/third_edition/html/typesValues.html>`_
+
+- `Java Platform, Standard Edition 6
+  API Specification --
+  http://java.sun.com/javase/6/docs/api/
+  <http://java.sun.com/javase/6/docs/api/>`_
 
 
 Integrating Jython/Python into Java
@@ -1418,6 +1678,10 @@ interpreter into your Java application:
   For an example of this technique and information on how to do it,
   see section `Calling Jython from Java`_.
 
+Also see:
+`Jython User Guide: Embedding Jython -
+http://jython.org/Project/userguide.html#embedding-jython
+<http://jython.org/Project/userguide.html#embedding-jython>`_.
 
 Embedding Jython into Java is simple
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1726,6 +1990,500 @@ Notes:
   <http://jython.org/docs/javadoc/org/python/util/InteractiveConsole.html>`_.
 
 
+Embedding Jython with the Java Scripting Engine
+-----------------------------------------------
+
+A scripting engine is an alternative way to execute Jython scripts
+from within Java.
+
+Installing script engine support
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Scripting engine support is here:
+`scripting Project home --
+https://scripting.dev.java.net/
+<https://scripting.dev.java.net/>`_
+
+I downloaded the ScriptEngine support using CVS.
+
+To build support for Jython, I did the following::
+
+    $ cd ${ENGINE_ROOT}/scripting/engines/jython/make/
+    $ ant
+
+Then add the following to your CLASSPATH::
+
+    ${ENGINE_ROOT}/scripting/engines/jython/build/jython-engine.jar
+
+
+Using script engine support
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Here is a simple example that (1) displays information about existing
+script engines and (2) runs several lines of Jython code::
+
+    // File: ScriptEngine1.java
+
+    import java.io.*;
+    import java.util.*;
+    import javax.script.ScriptEngineManager;
+    import javax.script.ScriptEngineFactory;
+    import javax.script.ScriptEngine;
+    import javax.script.ScriptException;
+
+
+    public class ScriptEngine1
+    {
+        public static void main(String[]args) throws IOException, ScriptException
+        {
+            listEngines();                                          // Note 1
+            ScriptEngineManager mgr = new ScriptEngineManager();    // Note 2
+            ScriptEngine eng = mgr.getEngineByName("python");
+            System.out.println("eng: " + String.valueOf(eng));
+            eng.put("var1", new Integer(257));                      // Note 3
+            eng.eval("print 'var1: %s' % var1");
+            eng.eval("import sys");                                 // Note 4
+            eng.eval("print sys.version");
+        }
+
+        public static void listEngines(){                           // Note 1
+            ScriptEngineManager mgr = new ScriptEngineManager();
+            List<ScriptEngineFactory> factories =
+                    mgr.getEngineFactories();
+            for (ScriptEngineFactory factory: factories) {
+                System.out.println("ScriptEngineFactory Info");
+                String engName = factory.getEngineName();
+                String engVersion = factory.getEngineVersion();
+                String langName = factory.getLanguageName();
+                String langVersion = factory.getLanguageVersion();
+                System.out.println("\tScript Engine: " + engName + ":" + 
+                                   engVersion);
+                List<String> engNames = factory.getNames();
+                for(String name: engNames) {
+                    System.out.println("\tEngine Alias: " + name);
+                }
+                System.out.println("\tLanguage: " + langName + ":" + 
+                                   langVersion);
+            }
+        }
+    }
+
+Notes:
+
+1. Funtion ``listEngines`` iterates over each of the available script
+   engines and prints out a bit of information about each one.
+
+2. We retrieve the Jython script engine.
+
+3. From Java, we set a variable in the engine/Jython environment, then
+   evaluate a Jython script that prints the value of the variable.
+
+4. We evaluate several lines of code that import the ``sys`` module
+   and displays the Jython version number.
+
+This is the result of running the above Java program::
+
+    $ javac ScriptEngine1.java
+    $ java ScriptEngine1
+    ScriptEngineFactory Info
+            Script Engine: jython:2.2b1
+            Engine Alias: jython
+            Engine Alias: python
+            Language: python:2.2b1
+    ScriptEngineFactory Info
+            Script Engine: Mozilla Rhino:1.6 release 2
+            Engine Alias: js
+            Engine Alias: rhino
+            Engine Alias: JavaScript
+            Engine Alias: javascript
+            Engine Alias: ECMAScript
+            Engine Alias: ecmascript
+            Language: ECMAScript:1.6
+    eng: com.sun.script.jython.JythonScriptEngine@3caf7a1f
+    var1: 257
+    2.2.1
+
+
+Compiling Jython code with jythonc
+----------------------------------
+
+Introduction to jythonc
+~~~~~~~~~~~~~~~~~~~~~~~
+
+``jythonc`` is currently unsupported and is deprecated, although it
+might reappear in some future version of Jython.  Here is a message
+on this from the jython-users email list::
+
+    Subject: Re: [Jython-users] What will replace jythonc in 2.3
+    Date: Thu, 29 Nov 2007 09:29:10 -0500
+    From jython-users-bounces@lists.sourceforge.net  Thu Nov 29 06:29:17 2007
+    From: "Frank Wierzbicki" <fwierzbicki@gmail.com>
+    To: "Chris Fenton" <chrisf@fagmed.uit.no>
+    Cc: jython-users@lists.sourceforge.net
+
+    On Nov 29, 2007 8:23 AM, Chris Fenton <chrisf@fagmed.uit.no> wrote:
+    > I use jythonc regularly to distribute webstart apps for my fellow
+    > biologists.
+    > If jythonc disappears what is the obvious replacement for generating jars.
+
+    The next Jython is some way off -- but we are aware that there are a
+    number of use cases that need to be covered one way or another when
+    the old jythonc disappears.  Some of them won't require a jythonc at
+    all -- I suspect that we can come up with a reasonable jarring
+    strategy w/o jythonc.  I think we will find that some of the use cases
+    are best served by a new version of jythonc -- but one that will be
+    based on the same code as the "regular" compiler.  This is all tbd
+    though -- first we have to get our 2.5 features straightened out on
+    the basic compiler.
+
+    -Frank
+
+What ``jythonc`` does:
+
+- Generates Java code from a Jython class.
+
+- Compiles the generated Java code.
+
+- Packages the compiled Java code in a jar file.
+
+What ``jythonc`` is (sometimes) used for:
+
+- To generate Java code so that classes written in Jython can be used
+  from Java.  But, see section `Calling Jython from Java`_ for an
+  alternative technique.
+
+- To package an application in a jar file for deployment.  But, see
+  section `Deployment and Distribution`_ for an alternative technique.
+
+
+How to run jythonc
+~~~~~~~~~~~~~~~~~~
+
+Here are examples.
+
+Create a self-contained jar file with ``jythonc``::
+
+    $ jythonc -j hello.jar -a TestHello.py
+
+Create java class files that can be imported into Java::
+
+    $ jythonc hello.jar
+
+
+Calling Jython from Java using jythonc
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Preparing Jython code for ``jythonc`` -- Create Java compatible Jython
+modules:
+
+- The Jython class must inherit from a Java class.
+
+- The name of the Jython module and the class in it must be the same.
+  For example, class ``Foo`` must be in a module named ``Foo.py``.
+
+- Add ``@sig`` directives to methods that you want to be able to call
+  from Java.
+
+Another view: Jython is the extension language for Java.
+
+What is ``jythonc`` and what is its status?  
+
+    "jythonc transforms Python source code into Java source code then
+    invokes a Java compiler to turn it into .class files. This
+    allows Python to be integrated into Java in several places that
+    regular Jython currently doesn't support. It also processes
+    special annotations in docstrings on methods in Python code to
+    determine the static type information to expose when turning a
+    dynmically typed Python method into a statically typed Java
+    method.
+
+    "jythonc is unmaintained and will not be present in
+    Jython-2.3. While jythonc handles all of the language features
+    present in Jython 2.2, it doesn't support 2.3 features such as
+    generators. As such, it is not recommended that new Jython
+    projects make use of jythonc. It is only included in Jython-2.2
+    to support older users of jythonc and to allow access to a few
+    features that are only provided by jythonc at the moment:
+    
+    1. Running in a JVM with a classloader that will not load
+       dynamically created classes
+
+    2. Declaring Java method signatures in Python code
+
+    3. Loading Python classes dynamically from Java with
+       Class.forName
+
+    "While all of these features are planned for Jython-2.3, they are
+    currently only available from jythonc. Most uses of the second
+    feature, adding method declarations to docstrings, can be
+    handled by declaring a Java interface to implement with a Python
+    class. Each method in the Python implementation takes the types
+    of the Java method it implements. Exposing the Python class as
+    an instance of that type to Java code can be done as explained
+    in Accessing Jython from Java Without Using jythonc and its
+    followup, Simple and Efficient Jython Object Factories."
+
+            (See http://www.jython.org/Project/jythonc.html)
+
+You can extend Java classes in your Jython code.
+
+You can add (J)Python protocols to Java classes.
+
+You will need to describe the signature of methods in order to
+make them callable from Java (in addition to Jython).
+
+What ``jythonc`` does -- ``jythonc`` translates ``.py`` files into
+``.java`` source code files, then compiles these to ``.class``
+files.
+
+With ``jythonc``, you can also:
+
+- Compile Jython (.py) to Java class files (.class).
+
+- Compile Jython to Java source, then stop without compiling to
+  ``.class`` files.
+
+- Create standalone jar file containing your Jython code and that can
+  be run on machines on which Java is installed but not Jython.
+
+- Use a Java compiler different from the default: ``javac``. See
+  the help from ``jythonc``::
+
+    --compiler path
+    -C path
+        Use a different compiler than `standard' javac.  If this is set to
+        `NONE' then compile ends with .java.  Alternatively, you can set the
+        property python.jpythonc.compiler in the registry.
+
+  This option can also be set in your Jython registry file.
+
+Java compatible classes - In order to implement a Java compatible
+class (that is, one that acts like a native Java class and can be
+called from Java), your Jython code must follow these rules:
+
+- Inherit from a Java class or interface.
+
+- Include only one class per module.
+
+- Give the Jython class and the source file that contains it the same
+  name.
+
+- Place all code inside that Jython class.
+
+- Include method signature hints (called sig-strings) -- Add a ``@sig``
+  line in the doc-string for each method.
+
+How to use jythonc:
+
+- Type ``jythonc --help`` for help::
+
+      $ jythonc --help
+
+- Compile your Jython code with::
+
+      jythonc mymodule.py
+
+Some notes:
+
+- When your run ``jythonc``, by default, the ``.java`` files are placed
+  in a sub-directory ``./jpywork``.  You can override this with the
+  ``--workdir`` command line option.  From ``jythonc --help``::
+
+      --workdir directory
+      -w directory
+          Specify working directory for compiler (default is ./jpywork)
+
+- When you run this resulting code from Java, the directory
+  ``./jpywork`` and the Jython jar file must be on your classpath.
+
+
+Example -- The following Jython code extends a Java class.
+Compile it with ``jythonc``::
+
+    # Foo.py
+
+    import java
+
+    class Foo(java.util.Date):
+        def __init__(self):
+            self.count = 0
+        def bar(self, incr=1):
+            """@sig void bar(int incr)"""
+            self.count += incr
+            return self.count
+        def toString(self):
+            cnt = self.bar()
+            return "Foo[" + java.util.Date.toString(self) + " " + `cnt` + "]"
+
+Example, continued -- Here is Java code to test the above.
+Compile it with ``javac`` and run it::
+
+    // FooTest.java
+
+    public class FooTest {
+         public static void main(String[] args) {
+             Foo foo = new Foo();
+             System.out.println(foo);
+             foo.bar();
+             foo.bar(43);
+             System.out.println(foo);
+         }
+    }
+
+Notes:
+
+- You will need to add ``jpywork`` on your classpath.  So, you can
+  compile and run it as follows::
+
+      $ jythonc Foo.py
+      $ javac -cp jpywork:$CLASSPATH FooTest.java
+      $ java -cp jpywork:$CLASSPATH FooTest
+
+
+In order to implement a Java compatible class (that is, one that acts
+like a native Java class and can be called from Java), your Jython
+code must follow these rules:
+
+- Inherit from a Java class or interface.  If you do not need to
+  inherit any additional capability, inherit from
+  ``java.lang.Object``.
+
+- Include method signature hints (called sig-strings).
+
+- Give the Jython class and the source file it is in the same name.
+
+Here is another simple example::
+
+    """simpleclass.py
+
+    This is a simple class to demonstrate the use of jythonc.
+    """
+
+    import java.lang.Object
+
+    class simpleclass(java.lang.Object):
+        def __init__(self, name='The Horse With No Name'):
+	    """public simpleclass(String name)
+	    """
+	    self.name = name
+	    self.size = -1
+        def set_name(self, name):
+            """@sig public void set_name(String name)
+            """
+            self.name = name
+        def set_size(self, size):
+            """@sig public void set_size(int size)
+            """
+            self.size = size
+        def show(self):
+            """@sig public String show()
+            """
+            return 'name: %s  size: %s' % (self.name, self.size, )
+
+    def test():
+        sc = simpleclass()
+        s1 = sc.show()
+        print "1.", s1
+        sc.set_name("dave")
+        sc.set_size(4321)
+        s1 = sc.show()
+        print "2.", s1
+
+    if __name__ == '__main__':
+        test()
+
+And, a Java test harness for this simple example::
+
+    // simpleclasstest.java
+
+    public class simpleclasstest {
+        public static void main(String[] args) {
+            String s1;
+            simpleclass sc = new simpleclass();
+            s1 = sc.show();
+            System.out.println("1. " + s1);
+            sc.set_name("dave");
+            sc.set_size(4321);
+            s1 = sc.show();
+            System.out.println("2. " + s1);
+        }
+    }
+
+Notes:
+
+- Compile and run with something like the following::
+
+      $ jythonc simpleclass.py
+      $ javac -cp jpywork:$CLASSPATH simpleclasstest.java
+      $ java -cp jpywork:$CLASSPATH simpleclasstest
+      1. name: The Horse With No Name  size: -1
+      2. name: dave  size: 4321
+
+- You will need to put ``jpywork`` on your ``CLASSPATH``.
+
+- In order to produce a Java compatible class, our Jython class must
+  inherit from a Java class.  In this case, we use
+  ``java.lang.Object``, because we do not need to inherit any behavior.
+
+- The methods ``set_name``, ``set_size``, and ``show`` each have
+  sig-strings.
+
+In the following example, we create a stand-alone Jar file, that is,
+one that can be executed as a script on a machine where Jython is not
+installed.  Here is the Jython script::
+
+    # test_jythonc.py
+
+    import sys
+
+    def test(words):
+        msgs = ['hi', 'bye']
+        for word in words:
+            msgs.append(word)
+        for msg in msgs:
+            print msg
+
+    def main():
+        args = sys.argv[1:]
+        test(args)
+
+    if __name__ == '__main__':
+        main()
+
+
+Compile and build a Jar file with the following::
+
+    $ jythonc --all --jar mytest.jar test_jythonc.py
+
+Run it as follows::
+
+    $ java -jar mytest.jar hello goodbye
+    hi
+    bye
+    hello
+    goodbye
+
+Notes:
+
+- Note that our Jython script contains no class.  ``jythonc`` will
+  create a public class and a public static main function for us.
+
+- The ``--jar`` flag tells ``jythonc`` that we want the results placed
+  in a Jar file (as opposed to placing it in the work directory
+  ``./jpywork``).
+
+- The ``--all`` flag tells ``jythonc`` to include all Jython support
+  in the Jar file, making it stand-alone.  This enables us to run it
+  on a system where Java is installed but Jython is not.
+
+And the following example builds a standalone jar file from our
+``simpleclass.py`` module, above::
+
+    $ jythonc -j simpleclass.jar -a simpleclass.py
+    $ java -jar simpleclass.jar
+    1. name: The Horse With No Name  size: -1
+    2. name: dave  size: 4321
+
 
 Deployment and Distribution
 ===========================
@@ -1782,6 +2540,9 @@ contents of the ``Lib/`` directory to it::
     $ cd $JYTHON_HOME
     $ cp jython.jar jythonlib.jar
     $ zip -r jythonlib.jar Lib
+
+Note also that the Jython installer enables you to create a
+stand-alone jar file.
 
 
 Add modules and paths to the jar file
@@ -1855,11 +2616,11 @@ Add other modules to the jar::
     # Add path to additional jar file.
     $ jar ufm myapp.jar othermanifest.mf
 
-For a more self-contained jar, add the {{{__run__.py}}} module::
+For a more self-contained jar, add the ``__run__.py`` module::
 
     # Copy or rename your start-up script.
     $ cp mymainscript.py __run__.py
-    # Add your start-up script (__run__.py) to the jar.
+    # Add your start-up script (__run__.py) ot the jar.
     $ zip myapp.jar __run__.py
     # Add path to main jar to the CLASSPATH environment variable.
     $ export CLASSPATH=/path/to/my/app/myapp.jar:$CLASSPATH
@@ -2464,7 +3225,7 @@ After unrolling the binary distribution, I added the following to my
 - $XMLBEANS_HOME/lib/xbean.jar
 - $XMLBEANS_HOME/lib/jsr173_1.0_api.jar
 
-And, I added the following to my ``PATH``:
+And, I added the following to my ``PATH`` environment variable:
 
 - $XMLBEANS_HOME/bin
 
@@ -2474,9 +3235,10 @@ where XMLBEANS_HOME is the directory in which XMLBeans is installed.
 An example
 ++++++++++
 
-This example is copied from `XMLBeans at Wikipedia --
+This example was copied from `XMLBeans at Wikipedia --
 http://en.wikipedia.org/wiki/XMLBeans
-<http://en.wikipedia.org/wiki/XMLBeans>`_ and adapted to Jython.
+<http://en.wikipedia.org/wiki/XMLBeans>`_
+and then adapted to Jython.
 
 The XML Schema::
 
@@ -2565,7 +3327,7 @@ it uses the same generated Java classes as the above Java code::
     class CountrySample(object):
 
         def main(self, args):
-            country = Country. Factory.newInstance()
+            country = Country.Factory.newInstance()
             country.setName("Denmark")
             country.setPopulation(5450661);    # from wikipedia :-)
             # Print out country XMLBean as XML.
@@ -2840,13 +3602,11 @@ a careful reading:
 
 
 
-
-
-
 .. Configuration for Emacs
+.. Aternative mode: indented-text
 ..
    Local Variables:
-   mode: indented-text
+   mode: rst
    indent-tabs-mode: nil
    sentence-end-double-space: t
    fill-column: 68
