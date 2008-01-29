@@ -8,7 +8,7 @@ The most important thing to know about Django on Jython is that we are almost th
 
 To run Django on Jython, with a PostgreSQL backend, the following steps are necessary:
 
- * Use the Jython trunk. The Modern branch was recently merged in, and has now been deleted. So more history. Modern consolidated the bugs, workarounds, and patches found below -- plus a bunch more -- in a stable, almost-ready-to-be-merged-into-trunk version of Jython. The most important aspect is that we have tried to make Jython conform more to CPython, using Django as our guide, although there are some gaps - especially if Django already had incorporated fixes. Our driving goal is to converge on these gaps over time. Please note that is intended to be stable, performant code.
+ * Use the Jython trunk.
 
  * Use the Django trunk (tested with rev 6992, later should be OK too).
 
@@ -48,11 +48,13 @@ Modern is now in trunk.
 
 === Merging Modern into trunk ===
 
+With the Modern branch was recently merged in (and deleted), we have consolidated the bugs, workarounds, and patches found below -- plus a bunch more. The most important aspect is that we have tried to make Jython conform more to CPython, using Django as our guide, although there are some gaps - especially if Django already had incorporated fixes. Our driving goal is to converge on these gaps over time. Please note that is intended to be stable, performant code, and so far that looks to be the case!
+
 Here are some of the things we addressed:
 
  * The test_extcall unit test still fails. This appears to be a dependency on {{{dict traversal}}} being a specific arbitrary order different from CPython's. Google's GHOP produced an improved version for Python 2.6, so we will look at this as a starting point for further analysis.
 
- * Tristan King provided a near complete subset of the functionality for {{{time.strptime}}}, as implemented in {{{org.python.modules.time.Time}}}. This needs to be enhanced. All unit tests in the CPythonLib version of test_time now pass except for {{{strptime}}} -- specifically the conversion specifier {{{'%c'}}} -- so we can also move to that, and discard our Jython version, when this is completed. That should be soon! Done.
+ * Tristan King provided a near complete subset of the functionality for {{{time.strptime}}}, as implemented in {{{org.python.modules.time.Time}}}. This needs to be enhanced. All unit tests in the CPythonLib version of test_time now pass except for {{{strptime}}} -- specifically the conversion specifier {{{'%c'}}} -- so we can also move to that, and discard our Jython version, when this is completed. That should be soon! Done, and in trunk.
 
  * Decide whether we should use {{{ConcurentHashMap}}} or not as the backing hash map for {{{dict}}} and {{{__dict__}}}. CHM introduces creation overhead, but it should prove to be far more scalable on multicore systems. The programming model is also far nicer with respect to Jython. Done.
 
