@@ -1,3 +1,96 @@
-Describe WebFrameworks here.create afreewebsite now 
-disconnect from server
-8*"aluka" "wanjala"
+#pragma section-numbers off
+
+= Web Frameworks for Python =
+
+A Web framework is a collection of packages or modules which allow developers to write Web applications (see WebApplications) or services without having to handle such low-level details as protocols, sockets or process/thread management.
+
+As a developer using a framework, you typically write code which conforms to some kind of conventions that lets you "plug in" to the framework, delegating responsibility for the communications, infrastructure and low-level stuff to the framework whilst concentrating on the logic of the application in your own code. This "plugging in" aspect of Web development is often seen as being in opposition to the classical distinction between programs and libraries, and the notion of a "mainloop" dispatching events to application code is very similar to that found in [wiki:GuiProgramming GUI programming].
+
+Generally, frameworks provide support for a number of activities such as interpreting requests (getting form parameters, handling cookies and sessions), producing responses (presenting data as HTML or in other formats), storing data persistently, and so on. Since a non-trivial Web application will require a number of different kinds of abstractions, often stacked upon each other, those frameworks which attempt to provide a complete solution for applications are often known as '''full-stack''' frameworks in that they attempt to supply components for each layer in the stack.
+
+Many frameworks now provide an element of customization in their support for the above activities and abstractions, utilizing [wiki:WebComponents components] in that they provide abstractions only for certain specific things. As a result, it can be possible for you to build your own full-stack framework almost entirely from existing components.
+
+== Popular Full-Stack Frameworks ==
+
+A web application may use a combination of a base HTTP application server, a storage mechanism such as a database, a template engine, a request dispatcher, an authentication module and an AJAX toolkit. These can be individual components or be provided together in a high-level framework.
+
+These are the most popular high-level frameworks. Many of them include   components listed on the WebComponents page.
+
+ * ["Django"] (0.96 Released 2007-03-23) a high-level Python Web framework that encourages rapid development and clean, pragmatic design
+ * [http://pylonshq.com/ Pylons] (0.9.6 Released 2007-08) a lightweight Web framework emphasizing flexibility and rapid development. It combines the very best ideas from the worlds of Ruby, Python and Perl, providing a structured but extremely flexible Python Web framework. It's also one of the first projects to leverage the emerging WSGI standard, which allows extensive re-use and flexibility but only if you need it. Out of the box, Pylons aims to make Web development fast, flexible and easy. Pylons is built on top of Paste (see below).
+ * [http://www.turbogears.org/ TurboGears] (1.0 Released 2007-01-03)  the rapid Web development megaframework you've been looking for. Combines ["CherryPy"], Kid, SQLObject and MochiKit. After reviewing the website check out: [http://lucasmanual.com/mywiki/TurboGears QuickStart Manual]
+ * [http://www.zope.org/ Zope] (2.10.4 Released 2007-07-04, 3.3.1 Released 2007-01-14, Zope 3.4.0b2 Released 2007-11-05) Being the grandaddy of Python web frameworks, Zope has grown into a family of frameworks over the years. Zope 1 was released in 1999. Zope 2 is both a web framework and a general purpose application server, today it is primarily used by ContentManagementSystems. Zope 3 is both a standalone framework and a collection of related libraries, which are also included with newer releases of Zope 2. [http://grok.zope.org Grok] (0.10 Released 2007-08-21) builds on the Zope 3 libraries but places an emphasis on convention over configuration to create an easier way to use Zope 3. All of the Zope frameworks include the ZODB, an object database for Python.
+
+
+See below for some other arguably less popular full-stack frameworks.
+
+== Content Management Systems ==
+
+Content management systems (CMS) often allow you to build application like functionality upon them and typically provide many of the facilities seen in full-stack frameworks. See ContentManagementSystems for more details.
+
+== Web Components ==
+
+Some frameworks promote interoperable components for things like templating/output and authentication/authorization, and so you might see users of different frameworks actually using the same component or library. See WebComponents for details of such components.
+
+== Other Full-Stack Frameworks ==
+
+These frameworks also provide most, if not all of the technology stack. However, they are regarded as not being as popular as the frameworks listed above.
+
+ * [http://www.movatis.com/crusader Crusader] is a powerful application server for Python based upon a scalable, extensible and easy-to-use general purpose server framework.
+ * [http://www.stackworks.net/view.php/cymbeline/index.html Cymbeline] (1.3.1 Released 2005-12-09) an application server framework, including functionality such as DB and arbitrary object pooling, Web servers, persistant object repository, and a text console
+ * [http://gizmojo.org/ Gizmo(QP)] (0.7 Released 2007-04-17) extends QP (see below) adding functionality to help with building rich and exacting web interfaces. Includes a Form module that supports (redundant) automatically generated client-side field validation as well as additional json callbacks.
+ * ["Karrigell"] (2.3.6 Released 2007-10-07) is a flexible Python web framework, with a clear and intuitive syntax. It is independent from any database, ORM or templating engine, and lets the programmer choose between a variety of coding styles.
+ * [https://www.mems-exchange.org/software/qp/ QP] (1.8 Released 2006-08-22) a package for defining and running multiple Web applications that are based on Durus for persistence, offering standard persistent Session and User classes, easy interactive database sessions, and unicode QPY for assembling html.
+ * SkunkWeb (3.4.0 Released 2004-09-10)
+ * ["Spyce"] (2.1.3 Released 2006-11-17)
+ * [http://www.web2py.com web2py] (currently version 1.18) Development, deployment and maintenance of applications and databases can be done via the provided web interface. web2py has no configuration files an requires no installation, it can run off a USB drive. web2py uses Python for the model, controller and template language, has a built-in ticketing system to manage errors, an internationalization engine, works with MySQL, PostgreSQL, SQLite and Oracle via an ORM abstraction layer. Can handle HTML, CSV, RTF, JSON, WIKI markup and other formats. Production ready and always backward compatible. Everything in one package with no dependencies.
+ * [http://webpy.org/ web.py] (0.23 Released 2008-01-19) Think about the ideal way to write a Web app. Write the code to make it happen.
+ * [http://www.webwareforpython.org/ Webware] (0.9.4 Released 2007-07-07) is a suite of Python packages and tools for developing object-oriented, Web-based applications
+
+== Basic Frameworks ==
+
+These projects provide the base "application server", either running as its own independent process, upon Apache or in other environments. On many of these you can then introduce your own choice of templating engines and other components to run on top, although some may provide technologies for parts of the technology stack.
+
+ * ["CherryPy"] (3.0.2 Released 2007-08-07) is a pythonic, object-oriented HTTP framework. CherryPy powered web applications are in fact stand-alone Python applications embedding their own multi-threaded web server.["TurboGears"] (see above) also uses CherryPy.
+ * [http://pythonpaste.org/ Python Paste] (1.4 Released 2007-06-26) brings consistency to Python Web development and Web application installation, providing tools for both developers and system administrators. Also, Pylons (see above) is built on top of Paste.
+ * [http://www.stroeder.com/pylib/PyWebLib/ PyWebLib] (1.3.4) - provides support for forms and sessions; used to implement web2ldap
+ * ["WebStack"] (1.2.7 Released 2007-10-29) - very lightweight, requiring layers of extra technology (eg. [http://www.python.org/pypi/XSLTools XSLTools] and others) to match full-stack frameworks in feature comparisons
+
+=== Basic Frameworks Providing Templating ===
+
+ * ["Albatross"] (1.36 Released 2007-03-19) a small and flexible Python toolkit for developing highly stateful Web applications.
+ * ["Aquarium"] (2.2.1 Released 2005-04-21) offers convenient libraries, tight integration with Cheetah, adaptors for various Web environments
+ * [http://divmod.org/trac/wiki/DivmodNevow Divmod Nevow] (0.9.0 Released 2006-06-12) a comprehensive library including a resource model encouraging the separation of application and presentation logic, a markup system with support for designer-friendly XHTML templates and pure-Python templates, and a robust AJAX-like API ([http://divmod.org/trac/wiki/DivmodNevow/Athena Divmod Athena]) which supports the creation of highly dynamic Web pages in a structured manner.
+ * ["JOTWeb2"] (1.10 Released 2005-12-30) developing dynamic Web applications using HTML and TAL/TALES/METAL for templating
+ * [http://nick.borko.org/pse/index.html Python Servlet Engine] (3.0.4 Released 2006-02-17) PSE parses your templates into byte compiled "servlets" to produce Web pages that run fast
+ * [http://www.mems-exchange.org/software/quixote/ Quixote] (2.4 Released 2005-12-13) Allows developers to develop dynamic Web sites while using as much of their existing Python knowledge as possible
+ * [http://snakelets.sourceforge.net/ Snakelets] (1.44 Released 2006-06-04) simple-to-use Python Web application server
+ * [http://trac.pytan.com/ Spark] (0.2.1 Released 2006-9-15) Fast and lightweight Web kit. Supports mod_python, WSGI, Twisted.
+ * [http://robinparmar.com/wasp.html Wasp] (2.00 Released 2007.07) - supports command-line, CGI and embedded web server modes, with templating, session mechanism and other modules emphasizing ease of use and familiar paradigms.
+
+== Discontinued/Inactive Frameworks ==
+
+The following frameworks are either discontinued, in that their developers may have stated that they no longer maintain the code, or appear to be inactively developed or maintained, in that the Web site for the project has remained unchanged for an extended period of time.
+
+ * ["4Suite"] (the server product seems to receive relatively infrequent updates and the site is often down)
+ * ["maki"] (developers no longer use the product)
+ * [http://www.ciobriefings.com/psp/ Python Server Pages], or PSP (old Web site from 1999)
+
+== Books and Articles ==
+
+ * Steve Holden wrote a book on [http://pydish.holdenweb.com/pwp/ Python Web Programming]. The book from John Goerzen, [http://www.apress.com/book/bookDisplay.html?bID=363 Foundations of Python Network Programming], can also be useful. O'Reilly's [http://www.oreilly.com/catalog/python3/ Programming Python 3rd Edition] has 500 pages on Internet programming, including 250 on Web scripting. Finally, check out the Web Programming chapter in [http://corepython.com Core Python Programming] by Wesley Chun -- there is also a small section elsewhere on Web APIs.
+ * [http://www.tossed.org/modules.php?name=News&amp;amp;file=article&amp;amp;sid=12 Developing With Mod_Python] - an article on Mod_Python programming with Cheetah Templates and MySQL.  Contains code samples.
+ * The [http://benjiyork.com/quick_start Zope 3 Quick Start Guide] gives a short introduction to Zope 3.
+
+== Editorial Note ==
+
+The above lists should be arranged in ascending alphabetical order - please respect this when adding new solutions. When specifying release dates please use the format YYYY-MM-DD.
+
+Some special notes to contributors to this page who like to assume an advocacy position when "reorganising" the content:
+
+ * '''Do not''' remove editorial guidelines: when people do this it not only indicates that they do not care about such guidelines, but it also leads others to believe that the page never had any structure or purpose.
+ * If you must change the categories used on this page, at least attempt to assign all frameworks to meaningful categories. '''Do not''' invent special categories in order to elevate the profile of certain projects. '''Do not''' merge categories and put frameworks into a miscellaneous category.
+ * '''Do not''' add links to projects unless they are Web frameworks. Instead, use the ["WebComponents"], ["WebServers"], ["Templating"] pages, or any page referenced by ["WebProgramming"].
+ * Some frameworks are not actively developed or maintained. '''Do not''' just move entries into the "Discontinued/Inactive Frameworks" section without at least doing some investigation first.
+
+And some basic editing advice: use the preview button when making edits, rather than leaving tens of micro-changes in the history.
