@@ -1,14 +1,25 @@
 #pragma section-numbers off
-[[TableOfContents]]
 
-== Masthead ==
+= Oracle =
 
   URL:: http://www.oracle.com/index.html
   FAQ:: http://www.orafaq.com/
   Wiki:: http://www.orawiki.com/
   Wikipedia:: http://en.wikipedia.org/wiki/Oracle_database
-  license:: commercial; free for development from [http://www.oracle.com/technology//index.html Oracle Technology Network]; [http://www.oracle.com/technology/software/products/database/xe/index.html Oracle XE] is free for production and development(and an excellent option all-around)
+  license:: commercial/proprietary; free for development from [http://www.oracle.com/technology//index.html Oracle Technology Network]; [http://www.oracle.com/technology/software/products/database/xe/index.html Oracle XE] is free for production and development (and an excellent option all-around)
   platforms:: Unix, Linux, win32, win64
+
+== Pros ==
+
+ * Reputation for being capable of handling large scale databases
+ * Typically the database system others compare themselves to
+
+== Cons ==
+
+ * Requires bloated Oracle client installation on any machine that the app will run on
+ * Frequently the subject of migration discussions (to alternatives), usually for reasons of cost
+
+----
 
 == DB API 2.0 Drivers ==
 
@@ -19,10 +30,6 @@
   platforms:: Unix, win32
   Python versions::
 
-==== Extensions to DB API ====
-
-==== Comments ====
-
 === cx_Oracle ===
 
   URL:: http://www.computronix.com/utilities.shtml
@@ -31,70 +38,14 @@
   Python versions:: 2.2 - 2.4
   Oracle versions:: 8i - 10g
 
-==== Extensions to DB API ====
-
-==== Comments ====
-
-While trying to install the cx_Oracle Python utility, I encounter the following error:
-
- 
-
-sh-2.05b# python setup.py build
-
-running build
-
-running build_ext
-
-building 'cx_Oracle' extension
-
-gcc -pthread -DNDEBUG -g -O3 -Wall -Wstrict-prototypes -fPIC -I/devtools/oracle/product/8.1.5/rdbms/demo -I/devtools/oracle/product/8.1.5/rdbms/public -I/devtools/oracle/product/8.1.5/network/public -I/usr/local/python2.4/include/python2.4 -c cx_Oracle.c -o build/temp.linux-i686-2.4/cx_Oracle.o -DBUILD_TIME="January 21, 2005 11:19:47"
-
-cx_Oracle.c:10: xa.h: No such file or directory
-
-error: command 'gcc' failed with exit status 1
-
- 
-
-Where can I find the xa.h file?  The only package I could find online that provides any such file is a cd i/o library, and that doesn’t seem right.
-
-I am running a 2.4 linux kernel, trying to install cx_Oracle-4.0.1 on top of Python 2.4.
-
-I have tried the beta package which should be more 2.4 compatible, but still no luck.  Any help is appreciated.  Thanks!
-
-'''Answer''':
-
-
-I got the same problem. Installing package "python2.4-dev" worked for me.
-
-
-''apt-get install python2.4-dev''
-
-
-== Other Drivers ==
-
-=== driver name ===
-
-  URL:: 
-  licence::
-  platforms::
-  Python versions::
-
-==== Programming Model ====
-
-==== Comments ====
+----
 
 == Supported Python Applications ==
 
  * ["Zope"]
  * an Oracle (DCOracle and DCOracle2) driver exists for ["PyDO"] (Python Data Objects)
 
-== Pros ==
-
-== Cons ==
- * Requires bloated Oracle client installation on any machine that the app will run on
-
-
-== Weblinks ==
+== Web Links ==
 
 [http://www.orafaq.com/forum Oracle Forum]
 
