@@ -1,40 +1,47 @@
 #pragma section-numbers off
-[[TableOfContents]]
 
-== Masthead ==
+= PostgreSQL =
 
   URL:: http://www.postgresql.org/
-  licence:: BSD-like 
-  platforms:: Unix, win32 (Cygwin); a native win32 port is in the works
+  licence:: BSD
+  platforms:: Unix, win32 ([http://www.postgresql.org/docs/faqs.FAQ_MINGW.html NT-based Microsoft operating system])
+
+== Pros ==
+
+From the [http://www.postgresql.org/about/ features page]:
+
+ * Good compliance with SQL standards
+ * Supports many SQL features
+   * Foreign keys
+   * Implements all SQL99 join types: inner join, left, right, full outer join, natural join
+   * Subqueries
+   * UNION and UNION ALL, INTERSECT and EXCEPT
+   * Views
+   * Triggers
+ * Support for international character sets, multibyte character encodings, Unicode
+ * Supports many languages for writing server-side functions/procedures and aggregates: Python, C, Perl, Tcl, PL/PgSQL, ...
+ * ACID compliant
+ * Support for rollback
+ * Serializable transaction isolation
+ * Multi-Version Concurrency Control (MVCC) for highly scalable concurrent applications
+
+== Cons ==
+
+ * Native Windows version is implemented in the PostgreSQL 8.x version, and just for Windows NT 4.0 / 2000 / XP / 2003. For running on other Windows platform or an older version than 8.0 there is a Cygwin version.
+
+----
 
 == DB API 2.0 Drivers ==
 
-=== PyGresQL ===
+=== PyGreSQL ===
 
-  URL:: http://www.PyGreSQL.org/
+  URL:: http://www.pygresql.org/
   licence:: BSD-like (depends on mxDateTime, which may be GPL-incompatible)
   platforms:: Unix, win32
   Python versions:: 1.5.2 thru 2.4
-  Maintenance:: Last version released Dec 13, 2004
+  Maintenance:: Last version released is 3.8.1 (2006-06-05)
 
-
-==== Extensions to DB API ====
-
-  * Alternative old nonstandard PostgreSQL interface
-
-==== Comments ====
-
-=== PoPy ===
-
-  URL:: http://popy.sourceforge.net
-  Licence:: GPL
-  Platforms:: Unix
-  Python versions::
-  Maintenance:: Last release 8/2001. Eventually merged with PyGresQL. http://zope.org/Members/tm/Full_Announce (as of 10/2003)
-
-==== Extensions to DB API ====
-
-==== Comments ====
+Now incorporates PoPy - see http://zope.org/Members/tm/Full_Announce
 
 === psycopg ===
 
@@ -67,41 +74,9 @@
   * The fetch methods on cursors return an instances of PgResultSet, which you can use to access rows by index (like in DB-API), dictionary-like or with attributes. This feature can be turned off for a slight performance boost.
   * Support for PostgreSQL notifications in the low-level API.
 
-==== Comments ====
-
-== Other Drivers ==
-
-=== driver name ===
-
-  URL::
-  licence::
-  platforms::
-  Python versions::
-
-==== Programming Model ====
-
-==== Comments ====
+----
 
 == Supported Python Applications ==
  * ["Zope"]
  * DbDoc
  * three PostgreSQL drivers (using pgdb, included with the PostgreSQL distro, pypgsql, and psycopg) exist for ["PyDO"] (Python Data Objects)
-
-== Pros ==
- * Good compliance with SQL standards
- * Supports many SQL features
-   * Foreign keys
-   * Implements all SQL99 join types: inner join, left, right, full outer join, natural join
-   * Subqueries
-   * UNION and UNION ALL, INTERSECT and EXCEPT
-   * Views
-   * Triggers
- * Support for international character sets, multibyte character encodings, Unicode
- * Supports many languages for writing server-side functions/procedures and aggregates: Python, C, Perl, Tcl, PL/PgSQL, ...
- * ACID compliant
- * Support for rollback
- * Serializable transaction isolation
- * Multi-Version Concurrency Control (MVCC) for highly scalable concurrent applications
-
-== Cons ==
- * Native Windows version is implemented in the PostgreSQL 8.x version, and just for Windows NT 4.0 / 2000 / XP / 2003. For running on other Windows platform or an older version than 8.0 there is a Cygwin version.
