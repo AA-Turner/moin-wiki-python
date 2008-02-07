@@ -164,3 +164,7 @@ that must be called for every instance of that object. See PyInteger's ``int_new
 for an example of this type of ``@ExposedNew``.
 
 With either form, there can be only one ``@ExposedNew`` per class.
+
+Final Step
+===========
+The generated code is invoked from the static block of the exposed class, so that static block must be run for the exposed type to be used.  Unfortunately, Java doesn't invoke the static block whenever a class is referenced as a constant like having ``PyObject.class`` in your code.  Instead it waits for something on the class to be accessed, either a static field or method or through the creation of an instance.  To make sure the exposed type functions properly, you must ensure that an access like this occurs and runs the static block before any Python code attempts to use the type.  To do this for builtin Jython types, we've been adding a static field like ``public static final PyType TYPE = PyType.fromClass(<whatever the class is>.class);`` and then using that field to load the type into the module where it lives ie for adding the list type to the builtins we call ``dict.__setitem__("list", PyList.TYPE);`` as it's filling the builtins dict.
