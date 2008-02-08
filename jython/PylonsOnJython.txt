@@ -25,7 +25,13 @@ requires:
 
   * fix for inspect.argspec not working (also needed for Pylons, among other things) **(fixed in r4053)**
 
-  * compiler package (and compiler requires the parser module which Jython lacks). nose only needs the compiler module to use compiler.consts.CO_GENERATOR; until there's a parser, maybe jython could provide a broken compiler module that doesn't import parser
+  * imp.find_module returned entries in regard to bytecode files instead of .py files when they were available **(fixed in r4080)**
+
+  * fix type names and class __module__ in doctests **(fixed in r4107, 4111)**
+
+  * methods weren't always inheriting their inner functions' __name__ and __doc__ **(fixed in r4109)**
+
+  * compiler package (and compiler requires the parser module which Jython lacks). nose only needs the compiler module to use compiler.consts.CO_GENERATOR; until there's a parser jython will provide a broken compiler module that doesn't import parser **(added in r4114)**
 
 Routes
 ------
