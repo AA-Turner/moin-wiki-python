@@ -1,4 +1,4 @@
-Mac OS X 10.5.x (Leopard) comes with the 2.5.1 Python distribution pre-installed, with an integrated Python Launcher.app.  As of this writing (7 Feb. 2008), this is the same as the current Python/MacPython stable release.  So for the first time users may wish to avoid installing the pythonmac.org distribution and use the built-in python.  However, the built-in python does not include IDLE.app or Build Applet.app, and the standard pythonmac.org distribution will not allow their installation without the installation of at least a complete, redundant Python.framework.
+Mac OS X 10.5.x (Leopard) comes with the 2.5.1 Python distribution pre-installed, with an integrated Python Launcher.app.  As of this writing (7 Feb. 2008), this is the same as the current Python/MacPython stable release.  So for the first time users may wish to avoid installing the pythonmac.org distribution and use the built-in python.  However, the built-in python does not include IDLE.app and the standard pythonmac.org distribution will not allow its installation without the installation of at least a complete, redundant Python.framework.
 
 Some people have legitimate reasons for wanting to install IDLE on Leopard.  E.g., even though Leopard's Xcode 3.0 supports Python development, it does so in a heavyweight, support-all-of-Cocoa fashion.  And educators teaching Python who wish to do so in a platform-agnostic way may also be best served by IDLE.
 
@@ -6,7 +6,7 @@ The following steps will allow the installation of IDLE.app (and other MacPython
 
 1. Download and mount:
 
-<http://pythonmac.org/packages/py25-fat/dmg/python-2.5-macosx.dmg>
+  <http://pythonmac.org/packages/py25-fat/dmg/python-2.5-macosx.dmg>
 
 2. In Finder, do a Show Package Contents on "MacPython.mpkg".
 
@@ -14,7 +14,9 @@ The following steps will allow the installation of IDLE.app (and other MacPython
 
 4. In Terminal, create a symbolic link for the system's Python.framework in the location expected by the pythonmac.org tools, like so:
 
-cd /Library/Frameworks[[BR]]
-sudo ln -s /System/Library/Frameworks/Python.framework/ Python.framework
+  cd /Library/Frameworks[[BR]]
+  sudo ln -s /System/Library/Frameworks/Python.framework/ Python.framework
 
-You're done!  IDLE.app works as intended.  So does Build Applet.app.  And since the pythonmac.org distro is the same 2.5.1 release as comes pre-installed with Leopard, there shouldn't be any module/interpreter compatibility issues.
+You're done!  IDLE.app works as intended.  And since the pythonmac.org distro is the same 2.5.1 release as comes pre-installed with Leopard, there shouldn't be any module/interpreter compatibility issues.
+
+It is recommended that you delete the newly installed Python Launcher.app, because it is already present inside the system Python.framework.  If you have installed Apple's developer tools (Xcode et al), it is recommended that you delete the newly installed Build Applet.app, because it is already present in /Developer/Applications/Utilities/MacPython 2.5.
