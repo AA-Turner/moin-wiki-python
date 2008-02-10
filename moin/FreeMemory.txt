@@ -1,5 +1,10 @@
 As Christian Heimes describes it [http://groups.google.com/group/comp.lang.python/browse_thread/thread/32e62acc62773a3d#d9baaa3a229ad90b here], Python uses its own memory allocator for small objecst (< 257 bytes). Larger objects are allocated directly with malloc, smaller objects end up in arenas. The code is well documented [http://svn.python.org/view/python/trunk/Objects/obmalloc.c?rev=56476&view=auto in obmalloc.c].
 
+ * Classes with a __del__ method may create reference 
+cycles. The GC can't break cycles when a __del__ method is involved. 
+ * keeping references to tracebacks, exception objects (except 
+Exception, err) or frames (sys._getframe())
+
 Related information:
  * [http://groups.google.com/group/comp.lang.python/browse_thread/thread/7249eee28515bb92/d8007feb4df9fa4f?lnk=gst&q=trac+memory#d8007feb4df9fa4f tips from Christian Heimes to find memory leaking code]
  * [http://groups.google.com/group/trac-dev/browse_thread/thread/116e519da54f16b difficulties to find a leak in Edgewall Trac]
