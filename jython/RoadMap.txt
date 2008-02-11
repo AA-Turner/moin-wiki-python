@@ -1,138 +1,50 @@
-## Please edit system and help pages ONLY in the moinmaster wiki! For more
-## information, please see MoinMaster:MoinPagesEditorGroup.
-## Please edit (or translate) system/help pages on the moinmaster wiki ONLY.
-## For more information, please see MoinMaster:MoinPagesEditorGroup.
-##master-page:Unknown-Page
-##master-date:Unknown-Date
-#acl MoinPagesEditorGroup:read,write,delete,revert All:read
-#format wiki
-#language en
+'''Contents''' [[TableOfContents]]
 
-'''Note:''' This page is fairly out of date, as the jython community was slumbering for a time.  Recently activity has picked back up, and jython 2.2 beta 1 was released on February 8, 2007.
+= Alpha =
 
-For a more recently-updated page, please see here: http://www.jython.org/Project/roadmap.html
- 
-= Where Is Jython Going? =
+ * Generator expressions
+ * Function/method decorators
+ * [http://www.python.org/peps/pep-0308.html PEP 308]: Conditional expressions
+ * 'with' statement
+ * New generator features
+ * Unified try/except/finally
 
-First of all, Jython recently received one of three PSF grants for so development and community building will continue. The Big Picture as of the start of 2005 can be found in MovingJythonForward.
+== Done ==
+ * yield is always a keyword.
+ * enumerate() built-in added.
+ * int() will now return a long instead of raising OverflowError if a number is too large.
+ * list.insert() changed to be consistent with negative slice indexing.
+ * list.index() takes optional start, stop arguments.
+ * Dictionaries gained a pop() method and .fromkeys() class method.
+ * dict() constructor takes keyword arguments.
+ * Many type objects are now callable.
+ * [http://www.python.org/dev/peps/pep-0218/ PEP 218]: A Standard Set Datatype
+ * [http://www.python.org/dev/peps/pep-0273 PEP 273]: Importing Modules from Zip Archives
+ * [http://www.python.org/dev/peps/pep-0278 PEP 278]: Universal Newline Support
+ * [http://www.python.org/dev/peps/pep-0285 PEP 285]: A Boolean Type
 
-----
+= Beta =
 
-== February 2005 ==
+ * assert no longer checks `__debug__` flag.
+ * [http://www.python.org/dev/peps/pep-0307 PEP 307]: Pickle Enhancements
+ * Unifying int/long
+ * [http://www.python.org/dev/peps/pep-0263 PEP 263]: Defining Python Source Code Encodings
+ * Multi-line imports
+ * Absolute & relative imports
+ * Exceptions as new-style classes
+ * [http://www.python.org/doc/2.5/whatsnew/pep-357.html PEP 357]: Allowing Any Object to be Used for Slicing
 
-Jython.org update and addition of a wiki. ''If you're reading this, we're getting somewhere ;)''
+= Replace jythonc =
 
-Assign bugs. The buglist needs to be prioritized and non-bugs need to be removed. In part this has to happen with NewStyleClasses. as bugs will be best evaluated in light of that shipment. The patch list will also need to be cleaned up and reviewed.
+jythonc doesn't handle generators and is difficult to debug and improve.  The current thinking is to add capabilites to jython itself to generate bytecode from py files and run those statically compiled items rather than jythonc's approach of making Java classes that work like the base Python code.  See http://thread.gmane.org/gmane.comp.lang.jython.devel/1429/focus=1430 for the general idea. 
 
-'''Milestone:''' Implementation of NewStyleClasses. One of the primary missing features in Jython is the implementation of new style classes which SamuelePedroni has been working on. 
+= Solidify Import System =
 
-'''Milestone:''' Design for the implementation of PEP302 and initial development.  This effort will be led by BrianZimmer.  If you're interested in assisting let him know.
+Jython adds to Python's import system to handle loading from Java's classpath and to load from jar files.  It's not exactly clear what modifications are in place and what techniques are best for adding jar files to the path at runtime and things like that.  An informational JEP explaining what's been added and how things relate to both the Python and Jython sides would be nice.  
 
+Brett Cannon has been working on rewriting all of Python's import machinery in Python; see http://svn.python.org/view/sandbox/trunk/import_in_py/
+for the code.
 
-== March 2005 ==
+= Complete Java to Python naming integration =
 
-Start fixing bugs. High priority bugs will need to be dealt with, and the community will need to be made aware of critical open bugs!
-
-Removal of makefiles, update the ant build. It's likely this could involve a reorganisation of the repository. '''Any repository reorg is dependent on NewStyleClasses having shipped'''. Some people have indicated a preference for Subversion going forward - the community should allow that merely discussing a change of VCS is going to take a good amount of time.
-
-'''Milestone:''' A transparent community process for incorporating patches and contributions.
-
-
-== April 2005 ==
-
-Final decision on choice of VCS and repository layout.
-
-Creation of repeatable build, deployment and installation scripts to facilitate future releases. The current installer is known not to work.
-
-'''Milestone:''' Jython 2.4 alpha. The completion of the new-style class integration, the fixing of critical bugs will culminate in the release of an initial alpha. 
-
-
-== May 2005 ==
-
-A good amount of time in May can be expected to deal with feedback from the alpha release.
-
-Simplifying import (removing PackageManager).  Simplifying the importing of Java classes would ease a lot frustration and make things more consistent.
-
-'''Milestone:''' CollectionsIntegration, removing 1.1 support.
-
-Consider the current situation:
-
-    {{{
-    >>> from java.util import ArrayList
-    >>> a = ArrayList([1,2,3])
-    Traceback (innermost last):
-      File "<console>", line 1, in ?
-    TypeError: java.util.ArrayList(): 1st arg can't be coerced to java.util.Collection or int
-    }}}
-
-and as a result, slate the following for implementation:
-
- * Support for boolean type
- * PEP 302 (New Import Hooks)
- * Logging (PEP 282, there exists a patch proposal for integration with Log4J)
- * DataType marshalling from the Jython runtime to Java runtime
- * User-defined types
- * JythonC integration into standard interpreter compiler
- * Changes required for new Java 1.5 updates (enum & assert)
-
-== June 2005 ==
-
-Fix issues found in the alpha and incorporate the tighter Java integration features as they arrive. 
-
-'''Milestone:''': Jython 2.4 beta. The resulting work will be released as a beta candidate.
-
-
-== July 2005 ==
-
-bugs, bugs, bugs. And who knows what else. Plus this time of year a lot of people are on vacation.
-
-
-== August 2005 ==
-
-
-'''Milestone:''': Jython 2.4 final. 
-
-
-== September 2005 ==
-
-After releasing a final the decisions about source control can be implemented.  It's important to have a firm plan in place by this time and to have delivered a new and stable Jython release prior to any migration.
-
-With the final release, focus is expected to center on AbsentModules. It is proposed that at least following modules be delivered by this time:
-
-    * SetsModule
-    * SelectModule
-    * DateTimeModule
-
-The community will dictate the remainder of the modules to be delivered.
-
-
-== October 2005 ==
-
-Missing Built-ins. A number of built-ins are missing as well methods core classes have appeared since 2.1. Some of the missing features have been documented in the whatsnew lists available with each new Python:
-
-    * http://www.python.org/doc/2.2.1/whatsnew/whatsnew22.html
-    * http://python.org/2.3/highlights.html
-    * http://python.org/2.4/highlights.html
-
-
-'''Milestone:''': Jython 2.4.1 release candidate.
-
-
-== November 2005 ==
-
-Fix issues found in the release candidate and incorporate implemented modules as they arrive. 
-
-
-'''Milestone:''': Jython 2.4.1 final. 
-
-
-
-----
-
-Ongoing
-
- * Polishing the cluster PyJavaClass/PyJavaInstance/PyClass/PyInstance
- * Documentation
-
-----
-CategoryContribute
+Java allows a method and field of the same name to exist in the same class.  Python only has a single namespace for these items.  This leads to methods being hidden in a Java instance in Jython if the instance has a field of the same name.  In addition, the bean convenience methods that map object.getField() in Java to  object.field in Jython lead to collisions.  See http://thread.gmane.org/gmane.comp.lang.jython.user/4919/ and http://jython.org/bugs/1509095.  A standard system for renaming fields and methods to avoid collisions and a JEP explaining the whole thing would be most welcome.
