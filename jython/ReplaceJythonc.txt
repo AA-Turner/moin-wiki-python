@@ -1,0 +1,5 @@
+jythonc doesn't handle generators and is difficult to debug and improve.  The current thinking is to add capabilites to jython itself to generate bytecode from py files and run those statically compiled items rather than jythonc's approach of making Java classes that work like the base Python code.  The current thinking runs as follows:
+ 
+ * Turn Python classes into Java classes without a Java interface or class using function annotations to specify the static Java type information
+ * statically compile proxy classes for Python classes that extend Java classes
+ * remove code from core that is only there to support jythonc
