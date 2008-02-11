@@ -1,13 +1,16 @@
-'''Contents''' [[TableOfContents]]
+This is a specific list of the features needed to make releases towards Jython 2.5.  The first alpha will be made once Jython supports all CPython 2.5 language level features.      After the alphas have stabalized, all the library and Jython-only features will be completed in the beta series of releases.  Once all the features are present in the betas, we'll go into release candidate mode until 2.5 is finally released.
 
 = Alpha =
 
- * Generator expressions
- * Function/method decorators
+ * Move antlr parser in /trunk/sandbox/ast to trunk
+ * Translate summer of code compiler to Java and hook up to antlr
+ * [http://www.python.org/doc/2.4/whatsnew/node4.html PEP 289]: Generator expressions
+ * [http://www.python.org/doc/2.4/whatsnew/node6.html PEP 318]: Function/method decorators
  * [http://www.python.org/peps/pep-0308.html PEP 308]: Conditional expressions
  * [http://www.python.org/dev/peps/pep-0343/ PEP 343]: 'with' statement
- * New generator features
+ * [http://www.python.org/doc/2.5/whatsnew/pep-342.html PEP 342]: Coroutines via generators
  * [http://www.python.org/dev/peps/pep-0341/ PEP 341]: Unified try/except/finally
+ * Upgrade to 2.5 CPythonLib
 
 == Done ==
  * yield is always a keyword.
@@ -30,26 +33,18 @@
 = Beta =
 
  * [http://www.python.org/dev/peps/pep-0307 PEP 307]: Pickle Enhancements
- * Unifying int/long
+ * [http://www.python.org/dev/peps/pep-0237/ PEP 237]: Unifying int/long
  * [http://www.python.org/dev/peps/pep-0263 PEP 263]: Defining Python Source Code Encodings
+ * [http://www.python.org/doc/2.4/whatsnew/node5.html PEP 292]: Simpler String Substitutions
  * [http://www.python.org/dev/peps/pep-0328/ PEP 328]: Multi-line and absolute/relative imports
  * [http://www.python.org/dev/peps/pep-0352/ PEP 352]: Exceptions as new-style classes
  * [http://www.python.org/doc/2.5/whatsnew/pep-357.html PEP 357]: Allowing Any Object to be Used for Slicing
  * [http://www.python.org/dev/peps/pep-0309/ PEP 309]: Partial Function Application 
  * [http://www.python.org/dev/peps/pep-0338/ PEP 338]: Executing modules as scripts
- * [http://www.python.org/doc/2.3/whatsnew/node14.html PEP 305]: CSV 
-
-= Replace jythonc =
-
-jythonc doesn't handle generators and is difficult to debug and improve.  The current thinking is to add capabilites to jython itself to generate bytecode from py files and run those statically compiled items rather than jythonc's approach of making Java classes that work like the base Python code.  See http://thread.gmane.org/gmane.comp.lang.jython.devel/1429/focus=1430 for the general idea. 
-
-= Solidify Import System =
-
-Jython adds to Python's import system to handle loading from Java's classpath and to load from jar files.  It's not exactly clear what modifications are in place and what techniques are best for adding jar files to the path at runtime and things like that.  An informational JEP explaining what's been added and how things relate to both the Python and Jython sides would be nice.  
-
-Brett Cannon has been working on rewriting all of Python's import machinery in Python; see http://svn.python.org/view/sandbox/trunk/import_in_py/
-for the code.
-
-= Complete Java to Python naming integration =
-
-Java allows a method and field of the same name to exist in the same class.  Python only has a single namespace for these items.  This leads to methods being hidden in a Java instance in Jython if the instance has a field of the same name.  In addition, the bean convenience methods that map object.getField() in Java to  object.field in Jython lead to collisions.  See http://thread.gmane.org/gmane.comp.lang.jython.user/4919/ and http://jython.org/bugs/1509095.  A standard system for renaming fields and methods to avoid collisions and a JEP explaining the whole thing would be most welcome.
+ * [http://www.python.org/doc/2.3/whatsnew/node14.html PEP 305]: csv module
+ * [http://www.python.org/doc/2.4/whatsnew/node8.html PEP 324]: subprocess module
+ * [http://www.python.org/doc/2.4/whatsnew/node9.html PEP 327]: decimal type
+ * [http://www.python.org/doc/2.4/whatsnew/node7.html PEP 322]: Reverse iteration
+ * ReplaceJythonc
+ * ExposeAnnotations
+ * MigrateBugtests
