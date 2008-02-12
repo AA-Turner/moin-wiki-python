@@ -2,39 +2,50 @@
 
 A variety of XML processing solutions are available for Python. This page attempts, at the very least, to list the most actively developed or most easily available.
 
-== Parsers ==
+The standard library has a number of tools available, which fall into mainly three categories:
 
-In the standard library:
+ * XML tree libraries that adhere to the W3C DOM standard:
+   * MiniDom - the xml.dom.minidom package
+   * PullDom - the xml.dom.pulldom package
+ * an event-driven XML parser compatible with the W3C SAX standard:
+   * ["Sax"] - the xml.sax package
+ * a pythonesque XML tree library:
+   * ElementTree  - the xml.etree package (new in Python 2.5)
 
- * ElementTree - the xml.etree package (new in Python 2.5)
- * MiniDom - the xml.dom.minidom package
- * PullDom - the xml.dom.pulldom package
- * ["Sax"] - the xml.sax package
+The DOM and SAX packages have the advantage of being compatible to W3C standard APIs, so users who are already familiar with these APIs can use them without learning too many new things.  Everyone else should start with the more pythonic ElementTree library, which is very well integrated into the Python language, and therefore very easy to learn and use.
 
-Available separately:
+== External packages ==
+
+A long list of special purpose and general purpose Python XML packages is available from [http://pypi.python.org/pypi?:action=browse&show=all&c=500 PyPI]. The following is a choice of major tools that support a broader set of XML features.
+
+=== Pythonic tools ===
+
+ * [http://uche.ogbuji.net/tech/4suite/amara/manual Amara] - Amara provides tools you can trust to conform with XML standards without losing the familiar Python feel
+ * [http://codespeak.net/lxml/ lxml] - a pythonic, ElementTree-compatible binding for the libxml2 and libxslt libraries that comes with all sorts of powerful XML tools, well integrated into an easy-to-use Python API
+ * [http://codespeak.net/lxml/objectify.html lxml.objectify] - a Python object API for XML based on lxml
+
+=== W3C DOM-like libraries ===
 
  * [http://4suite.org/ 4Suite] - a framework for XML (and RDF) processing
- * [http://uche.ogbuji.net/tech/4suite/amara/manual Amara] - Amara provides tools you can trust to conform with XML standards without losing the familiar Python feel
  * [http://www.ikaaro.org/itools/ itools.xml] - itools provides XML processing support in a fashion similar to that of PullDom
  * [http://www.python.org/pypi/libxml2dom libxml2dom] - PyXML-style API for the libxml2 Python bindings
- * [http://codespeak.net/lxml/ lxml] - a "Pythonic" binding for the libxml2 and libxslt libraries that comes with all sorts of powerful XML tools, all integrated into an easy-to-use API
- * [http://pyxml.sourceforge.net/ PyXML] - the semi-official Python distribution for XML, now without a maintainer
+ * [http://pyxml.sourceforge.net/ PyXML] - the semi-official Python distribution for XML, now without a maintainer!
  * [http://www.python.org/pypi/qtxmldom qtxmldom] - PyXML-style API for the qtxml Python bindings
 
-== XSLT ==
+=== XSLT Support ===
 
- * [http://uche.ogbuji.net/tech/akara/nodes/2003-01-01/python-xslt XSLT tools for Python] - a collection of examples and links by Uche Ogbuji
- * [http://www.python.org/pypi/XSLTools XSLTools] - XSL transformations on top of libxslt and [http://www.python.org/pypi/libxml2dom libxml2dom], with added Web development support
+ * [http://uche.ogbuji.net/tech/akara/nodes/2003-01-01/python-xslt XSLT tools for Python] - an (older) collection of examples and links by Uche Ogbuji
  * [http://codespeak.net/lxml lxml] has excellent support for XSLT that is based on libxslt
+ * [http://www.python.org/pypi/XSLTools XSLTools] - XSL transformations on top of libxslt and [http://www.python.org/pypi/libxml2dom libxml2dom], with added Web development support
  * Some tools linked from the [http://www.w3.org/XML/Query/#implementations XQuery homepage] provide Python bindings for their XSLT2 and XPath2 implementations
 
-== XML-based Communications ==
+=== XML-based Communications ===
 
  * [http://pyxmpp.jajcus.net/ PyXMPP] - a Python XMPP (RFC 3920,3921) and [http://www.jabber.org/protocol/ Jabber] implementation
  * [http://jabberpy.sourceforge.net/ jabber.py] - a Python module for the jabber instant messaging protocol
  * [http://xmpppy.sourceforge.net/ xmpppy] - a Python library that is targeted to provide easy scripting with Jabber
 
-== Web Services ==
+=== Web Services ===
 
  * XmlRpc
    * DocXmlRpcServer
