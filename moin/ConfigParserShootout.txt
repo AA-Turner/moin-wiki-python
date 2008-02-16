@@ -234,6 +234,55 @@ OK, I'll Toss My Hat Into The Ring.  I just found this discussion tonight for th
 
 As the default config format on OS X, plist files are already used by hundreds of apps.  Though popular on the Mac, the format can be used from any platform or language since it's a [http://developer.apple.com/documentation/MacOSX/Conceptual/BPRuntimeConfig/Articles/ConfigFiles.html subset of XML].  Graphical editors are available from Apple as part of its free developer tools, as well as from [http://homepage.mac.com/bwebster/plisteditpro.html third party developers]
 
+== PyOptionTree ==
+
+[http://pyoptiontree.sourceforge.net PyOptionTree] is a hierarchical parameter parser that I wrote with the goal being to allow the user to both specify parameters *and* modify, control, structure, copy, and record them in a efficient and intuitive way.  I've been using and refining it for over a year, and it has many of the options that people seem to find desirable, plus a few more, so I thought it'd be worthwhile to post here.  If people have any comments, please let me know.
+
+It supports:
+ * Lists, tuples, and dictionaries (through dict() and list of 2-tuples).  Also supports nesting lists and tuples.
+ * Embedded python code.
+ * Linking options (even forward linking) using a directory-like syntax.
+ * A useful set of functions for importing additional files, loading pickles to be the value of objects, string operations, summation, concatenation, etc.
+ * Allowing for program-defined functions that can be passed to the parser.
+ * Inheritance and a more object oriented feel through by allowing branches to be copied and modified.
+ * Saving the tree in the same format.  The saving preserves the original order of nodes.
+ * Allowing the programmer to modify the tree -- even inserting arbitrary pickleable objects -- and save it in the same format.
+ * Parse and incorporating command line arguments.
+
+Here's a simple example:
+{{{
+Tasks = [exercises/jog, eating/eatcereal, eating/eattoast]   # links to the following subtrees
+
+exercises = {
+  jog = {
+    action = "jog"
+    minutes = 30
+  }
+  # etc.
+}
+
+eating = {
+  eatcereal = {
+    action = "eat"
+    food = "cereal"
+  }
+  
+  eattoast = copy(eatcereal)  # this creates a copy of the eatcereal subtree
+  eattoast/food = "toast"     # this changed the food option of that copy
+}
+}}}
+On the programmer's end, each of the braches behaves like a full tree, e.g.:
+{{{
+def runTests(opttreefile):
+    ot = PyOptionTree(opttreefile)
+    for t in ot('Tasks'):   # According to the above definition,
+        runTest(t)         # t is a subtree (branch).
+
+def runTest(ot):
+    print 'Current Action: ', ot("name")
+}}}
+
+
 = Features =
 
 This is a list of features that should be taken into account.
