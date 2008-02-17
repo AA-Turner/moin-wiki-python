@@ -48,6 +48,18 @@ requires:
 
   * webbrowser module: paste.fixture imports it. Jython doesn't include it. It's a pretty simple module -- though it doesn't seem to work right on Jython when launching a console browser (like lynx or links). I think it's an os.system problem
 
+  * exposes a bug in strings to ints. 
+
+  Offending code is:
+
+  int("00c04fd430c8", 16)
+  
+  Exception:
+
+  File "/Users/pjenvey/src/java/jython-trunk/dist/Lib/site-packages/PasteScript-1.6.2dev_r7203-py2.3.egg/paste/script/util/uuid.py", line 49, in __init__
+
+  ValueError: invalid literal for __int__: 00c04fd430c8
+
 Mako
 ----
 requires:
@@ -72,7 +84,7 @@ FormEncode
 ----------
 requires:
 
-  * gettext (which requires the locale module, which Jython lacks)
+  * gettext (which requires the locale module, which Jython lacks) **(both were added in r4077, 4084)**
 
 simplejson
 ----------
@@ -87,6 +99,7 @@ decorator
 ---------
 
   * Note: decorators aren't currently supported in Jython, however the decorator module doesn't actually use decorators (works on CPython 2.3)
+  * requires function.func_defaults to be writable and it currently isn't on Jython
 
 Later down the road
 ===================
