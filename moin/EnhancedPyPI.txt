@@ -8,23 +8,24 @@ This document provides:
 = Rationale =
 
 The PyPI is playing a very important role in the standardization of 
-Python package distribution since Python 2.4. Together with Distutils
+Python package distribution since Python 2.4. Together with Distutils 
 and the third-party library Setuptools, most Python programmers are 
 releasing their packages in eggs, and are making them available in PyPI.
 
-Web frameworks such as Plone and the underlying framework, are
-now entirely distributed in eggs, and use PyPI as the main place to
-publish them. Some tools like zc.buildout automates the build of
+Web frameworks such as Plone and the underlying framework, are 
+now entirely distributed in eggs, and use PyPI as the main place to 
+publish them. Some tools like {{{zc.buildout}}} automate the build of 
 Python application by looking for eggs in PyPI and downloading them.
 
-This central approach is great for Python advocacy, and for the cohesion
-of the community of developers, but brings a few issues:
+This central approach is great for Python advocacy, and for the cohesion 
+of the community of developers, but brings a few issues. The ones 
+addressed in this document are:
 
  * when PyPI is unreachable, developers are unable to build their application, unless they have a local PyPI cache;
- * when people from a sub-community, like Plone, want to promote their work, they need to shout it out in several places, to make sure it has reach people focused on the given framework. These places are acting a bit like the PyPI, so a common releasing standard make thing easier to automate.
+ * when people from a sub-community, like Plone, want to promote their work, they need to shout it out in several places, to make sure it has reach people focused on the given framework. These places are acting a bit like the PyPI, so a common releasing standard make things easier to automate.
 
-This document provides a solution to transparently support several index
-servers. It is a very low risk and very simple to implement. It is also
+This document provides a solution to transparently support several index 
+servers. It is a very low risk and very simple to implement. It is also 
 finalizing a feature that was primarily intended by Distutils and PyPI, 
 but not easy to use as-is: making it a central server, but allowing 
 people to register and upload their package elsewhere.
@@ -32,23 +33,22 @@ people to register and upload their package elsewhere.
 The rest of the document presents the actions to take, and the work 
 to be done for it:
 
- * making .pypirc supports multiple servers
+ * making {{{.pypirc}}} support multiple servers
  * making PyPI permissive for Trove classification
 
-= Making .pypirc supports multiple servers =
+= Making .pypirc support multiple servers =
 
-Right now, the .pypirc file is intended to keep username and password
+Right now, the {{{.pypirc}}} file is intended to keep username and password 
 for registering a package. The file looks like
 
 {{{
   [server-login]
   username:tarek
   password:secret
-
 }}}
 
-The default repository is PyPI, and when another repository has to be used,
-there are two options. 
+The default repository is PyPI, and when another repository has to be used, 
+there are two options.
 
 Either adding the repository url in the command line:
 
@@ -56,7 +56,7 @@ Either adding the repository url in the command line:
   $ python setup.py register -r http://example.com/repository
 }}}
 
-Either adding it in the .pypirc file:
+or adding it in the {{{.pypirc}}} file:
 
 {{{
   [server-login]
@@ -65,25 +65,25 @@ Either adding it in the .pypirc file:
   repository:http://example.com/repository
 }}}
 
-In both cases, it is not possible when your username differs from a server to 
-another, to keep a username/password for each server. Furthermore the realm
+In both cases, if your username differs from a server to another, it is not 
+possible to keep a username/password for each server. Furthermore the realm 
 associated with the server is hardcoded to "pypi".
 
-== Several sections in .pypirc ==
+== Several sections in {{{.pypirc}}} ==
 
-A simple way to enhance it, is to be able to add several sections in .pypirc.
-The root section would be the [distutils] section, with a list of sections
-that represent a server. 
+A simple way to enhance it, is to be able to add several sections in
+{{{.pypirc}}}. The root section would be the {{{[distutils]}}}
+section, with a list of sections that represent a server.
 
 For example:
 
 {{{
   [distutils]
-  index-servers = 
-    pypi 
+  index-servers =
+    pypi
     my-other-server
     my-other-server-with-its-own-realm
-    
+
   [pypi]
   repository:http://pypi.python.org/pypi/
   username:tarek2
@@ -103,9 +103,9 @@ For example:
 }}}
 
 
-When a user call the register or the upload command, it will
-use the default server located in the pypi section, or 
-the server given by the -r option:
+When a user calls the {{{register}}} or the {{{upload}}} command, it will 
+use the default server located in the {{{pypi}}} section, or 
+the server given by the {{{-r}}} option:
 
 
 {{{
@@ -113,7 +113,7 @@ $ python setup.py register sdist upload -r http://example.com/repository       #
 $ python setup.py register sdist upload        # registering and uploading at PyPI
 }}}
 
-the -r option will also accept the name of the section:
+the {{{-r}}} option will also accept the name of the section:
 
 {{{
 $ python setup.py register sdist upload -r my-other-server      # registering and uploading at example.com
@@ -122,8 +122,8 @@ $ python setup.py register sdist upload -r pypi       # registering and uploadin
 
 Default values in this file will be:
 
- * distutils:index-servers : "pypi"
- * pypi:repository : http://pypi.python.org/pypi/
+ * {{{distutils:index-servers}}} : {{{"pypi"}}}
+ * {{{pypi:repository}}} : {{{http://pypi.python.org/pypi/}}}
 
 
 Backward compatibility will be kept, and a file that uses the old format:
@@ -138,9 +138,9 @@ Backward compatibility will be kept, and a file that uses the old format:
 
 {{{
   [distutils]
-  index-servers = 
-    pypi 
-    
+  index-servers =
+    pypi
+
   [pypi]
   username:tarek2
   password:secret
