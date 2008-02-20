@@ -76,13 +76,13 @@ Here are some of the things we addressed:
 
 === Former Minor annoyances ===
 
- * slice should be a type, not a function. [http://sourceforge.net/tracker/index.php?func=detail&aid=1791931&group_id=12867&atid=112867 bug] [http://sourceforge.net/tracker/index.php?func=detail&aid=1798544&group_id=12867&atid=312867 patch]
+ * slice should be a type, not a function. [http://bugs.jython.org/issue1791931 bug] [http://bugs.jython.org/issue1798544 patch]
  * {{{PyBoolean.__tojava__}}} returns an {{{Integer}}}
    * It affects zxJDBC unless a DataHandler sets the right type of boolean parameters. Fortunately, JDBC30DataHandler does this thing, at least on my limited tests -- LeonardoSoto
  * Jython does not have {{{__builtins__}}} as a module.  Django adds "_" as a convenience method for calling gettext in {{{django/conf/__init__.py}}}.
     * According to the Python docs, {{{__builtins__}}} is a implementation detail and shouldn't be used by portable applications, so it's a Django problem.  (See note about {{{__builtins__}}} here: http://docs.python.org/ref/naming.html)
  * Jython methods are not descriptors. It seems a implementation detail. [http://code.djangoproject.com/ticket/5664 django patch]
- * Jython classes which extend dict cannot be compared to a dict. [https://sourceforge.net/tracker/index.php?func=detail&aid=1804011&group_id=12867&atid=112867 bug] [https://dev.archer.edu.au/projects/kepler/changeset/149?format=diff&new=149 django patch]
+ * Jython classes which extend dict cannot be compared to a dict. [http://bugs.jython.org/issue1804011 bug] [https://dev.archer.edu.au/projects/kepler/changeset/149?format=diff&new=149 django patch]
  * Jython doesn't recognize {{{__unicode__}}} methods assigned to instances. 
     * But, this is the only {{{__*__}}} method where CPython allows this, and it's not documented anywhere. So, it's a implementation detail and should be fixed on Django. [http://code.djangoproject.com/ticket/5560 django patch]
 
@@ -103,5 +103,5 @@ Here are some of the things we addressed:
    * Django don't check or change file permissions when running on Jython now
  * The {{{U}}} (Universal newlines) flag for {{{open()}}} isn't recognized on Jython
  * Unicode string interpolation doesn't work
- * {{{object}}} has a {{{__unicode__}}} attribute (it doesn't on CPython) [https://sourceforge.net/tracker/?func=detail&atid=112867&aid=1800378&group_id=12867 bug] [https://sourceforge.net/tracker/?func=detail&atid=312867&aid=1800381&group_id=12867 patch] -- TristanKing
- * metaclasses need to know the {{{__module__}}} of its classes  [http://sourceforge.net/tracker/index.php?func=detail&aid=1781500&group_id=12867&atid=112867 bug] [http://sourceforge.net/tracker/index.php?func=detail&aid=1789137&group_id=12867&atid=312867 patch]
+ * {{{object}}} has a {{{__unicode__}}} attribute (it doesn't on CPython) [http://bugs.jython.org/issue1800378 bug] [http://bugs.jython.org/issue1800381 patch] -- TristanKing
+ * metaclasses need to know the {{{__module__}}} of its classes  [http://bugs.jython.org/issue1781500 bug] [http://bugs.jython.org/issue1789137 patch]
