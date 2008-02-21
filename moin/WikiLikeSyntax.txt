@@ -435,3 +435,24 @@ The class definition may seem more complicated, but adding a new type of line on
 Now you just need to add some code to text_to_paragraph to handle the new types of lines; or even better, we could fix things so that runs of one or more XXX_YYY tokens get turned into a single XXX token containing multiple YYY tokens.  I'll leave that last bit as an exercise for the reader.  ;-)
 
 -- SamDenton3
+
+It's been almost 3 years now.  I have found a better technique for doing wiki-like syntax.  I don't recall seeing this technique in TextProcessingInPython.  (I suspect the RegularExpression {{{(?P<...>)}}} form didn't exist yet.)
+
+The technique involves automatically turning {{{(?P<...>)}}} capture results into functions, and then recursing back into regexes.
+
+[http://oink.sheep.art.pl/WikiCreole_parser_in_python Sheep:WikiCreole_parser_in_python] demonstrates it, and is how I discovered it.
+
+From a high level, the technique is:
+
+* Make an object that emits parse tree nodes.
+* Write your grammar in regular expressions.  (One big grammar.)
+* Use {{{(?P<...>)}}} in your grammar, to name significant parts of the regexes.
+* Call {{{re.sub}}}, starting with the S production, and instead of substituting with a string, substitute with a function ("_replace", described below.)
+
+'''_replace is the trick.'''
+
+_replace will read off the {{{(?P<...>)}}} captures via {{{match.groupdict()}}}, and '''turn them into function names.'''  The function names are methods on the object that is emitting the parse tree.
+
+The methods are called, and they use the match object to construct the node.  This often times involves calling {{{re.sub}}} again on matched context, and this is where the recursive element comes in.
+
+-- LionKimbro
