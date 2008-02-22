@@ -477,7 +477,7 @@ I use unicode strings, so I had to convert the group names to strings first to u
 It expects the {{{_repl}}} methods to accept keyword arguments named the same as the groups contained in respective patterns. For example:
 
 {{{#!python
-  pattern = ur"(?P<link>\[\[(?<link_target>[^\]+|])(|(?P<link_text>[^\]]+))?\]\])"
+  pattern = ur"(?P<link>\[\[(?<link_target>[^\]|]+)(|(?P<link_text>[^\]]+))?\]\])"
   def link_repl(self, link, link_target, link_text=None):
      if link_text is None:
          link_text = link_target
