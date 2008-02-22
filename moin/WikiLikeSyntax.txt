@@ -481,7 +481,7 @@ It expects the {{{_repl}}} methods to accept keyword arguments named the same as
   def link_repl(self, link, link_target, link_text=None):
      if link_text is None:
          link_text = link_target
-     return u'<a href="%s">%s</a>' % (link_target, link_text)
+     return u'<a href="%s">%s</a>' % (cgi.escape(link_target, quote=True), cgi.escape(link_text))
 }}}
 
 Note how the {{{link_text}}} group is optional, so the corresponding argument needs a default value.
