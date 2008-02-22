@@ -478,7 +478,7 @@ It expects the {{{_repl}}} methods to accept keyword arguments named the same as
 
 {{{#!python
   pattern = ur"(?P<link>\[\[(?<link_target>[^\]+|])(|(?P<link_text>[^\]]+))?\]\])"
-  def link_repl(link, link_target, link_text=None):
+  def link_repl(self, link, link_target, link_text=None):
      if link_text is None:
          link_text = link_target
      return u'<a href="%s">%s</a>' % (link_target, link_text)
