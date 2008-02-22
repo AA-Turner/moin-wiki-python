@@ -456,3 +456,33 @@ _replace will read off the {{{(?P<...>)}}} captures via {{{match.groupdict()}}},
 The methods are called, and they use the match object to construct the node.  This often times involves calling {{{re.sub}}} again on matched context, and this is where the recursive element comes in.
 
 -- LionKimbro
+
+Note also, that you can use re.finditer instead of re.sub if you want to have a little more control on the flow (for example, if you want to use yield to return partial parse as you go). Here is a nicer {{{_replace}}} function:
+
+{{{#!python
+    def _replace(self, match):
+        """Process a single match by calling an apropriate _repl method."""
+
+        groups = {}
+        for name, text in match.groupdict().iteritems():
+            if text is not None:
+                groups[str(name)] = text
+        for name, text in groups.iteritems():
+            repl = getattr(self, '%s_repl' % name, None)
+            if repl:
+                return repl(**groups)
+}}}
+
+I use unicode strings, so I had to convert the group names to strings first to use them as argument names.
+It expects the {{{_repl}}} methods to accept keyword arguments named the same as the groups contained in respective patterns. For example:
+
+{{{#!python
+  pattern = ur"(?P<link>\[\[(?<link_target>[^\]+|])(|(?P<link_text>[^\]]+))?\]\])"
+  def link_repl(link, link_target, link_text=None):
+     if link_text is None:
+         link_text = link_target
+     return u'<a href="%s">%s</a>' % (link_target, link_text)
+}}}
+
+Note how the {{{link_text}}} group is optional, so the corresponding argument needs a default value.
+-- RadomirDopieralski
