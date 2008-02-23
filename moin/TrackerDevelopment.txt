@@ -94,7 +94,7 @@ You need to install psycopg or psycopg2. Download it from http://www.initd.org.
 
 == Checkout spambayes_integration ==
 
-Even though spambayes does not need to be installed, you need to check it out.
+Even if you don't intend to use the !SpamBayes detector you must still check out the {{{spambayes_integration}}} instance.  If you do intend to use it, you will need to also install !SpamBayes proper and configure it appropriately (see below).
 
 {{{
   svn co http://svn.python.org/projects/tracker/instances/spambayes_integration
@@ -160,7 +160,12 @@ http://svn.python.org/projects/tracker/importer/README.rst has some information 
 
 == Common Problems ==
 
- SPAMBAYES_URI:: This is caused by the `xapian` package. The tracker wants to use this package if it's installed. As a workaround you can remove this package from your system and you should be able to create new issues for testing.
+ Incomplete/Missing !SpamBayes setup:: In your config.ini file set {{{spambayes_uri}}} to a syntactically valid, but nonexistent URI, e.g.:
+
+{{{
+    spambayes_uri = "http://localhost:9999/nobodyhere"
+}}}
+
 
 ----
 CategoryTracker
