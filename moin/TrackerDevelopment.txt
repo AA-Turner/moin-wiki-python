@@ -150,6 +150,67 @@ Start your roundup instance:
 You should now be able to browse http://localhost:9999/python-dev/ and
 get a roundup instance that looks just like http://bugs.python.org.
 
+== SpamBayes Setup ==
+
+If you intend to use the !SpamBayes detector to weed out spam from your tracker you will need to install it and start an instance of its {{{core_server}}} application.
+Briefly:
+
+ * Download and install at least version 1.1a4 of the [http://sourceforge.net/projects/spambayes !SpamBayes source] from !SourceForge.  If you are running on Windows '''do not''' use the binary installer!
+ * Establish a basic configuration, e.g.:
+{{{
+Devote a directory to it, e.g.:
+
+ SBDIR=/usr/local/spambayes/core_server  # or whatever...
+ mkdir -p $SBDIR
+
+Create an INI file:
+
+ cd $SBDIR
+ cat > bayescustomize.ini <<EOF
+[globals]
+verbose:False
+
+[Headers]
+include_evidence:True
+include_score:True
+
+[Tokenizer]
+record_header_absence:True
+summarize_email_prefixes:True
+summarize_email_suffixes:True
+mine_received_headers:True
+x-pick_apart_urls:True
+x-fancy_url_recognition:False
+x-lookup_ip:True
+lookup_ip_cache:$SBDIR/dnscache.pck
+max_image_size:100000
+crack_image_cache:$SBDIR/imagecache.pck
+
+crack_images:True
+image_size:True
+ocr_engine:gocr
+[Classifier]
+use_bigrams:False
+
+[Categorization]
+ham_cutoff:0.2
+spam_cutoff:0.85
+
+[Storage]
+persistent_storage_file:$SBDIR/hammie.db
+persistent_use_database:pickle
+messageinfo_storage_file:$SBDIR/messageinfo.fs
+
+[html_ui]
+display_score:True
+EOF
+
+Finally, run it:
+
+ BAYESCUSTOMIZE=$SBDIR/bayescustomize.ini core_server.py -m XMLRPCPlugin
+}}}
+ * If you are seeing image spam (this seems not to be a problem with wiki spam - yet), download and install [http://jocr.sourceforge.net/ GOCR]. 
+
 == Getting Help ==
 
 Subscribe to and ask your question on the tracker-discuss mailing list. See http://mail.python.org/mailman/listinfo/tracker-discuss
