@@ -8,6 +8,15 @@ Python solutions and commentary for [http://www.programming-challenges.com/pg.ph
 http://www.programming-challenges.com/pg.php?page=downloadproblem&probid=110101&format=html
 
 {{{
+
+    def memoized(fn):
+        memoized_lengths = [0] * 1000000
+        def fn2(n):
+            if not memoized_lengths[n]:
+                memoized_lengths[n] = fn(n)
+            return memoized_lengths[n]
+        return fn2
+
     @memoized
     def cycle_length(n):
         if n == 1: return 1
