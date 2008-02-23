@@ -44,9 +44,9 @@ Paste, PasteDeploy and PasteScript
 ----------------------------------
 requires:
 
-  * modulefinder module (imported in paste/__init__.py). Jython currently lacks it, and modulefinder relies on reading code objects via marshal.load
-
   * subprocess module: if it doesn't exist (Python 2.3) it uses a version copied over from CPython 2.4 (paste.util.subprocess24) **(added in r4150)**
+
+  * modulefinder module (imported in paste/__init__.py). Jython currently lacks it, and modulefinder relies on reading code objects via marshal.load
 
   * webbrowser module: paste.fixture imports it. Jython doesn't include it. It's a pretty simple module -- though it doesn't seem to work right on Jython when launching a console browser (like lynx or links). I think it's an os.system problem
 
@@ -96,6 +96,8 @@ simplejson
   File "/Users/pjenvey/src/java/jython-trunk/dist/Lib/distutils/command/build_ext.py", line 598, in get_ext_filename
 
   TypeError: cannot concatenate 'str' and 'NoneType' objects
+
+  **(fixed in r4157: A CCompilerError is now raised)**
 
 decorator
 ---------
