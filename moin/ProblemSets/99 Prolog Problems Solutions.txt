@@ -21,6 +21,52 @@ The suggested solution does not work for a list like the following:
 {{{
     a_list = [0, 1, [2, 3], 4, 5, [6, 7]]
 }}}
+as the argument name tries to imply, it only works for a list of lists, not a generic list of variously and mixedly nested lists and items. Here's a more general solution using the simple recursive approach:
+{{{
+    def flatten(nestedList):
+        def aux(listOrItem):
+            if isinstance(listOrItem, list):
+                for elem in listOrItem:
+                    for item in aux(elem):
+                        yield item
+            else:
+                yield listOrItem
+        return list(aux(nestedList))
+}}}
+
+This problem is also a good example of "recursion elimination": explicitly maintain a LIFO stack of what sublists are being expanded so as to avoid actual recursion.  The rec-elim approach is usually faster and avoids issues with recursion depth limits.  Here's a version that works when it's OK to dismantle the input argument -- for variety, I have it build the result into another list by calls to .append, instead of using yield in an auxliary generator and calling list() on it.
+{{{
+    def flatten(nestedList):
+        result = []
+        stack = [nestedList]
+        while stack:
+            if isinstance(stack[-1], list):
+                try: stack.append(stack[-1].pop(0))
+                except IndexError: stack.pop() # remove now-empty sublist
+            else:
+                result.append(stack.pop())
+        return result
+}}}
+
+If you're not allowed to dismantle the input argument, you can take a preliminary copy.deepcopy of it as the initial item in the stack, or you can "pay as you go" by doing shallow copies "at the last minute" when needed. Here's an example of the latter approach, with other little variants. Here, stack is always a list of non-empty sublists which are shallow copies of sublists from the initial argument (and so the sublists on the stack can always be dismantled with no problems) while leaves (non-list subitems) are always immediately appended to the result (this, btw, builds up the result in a reversed way, so a call to result.reverse becomes necessary).
+{{{
+    def flatten(nestedList):
+        result = []
+        if not nestedList: return result
+        stack = [list(nestedList)]
+        while stack:
+            current = stack.pop()
+            next = current.pop()
+            if current: stack.append(current)
+            if isinstance(next, list):
+                if next: stack.append(list(next))
+            else: result.append(next)
+        result.reverse()
+        return result
+}}}
+
+
+
 
 = Problem 8: Eliminate consecutive duplicates of list elements =
 
