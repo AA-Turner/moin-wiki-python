@@ -66,12 +66,28 @@ If you're not allowed to dismantle the input argument, you can take a preliminar
 }}}
 
 
-
-
 = Problem 8: Eliminate consecutive duplicates of list elements =
 
 {{{
     from itertools import groupby
     def compress(alist):
         return [key for key, group in groupby(alist)]
+}}}
+
+
+= Problem 9: Pack consecutive duplicates of list elements into sublists =
+
+{{{
+    from itertools import groupby
+    def pack(alist):
+        return [list(group) for key, group in groupby(alist)]
+}}}
+
+
+= Problem 10: Run-length encoding of a list =
+
+{{{
+    from itertools import groupby
+    def encode(alist):
+        return [[len(list(group)), key] for key, group in groupby(alist)]
 }}}
