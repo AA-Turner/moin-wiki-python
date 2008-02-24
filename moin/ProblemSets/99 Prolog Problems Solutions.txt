@@ -113,3 +113,13 @@ If you're not allowed to dismantle the input argument, you can take a preliminar
             else: return [(g, [0])]
         return [x for g in alist for x, R in aux(g) for i in R]
 }}}
+
+= Problem 13: Run-length encoding of a list (direct solution) =
+{{{
+    def encode_direct(alist):
+        def aux(k, g):
+            l = sum(1 for x in g)
+            if l>1: return [l, k]
+            else: return k
+        return [aux(key, group) for key, group in groupby(alist)]
+}}}
