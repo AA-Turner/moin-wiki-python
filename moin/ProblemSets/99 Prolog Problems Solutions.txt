@@ -102,3 +102,14 @@ If you're not allowed to dismantle the input argument, you can take a preliminar
             else: return lg[0]
         return [aux(list(group)) for key, group in groupby(alist)]
 }}}
+
+
+= Problem 12: Decode a run-length encoded list =
+
+{{{
+    def decode(alist):
+        def aux(g):
+            if isinstance(g, list): return [(g[1], range(g[0]))]
+            else: return [(g, [0])]
+        return [x for g in alist for x, R in aux(g) for i in R]
+}}}
