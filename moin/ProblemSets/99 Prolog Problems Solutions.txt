@@ -146,3 +146,68 @@ If you're not allowed to dismantle the input argument, you can take a preliminar
     def drop(L, N):
       return [x for i,x in enumerate(L) if i%N != N-1]
 }}}
+
+= Problem 17: Split a list into two parts; the length of the first part is given =
+{{{
+    def split(L, N):
+        return L[:N], L[N:]
+}}}
+
+
+= Problem 18: Extract a slice from a list =
+Given two indices, I and K, the slice is the list containing the elements between the I'th and K'th element of the original list (both limits included). Start counting the elements with 1.
+{{{
+    def slice(L, I, K):
+        return L[I-1:K]
+}}}
+
+
+= Problem 19: Rotate a list N places to the left =
+{{{
+    def rotate(L, N):
+        return L[N:] + L[:N]
+}}}
+
+
+
+= Problem 20: Remove the K'th element from a list =
+{{{
+    def remove_at(L, N):
+        return L[N-1], L[:N-1] + L[N:]
+}}}
+
+
+= Problem 21: Insert an element at a given position into a list =
+{{{
+    def insert_at(x, L, N):
+        return L[:N-1]+[x]+L[N-1:]
+}}}
+
+
+= Problem 22: Create a list containing all integers within a given range =
+{{{
+    def irange(I, J):
+        return range(I, J+1)
+}}}
+
+
+= Problem 23: Extract a given number of randomly selected elements from a list =
+{{{
+    import random
+    def rnd_select(L, N):
+        return random.sample(L, N)
+}}}
+
+= Problem 24: Lotto: Draw N different random numbers from the set 1 =
+{{{
+    import random
+    def rnd_select(N, M):
+        return random.sample(range(1, M+1), N)
+}}}
+
+= Problem 25: Generate a random permutation of the elements of a list =
+{{{
+    import random
+    def rnd_permu(L):
+        return random.sample(L, len(L))
+}}}
