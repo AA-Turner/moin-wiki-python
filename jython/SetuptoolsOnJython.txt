@@ -55,3 +55,5 @@ The Jython changes made for setuptools:
   -E codec : Use a different codec the reading from the console. '''''-E codec renamed to -C codec in r4013. -E is now a noop (but valid) command line arg'''''
 
  * os.lstat. setuptools cut and pasted shutil's rmtree from CPython 2.4, which uses lstat to check for a directory vs a symlink to a directory. We now support an os.stat that fills in st_mode's directory bit, but can we support lstat? (We definitely can with JNA)? Can setuptools avoid lstat completely (requiring a patch)? I don't think Java can safely determine a sym link yet. Java 1.7's JSR 203 (nio part 2) should address this as well as chmod, but we obviously need a solution for Java 1.5 '''''Turned out we can implement a simple lstat in pure Java, added in r4014'''''
+
+ * for Jython on Windows: distutils.filelist.translate_pattern required ntpath to work correctly, and setuptools required chdir to not canonicalize the pathname via java.io.File '''''both issues fixed with usage of ntpath, in r4171''''' 
