@@ -224,3 +224,27 @@ Given two indices, I and K, the slice is the list containing the elements betwee
 	    for another in combination(K-1, L[i+1:]):
 		yield thisone + another
 }}}
+
+= Problem 27: Group the elements of a set into disjoint subsets =
+'''TODO''': add a solution for this problem.
+
+= Problem 28: Sorting a list of lists according to length of sublists =
+{{{
+    def lsort(L):
+        return sorted(L, key=len)
+
+    from collections import defaultdict
+
+    def lfsort(L):
+        lencounts = defaultdict(int)
+        for sublist in L: lencounts[len(sublist)] += 1
+        def bylenfreq(sublist): return lencounts[len(sublist)]
+        return sorted(L, key=bylenfreq)
+}}}
+
+'''Note''': there is no problem 29 in the original problem set
+
+'''Note''': there is no problem 30 in the original problem set
+
+= Problem 31: Determine whether a given integer number is prime =
+'''TODO''': add a solution for this problem.
