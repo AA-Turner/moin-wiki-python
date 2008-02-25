@@ -46,21 +46,11 @@ requires:
 
   * subprocess module: if it doesn't exist (Python 2.3) it uses a version copied over from CPython 2.4 (paste.util.subprocess24) **(added in r4150)**
 
+  * paste.script.util.uuid requires the Python 2.3 int/long unification (PEP 237) phase B **(added in r4175)**
+
   * modulefinder module (imported in paste/__init__.py). Jython currently lacks it, and modulefinder relies on reading code objects via marshal.load
 
   * webbrowser module: paste.fixture imports it. Jython doesn't include it. It's a pretty simple module -- though it doesn't seem to work right on Jython when launching a console browser (like lynx or links). I think it's an os.system problem
-
-  * paste.script.util.uuid requires the Python 2.3 int/long unification (PEP 237) phase B
-
-  Offending code is:
-
-  int("00c04fd430c8", 16)
-  
-  Exception:
-
-  File "/Users/pjenvey/src/java/jython-trunk/dist/Lib/site-packages/PasteScript-1.6.2dev_r7203-py2.3.egg/paste/script/util/uuid.py", line 49, in __init__
-
-  ValueError: invalid literal for __int__: 00c04fd430c8
 
 Mako
 ----
@@ -72,15 +62,18 @@ Beaker
 ------
 requires:
 
-  * Paste (for paste.fixture)
+  * Paste (for paste.fixture) **can be installed/imported now**
   * base64.b64encode: might die on an attempting to import b64encode in beaker.crypto.PBKDF2 (at least it does when the tests are run)
 
 WebHelpers
 ----------
 requires:
 
-  * routes
-  * simplejson
+  * routes **(can be installed/imported now that Paste doesn't blow up)**
+
+  * simplejson **(can be installed now)**
+
+  * webhelpers.textile requires the unicodedata module
 
 FormEncode
 ----------
