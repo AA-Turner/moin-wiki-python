@@ -84,21 +84,15 @@ requires:
 simplejson
 ----------
 
-  * `SetuptoolsOnJython`_ (actually distutils) currently has trouble installing simplejson, because it attempts to compile its optional C extensions (that help performance). It expects to catch a distutils.errors.CCompilerError if the compilation fails, but Jython dies much earlier:
+  * `SetuptoolsOnJython`_ (actually distutils) currently had trouble installing simplejson because it attempts to compile its optional C extensions (that help performance). It expected to catch a distutils.errors.CCompilerError **(fixed in r4157: A CCompilerError is now raised)**
 
-  File "/Users/pjenvey/src/java/jython-trunk/dist/Lib/distutils/command/build_ext.py", line 598, in get_ext_filename
-
-  TypeError: cannot concatenate 'str' and 'NoneType' objects
-
-  **(fixed in r4157: A CCompilerError is now raised)**
-
-  all tests pass!
+  all simplejson tests pass!
 
 decorator
 ---------
 
-  * Note: decorators aren't currently supported in Jython, however the decorator module doesn't actually use decorators (works on CPython 2.3)
   * requires function.func_defaults to be writable and it currently isn't on Jython
+  * Note: decorators aren't currently supported in Jython, however the decorator module doesn't actually use decorators (works on CPython 2.3)
 
 Later down the road
 ===================
