@@ -48,9 +48,9 @@ requires:
 
   * paste.script.util.uuid requires the Python 2.3 int/long unification (PEP 237) phase B **(added in r4175)**
 
-  * modulefinder module (imported in paste/__init__.py). Jython currently lacks it, and modulefinder relies on reading code objects via marshal.load
+  * modulefinder module (imported in paste/__init__.py). Jython currently lacks it, and modulefinder relies on reading code objects via marshal.load **(modulefinder added in r4179)**
 
-  * webbrowser module: paste.fixture imports it. Jython doesn't include it. It's a pretty simple module -- though it doesn't seem to work right on Jython when launching a console browser (like lynx or links). I think it's an os.system problem
+  * webbrowser module: paste.fixture imports it, Jython doesn't include it. It's pretty useless without the platform dependent CPython ic module on most environments. Without that, only console based browsers work and Jython's os.system can't redirect their stdin to actually make them usable **(Paste/WebTest trunk now only import webbrowser when it's needed)**
 
 Mako
 ----
