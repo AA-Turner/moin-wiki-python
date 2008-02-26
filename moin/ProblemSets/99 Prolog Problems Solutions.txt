@@ -248,3 +248,34 @@ Given two indices, I and K, the slice is the list containing the elements betwee
 
 = Problem 31: Determine whether a given integer number is prime =
 '''TODO''': add a solution for this problem.
+
+= Problem 46: Print a truth table for a logical expression of two variables =
+{{{
+def table(expr):
+    """
+    print truth table for logical expression
+        
+    >>> table('and(A,or(A,B))')
+    A     B     and(A,or(A,B))
+    True  True  True 
+    True  False True 
+    False True  False
+    False False False
+    """
+    # uppercase functions to avoid name clashes with 
+    #   python reserved words
+    def AND(a,b): return a and b
+    def NAND(a,b): return not (a and b)
+    def OR(a,b): return a or b
+    def NOR(a,b): return not (a or b)
+    def XOR(a,b): return a ^ b
+    def EQU(a,b): return not (a ^ b)
+    def IMP(a,b): return b if a else True
+
+    format = "%-5s %-5s %-5s"
+    print  format % ('A','B',expr)
+    expr = compile(expr.upper(),'<expression>','eval')
+    for A in (True,False):
+        for B in (True, False):
+            print format % (A, B, eval(expr,locals()))
+}}}
