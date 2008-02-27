@@ -672,4 +672,44 @@ if __name__ == "__main__":
     import doctest
     doctest.testmod(verbose=True)
 }}}
-'''Note''': problems 49-99 still to be done (PLEASE edit this place-holder as you do more problems!)
+
+= Problem 49: Generate list of n-bit Gray codes. =
+{{{
+def binaryString(n,w=0):
+    """return binary representation of 'n' as a 'w'-width string.
+
+    >>> binaryString(6)
+    '110'
+    >>> binaryString(3,4)
+    '0011'
+    """
+
+    from collections import deque
+    bits = deque()
+    while n > 0:
+        bits.appendleft(('0','1')[n&1])
+        n >>= 1
+    while len(bits) < w:
+        bits.appendleft('0')
+    return ''.join(bits)
+
+def gray(width):
+    """return list with 'width'-bit gray code.
+
+    >>> gray(1)
+    ['0', '1']
+    >>> gray(2)
+    ['00', '01', '11', '10']
+    >>> gray(3)
+    ['000', '001', '011', '010', '110', '111', '101', '100']
+    """
+    
+    return [binaryString(n ^ (n>>1),width) for n in range(2**width)]
+
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod(verbose=True)
+}}}
+
+'''Note''': problems 50-99 still to be done (PLEASE edit this place-holder as you do more problems!)
