@@ -428,17 +428,13 @@ def table( expr ):
         # operand stack, and assembled into a call to the appropriate function.
         # The function call is pushed onto the operand stack
         def reduce( operators, operands ):
-            try:
-                op = operators.pop()
-                right = operands.pop()
-                if op == 'not':
-                    operands.append( "%s(%s)" % ( op.upper(), right ))
-                else:
-                    left = operands.pop()
-                    operands.append( "%s(%s,%s)" % ( op.upper(), left, right ))
-            except:
-                print operators, operands, right, op
-                raise
+            op = operators.pop()
+            right = operands.pop()
+            if op == 'not':
+                operands.append( "%s(%s)" % ( op.upper(), right ))
+            else:
+                left = operands.pop()
+                operands.append( "%s(%s,%s)" % ( op.upper(), left, right ))
 
         prec = { '('   : 0,                 # operator precedence
                  'imp' : 1,
