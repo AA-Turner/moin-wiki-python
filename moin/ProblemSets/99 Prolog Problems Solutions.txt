@@ -381,12 +381,140 @@ def table(expr):
     def EQU(a,b): return not (a ^ b)
     def IMP(a,b): return b if a else True
 
+    # print a nice header
     format = "%-5s %-5s %-5s"
     print  format % ('A','B',expr)
+
+    # convert the expression to uppercase and 
+    # compile it for later 'eval' call
     expr = compile(expr.upper(),'<expression>','eval')
+
     for A in (True,False):
         for B in (True, False):
+
+            # locals() provides the environment for
+            # evaluating the compiled expr, and
+            # includes A, B, and the logical functions
+            # defined above (AND, NAND, ...)
             print format % (A, B, eval(expr,locals()))
 }}}
 
-'''Note''': problems 47-99 still to be done (PLEASE edit this place-holder as you do more problems!)
+= Problem 47: Print a truth table for an infix logical expression of two variables =
+{{{
+def table( expr ):
+    """
+    P47: Print a truth table for an infix logical expression
+
+    >>> table('A and not B')
+      A     B   A and not B
+    True  True  False
+    True  False True 
+    False True  False
+    False False False
+
+    >>> table('not(A imp B)')
+      A     B   not(A imp B)
+    True  True  False
+    True  False True 
+    False True  False
+    False False False
+    """
+
+    # convert infix expression to prefix (function call) form
+    def toPrefix( expr ):
+        from re import finditer
+    
+        # Pop and operator of the operators stack and one or two operands of the
+        # operand stack, and assembled into a call to the appropriate function.
+        # The function call is pushed onto the operand stack
+        def reduce( operators, operands ):
+            try:
+                op = operators.pop()
+                right = operands.pop()
+                if op == 'not':
+                    operands.append( "%s(%s)" % ( op.upper(), right ))
+                else:
+                    left = operands.pop()
+                    operands.append( "%s(%s,%s)" % ( op.upper(), left, right ))
+            except:
+                print operators, operands, right, op
+                raise
+
+        prec = { '('   : 0,                 # operator precedence
+                 'imp' : 1,
+                 'or'  : 2, 'nor' : 3,
+                 'xor' : 3, 'equ' : 3,
+                 'and' : 4, 'nand': 4,
+                 'not' : 5
+                 }
+
+        # operand and operator stacks
+        operands  = []  
+        operators = []
+
+        # Regular expression for parsing the infix expression.  It has three
+        # parenthesized groups, which are returned in a tuple by the groups()
+        # method of a match object (mo).  The tuple is unpacked into
+        # corresponding variables in the for-statement.
+        # 
+        #         paren |    logical operators (curop)    |ident
+        regex = r"([()])|(not|and|nand|or|nor|xor|equ|imp)|(\w+)"
+
+        for paren,curop,ident in (mo.groups() for mo in finditer(regex,expr)):
+            # identifiers (i.e., variable names) are pushed on the operand stack
+            if ident is not None:
+                operands.append( ident )
+
+            # left parens are pushed on the operator stack
+            elif paren == '(':
+                operators.append( paren )
+
+            # for a right paren, the stacks are reduced until the matching
+            # left paren is encountered.  The left paren is discarded.
+            elif paren == ')':
+                while operators[-1] != '(':
+                    reduce( operators, operands )
+                    
+                _ = operators.pop()
+        
+            else:
+                # while the operator being parsed (curop) has a lower
+                # precedence than the one on the top of the operator stack,
+                # reduce the higher priority operator.  Then push the curop
+                # onto the opperator stack
+                while operators != [] and prec[ curop ] <= prec[ operators[-1] ]:
+                    reduce( operators, operands )
+
+                operators.append( curop )
+
+        # after the input expression is exhausted, reduce the operands on the
+        # operand stack until it is empty
+        while operators != []:
+            reduce( operators, operands )
+
+        return operands.pop()
+
+    def NOT(a): return not a
+    def AND(a,b): return a and b
+    def NAND(a,b): return not AND(a,b)
+    def XOR(a,b): return a ^ b
+    def EQU(a,b): return not XOR(a,b)
+    def OR(a,b): return a or b
+    def NOR(a,b): return not OR(a,b)
+    def IMP(a,b): return b if a else True
+
+    stmnt = compile(toPrefix(expr),'<string>','eval')
+
+    format = "%-5s %-5s %-5s"
+    print format % ('  A  ','  B  ',expr)
+
+    for A in (True,False):
+        for B in (True,False):
+            print format % (A,B,eval(stmnt,locals()))
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod(verbose=True)
+}}}
+
+'''Note''': problems 48-99 still to be done (PLEASE edit this place-holder as you do more problems!)
