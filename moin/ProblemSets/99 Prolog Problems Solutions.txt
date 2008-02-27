@@ -327,22 +327,51 @@ Which is more readable?  "Ai posteri l'ardua sentenza..."!-)
 '''Note''': there is no problem 30 in the original problem set
 
 = Problem 31: Determine whether a given integer number is prime =
-'''TODO''': add a solution for this problem.
+Simplest approach: generate all primes, stop when the number N under test
+equals a prime, or is divisible by it without being equal, or when no higher
+prime is of interest because we've checked all primes <= sqrt(N).
+
+{{{
+    import itertools
+
+    def erat2():
+        # from Python Cookbook, 2nd Edition, recipe 18.10
+        D = {}
+        yield 2
+        for q in itertools.islice(itertools.count(3), 0, None, 2):
+            p = D.pop(q, None)
+            if p is None:
+                D[q*q] = q
+                yield q
+            else:
+                x = p + q
+                while x in D or not (x&1):
+                    x += p
+                D[x] = p
+
+    def is_prime(N):
+        for p in erat2():
+            if N == p: return True
+            elif p*p > N: return True
+            elif N%p == 0: return False
+}}}
+
+'''Note''': problems 32-45 still to be done (PLEASE edit this place-holder as you do more problems!)
 
 = Problem 46: Print a truth table for a logical expression of two variables =
 {{{
 def table(expr):
     """
     print truth table for logical expression
-        
+
     >>> table('and(A,or(A,B))')
     A     B     and(A,or(A,B))
-    True  True  True 
-    True  False True 
+    True  True  True
+    True  False True
     False True  False
     False False False
     """
-    # uppercase functions to avoid name clashes with 
+    # uppercase functions to avoid name clashes with
     #   python reserved words
     def AND(a,b): return a and b
     def NAND(a,b): return not (a and b)
@@ -359,3 +388,5 @@ def table(expr):
         for B in (True, False):
             print format % (A, B, eval(expr,locals()))
 }}}
+
+'''Note''': problems 47-99 still to be done (PLEASE edit this place-holder as you do more problems!)
