@@ -226,7 +226,87 @@ Given two indices, I and K, the slice is the list containing the elements betwee
 }}}
 
 = Problem 27: Group the elements of a set into disjoint subsets =
-'''TODO''': add a solution for this problem.
+A natural recursive approach requires "temporarily modifying" certain things
+(the main list, the list of sublists, the list of counts of remaining lengths
+desired in the sublists); one way to express this is by the `with' statement
+and the "resource allocation is initialization" (RAII) idiom it enables...:
+
+{{{
+    from __future__ import with_statement
+    import contextlib
+    import itertools
+
+    def group(alist, glens):
+        # entries in glens are ints >0 summing to len(alist)
+        assert all(g>0 for g in glens)
+        assert sum(glens) == len(alist)
+        # return the generator made by an auxliary function
+        return _g(alist, glens, [ [] for g in glens ])
+
+    #
+    # helpers: with-statement contexts for RAII idioms
+    #
+    @contextlib.contextmanager
+    def popping(L):
+        item = L.pop()
+        yield item
+        L.append(item)
+
+    @contextlib.contextmanager
+    def appending(L, item):
+        L.append(item)
+        yield L
+        L.pop()
+
+    @contextlib.contextmanager
+    def decrementing(L, index):
+        L[index] -= 1
+        yield L
+        L[index] += 1
+
+    #
+    # helper: auxiliary recursive generator function
+    #
+    def _g(L, rls, grps):
+        if sum(rls) == 0:
+            yield list(list(grp) for grp in grps)
+            return
+        with popping(L) as item:
+            for i, (rl, grp) in enumerate(itertools.izip(rls, grps)):
+                if rl > 0:
+                    with appending(grp, item):
+                        with decrementing(rls, i):
+                            for filled in _g(L, rls, grps):
+                                yield filled
+}}}
+
+However, the Zen of Python says that "flat is better than nested", and, of
+course, we ''can'' express _g in a much flatter way by giving up the nesting,
+e.g. as follows:
+
+{{{
+    #
+    # helper: auxiliary recursive generator function
+    #
+    def _g(L, rls, grps):
+        if sum(rls) == 0:
+            yield list(list(grp) for grp in grps)
+            return
+        item = L.pop()
+        for i, (rl, grp) in enumerate(itertools.izip(rls, grps)):
+            if rl == 0: continue
+            grp.append(item)
+            rls[i] -= 1
+            for filled in _g(L, rls, grps):
+                yield filled
+            rls[i] += 1
+            grp.pop()
+        L.append(item)
+
+}}}
+
+Which is more readable?  "Ai posteri l'ardua sentenza..."!-)
+
 
 = Problem 28: Sorting a list of lists according to length of sublists =
 {{{
