@@ -400,6 +400,7 @@ def table(expr):
 }}}
 
 = Problem 47: Print a truth table for an infix logical expression of two variables =
+
 {{{
 def table( expr ):
     """
@@ -513,4 +514,162 @@ if __name__ == "__main__":
     doctest.testmod(verbose=True)
 }}}
 
-'''Note''': problems 48-99 still to be done (PLEASE edit this place-holder as you do more problems!)
+= Problem 48: Print truth table for logical infix expression having an arbitrary number of variables =
+
+{{{
+def table(expr):
+    '''
+    Print a truth table for infix boolean expression with
+    arbitrary number of variables.
+
+    Implemented as an interpreter using a recursive decent parsing technique.
+
+    Uses the tokenize module to convert expression to tokens.
+
+    >>> table('A and (B or C) equ A and B or A and C')
+    A     B     C     A and (B or C) equ A and B or A and C
+    True  True  True  True 
+    True  True  False True 
+    True  False True  True 
+    True  False False True 
+    False True  True  True 
+    False True  False True 
+    False False True  True 
+    False False False True 
+    
+    >>> table('(not A or B) equ (A imp C)')
+    A     B     C     (not A or B) equ (A imp C)
+    True  True  True  True 
+    True  True  False False
+    True  False True  False
+    True  False False True 
+    False True  True  True 
+    False True  False True 
+    False False True  True 
+    False False False True 
+    '''
+    from tokenize import generate_tokens
+    from StringIO import StringIO
+
+    def evaluate(expr):
+        '''entry point for recursive decent parser/interpreter'''
+
+        readline = StringIO(expr).readline
+
+        # tokenize returns a tuple. element[1] is the text of the token
+        # tokenize returns '' as the final token
+        tokens = [t[1] for t in generate_tokens(readline)][:-1]
+        
+        return imp_expr(tokens)
+    
+    def imp_expr(tokens):
+        '''imp_expr := or_expr [ 'imp' or_expr ]'''
+        
+        value = or_expr(tokens)
+        if tokens and tokens[0] == 'imp':
+            _ = tokens.pop(0)
+            right = or_expr(tokens)
+            value = right if value else True
+        return value
+
+    def or_expr(tokens):
+        '''or_expr := xor_expr [ ('or'|'nor') xor_expr ]'''
+        
+        value = xor_expr(tokens)
+        if tokens and tokens[0] in ('or','nor'):
+            op = tokens.pop(0)
+            right = xor_expr(tokens)
+            value = value or right
+            if op == 'nor':
+                value = not value
+        return value
+
+    def xor_expr(tokens):
+        '''xor_expr := and_expr [ ('xor'|'equ') and_expr ]'''
+        
+        value = and_expr(tokens)
+        if tokens and tokens[0] in ('xor','equ'):
+            op = tokens.pop(0)
+            right = and_expr(tokens)
+            value = value == right
+            if op == 'xor':
+                value = not value
+        return value
+
+    def and_expr(tokens):
+        '''and_expr := not_expr [ ('and'|'nand') not_expr ]'''
+        
+        value = not_expr(tokens)
+        if tokens and tokens[0] in ('and','nand'):
+            op = tokens.pop(0)
+            right = not_expr(tokens)
+            value = value and right
+            if op == 'nand':
+                value = not value
+        return value
+
+    def not_expr(tokens):
+        '''not_expr := [ 'not' ] atom'''
+        
+        if tokens and tokens[0] == 'not':
+            _ = tokens.pop(0) 
+            value = not atom(tokens)
+        else:
+            value = atom(tokens)
+        return value
+
+    def atom(tokens):
+        '''atom := '(' imp_expr ')'
+                |  variable
+        '''
+        
+        if tokens and tokens[0] == '(':
+            _ = tokens.pop(0)
+            value = imp_expr(tokens)
+            _ = tokens.pop(0)
+        else:
+            ident = tokens.pop(0)
+            value = variable[ident]
+
+        return value
+
+    def combos(variable,varlist):
+        '''generate all possible combinations of values for the
+        variables in "varlist", updating the values in "variable"
+        '''
+        
+        if varlist == []:
+            yield []
+        else:
+            for variable[varlist[0]] in (True,False):
+                for rest in combos(variable,varlist[1:]):
+                    yield [variable[varlist[0]]] + rest
+
+    keywords = 'and nand xor equ or nor imp not ( )'.split()
+    readline = StringIO(expr).readline
+
+    # generate a list of variable names, by parsing 'expr' and collecting
+    # text tokens that aren't keywords.  The values are kept in the dict
+    # 'variable'.
+    variable = {}
+    for token in generate_tokens(readline):
+        text = token[1]
+        if text != '' and text not in keywords:
+            variable[text] = text
+    varlist = sorted(variable.keys())
+    variable['result'] = expr
+
+    # format has a '%(varname)-5s' field for each variable and result
+    format = " ".join("%%(%s)-5s" % v for v in varlist + ["result"])
+    
+    print format % variable
+
+    for _ in combos(variable,varlist):
+        variable["result"] = evaluate(expr)
+        print format % variable
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod(verbose=True)
+}}}
+'''Note''': problems 49-99 still to be done (PLEASE edit this place-holder as you do more problems!)
