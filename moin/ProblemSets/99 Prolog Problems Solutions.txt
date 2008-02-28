@@ -408,7 +408,255 @@ def phi(m):
         return len(r)
 }}}
 
-'''Note''': problems 35-45 still to be done (PLEASE edit this place-holder as you do more problems!)
+= Problem 35: Determine prime factors of a number =
+
+{{{
+_primes = [2,3,5,7,11,13,17,19]
+def primeGenerator(limit=1000):
+    """simple minded prime number generator, returns primes in sequence
+    up to the limit.
+
+    >>> list(primeGenerator(50))[7:]
+    [19, 23, 29, 31, 37, 41, 43, 47]
+
+    >>> list(primeGenerator(500))[::10]
+    [2, 31, 73, 127, 179, 233, 283, 353, 419, 467]
+    """
+    global _primes
+
+    # iterate over list of previously generated primes
+    for prime in _primes:
+        if prime >= limit:
+            break
+        yield prime
+
+    # All primes > 3 have the form 6k +/- 1.
+    # delta will be 2 if prime is 6k-1; and 4 if prime is 6k+1.
+    # So, prime + delta is also of form 6k +/- 1
+    # In the loop below, delta ^= 6 causes delta to toggle between
+    # 2 and 4 so that candidate is always of the form 6k +/- 1.
+    # odd numbers of the form 6k + 3 are not tested for primality
+    delta = (prime+3) % 6
+    candidate = prime + delta
+
+    # test candidate using trial division with known primes
+    while candidate < limit:
+        for prime in _primes:
+            if candidate % prime == 0:
+                break
+            if prime*prime > candidate:
+                _primes.append(candidate)
+                yield candidate
+                break
+            
+        delta ^= 6          # gen sequence ... 2, 4, 2, 4, 2, 4, 2 ...
+        candidate += delta  
+
+def prime_factors(n):
+    """find factors of n using trial division by primes.
+
+    >>> prime_factors(315)
+    [3, 3, 5, 7]
+    """
+
+    factors = []
+
+    for p in primeGenerator(n):
+        if p*p > n: break
+        
+        while n % p == 0:
+            n /= p
+            factors.append(p)
+
+    if n != 1:
+        factors.append(n)
+            
+    return factors
+}}}
+
+= Problem 36: Determine prime factorization of a number =
+
+Similar to problem P35, except the result is a list of pairs [p,m] where prime factor, ''p'', occurs ''m'' times in the factorization of the number.
+
+Uses the function prime_factors() defined in problem P35.
+
+{{{
+def prime_factors_mult(n):
+    """return list [ [p_0,k_0], [p_1,k_1], ... ], where there are 'k_i'
+    occurances of 'p_i' in the prime factorization of n.
+    
+    >>> prime_factors_mult(315)
+    [[3, 2], [5, 1], [7, 1]]
+    """
+    
+    from itertools import groupby
+
+    result = []
+    for key,valueiterator in groupby(prime_factors(n)):
+        result.append( [ key, len( list( valueiterator ) ) ] )
+
+    return result
+}}}
+
+= Problem 37: A more efficient totient function =
+
+See Problem 34, for a simpler implementation.
+
+{{{
+def totient(n):
+    """calculate Euler's totient function.
+
+    If [[p_0,m_0], [p_1,m_1], ... ] is a prime factorization of 'n',
+    then the totient function phi(n) is given by:
+
+        (p_0 - 1)*p_0**(m_0-1) * (p_1 - 1)*p_1**(m_1-1) * ...
+
+    >>> phi(1)
+    1
+    >>> phi(10)
+    4
+    """
+    from operator import mult
+
+    if n == 1: return 1
+    
+    return reduce(mult, [(p-1) * p**(m-1) for p,m in prime_factors_mult(n)])
+}}}
+
+= Problem 38: Compare totient functions =
+
+Compare the function for calculating the totient function in problems 34 and 37.
+
+{{{
+def P38(printtimes=True):
+    """Time the execution of the totient function from P34 and P37
+
+    For doctests, set 'printtimes=False' or the doctest will likely fail,
+    because the executions time will be different.
+    
+    >>> P38(printtimes=False)
+    list of functions from fastest to slowest:
+       totient 
+           phi 
+    """	
+    from timeit import Timer
+
+    result = {}
+    for funcname in ('phi','totient'):
+        stmt  = "x = %s( 10090 )" % funcname
+        setup = "from __main__ import %s" % funcname
+
+        timer = Timer( stmt=stmt, setup=setup )
+        result[funcname] = timer.timeit(number=100)
+
+    print "list of functions from fastest to slowest:"
+    for funcname in sorted( result.keys(), key=lambda k:result[k] ):
+        print "%10s %s" % (funcname, result[funcname] if printtimes else '')
+
+}}}
+
+= Problem 39: Generate a list of primes in a given range =
+
+Uses primeGenerator() from problem 35.
+
+{{{
+def primelist(lower=0,upper=1000):
+    """return list of primes greater than 'lower' and less than 
+    or equal to 'upper'
+
+    >>> primelist(10,30)
+    [11, 13, 17, 19, 23, 29]
+    """
+    from functools import partial
+    from itertools import dropwhile
+    from operator import ge
+
+    return list(dropwhile(partial(ge,lower),primeGenerator(upper)))
+
+}}}
+
+= Problem 40: Goldbach Conjecture =
+
+Write a function that returns the Goldbach composition of a number.
+
+{{{
+def goldbach(n):
+    """Print goldbach composition for 'n'.
+
+    >>> goldbach(28)
+    (5, 23)
+    """
+    assert(n&1 == 0)
+    primes = primelist(1,n)
+    lo = 0
+    hi = len(primes) - 1
+    while lo <= hi:
+        sum = primes[lo] + primes[hi]
+        if sum == n:
+            break
+        elif sum < n:
+            lo += 1
+        else:
+            hi -= 1
+    else:
+        print "Goldbach conjecture fails for", n
+
+    return primes[lo], primes[hi]
+}}}
+
+= Problem 41: Print list of Goldbach compositions =
+
+Given a range of integers by its lower and upper limit, print a list of all even numbers and their Goldbach composition.
+
+{{{
+def goldbach_list(lower,upper):
+    """Print goldberg composition for all even numbers greater than
+    'lower' and less than or equal to 'upper'.
+    
+    >>> goldbach_list(9,20)
+    10 = 3 + 7
+    12 = 5 + 7
+    14 = 3 + 11
+    16 = 3 + 13
+    18 = 5 + 13
+    20 = 3 + 17
+    """
+
+    # Goldbach conjection applies to even numbers > 2
+    if lower&1:
+        lower += 1
+    if lower < 4:
+        lower = 4
+
+    for n in range(lower,upper+1,2):
+        gb = goldbach(n)
+        print "%d = %d + %d" % (n, gb[0], gb[1])
+}}}
+
+
+
+Part 2: print Goldbach compositions in which both primes are greater than a threshold number.
+
+{{{
+def goldbach_list(lower,upper,threshold=0):
+    """Print goldberg composition for all even numbers greater than
+    'lower' and less than or equal to 'upper'.
+
+    >>> goldbach_list(1,2000,50)
+    992 = 73 + 919
+    1382 = 61 + 1321
+    1856 = 67 + 1789
+    1928 = 61 + 1867
+    """
+
+    for n in range(lower,upper+1,2):
+        gb = goldbach(n)
+        if gb[0] > threshold:
+            print "%d = %d + %d" % (n, gb[0], gb[1])
+}}}
+
+
+'''Note''': problems 42-45 still to be done (PLEASE edit this place-holder as you do more problems!)
 
 = Problem 46: Print a truth table for a logical expression of two variables =
 {{{
