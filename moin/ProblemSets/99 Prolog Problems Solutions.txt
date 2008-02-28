@@ -599,6 +599,22 @@ def table(expr):
     False True  False True 
     False False True  True 
     False False False True 
+
+    >>> table('A and B and C')
+    A     B     C     A and B and C
+    True  True  True  True 
+    True  True  False False
+    True  False True  False
+    True  False False False
+    False True  True  False
+    False True  False False
+    False False True  False
+    False False False False
+
+    >>> table('not not A')
+    A     not not A
+    True  True 
+    False False
     '''
     from tokenize import generate_tokens
     from StringIO import StringIO
@@ -615,20 +631,20 @@ def table(expr):
         return imp_expr(tokens)
     
     def imp_expr(tokens):
-        '''imp_expr := or_expr [ 'imp' or_expr ]'''
+        '''imp_expr := or_expr [ 'imp' or_expr ]*'''
         
         value = or_expr(tokens)
-        if tokens and tokens[0] == 'imp':
+        while tokens and tokens[0] == 'imp':
             _ = tokens.pop(0)
             right = or_expr(tokens)
             value = right if value else True
         return value
 
     def or_expr(tokens):
-        '''or_expr := xor_expr [ ('or'|'nor') xor_expr ]'''
+        '''or_expr := xor_expr [ ('or'|'nor') xor_expr ]*'''
         
         value = xor_expr(tokens)
-        if tokens and tokens[0] in ('or','nor'):
+        while tokens and tokens[0] in ('or','nor'):
             op = tokens.pop(0)
             right = xor_expr(tokens)
             value = value or right
@@ -637,10 +653,10 @@ def table(expr):
         return value
 
     def xor_expr(tokens):
-        '''xor_expr := and_expr [ ('xor'|'equ') and_expr ]'''
+        '''xor_expr := and_expr [ ('xor'|'equ') and_expr ]*'''
         
         value = and_expr(tokens)
-        if tokens and tokens[0] in ('xor','equ'):
+        while tokens and tokens[0] in ('xor','equ'):
             op = tokens.pop(0)
             right = and_expr(tokens)
             value = value == right
@@ -649,10 +665,10 @@ def table(expr):
         return value
 
     def and_expr(tokens):
-        '''and_expr := not_expr [ ('and'|'nand') not_expr ]'''
+        '''and_expr := not_expr [ ('and'|'nand') not_expr ]*'''
         
         value = not_expr(tokens)
-        if tokens and tokens[0] in ('and','nand'):
+        while tokens and tokens[0] in ('and','nand'):
             op = tokens.pop(0)
             right = not_expr(tokens)
             value = value and right
@@ -662,12 +678,16 @@ def table(expr):
 
     def not_expr(tokens):
         '''not_expr := [ 'not' ] atom'''
+        invert = False
         
-        if tokens and tokens[0] == 'not':
-            _ = tokens.pop(0) 
-            value = not atom(tokens)
-        else:
-            value = atom(tokens)
+        while tokens and tokens[0] == 'not':
+            _ = tokens.pop(0)
+            invert = not invert
+            
+        value = atom(tokens)
+        if invert:
+            value = not value
+            
         return value
 
     def atom(tokens):
@@ -723,6 +743,7 @@ def table(expr):
 if __name__ == "__main__":
     import doctest
     doctest.testmod(verbose=True)
+
 }}}
 
 = Problem 49: Generate list of n-bit Gray codes. =
