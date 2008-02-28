@@ -360,12 +360,34 @@ prime is of interest because we've checked all primes <= sqrt(N).
 
 {{{
 def gcd(a,b):
+    """Return the gcd of two positive integers.
+
+    >>> gcd(36,63)
+    9
+    >>> gcd(63,36)
+    9
+    """
+
     while b != 0:
         a, b = b, a%b
     return a
 }}}
 
-'''Note''': problems 33-45 still to be done (PLEASE edit this place-holder as you do more problems!)
+= Problem 33: Determine if two numbers are coprime =
+Two numbers are coprime if the gcd is 1. So, using gcd() from problem 32.
+
+{{{
+def coprime(a,b):
+   """return True if 'a' and 'b' are coprime.
+
+   >>> coprime(35,64)
+   True
+   """
+
+   return gcd(a,b) == 1
+}}}
+
+'''Note''': problems 34-45 still to be done (PLEASE edit this place-holder as you do more problems!)
 
 = Problem 46: Print a truth table for a logical expression of two variables =
 {{{
