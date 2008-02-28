@@ -387,7 +387,28 @@ def coprime(a,b):
    return gcd(a,b) == 1
 }}}
 
-'''Note''': problems 34-45 still to be done (PLEASE edit this place-holder as you do more problems!)
+= Problem 34: Calculate Euclid's totient function =
+
+Use a primitive method to calculate Euclid's totient function.
+
+{{{
+def phi(m):
+    """calculate Euler's totient function using a primitive method.
+
+    >>> phi(1)
+    1
+    >>> phi(10)
+    4
+    """
+    
+    if m == 1:
+        return 1
+    else:
+        r = [n for n in range(1,m) if coprime(m,n)]
+        return len(r)
+}}}
+
+'''Note''': problems 35-45 still to be done (PLEASE edit this place-holder as you do more problems!)
 
 = Problem 46: Print a truth table for a logical expression of two variables =
 {{{
