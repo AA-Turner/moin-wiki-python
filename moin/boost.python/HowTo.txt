@@ -226,6 +226,71 @@ class_<MyClass, boost::smart_ptr<MyClass> >("MyClass")
      :  .def("__init__", make_constructor(makeClass))
 }}}
 
+
+=== boost.function objects ===
+
+There are times when you want to have the fast callbacks of C++ in boost.function objects to be used both from 
+C++ and python, and also have them to access both C++ and Python code. I have been using this  file
+attachment:py_boost_function.hpp in a regular basis, but of course it admits a lot of improvement. Be aware
+that this header uses boost.function_types; a library which currently is not in the main boost distribution.
+
+Usage example:
+
+For the boost.python C++ module:
+
+{{{     
+     ...
+     #include <boost/python.hpp>
+     ...
+     #include "py_boost_function.hpp"
+     ...
+
+     void module_greeter_f(string const& origin)
+     {
+           cout << "Hello world, by " << origin << endl;
+     }
+
+
+     boost::function< void( string const& ) > module_greeter( 
+          module_greeter_f
+     ) ;
+     ...
+
+     BOOST_PYTHON_MODULE( foo ) {
+
+          using namespace boost::python;
+          ...
+
+          def_function< void(string const&) >(
+              "greeter_function_t", 
+              "A greeting function" 
+          );
+
+          ...
+          scope().attr("module_greeter") = module_greeter;
+     }
+}}}
+
+From python code:
+
+- Invoke:
+
+{{{
+
+          >>> import foo
+          >>> foo.module_greeter("world")
+}}}
+
+- Create instances from python:
+
+{{{             
+          >>> def my_greetings(hi):
+          >>> ... print hi, ", world"
+          >>> ...
+          >>> grfunc = foo.greeter_function_t.from_callable( my_greetings )
+}}}
+
+
 == How to get... ==
 
 === C++ object from Python ===
