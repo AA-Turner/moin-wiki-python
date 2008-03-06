@@ -1,14 +1,14 @@
 #format rst
 
-Pylons (0.9.6.1) on Jython Requirements/TODO
-============================================
+Pylons (trunk, 0.9.7) on Jython Requirements/TODO
+=================================================
 
 Installing Pylons and its dependencies
 --------------------------------------
 
   * distutils and setuptools **(distutils is now supported and setuptools-0.6c8 supports jython-trunk, See** `SetuptoolsOnJython`_ ** for more details)**
 
-  * Ensure all dependencies' tests pass
+  * Ensure all dependencies' tests pass. Pylons on jython buildbot: http://pylonshq.com:8014/
 
 nose
 ----
@@ -37,10 +37,10 @@ requires:
 
 Routes
 ------
-All tests, except some which require paste.fixture (Paste is troublesome to import at this point), pass
+Most tests pass, there's a few failures, some of which are due to dict ordering.
 
 
-Paste, PasteDeploy and PasteScript
+Paste
 ----------------------------------
 requires:
 
@@ -51,6 +51,26 @@ requires:
   * modulefinder module (imported in paste/__init__.py). Jython currently lacks it, and modulefinder relies on reading code objects via marshal.load **(modulefinder added in r4179)**
 
   * webbrowser module: paste.fixture imports it, Jython doesn't include it. It's pretty useless without the platform dependent CPython ic module on most environments. Without that, only console based browsers work and Jython's os.system can't redirect their stdin to actually make them usable **(Paste/WebTest trunk now only import webbrowser when it's needed)**
+
+PasteDeploy
+-----------
+All tests pass
+
+PasteScript
+-----------
+PasteScript imports a number of CPython only modules (like pwd and fcntl)
+
+WebOb
+-----
+A few failures
+
+WebTest
+-------
+All tests pass
+
+WebError
+--------
+1 failing test
 
 Mako
 ----
