@@ -1,0 +1,32 @@
+This page documents the time-complexity of various operations in CPython.  Other Python implementations may have slightly different performance characteristics.  However, it is generally safe to assume that they are not slower by more than a factor of O(log n).
+
+Generally, 'n' is the number of elements currently in the container.  'k' is either the value of a parameter or the number of elements in the parameter.
+
+= list =
+
+The Average Case assumes parameters generated uniformly at random.
+
+||'''Operation'''||'''Average Case'''||'''Amortized Worst Case'''||
+||Copy||O(n)||O(n)||
+||Append||O(1)||O(1)||
+||Insert||O(n)||O(n)||
+||Get Item||O(1)||O(1)||
+||Set Item||O(1)||O(1)||
+||Delete Item||O(n)||O(n)||
+||Iteration||O(n)||O(n)||
+||Get Slice||O(k)||O(k)||
+||Del Slice||O(n)||O(n)||
+||Set Slice||O(k+n)||O(k+n)||
+||Extend||O(k)||O(k)||
+||Sort||O(n log n)||O(n log n)||
+||Multiply||O(nk)||O(nk)||
+
+= dict =
+The Average Case times listed for dict objects assume that the hash function for the objects is sufficiently robust to make collisions uncommon.  The Average Case assumes the keys used in parameters are selected uniformly at random from the set of all keys.
+
+||'''Operation'''||'''Average Case'''||'''Amortized Worst Case'''||
+||Copy||O(n)||O(n)||
+||Get Item||O(1)||O(n)||
+||Set Item||O(1)||O(n)||
+||Delete Item||O(1)||O(n)||
+||Iteration||O(n)||O(n)||
