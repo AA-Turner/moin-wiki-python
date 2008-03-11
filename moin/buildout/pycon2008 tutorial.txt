@@ -37,4 +37,46 @@ Exercises:
         + *sys.path*
      + for each kind of sandbox
 
-  3. ???
+  3. Processing Distributions
+
+     1. Grab a source distribution
+
+        | $ /sandbox/bin/easy_install --editable --build-directory . SQLObject==0.9.5
+        | $ /sandbox/bin/easy_install --editable --build-directory . SQLObject==dev
+
+        Examine its directory structure and common files.
+
+     2. Query the list of available distribution formats.
+
+        | $ cd sqlobject
+        | $ /sandbox/bin/python  setup.py  sdist --help-formats
+        | $ /sandbox/bin/python  setup.py  bdist --help-formats
+
+     3. Build and package it as a binary distribution.
+
+        | $ /sandbox/bin/python  setup.py  build
+        | $ /sandbox/bin/python  setup.py  install
+        | $ /sandbox/bin/python  setup.py  bdist --formats=tar,egg,rpm
+
+        Examine the run output and the table-of-contents of the distribution
+        archive afterward.  Note the way that metadata is stored.
+
+     4. Repackage it as a source distribution
+
+        | $ /sandbox/bin/python  setup.py sdist --formats=zip
+
+        Examine the run output and the table-of-contents of the source
+        archive.  Note the different way that metadata is stored.
+
+     5. Try to import it, then run the "develop" cmd and try again.
+
+        | $ cd /sandbox
+        | $ /sandbox/bin/python
+        | $ import sqlobject
+
+        ..
+
+        | $ cd /sandbox/sqlobject
+        | $ /sandbox/bin/python setup.py develop
+
+  4. ???
