@@ -80,3 +80,60 @@ Exercises:
         | $ /sandbox/bin/python setup.py develop
 
   4. ???
+
+  5. Create a simple buildout around an egg and experiment with it.
+
+     1. Create an empty buildout area.
+
+        | $ virtualenv --no-site-packages pycon
+        | $ cd pycon
+        | $ buildout init
+
+     2. Put into it a simple egg by creating a "buildout.cfg" file:
+
+        | [buildout]
+        | parts = mypython
+        | prefer-final = true
+        |
+        | [mypython]
+        | recipe = zc.recipe.egg
+        | interpreter = dbpython
+        | eggs = SQLObject
+
+     3. Invoke "bin/buildout" and examine the output messages, the directory
+        structure and the *dbpython* script.
+
+        Test for what version got installed and where it came from.
+
+        | $ bin/dbpython
+        | >>> import sqlobject
+        | >>> sqlobject.__file__
+        | '/var/tmp/buildout/eggs/SQLObject-0.10.0-py2.5.egg/sqlobject/__init__.py'
+
+     4. Force it to use a specific version of SQLObject.
+
+        | eggs = SQLObject==0.9
+
+        Test for what version got installed and where it came from.
+
+        | $ bin/dbpython
+        | >>> import sqlobject
+        | >>> sqlobject.__file__
+        | '/var/tmp/buildout/eggs/SQLObject-0.9.0-py2.5.egg/sqlobject/__init__.py'
+
+     5. Remove that constraint and grab its source distribution.
+
+        | $ bin/easy_install --editable -b . SQLObject
+
+        Alter "buildout.cfg" file to make it a development egg:
+
+        | develop = sqlobject
+
+        Test for what version got installed and where it came from.
+
+        | $ bin/dbpython
+        | >>> import sqlobject
+        | >>> sqlobject.__file__
+        | '/tmp/kkk/sqlobject/sqlobject/__init__.py'
+
+  6. ???
