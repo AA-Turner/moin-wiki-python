@@ -79,7 +79,50 @@ Exercises:
         | $ cd /sandbox/sqlobject
         | $ /sandbox/bin/python setup.py develop
 
-  4. ???
+  4. Generating Scripts that Invokes Entrypoints
+
+     1. Create a sandbox in which to work.
+
+        | $ virtualenv --no-site-packages pycon
+        | $ cd pycon
+
+     2. Create a distribution for a new egg that has two scripts.
+
+        | # File: pycon/setup.py
+        | from setuptools import setup
+        |
+        | setup(name="myscript",
+        |       version="1.0.0",
+        |       py_module = ['myscript'],
+        |       entry_points={
+        |          "console_scripts": [
+        |              "alpha = myscript:alpha_cmd",
+        |              "beta = myscript:beta_cmd"]
+        |           },
+        |      )
+
+        ..
+
+        | # File: pycon/myscript.py
+        | def alpha_cmd():
+        |     print "Hello from Alpha Centauri"
+        |
+        | class beta_cmd(object):
+        |     def __init__(self):
+        |         print "Hello from Beta Centauri"
+
+     3. Mark it a develop-egg and then add the egg as a 'myscript' part.
+
+        | # File: pycon/buildout.cfg
+        | [buildout]
+        | develop = .
+        | parts = myscript
+        |
+        | [myscript]
+        | recipe = zc.recipe.egg
+        | eggs = myscript
+
+     4. Run *buildout* and look in the bin/ directory for scripts.
 
   5. Create a simple buildout around an egg and experiment with it.
 
@@ -135,5 +178,3 @@ Exercises:
         | >>> import sqlobject
         | >>> sqlobject.__file__
         | '/tmp/kkk/sqlobject/sqlobject/__init__.py'
-
-  6. ???
