@@ -1,5 +1,3 @@
-CharlieGroves, incept: 2006-11-16
-
 Porting an existing Python module written in C into Java that Jython understands is a pretty straightforward task so it can serve as a good introduction to the Jython codebase.  I'm going to explain how to go about porting the [http://www.python.org/doc/2.3.5/lib/module-csv.html csv] module here.
 
  1. Declare your intention to implement the csv module on the Jython dev list so no one else starts working on it.
@@ -12,12 +10,12 @@ Porting an existing Python module written in C into Java that Jython understands
 
 The table below contains modules implemented in C in Python that are missing in Jython.  Feel free to grab one of them and get started.  If none of them catch your fancy, run dist/Lib/test/regrtest.py.  All of the skipped tests are for modules that are present in CPython but not in Jython, so they're fair game too. See the "Missing Modules" section of ../RegressionTestNotes for a list as of 20061123.
 
-||Module||Difficulty||Desirability||Taken||
-||csv||**||**||Y||
-||math||**||***||N||
-||select||****||****||N||
-||tarfile||****||***||N||
-||unicodedata||***||****||N||
+||Module||Taken||Affected tests||
+||csv||Y||test_csv||
+||tarfile||N||test_tarfile||
+||unicodedata||Y||test_unicodedata,test_codeccallback||
+||heapq||N||
+||mmap||Y||
 
 == Comments ==
 '''Why have you called the Java file _csv.java instead of just csv.java?  Is there a convention here and if so, why don't all the classes follow the same convention.'''
