@@ -32,14 +32,15 @@ Of course, help() is not currently working at all in Jython -- so the first step
 
 == Jython unit testing ==
 
-Jython has two sets of unit tests -- one which is comprised of the CPython tests and a number of Jython specific tests written in a
-similar style.  The other is the "bugtests" directory -- which contains just short of 400 tests which are numbered test000.py to test394.py.  The bugtests are peculiar to Jython -- they do many things that just wouldn't make sense in a CPython context.  For example, the bugtests have support for compiling java source files as part of the testing.  A project to clean out and modernize the bugtests (as well as the Jython specific unit tests under Lib/test) is definitely in order.  The project could proceed through several steps: 
+Jython has two sets of unit tests -- one which is comprised of the CPython tests and a number of Jython specific tests written in a similar style.  The other is the "bugtests" directory -- which contains just short of 400 tests which are numbered test000.py to test394.py.  The bugtests are peculiar to Jython -- they do many things that just wouldn't make sense in a CPython context.  For example, the bugtests have support for compiling java source files as part of the testing.  A project to clean out and modernize the bugtests (as well as the Jython specific unit tests under Lib/test) is definitely in order.  The project could proceed through several steps: 
 
  1. Determine if tests currently giving warnings are valid and need to be fixed or if they should be removed
- 2. Break tests into groups for jythonc, Java integration, Jython specific functionality, and any other groupings that make sense after going through the tests
- 3. Rename the tests with descriptive names instead of numbers
- 4. Use unittest where possible instead of the custom driver.py code
- 5. Hook the bugtests into the buildbot through the Ant build
+ 1. Break tests into groups for jythonc, Java integration, Jython specific functionality, and any other groupings that make sense after going through the tests
+ 1. Rename the tests with descriptive names instead of numbers
+ 1. Use nose where possible instead of the custom driver.py code
+ 1. Hook the bugtests into the buildbot through the Ant build
+
+nose has just become runnable with Jython.  As we add new tests to Jython and convert the existing ones, it'd be far preferable to use nose instead of the unittest module.  Add nose to Jython as an svn:external, hook it into Lib/test/regrtest.py and add some docs on writing tests with nose for Jython to the developer guide.
 
 == Reloading in Jython ==
 Note: this was copied directly from a post by Paul D. Fernhout to jython-dev
@@ -108,7 +109,3 @@ and how it does exception handling. For inspiration, see:
 == Stackless Jython ==
 
 Allow Jython to function similar to Stackless python
-
-== nose tests for the core ==
-
-Phil Jenvey has just completed support for running nose tests with Jython.  As we add new tests to Jython, it'd be far preferable to write them using nose as compared to the unittest module.  Add nose to Jython as an svn:external, hook it into Lib/test/regrtest.py and add some docs on writing tests with nose for Jython to the developer guide.
