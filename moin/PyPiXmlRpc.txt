@@ -1,71 +1,58 @@
 = PyPI's XML-RPC methods =
 
-XmlRpc methods:
+Example usage:
+{{{
+>>> import xmlrpclib
+>>> server = xmlrpclib.Server('http://pypi.python.org/pypi')
+>>> server.package_releases('roundup')
+['1.1.2']
+>>> server.package_urls('roundup', '1.1.2')
+[{'url':
+'http://pypi.python.org/packages/source/r/roundup/roundup-1.1.2.tar.gz',
+'packagetype': 'sdist'}, {'url':
+'http://pypi.python.org/packages/any/r/roundup/roundup-1.1.2.win32.exe',
+'packagetype': 'bdist_wininst'}]
+}}}
 
-package_releases(package_name, show_hidden=False):
-     Returns list of release versions, as strings, e.g., ['0.1', '0.2b',
-     '0.2'], in chronological order. If show_hidden is True then both
-     hidden and unhidden will be listed.
+'''list_packages()'''
+  Retrieve a list of the package names registered with the package index. Returns a list of name strings.
 
-package_stable_version(package_name):
-     Returns packages.stable_version; the current stable version of the
-     package.  E.g., the string '0.3'
+'''package_releases(package name)'''
+  Retrieve a list of the releases registered for the given package name. Returns a list of version strings.
 
-package_urls(package_name, version):
-     A list of {'url': url, 'packagetype': packagetype}, like [{'url':
-     'http://svn.pythonpaste.org/Paste/trunk', 'packagetype':
-     'svn_trunk'}, {'url': 'http://pythonpaste.org/Paste-0.1.tar.gz',
-     'packagetype': 'sdist'}]
+'''release_urls(package_name, version)'''
+  Retrieve a list of download URLs for the given package release. Returns a list of dicts {'url': the url, 'packagetype': the download package type} where the packagetype is one of the setup.py package types ('sdist', 'bdist', etc).
 
-package_data(package_name, version):
-     A dictionary that summarizes the releases table, plus
-     release_classifiers.  E.g.: { { {
-         {'name': 'OpenRelease',
-          'version': '0.1.2',
-          'author': 'Richard Harris',
-          'author_email': 'author@address.example',
-          'maintainer': '',
-          'maintainer_email': '',
-          'homepage': 'http://open-release.sourceforge.net',
-          'download_url': 'http://prdownloads.sourceforge.net/projects/open-release/OpenRelease-0.1.2.tar.gz',
-          'description': "OpenRelease is a Python module which 
- automates the packaging, release and announcement of Open Source 
- software. The pack class creates packages, which are defined by packer 
- classes, manages versioning, and brings up your notes and changelog in 
- an editor. The release class uploads the package to SourceForge, 
- releases it through QRS, announces it on freshmeat and (if appropriate) 
- on pypi.",
-          'license': 'GNU General Public License',
-          'platform': 'any',
-          'classifiers': [
-              'Development Status :: 4 - Beta',
-              'Environment :: Console',
-              'Intended Audience :: Developers',
-              'License :: OSI Approved :: GNU General Public License (GPL)',
-              'Natural Language :: English',
-              'Operating System :: OS Independent',
-              'Programming Language :: Python',
-              'Topic :: Software Development'],
-          'summary': '',
-          'description_html': '',
-          'keywords': '',
-          }
-} } }
+'''release_data(package_name, version)'''
+  Retrieve metadata describing a specific package release. Returns a dict with keys for:
 
-     All keys are required.  Missing values are given as 'UNKNOWN'.
+     * name
+     * version
+     * stable_version
+     * author
+     * author_email
+     * maintainer
+     * maintainer_email
+     * home_page
+     * license
+     * summary
+     * description
+     * keywords
+     * platform
+     * download_url
+     * classifiers (list of classifier strings)
 
-search(field_specifiers, [operator='and']):
-     field_specifiers is a dictionary of {fieldname: searchvalue}.
-     Returns a list like [(name, version)] of matching non-hidden
-     records.  The search values are case-insensitive and match any
-     substring.  The second argument indicates if all the field
-     specifiers are ANDed or ORed together.  The value defaults to
-     'and' and is case-insensitive.
+'''search(spec[, operator])'''
+   Search the package database using the indicated search spec.
 
-changelog(since)
-     Return a list of changed packages since the given timestamp;
-     since is given in seconds since the Unix epoch. For each
-     package, it provides name, version, submitted_date, and
-     action.
+ The spec may include any of the keywords described in the above list (except 'stable_version' and 'classifiers'), for example: {'description': 'spam'} will search description fields. Within the spec, a field's value can be a string or a list of strings (the values within the list are combined with an OR), for example: {'name': ['foo', 'bar']}.
+
+ Arguments for different fields are combined using either "and" (the default) or "or". Example: search({'name': 'foo', 'description': 'bar'}, 'or').
+
+ The results are returned as a list of dicts {'name': package name, 'version': package release version, 'summary': package release summary}
+
+'''changelog(since)'''
+  Retrieve a list of four-tuples (name, version, timestamp, action) since the given timestamp. All timestamps are UTC values. The argument is a UTC integer seconds since the epoch.
+
 ----
 CategoryDocumentation
