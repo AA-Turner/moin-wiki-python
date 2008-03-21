@@ -1,0 +1,103 @@
+
+<table width="99%" border="0" cellspacing="0" cellpadding="0">
+<script type="text/javascript" src="javascripts/scripts.js"></script>
+   <tr>
+     <td colspan="2"><img src="images/spacer.gif" alt="" width="1" height="3" /></td>
+   </tr>
+   <tr>
+     <td width="286" rowspan="2" align="right" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+       <tr>
+         <td><img src="images/spacer.gif" alt="" width="5" height="10" /></td>
+       </tr>
+       <tr>
+         <td align="right" valign="bottom"><span style="padding-left:7px;">
+           <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" width="282" height="69">
+             <param name="movie" value="images/logo.swf" />
+             <param name="quality" value="high" />
+             <param name="wmode" value="transparent" />
+             <embed src="images/logo.swf" width="282" height="69" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" wmode="transparent"></embed>
+           </object>
+         </span></td>
+       </tr>
+     </table></td>
+     <td align="right" valign="top"><table width="250" border="0" cellpadding="0" cellspacing="3">
+       <form action="index.php" method="post" name="frmlang" id="frmlang">
+         <tr>
+           <td align="right" class="top_red white"> Language:&nbsp;
+               <select name="country" onchange="javascript:document.frmlang.submit();">
+					{$tmp_country}
+               </select>
+               <input type="hidden" name="backurl" value="{$print.page_url}" />           
+		   </td>
+         </tr>
+       </form>
+     </table></td>
+   </tr>
+   <tr>
+     <td height="69" align="left" valign="bottom">
+       <table width="100%" border="0" cellspacing="0" cellpadding="0">
+         <tr>
+           <td align="center" valign="middle" id="tab1"><a href="index.php" class="smlink bold">Home</a></td>
+           <td width="1" align="center" valign="middle" class="font11 white bold" id="tab2" style="padding-bottom:0px;padding-top:0px;">|</td>
+           <td align="center" valign="middle" >
+<!--		   <span id="pid"><a href="javascript:;" class="smlink bold" style="padding-bottom:10px;padding-top:5px;">Luxe Brands</a></span>
+-->		   
+
+<div class="menu">
+	<ul>
+		<li><a href="#" class="smlink bold" style="padding-bottom:10px;padding-top:5px;">Luxe Brands<!--[if IE 7]><!--></a><!--<![endif]-->
+			<ul>
+			{include_php file="tree_catg.php"}
+			</ul>
+		</li>
+	</ul>
+</div>
+			
+
+			</td>
+           <td width="1" align="center" valign="middle" class="font11 white bold" id="tab3">|</td>
+           <td align="center" valign="middle" id="tab4"><a href="forum" class="smlink bold">Forum</a></td>
+           <td width="1" align="center" valign="middle" class="font11 white bold">|</td>
+           <td align="center" valign="middle"><a href="index.php?file={$print.register}" class="smlink bold">{$print.register_text}</a></td>
+           <td align="center" valign="middle"><span class="font11 white bold">|</span></td>
+           <td align="center" valign="middle"><a href="index.php?file=articlelist" class="smlink bold">Articles</a></td>
+           <td align="center" valign="middle">&nbsp;</td>
+           <td width="1" align="center" valign="middle" class="font11 white bold">|</td>
+           <td align="center" valign="middle"><a href="index.php?file={$print.login}" class="smlink bold">{$print.login_text}</a></td>
+           <td width="1" align="center" valign="middle" class="font11 white bold">|</td>
+           <td align="center" valign="middle"><a href="index.php?file=staticpage&pagename=advertise" class="smlink bold">Advertise</a></td>
+           <td align="center" valign="middle"><span class="font11 white bold">|</span></td>
+           <td align="center" valign="middle"><a href="index.php?file=viewmediakit" class="smlink bold">Media Kit</a></td>
+         </tr>
+         <tr>
+           <td colspan="16" align="center" valign="middle"><img src="images/spacer.gif" alt="" width="1" height="5" /></td>
+         </tr>
+       </table>
+<!--		<div id="subcatg" style="display:none;" class="menu">-->
+<!--			<ul >-->
+<div class="menu" id="subcatg" style="display:none;">
+	<ul>
+				{include_php file="tree_catg.php"}
+
+	</ul>
+</div>					
+<!--			</ul>-->
+<!--		</div>-->
+
+	   </td>
+   </tr>
+</table>
+{literal}
+<script language="javascript">
+function select_country(f)
+{
+	var tmp_country = f;
+	
+	var page_url = "{/literal}{$print.page_url}{literal}";
+	var string = "?"+page_url;
+//	var string = "?"+page_url+'&country='+f;
+	window.location.href= string;
+
+}
+</script>
+{/literal}
