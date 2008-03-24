@@ -45,7 +45,7 @@ A number of modules that django uses has been removed, or renamed:
 In addition, a few functions and attributes got renamed:
 
  * to test whether something is a function, don't look at 
- func_code anymore; use __code__ instead.
+ `func_code` anymore; use `__code__` instead.
 
 == Bytes vs. Strings ==
 
@@ -76,7 +76,7 @@ To fix these problems, I made the following changes:
  meant as bytes, plus all cases where str() was used to invoke the default 
  conversion of 2.x.
 
- * Django encourages users to define __unicode__ methods in models; 2to3
+ * Django encourages users to define `__unicode__` methods in models; 2to3
  leaves them alone. Rather than changing them to str, I kept the Django
  approach of calling them explicitly. In some cases, they were called
  implicitly (through unicode()); these calls had to be converted.
@@ -108,7 +108,7 @@ To fix these problems, I made the following changes:
   * Django relies on clearing the dictionary of the class called Meta in a
   Model. This a) doesn't work anymore, as the dictionary proxy is immutable,
   and b) leaves over a number of attributes in the class that are new in 3.x
-  (__weakref__ and __dict__). I copy the dict, then clear it. I don't understand
+  (`__weakref__` and `__dict__`). I copy the dict, then clear it. I don't understand
   why it is important to clear the dict, other than checking that all attributes
   have been processed completely, so I hope this change is correct.
 
@@ -118,8 +118,8 @@ To fix these problems, I made the following changes:
  * list.sort doesn't support the sort function anymore. In the specific case,
  rewriting it to use a key= function was straight-forward.
  * Django sorts Fields by creation_counter, to get the declaration order. It
- uses __cmp__ as a relationship. I added __lt__, and it seems to work, but
- I think a fixer should be added to 2to3, or the entire __cmp__ story be
+ uses `__cmp__` as a relationship. I added `__lt__`, and it seems to work, but
+ I think a fixer should be added to 2to3, or the entire `__cmp__` story be
  thought over again.
  * In AdminLogNode, limit shows up as a string, not as an int, and slice() will complain. 
  I'm not sure why that works in 2.x.
@@ -131,5 +131,5 @@ To fix these problems, I made the following changes:
  by 2to3. When manage.py is then run as the main script, Python complains that the relative
  import is incorrect. However, that *would* be correct if the script is imported as
  <site>.manage
- * checks for im_func need to be replaced with checks for __func__.
+ * checks for `im_func` need to be replaced with checks for `__func__`.
  * ... (many more things; this just barely works)
