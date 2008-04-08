@@ -132,6 +132,26 @@ This means that you may get differing exception signatures when using zero timeo
 
 == Known issues and workarounds ==
 
+=== Null address returned from UDP socket.recvfrom() in timeout mode ===
+
+This bug is reported on the jython bug tracker: [http://bugs.jython.org/issue1018 UDP recvfrom fails to get the remote address]
+
+==== Description ====
+
+When an UDP socket is in timeout mode, the address returned from socket.recvfrom() is always (None, -1).
+
+This only happens in timeout mode, because that code path uses java.net.DatagramSocket.receive() to receive packets. For some reason, DatagramPackets receive()d in this way either
+
+   * Return null from the DatagramPacket.getAddress() method, thus preventing us from obtaining the source address
+   * Cause an exception when DatagramPacket.getSocketAddress() is called.
+
+This bug has been reported to Sun, but is not yet public on the Java bug database.
+
+==== Workaround ====
+
+   1. Until the java bug is fixed, only use sockets in either blocking or non-blocking mode; the problem will not occur in this case.
+   1. If you need timeouts, then until the java bug is fixed, you should probably create your own DatagramSockets, directly through the java.net APIs.
+
 === Deadlock problems with socket.makefile() ===
 
 '''''Note: this issue is fixed in subversion and will be fixed in Jython 2.2.2'''''
