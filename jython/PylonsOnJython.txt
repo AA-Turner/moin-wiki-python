@@ -13,6 +13,8 @@ Installing Pylons and its dependencies
 nose
 ----
 
+**nose trunk is now fully supported on Jython**
+
 Pylons projects require nose, but most packages (including Pylons) use nose as their own test runners.
 
 requires:
@@ -37,7 +39,7 @@ requires:
 
 Routes
 ------
-Most tests pass, there's a few failures, some of which are due to dict ordering.
+**All tests pass, minus one doctest (that fails due to expecting CPython dict ordering)**
 
 
 Paste
@@ -52,38 +54,45 @@ requires:
 
   * webbrowser module: paste.fixture imports it, Jython doesn't include it. It's pretty useless without the platform dependent CPython ic module on most environments. Without that, only console based browsers work and Jython's os.system can't redirect their stdin to actually make them usable **(Paste/WebTest trunk now only import webbrowser when it's needed)**
 
+  * selectable files: cgiapp uses this in conjunction with subprocess. we can emulate selectable files but it still might have trouble expecting subprocess behavior we can't emulate
+
 PasteDeploy
 -----------
-All tests pass
+**All tests pass**
 
 PasteScript
 -----------
-PasteScript imports a number of CPython only modules (like pwd and fcntl)
+PasteScript imports a number of CPython only modules (like pwd and fcntl) **(now conditionally)**
+
+  * One failing test requires the Cheetah templating language (maybe we'll just skip it)
+  * test_egg_finder doesn't seem to have its paths setup correctly
 
 WebOb
 -----
-A few failures
+All the important tests are passing, the current failures are either due to testing > 2.3 behavior, and one due to cStringIO's repr not matching CPython's
 
 WebTest
 -------
-All tests pass
+**All tests pass**
 
 WebError
 --------
-1 failing test
+**All tests pass**
 
 Mako
 ----
 requires:
 
-  * compiler module: to parse Python code into AST. The compiler module is mostly pure Python code, but its guts are really the native parser module (which Jython lacks)
+  * _ast module: mako trunk includes support for parsing Python code via _ast. Frank is busy working on _ast support
 
 Beaker
 ------
+**All tests pass**
+
 requires:
 
   * Paste (for paste.fixture) **can be installed/imported now**
-  * base64.b64encode: might die on an attempting to import b64encode in beaker.crypto.PBKDF2 (at least it does when the tests are run)
+  * base64.b64encode: might die on an attempting to import b64encode in beaker.crypto.PBKDF2 (at least it does when the tests are run) **fixed, b64encode is 2.4 specific, 2.3 backwards compat was added**
 
 WebHelpers
 ----------
@@ -93,7 +102,11 @@ requires:
 
   * simplejson **(can be installed now)**
 
-  * webhelpers.textile requires the unicodedata module
+  * webhelpers.textile requires the unicodedata module **now imported only when needed**
+
+  * some tests rely on source code encodings (PEP 263) support
+
+  * the literal object requires a fix for our str/unicode __add__/__radd__ problems
 
 FormEncode
 ----------
@@ -101,12 +114,19 @@ requires:
 
   * gettext (which requires the locale module, which Jython lacks) **(both were added in r4077, 4084)**
 
+  * some tests rely on source code encodings (PEP 263) support
+
+  * attempts to import xml.parsers.expat.ExpatError
+
+  * uses elementtree which doesn't work due to reliance on xml.parsers.expat
+
 simplejson
 ----------
 
+**all simplejson tests pass**
+
   * `SetuptoolsOnJython`_ (actually distutils) currently had trouble installing simplejson because it attempts to compile its optional C extensions (that help performance). It expected to catch a distutils.errors.CCompilerError **(fixed in r4157: A CCompilerError is now raised)**
 
-  all simplejson tests pass!
 
 decorator
 ---------
