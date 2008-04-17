@@ -9,14 +9,16 @@
 
 === Introduction ===
 
-Almost every application written today requires data access of some kind.  The most common forms of data access today are based upon selection, update, delete processes against a database or XML.  While data access has been around for many years now and may be quite trivial, it is an essential concept for any programming language.  Not only is it important to know the concepts behind data access, but it is also important to adhere to the basics of object orientation while doing so.  A well formed application will use objects to pass data around, which makes it more flexible and easy to code.
+Almost every application written today requires data access of some kind.  The most common forms of data access today are based upon selection, update, delete processes against a database or XML.  While data access has been around for many years now and may be quite trivial, it is an essential concept for any programming language.  Not only is it important to know the concepts behind data access, but it is also important to adhere to the basics of object orientation while doing so.  A well formed application will use objects to pass data around, which makes it more flexible and easy to maintain.
 
 In this short article, I will quickly walk through the basics of setting up and using a simple data access model based upon well known Java models.  Please note that this model is incomplete because it only touches upon the beginnings of creating such a model.  Most Java applications use interfaces to access data from a controller class, whereas this simple model leaves that concept out completely. 
 
 
 === Setting Up the Database ===
 
-I'll create a simple object for our Oracle database.  If you don't have access to an Oracle database server, then I recommend downloading Oracle database Express edition for free.  Nothing new here at all...I want to create a database table and insert some data.  In a real world application the table would definitely include more fields, but you should get the idea.
+I'll create a simple object for our Oracle database, although this same process can be used with almost every other RDBMS just as efficiently.  If you don't have access to an Oracle database server, then I recommend downloading Oracle Database Express edition for free.  
+
+Nothing new here at all...I want to create a database table and insert some data.  In a real world application the table would definitely include more fields, but you should get the idea.
 
 {{{
 create table person(
@@ -129,7 +131,7 @@ class PersonDA(java.lang.Object):
         stmt.setString(2, person.getFirst())
         stmt.setString(3, person.getLast())
         
-        stmt.executeUpdate();
+        stmt.executeUpdate()
         
         stmt.close()
         self.connection.close()
@@ -138,4 +140,45 @@ class PersonDA(java.lang.Object):
 
 === Using the Data ===
 
-Once that these two objects have been defined, it is easy to create a facade or controller class
+Once that these two objects have been defined, it is easy to create a facade or controller class to obtain and use the data.  This controller class can then be used to invoke methods on the data access object from ant desktop or web based application.  Here is a simple controller example.  While it does not effectively do much, hopefully you can get the idea of how to write something that will be more useful in a real world application.
+
+{{{
+# PersonController.py
+# Package:  org.jythonMonthly.controller
+
+import java
+from java.util import ArrayList
+from org.jythonMonthly.bean import Person
+from org.jythonMonthly.data import PersonDA
+
+class PersonController(java.lang.Object):
+    def __init__(self):
+        self.data = PersonDA.PersonDA("USER","PASSWORD","SID","HOST","PORT")
+        
+    def findPerson(self, search):
+        person = Person.Person(search.id, search.first, search.last)
+        #personArray = ArrayList()
+        personArray = self.data.findPersonByName(person)
+        return personArray
+    
+    def save(self, person):
+        self.data.persist(person)
+
+#  Initiate the process using this main method
+#  First, we will create a new person object and 
+#  populate it with the person whom we'd like to find.
+#  Next, we will pass that person object to the controller.findPerson method
+#  and return a list of matching objects.    
+if __name__ == "__main__":
+    person = Person.Person(1, 'none','PARKER')
+    controller = PersonController()
+    personList = controller.findPerson(person)
+    for x in range(0,personList.size()):
+        person = personList.get(x)
+        print person.toString()
+
+}}}
+
+=== Conclusion ===
+
+All in all, this is an old and simple recipe for obtaining data in software development.  If you don't follow a model such as this, your application can become unscalable and hard to maintain.  Hopefully this article will help some Jython newcomers in the data realm.  Next month, I will choose another basic concept to explain. 
