@@ -58,7 +58,7 @@ requires:
 
   * some tests rely on source code encodings (PEP 263) support
 
-  * selectable files: cgiapp uses this in conjunction with subprocess. we can emulate selectable files but it still might have trouble expecting subprocess behavior we can't emulate
+  * selectable files: cgiapp selects on files. we can emulate selectable files if the file is backed by a FileChannel, but cgiapp also selects on a subprocess's (with stdout=PIPE) stdout file, which is backed by a StreamIO. We'll probably never be able to fully support this module in Jython
 
 PasteDeploy
 -----------
