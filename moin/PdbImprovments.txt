@@ -13,6 +13,14 @@ It would be great if pdb's environment were like the Python interactive shell - 
 
 ''[rocky: I'm not exactly sure what this means. Both pdb (and pydb) inherit from the Cmd class which handles user interaction.]''
 
+Here's an example:
+ {{{(Pdb) for x in [1,2,3]:
+*** SyntaxError: unexpected EOF while parsing (<stdin>, line 1)
+(Pdb) print """A multi-
+*** SyntaxError: EOF while scanning triple-quoted string (<stdin>, line 1)}}}
+
+
+
 Something that's really needed is the possibility to stop another Python process in the middle and work from there - gdb has this possibility, and a few times I've tried to use it to find what my Python processes were doing, but it wasn't easy and most of the times I wasn't able to understand what they were really doing.
 
 ''[rocky: I'm not sure that this can be done without changing the python  interpreter or without arranging for the possibility previously. A step along the way to accomplish this might be to extend pdb to allow another process to control it, but the python program would have had to been started in a way that allows for this. Nir Aides in winpdb allows for control by remote execution for which this is a special case where the process lives on the same machine.]''
