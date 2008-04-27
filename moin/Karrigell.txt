@@ -4,7 +4,7 @@
 
    URL:: http://www.karrigell.com
 
-   version::2.3.5 (''[[Date(2007-05-19T15:00:00Z)]]'')
+   version::2.4.0 (''[[Date(2008-04-12T15:00:00Z)]]'')
 
    licence::BSD revised
 
@@ -21,8 +21,6 @@ No requirement besides Python : Karrigell is provided with a web server and a Py
 Web programming
 
 Demos included in the distribution include a Wiki server, Kwiki (a sort of Wiki, but with the wysiwyg editor FCKEditor), a forum, a calendar, an interface for script internationalization, and a portal with user login/logout, personalization and news editing
-
-Version 2.3.2 introduced Instant''''''Site, an application to manage MySQL or SQLite databases online
 
 === Development Interfaces ===
 
@@ -42,7 +40,7 @@ Provided through functions available in scripts
 
 Session() returns a session object, to which attributes can be set (arbitrary Python objects : user login, database connexion and cursor, etc.)
 
-Basic HTTP authentication is available with Authentication(''testFunction''[,''realm,errorMessage'']) where testFunction is a user-defined function taking no argument, which returns true if the authentication test succeeds (depending on the values of AUTH_USER and AUTH_PASSWORD) and false otherwise
+A user management framework allows the site administrator to manage a user database with roles(admin, editor, visitor). In scripts, function Login(role) checks if user is logged in with the specified role, or redirects to an authentication script ; Role() returns user's role
 
 === Persistence Support ===
 
