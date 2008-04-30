@@ -1,47 +1,18 @@
-= Processing And Analyzing Extremely Large Amounts Of Data In Python =
+= What is PyTables? =
 
-== Abstract ==
+[http://www.pytables.org PyTables] is a package for managing hierarchical datasets and designed to efficiently and easily cope with extremely large amounts of data.
 
-Many scientific applications frequently need to save and read
-extremely large amounts of data (frequently, this data is derived from
-experimental devices).  Analyzing the data requires re-reading it many
-times in order to select the most appropriate data that reflects the
-scenario under study. In general, it is not necessary to modify the
-gathered data (except perhaps to enlarge the dataset), but simply
-access it multiple times from multiple points of entry.
+[http://www.pytables.org PyTables] is built on top of the [http://www.hdfgroup.org/HDF5/ HDF5] library, using the Python language and the [http://numpy.scipy.org/ NumPy] package. It features an object-oriented interface that, combined with C extensions for the performance-critical parts of the code (generated using [http://www.cosc.canterbury.ac.nz/greg.ewing/python/Pyrex/ Pyrex]), makes it a fast, yet extremely easy to use tool for interactively dealing with, processing and searching very large amounts of data. One important feature of [http://www.pytables.org PyTables] is that it optimizes memory and disk resources so that data takes much less space (specially if on-flight compression is used) than other solutions such as relational or object oriented databases.
 
-The goal of [http://pytables.sourceforge.net PyTables] is to address this
-requirements by enabling the end user to manipulate easily scientific data
-tables, numarray objects and Numerical Python objects in a persistent,
-hierarchical structure.
+= Design goals =
+!PyTables has been designed to fulfill the next requirements:
 
-== Capabilities ==
+   1. Allow to structure your data in a '''hierarchical''' way.
+   2. '''Easy to use'''. It implements the natural naming scheme for allowing convenient access to the data.
+   3. All the '''cells''' in datasets can be '''multidimensional''' entities.
+   4. Most of the '''I/O operations speed''' should be '''only limited by the underlying I/O subsystem'''.
+   5. Enable the end user to save large datasets in a efficient way, i.e. '''each single byte''' of data on disk has to be '''represented by one byte plus a small fraction''' when loaded in memory.
 
-During my talk, I'll be describing the capabilities of the forthcoming
-PyTables 0.4 version, including:
+= Where to find it =
 
- * Appendable tables: It supports adding records to already created tables.
-
- * Unlimited data size: Allows working with tables with a large number of
- records, i.e. that don't fit in memory.
-
- * Support of Numeric and numarray Python arrays.
-
- * Hierarchical data model: Pytables builds up an object tree in memory that
- replicates the hierarchical structure existing on disk. 
-
- * Data compression: It supports data compression (through the use of the
- zlib library) out of the box. 
-
- * Support of files bigger than 2 GB.
-
- * Ability to read generic HDF5 files and work natively with them.
-
- * Architecture-independent: PyTables has been carefully coded (as HDF5
- itself) with little-endian/big-endian byte orderings issues in mind.
-
- * Optimized I/O: PyTables has been designed from the ground with
- performance in mind. We will see some benchmarks comparing PyTables speed
- with other databases.
-
-PyConFrancescAlted
+For more info, documentation and downloads of !PyTables, please go to its official [http://www.pytables.org home page].
