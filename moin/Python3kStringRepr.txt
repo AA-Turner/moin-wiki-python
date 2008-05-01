@@ -1,0 +1,137 @@
+#format rst
+
+PEP: 
+Title: String representation in Python 3000
+Version: $Revision$
+Last-Modified: $Date$
+Author: Atsuo Ishimoto <ishimoto--at--gembook.org>
+Status: Draft
+Type: Standards Track
+Content-Type: text/x-rst
+Created: 
+Post-History: 
+
+
+Abstract
+========
+
+This PEP proposes new string repr for Python 3000. In Python prior to Python 3000, repr() built-in function is used to convert arbitrary objects to printable ASCII strings for debugging and logging. For Python 3000, wider range of characters defined in Unicode standard should be considered 'printable'.
+
+
+Motivation
+==========
+
+Current repr() converts 8-bit strings to ASCII by following algorithm.
+
+- Convert CR, LF, TAB and '\\' to '\r', '\n', '\t', '\\'.
+
+- Convert other non-printable characters(0x00-0x1f, 0x7f) and non-ASCII characters(>=0x80) to '\xXX'.
+
+- Backslash-escape quote characters(' or ") and add quote character at head and tail.
+
+For Unicode strings, following conversions are added.
+
+- Leading surrogate pair characters without trailing character(0xd800-0xdbff, but not followed by 0xdc00-0xdfff) to '\uXXXX'.
+
+- Convert 16-bit characters(>=0x100) to '\uXXXX'.
+
+- Convert 21-bit characters(>=0x10000) and surrogate pair characters to '\U00xxxxxx'.
+
+This algorithm converts any strings to printable ASCII, and repr() is used as handy and safe way when printing strings for debug or logging. Although all non-ASCII characters are escaped, it is not a problem when most characters in string are ASCII. But this is an inconvenience for other languages such as Japanese which most characters in string are not ASCII. Python 3000 has a lot of nice features for non-Latin people such as non-ASCII identifiers, so progressing in this area would be desired. 
+
+People might concern such output will mess their console up if they print binary data like images. But such ruin is unlikely to happen because bytes and strings are different type in Python 3000, so printing image to console doesn't break your display. 
+
+This issue was once discussed by Hye-Shik Chang [1]_ , but was rejected.
+
+
+Specification
+=============
+
+- Algorithm to build repr string is changed to:
+
+ * Convert CR, LF, TAB and '\' to '\r', '\n', '\t', '\\'.
+
+ * Convert other non-printable ASCII characters(0x00-0x1f, 0x7f) to '\xXX'.
+
+ * Leading surrogate pair characters without trailing character(0xd800-0xdbff, but not followed by 0xdc00-0xdfff) to '\uXXXX'.
+
+ * Convert Unicode whitespace other than ASCII space('\x20') and control characters (categories Z* and C* in Unicode database) to '\uXXXX' or '\U00xxxxxx'.
+
+- Set Unicode error-handler for sys.stdout and sys.stderr to 'backslashreplace' as default.
+
+- Add encoding and errors arguments to print() built-in function, which defaults are ``sys.getfilesystemencoding()`` and 'backslashreplace'.
+
+
+Rationale
+=========
+
+repr() in Python 3000 should not rely on ASCII but Unicode standard. Also conversion should not be affected by locale setting, because locale is not necessary to same as output device's locale. For example, daemon process invoked in ASCII setting, but emits log in UTF-8 is pretty common. 
+
+Characters not supported by user's console are hex-escaped on printing, by error-handler of Unicode encoders. If error-handler of the output file is 'backslashreplace', such characters are hex-escaped by error handler without raising UnicodeEncodeError. For example, if your default encoding is ASCII, ``print('¢')`` will prints '\xa2'. If your encoding is ISO-8859-1, '¢' will be printed. If you want to print same strings as Python 2, you can set encoding and errors of output file to 'ASCII' and 'strict' respectively. You can also specify encoding and error-handler when printing, e.g. ``print('¢', encoding='ASCII', errors='backslashreplace')``.
+
+
+Printable characters
+--------------------
+
+Unicode standard doesn't define Non-printable characters to be escaped in repr(). So we define Non-printable characters as follows.
+
+- Non-printable ASCII characters as Python 2.
+
+- Broken surrogate pair characters.
+
+- Characters defined in Unicode character database as 
+  
+  * Cc (Other, Control)
+  * Cf (Other, Format)
+  * Cs (Other, Surrogate)
+  * Co (Other, Private Use)
+  * Cn (Other, Not Assigned)
+  * Zl Separator, Line ('\u2028', LINE SEPARATOR)
+  * Zp Separator, Paragraph ('\u2029', PARAGRAPH SEPARATOR)
+  * Zs (Separator, Space) other than ASCII space('\x20'). Characters in this category should be escaped to avoid ambiguity.
+
+Alternate Solutions
+-------------------
+
+To help debugging in non-Latin language without changing repr(), other suggestion were made.
+
+- Supply a tool to print lists or dicts.
+
+  Strings to be printed for debugging are not only contained by lists or dicts, but a lot of complex objects. File objects contain a file name in Unicode, exception objects contain message in Unicode, etc. These strings should be printed in readable form when repr()ed. It is impossible to implement a tool to print all possible object types.
+
+- Use sys.displayhook and sys.excepthook.
+
+  At the interactive session, we can write hooks to restore hex escaped characters to original. But these hooks are called only when the result of evaluating an expression entered in an interactive Python session, doesn't work for print function or non-interactive session. 
+
+- Subclass sys.stdout and sys.stderr.
+
+  It is difficult to implement a subclass to restore hex-escaped characters since there isn't enough information left by the time it's a string to undo the escaping correctly in all cases. For example, ``print("\\"+"u0041")`` should be printed as '\u0041', not 'A'. But no chance to tell file objects apart.
+
+- Make the encoding used by unicode_repr() adjustable.
+
+  I don't want to preserve current repr() behavior to make application/library authors aware of non-ASCII repr(). And I think selecting an encoding on printing is more flexible than having global setting.
+
+
+Open Issues 
+===========
+
+- A lot of people uses UTF-8 for their encoding, such as de_DE.utf8. In this case, backslashescape trick doesn't work.
+
+
+Backwards Compatibility
+=======================
+
+Changing repr() result break some of existing codes, especially testing code. Five tests in Python's regression test failed by this modification. 
+
+
+References
+==========
+
+.. [1] Multibyte string on string::string_print
+        (http://bugs.python.org/issue479898)
+
+
+Copyright
+=========
+
+This document has been placed in the public domain.
