@@ -56,20 +56,16 @@ Specification
 
  * Convert leading surrogate pair characters without trailing character(0xd800-0xdbff, but not followed by 0xdc00-0xdfff) to '\\uXXXX'.
 
- * Convert Unicode whitespace other than ASCII space('\\x20') and control characters (categories Z* and C* in the Unicode database) to '\\uXXXX' or '\\U00xxxxxx'.
+ * Convert Unicode whitespace other than ASCII space('\\x20') and control characters (categories Z* and C* in the Unicode database) to 'xXX', '\\uXXXX' or '\\U00xxxxxx'.
 
 - Set the Unicode error-handler for sys.stdout and sys.stderr to 'backslashreplace' by default.
-
-- Add encoding and errors arguments to the built-in print() function, with defaults of ``sys.getfilesystemencoding()`` and 'backslashreplace'.
-
 
 Rationale
 =========
 
 The repr() in Python 3000 should be Unicode not ASCII based, just like Python 3000 strings. Also, conversion should not be affected by the locale setting, because the locale is not necessarily the same as the output device's locale. For example, it is common for a daemon process to be invoked in an ASCII setting, but writes UTF-8 to its log files. 
 
-Characters not supported by user's console are hex-escaped on printing, by the Unicode encoders' error-handler. If the error-handler of the output file is 'backslashreplace', such characters are hex-escaped without raising UnicodeEncodeError. For example, if your default encoding is ASCII, ``print('¢')`` will prints '\\xa2'. If your encoding is ISO-8859-1, '¢' will be printed. If you want to print same strings as Python 2, you can set encoding and errors of the output file to 'ASCII' and 'strict' respectively. You can also specify encoding and error-handler when printing, e.g. ``print('¢', encoding='ASCII', errors='backslashreplace')``.
-
+Characters not supported by user's console are hex-escaped on printing, by the Unicode encoders' error-handler. If the error-handler of the output file is 'backslashreplace', such characters are hex-escaped without raising UnicodeEncodeError. For example, if your default encoding is ASCII, ``print('¢')`` will prints '\\xa2'. If your encoding is ISO-8859-1, '¢' will be printed. 
 
 Printable characters
 --------------------
@@ -122,7 +118,17 @@ Open Issues
 Backwards Compatibility
 =======================
 
-Changing repr() may break some existing codes, especially testing code. Five of Python's regression test fail with this modification. 
+Changing repr() may break some existing codes, especially testing code. Five of Python's regression test fail with this modification. If you need repr() strings without non-ASCII character as Python 2, you can use following function.
+
+::
+
+    def repr_ascii(obj):
+        return str(repr(obj).encode("ASCII", "backslashreplace"), "ASCII")
+
+Reference Implementation
+========================
+
+http://bugs.python.org/issue2630
 
 
 References
