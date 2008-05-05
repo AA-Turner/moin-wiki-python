@@ -1,7 +1,16 @@
 #format rst
 
-Pylons (trunk, 0.9.7) on Jython Requirements/TODO
-=================================================
+Pylons (trunk, 0.9.7) on Jython 
+===============================
+
+**Status**: Pylons is mostly working on Jython with a few different requirements:
+
+ * The mako jython branch is required
+ * The mako branch currently requires the explicit `inclusion of the antlr jar in your classpath <hhttp://www.nabble.com/_ast-td16622739.html>`_
+ * Scripts created by setuptools (such as paster) currently aren't runnable for two reasons: 1) they aren't made executable (on POSIX) due to lack of os.chmod and 2) their shebang lines are invalid due to the fact that the Jython sys.executable is a shell script. This will require a patch to setuptools to fix POSIX (in a hacky way) and is going to require a lot more trouble on Windows. See `this thread <http://mail.python.org/pipermail/distutils-sig/2008-April/009357.html>`_
+
+Pylons on Jython requirements that were made or are pending (not a complete list)
+=================================================================================
 
 Installing Pylons and its dependencies
 --------------------------------------
@@ -46,6 +55,8 @@ Paste
 ----------------------------------
 requires:
 
+**Paste is mostly working, with the exception of paste.cgiapp**
+
   * subprocess module: if it doesn't exist (Python 2.3) it uses a version copied over from CPython 2.4 (paste.util.subprocess24) **(added in r4150)**
 
   * paste.script.util.uuid requires the Python 2.3 int/long unification (PEP 237) phase B **(added in r4175)**
@@ -66,14 +77,15 @@ PasteDeploy
 
 PasteScript
 -----------
-PasteScript imports a number of CPython only modules (like pwd and fcntl) **(now conditionally)**
+**All tests pass**
 
+  * PasteScript imports a number of CPython only modules (like pwd and fcntl) **(now conditionally)**
   * One failing test requires the Cheetah templating language (maybe we'll just skip it)
-  * test_egg_finder doesn't seem to have its paths setup correctly
+  * test_egg_finder doesn't seem to have its paths setup correctly **fixed, was a py.test to nosetest migration fixture problem**
 
 WebOb
 -----
-All the important tests are passing, the current failures are either due to testing > 2.3 behavior, and one due to cStringIO's repr not matching CPython's
+**All the important tests are passing, the current failures are either due to testing > 2.3 behavior, and one due to cStringIO's repr not matching CPython's**
 
 WebTest
 -------
@@ -85,9 +97,8 @@ WebError
 
 Mako
 ----
-requires:
+**mako has a branches/jython, when combined with the experimental _ast support in jython-trunk (see http://www.nabble.com/_ast-td16622739.html) 95% of tests pass** 
 
-  * mako has a branches/jython, when combined with the **experimental _ast support in jython-trunk (see http://www.nabble.com/_ast-td16622739.html)** most tests pass
   * There are still issues with some tests relying on source code encodings (PEP 263) support
   * There's an issue with Unicode handling in some cases, because Jython's _ast uses a _ast.Unicode type (unlike CPython). Its 's' value returns a string instead of unicode (unlike CPython)
 
@@ -110,9 +121,9 @@ requires:
 
   * webhelpers.textile requires the unicodedata module **now imported only when needed**
 
-  * some tests rely on source code encodings (PEP 263) support
+  * the literal object requires a fix for our str/unicode __add__/__radd__ problems **fixed in r4350**
 
-  * the literal object requires a fix for our str/unicode __add__/__radd__ problems
+  * some tests rely on source code encodings (PEP 263) support
 
 FormEncode
 ----------
@@ -126,12 +137,12 @@ requires:
 
   * attempts to import xml.parsers.expat.ExpatError
 
-  * uses elementtree which doesn't work (yes I mean the pure python version) due to reliance on xml.parsers.expat
+  * uses elementtree which isn't supported (not even the pure Python version works due to reliance on xml.parsers.expat). I've contacted Fredrik Lundh about an experimental version of elementtree for Jython that's in his sandbox (mentioned here http://42.blogs.warnock.me.uk/2004/09/elementtree_is_.html ) but I haven't heard back from him =[
 
 simplejson
 ----------
 
-**all simplejson tests pass**
+**all simplejson tests were passing until a few revisions ago, when a test was added that utilizes the decimal module which we currently lack (though decimal is totally not required for simplejson)**
 
   * `SetuptoolsOnJython`_ (actually distutils) currently had trouble installing simplejson because it attempts to compile its optional C extensions (that help performance). It expected to catch a distutils.errors.CCompilerError **(fixed in r4157: A CCompilerError is now raised)**
 
@@ -157,6 +168,6 @@ Turbogears 2
 
   * Jim Baker started playing with Genshi on Jython. Genshi's Markdown class requires the same str/unicode __add__/__radd__ fix webhelpers needs.
 
-  * Ariane Paola has submitted an application to work on porting TurboGears 2 components to Jython for Google's Summer of Code
+  * Ariane Paola is slated to work on porting TurboGears 2 components for Jython for Google's Summer of Code
 
-  * There's also a Zope on Jython application
+  * Georgy Berdyshev is slated to work on porting Zope components to Jython for Jython for Google's Summer of Code
