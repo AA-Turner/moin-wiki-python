@@ -28,7 +28,7 @@ The current repr() converts 8-bit strings to ASCII using following algorithm.
 
 - Convert other non-printable characters(0x00-0x1f, 0x7f) and non-ASCII characters(>=0x80) to '\\xXX'.
 
-- Backslash-escape quote characters(' or ") and add quote character at head and tail.
+- Backslash-escape quote characters(apostrophe, ') and add the quote character at the beginning and the end.
 
 For Unicode strings, the following additional conversions are done.
 
@@ -58,12 +58,14 @@ Specification
 
  * Convert Unicode whitespace other than ASCII space('\\x20') and control characters (categories Z* and C* in the Unicode database) to 'xXX', '\\uXXXX' or '\\U00xxxxxx'.
 
+ * Backslash-escape quote characters(apostrophe, ') and add quote character at the beginning and the end.
+
 - Set the Unicode error-handler for sys.stdout and sys.stderr to 'backslashreplace' by default.
 
 Rationale
 =========
 
-The repr() in Python 3000 should be Unicode not ASCII based, just like Python 3000 strings. Also, conversion should not be affected by the locale setting, because the locale is not necessarily the same as the output device's locale. For example, it is common for a daemon process to be invoked in an ASCII setting, but writes UTF-8 to its log files. 
+The repr() in Python 3000 should be Unicode not ASCII based, just like Python 3000 strings. Also, conversion should not be affected by the locale setting, because the locale is not necessarily the same as the output device's locale. For example, it is common for a daemon process to be invoked in an ASCII setting, but writes UTF-8 to its log files. Also, web applications might want to report the error infomation in more readable form based on page's encoding.
 
 Characters not supported by user's console are hex-escaped on printing, by the Unicode encoders' error-handler. If the error-handler of the output file is 'backslashreplace', such characters are hex-escaped without raising UnicodeEncodeError. For example, if your default encoding is ASCII, ``print('¢')`` will prints '\\xa2'. If your encoding is ISO-8859-1, '¢' will be printed. 
 
@@ -98,7 +100,7 @@ To help debugging in non-Latin languages without changing repr(), other suggesti
 
 - Use sys.displayhook and sys.excepthook.
 
-  For interactive sessions, we can write hooks to restore hex escaped characters to the original characters. But these hooks are called only when the result of evaluating an expression entered in an interactive Python session, and doesn't work for the print() function or for non-interactive sessions. 
+  For interactive sessions, we can write hooks to restore hex escaped characters to the original characters. But these hooks are called only when the result of evaluating an expression entered in an interactive Python session, and doesn't work for the print() function, for non-interactive sessions or for logging.debug("%r", ...), etc.
 
 - Subclass sys.stdout and sys.stderr.
 
@@ -108,12 +110,12 @@ To help debugging in non-Latin languages without changing repr(), other suggesti
 
   There is no benefit preserving the current repr() behavior to make application/library authors aware of non-ASCII repr(). And  selecting an encoding on printing is more flexible than having a global setting.
 
-
 Open Issues 
 ===========
 
 - A lot of people use UTF-8 for their encoding, for example, en_US.utf8 and de_DE.utf8. In such cases, the backslashescape trick doesn't work.
 
+- there is a problem of similarly drawing characters in Western,Greek and Cyrillic languages. These languages use similar (but different) alphabets (descended from the common ancestor) and contain letters that look similar but has different character codes. For example, it is hard to distinguish Latin 'a', 'e' and 'o' from Cyrillic 'а', 'е' and 'о'. (The visual representation, of course, very much depends on the fonts used but usually these letters are almost indistinguishable.)
 
 Backwards Compatibility
 =======================
@@ -136,7 +138,6 @@ References
 
 .. [1] Multibyte string on string::string_print
         (http://bugs.python.org/issue479898)
-
 
 Copyright
 =========
