@@ -1,15 +1,15 @@
 #format rst
 
 =====================
-Learning Jython
+Jython Course Outline
 =====================
 
 :Author: Dave Kuhlman
 :address: dkuhlman@rexx.com
     http://www.rexx.com/~dkuhlman
 
-:revision: 1.1a
-:date: Dec. 17, 2007
+:revision: 1.1b
+:date: May 9, 2008
 
 :copyright: Copyright (c) 2006 Dave Kuhlman.  All Rights Reserved.
     This software is subject to the provisions of the MIT License
@@ -33,7 +33,7 @@ the price of one.  If your learn Python, then you have also learned
 Jython, and vice versa.  If you already know Python, then you know
 Jython.
 
-But, if you do not know Python **or** Jython, then here are good
+But, if you do know know Python **or** Jython, then here are good
 training aids:
 
 - `Python documentation --
@@ -62,7 +62,7 @@ Install Jython
 --------------
 
 You will need Java installed, of course.  And, since you are likely
-to want to use Java class libraries from Jython, it is also likely
+to want to use Jython class libraries from Jython, it is also likely
 that you will want the Java SDK.  **Important**: If more than one
 version of Java is installed on your machine, make sure that when
 you install Jython, you use the version of Java for which the SDK is
@@ -2598,6 +2598,20 @@ class (``org.python.util.jython``) on the command line.  That
 starts the Jython interpreter, which looks for and runs our
 ``__run__.py`` script.
 
+Alternatively, instead of adding your standalone jar to the
+``CLASSPATH`` environment variable, you can use the ``-cp`` or
+``-classpath`` command line options::
+
+    $ java -cp myapp.jar org.python.util.jython -jar myapp.jar
+
+And, a shorter form which does the same thing is this::
+
+    $ java -jar myapp.jar -jar myapp.jar
+
+This works because Java and Jython *both* have ``-jar`` options. The
+first ``-jar`` tells Java to run Jython, and the second ``-jar``
+tells Jython to run the ``__run__.py`` in the jar file.
+
 
 A summary
 ~~~~~~~~~
@@ -2638,9 +2652,18 @@ Run the application::
 
     $ java -jar myapp.jar mymainscript.py arg1 arg2
 
-Or, if you have added your start-up script to the jar::
+Or, if you have added your start-up script to the jar, use one of
+the following::
 
     $ java org.python.util.jython -jar myapp.jar arg1 arg2
+
+::
+
+    $ java -cp myapp.jar org.python.util.jython -jar myapp.jar arg1 arg2
+
+::
+
+    $ java -jar myapp.jar -jar myapp.jar arg1 arg2
 
 
 
