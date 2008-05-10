@@ -82,6 +82,7 @@ int main()
     version_obj = PyMapping_GetItemString(sys_dict, "version");
     version_string = PyString_AsString(version_obj);
     printf("%s\n\n", version_string);
+    Py_XDECREF(version_obj);
 
     /* Inject a variable into __main__, in this case i */
     i = 5;
@@ -94,6 +95,8 @@ int main()
     /* Extract the resultant variable, k */
     k_obj = PyMapping_GetItemString(main_dict, "k");
     k = PyInt_AsLong(k_obj);
+    Py_XDECREF(k_obj);
+    Py_XDECREF(i_obj);
 
     /* Show the result of the Python calculation */
     printf("Python calculated that %d! = %d\n", i, k);
