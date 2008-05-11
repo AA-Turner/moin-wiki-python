@@ -4,33 +4,25 @@
 
 == Introduction ==
 
-This page descibes a new implementation of non-blocking sockets for jython. Hopefully, this new support should make possible the use of event-based server frameworks on jython. Examples of cpython event-based frameworks are [http://twistedmatrix.com/ Twisted], [http://www.zope.org/ Zope] and [http://www.amk.ca/python/code/medusa.html Medusa].
+This page descibes the socket module for jython 2.2, which for the first time has support for [http://en.wikipedia.org/wiki/Non-blocking_I/O asynchronous or non-blocking operations]. Hopefully, this new support should make possible the use of event-based server frameworks on jython. Examples of cpython event-based frameworks are [http://twistedmatrix.com/ Twisted], [http://www.zope.org/ Zope] and [http://www.amk.ca/python/code/medusa.html Medusa]. It is considered by some that Asynchronous IO is the only way to address [http://www.kegel.com/c10k.html The C10K problem]
 
-The implementation currently resides in the jython sandbox because the modules are new, and need testing on multiple Operating Systems and Java Virtual Machines (JVMs) before being committed to the core language.
+The socket module is pretty much feature complete. It is written to use java.nio apis as much as possible, i.e. all reads and writes are carried out through the sockets java.nio.channel based interface. However, there are some circumstances, specifically timeout operations, where the java.net.socket interfaces have to be used.
 
-Once we're satisfied that they are functional and reliable, they will be commited to the jython trunk, and will hopefully form part of the upcoming jython 2.2 release.
+The socket module is quite stable; a [http://bugs.jython.org/issue?%40search_text=&title=&%40columns=title&id=&%40columns=id&creation=&creator=&activity=&%40columns=activity&%40sort=activity&actor=&nosy=&type=&components=&versions=&severity=&dependencies=&assignee=amak&keywords=&priority=&%40group=priority&status=&%40columns=status&resolution=&%40pagesize=50&%40startwith=0&%40action=search number of bugs in the functionality have been found and fixed]. 
 
+There are necessarily some differences between the behaviour of the cpython and jython socket modules, because jython is implemented on the java socket model, which is more restrictive than the C language socket interface that cpython is based on. It is the purpose of this document to describe those differences. If you find a difference in behaviour between cpython and jython that is not documented here, and where jython is behaving differently to the cpython socket documentation, then [http://bugs.jython.org/ that should be considered a bug and reported, please].
+ 
 == Requirements ==
 
 Non-blocking support
-  * JVM version with [http://java.sun.com/j2se/1.4.2/docs/guide/nio/ java.nio] support, i.e. >= version 1.4 (> 1.4.2_13 highly recommended)
-  * Any jython version >= 2.1
+  * JVM version with [http://java.sun.com/j2se/1.4.2/docs/guide/nio/ java.nio] support, i.e. >= version 1.4
+  * Any jython version >= 2.2
 
 SSL support
   * JVM version: any version on which jython runs.
-  * Any jython version >= 2.1
+  * Any jython version >= 2.2
 
-== How to get these modules ==
-
-The new socket and select modules have now been moved into the jython distribution, so any download of [http://www.jython.org/Project/download.html jython 2.2rc1] or more recent will contain the new modules.
-
-== How to use these modules ==
-
-As before, the socket module is imported like this
-
-{{{
-import socket
-}}}
+== Cpython compatibility ==
 
 The new socket module has been written to comply as closely as possible with the cpython 2.4 API for non-blocking sockets, therefore you should use the cpython socket documentation as your reference when writing code.
 
@@ -40,7 +32,7 @@ If the new jython module exhibits behaviour that differs from that described in 
 
 == SSL Support ==
 
-These modules include an implementation of client side SSL support, which is compatible with the cpython SSL API. The client side ssl example from the cpython documentation should just work.
+The module includes an implementation of client side SSL support, which is compatible with the cpython SSL API. The client side ssl example from the cpython documentation should just work.
 
 http://docs.python.org/lib/socket-example.html
 
@@ -55,34 +47,25 @@ All of the above are possible, but since no other python version includes that s
 
 If you have serious SSL or crypto requirements, then I '''strongly''' recommend using the java crypto libraries, or one of the excellent third-party crypto libraries for java, such as that from the [http://www.bouncycastle.org Legion of the Bouncy Castle].
 
-== Jython versions ==
+=== Certificate Checking ===
 
-These modules were developed on jython 2.1. They were tested on all available later versions, which at this time is [http://www.jython.org/Project/download.html 2.2rc1] and 2.3 (a0?).
+By default, the cpython socket library does not carry out certificate checking, which means that it will accept expired certificates, etc. This is acceptable when the validity of the remote certificate is not important, such as in testing.
 
-The modules should work identically on all versions, and have passed all available unit tests on all versions.
+In Java, by default, certificate checking is '''enabled'''. This means that the jython ssl routines *will* verify the validity of the remote certificate, and refuse to form the connection if it is not valid. If this is a problem for you, then you can get around as described here.
+
+==== By configuring your JVM ====
+
+If you are using self-generated certificates for testing, then you can import those certificates into the JVM running your jython scripts, and the certificate will then be recognised. See this article from Sun on [http://java.sun.com/j2ee/1.4/docs/tutorial/doc/Security6.html how to install certificates on a JVM].
+
+==== BY installing your own SecurityManager ====
+
+TODO: Need to write some code and documentation for how to install your own [http://java.sun.com/j2se/1.4.2/docs/api/java/lang/SecurityManager.html SecurityManager] so that it simply accepts all certificates. Here is a java article on [http://scv.bu.edu/Doc/Java/tutorial/networking/security/index.html  Providing Your Own Security Manager]
 
 == Cpython versions ==
 
 It is the intention that these modules be fully API compatible with cpython, as far as is possible or sensible. This means that any cpython socket code that is syntax compatible with your selected jython version should produce identical behaviour to the same code running on cpython.
 
 The unit-tests provided with these modules should also run on all versions of cpython. See below under unit-tests for more details.
-
-== JVM bug fixes ==
-
-The java.nio package was introduced in java in 200?. This implementation of non-blocking sockets for jython was written in 2004, and was essentially complete back then.
-
-However, whenever it was run against JVMs available at that time, and on JVMs up to and including version 1.4.2_09 (release date), it would hang when the unit tests were run (On Windows Server 2003 and Windows 2000 Server). The main symptom was that server sockets would remain in existence long after they had been closed, in CLOSE_WAIT and TIME_WAIT states which would time out after a long period of minutes.
-
-I tore my hair out for a long time trying to figure out what the problem was, and tried all kinds of approaches to fix the problem, i.e. adding, omitting or changing the various operations involved in closing a non-blocking socket. You can read more detail here
-
-http://www.nabble.com/Non-blocking-IO-update.-tf389917.html#a1074623
-
-But when I upgraded my JVM to jdk 1.4.2_13, and ran the tests on that, the whole problem disappeared! I still do not know why; possibilities include
-
- * There was a bug in previous JVMs that caused the problem. 
- * There was a bug in my development platform (Windows Server 2000 and 2003) that caused the problem.
-
-But you should know that if you use this non-blocking support on JVM versions prior to 1.4.2_13, it is quite possible that you will have the same problem with sockets not closing properly. Therefore, I recommend running this code only on JDK 1.4.2_13 or greater; if you successfully run it on previous versions, especially on different platforms, let me know about.
 
 == Other I/O ==
 
@@ -97,23 +80,11 @@ Specifically, [http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/FileCha
 
 Of the two channel types listed above, these modules only support socket channels. This is because it was necessary to rewrite all of the socket creation calls to return SelectableChannels. To do so for Pipes, which are used for communication with sub-processes, it would be necessary to rewrite the jython sub-process creation modules, i.e. popen, etc, to create SelectableChannels. Although it should be reasonably straightforward to implement this, I have no plans to do this work.
 
-== Unit tests ==
-
-If you plan to make use of these modules on any platform, I '''highly''' recommend running the unit tests first; they should flush out any problems you might have.
-
-There are three test modules in the '''test''' subdirectory
-
-  1. '''test_socket.py'''. This module is ported from the cpython 2.4 code base; all tests in it pass on all available jython versions from 2.1 on. The ported module still runs on cpython, for compatibility checks. (Actually, it fixes a couple of small bugs in the original cpython test module).
-
-  1. '''test_select.py'''. This module is ported from the cpython 2.4 code base, but rewritten so that they work with the unittest module. All tests in it pass on all available jython versions from 2.1 on. The ported module still runs on cpython, for compatibility checks. 
-
-  1. '''test_select_new.py'''. This is a brand new module that I wrote to test the select API. It has been written to work on cpython and jython, and passes all tests on both.
-
 == Differences between cpython and jython ==
 
 === Error handling ===
 
-These modules have been coded so that the error handling is as close to the error handling of cpython as possible. So, ideally, cpython socket and select code run on jython should exhibit identical behaviour to cpython, in terms of exception types raised, error numbers returned, etc.
+These modules have been coded so that the error handling is as close to the error handling of cpython as possible. So, ideally, cpython socket and select code run on jython should exhibit identical behaviour to cpython, in terms of exception types raised, error numbers returned, etc. 
 
 However, due to the different semantics of java and C, there will be differences in the error handling, which will be documented here as they are discovered.
 
@@ -134,7 +105,7 @@ This means that you may get differing exception signatures when using zero timeo
 
 === Null address returned from UDP socket.recvfrom() in timeout mode ===
 
-This bug is reported on the jython bug tracker: [http://bugs.jython.org/issue1018 UDP recvfrom fails to get the remote address]
+This bug is reported on the jython bug tracker: [http://bugs.jython.org/issue1018 UDP recvfrom fails to get the remote address].
 
 ==== Description ====
 
@@ -151,42 +122,3 @@ This bug has been reported to Sun, but is not yet public on the Java bug databas
 
    1. Until the java bug is fixed, only use sockets in either blocking or non-blocking mode; the problem will not occur in this case.
    1. If you need timeouts, then until the java bug is fixed, you should probably create your own DatagramSockets, directly through the java.net APIs.
-
-=== Deadlock problems with socket.makefile() ===
-
-'''''Note: this issue is fixed in subversion and will be fixed in Jython 2.2.2'''''
-
-==== Description ====
-
-This is a bug that has been reported on the [http://bugs.jython.org/issue1744567 bug tracker].
-
-If the user
-   1. Opens a socket
-   1. Obtains a file wrapper for that socket, using the makefile() method
-   1. Tries to simultaneously read and write on the file wrapper from different threads
-   1. A deadlock will ensue
-
-==== Cause ====
-
-This is because of the way that the InputStream and OutputStream for a socket are created under java.nio, i.e. by static methods on the [http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/Channels.html java.nio.channels.Channels] class. As you can see from these bug reports on the java bug database
-
-   * [http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4509080 Streams inhibit concurrent reading & writing]
-   * [http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4509080 Channels.newInputStream() and newOutputStream() synchronize too much]
-
-There is a lock shared between the resulting InputStream and OutputStream that prevents simultaneous read and write. If you do attempt to simultaneously read and write on the same socket/file from two different threads, you risk getting a deadlock.
-
-==== Fix ====
-
-Since the java bug report is nearly six years old, it is reasonable to assume that it will not be fixed promptly by Sun. There is a possible implementation pathway that can get around this problem, by creating a PyFile that can map read and write operations to channels instead of streams.
-
-However, the viability of this fix is unknown, and requires further research.
-
-==== Workaround ====
-
-Until a fix is delivered, there are several workarounds to the problem.
-
-   1. Do not use file wrappers around sockets. Instead, use the socket.send and socket.recv methods, which are not affected by this lock. In order to minimise code change, you need only adopt this strategy for reading or writing, but not both. So long as either reading-only or writing-only is carried out through the file wrapper, there should no lock contention or deadlock.
-
-   1. Use the select.select call to multiplex channels. The select.select function and select.poll objects have recently been added to jython; try them out.
-
-   1. Ensure that your code does not try to read and write simultaneously on the same socket file wrapper. You can do this by implementing your own exclusion (e.g. a semaphore), or perhaps using delays to ensure that the read and write operations happen at different times, or by restricting all read and write operations on a socket file wrapper to a single thread.
