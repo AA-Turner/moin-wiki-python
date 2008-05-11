@@ -7,11 +7,7 @@ Example usage:
 >>> server.package_releases('roundup')
 ['1.1.2']
 >>> server.package_urls('roundup', '1.1.2')
-[{'url':
-'http://pypi.python.org/packages/source/r/roundup/roundup-1.1.2.tar.gz',
-'packagetype': 'sdist'}, {'url':
-'http://pypi.python.org/packages/any/r/roundup/roundup-1.1.2.win32.exe',
-'packagetype': 'bdist_wininst'}]
+[{'has_sig': True, 'comment_text': '', 'python_version': 'source', 'url': 'http://pypi.python.org/packages/source/r/roundup/roundup-1.1.2.tar.gz', 'md5_digest': '7c395da56412e263d7600fa7f0afa2e5', 'downloads': 2989, 'filename': 'roundup-1.1.2.tar.gz', 'packagetype': 'sdist', 'size': 876455}, {'has_sig': True, 'comment_text': '', 'python_version': 'any', 'url': 'http://pypi.python.org/packages/any/r/roundup/roundup-1.1.2.win32.exe', 'md5_digest': '983d565b0b87f83f1b6460e54554a845', 'downloads': 2020, 'filename': 'roundup-1.1.2.win32.exe', 'packagetype': 'bdist_wininst', 'size': 614270}]
 }}}
 
 '''list_packages()'''
@@ -21,7 +17,16 @@ Example usage:
   Retrieve a list of the releases registered for the given package name. Returns a list of version strings.
 
 '''release_urls(package_name, version)'''
-  Retrieve a list of download URLs for the given package release. Returns a list of dicts {'url': the url, 'packagetype': the download package type} where the packagetype is one of the setup.py package types ('sdist', 'bdist', etc).
+  Retrieve a list of download URLs for the given package release. Returns a list of dicts with the following keys:
+     * url
+     * packagetype ('sdist', 'bdist', etc)
+     * filename
+     * size
+     * md5_digest
+     * downloads
+     * has_sig
+     * python_version (required version, or 'source', or 'any')
+     * comment_text
 
 '''release_data(package_name, version)'''
   Retrieve metadata describing a specific package release. Returns a dict with keys for:
