@@ -22,9 +22,7 @@ Here's what works:
 
 syncdb and the very cool Django admin run; many unit tests pass. You can run with internationalization enabled. You do need to run the dev server with --noreload for now. We need to document here how to run with [http://www.xhaus.com/modjy/ modjy], which is Alan Kennedy's servlet container for WSGI apps.
 
-In running the model unit tests, here are the things we seem to be missing, accounting for most of the approximately 75 failures:
-
- * Many doctests are fragile, because they depend on the dict traversal ordering; in Jython, this is different that CPython, and if we adopt {{{ConcurrentHashMap}}}, it's not even repeatable. This would seem to be a pervasive bug in Django.
+In running the model unit tests, here are the things we seem to be missing:
 
  * We still have some encoding problems, again seen in doctests. An example where output is expected to be lower case hex, not upper case. I fixed the problem in {{{PyUnicode}}}, but there are more places. Our current plan is to make test_unicode.py pass (accounting for any UTF-16 vs UCS-2/UCS-4 issues).
 
@@ -32,7 +30,9 @@ In running the model unit tests, here are the things we seem to be missing, acco
 
  * No decorators yet! (But they are coming soon, and are now available experimentally for Jython.) 
 
-There may be some other rough categories, we need to look at the failures more systematically. All that doctest noise is certainly annoying!
+There may be some other rough categories, we need to look at the failures more systematically. 
+
+[http://dojstatus.leosoto.com Here are some unofficial test suite results]
 
 == Next Steps ==
 
@@ -60,6 +60,8 @@ Here are some of the things we addressed:
 
 
 === Former Major Problems ===
+
+ * Many doctests are fragile, because they depend on the dict traversal ordering; in Jython, this is different that CPython, and if we adopt {{{ConcurrentHashMap}}}, it's not even repeatable. This would seem to be a pervasive bug in Django. This was fixed on Django.
 
  * Jython does not support non-str keys in {{{__dict__}}} right now.  Jim Baker replaced the custom dictionary in {{{PyStringMap}}} with a {{{HashMap}}} (along Groves' earlier work). This change should resolve this problem.  Try the [https://jython.svn.sourceforge.net/svnroot/jython/branches/modern/ modern] branch. Problem encountered in {{{django/utils/_threading_local.py}}}. 
  * Something goes wrong with {{{re.compile(u"([\u0080-\uffff])")}}} in {{{django/utils/text.py}}} I think it is a lacking in our array implementation but this needs more investigation.
