@@ -1,0 +1,35 @@
+= planet.python.org setup =
+
+planet.python.org is currently hosted on dinsdale.python.org.
+It's running a 2005 version of the software
+
+The set-up is in the /data/planet/ directory.  Templates and the configuration files
+are in /data/planet/config/.  Currently the configuration files are:
+
+* config.ini : for planet.python.org
+* jython.ini : for planet.jython.org
+
+The Subversion URL for the repository is 
+file:///data/repos/systems/dinsdale/data/planet/code/ on dinsdale, or 
+svn+ssh://svn.python.org/data/repos/systems/ for remote access.
+
+Currently the live Planet set-up is under my user ID on dinsdale; we should move it to some
+generic user ID and put it in some common group. 
+There's no commit hook that automatically updates the live files after a checkin; instead I just log into dinsdale, edit config.ini or jython.ini as desired, commit it, and 
+wait for the next scheduled update to run.
+
+The sites are updated with the following cron jobs (again, under my user ID): {{{
+37 1,4,7,10,13,16,19,21 * * * /data/planet/run.sh /data/planet/config/config.ini
+47 1,10,19 * * * /data/planet/run.sh /data/planet/config/jython.ini
+}}}
+
+== Adding/removing feeds ==
+
+
+
+
+== Tasks ==
+
+* Possible task: move entire set-up to ximinez.python.org, which runs more of the dynamic content for *.python.org.
+
+* Move set-up to 
