@@ -32,37 +32,7 @@ Eclipse has a plugin to become a  SVN client and can be used to get the project 
 
 == Building the project using ANT ==
 [[Anchor(ANT)]]
-At this point, you should be able to build the project using Eclipse's `Java Builder`.  This will only compile the classes though --you'll want to use `<yourProjectName>/build.xml` to get the full ant build.  (Jython won't run without this.)  To do this:
- *First, set up an `ant.properties` file to supply "parameters" to `build.xml`
-  *Put the file directly under `<yourProjectName>/`.  It has to be in the same directory as `build.xml`, or in `user.home`. This is because build.xml explicitly searches two directories for `ant.properties`: `user.home` and the directory where `build.xml` is located (in this order). When in doubt, `ant -f build.xml usage` will tell you.
-  *Put in info such as
-{{{
-    build.compiler=modern
-    debug=false
-    #debuglevel=lines,vars,source
-    optimize=false
-
-    #javaccHome=/Users/bzimmer/Library/Java/Extras/javacc-3.2
-
-    ht2html.dir=
-
-    ### zxJDBC ###
-    #oracle.jar=
-    #mysql.jar=/Users/bzimmer/Library/Java/Extras/mysql-connector-java-3.1.6-bin.jar
-    #informix.jar=
-    #postgresql.jar=/Users/bzimmer/Library/Java/Extras/pg74.215.jdbc2.jar
-    #jdbc.jar=
-    #servlet.jar=
-}}}
-  I left stuff commented out, but you can see how you can add jars, etc. using this file.
- *Navigate to `build.xml` and Right-Click and select `Run` | `External Tools`.
- *Select `New` and on the `Main` tab
-  *For `Buildfile:`, the default of `${workspace_loc:/<yourProjectName>/build.xml}` should be fine
-  *For `Base Directory:`, click `Browse Workspace` and navigate to the `<yourProjectName>` directory and select it
-  *Click on the `Properties` tab 
-  *Unselect the `Use global properties as specified...` check box
-  *Click the `Add External` button and navigate to and select `<yourProjectName>/ant.properties`
-  *Select `Apply` and `Run`
+At this point, you should be able to build the project using Eclipse's `Java Builder`.  This will only compile the classes though --you'll want to use `<yourProjectName>/build.xml` to get the full ant build.  (Jython won't run without this.)  To do this, right click on build.xml and choose Run As Ant Build.
 
 A successful build should output something like the following:
 {{{
