@@ -150,6 +150,14 @@ $ java org.python.util.jython -jar myapp.jar
 
 Notice how, when we start the application, we specify the jython class ({{{org.python.util.jython}}}) on the command line.  That starts the Jython interpreter, which looks for and runs our {{{__run__.py}}} script.
 
+Alternatively, instead of adding your standalone jar to the {{{CLASSPATH}}} environment variable, you can use the {{{-cp}}} or {{{-classpath}}} command line options:
+
+{{{
+$ java -cp myapp.jar org.python.util.jython -jar myapp.jar
+}}}
+
+This works because Java and Jython ''both'' have {{{-jar}}} options. The first {{{-jar}}} tells Java to run Jython, and the second {{{-jar}}} tells Jython to run the {{{__run__.py}}} in the jar file.
+
 
 === A summary ===
 
@@ -197,13 +205,14 @@ Run the application:
 $ java -jar myapp.jar mymainscript.py arg1 arg2
 }}}
 
-Or, if you have added your start-up script to the jar:
+Or, if you have added your start-up script to the jar, use one of the following:
+
 
 {{{
 $ java org.python.util.jython -jar myapp.jar arg1 arg2
+$ java -cp myapp.jar org.python.util.jython -jar myapp.jar arg1 arg2
+$ java -jar myapp.jar -jar myapp.jar arg1 arg2
 }}}
-
-
 
 
 == A note about webstart ==
