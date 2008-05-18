@@ -1387,3 +1387,37 @@ SecondBruce("That's a strange expression, Bruce.")
 FirstBruce("First Bruce: Well Bruce, I heard the Prime Minister use it. S'hot enough to boil a monkey's bum in 'ere, your Majesty,' he said and she smiled quietly to herself.")
 ThirdBruce.Talk("She's a good Sheila, Bruce and not at all stuck up.")
 }}}
+
+=== Unimplemented function replacement ===
+
+Allows you to test unimplemented code in a development environment by specifying a default argument as an argument to the decorator (or you can leave it off to specify None to be returned.
+
+{{{
+# Annotation wrapper annotation method
+def unimplemented(defaultval):
+    if(type(defaultval) == type(unimplemented)):
+        return lambda: None
+    else:
+        # Actual annotation
+        def unimp_wrapper(func):        
+            # What we replace the function with
+            def wrapper(*arg):
+                return defaultval
+            return wrapper
+        return unimp_wrapper
+}}}
+
+=== Redirects stdout printing to python standard logging. ===
+
+{{{
+def logprintinfo(func):
+    """Wraps a method so that any calls made to print get logged instead"""
+    def pwrapper(*arg):
+        stdobak = sys.stdout
+        lpinstance = LogPrinter()
+        sys.stdout = lpinstance
+        res = func(*arg)
+        sys.stdout = stdobak
+        return res
+    return pwrapper
+}}}
