@@ -1,8 +1,20 @@
-GnuEmacs is the editor of the gods (XEmacs even more so - it ships with EmacsPythonMode as a default). [Actually, XEmacs lacks some features
-for dealing properly with Python, particularly the string syntax.]
-Does everything (almost) that you could want it to, and if it doesn't you can make it do what you want, in Python (or Lisp).
+= Emacs =
+
+Emacs (the major flavors being GnuEmacs and XEmacs) is a text editor which
+come with good support for writing Python code.  Each has its strengths and
+weaknesses, but in general either provide very nice environments for the
+Python programmer.
+
+== Tools for Python coders ==
+
+For stupid historical reasons, GnuEmacs and XEmacs come with different major
+mode for editing Python code, though both do a fine job of it.
+[https://launchpad.net/python-mode/ Work] is underway to unify the two modes.
+Please [http://mail.python.org/mailman/listinfo/python-mode get involved] if
+you want to help.
 
 Some tools have been written for using Python from Emacs:
+
   * EmacsPythonMode, a major mode for programming Python in Emacs. 
     * Rudimentary completion is implemented on top of EmacsPythonMode by EmacsPythonCompletion
   * python.el, a Python mode which will be included when Emacs 22 is released, with a number of advantages over python-mode.el. For a version with fixes and enhancements (as of 2006-06) and one that works with Emacs 21, see [http://www.loveshack.ukfsn.org/emacs].
@@ -12,7 +24,48 @@ Some tools have been written for using Python from Emacs:
   * [http://sourceforge.net/projects/oo-browser/ OO-Browser], an Emacs class browser for object-oriented languages with support for Python.
   * The [http://www.cs.cornell.edu/home/raman/emacspeak emacspeak audio desktop] is a speech interface that allows visually impaired users to interact independently and efficiently with the computer. It has editing support for interactive Python development. Features aural highlighting, structured browsing and debugging. 
 
-'''Other resources:'''
+== Support for C Python core developers ==
+
+Both Emacs and XEmacs have support for developers hacking on the Python C code
+itself.  If you're developing Python 2.x, just use the standard `python` style
+that comes with c-mode.  If you're hacking on Python 3.x, you'll want to add
+the following code to your `.emacs` file (given by
+[http://mail.python.org/pipermail/python-dev/2008-May/079582.html Georg Brandl]):
+
+{{{
+(c-add-style
+  "python-new"
+  '((indent-tabs-mode . nil)
+    (fill-column      . 78)
+    (c-basic-offset   . 4)
+    (c-offsets-alist  . ((substatement-open . 0)
+                         (inextern-lang . 0)
+                         (arglist-intro . +)
+                         (knr-argdecl-intro . +)))
+    (c-hanging-braces-alist . ((brace-list-open)
+                               (brace-list-intro)
+                               (brace-list-close)
+                               (brace-entry-open)
+                               (substatement-open after)
+                               (block-close . c-snug-do-while)))
+    (c-block-comment-prefix . "* "))
+  )
+
+;; This is a very crude hook that auto-selects the C style depending on
+;; whether it finds a line starting with tab in the first 3000 characters
+;; in the file
+(defun c-select-style ()
+   (save-excursion
+     (if (re-search-forward "^\t" 3000 t)
+         (c-set-style "python")
+       (c-set-style "python-new"))))
+(add-hook 'c-mode-hook 'c-select-style)
+}}}
+
+'''Note:''' ''We should try to get the style into upstream c-mode.''
+
+== Other resources ==
+
   * [wiki:EmacsWiki:SiteMap The Emacs Wiki], a good starting place.
   * [http://www.gnu.org/software/emacs/emacs.html GnuEmacs web page].
   * [http://www.xemacs.org XEmacs web page].
