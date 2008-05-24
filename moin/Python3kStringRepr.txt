@@ -84,8 +84,6 @@ The repr() in Python 3000 should be Unicode not ASCII based, just like Python 30
 
 Characters not supported by user's console are hex-escaped on printing, by the Unicode encoder's error-handler. If the error-handler of the output file is 'backslashreplace', such characters are hex-escaped without raising UnicodeEncodeError. For example, if your default encoding is ASCII, ``print('Hello ¢')`` will prints 'Hello \\xa2'. If your encoding is ISO-8859-1, 'Hello ¢' will be printed.
 
-For the console with Unicode-based encoding, for example, en_US.utf8 and de_DE.utf8, the backslashescape trick doesn't work and all printable characters are not escaped. This will cause  a problem of similarly drawing characters in Western,Greek and Cyrillic languages. These languages use similar (but different) alphabets (descended from the common ancestor) and contain letters that look similar but has different character codes. For example, it is hard to distinguish Latin 'a', 'e' and 'o' from Cyrillic 'а', 'е' and 'о'. (The visual representation, of course, very much depends on the fonts used but usually these letters are almost indistinguishable.) To avoid the problem, user can adjust terminal encoding to get desired result suitable for their environment.
-
 For non-interactive session, default error-handler of sys.stdout should be default to 'strict'. Other applications reading the output might not understand hex-escaped characters, so un-supported characters should be trapped when writing.
 
 Printable characters
@@ -148,6 +146,10 @@ To avoid exceptions raised, you can specify error-handler explicitly. ::
 
     log = open("logfile", "w", errors="backslashreplace")
     log.write(repr(data))  # Unsupported characters will be escaped.
+
+
+For the console with Unicode-based encoding, for example, en_US.utf8 and de_DE.utf8, the backslashescape trick doesn't work and all printable characters are not escaped. This will cause a problem of similarly drawing characters in Western,Greek and Cyrillic languages. These languages use similar (but different) alphabets (descended from the common ancestor) and contain letters that look similar but has different character codes. For example, it is hard to distinguish Latin 'a', 'e' and 'o' from Cyrillic 'а', 'е' and 'о'. (The visual representation, of course, very much depends on the fonts used but usually these letters are almost indistinguishable.) To avoid the problem, user can adjust terminal encoding to get desired result suitable for their environment.
+
 
 
 Open Issues
