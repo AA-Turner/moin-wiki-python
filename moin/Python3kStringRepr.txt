@@ -38,7 +38,11 @@ For Unicode strings, the following additional conversions are done.
 
 - Convert 21-bit characters(>=0x10000) and surrogate pair characters to '\\U00xxxxxx'.
 
-This algorithm converts any string to printable ASCII, and repr() is used as handy and safe way to print strings for debugging or for logging. Although all non-ASCII characters are escaped, this does not matter when most of the string's characters are ASCII. But for other languages, such as Japanese where most characters in a string are not ASCII, this is very inconvenient. Python 3000 has a lot of nice features for non-Latin users such as non-ASCII identifiers, so it would be helpful if Python could also progress in a similar way for printable output.
+This algorithm converts any string to printable ASCII, and repr() is used as handy and safe way to print strings for debugging or for logging. Although all non-ASCII characters are escaped, this does not matter when most of the string's characters are ASCII. But for other languages, such as Japanese where most characters in a string are not ASCII, this is very inconvenient. 
+
+we can use ``print(aJapaneseString)`` to get readable string, but we don 't have workaround to read strings in containers such as list or tuple. ``print(listOfJapaneseStrings)`` uses repr() to build the string to be printed, so resulting strings are always hex-escaped. Or when ``open(japaneseFilemame)`` raises an exception, the error message is something like ``IOError: [Errno 2] No such file or directory: '\u65e5\u672c\u8a9e'``, which isn't helpful.
+
+Python 3000 has a lot of nice features for non-Latin users such as non-ASCII identifiers, so it would be helpful if Python could also progress in a similar way for printable output.
 
 Some users might be concerned that such output will mess up their console if they print binary data like images. But this is unlikely to happen in practice because bytes and strings are different types in Python 3000, so printing an image to the console won't mess it up.
 
