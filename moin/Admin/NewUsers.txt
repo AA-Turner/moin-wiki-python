@@ -1,0 +1,15 @@
+= Adding New User Accounts =
+
+Only logins using SSH authentication are allowed; password-authenticated logins are not supported.
+
+ 1. Create the user account.  The Debian tool for doing this is useradd: {{{
+sudo useradd -G svnusers,webmaster -c "<full name>" -m <account-name>
+}}}
+
+ 1. Create the user's SSH authorization keys. {{{
+cd ~<account-name>
+mkdir .ssh
+chmod 700 .ssh/
+jed .ssh/authorized_keys2
+chmod 600 .ssh/authorized_keys2 
+}}}
