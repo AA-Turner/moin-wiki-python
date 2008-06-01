@@ -80,6 +80,52 @@ Specifically, [http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/FileCha
 
 Of the two channel types listed above, these modules only support socket channels. This is because it was necessary to rewrite all of the socket creation calls to return SelectableChannels. To do so for Pipes, which are used for communication with sub-processes, it would be necessary to rewrite the jython sub-process creation modules, i.e. popen, etc, to create SelectableChannels. Although it should be reasonably straightforward to implement this, I have no plans to do this work.
 
+== Socket options ==
+
+The following socket options are supported on jython
+
+For TCP client sockets
+  * SO_KEEPALIVE
+  * SO_LINGER
+  * SO_OOBINLINE
+  * SO_RCVBUF
+  * SO_REUSEADDR
+  * SO_SNDBUF
+  * SO_TIMEOUT
+  * TCP_NODELAY
+
+For TCP server sockets
+  * SO_RCVBUF
+  * SO_REUSEADDR
+  * SO_TIMEOUT
+
+For UDP sockets
+  * SO_BROADCAST
+  * SO_RCVBUF
+  * SO_REUSEADDR
+  * SO_SNDBUF
+  * SO_TIMEOUT
+
+If an option is not explicitly listed above, it is explicitly not supported, i.e. jython cannot because java does not support the option.
+
+All but one of the above take either a single boolean/integer or a single integer as a parameter, so they might be called like so
+
+{{{
+mysock.setsockopt(socket.SOL_SOCKET, socket.SO_OOBINLINE, 1)
+mysock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 32768)
+}}}
+
+The exception is SO_LINGER, which (thanks to cpython's C heritage) takes a packed struct containing two values, the first is the flag to enable or disable SO_LINGER, the second specifies the linger time. The return value from getting the option is similarly packed. Here is a code snippet
+{{{
+import struct
+linger_enabled = 1
+linger_time = 10
+linger_struct = struct.pack('ii', linger_enabled, linger_time)
+mysock.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER, linger_struct)
+linger_status = mysock.getsockopt(socket.SOL_SOCKET, socket.SO_LINGER)
+linger_enabled, linger_time = struct.unpack('ii', linger_status)
+}}}
+
 == Differences between cpython and jython ==
 
 === Error handling ===
