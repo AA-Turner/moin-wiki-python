@@ -93,3 +93,11 @@ from select import cpython_compatible_select as select
 === Receiving urgent data can cause select to lie (Windows implementation) ===
 
 Bug 1773955 describes the scenario. It is caused by a bug in the Sun Java implementation and there is no known Jython fix. A partial workaround is to call setOOBInline(True) on the jsocket within the Jython socket. This will cause the urgent data to be merged into the regular stream and will keep from confusing select() however you will have to ignore the urgent data at the application level.
+
+'''Addendum''': Support for socket options has been checked into the repo at [http://fisheye3.atlassian.com/changelog/jython/?cs=4493 revision 4494]. See NewSocketModule for more details on the options available. 
+
+With the new support, you don't need to call the java API on the underlying socket; you can set the OOBINLINE flag using python syntax, like this
+{{{
+mysock.setsockopt(socket.SOL_SOCKET, socket.SO_OOBINLINE, 1)
+}}}
+But there is still no workaround for the lack of support for TCP Urgent Data on java.
