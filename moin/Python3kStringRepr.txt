@@ -89,9 +89,9 @@ Rationale
 
 The repr() in Python 3000 should be Unicode not ASCII based, just like Python 3000 strings. Also, conversion should not be affected by the locale setting, because the locale is not necessarily the same as the output device's locale. For example, it is common for a daemon process to be invoked in an ASCII setting, but writes UTF-8 to its log files. Also, web applications might want to report the error information in more readable form based on the HTML page's encoding.
 
-Characters not supported by the user's console could be hex-escaped on printing, by the Unicode encoder's error-handler. If the error-handler of the output file is 'backslashreplace', such characters are hex-escaped without raising UnicodeEncodeError. For example, if your default encoding is ASCII, ``print('Hello ¢')`` will prints 'Hello \\xa2'. If your encoding is ISO-8859-1, 'Hello ¢' will be printed. 
+Characters not supported by the user's console could be hex-escaped on printing, by the Unicode encoder's error-handler. If the error-handler of the output file is 'backslashreplace', such characters are hex-escaped without raising UnicodeEncodeError. For example, if your default encoding is ASCII, ``print('Hello ¢')`` will print 'Hello \\xa2'. If your encoding is ISO-8859-1, 'Hello ¢' will be printed. 
 
-Default error-handler of sys.stdout is 'strict'. Other applications reading the output might not understand hex-escaped characters, so unsupported characters should be trapped when writing. If you need to escape unsupported characters, you should change error-handler explicitly. For sys.stderr, default error-handler is set to 'backslashreplace' and printing exceptions or error messages won't be failed.
+The default error-handler for sys.stdout is 'strict'. Other applications reading the output might not understand hex-escaped characters, so unsupported characters should be trapped when writing. If you need to escape unsupported characters, you should explicitly change the error-handler. For sys.stderr, the default error-handler is set to 'backslashreplace' and printing exceptions or error messages won't be failed.
 
 Alternate Solutions
 -------------------
@@ -135,7 +135,7 @@ To avoid exceptions being raised, you can explicitly specify the error-handler. 
     log.write(repr(data))  # Unsupported characters will be escaped.
 
 
-For a console that uses a Unicode-based encoding, for example, en_US.utf8 or de_DE.utf8, the backslashescape trick doesn't work and all printable characters are not escaped. This will cause a problem of similarly drawing characters in Western, Greek and Cyrillic languages. These languages use similar (but different) alphabets (descended from the common ancestor) and contain letters that look similar but have different character codes. For example, it is hard to distinguish Latin 'a', 'e' and 'o' from Cyrillic 'а', 'е' and 'о'. (The visual representation, of course, very much depends on the fonts used but usually these letters are almost indistinguishable.) To avoid the problem, the user can adjust the terminal encoding to get a result suitable for their environment.
+For a console that uses a Unicode-based encoding, for example, en_US.utf8 or de_DE.utf8, the backslashescape trick doesn't work and all printable characters are not escaped. This will cause a problem of similarly drawing characters in Western, Greek and Cyrillic languages. These languages use similar (but different) alphabets (descended from a common ancestor) and contain letters that look similar but have different character codes. For example, it is hard to distinguish Latin 'a', 'e' and 'o' from Cyrillic 'а', 'е' and 'о'. (The visual representation, of course, very much depends on the fonts used but usually these letters are almost indistinguishable.) To avoid the problem, the user can adjust the terminal encoding to get a result suitable for their environment.
 
 
 
