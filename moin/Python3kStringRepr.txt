@@ -77,9 +77,11 @@ Specification
 
 - Set the Unicode error-handler for sys.stderr to 'backslashreplace' by default.
 
-- Add ``'%a'`` string format operator. ``'%a'`` converts any python object to a string using repr() and then hex-escapes all non-ASCII characters. The ``'%a'`` format operator generates the same string as ``'%r'`` in Python 2.
+- Add a new function to the Python C API ``PyObject *PyObject_ASCII(PyObject *o)``. This function converts any python object to a string using PyObject_Repr() and then hex-escapes all non-ASCII characters. ``PyObject_ASCII()`` generates the same string as ``PyObject_Repr()`` in Python 2.
 
 - Add a new built-in function, ``ascii()``. This function converts any python object to a string using repr() and then hex-escapes all non-ASCII characters. ``ascii()`` generates the same string as ``repr()`` in Python 2.
+
+- Add ``'%a'`` string format operator. ``'%a'`` converts any python object to a string using repr() and then hex-escapes all non-ASCII characters. The ``'%a'`` format operator generates the same string as ``'%r'`` in Python 2. Also, add ``'!a'`` conversion flags to the ``string.format()`` method and add ``'%A'`` operator to the PyUnicode_FromFormat(). They converts any object to an ASCII string as ``'%a'`` string format operator.
 
 - Add an ``isprintable()`` method to the string type. ``str.isprintable()`` returns False if repr() should escape any character in the string; otherwise returns True. The ``isprintable()`` method calls the ``PY_UNICODE_ISPRINTABLE()`` function internally.
 
@@ -91,7 +93,8 @@ The repr() in Python 3000 should be Unicode not ASCII based, just like Python 30
 
 Characters not supported by the user's console could be hex-escaped on printing, by the Unicode encoder's error-handler. If the error-handler of the output file is 'backslashreplace', such characters are hex-escaped without raising UnicodeEncodeError. For example, if your default encoding is ASCII, ``print('Hello ¢')`` will print 'Hello \\xa2'. If your encoding is ISO-8859-1, 'Hello ¢' will be printed. 
 
-The default error-handler for sys.stdout is 'strict'. Other applications reading the output might not understand hex-escaped characters, so unsupported characters should be trapped when writing. If you need to escape unsupported characters, you should explicitly change the error-handler. For sys.stderr, the default error-handler is set to 'backslashreplace' and printing exceptions or error messages won't be failed.
+The default error-handler for sys.stdout is 'strict'. Other applications reading the output might not understand hex-escaped characters, so unsupported characters should be trapped when writing. If you need to escape unsupported characters, you should explicitly change the error-handler. Unlike sys.stdout, sys.stderr doesn't raise UnicodeEncodingError by default, because the default error-handler is 'backslashreplace'". So printing error messeges containing non-ASCII characters to
+sys.stderr will not raise an exception. Also, information about uncaught exceptions (exception object, traceback) are printed by the interpreter without raising exceptions.
 
 Alternate Solutions
 -------------------
@@ -136,13 +139,6 @@ To avoid exceptions being raised, you can explicitly specify the error-handler. 
 
 
 For a console that uses a Unicode-based encoding, for example, en_US.utf8 or de_DE.utf8, the backslashescape trick doesn't work and all printable characters are not escaped. This will cause a problem of similarly drawing characters in Western, Greek and Cyrillic languages. These languages use similar (but different) alphabets (descended from a common ancestor) and contain letters that look similar but have different character codes. For example, it is hard to distinguish Latin 'a', 'e' and 'o' from Cyrillic 'а', 'е' and 'о'. (The visual representation, of course, very much depends on the fonts used but usually these letters are almost indistinguishable.) To avoid the problem, the user can adjust the terminal encoding to get a result suitable for their environment.
-
-
-
-Open Issues
-===========
-
-- Is the ``ascii()`` function necessary, or is it sufficient to document how to do it? If necessary, should ``ascii()`` belong to the builtin namespace?
 
 
 Rejected Proposals
