@@ -19,16 +19,16 @@ This is an introduction to developing Jython, just to get someone started. It do
 
   * http://ant.apache.org/ A Java-based build tool.
   * Eclipse users, see [wiki:Self:/EclipseNotes#ANT Eclipse ANT notes]
-  * Download the latest version and install so the bin/ is somewhere in your path.
-  * The build.xml is the file containing the compiler directives
-  * After getting Ant setup, run ''ant'' in your Jython checkout directory.  That should produce ''dist/jython.jar'' if everything is setup correctly. 
+  * Download the latest version and install so Ant's `bin` directory is somewhere in your path.
+  * The `build.xml` is the file containing the compiler directives
+  * After getting Ant set up, run `ant` in your Jython checkout directory.  That should produce `dist/jython.jar` if everything is setup correctly. 
 
 
 ''' Tests '''
- After you've built the project, you may want to set up an excutable file on your path to make it easy to launch your build of jython. This file will need to:
- *Set the python home property to the `dist` directory of your build (otherwise, you'll get import errors on the standard lib stuff).
- *Execute the `jython.jar` in the `dist` produced by the build.      
-Here's a batch file that runs the built jython.jar (for windows): [[Anchor(sampleBatch)]]
+ As part of building the project, Jython will generate an executable script, `dist/bin/jython`, to make it easy to launch your build of Jython. This works if you're on a Unix-like platform (including Mac OS X and Cygwin).
+
+If you're using Windows without Cygwin, here's a batch file that runs the built `jython.jar`:
+[[Anchor(sampleBatch)]]
 {{{
 :: jytip.bat
 @echo off
@@ -49,22 +49,12 @@ if [%1] == [] goto end
 java -Dpython.home=<path to dist directory>\\dist -jar <path to dist directory>\dist\jython.jar %ARGS%
 }}}
 
-On Unix you can use a shell script: {{{
-#!/bin/sh
-
-exec java -Dpython.home=<path>/dist/ -jar <path>/dist/jython.jar $*
-}}}
-
-
 Now you're ready to run tests...
 
   * There are a couple different places to find test cases
-    * Jython's dist/Lib/test (populated by the build process)
-    * Jython's bugtests subdirectory (included with the development sources)
-  * Run a particular test or you can run the whole Python test suite by running the following:
-{{{
-jython dist/Lib/test/regrtest.py -e
-}}}
+    * Jython's `dist/Lib/test` (populated by the build process)
+    * Jython's `bugtests` subdirectory (included with the development sources)
+  * Run a particular test, or you can run the whole Python test suite with `ant regrtest`.
 
 See TestingJython for some more details.
 
