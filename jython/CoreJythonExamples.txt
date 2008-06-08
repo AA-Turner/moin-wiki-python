@@ -12,13 +12,13 @@ DocumentationAndEducation
 
 Examples related to core Jython / Python will be here. Intended for those new to Python / Jython
 
-=== Print ===
+== Print ==
 Print Hello world
 {{{ print 'Hello World' 
 print "Hello World"
 }}}
 
-=== JArray ===
+== JArray ==
 
 I was curious on how to work with jarray and move the arrays between classes after being filled with values and operated. I think this example explains some of the basics. Of course, there are more pythonic ways to do this. Cheers! Alfonso Reyes 
 
@@ -60,7 +60,7 @@ for i in range(0, n/3, 1):
     print i, arr[i], uarr[i]
 }}}
 
-=== Multidimensional 2-D String Array ===
+== Multidimensional 2-D String Array ==
 In case you need 2-D string arrays this example may help you to start. Cheers! Alfonso Reyes, Houston-Texas
 
 {{{#!python
@@ -91,4 +91,34 @@ for i in range(0, len(str2d), 1):
         print str2d[i][j]+"\t",
     print
 print
+}}}
+
+== Finding methods in a python script ==
+
+Posted on the Jython list March 18, 2008:
+
+This will give you name-method pairs; if you just want the names, call
+keys() on it.  
+
+{{{
+import inspect
+
+def _is_some_method(object):
+    return inspect.ismethod(object) or inspect.ismethoddescriptor(object)
+
+def allmethods(cl):
+    methods = {}
+    for key, value in inspect.getmembers(cl, _is_some_method):
+        methods[key] = 1
+    for base in cl.__bases__:
+        methods.update(allmethods(base)) # all your base are belong to us
+    for key in methods.keys():
+        methods[key] = getattr(cl, key)
+    return methods
+
+}}}
+Usage example:
+{{{
+>>> allmethods(str).keys()
+['__unicode__', 'rjust', 'center', 'endswith', 'decode', 'translate', 'lower', 'encode', 'isunicode', '__setattr__', '__rmul__', '__add__', '__str__', 'istitle', 'lstrip', 'join', '__reduce_ex__', 'startswith', 'isalnum', 'rstrip', '__getattribute__', '__getslice__', '__eq__', '__init__', '__mod__', 'isupper', '__len__', 'rindex', 'isalpha', 'replace', '__ne__', 'strip', 'isspace', 'swapcase', 'split', 'isnumeric', 'capitalize', 'rfind', '__getitem__', '__contains__', 'title', '__ge__', 'index', '__repr__', 'ljust', 'islower', '__le__', 'isdecimal', 'expandtabs', '__delattr__', 'find', 'splitlines', 'count', 'upper', '__gt__', '__reduce__', 'isdigit', '__lt__', 'zfill', '__cmp__', '__mul__', '__hash__']
 }}}
