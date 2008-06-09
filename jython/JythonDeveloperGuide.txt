@@ -1,31 +1,27 @@
 This is an introduction to developing Jython, just to get someone started. It doesn't cover the source code in any depth or discuss the design behind Jython. It's purely aimed at getting a development environment set up. It's definitely not complete so feel free to make it better!
 
 
-''' SVN '''
+''' Subversion '''
 
-  * http://subversion.tigris.org/
-  * available on most *nix systems or with cygwin on Windows
-  * GUI clients are available on most platforms
-  * Eclipse users, see JythonDeveloperGuide/EclipseNotes
-  * can browse the source at http://fisheye3.cenqua.com/browse/jython
-  * to obtain the a copy of the ''current development'' source, checkout from trunk:
-    {{{   
-    svn co https://jython.svn.sourceforge.net/svnroot/jython/trunk/jython
-     }}}
+  * Check out a copy of the Jython source with [http://subversion.tigris.org/ Subversion], available on most *nix systems or with Cygwin on Windows.
+  * You can use the command line tool `svn`, or [http://subversion.tigris.org/links.html#clients GUI clients are available] on most platforms.
+  * !NetBeans, Eclipse and other Java IDEs also integrate Subversion support.  Eclipse users should see JythonDeveloperGuide/EclipseNotes.
+  * Browse the source code on the Web at http://fisheye3.cenqua.com/browse/jython.
+  * To obtain the a copy of the ''current development'' source, check out the Jython trunk:
+    {{{ svn co https://jython.svn.sourceforge.net/svnroot/jython/trunk/jython }}}
 
-  * Patches should be posted to the [http://sourceforge.net/tracker/?group_id=12867&atid=312867 jython patch tracker] as explained in the PatchGuidelines.
+  * Attach patches to issues in the [http://bugs.jython.org/ Jython bug tracker].
 
 ''' Ant '''
 
-  * http://ant.apache.org/ A Java-based build tool.
-  * Eclipse users, see [wiki:Self:/EclipseNotes#ANT Eclipse ANT notes]
-  * Download the latest version and install so Ant's `bin` directory is somewhere in your path.
-  * The `build.xml` is the file containing the compiler directives
-  * After getting Ant set up, run `ant` in your Jython checkout directory.  That should produce `dist/jython.jar` if everything is setup correctly. 
-
+  * [http://ant.apache.org/ Ant] is a Java-based tool used to build Jython from source.
+  * Eclipse users, see [wiki:Self:/EclipseNotes#ANT Eclipse Ant notes]
+  * Download the latest version and install it so Ant's `bin` directory is somewhere in your path.
+  * To build Jython, run `ant` in the top-level Jython directory (which contains the Ant file `build.xml`).
+  * The results of the build appear in the `dist` subdirectory.
 
 ''' Tests '''
- As part of building the project, Jython will generate an executable script, `dist/bin/jython`, to make it easy to launch your build of Jython. This works if you're on a Unix-like platform (including Mac OS X and Cygwin).
+The Jython build process generates an executable Bash script, `dist/bin/jython`, to make it easy to launch your build of Jython. It works on Unix-like platforms (including Mac OS X and Cygwin).
 
 If you're using Windows without Cygwin, here's a batch file that runs the built `jython.jar`:
 [[Anchor(sampleBatch)]]
@@ -54,7 +50,7 @@ Now you're ready to run tests...
   * There are a couple different places to find test cases
     * Jython's `dist/Lib/test` (populated by the build process)
     * Jython's `bugtests` subdirectory (included with the development sources)
-  * Run a particular test, or you can run the whole Python test suite with `ant regrtest`.
+  * Run a particular test, or the whole Python test suite with `ant regrtest`.
 
 See TestingJython for some more details.
 
@@ -63,6 +59,7 @@ Note the following describes the current trunk/jython. If you are working from a
 
   * src/org       : top level package for python
   * src/com       : zxJDBC related sources
+  * src/shell     : launcher scripts
   * src/templates : java source generator & related templates, used to update portions of java classes elsewhere in the source tree
   * Demo          : demo sources for the website and such
   * Doc           : the website documentation(see /WebsiteBuilderSetup to build the http://jython.org website)
