@@ -76,10 +76,10 @@ far but ...  I don't know what's going on.
 
 '''Answer'''
 
-While it is true that - conceptually -  a class is an instance of it's metaclass, there is still a big difference
+While it is true that - conceptually -  a class is an instance of its metaclass, there is still a big difference
 between class objects and instance objects (Yes, it's confusing). 
 
-A call to {{{instance.func(a, b)}}} get's translated into {{{instance.__class.__.func(instance, a, b)}}} 
+A call to {{{instance.func(a, b)}}} gets translated into {{{instance.__class.__.func(instance, a, b)}}} 
 -- it's a bound method.
 A call to {{{cls.func(a, b)}}} does '''not''' get translated into {{{cls.__class__.func(cls, a, b)}}}, because it is an '''unbound method'''. It won't get translated into anything and that's why 
 {{{__setattr__()}}} complains, it expects the object whose attribute should get set as its first
