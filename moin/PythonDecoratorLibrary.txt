@@ -41,13 +41,13 @@ def simple_decorator(decorator):
 # Sample Use:
 #
 @simple_decorator
-def mySimpleLoggingDecorator( func ):
-    def YOU_WILL_NEVER_SEE_THIS_NAME( *args, **kwargs ):
+def my_simple_logging_decorator(func):
+    def you_will_never_see_this_name(*args, **kwargs):
         print 'calling %s' % func.__name__
-        return func( *args, **kwargs )
-    return YOU_WILL_NEVER_SEE_THIS_NAME
+        return func(*args, **kwargs)
+    return you_will_never_see_this_name
 
-@mySimpleLoggingDecorator
+@my_simple_logging_decorator
 def double(x):
     "Doubles a number"
     return 2*x
@@ -140,16 +140,16 @@ Yet another property decorator:
 
 {{{
 #!python
-def Property(function):
+def property(function):
     keys = 'fget', 'fset', 'fdel'
     func_locals = {'doc':function.__doc__}
-    def probeFunc(frame, event, arg):
+    def probe_func(frame, event, arg):
         if event == 'return':
             locals = frame.f_locals
-            func_locals.update(dict((k,locals.get(k)) for k in keys))
+            func_locals.update(dict((k, locals.get(k)) for k in keys))
             sys.settrace(None)
-        return probeFunc
-    sys.settrace(probeFunc)
+        return probe_func
+    sys.settrace(probe_func)
     function()
     return property(**func_locals)
 
@@ -158,25 +158,27 @@ def Property(function):
 from math import radians, degrees, pi
 
 class Angle(object):
-    def __init__(self,rad):
+    def __init__(self, rad):
         self._rad = rad
 
-    @Property
+    @property
     def rad():
         '''The angle in radians'''
         def fget(self):
             return self._rad
-        def fset(self,angle):
-            if isinstance(angle,Angle): angle = angle.rad
+        def fset(self, angle):
+            if isinstance(angle, Angle):
+	        angle = angle.rad
             self._rad = float(angle)
 
-    @Property
+    @property
     def deg():
         '''The angle in degrees'''
         def fget(self):
             return degrees(self._rad)
-        def fset(self,angle):
-            if isinstance(angle,Angle): angle = angle.deg
+        def fset(self, angle):
+            if isinstance(angle, Angle):
+	        angle = angle.deg
             self._rad = radians(angle)
 }}}
 
@@ -288,7 +290,7 @@ class curried(object):
 
 @curried
 def add(a, b):
-    return a+b
+    return a + b
 
 add1 = add(1)
 
@@ -335,7 +337,7 @@ def prn(x):
 def mult(x, y):
     return x * y
 
-prn(mult(2,2))
+prn(mult(2, 2))
 
 }}}
 
@@ -377,17 +379,17 @@ class countcalls(object):
 
    def __init__(self, f):
       self.__f = f
-      self.__numCalls = 0
+      self.__numcalls = 0
       countcalls.__instances[f] = self
 
    def __call__(self, *args, **kwargs):
-      self.__numCalls += 1
+      self.__numcalls += 1
       return self.__f(*args, **kwargs)
 
    @staticmethod
    def count(f):
       "Return the number of times the function f was called."
-      return countcalls.__instances[f].__numCalls
+      return countcalls.__instances[f].__numcalls
 
    @staticmethod
    def counts():
@@ -405,14 +407,14 @@ def deprecated(func):
     """This is a decorator which can be used to mark functions
     as deprecated. It will result in a warning being emitted
     when the function is used."""
-    def newFunc(*args, **kwargs):
+    def new_func(*args, **kwargs):
         warnings.warn("Call to deprecated function %s." % func.__name__,
                       category=DeprecationWarning)
         return func(*args, **kwargs)
-    newFunc.__name__ = func.__name__
-    newFunc.__doc__ = func.__doc__
-    newFunc.__dict__.update(func.__dict__)
-    return newFunc
+    new_func.__name__ = func.__name__
+    new_func.__doc__ = func.__doc__
+    new_func.__dict__.update(func.__dict__)
+    return new_func
 
 # === Examples of use ===
 
@@ -436,9 +438,9 @@ def unchanged(func):
 
 def disabled(func):
     "This decorator disables the provided function, and does nothing"
-    def emptyFunc(*args,**kargs):
+    def empty_func(*args,**kargs):
         pass
-    return emptyFunc
+    return empty_func
 
 # define this as equivalent to unchanged, for nice symmetry with disabled
 enabled = unchanged
@@ -447,11 +449,11 @@ enabled = unchanged
 # Sample use
 #
 
-globalEnableFlag = int(True)
+global_enable_flag = True
 
-state = (disabled, enabled)[globalEnableFlag]
+state = enabled if global_enable_flag else disabled
 @state
-def specialFunctionFoo():
+def special_function_foo():
     print "function was enabled"
 }}}
 
@@ -460,17 +462,18 @@ def specialFunctionFoo():
 
 {{{
 #!python
-def dumpArgs(func):
+def dump_args(func):
     "This decorator dumps out the arguments passed to a function before calling it"
     argnames = func.func_code.co_varnames[:func.func_code.co_argcount]
     fname = func.func_name
-    def echoFunc(*args,**kwargs):
-        print fname, ":", ', '.join('%s=%r' % entry
-                                    for entry in zip(argnames,args) + kwargs.items())
+    def echo_func(*args,**kwargs):
+        print fname, ":", ', '.join(
+	    '%s=%r' % entry
+            for entry in zip(argnames,args) + kwargs.items())
         return func(*args, **kwargs)
-    return echoFunc
+    return echo_func
 
-@dumpArgs
+@dump_args
 def f1(a,b,c):
     print a + b + c
 
@@ -535,7 +538,7 @@ distribution.
   4
 """
 
-__all__ = [ 'precondition', 'postcondition', 'conditions' ]
+__all__ = ['precondition', 'postcondition', 'conditions']
 
 DEFAULT_ON = True
 
@@ -557,8 +560,8 @@ class conditions(object):
 
     def __call__(self, function):
         # combine recursive wrappers (@precondition + @postcondition == @conditions)
-        pres  = set( (self.__precondition,) )
-        posts = set( (self.__postcondition,) )
+        pres  = set((self.__precondition,))
+        posts = set((self.__postcondition,))
 
         # unwrap function, collect distinct pre-/post conditions
         while type(function) is FunctionWrapper:
@@ -654,26 +657,26 @@ def synchronized(lock):
     """ Synchronization decorator. """
 
     def wrap(f):
-        def newFunction(*args, **kw):
+        def new_function(*args, **kw):
             lock.acquire()
             try:
                 return f(*args, **kw)
             finally:
                 lock.release()
-        return newFunction
+        return new_function
     return wrap
 
 # Example usage:
 
 from threading import Lock
-myLock = Lock()
+my_lock = Lock()
 
-@synchronized(myLock)
+@synchronized(my_lock)
 def critical1(*args):
     # Interesting stuff goes here.
     pass
 
-@synchronized(myLock)
+@synchronized(my_lock)
 def critical2(*args):
     # Other interesting stuff goes here.
     pass
@@ -735,7 +738,7 @@ def accepts(*types, **kw):
              Must specify type for each parameter.
     kw    -- Optional specification of 'debug' level (this is the only valid
              keyword argument, no other should be given).
-             debug=( 0 | 1 | 2 )
+             debug = ( 0 | 1 | 2 )
 
     """
     if not kw:
@@ -775,7 +778,7 @@ def returns(ret_type, **kw):
                 Must specify type for each parameter.
     kw       -- Optional specification of 'debug' level (this is the only valid
                 keyword argument, no other should be given).
-                debug=( 0 | 1 | 2 )
+                debug=(0 | 1 | 2)
 
     """
     try:
@@ -826,29 +829,30 @@ Handles HTML boilerplate at top and bottom of pages returned from CGI methods.  
 {{{
 #!python
 class CGImethod(object):
-    def __init__(self,title):
+    def __init__(self, title):
         self.title = title
-    def __call__(self,fn):
-        def wrappedFn(*args):
+    def __call__(self, fn):
+        def wrapped_fn(*args):
             print "Content-Type: text/html\n\n"
             print "<HTML>"
             print "<HEAD><TITLE>%s</TITLE></HEAD>" % self.title
             print "<BODY>"
             try:
                 fn(*args)
-            except Exception,e:
+            except Exception, e:
                 print
                 print e
             print
             print "</BODY></HTML>"
 
-        return wrappedFn
+        return wrapped_fn
 
 @CGImethod("Hello with Decorator")
-def sayHello():
+def say_hello():
     print '<h1>Hello from CGI-Land</h1>'
 
 }}}
+
 == State Machine Implementaion ==
 
 This example uses Decorators to facilitate the implementation of a
@@ -857,165 +861,165 @@ are the event handlers for the class.  In this example, actions are
 associated with the transitions, but it is possible with a little
 consideration to associate actions with states instead. 
 
-The example defines a class, myMachine that is a state machine. 
+The example defines a class, MyMachine that is a state machine. 
 Multiple instances of the class may be instantiated with each maintaining its own state. A class also may have multiple states.
-Here I've used Gstate and Tstate.  
+Here I've used gstate and tstate.
 
-The code in the imported stateDefn file gets a bit hairy, but
+The code in the imported statedefn file gets a bit hairy, but
 you may not need to delve into it for your application.
 
 {{{
 # State Machine example Program
 
-from StateDefn import *
+from statedefn import *
 
 class MyMachine(object):
 
     # Create Statedefn object for each state you need to keep track of.
     # the name passed to the constructor becomes a StateVar member of the current class.
-    # i.e. if myObj is a MyMachine object, myObj.gstate maintains the current Gstate
-    Gstate = StateTable("gstate")
-    Tstate = StateTable("turtle")
+    # i.e. if my_obj is a MyMachine object, my_obj.gstate maintains the current gstate
+    gstate = StateTable("gstate")
+    tstate = StateTable("turtle")
 
     def __init__(self, name):
         # must call init method of class's StateTable object. to initialize state variable
-        self.Gstate.initialize(self)
-        self.Tstate.initialize(self)
+        self.gstate.initialize(self)
+        self.tstate.initialize(self)
         self.mname = name
-        self.Acount = 0
-        self.Bcount = 0
-        self.Ccount = 0
+        self.a_count = 0
+        self.b_count = 0
+        self.c_count = 0
 
-    # Decorate the Event Handler virtual functions -note Gstate parameter
-    @EventHandler(Gstate)
-    def EventA( self ): pass
-    @EventHandler(Gstate)
-    def EventB( self ): pass
-    @EventHandler(Gstate)
-    def EventC( self, val ): pass
+    # Decorate the Event Handler virtual functions -note gstate parameter
+    @event_handler(gstate)
+    def event_a(self): pass
+    @event_handler(gstate)
+    def event_b(self): pass
+    @event_handler(gstate)
+    def event_c(self, val): pass
 
-    @EventHandler(Tstate)
-    def Toggle(self): pass
+    @event_handler(tstate)
+    def toggle(self): pass
 
 
     # define methods to handle events.
-    def _eventAHdlr1(self):
+    def _event_a_hdlr1(self):
         print "State 1, event A"
-        self.Acount += 1
-    def _eventBHdlr1(self):
+        self.a_count += 1
+    def _event_b_hdlr1(self):
         print "State 1, event B"
-        self.Bcount += 1
-    def _eventCHdlr1(self, val):
+        self.b_count += 1
+    def _event_c_hdlr1(self, val):
         print "State 1, event C"
-        self.Ccount += 3*val
+        self.c_count += 3*val
 
-    def _eventAHdlr2(self):
+    def _event_a_hdlr2(self):
         print "State 2, event A"
-        self.Acount += 10
-        # here we brute force the Tstate to on, leave & enter functions called if state changes.
-        # turtle is object's state variable for Tstate, comes from constructor argument
-        self.turtle.SetState(self, self._t_on )
-    def _eventBHdlr2(self):
+        self.a_count += 10
+        # here we brute force the tstate to on, leave & enter functions called if state changes.
+        # turtle is object's state variable for tstate, comes from constructor argument
+        self.turtle.set_state(self, self._t_on)
+    def _event_b_hdlr2(self):
         print "State 2, event B"
-        self.Bcount += 10
-    def _eventCHdlr2(self, val):
+        self.b_count += 10
+    def _event_c_hdlr2(self, val):
         print "State 2, event C"
-        self.Ccount += 2*val
+        self.c_count += 2*val
 
-    def _eventAHdlr3(self):
-        self.Acount += 100
+    def _event_a_hdlr3(self):
+        self.a_count += 100
         print "State 3, event A"
-    def _eventBHdlr3(self):
+    def _event_b_hdlr3(self):
         print "State 3, event B"
-        self.Bcount += 100
+        self.b_count += 100
         # we decide here we want to go to state 2, overrrides spec in state table below.
-        # transition to NextState is made after the method exits.
-        self.gstate.NextState = self._state2 
-    def _eventCHdlr3(self, val):
+        # transition to next_state is made after the method exits.
+        self.gstate.next_state = self._state2 
+    def _event_c_hdlr3(self, val):
         print "State 3, event C"
-        self.Ccount += 5*val
+        self.c_count += 5*val
     
     # Associate the handlers with a state. The first argument is a list of methods.
-    # One method for each EventHandler decorated function of Gstate. Order of methods
+    # One method for each event_handler decorated function of gstate. Order of methods
     # in the list correspond to order in which the Event Handlers were declared.
     # Second arg is the name of the state.  Third argument is to be come a list of the
     # next states. 
     # The first state created becomes the initial state.
-    _state1 = Gstate.State("One",  (_eventAHdlr1, _eventBHdlr1, _eventCHdlr1 ), 
-                                      ("Two", "Three", None ))
-    _state2 = Gstate.State("Two",  (_eventAHdlr2, _eventBHdlr2, _eventCHdlr2 ),
+    _state1 = gstate.state("One",  (_event_a_hdlr1, _event_b_hdlr1, _event_c_hdlr1), 
+                                      ("Two", "Three", None))
+    _state2 = gstate.state("Two",  (_event_a_hdlr2, _event_b_hdlr2, _event_c_hdlr2),
                                      ("Three",        None,          "One"))
-    _state3 = Gstate.State("Three",(_eventAHdlr3, _eventBHdlr3, _eventCHdlr3 ),
+    _state3 = gstate.state("Three",(_event_a_hdlr3, _event_b_hdlr3, _event_c_hdlr3),
                                  (None,         "One",         "Two"))
 
 
-    # Declare a function that will be called when entering a new Gstate.
-    # Can also declare a leave function using @OnLeaveFunction(Gstate)
-    @OnEnterFunction(Gstate)
-    def _enterGstate(self):
-        print "entering state ", self.gstate.Name() , "of ", self.mname
-    @OnLeaveFunction(Tstate)
-    def _leaveTstate(self):
-        print "leaving state ", self.turtle.Name() , "of ", self.mname
+    # Declare a function that will be called when entering a new gstate.
+    # Can also declare a leave function using @on_leave_function(gstate)
+    @on_enter_function(gstate)
+    def _enter_gstate(self):
+        print "entering state ", self.gstate.name() , "of ", self.mname
+    @on_leave_function(tstate)
+    def _leave_tstate(self):
+        print "leaving state ", self.turtle.name() , "of ", self.mname
 
 
-    def _toggleOn(self):
+    def _toggle_on(self):
         print "Toggle On"
 
-    def _toggleOff(self):
+    def _toggle_off(self):
         print "Toggle Off"
 
-    _t_off = Tstate.State( "Off", [_toggleOn],
-                         ["On"     ])
-    _t_on =  Tstate.State( "On",  [_toggleOff],
+    _t_off = tstate.state("Off", [_toggle_on],
+                         ["On"])
+    _t_on =  tstate.state("On", [_toggle_off],
                           ["Off"])
 
 
 def main():
-    bigMachine = MyMachine("big")
-    lilMachine = MyMachine("lil")
+    big_machine = MyMachine("big")
+    lil_machine = MyMachine("lil")
 
-    bigMachine.EventA()
-    lilMachine.EventA()
-    bigMachine.EventA()
-    lilMachine.EventA()
-    bigMachine.EventB()
-    lilMachine.EventB()
-    bigMachine.EventC(4)
-    lilMachine.EventC(2)
-    bigMachine.EventC(1)
-    lilMachine.EventC(3)
-    bigMachine.EventB()
-    lilMachine.EventB()
-    bigMachine.EventA()
-    lilMachine.EventA()
-    bigMachine.EventA()
+    big_machine.event_a()
+    lil_machine.event_a()
+    big_machine.event_a()
+    lil_machine.event_a()
+    big_machine.event_b()
+    lil_machine.event_b()
+    big_machine.event_c(4)
+    lil_machine.event_c(2)
+    big_machine.event_c(1)
+    lil_machine.event_c(3)
+    big_machine.event_b()
+    lil_machine.event_b()
+    big_machine.event_a()
+    lil_machine.event_a()
+    big_machine.event_a()
 
-    bigMachine.Toggle()
-    bigMachine.Toggle()
-    bigMachine.Toggle()
+    big_machine.toggle()
+    big_machine.toggle()
+    big_machine.toggle()
 
-    lilMachine.EventA()
-    bigMachine.EventB()
-    lilMachine.EventB()
-    bigMachine.EventC(3)
-    bigMachine.EventA()
-    lilMachine.EventC(2)
-    lilMachine.EventA()
-    bigMachine.EventB()
-    lilMachine.EventB()
-    bigMachine.EventC(7)
-    lilMachine.EventC(1)
+    lil_machine.event_a()
+    big_machine.event_b()
+    lil_machine.event_b()
+    big_machine.event_c(3)
+    big_machine.event_a()
+    lil_machine.event_c(2)
+    lil_machine.event_a()
+    big_machine.event_b()
+    lil_machine.event_b()
+    big_machine.event_c(7)
+    lil_machine.event_c(1)
 
-    print "Event A count ", bigMachine.Acount
-    print "Event B count ", bigMachine.Bcount
-    print "Event C count ", bigMachine.Ccount
-    print "LilMachine C count ", lilMachine.Ccount
+    print "Event A count ", big_machine.a_count
+    print "Event B count ", big_machine.b_count
+    print "Event C count ", big_machine.c_count
+    print "LilMachine C count ", lil_machine.c_count
 
 main()
 
 }}}
-And now the imported StateDefn.py
+And now the imported statedefn.py
 {{{
 #
 # Support for State Machines.  ref - Design Patterns by GoF
@@ -1027,85 +1031,85 @@ And now the imported StateDefn.py
 #
 import exceptions
 
-class StateMachineError( exceptions.Exception):
+class StateMachineError(exceptions.Exception):
     def __init__(self, args = None):
        self.args = args
 
 class StateVar(object):
-    def __init__(self, initialState):
-        self._currentState = initialState
-        self.NextState = initialState            # publicly settable in an event handling routine.
+    def __init__(self, initial_state):
+        self._current_state = initial_state
+        self.next_state = initial_state            # publicly settable in an event handling routine.
     
-    def SetState( self, owner, newState):
+    def set_state(self, owner, new_state):
         '''
-        Forces a state change to newState
+        Forces a state change to new_state
         '''
-        self.NextState = newState
-        self.__toNextState( owner )
+        self.next_state = new_state
+        self.__to_next_state(owner)
 
-    def __toNextState(self, owner):
+    def __to_next_state(self, owner):
         '''
         The low-level state change function which calls leave state & enter state functions as 
         needed.
 
         LeaveState and EnterState functions are called as needed when state transitions.
         '''
-        if not (self.NextState is self._currentState):
-            if ( hasattr( self._currentState, "leave")):
-                leave = self._currentState.leave
+        if not (self.next_state is self._current_state):
+            if (hasattr(self._current_state, "leave")):
+                leave = self._current_state.leave
                 leave(owner)
-            elif (hasattr( self, "leave")):
+            elif (hasattr(self, "leave")):
                  self.leave(owner)
-            self._currentState =  self.NextState
-            if ( hasattr( self._currentState, "enter")):
-                enter = self._currentState.enter
+            self._current_state =  self.next_state
+            if (hasattr(self._current_state, "enter")):
+                enter = self._current_state.enter
                 enter(owner)
-            elif (hasattr( self, "enter")):
+            elif (hasattr(self, "enter")):
                 self.enter(owner)
 
-    def __fctn( self, funcName ):
+    def __fctn(self, func_name):
         ''' 
         Returns the owning class's method for handling an event for the current state.
         This method not for public consumption.
         '''
-        vf = self._currentState.GetFE(funcName)
+        vf = self._current_state.get_fe(func_name)
         return vf
 
-    def Name(self):
+    def name(self):
         '''
         Returns the current state name.
         '''
-        return self._currentState.name
+        return self._current_state.name
 
 class STState(object):
-    def __init__(self, stateName):
-        self.name = stateName
-        self.fctnDict = {}
+    def __init__(self, state_name):
+        self.name = state_name
+        self.fctn_dict = {}
 
-    def SetEvents( self, eventList, eventHdlrList, nextStates ):
-        dictionary = self.fctnDict
-        if not nextStates:
-            def setRow( event, method ):
-                dictionary[ event ] = [method, None]
-            map( setRow, eventList, eventHdlrList)
+    def set_events(self, event_list, event_hdlr_list, next_states):
+        dictionary = self.fctn_dict
+        if not next_states:
+            def set_row(event, method):
+                dictionary[event] = [method, None]
+            map(set_row, event_list, event_hdlr_list)
         else:
-            def setRow2( event, method, nextState ):
-                dictionary[ event ] = [method, nextState]
-            map( setRow2, eventList, eventHdlrList, nextStates)
-        self.fctnDict = dictionary
+            def set_row2(event, method, next_state):
+                dictionary[event] = [method, next_state]
+            map(set_row2, event_list, event_hdlr_list, next_states)
+        self.fctn_dict = dictionary
 
-    def GetFE( self, fctnName):
-        return self.fctnDict[fctnName]
+    def get_fe(self, fctn_name):
+        return self.fctn_dict[fctn_name]
 
-    def MapNextStates(self, stateDict):
+    def map_next_states(self, state_dict):
         ''' Changes second dict value from name of state to actual state '''
-        for de in self.fctnDict.values():
-            nextStateName = de[1]
-            if nextStateName:
-                if stateDict.has_key( nextStateName ):
-                    de[1] = stateDict[nextStateName]
+        for de in self.fctn_dict.values():
+            next_state_name = de[1]
+            if next_state_name:
+                if state_dict.has_key(next_state_name):
+                    de[1] = state_dict[next_state_name]
                 else:
-                    raise StateMachineError( 'Invalid Name for next state: %s' % nextStateName )
+                    raise StateMachineError('Invalid Name for next state: %s' % next_state_name)
 
 
 class StateTable(object):
@@ -1113,12 +1117,12 @@ class StateTable(object):
     Magical class to define a state machine, with the help of several decorator functions
     which follow.
     '''
-    def __init__( self, declname):
-        self.machineVar=declname
-        self._initialState = None
-        self._stateList = {}
-        self._eventList = []
-        self.needInitialize = 1
+    def __init__(self, declname):
+        self.machine_var = declname
+        self._initial_state = None
+        self._state_list = {}
+        self._event_list = []
+        self.need_initialize = 1
     
     def initialize(self, parent):
         '''
@@ -1126,90 +1130,90 @@ class StateTable(object):
         Must call this method in the parent' object's __init__ method.  You can have
         Multiple state machines within a parent class. Call this method for each
         '''
-        statevar= StateVar( self._initialState)
-        parent.__dict__[self.machineVar] =statevar
-        if (hasattr( self, "enter")):
+        statevar= StateVar(self._initial_state)
+        parent.__dict__[self.machine_var] =statevar
+        if (hasattr(self, "enter")):
             statevar.enter = self.enter
-        if (hasattr( self, "leave")):
+        if (hasattr(self, "leave")):
             statevar.leave = self.leave
         #Magic happens here - in the 'next state' table, translate names into state objects.
-        if  self.needInitialize:
-            for xstate in list(self._stateList.values()):
-                xstate.MapNextStates( self._stateList )
-            self.needInitialize = 0
+        if  self.need_initialize:
+            for xstate in list(self._state_list.values()):
+                xstate.map_next_states(self._state_list)
+            self.need_initialize = 0
 
-    def DefState( self, eventHdlrList, name ) :
+    def def_state(self, event_hdlr_list, name):
         '''
         This is used to define a state. the event handler list is a list of functions that
         are called for corresponding events. name is the name of the state.
         '''
-        stateTableRow = STState(name)
-        if ( len(eventHdlrList) != len(self._eventList)):
+        state_table_row = STState(name)
+        if (len(event_hdlr_list) != len(self._event_list)):
             raise StateMachineError('Mismatch between number of event handlers and the methods specified for the state.')
 
-        stateTableRow.SetEvents( self._eventList, eventHdlrList, None )
+        state_table_row.set_events(self._event_list, event_hdlr_list, None)
         
-        if self._initialState is None:
-            self._initialState = stateTableRow
-        self._stateList[name] = stateTableRow
-        return stateTableRow
+        if self._initial_state is None:
+            self._initial_state = state_table_row
+        self._state_list[name] = state_table_row
+        return state_table_row
 
-    def State( self, name, eventHdlrList, nextStates ) :
-        stateTableRow = STState(name)
-        if ( len(eventHdlrList) != len(self._eventList)):
+    def state(self, name, event_hdlr_list, next_states):
+        state_table_row = STState(name)
+        if (len(event_hdlr_list) != len(self._event_list)):
             raise StateMachineError('Mismatch between number of event handlers and the methods specified for the state.')
-        if ( (not nextStates is None) and len(nextStates) != len(self._eventList)):
+        if ((not next_states is None) and len(next_states) != len(self._event_list)):
             raise StateMachineError('Mismatch between number of event handlers and the next states specified for the state.')
         
-        stateTableRow.SetEvents( self._eventList, eventHdlrList, nextStates )
+        state_table_row.set_events(self._event_list, event_hdlr_list, next_states)
         
-        if self._initialState is None:
-            self._initialState = stateTableRow
-        self._stateList[name] = stateTableRow
-        return stateTableRow
+        if self._initial_state is None:
+            self._initial_state = state_table_row
+        self._state_list[name] = state_table_row
+        return state_table_row
 
-    def __AddEvHdlr( self, funcName ):
+    def __add_ev_hdlr(self, func_name):
         '''
         Informs the class of an event handler to be added. We just need the name here. The
         function name will later be associated with one of the functions in a list when a state is defined.
         '''
-        self._eventList.append( funcName )
+        self._event_list.append(func_name)
 
 # Decorator functions ... 
-def EventHandler( stateClass ):
+def event_handler(state_class):
     '''
     Declare a method that handles a type of event.
     '''
-    def Wrapper( func ):
-        stateClass._StateTable__AddEvHdlr( func.__name__ )
-        def ObjCall( self, *args, **keywords ):
-            stateVar = self.__dict__[ stateClass.machineVar ]
-            funky, nextState = stateVar._StateVar__fctn( func.__name__ )
-            if not nextState is None:
-                stateVar.NextState = nextState
-            rv = funky(self, *args, **keywords )
-            stateVar._StateVar__toNextState( self)
+    def wrapper(func):
+        state_class._StateTable__add_ev_hdlr(func.__name__)
+        def obj_call(self, *args, **keywords):
+            state_var = self.__dict__[state_class.machine_var]
+            funky, next_state = state_var._StateVar__fctn(func.__name__)
+            if not next_state is None:
+                state_var.next_state = next_state
+            rv = funky(self, *args, **keywords)
+            state_var._StateVar__to_next_state(self)
             return rv
-        return ObjCall
-    return Wrapper
+        return obj_call
+    return wrapper
 
-def OnEnterFunction( stateClass ):
+def on_enter_function(state_class):
     '''
     Declare that this method should be called whenever a new state is entered.
     '''
-    def Wrapper(func):
-        stateClass.enter = func
+    def wrapper(func):
+        state_class.enter = func
         return func
-    return Wrapper
+    return wrapper
 
-def OnLeaveFunction( stateClass ):
+def on_leave_function(state_class):
     '''
     Declares that this method should be called whenever leaving a state.
     '''
-    def Wrapper(func):
-        stateClass.leave = func
+    def wrapper(func):
+        state_class.leave = func
         return func
-    return Wrapper
+    return wrapper
 
 }}}
 
@@ -1322,7 +1326,7 @@ class DecoTraceWithArgs(object):
                 ret=f(instance, *fargs, **kw)
             else:
                 # just send in the give args and kw
-                ret=f( *(fargs + self.dec_args), **kw)
+                ret=f(*(fargs + self.dec_args), **kw)
 
             self._aftercall(ret)
             return ret
@@ -1364,7 +1368,7 @@ class Bruce(object):
         return 'Bruce'
 
     @DecoTraceWithArgs(label="Trace a class", standardline="How are yer Bruce?", stream=stdout)
-    def Talk(self, *fargs, **kwargs):
+    def talk(self, *fargs, **kwargs):
         'Simple function using decorator with arguments'
         
         print '%s:' % self,
@@ -1377,15 +1381,15 @@ ThirdBruce = Bruce('Third Bruce')
 
 SecondBruce()
 FirstBruce("First Bruce: Oh, Hello Bruce!")
-ThirdBruce.Talk()
+ThirdBruce.talk()
 FirstBruce("First Bruce: Bit crook, Bruce.")
 SecondBruce("Where's Bruce?")
 FirstBruce("First Bruce: He's not here, Bruce")
-ThirdBruce.Talk("Blimey, s'hot in here, Bruce.")
+ThirdBruce.talk("Blimey, s'hot in here, Bruce.")
 FirstBruce("First Bruce: S'hot enough to boil a monkey's bum!")
 SecondBruce("That's a strange expression, Bruce.")
 FirstBruce("First Bruce: Well Bruce, I heard the Prime Minister use it. S'hot enough to boil a monkey's bum in 'ere, your Majesty,' he said and she smiled quietly to herself.")
-ThirdBruce.Talk("She's a good Sheila, Bruce and not at all stuck up.")
+ThirdBruce.talk("She's a good Sheila, Bruce and not at all stuck up.")
 }}}
 
 == Unimplemented function replacement ==
