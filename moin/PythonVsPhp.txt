@@ -42,6 +42,7 @@ Both PHP and Python:
     * a general purpose programming language (not just for the web)
       * Retort: ''not true PHP has a CLI SAPI, and is embeddable''
     * indentation is used to mark out block structure rather than curly braces
+      * Retort: ''PHP curly braces make it work with HTML more easy''
     * namespaces and modules
       * Retort: ''PHP 5.3 introduces [http://ilia.ws/archives/187-Introduction-to-PHP-5.3-Slides.html namespaces]''
         * Counter-retort:  ''PHP 5.3 isn't out''.
@@ -52,13 +53,16 @@ Both PHP and Python:
     * true object orientation and 'first class' classes and functions
       * Retort: ''OO has been completely revamped in PHP 5''
         * Counter-retort: ''But it's still painfully, obviously a hack''
+          * Retort: ''PHP 5 support true PPP (private, public, protected) that Python does not. In PHP, developer does not need to assign self as the first parameter in a method because $this is explicitly recognized.''
     * classes are used extensively in the standard library
+      * Retort: ''PHP 5 has SPL which is fully class-based''
     * a notion of private attributes
       * Retort: ''PHP 5 supports private, protected and public for both properties and methods''
     * multiple inheritance
+      * Retort: ''PHP supports Trail that is more flexible and less painful than multiple inheritance. I don't think multiple inheritance is good thing. Java avoids that feature.''
     * object-oriented file handling
     * method chaining
-      * Retort: ''Method Chaining is possible in PHP5 once an object is instantiated''
+      * Retort: ''Method Chaining is possible in PHP5 once an object is instantiated. In PHP it is called fluent interface''
     * excellent introspection
       * Retort: ''PHP 5 Reflection''
         * Counter-retort: ''We said '''excellent''' introspection''
@@ -68,34 +72,42 @@ Both PHP and Python:
       * Retort: ''Array members can be unset()''
     * consistent case sensitivity (PHP functions are case insensitive, but variables are case sensitive)
     * a simple array slicing syntax
+      * Retort: ''array_slice() function is PHP is not simple enough, huh?''
     * lambdas and other builtin functional programming constructs
       * Retort: ''php.net/create_function''
         * Counter-retort: create_function() is a crock; what it produces is not the True Lambda
+      * Retort: ''PHP supports true closure feature in PHP5.3. This feature has been added recently and it works.''
     * iterators
       * Retort: ''in PHP 5''
     * structured exception handling
       * Retort: ''in PHP 5''
         * Counter-retort: ''where are PHP 5's equivalent of else and finally?''
     * operator overloading
+      * Retort: ''operator overloading support is considered harmful and is a sign of a bad design language. In PHP you can use runkit extension to emulate the same feature''
     * SWIG integration
     * threading
     * an excellent profiler
+      * Retort: XDebug, a debugging and profiling extension, that supports both PHP4 and PHP5 is extremely popular
     * several debuggers and IDEs
-      * Retort: ''PHP had commercial tools for a long time, Eclipse PDT is Open-Source''
+      * Retort: ''PHP had commercial tools for a long time, Eclipse PDT is Open-Source. Netbeans PHP is open source too''
     * lots of high-level data types (lists, tuples, dicts, mx.DateTimes, NumPy arrays, etc.)
+      * Retort: ''PHP had SPL Types which is included in PHP5 as a standard library''
     * differentiation between arrays (lists) and associative arrays (dictionaries).
+      * Retort: ''PHP array is more flexible. In case developer want a true array, just use FixedArray in PHP SPL''
     * dates that aren't limited to UNIX timestamps (<1970, >2038)
       * Retort: ''From PHP 5.1.0 the [http://www.php.net/DateTime DateTime] library is bundled with PHP and removes the above limitations''
     * cached byte-code compilation
-      * Retort: ''available in PHP for either $980 from Zend or for free from pecl.php.net/apc''
+      * Retort: ''available in PHP for either $980 from Zend or for free from pecl.php.net/apc. Among others are eAccelarator, XCache, which are both open source''
     * a standardized database API
       * Retort: ''pecl.php.net/PDO -- PHP 5.1''
     * support for all major GUI frameworks
+      * Retort: ''PHP supports GTK and QT''
     * strong internationalization and UNICODE support
-      * Retort: ''[http://wiki.pooteeweet.org/PhP60 PHP 6] will include Unicode support''
+      * Retort: ''[http://wiki.pooteeweet.org/PhP60 PHP 6] will include Unicode support. This feature is available in PHP5.2 and PHP5.3 via intl extension which can be found at pecl.php.net''
     * maturity, stability and upward-compatibility
       * Retort: ''PHP is stable, mature and up/backward-compatible''
         * Counter-retort: ''in general PHP applications must be ported between PHP 4, PHP 5 and future PHP 6 with Unicode''
+          * Retort: ''No, PHP4 can not seamlessly in PHP5 runtime engine (99%). As for PHP6, the same. In Python, if you want to break our application, run it in Python 3.0''
         * Counter-retort: ''As for maturity... "Age is not an accomplishment"''
     * tends to lead to much more scalable applications -- importing modules is safer than textually including code as in PHP: global variables are not used to exchange information.
 
@@ -125,6 +137,7 @@ The vast majority of Python Web applications are run in a separate process. This
 == Security ==
 
 Here's some interesting notes on security in PHP: http://www.securereality.com.au/studyinscarlet.txt
+  * Retort: ''This note seems to be made a century ago. Lots of things has changed and that note does not make sense anymore''
 
 == Community Support ==
 
