@@ -1,35 +1,37 @@
+#format rst
+
 To Fix
 ======
 
-test_code - no co_names, not certainly supported by the compiler, perhaps not likely to be (see http://docs.python.org/lib/bytecodes.html)
-*test_datetime - rounding, strptime missing a function (looks like new functionality in 2.5)
-test_distuils - dependence on emitting .pyc, also case of test_home_installation_*
-test_email - codecs.charmap_build, other codec issue
-test_float - __getformat__
-test_functools - partial is not a type (yet)
-test_generator - not rejecting incorrect syntax wrt yield; but others need to be resolved outside of parser (maybe eval order?); fibgen is causing parse issues; tracebacks have extra blank lines apparently
-test_genexps - need to test iterability of an object like int; similar syntax issues as test_generator
-test_gettext - codecs.charmap_build
-test_index - no support for __index__ yet
-test_inspect - getsource (no surprise with this type of issue)
-test_mailbox - TestMaildir.test_clean fails due to os.utime not setting atime
+* test_code - no co_names, not certainly supported by the compiler, perhaps not likely to be (see http://docs.python.org/lib/bytecodes.html)
+* test_datetime - rounding, strptime missing a function (looks like new functionality in 2.5)
+* test_distuils - dependence on emitting .pyc, also case of test_home_installation_*
+* test_email - codecs.charmap_build, other codec issue
+* test_float - __getformat__
+* test_functools - partial is not a type (yet)
+* test_generator - not rejecting incorrect syntax wrt yield; but others need to be resolved outside of parser (maybe eval order?); fibgen is causing parse issues; tracebacks have extra blank lines apparently
+* test_genexps - need to test iterability of an object like int; similar syntax issues as test_generator
+* test_gettext - codecs.charmap_build
+* test_index - no support for __index__ yet
+* test_inspect - getsource (no surprise with this type of issue)
+* test_mailbox - TestMaildir.test_clean fails due to os.utime not setting atime
 
 Flaky/arch?
 ===========
 
-test_scope - sometimes fails due to GC
+* test_scope - sometimes fails due to GC
 
 Parser
 ======
 
-test_compile - over acceptance of incorrect syntax; need to raise problems with unicode being declared to have an encoding!
-test_contextlib - likely parser eval order
-test_decorators - eval order
-test_doctest - lineno is incorrect, parser prob
-test_genexp, test_generator - see above
-test_java_integration - ReservedNamesTest (in/exec), also there's class
-test_jy_compile - not rejecting syntax, is there an issue with exec code in a_dict?
+* test_compile - over acceptance of incorrect syntax; need to raise problems with unicode being declared to have an encoding!
+* test_contextlib - likely parser eval order
+* test_decorators - eval order
+* test_doctest - lineno is incorrect, parser prob
+* test_genexp, test_generator - see above
+* test_java_integration - ReservedNamesTest (in/exec), also there's class
+* test_jy_compile - not rejecting syntax, is there an issue with exec code in a_dict?
 
 Compiler
 ========
-test_univnewlines - SyntaxError (due to newline issues?) and wrong line numbers in test_execfile
+* test_univnewlines - SyntaxError (due to newline issues?) and wrong line numbers in test_execfile
