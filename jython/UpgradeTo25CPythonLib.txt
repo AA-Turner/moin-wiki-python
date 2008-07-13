@@ -3,6 +3,7 @@
 To Fix
 ======
 
+* test_array - many failures, a lot due to arg validation?, but probably others
 * test_code - no co_names, not certainly supported by the compiler, perhaps not likely to be (see http://docs.python.org/lib/bytecodes.html)
 * test_datetime - rounding, strptime missing a function (looks like new functionality in 2.5)
 * test_distuils - dependence on emitting .pyc, also case of test_home_installation_*
@@ -15,11 +16,17 @@ To Fix
 * test_index - no support for __index__ yet
 * test_inspect - getsource (no surprise with this type of issue)
 * test_mailbox - TestMaildir.test_clean fails due to os.utime not setting atime
+* test_site - del sys.setdefaultencoding does nothing
+* test_str, test_string, test_userstring, test_unicode - struct type 'P' not supported
+* test_threadedtempfile - import lock is probably in the wrong place
+* test_tuple - fails sometimes due to OutOfMemoryError
+* test_unicode - codecs.charmap_build, rsplit, lack of idna encoding (which needs unicodedata)
 
 Flaky/arch?
 ===========
 
 * test_scope - sometimes fails due to GC
+* test_cmd_line - CmdLineTest.test_q fails only on buildbot [http://bob.underboss.org:8080/job/jython-asm/27/testReport/test.test_cmd_line/CmdLineTest/test_q/]
 
 Parser
 ======
