@@ -19,7 +19,7 @@ import pprint;pprint.pprint(zip(('Byte', 'KByte', 'MByte', 'GByte', 'TByte'), (1
 }}}
  * And what's the largest number that can be represented by 8 Byte?
 {{{
-print '\n'.join(["%i Byte = %i Bit = largest number: %i" %(j, j*8, 256**j) for j in [2**i for i in xrange(8)]])
+print '\n'.join("%i Byte = %i Bit = largest number: %i" % (j, j*8, 256**j-1) for j in (1 << i for i in xrange(8)))
 }}}
 Cute, isn't it?
 
