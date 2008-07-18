@@ -1,14 +1,13 @@
 This is an introduction to developing Jython, just to get someone started. It doesn't cover the source code in any depth or discuss the design behind Jython. It's purely aimed at getting a development environment set up. It's definitely not complete so feel free to make it better!
 
-
 == Subversion ==
 
   * Check out a copy of the Jython source with [http://subversion.tigris.org/ Subversion], available on most *nix systems or with Cygwin on Windows.
   * You can use the command line tool `svn`, or [http://subversion.tigris.org/links.html#clients GUI clients are available] on most platforms.
   * !NetBeans, Eclipse and other Java IDEs also integrate Subversion support.  Eclipse users should see JythonDeveloperGuide/EclipseNotes.
   * Browse the source code on the Web at http://fisheye3.cenqua.com/browse/jython.
-  * To obtain the a copy of the ''current development'' source, check out the Jython trunk:
-    {{{ svn co https://jython.svn.sourceforge.net/svnroot/jython/trunk/jython }}}
+  * To obtain the a copy of the ''current development'' source, check out the Jython ASM branch:
+    {{{ svn co https://jython.svn.sourceforge.net/svnroot/jython/branches/asm/ }}}
 
   * Attach patches to issues in the [http://bugs.jython.org/ Jython bug tracker].
 
@@ -23,27 +22,7 @@ This is an introduction to developing Jython, just to get someone started. It do
 == Tests ==
 The Jython build process generates an executable Bash script, `dist/bin/jython`, to make it easy to launch your build of Jython. It works on Unix-like platforms (including Mac OS X and Cygwin).
 
-If you're using Windows without Cygwin, here's a batch file that runs the built `jython.jar`:
-[[Anchor(sampleBatch)]]
-{{{
-:: jytip.bat
-@echo off
-set ARGS=
-
-:: concatenate all the command line args into one
-:loop
-if [%1] == [] goto end
-        set ARGS=%ARGS% %1
-        shift
-        goto loop
-:end
-
-:: this is mine...
-:: java -Dpython.home=C:\\workspace\\JythonTip\\jython\\dist -jar 
-::<cont> c:\workspace\JythonTip\jython\dist\jython.jar %ARGS%
-:: fill in <placeholders> below:
-java -Dpython.home=<path to dist directory>\\dist -jar <path to dist directory>\dist\jython.jar %ARGS%
-}}}
+If you're using Windows without Cygwin, use the batch file `dist/bin/jython.bat` instead.
 
 Now you're ready to run tests...
 
