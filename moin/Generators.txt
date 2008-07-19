@@ -1,5 +1,95 @@
 Generators are very useful and can help simplify your code and improve its performance.
 
+= Simplified Code =
+
+The simplification of code is a result of generator function and generator expression support provided by Python.
+
+To illustrate this, we will compare different implementations that implement a function, "firstn", that represents the first ''n'' non-negative integers, where ''n'' is a really big number, and assume (for the sake of the examples in this section) that each integer take up a lot of space, say 10 megabytes each. 
+
+Note: Please note that in real life, integers do not take up that much space, unless they are really, really, really, big integers. For instance you can represent a 309 digit number with 128 bytes (add some overhead, it will still be less than 150 bytes).
+
+First, let us consider the simple example of building a list and returning it. 
+
+{{{
+#!python
+# Build and return a list
+def firstn(n):
+    num, nums = 0, []
+    while num < n:
+        nums.append(num)
+        num += 1
+    return nums
+
+sum_of_first_n = sum(firstn(1000000))
+}}}
+
+This is clearly not acceptable in our case, because we cannot afford to keep all ''n'' "10 megabyte" integers in memory. 
+
+So, we resort to the generator pattern. The following implements generator as an iterable object.
+
+{{{
+#!python
+# Using the generator pattern (an iterable)
+class firstn(object):
+    def __init__(self, n):
+        self.n = n
+        self.num, self.nums = 0, []
+    
+    def __iter__(self):
+        return self
+    
+    def next(self):
+        if self.num < self.n:
+            cur, self.num = self.num, self.num+1
+            return cur
+        else:
+            raise StopIteration()
+
+sum_of_first_n = sum(firstn(1000000))
+}}}
+
+This will perform as we expect, but we have the following issues:
+ * there is a lot of boilerplate
+ * the logic has to be expressed in a somewhat convoluted way
+
+Furthermore, this is a pattern that we will use over and over for many similar constructs. Imagine writing all that just to get an iterator.
+
+Python provides generator functions as a convenient shortcut to building iterators. Lets us rewrite the above iterator as a generator function:
+
+{{{
+#!python
+# Build and return a list
+def firstn(n):
+    num = 0
+    while num < n:
+        yield num
+        num += 1
+
+sum_of_first_n = sum(firstn(1000000))
+}}}
+
+Note that the expression of the number generation logic is clear and natural. It is very similar to the implementation that built a list in memory, but has the memory usage characteristic of the iterator implementation.
+
+Generator expressions provide an additional shortcut to build generators out of expressions similar to that of list comprehensions. 
+
+In fact, we can turn a list comprehension into a generator expression by replacing the square brackets ("[ ]") with parentheses. Alternately, we can think of list comprehensions as generator expressions wrapped in a list constructor.
+
+Consider the following example:
+{{{
+#!python
+# list comprehension
+doubles = [2 * n for n in range(50)]
+
+# same as the list comprehension above
+doubles = list(2 * n for n in range(50))
+}}}
+
+Notice how a list comprehension is essentially a generator expression passed to a list constructor.
+
+By allowing generator expressions, we don't have to write a generator function if we do not need the list. If only list comprehensions were available, and we needed to lazily build a set of items to be processed, we will have to write a generator function.
+
+This also means that we can use the same syntax we have been using for list comprehensions to build generators.
+
 = Improved Performance =
 
 The performance improvement from the use of generators is the result of the lazy (on demand) generation of values, which translates to lower memory usage.
@@ -30,7 +120,7 @@ On the other hand, when we use `xrange`, we do not incur the cost of building a 
 
 In the case of the "range" function, using it as an iterable is the dominant use-case, and this is reflected in Python 3.x, which makes the `range` built-in return a generator instead of a list.
 
-It should however we noted that a generator will provide performance benefits only if do not intend to use that set of generated values more than once.
+It should however we noted that a generator will provide performance benefits only if we do not intend to use that set of generated values more than once.
 
 Consider the following example:
 
