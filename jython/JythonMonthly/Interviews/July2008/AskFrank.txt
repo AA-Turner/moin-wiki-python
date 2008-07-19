@@ -18,18 +18,24 @@ I'll start it off with the question we all want to ask:
 
 1)  You've been with Sun for just over three months now, how is Jython development at Sun been going so far?
 
+Sun has been great.  They genuinely want me to just do more of what I had been doing.  They really want to see Jython succeed.  I've also been helping with some NetBeans work -- mainly helping them use the antlr parser that I wrote for Jython in NetBeans.
+
 2)  To me it seems from the Python side, Jython is considered irrelevant.  Is there any effort to get Jython more into a cooperative effort with Python development?  (marvin greenberg,  public dot marvin on gmail dot com)
+Python and Jython have been cooperating from the very beginning.  It has been more difficult lately since Jython has been lagging version-wise (we're at version 2.2 while Python is at 2.5) but once we catch up this will become better.  If you look at the CPython sources you can see lots of places that have Jython specific areas, and CPython has been making great progress lately in making sure that there is always a pure Python version of standard libraries (this makes it easier for other implementations like Jython).  This will become more common I think, once we have caught up.  
 
 ----
- Here's my 2 cents worth:
-
-3) Building on question 2, IDE/Editor support, there is a fair amount of Python support in IDE's but with the exception of Eclipse with PyDev is there any true Jython support  (ie Python with Java )
+ . Here's my 2 cents worth:
+3) Building on question 2, IDE/Editor support, there is a fair amount of Python support in IDE's but with the exception of Eclipse with PyDev is there any true Jython support  (ie Python with Java)
+I don't personally spend much time using IDEs but other Jython developers tell me that Eclipse does allow breakpoints, etc to work between Jython and Java projects.  Also, given the JRuby support that I've seen in NetBeans, I expect the same from that project once the Jython/Python support appears (see nbpython project for more).
 
 4) A while back there was talk about scripting languages being able share object at the JVM level, for example, Jython using JRuby objects. Is there any news in that regard?
+Nothing concrete yet.  We can actually do that in a limited way now, by using each languages support of creating a Java interface, and using the Java integration of these languages (so from Jython you can implement a Java interface, then from JRuby you could call that interface).  This is clunky though, and we would like to do better.  A cool project looking into this is Attila Szegedi's metaobject protocol (MOP) project: http://dynalang.sourceforge.net/
 
 5) With you working at Sun now, obviously they have gained in stature but where does Sun see JVM based scripting languages, like Jython fitting into the over all picture with future JVM and Java versions.
+Sun is very interested in making the JVM a rich environment for many languages.  Certainly in the past the JVM was developed as a Java-only kind of place.  This is no longer the case.  There is some really interesting work going on to make the JVM a really great environment for languages like Jython.  For more see the mlvm or Da Vinci Machine project: http://openjdk.java.net/projects/mlvm/
 
 5.5) (not related to q5, just days later :) ) Would the results of Java profiling tools like findbugs, Jprofiler or myKit be helpful or more importantly useful to you or one of the members of the development team?
+Certainly -- some of the Jython devs, particularly Nicholas Riley are using profiling tools already.  Nicholas is using YourKit (http://www.yourkit.com/java/profiler/index.jsp).
 
 Thanks Frank and Josh.[[BR]] Greg.
 
@@ -49,7 +55,7 @@ Thanks in advance,
 Luis Sergio Oliveira
 
 ----
-11) On the current jython website, the roadmap says that the current codebase of Jython 2.2 "is extremely brittle". Is it possible for you to walk us through some of the (major) refactoring that have been done to the codebase of Jython 2.5?
+ 11) On the current jython website, the roadmap says that the current codebase of Jython 2.2 "is extremely brittle". Is it possible for you to walk us through some of the (major) refactoring that have been done to the codebase of Jython 2.5?
 
 12) Is it possible to do optional static type declaration in Jython? It will not be compliant to CPython, but I would like to know if it is at least technically feasible since Jython is running on JVM.
 
@@ -58,17 +64,16 @@ Thanks,
 Anthony Kong
 
 ----
-13) What would be the first steps for someone that wants to help with developing Jython itself? Where to start? Are there lightweight tasks? Which skills are really needed? Etc.
+ 13) What would be the first steps for someone that wants to help with developing Jython itself? Where to start? Are there lightweight tasks? Which skills are really needed? Etc.
 
 thx, Berco Beute
 
 ----
- 14) Do you plan on releasing any milestones in the development of jython2.5.
-
+ . 14) Do you plan on releasing any milestones in the development of jython2.5.
 Thanks, Allan Davis
 
 ----
-Sorry, more questions...
+ Sorry, more questions...
 
 15) What is your take on GIL given your experience with Jython development? Is GIL, in CPython world, a bottleneck to performance? (There are already a lot of discussions around this topic. It is hard to tell which is fact, opinion or just myth. I'd like to see if u may provide a different angle to this topic)
 
@@ -77,12 +82,6 @@ Sorry, more questions...
 Cheers, Anthony
 
 -----
+17)  I'm a non-Java programmer who's into Jython programming. It seems that Jython is geared more towards the Java developers; for example, creating stand-alone jar applications is only practical if you already know Java. Are there any attempts to "not alienate" (for lack of a better term) people like me? I'm sure Jython would love to have a much wider audience.
 
-17)  I'm a non-Java programmer who's into Jython programming. It seems that
-Jython is geared more towards the Java developers; for example,
-creating stand-alone jar applications is only practical if you already
-know Java. Are there any attempts to "not alienate" (for lack of a
-better term) people like me? I'm sure Jython would love to have a much
-wider audience.
-
- Submitted by astigmatik
+ . Submitted by astigmatik
