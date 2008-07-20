@@ -67,26 +67,21 @@ Thanks in advance,
 Luis Sergio Oliveira
 
 ----
-11) On the current jython website, the roadmap says that the current codebase of Jython 2.2 "is extremely brittle". Is it possible for you to walk us through some of the (major) refactoring that have been done to the codebase of Jython 2.5?
-I can't really give this question the attention it really deserves, but I can give some brief examples.  "Extremely brittle" might have been better stated as "really hard for newcomers to read".  We have replaced the Javacc parser with an Antlr parser -- and Antlr has *much* better documentation compared to Javacc.  We have refactored the compiler to use ASM, which is a very common choice for bytecode generation.  We have reduced the amount of custom code generation for new-style classes and replace it with annotations, which should be much more familiar to Java programmers.  We have reformatted lots of code to better fit a Java style.
-12) Is it possible to do optional static type declaration in Jython? It will not be compliant to CPython, but I would like to know if it is at least technically feasible since Jython is running on JVM.
-We will be looking into adding decorators that will allow Jython to automatically express Java methods something like the support that jythonc used to give.  Jim Baker has been talking with Jemery Seik about his work in gradual typing -- so this may be something to watch.Thanks,
+ 11) On the current jython website, the roadmap says that the current codebase of Jython 2.2 "is extremely brittle". Is it possible for you to walk us through some of the (major) refactoring that have been done to the codebase of Jython 2.5? I can't really give this question the attention it really deserves, but I can give some brief examples.  "Extremely brittle" might have been better stated as "really hard for newcomers to read".  We have replaced the Javacc parser with an Antlr parser -- and Antlr has *much* better documentation compared to Javacc.  We have refactored the compiler to use ASM, which is a very common choice for bytecode generation.  We have reduced the amount of custom code generation for new-style classes and replace it with annotations, which should be much more familiar to Java programmers.  We have reformatted lots of code to better fit a Java style. 12) Is it possible to do optional static type declaration in Jython? It will not be compliant to CPython, but I would like to know if it is at least technically feasible since Jython is running on JVM. We will be looking into adding decorators that will allow Jython to automatically express Java methods something like the support that jythonc used to give.  Jim Baker has been talking with Jemery Seik about his work in gradual typing -- so this may be something to watch.Thanks,
 
 Anthony Kong
 
 ----
-13) What would be the first steps for someone that wants to help with developing Jython itself? Where to start? Are there lightweight tasks? Which skills are really needed? Etc.
-The first thing would be to try compiling Jython on your local system and see how it works.  See http://wiki.python.org/jython/JythonDeveloperGuide for more.  Next you  might want to see if there is a particular Python module that you want to use or that isn't working -- and take a look at why it isn't working (and give us a bug report or try to fix it!)thx, Berco Beute
+ 13) What would be the first steps for someone that wants to help with developing Jython itself? Where to start? Are there lightweight tasks? Which skills are really needed? Etc. The first thing would be to try compiling Jython on your local system and see how it works.  See http://wiki.python.org/jython/JythonDeveloperGuide for more.  Next you  might want to see if there is a particular Python module that you want to use or that isn't working -- and take a look at why it isn't working (and give us a bug report or try to fix it!)thx, Berco Beute
 
 ----
-14) Do you plan on releasing any milestones in the development of jython2.5.
-Timely question :) -- see http://fwierzbicki.blogspot.com/2008/07/jython-25-alpha-released.html for the alpha announcement.Thanks, Allan Davis
+ 14) Do you plan on releasing any milestones in the development of jython2.5. Timely question :) -- see http://fwierzbicki.blogspot.com/2008/07/jython-25-alpha-released.html for the alpha announcement.Thanks, Allan Davis
 
 ----
  . Sorry, more questions...
 15) What is your take on GIL given your experience with Jython development? Is GIL, in CPython world, a bottleneck to performance? (There are already a lot of discussions around this topic. It is hard to tell which is fact, opinion or just myth. I'd like to see if u may provide a different angle to this topic)
 
-I suspect the average user of Python is not affected by the GIL in current environments.  However, highly multithreaded environments and the massively multicore machines that are coming, are quite likely to start getting a performance advantage from GIL-less Pythons (with Jython, of course, being one of those GIL-less Pythons).
+I suspect the average user of Python is not affected by the GIL in current environments.  However, highly multithreaded environments and the massively multicore machines that are coming, are quite likely to get a performance advantage from GIL-less Pythons (with Jython, of course, being one of those GIL-less Pythons).
 
 16) Do you have any kind of possible arrangement of tests/benchmark in mind such that, by comparing cpython and jython, we can find out the performance gain that is a result of removal of GIL?
 
@@ -95,7 +90,9 @@ We have some ideas in this area, but nothing concrete to point at just yet.
 Cheers, Anthony
 
 -----
-17)  I'm a non-Java programmer who's into Jython programming. It seems that Jython is geared more towards the Java developers; for example, creating stand-alone jar applications is only practical if you already know Java. Are there any attempts to "not alienate" (for lack of a better term) people like me? I'm sure Jython would love to have a much wider audience.
+ 17)  I'm a non-Java programmer who's into Jython programming. It seems that Jython is geared more towards the Java developers; for example, creating stand-alone jar applications is only practical if you already know Java. Are there any attempts to "not alienate" (for lack of a better term) people like me? I'm sure Jython would love to have a much wider audience.
+
 The main thrust of 2.5 work has been to get to a modern version of Python that is better able to run typical Python programs that we see heavily used (like Django, TurboGears, and Pylons).  In the course of this work we have improved support for more standard Python practices like the use of setuptools.  Our first target is to make Jython a really good implementation of Python.  Hopefully that will help...
+
  . Submitted by astigmatik
  .
