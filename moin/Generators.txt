@@ -23,7 +23,7 @@ def firstn(n):
 sum_of_first_n = sum(firstn(1000000))
 }}}
 
-This is clearly not acceptable in our case, because we cannot afford to keep all ''n'' "10 megabyte" integers in memory. 
+The code is quite simple and straightforward, but its builds the full list in memory. This is clearly not acceptable in our case, because we cannot afford to keep all ''n'' "10 megabyte" integers in memory. 
 
 So, we resort to the generator pattern. The following implements generator as an iterable object.
 
@@ -84,19 +84,21 @@ doubles = [2 * n for n in range(50)]
 doubles = list(2 * n for n in range(50))
 }}}
 
-Notice how a list comprehension is essentially a generator expression passed to a list constructor.
+Notice how a list comprehension looks essentially like a generator expression passed to a list constructor.
 
 By allowing generator expressions, we don't have to write a generator function if we do not need the list. If only list comprehensions were available, and we needed to lazily build a set of items to be processed, we will have to write a generator function.
 
 This also means that we can use the same syntax we have been using for list comprehensions to build generators.
 
+Keep in mind that generators are a special type of iterator, and that containers like `list` and `set` are also iterables. The uniform way in which all of these are handled, adds greatly to the simplification of code.
+
 = Improved Performance =
 
-The performance improvement from the use of generators is the result of the lazy (on demand) generation of values, which translates to lower memory usage.
+The performance improvement from the use of generators is the result of the lazy (on demand) generation of values, which translates to lower memory usage. Furthermore, we do not need to wait until all the elements have been generated before we start to use them. This is similar to the benefits provided by iterators, but the generator makes building iterators easy.
 
 This can be illustrated by comparing the `range` and `xrange` built-ins of Python 2.x. 
 
-Both `range` and `xrange` represent a range of numbers, and have the same function signature, but `range` returns a `list` while `xrange` returns a generator.
+Both `range` and `xrange` represent a range of numbers, and have the same function signature, but `range` returns a `list` while `xrange` returns a generator (at least in concept; the implementation may differ).
 
 Say, we had to compute the sum of the first ''n'', say 1,000,000, non-negative numbers. 
 
@@ -179,7 +181,7 @@ for i in bounded_squares:
 }}}
 
 to be written: Generators made from classes?
-to be written: Discussion of code simplification (similar to the discussion on performance improvement)
+
 
 == Links ==
 
