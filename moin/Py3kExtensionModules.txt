@@ -4,13 +4,7 @@ This is a list of suggestion about the migration of Python C extension module to
 
  * Now Python 3 uses Unicode as internal string representation, all the class name, method name, etc are Unicode string. So check all the occurrences of PyString_*, most of them should be replaced as PyUnicode_*. When you suffered segmentation fault, sometime it because you provided a PyString where the C-API expecting a PyUnicode. Also, for the returning value of your C extension function, you may use PyUnicode instead of PyString, otherwise you may broken your client's code.
 
- * PyInt_* removed, you can define a series of macro for it:
- 
-{{{#!cplusplus
-#define PyInt_Check(x) PyLong_Check(x)
-#define PyInt_AsLong(x) PyLong_AsLong(x)
-#define PyInt_FromLong(x) PyLong_FromLong(x)
-}}}
+ * PyInt_* removed, but you can explicitely ``#include <intobject.h>`` to define aliases that redirect most PyInt_* symbols to PyLong_*.
  
  * PEP 3123: Making PyObject_HEAD conform to standard C (http://www.python.org/dev/peps/pep-3123/). When initializing type objects, replace 
  
