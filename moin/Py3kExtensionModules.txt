@@ -1,0 +1,48 @@
+This is a list of suggestion about the migration of Python C extension module to Python 3.0. Fell free to expand the list!
+
+ * Use conditional compilation to make your code able to compile under both Python 2.x and 3.0 C-API.
+
+ * Now Python 3 uses Unicode as internal string representation, all the class name, method name, etc are Unicode string. So check all the occurrences of PyString_*, most of them should be replaced as PyUnicode_*. When you suffered segmentation fault, sometime it because you provided a PyString where the C-API expecting a PyUnicode. Also, for the returning value of your C extension function, you may use PyUnicode instead of PyString, otherwise you may broken your client's code.
+
+ * PyInt_* removed, you can define a series of macro for it:
+ 
+{{{#!cplusplus
+#define PyInt_Check(x) PyLong_Check(x)
+#define PyInt_AsLong(x) PyLong_AsLong(x)
+#define PyInt_FromLong(x) PyLong_FromLong(x)
+}}}
+ 
+ * PEP 3123: Making PyObject_HEAD conform to standard C (http://www.python.org/dev/peps/pep-3123/). When initializing type objects, replace 
+ 
+{{{#!cplusplus
+PyObject_HEAD_INIT(NULL)
+0, /* ob_size */
+}}}
+ 
+ with
+ 
+{{{#!cplusplus
+PyVarObject_HEAD_INIT(NULL, 0)
+}}}
+ 
+ And you'd better use pre-defined macros Py_TYPE(o), Py_REFCNT(o), Py_SIZE(o) to access o->ob_type, o->ob_refcnt and o->ob_size separately. For more details please read the PEP.
+ 
+ * Changes in PyNumberMethods: nb_divide, nb_coerce, nb_oct, nb_hex and nb_inplace_divide removed.
+ 
+
+ * Read PEP 3121 Extension Module Initialization and Finalization (http://www.python.org/dev/peps/pep-3121/) and change your code to the new API. It solved many problems for module initialization and finalization.
+
+ * Now PyObject_Compare() raises exception when comparing two objects of different type. (In case of Python 2.x, it compares their pointer.)
+
+ * If your object has slicing interface (eg. obj[2:5]), you should notice that __getitem__, __setitem__ and __delitem__ now receive PySliceObject instead of a pair of integer value.
+
+ * Unbound method removed. In Python 3 you can use PyInstanceMethod_New() C-API to generate an unbound method for your C function.
+
+ * PyClass_Check() removed. Consider this as a workaround:
+{{{#!cplusplus
+#define PyClass_Check(obj) PyObject_IsInstance(obj, (PyObject *)&PyType_Type)
+}}}
+
+ * PyInstance_NewRaw() removed, try to use PyBaseObject_Type.tp_new() for replacement.
+  
+ * In py3k dict.items() method returns a dict_items object, you can uses PySequence_Fast() to convert it to a sequence.
