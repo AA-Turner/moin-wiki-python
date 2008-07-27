@@ -230,7 +230,7 @@ are only minor tweaks of the basic structure? How about more radical departures 
 an arbitrary number of nodes per edge)?
 "oops, didn't read this far. Well you know my answer: make every graph a hypergraph. (Nick)"
 
-One possibility would be to base the API definition on the [http://www.gupro.de/GXL Graph eXchange Langage] (GXL). It is derived from many separate graph representation languages and seems quite
+One possibility would be to base the API definition on the [http://www.gupro.de/GXL Graph eXchange Language] (GXL). It is derived from many separate graph representation languages and seems quite
 complete (it even supports hypergraphs and hierarchical graphs!), logical, and well-thought-out.
 The language itself
 consists of an XML and a UML notation,
@@ -241,6 +241,8 @@ some support for transformations of some kind) but that could probably be done a
 extension. We might not want to support ''all'' of the GXL model, of course. We might even want
 to define several layers of standard compliance, with Layer 0 being only the current de facto
 standard graph API, for example. (Magnus)
+
+I think [http://graphml.graphdrawing.org/ GraphML] would be great to be supported for reading and writing graphs. (Ralf)
 
 With the goal of designing an API for Python in mind, I would think one of the first decisions that needs to be made is whether to use multiple classes (ala Vertex, Edge, Graph) or just one (ala Graph); also, are those classes going to be "Pythonic" in that they provide various methods in terms of Python operators or not (let's call the "not" alternative "Textbookish")? It seems to me that without settling this first, discussing the details of the API further is moot. But maybe I am wrong? (Peter)
 
@@ -311,9 +313,9 @@ I believe that the majority of graph algorithms can be implemented with this int
 
 6. We must note that Edges and Vertices are defined as sets in standar graph theory, so, we must also think how to joind the graph data structure to the standard python (set) builtin data type. (Jose Antonio Martin H.)
 
-= Hypergaphs =
+= Hypergraphs =
 
-As far as hypergraphs are concerned, a hypergraph is equivalent to a bi-partite graph, with two different set of nodes. One represents the regualar nodes, the other a set of edges (<- these are not edges of the Graph itself, but separate Edge(s) created earlier. So it is probably not necessary to include a separate mechanism for hypergraphs. (Nick V.)
+As far as hypergraphs are concerned, a hypergraph is equivalent to a bi-partite graph, with two different set of nodes. One represents the regular nodes, the other a set of edges (<- these are not edges of the Graph itself, but separate Edge(s) created earlier. So it is probably not necessary to include a separate mechanism for hypergraphs. (Nick V.)
 
 == Contributors ==
 
