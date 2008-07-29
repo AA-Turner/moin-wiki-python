@@ -5,24 +5,20 @@ To Fix
 
 * test_array - needs unicode array support
 * test_code - no co_names, not certainly supported by the compiler, perhaps not likely to be (see http://docs.python.org/lib/bytecodes.html)
-* test_datetime - rounding, strptime missing a function (looks like new functionality in 2.5)
 * test_float - struct unpack shouldn't allow float specials
 * test_functools - partial is not a type (yet)
-* test_generator - not rejecting incorrect syntax wrt yield; but others need to be resolved outside of parser (maybe eval order?); fibgen is causing parse issues; tracebacks have extra blank lines apparently
+* test_generators - not rejecting incorrect syntax wrt yield; but others need to be resolved outside of parser (maybe eval order?); fibgen is causing parse issues; tracebacks have extra blank lines apparently
 * test_genexps - need to test iterability of an object like int; similar syntax issues as test_generator
-* test_index - no support for __index__ yet
 * test_inspect - getsource (no surprise with this type of issue)
 * test_mailbox - TestMaildir.test_clean fails due to os.utime not setting atime
 * test_site - del sys.setdefaultencoding does nothing
-* test_str, test_string, test_userstring, test_unicode - struct type 'P' not supported
 * test_struct - needs new 2.5 struct.Struct type and pack_into/unpack_from
 * test_threadedtempfile - import lock is probably in the wrong place
-* test_unicode - rsplit, lack of idna encoding (which needs unicodedata)
+* test_unicode - lack of idna encoding (which needs unicodedata)
 
 Flaky/arch?
 ===========
 
-* test_cmd_line - CmdLineTest.test_q fails only on buildbot [http://bob.underboss.org:8080/job/jython-asm/27/testReport/test.test_cmd_line/CmdLineTest/test_q/]
 * test_scope - sometimes fails due to GC
 * test_tuple - sometimes with OutOfMemoryError during regrtest
 
@@ -33,8 +29,7 @@ Parser
 * test_contextlib - likely parser eval order
 * test_decorators - eval order
 * test_distuils - SyntaxError when attempting to py_compile to $py.class (probably parser newline problems)
-* test_doctest - lineno is incorrect, parser prob
+* test_doctest - exec doesn't work
 * test_genexp, test_generator - see above
 * test_java_integration - ReservedNamesTest (in/exec), also there's class
 * test_jy_compile - not rejecting syntax, is there an issue with exec code in a_dict?
-* test_univnewlines - SyntaxError (due to newline issues?) and wrong line numbers in test_execfile
