@@ -1,10 +1,10 @@
-This is a list of suggestion about the migration of Python C extension module to Python 3.0. Feel free to expand the list!
+This is a list of suggestions about the migration of Python C extension modules to Python 3.0. Feel free to expand the list!
 
  * Use conditional compilation to make your code able to compile under both Python 2.x and 3.0 C-API.
 
- * Now Python 3 uses Unicode as internal string representation, all the class name, method name, etc are Unicode string. So check all the occurrences of PyString_*, most of them should be replaced as PyUnicode_*. When you suffered segmentation fault, sometime it because you provided a PyString where the C-API expecting a PyUnicode. Also, for the returning value of your C extension function, you may use PyUnicode instead of PyString, otherwise you may broken your client's code.
+ * Now Python 3 uses Unicode as internal string representation, all the class name, method name, etc are Unicode strings. So check all the occurrences of PyString_*, most of them should be replaced with PyUnicode_*. When you suffer a segmentation fault, sometimes it's because you provided a PyString where the C-API expecting a PyUnicode. Also, for the return value of your C extension function, you may use PyUnicode instead of PyString, otherwise you may broken your client's code.
 
- * PyInt_* removed, but you can explicitely ``#include <intobject.h>`` to define aliases that redirect most PyInt_* symbols to PyLong_*.
+ * PyInt_* removed, but you can explicitly ``#include <intobject.h>`` to define aliases that redirect most PyInt_* symbols to PyLong_*.
  
  * PEP 3123: Making PyObject_HEAD conform to standard C (http://www.python.org/dev/peps/pep-3123/). When initializing type objects, replace 
  
@@ -39,6 +39,6 @@ PyVarObject_HEAD_INIT(NULL, 0)
 
  * PyInstance_NewRaw() removed, try to use PyBaseObject_Type.tp_new() for replacement.
   
- * In py3k dict.items() method returns a dict_items object, you can uses PySequence_Fast() to convert it to a sequence.
+ * In py3k dict.items() method returns a dict_items object, you can use PySequence_Fast() to convert it to a sequence.
 
  * struct member flags: The RO shorthand for READONLY is gone.
