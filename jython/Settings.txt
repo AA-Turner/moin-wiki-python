@@ -1,27 +1,44 @@
-|| python.cachedir				||
-|| python.cachedir.skip				||
-|| python.collections				||
-|| python.console				||
-|| python.console.encoding			||
-|| python.console.readlinelib			||
-|| python.deprecated.keywordMangling		||
-|| python.divisionWarning			||
-|| python.executable				||
-|| python.home					||
-|| python.modules.builtin			||
-|| python.options.Qnew				||
-|| python.options.caseok			||
-|| python.options.compileClass			||
-|| python.options.includeJavaStackInExceptions	||
-|| python.options.internalTablesImpl		||
-|| python.options.proxyDebugDirectory		||
-|| python.options.showJavaExceptions		||
-|| python.options.showPythonProxyExceptions	||
-|| python.os					||
-|| python.packages.directories			||
-|| python.packages.fakepath			||
-|| python.packages.paths			||
-|| python.path					||
-|| python.prepath				||
-|| python.security.respectJavaAccessibility	||
-|| python.verbose				||
+= Methods of specifying Jython options =
+
+ * `preProperties`, typically Java system properties specified with `-D` 'before' class/jar specification on Java command line
+
+ * Registry: property files `registry` in Jython root and `.jython` in `user.home`; if both are present, the latter replaces the former completely.  If either is present, the Java system properties are replaced entirely.  (This is likely a bug in PySystemState.addRegistryFile.)  See http://www.jython.org/Project/userguide.html#finding-the-registry-file for more information.
+
+ * `postProperties`, typically Jython properties specified with `-D` 'after' class/jar specification on Java command line (these overwrite Java system properties, too.)
+
+For `preProperties` and `postProperties`, alternate properties may be passed to `PySystemState.initialize` or `PythonInterpreter.initialize` by programmatic users of Jython.
+
+The runtime registry (`PySystemState.registry` from Java, or `sys.registry` from Python) is created from the above three sources.
+
+Other command-line arguments are written directly into Options static variables without going through the properties system; the overlapping properties are `python.divisionWarning`, `python.options.Qnew` and `python.verbose`.  In these overlapping cases, the above three sources always take precedence over the command-line equivalents.  (This precedence should likely be reversed.)
+
+|| Source                                       || Destination                         || Default                             ||
+|| install.root                                 ||                                     ||                                     ||
+|| python.cachedir                              || PySystemState.cachedir = File(...)  || "cachedir"                          ||
+|| python.cachedir.skip                         || PySystemState.cachedir = null       || true if standalone, else false      ||
+|| python.collections                           || PyInstance.initializeIterators      || ""                                  ||
+|| python.console                               || jython.main                         || "org.python.util.InteractiveConsole"||
+|| python.console.encoding                      || CompilerFlags.encoding              ||                                     ||
+|| python.console.readlinelib                   ||                                     ||                                     ||
+|| python.deprecated.keywordMangling            || Options.deprecatedKeywordMangling   || false                               ||
+|| python.divisionWarning                       || Options.divisionWarning             ||                                     ||
+|| python.executable                            || PySystemState.[default]Executable   || set by launcher script, else null   ||
+|| python.home                                  || PySystemState.[exec_]prefix         || set by launcher script, else "."    ||
+|| python.modules.builtin                       || PySystemState.builtin_module_names  || ""; appended to Setup.builtinModules||
+|| python.options.Qnew                          || Options.Qnew                        || false                               ||
+|| python.options.caseok                        || Options.caseok                      || false                               ||
+|| python.options.compileClass                  || ''unused; in default registry file''|| false (in registry file)            ||
+|| python.options.includeJavaStackInExceptions  || Options.includeJavaStackInExceptions|| false                               ||
+|| python.options.internalTablesImpl            || InternalTables.createInternalTables || null                                ||
+|| python.options.proxyDebugDirectory           || Options.proxyDebugDirectory         || null                                ||
+|| python.options.showJavaExceptions            || Options.showJavaExceptions          || false                               ||
+|| python.options.showPythonProxyExceptions     || Options.showPythonProxyExceptions   || false                               ||
+|| python.os                                    || os._name                            || "posix"                             ||
+|| python.packages.directories                  || SysPackageManager.findAllPackages   || "java.ext.dirs"                     ||
+|| python.packages.fakepath                     || SysPackageManager.findAllPackages   || null                                ||
+|| python.packages.paths                        || SysPackageManager.findAllPackages   || "java.class.path,sun.boot.class.path"||
+|| python.path                                  || end of path before JYTHON_JAR/Lib   || ""                                  ||
+|| python.prepath                               || beginning of path                   || ""                                  ||
+|| python.security.respectJavaAccessibility     || Options.respectJavaAccessibility    || true                                ||
+|| python.verbose                               || Options.verbose                     || Py.MESSAGE = 1                      ||
+|| python.xml.sax.parser                        || xml.sax.default_parser_list (split) || PY_SAX_PARSER or xml.sax.drivers2.drv_javasax ||
