@@ -1,16 +1,24 @@
-= Methods of specifying Jython options =
+= Methods of specifying Jython settings =
 
- * `preProperties`, typically Java system properties specified with `-D` 'before' class/jar specification on Java command line
+ * `preProperties`, typically Java system properties specified with `-D` '''before''' class/jar specification on Java command line
 
- * Registry: property files `registry` in Jython root and `.jython` in `user.home`; if both are present, the latter replaces the former completely.  If either is present, the Java system properties are replaced entirely.  (This is likely a bug in PySystemState.addRegistryFile.)  See http://www.jython.org/Project/userguide.html#finding-the-registry-file for more information.
+ * Registry: property files `registry` in Jython root and `.jython` in `user.home`; if both are present, the latter replaces the former completely.  If either is present, the Java system properties are replaced entirely.  (This is likely a bug in `PySystemState.addRegistryFile`.)  See [http://www.jython.org/Project/userguide.html#finding-the-registry-file Finding the Registry File] for more information.
 
- * `postProperties`, typically Jython properties specified with `-D` 'after' class/jar specification on Java command line (these overwrite Java system properties, too.)
+ * `postProperties`, typically Jython properties specified with `-D` '''after''' class/jar specification on Java command line (these overwrite Java system properties, too.)
 
 For `preProperties` and `postProperties`, alternate properties may be passed to `PySystemState.initialize` or `PythonInterpreter.initialize` by programmatic users of Jython.
 
 The runtime registry (`PySystemState.registry` from Java, or `sys.registry` from Python) is created from the above three sources.
 
 Other command-line arguments are written directly into Options static variables without going through the properties system; the overlapping properties are `python.divisionWarning`, `python.options.Qnew` and `python.verbose`.  In these overlapping cases, the above three sources always take precedence over the command-line equivalents.  (This precedence should likely be reversed.)
+
+== Documentation ==
+
+ * The options whose destinations are static variables in the `Options` class are well-documented there.
+
+ * The default `registry` file is severely bitrotted and needs redoing.
+
+ * The [http://www.jython.org/Project/userguide.html#the-jython-registry Jython user guide] refers to a subset of these properties.
 
 || Source                                       || Destination                         || Default                             ||
 || install.root                                 ||                                     ||                                     ||
