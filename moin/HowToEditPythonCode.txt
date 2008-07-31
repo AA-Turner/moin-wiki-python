@@ -1,3 +1,66 @@
-delletovicl
+[[TableOfContents]]
+
+= How To Edit Python Code =
+
+Python uses an indentation-based syntax for grouping statements into blocks. For example:
+
+{{{
+if some_condition and some_other_condition:
+    do_something()
+do_this_anyway()
+}}}
+
+However, beginners to Python programming are sometimes worried about this aspect of the language, asking questions like...
+
+ * How should I add space at the beginning of a line? (In other words, how should I indent text?)
+ * How can I be sure that Python won't change its mind about the space I've added?
+ * What happens if someone edits my code and mixes in tabs and spaces?
+ * Isn't Python susceptible to problems I've had with Makefiles?
+
+This leads us to introduce the golden rule...
+
 ----
-CategoryAdvocacy
+
+== Do Not Mix Tabs and Spaces! ==
+
+Now, this doesn't mean that you can't use the `Tab` key on your keyboard: it just means that your editor has to be set up properly so that tab characters aren't mixed in with space characters. Tab characters often appear as very wide spaces in text, typically making the cursor jump to a position further across in the editor window or terminal.
+
+This leads us to a simple choice:
+
+ * '''Either''' your editor should ''always'' add spaces when you press the `Tab` key...
+ * '''Or''' your editor should ''always'' add tabs when you press the `Tab` key, and you should yourself ''always'' use tabs when indenting.
+
+Many people recommend the first choice since you can use the `Tab` key as much as you like, and it does no harm to add spaces manually, although your indentation must always be consistent.
+
+----
+
+Whilst there is always a risk that someone with a badly behaved editor will start mixing tabs and spaces, potentially confusing Python, it should be remembered that such editing habits will probably confuse ''programmers'' working with such code in any language, as is shown by the following classic example in C-like languages:
+
+{{{
+if (some_condition && some_other_condition)
+    do_something();
+    do_this_anyway();
+}}}
+
+Although a C or C++ compiler will accept something like this, there may be a clear mismatch between what the programmer intended and the behaviour of the resulting code. Clearly, "sloppy" editing habits have an impact regardless of the role of indentation in a language's syntax.
+
+== Choosing a Text Editor ==
+
+You may have a favourite text editor in which you want to use to edit Python code. Hopefully, this editor will be slightly more sophisticated than the Notepad editor (on Windows) and will let you change its settings so that Python code can be edited effectively. Many text editors have support for syntax highlighting (so that different aspects of the text have different colours - keywords might be yellow, strings might be purple, and so on), and such things can be worthwhile benefits which can tempt you away from more primitive (if more familiar) programs. A list of Python-compatible editors can be found on the PythonEditors page.
+
+== Configuring a Text Editor ==
+
+Now that you've made a choice from the PythonEditors list, you'll want to make sure that it is set up properly. Below you'll find a guide for a number of different editors dealing with important Python issues such as indentation (tabs and spaces) as well as other more general issues like encodings and syntax highlighting/colouring.
+
+ * ["ViImproved (Vim)"] Vim and related editors
+
+== Editorial Note ==
+
+Feel free to add entries about other editors in the section above. Try and arrange the entries in ascending alphabetical order.
+
+= Other Resources =
+
+ * [http://www.python.org/dev/peps/pep-0008/ PEP 8 - Style Guide for Python Code]
+
+----
+CategoryEditors
