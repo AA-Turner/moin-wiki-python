@@ -26,13 +26,17 @@ This problem can occur if you are using Microsoft's VM (i.e. jview.exe) which pr
 
 == What is "python.path" and "python.prepath" mean in the Jython registry ==
 
+As of Subversion revision 5043 (August 1, 2008), "python.prepath" no longer has any effect; "python.path" replaces it, reverting to the behavior of Python 2.0a1 and earlier (and CPython). This workaround is no longer necessary because CPython standard library has been included with Jython for some time.
+
+Historical information follows:
+
 The key "python.path" in the Jython registry has recently changed. This FAQ entry is intended to clarify registry keys related to sys.path settings.
 
 Before Fri, December 15, 2000- the "python.path" key in the registry file appended the given value to the sys.path list before the (sys.prefix)/lib directory is added. This means for Jython-2.0a1 and before, the above behavior is expected.
 
 Changes committed on December 15, 2000 change the behavior so that the registry's "python.path" key is appended to sys.path after (sys.prefix)/lib directory. This applies to CVS versions and any subsequently released versions of Jython.
 
-This mimics the behavior of the appending that takes place in the autoloaded site.py. Traditionally JPython users have appended the CPython path in this registry key; however, this was unsafe as it then preceded the Jython lib directory. This change eliminates errors associated with appending the CPython lib path in this key.
+This mimics the behavior of the appending that takes place in the autoloaded site.py. Traditionally Jython users have appended the CPython path in this registry key; however, this was unsafe as it then preceded the Jython lib directory. This change eliminates errors associated with appending the CPython lib path in this key.
 
 For those instances where you do intend to add something to the sys.path before (sys.prefix)/lib, there is a new registry key called "python.prepath". This exists only after the 20001215 change date.
 
