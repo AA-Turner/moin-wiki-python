@@ -45,8 +45,10 @@ Other command-line arguments are written directly into Options static variables 
 || python.packages.directories                  || SysPackageManager.findAllPackages   || "java.ext.dirs"                     ||
 || python.packages.fakepath                     || SysPackageManager.findAllPackages   || null                                ||
 || python.packages.paths                        || SysPackageManager.findAllPackages   || "java.class.path,sun.boot.class.path"||
-|| python.path                                  || end of path after JYTHON_JAR/Lib    || ""                                  ||
-|| python.prepath                               || beginning of path after current dir || ""                                  ||
+|| python.path {X}                              || end of path after JYTHON_JAR/Lib    || ""                                  ||
+|| python.prepath (python.path in r5043+)       || beginning of path after current dir || ""                                  ||
 || python.security.respectJavaAccessibility     || Options.respectJavaAccessibility    || true                                ||
 || python.verbose                               || Options.verbose                     || Py.MESSAGE = 1                      ||
-|| python.xml.sax.parser                        || xml.sax.default_parser_list (split) || PY_SAX_PARSER or xml.sax.drivers2.drv_javasax ||
+|| python.xml.sax.parser                        || xml.sax.default_parser_list (split) || PY_SAX_PARSER, else xml.sax.drivers2.drv_javasax ||
+
+{X} gone in asm branch
