@@ -6,23 +6,30 @@ To Fix
 * test_coercion - __cmp__ doesn't utilize __coerce__?
 * test_generators - not rejecting incorrect syntax wrt yield; but others need to be resolved outside of parser (maybe eval order?); fibgen is causing parse issues; tracebacks have extra blank lines apparently
 * test_genexps - need to test iterability of an object like int; similar syntax issues as test_generator
-* test_inspect - getsource (no surprise with this type of issue)
+* test_inspect
+* test_multibytecodec
+* test_multibytecodec_support
 * test_operator - various things raise AttributeError instead of TypeError
+* test_os - 1 failure, test_access, looks like a .py$class <=> .pyc mixup
 * test_runpy - no PySystemState.startswith; no imp.getmagic
 * test_site - del sys.setdefaultencoding does nothing
 * test_struct - needs new 2.5 struct.Struct type and pack_into/unpack_from
+* test_tempfile - 1 failure, test_usable_template
 * test_unicode - lack of idna encoding (which needs unicodedata)
+* test_with
 * test_zipfile - possibly struct issues?
 
 Flaky/arch?
 ===========
 
 * test_scope - sometimes fails due to GC
+* test_socket - historically this is the case on SO_RCVBUF, SO_SNDBUF
 * test_tuple - sometimes with OutOfMemoryError during regrtest
 
 Parser
 ======
 
+* test_builtin
 * test_compile - over acceptance of incorrect syntax; need to raise problems with unicode being declared to have an encoding!
 * test_contextlib - likely parser eval order
 * test_decorators - eval order
@@ -33,3 +40,10 @@ Parser
 * test_java_integration - ReservedNamesTest (in/exec), also there's class
 * test_jy_compile - not rejecting syntax, is there an issue with exec code in a_dict?
 * test_traceback - not rejecting bad indentation
+
+Development
+===========
+
+* test__rawffi (for ctypes, ported from PyPy)
+* test_csv
+* test_univnewlines
