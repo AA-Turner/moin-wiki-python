@@ -9,13 +9,13 @@ To Fix
 * test_inspect
 * test_multibytecodec
 * test_multibytecodec_support
-* test_operator - various things raise AttributeError instead of TypeError
 * test_os - 1 failure, test_access, looks like a .py$class <=> .pyc mixup
 * test_runpy - no PySystemState.startswith; no imp.getmagic
 * test_site - del sys.setdefaultencoding does nothing
 * test_struct - needs new 2.5 struct.Struct type and pack_into/unpack_from
 * test_tempfile - 1 failure, test_usable_template
 * test_unicode - lack of idna encoding (which needs unicodedata)
+* test_univnewlines - test_doctest failures don't restore sys.stdin -- causes to skip (it normally passes)
 * test_with
 * test_zipfile - possibly struct issues?
 
@@ -29,21 +29,18 @@ Flaky/arch?
 Parser
 ======
 
-* test_builtin
+* test_builtin - compile/exec/eval problems
 * test_compile - over acceptance of incorrect syntax; need to raise problems with unicode being declared to have an encoding!
 * test_contextlib - likely parser eval order
 * test_decorators - eval order
-* test_distuils - SyntaxError when attempting to py_compile to $py.class (probably parser newline problems)
 * test_doctest - exec doesn't work
-* test_future - probably bad line numbers
+* test_future - bad line numbers
 * test_genexp, test_generator - parser probs
 * test_java_integration - ReservedNamesTest (in/exec), also there's class
 * test_jy_compile - not rejecting syntax, is there an issue with exec code in a_dict?
-* test_traceback - not rejecting bad indentation
 
 Development
 ===========
 
 * test__rawffi (for ctypes, ported from PyPy)
-* test_csv
-* test_univnewlines
+* test_csv - http://bugs.jython.org/issue1650802
