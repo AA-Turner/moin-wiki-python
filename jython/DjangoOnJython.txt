@@ -2,21 +2,19 @@
 
 == Summary of Django on Jython: The Gaps ==
 
-The most important thing to know about Django on Jython is that we are almost there, and with clean code. End-to-end functionality is demonstrated by the admin tool running in full CRUD, along with a substantial number of unit tests. But this has been achieved by so far requiring only 6 lines of code in changes to Django trunk. (There will be more, however, see below.)
+The most important thing to know about Django on Jython is that we are almost there, and with clean code. End-to-end functionality is demonstrated by the admin tool running in full CRUD, along with more than 90% of successful tests.
+
+Moreover, we are part of the goals for the upcoming Django 1.0 release.
 
 == Running on Jython ==
 
-To run Django on Jython, with a PostgreSQL backend, the following steps are necessary:
+To run Django on Jython, with a PostgreSQL backend, the easiest way to get started is to follow the instructions outlined [http://blog.leosoto.com/2008/07/my-new-djangojython-developer-workflow.html here]. If you prefer you can manually get Jython asm branch and Django trunk to later apply the patches at https://hg.leosoto.com/django.patches/file and https://hg.leosoto.com/jython.patches/file 
 
- * Use the Jython trunk.
-
- * Use the Django trunk (tested with rev 6992, later should be OK too).
-
- * Apply these two patches, [https://jython.svn.sourceforge.net/svnroot/jython/trunk/sandbox/jbaker/django/dispatch/robustapply.py django.dispatch.robustapply] ([https://hg.leosoto.com/django.jythonport/rev/bb2b9048ed14f72e99c5c133c7ecaaeb0a5c425c diff]) and [https://jython.svn.sourceforge.net/svnroot/jython/trunk/sandbox/jbaker/django/views/debug.py django.views.debug] ([https://hg.leosoto.com/django.jythonport/rev/663bcf5efc31409899fcdc10009bc92df3e1f6b9 diff]) due to Leo Soto. These should be in Django trunk soon.
- 
- * Use the database backend [https://jython.svn.sourceforge.net/svnroot/jython/trunk/sandbox/jbaker/django/db/backends/postgresql_zxjdbc/ zxjdbc_postgresql], which was contributed by Leo Soto. Frank Wierzbicki has an experimental backend for !MySQL. A casual inspection suggests that we should be able to refactor base.py in postgresql_zxjdbc such that with minimal modification, we can leverage other existing Django backends.
+Additionaly, you will need the [http://code.google.com/p/django-jython] django-jython integration code] which contains the JDBC database backends and some management utilities. 
 
 == Status ==
+
+'''This is mostly outdated. We are working on updated status and documentation. Sorry for the inconveniences.'''
 
 Here's what works:
 
