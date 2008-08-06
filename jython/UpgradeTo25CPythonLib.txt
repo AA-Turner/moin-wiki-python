@@ -17,7 +17,7 @@ To Fix
 * test_tempfile - 1 failure, test_usable_template
 * test_unicode - lack of idna encoding (which needs unicodedata)
 * test_univnewlines - test_doctest failures don't restore sys.stdin -- causes to skip (it normally passes)
-* test_with
+* test_with - we're generating bad bytecode with nested yields, e.g. with manager(): yield 1 (testWithYields)
 * test_zipfile - possibly struct issues?
 
 Flaky/arch?
@@ -25,7 +25,7 @@ Flaky/arch?
 
 * test_scope - sometimes fails due to GC
 * test_socket - historically this is the case on SO_RCVBUF, SO_SNDBUF
-* test_tuple - sometimes with OutOfMemoryError during regrtest
+* test_tuple - sometimes OutOfMemoryErrors during regrtest (when creating a set from a large list of small tuples). maybe not the tests fault, but the fact that the regrtest progressively uses more and more memory as it goes: http://pylonshq.com/pasties/917
 
 Parser
 ======
