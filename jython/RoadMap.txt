@@ -1,22 +1,9 @@
 This is a specific list of the features needed to make releases towards Jython 2.5.  The first alpha will be made once Jython supports all CPython 2.5 language level features.      After the alphas have stabilized, all the library and Jython-only features will be completed in the beta series of releases.  Once all the features are present in the betas, we'll go into release candidate mode until 2.5 is finally released.
 
-Just because a feature is in the beta list, that doesn't mean it can't land before the alpha release.  It only means it isn't necessary before the alpha.  Actually since all of the alpha features are dependent on the new compiler and parser, the beta tasks can be a good starting point.  PEPs 292, 305, 324 and 327 should be doable with trunk as can the template removal tasks and bugtests migration at the end of the list.
+Just because a feature is in the beta list, that doesn't mean it can't land before the alpha release.  It only means it isn't necessary before the alpha.  Actually since all of the alpha features are dependent on the new compiler and parser, the beta tasks can be a good starting point. 
 
-= Alpha =
+= Alpha 0/1 =
 
- * Move antlr parser in /trunk/sandbox/ast to trunk
- * Translate summer of code compiler to Java and hook up to antlr
- * [http://www.python.org/doc/2.4/whatsnew/node4.html PEP 289]: Generator expressions
- * [http://www.python.org/dev/peps/pep-0263 PEP 263]: Defining Python Source Code Encodings
- * [http://www.python.org/doc/2.4/whatsnew/node6.html PEP 318]: Function/method decorators
- * [http://www.python.org/peps/pep-0308.html PEP 308]: Conditional expressions
- * [http://www.python.org/dev/peps/pep-0343/ PEP 343]: 'with' statement
- * [http://www.python.org/doc/2.5/whatsnew/pep-342.html PEP 342]: Coroutines via generators
- * [http://www.python.org/dev/peps/pep-0341/ PEP 341]: Unified try/except/finally
- * [http://www.python.org/dev/peps/pep-0352/ PEP 352]: Exceptions as new-style classes
- * ["UpgradeTo25CPythonLib"]
-
-== Done ==
  * yield is always a keyword.
  * [http://www.python.org/dev/peps/pep-0279/ PEP 279]: enumerate() built-in added.
  * int() will now return a long instead of raising OverflowError if a number is too large.
@@ -35,20 +22,41 @@ Just because a feature is in the beta list, that doesn't mean it can't land befo
  * [http://www.python.org/dev/peps/pep-0307 PEP 307]: Pickle Enhancements
  * [http://www.python.org/doc/2.4/whatsnew/node8.html PEP 324]: subprocess module
  * [http://www.python.org/doc/2.3/whatsnew/node18.html#SECTION0001820000000000000000 optparse module]
+ * ExposeAnnotations
+
+ * Move antlr parser in /trunk/sandbox/ast to trunk
+ * Hookup asm compiler to antlr, solidify and add 2.5 features
+ * [http://www.python.org/doc/2.4/whatsnew/node4.html PEP 289]: Generator expressions '''*test_genexps has failures'''
+ * [http://www.python.org/dev/peps/pep-0263 PEP 263]: Defining Python Source Code Encodings
+ * [http://www.python.org/doc/2.4/whatsnew/node6.html PEP 318]: Function/method decorators '''*test_decorators has failures'''
+ * [http://www.python.org/peps/pep-0308.html PEP 308]: Conditional expressions
+ * [http://www.python.org/dev/peps/pep-0343/ PEP 343]: 'with' statement '''*test_with has failures'''
+ * [http://www.python.org/doc/2.5/whatsnew/pep-342.html PEP 342]: Coroutines via generators '''test_generators has failures'''
+ * [http://www.python.org/dev/peps/pep-0341/ PEP 341]: Unified try/except/finally
+ * [http://www.python.org/dev/peps/pep-0352/ PEP 352]: Exceptions as new-style classes
+ * ["UpgradeTo25CPythonLib"] '''*Ongoing'''
+ * [http://www.python.org/doc/2.4/whatsnew/node5.html PEP 292]: Simpler String Substitutions
+ * [http://www.python.org/doc/2.4/whatsnew/node9.html PEP 327]: decimal type
+
+
+= Alpha 2 =
+
+ * Ongoing parser fixes (universal newlines, line numbering, newline handling, interactive interpreter bugs)
+ * [http://www.python.org/dev/peps/pep-0237/ PEP 237]: Unifying int/long
+ * [http://www.python.org/doc/2.5/whatsnew/pep-357.html PEP 357]: Allowing Any Object to be Used for Slicing
+ * [http://www.python.org/dev/peps/pep-0309/ PEP 309]: Partial Function Application 
+ * [http://www.python.org/doc/2.3/whatsnew/node14.html PEP 305]: csv module
 
 
 = Beta =
 
- * [http://www.python.org/dev/peps/pep-0237/ PEP 237]: Unifying int/long
- * [http://www.python.org/doc/2.4/whatsnew/node5.html PEP 292]: Simpler String Substitutions
  * [http://www.python.org/dev/peps/pep-0328/ PEP 328]: Multi-line and absolute/relative imports
- * [http://www.python.org/doc/2.5/whatsnew/pep-357.html PEP 357]: Allowing Any Object to be Used for Slicing
- * [http://www.python.org/dev/peps/pep-0309/ PEP 309]: Partial Function Application 
  * [http://www.python.org/dev/peps/pep-0338/ PEP 338]: Executing modules as scripts
- * [http://www.python.org/doc/2.3/whatsnew/node14.html PEP 305]: csv module
- * [http://www.python.org/doc/2.4/whatsnew/node9.html PEP 327]: decimal type
- * [http://www.python.org/doc/2.4/whatsnew/node7.html PEP 322]: Reverse iteration
+ * [http://www.python.org/doc/2.4/whatsnew/node7.html PEP 322]: Reverse iteration '''This is mostly done but I think there's still some issues -pjenvey'''
  * ReplaceJythonc
- * ExposeAnnotations
  * MigrateBugtests
  * Import Python from the classpath
+ * Performance improvements
+
+= Future? =
+ * Translate summer of code compiler to Java
