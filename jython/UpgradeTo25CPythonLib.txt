@@ -4,6 +4,7 @@ To Fix
 ======
 
 * test_coercion - __cmp__ doesn't utilize __coerce__?
+* test_doctest - unicode problem
 * test_generators - not rejecting incorrect syntax wrt yield; but others need to be resolved outside of parser (maybe eval order?); fibgen is causing parse issues; tracebacks have extra blank lines apparently
 * test_genexps - need to test iterability of an object like int; similar syntax issues as test_generator
 * test_inspect
@@ -15,7 +16,6 @@ To Fix
 * test_struct - needs new 2.5 struct.Struct type and pack_into/unpack_from
 * test_tempfile - 1 failure, test_usable_template
 * test_unicode - lack of idna encoding (which needs unicodedata)
-* test_univnewlines - test_doctest failures don't restore sys.stdin -- causes to skip (it normally passes)
 * test_with
 * test_zipfile - possibly struct issues?
 
@@ -33,7 +33,6 @@ Parser
 * test_compile - over acceptance of incorrect syntax; need to raise problems with unicode being declared to have an encoding!
 * test_contextlib - likely parser eval order
 * test_decorators - eval order
-* test_doctest - exec doesn't work
 * test_future - bad line numbers
 * test_genexp, test_generator - parser probs
 * test_java_integration - ReservedNamesTest (in/exec), also there's class
@@ -43,4 +42,3 @@ Development
 ===========
 
 * test__rawffi (for ctypes, ported from PyPy)
-* test_csv - http://bugs.jython.org/issue1650802
