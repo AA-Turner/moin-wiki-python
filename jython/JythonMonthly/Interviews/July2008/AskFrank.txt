@@ -68,7 +68,12 @@ Luis Sergio Oliveira
 ----
  11) ''On the current jython website, the roadmap says that the current codebase of Jython 2.2 "is extremely brittle". Is it possible for you to walk us through some of the (major) refactoring that have been done to the codebase of Jython 2.5?''
 
-'''''I can't really give this question the attention it really deserves, but I can give some brief examples.  "Extremely brittle" might have been better stated as "really hard for newcomers to read".  We have replaced the Javacc parser with an Antlr parser -- and Antlr has *much* better documentation compared to Javacc.  We have refactored the compiler to use ASM, which is a very common choice for bytecode generation.  We have reduced the amount of custom code generation for new-style classes and replace it with annotations, which should be much more familiar to Java programmers.  We have reformatted lots of code to better fit a Java style. 12) Is it possible to do optional static type declaration in Jython? It will not be compliant to CPython, but I would like to know if it is at least technically feasible since Jython is running on JVM. We will be looking into adding decorators that will allow Jython to automatically express Java methods something like the support that jythonc used to give.  Jim Baker has been talking with Jemery Seik about his work in gradual typing -- so this may be something to watch.'''''
+'''''I can't really give this question the attention it really deserves, but I can give some brief examples.  "Extremely brittle" might have been better stated as "really hard for newcomers to read".  We have replaced the Javacc parser with an Antlr parser -- and Antlr has *much* better documentation compared to Javacc.  We have refactored the compiler to use ASM, which is a very common choice for bytecode generation.  We have reduced the amount of custom code generation for new-style classes and replace it with annotations, which should be much more familiar to Java programmers.  We have reformatted lots of code to better fit a Java style.'''''
+
+
+12) ''Is it possible to do optional static type declaration in Jython? It will not be compliant to CPython, but I would like to know if it is at least technically feasible since Jython is running on JVM.''
+
+'''''We will be looking into adding decorators that will allow Jython to automatically express Java methods something like the support that jythonc used to give.  Jim Baker has been talking with Jemery Seik about his work in gradual typing -- so this may be something to watch.'''''
 
 Thanks,
 
