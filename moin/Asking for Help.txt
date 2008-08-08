@@ -99,5 +99,19 @@ See Also: ["Asking for Help/Why doesn`t this work?"]
 
 
  * ["PythonFramework-x.x.pkg installation fails. Is there a workaround?"]
+
+ * I'm trying to split a string, but without breaking the quotes:
+x = '"a,b", c, d, "e,f,h", "i,j,k"'
+re.sub('"([^"]*)"', "\g<1>", x) 
+-> 'a,b, c, d, e,f,h, i,j,k' # Ok for me
+
+re.sub('"([^"]*)"', "|\g<1>|", x)
+-> '|a,b|, c, d, |e,f,h|, |i,j,k|'   # To show the separation of the groups, also Ok
+
+re.sub('"([^"]*)"', "\g<1>".replace(",", "|"), x)
+-> 'a,b, c, d, e,f,h, i,j,k' # The same result!
+-> 'a|b, c, d, e|f|h, i|j|k' # It doesn't suppose to replace all "," with "|" like here?
+
+TIA
 ----
 CategoryFaq
