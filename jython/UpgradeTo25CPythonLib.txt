@@ -5,7 +5,7 @@ To Fix
 
 * test_coercion - __cmp__ doesn't utilize __coerce__?
 * test_doctest - unicode problem
-* test_generators - not rejecting incorrect syntax wrt yield; but others need to be resolved outside of parser (maybe eval order?); fibgen is causing parse issues; tracebacks have extra blank lines apparently
+* test_generators - tracebacks have extra blank lines apparently; different syntax errors causing doctest to reject; throw into a gen doesn't work properly
 * test_genexps - need to test iterability of an object like int; similar syntax issues as test_generator
 * test_inspect
 * test_multibytecodec
@@ -15,7 +15,7 @@ To Fix
 * test_tempfile - 1 failure, test_usable_template
 * test_unicode - lack of idna encoding (which needs unicodedata)
 * test_univnewlines - test_doctest failures don't restore sys.stdin -- causes to skip (it normally passes)
-* test_with - we're generating bad bytecode with nested yields, e.g. with manager(): yield 1 (testWithYields)
+* test_with - we're generating bad bytecode with nested yields, e.g. with manager(): yield 1 (testWithYields) - FIXED
 * test_zipfile - possibly struct issues?
 
 Flaky/arch?
