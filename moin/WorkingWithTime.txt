@@ -74,11 +74,20 @@ print xml.utils.iso8601.ctime(0) # returns "1969-12-31T16:00-08:00"
 
 The module isn't perfect; If you omit the dashes, (perfectly valid ISO8601,) you'll get a {{{ValueError}}} exception.  However, unlike `time.strptime`, `xml.utils.iso8601.parse` will handle the timezone specification correctly.
 
-xml.utils is distributed in ''python-xml'' in debian and ubuntu.
+xml.utils is distributed in ''python-xml'' in debian and ubuntu, but appears to be unmaintained.
 
 == Parsing ISO 8601 with pyiso8601 ==
 
 http://cheeseshop.python.org/pypi/iso8601/ provides a standalone ISO8601 parser.
+
+== Parsing ISO 8601 with python-dateutil ==
+
+Although this isn't advertised as ISO8601 support, [http://labix.org/python-dateutil python-dateutil] seems to deal with the format correctly (for example, it has time zone support).
+
+{{{
+import dateutil.parser
+dateutil.parser.parse('2008-08-09T18:39:22Z')
+}}}
 
 == ISO8601 and Python in general ==
 
