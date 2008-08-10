@@ -53,9 +53,12 @@ processor encounters an ``@ExposedMethod``, it generates a new inner class
 extending PyMethodDescriptor that simply calls the annotated method when bound.  Because
 it's being called from a method descriptor, and Python method descriptors are
 available on types regardless of their location in the inheritance hierarchy,
-it's generally a good idea to make exposed methods final.  This ensures that
+it's generally **a good idea to make exposed methods final**.  This ensures that
 subclasses won't override the behavior of the method, so the descriptor always
-calls the same code when accessed directly off of the type.  
+calls the same code when accessed directly off of the type. Also, exposed methods 
+should avoid to call other virtual methods, directly or indirectly, unless the 
+interactions with subclasses overriding the invoked methods are clearly documented 
+and understood. 
 
 The generated descriptor maps the generic PyObject ``__call__`` method into the
 actual exposed method.  Like ``__call__``, it will pass up to four arguments
