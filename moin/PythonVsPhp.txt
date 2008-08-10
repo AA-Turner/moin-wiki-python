@@ -1,3 +1,181 @@
-good post dude thanks <a href=" http://www.diigo.com/profile/upornz ">yo uporn</a> =) <a href=" http://www.diigo.com/profile/nexxxx ">nexxx movie</a>
+= Python vs. PHP =
+
+This page was copied mindlessly from [http://wiki.w4py.org/python-vs-php.html] ([http://72.14.203.104/search?q=cache:bo4LWB1ZHswJ:wiki.w4py.org/python-vs-php.html+php+vs+python&hl=en&gl=us&ct=clnk&cd=1 Google Cache])
+
 ----
-CategoryAroundTheWorld
+
+== Common Ground ==
+
+Both PHP and Python:
+
+    * are interpreted, high level languages with dynamic typing
+    * are OpenSource (except where various [http://www.zend.com/products Zend products], recommended by some, are employed)
+    * are supported by large developer communities
+    * are easy to learn (compared to Java, and even Perl)
+    * are easy to extend in C, C++ and Java
+    * are extremely portable. They run on almost all platforms in existence without recompilation.
+    * support for variable number of function arguments.
+    * have the ability to freeze live objects in a string representation (for storing arbitrary objects on disk, moving them over the network, etc); they can then be converted back to identical objects with data intact. PHP's serialize function; Python's pickle and marshal modules. Note that PHP, handling of serialized objects and classes is much weaker and error prone than Python's due to PHP's lack of modules. When an object is serialized, only its attributes are stored, not its methods. Thus, the object's class must be present (with the exact same name) in the script that unserializes it. In Python this is handled automatically via the module/import framework. (this COULD be handled with PHP 5's __autoload(), but is not done automatically)
+
+== Compared as Languages ==
+
+=== What does PHP have that Python doesn't? ===
+
+    * syntax from C and Perl, with lots curly braces and dollar signs
+    * the 'switch' statement and 'do ... while' construct
+    * increment and decrement and assignment operators (assignment is a statement only in Python)
+    * the ternary operator/statement (... ? ... : ...)
+      * Retort: ''Python 2.5 has [http://www.python.org/dev/peps/pep-0308/ conditional expressions]''
+    * schizophrenic tableau of function names. The builtin library has a wide variety of naming conventions. There are no namespaces, so functions often have prefixes to denote their source (but often not). Functions are often placed into classes to simulate namespaces.
+      * Retort: ''PHP 5.3 introduces [http://ilia.ws/archives/187-Introduction-to-PHP-5.3-Slides.html namespaces]''
+        * Counter-retort:  ''PHP 5.3 isn't out''.
+    * a very casual language where all variables are "set" (to NULL), and a somewhat weak type system (not to be confused with dynamic types)
+    * an expedient (commonly installed) environment
+    * references ('$a =& $b' means that when $b changes, $a changes also)
+    * one array type that doubles as a list and a dictionary. Dictionary keys are iterated in their original order.
+    * private, protected and public modifiers for both properties and methods
+    * abstract and final modifiers for both classes and methods
+    * interfaces
+
+=== What does Python have that PHP doesn't? ===
+
+    * a general purpose programming language (not just for the web)
+      * Retort: ''not true PHP has a CLI SAPI, and is embeddable''
+    * indentation is used to mark out block structure rather than curly braces
+      * Retort: ''PHP curly braces make it work with HTML more easy''
+    * namespaces and modules
+      * Retort: ''PHP 5.3 introduces [http://ilia.ws/archives/187-Introduction-to-PHP-5.3-Slides.html namespaces]''
+        * Counter-retort:  ''PHP 5.3 isn't out''.
+    * a small core
+    * very clear, concise, and orthogonal syntax
+    * it is self documenting with docstrings and pydoc (PHP 5 has reflection and doc strings)
+    * keyword arguments to functions and methods, easy support for default arguments
+    * true object orientation and 'first class' classes and functions
+      * Retort: ''OO has been completely revamped in PHP 5''
+        * Counter-retort: ''But it's still painfully, obviously a hack''
+          * Retort: ''PHP 5 support true PPP (private, public, protected) that Python does not. In PHP, developer does not need to assign self as the first parameter in a method because $this is explicitly recognized.''
+    * classes are used extensively in the standard library
+      * Retort: ''PHP 5 has SPL which is fully class-based''
+    * a notion of private attributes
+      * Retort: ''PHP 5 supports private, protected and public for both properties and methods''
+    * multiple inheritance
+      * Retort: ''PHP supports Trail that is more flexible and less painful than multiple inheritance. I don't think multiple inheritance is good thing. Java avoids that feature.''
+    * object-oriented file handling
+    * method chaining
+      * Retort: ''Method Chaining is possible in PHP5 once an object is instantiated. In PHP it is called fluent interface''
+    * excellent introspection
+      * Retort: ''PHP 5 Reflection''
+        * Counter-retort: ''We said '''excellent''' introspection''
+    * everything is a reference! (references are painful in PHP)
+      * Retort: ''Not in PHP 5''
+    * one 'del' statement for all data types. PHP has 'unset' for variables and something else for array members.
+      * Retort: ''Array members can be unset()''
+    * consistent case sensitivity (PHP functions are case insensitive, but variables are case sensitive)
+    * a simple array slicing syntax
+      * Retort: ''array_slice() function is PHP is not simple enough, huh?''
+    * lambdas and other builtin functional programming constructs
+      * Retort: ''php.net/create_function''
+        * Counter-retort: create_function() is a crock; what it produces is not the True Lambda
+      * Retort: ''PHP supports true closure feature in PHP5.3. This feature has been added recently and it works.''
+    * iterators
+      * Retort: ''in PHP 5''
+    * structured exception handling
+      * Retort: ''in PHP 5''
+        * Counter-retort: ''where are PHP 5's equivalent of else and finally?''
+    * operator overloading
+      * Retort: ''operator overloading support is considered harmful and is a sign of a bad design language. In PHP you can use runkit extension to emulate the same feature''
+    * SWIG integration
+    * threading
+    * an excellent profiler
+      * Retort: XDebug, a debugging and profiling extension, that supports both PHP4 and PHP5 is extremely popular
+    * several debuggers and IDEs
+      * Retort: ''PHP had commercial tools for a long time, Eclipse PDT is Open-Source. Netbeans PHP is open source too''
+    * lots of high-level data types (lists, tuples, dicts, mx.DateTimes, NumPy arrays, etc.)
+      * Retort: ''PHP had SPL Types which is included in PHP5 as a standard library''
+    * differentiation between arrays (lists) and associative arrays (dictionaries).
+      * Retort: ''PHP array is more flexible. In case developer want a true array, just use FixedArray in PHP SPL''
+    * dates that aren't limited to UNIX timestamps (<1970, >2038)
+      * Retort: ''From PHP 5.1.0 the [http://www.php.net/DateTime DateTime] library is bundled with PHP and removes the above limitations''
+    * cached byte-code compilation
+      * Retort: ''available in PHP for either $980 from Zend or for free from pecl.php.net/apc. Among others are eAccelarator, XCache, which are both open source''
+    * a standardized database API
+      * Retort: ''pecl.php.net/PDO -- PHP 5.1''
+    * support for all major GUI frameworks
+      * Retort: ''PHP supports GTK and QT''
+    * strong internationalization and UNICODE support
+      * Retort: ''[http://wiki.pooteeweet.org/PhP60 PHP 6] will include Unicode support. This feature is available in PHP5.2 and PHP5.3 via intl extension which can be found at pecl.php.net''
+    * maturity, stability and upward-compatibility
+      * Retort: ''PHP is stable, mature and up/backward-compatible''
+        * Counter-retort: ''in general PHP applications must be ported between PHP 4, PHP 5 and future PHP 6 with Unicode''
+          * Retort: ''Not true, PHP4 can run seamlessly in PHP5 runtime engine (99%). As for PHP6, the same. In Python, if you want to break your application, run it in Python 3.0''
+        * Counter-retort: ''As for maturity... "Age is not an accomplishment"''
+    * tends to lead to much more scalable applications -- importing modules is safer than textually including code as in PHP: global variables are not used to exchange information.
+
+== Compared as Web Development Frameworks ==
+
+Unlike PHP, which has web development features built directly into the core language, Python's web development capabilites are provided by add-on modules. Basic CGI capabilities are provided by the 'cgi' module which comes in Python's standard library. There's also a wide range of third-party modules available for Python; some are complementary, others compete. As a result, Python provides a more flexible base for web development.
+
+There are some adverse side effects of this flexibility. First, the range of choices can be bewildering. Unless you are working experienced Python web developers, PHP is easier to get started with. Second, support for PHP is more common with shared-hosting companies than support for the various Python options.
+
+Another difference is that PHP is embedded in the web server, whereas Python web applications can either be embedded in the web server like PHP or run in a separate process. Here's a simple classification of Python web development platforms:
+
+ * emdedded in the web server process
+   * Apache modules (eg. mod_python) embed the Python interpreter in Apache and allow other Apache modules to be written with Python. This is the same idea as mod_perl.
+   * PyWX is an extension to AOLServer that serves the same purpose as the Apache modules above.
+   * MS ASP scripts can be written using Python via Active Scripting Host.
+ * running in a separate process
+   * non-persistent process (a new process is spawned for each request)
+     * custom CGI scripts
+   * persistent process (all requests are sent from the web server to one persistent process)
+     * custom Fast-CGI scripts
+     * 'Application Servers' (eg. Zope, Webware, SkunkWeb)
+
+(Note: PHP programs can be run standalone or as ordinary CGI scripts. However, when called indirectly from the web (eg. from a Perl CGI script), it requires unsetting an undocumented number of web environment variables so that PHP doesn't think it's running from the web and look in the wrong place for the script. Likewise, it's ''possible'' to write a long-running server in PHP, but there are precious few examples of it.)
+
+The vast majority of Python Web applications are run in a separate process. This has some important implications.
+
+== Security ==
+
+Here's some interesting notes on security in PHP: http://www.securereality.com.au/studyinscarlet.txt
+  * Retort: ''This note seems to be made a century ago. Lots of things has changed and that note does not make sense anymore''
+
+== Community Support ==
+
+=== PHP ===
+
+    * huge installed user base, but the figures are probably distorted by shared hosting
+    * low signal-to-noise ratio -- because PHP is so expedient, many of the users are not invested in the technology (or even their own code) or the community
+
+=== Python ===
+
+    * sizable, but not huge, installed user base
+    * Python Software Foundation
+    * lots of specialized interest groups
+    * very high signal-to-noise ratio
+
+== Commercial Support ==
+
+=== PHP ===
+
+    * http://www.zend.com
+
+=== Python ===
+
+See the ["CommercialServices"] page for more information.
+
+== Documentation ==
+
+Although both PHP and Python have excellent core documentation, Python's is more extensive and generally higher quality. PHP has a large number of translations available. Python doesn't. For PHP see http://www.php.net/docs.php and for Python see http://python.org/doc/ Python allows documentation on modules, classes, and functions to be included in the program code. The documentation becomes an attribute of the module/class/function, accessible from inside of the language itself. Python manual is really awfully structurized and presented compared to PHP manual, which uses cross-links, a lot of colorized examples and invaluable user comments to make it easier to comprehend the magic. PHP manual merges different versions of the language together making it a little bit bloated.
+
+== Editorial Notes ==
+
+Given the copy-and-paste origins of this document, along with the age of the original document, the text has been somewhat incoherent. Several changes have since been made to tidy up the text, drop redundant content (old comments which can be viewed in the original document, links to outdated resources and content found elsewhere in this Wiki), and to focus the remaining content on the actual topic of the page.
+
+
+== Constructive Criticism / Observations ==
+I came here for an objective comparison between PHP and Python but what I see is a document that is not only incorrect but is also heavily biased.  I realize this is a Python site but that doesn't give editors (read anonymous visitors) carte blanche when it comes to facts.  For example - it is claimed that unset is not uniformly used in PHP but in fact it works on variables, objects and arrays.  Next is the comment about Python having a profiler, so does PHP.  Other items that should not be in the section labeled things that Python has that PHP doesn't include:  method chaining,  classes are used extensively in the standard library, maturity, easy support for default arguments, debuggers and IDEs and that is just the beginning. 
+
+I don't see the harm in referring to future functionality because leaving it out implies that it isn't going to be available - for example the addition of namespaces and other features in PHP5.3 is going to be a nice step for the language and the release is imminent. That having been said, OOP in PHP is not complete IMO so I would like to see objective comparisons of OOP in PHP and OOP in Python which would be an enormous benefit to myself and others.
+
+I don't want seem like I hate Python, I honestly have no notions whatsoever about it but I do not like coming to a comparison page between two languages and discovering that the comments cannot be trusted.  The reason I came here at all was to decide if Python would be a good fit for future projects that I intend open source but I am leaving this site unsure of the true advantages that Python has to offer.  In the spirit of helping people know the difference, I suggest that you collaborate with someone who has no bias.  
+ * Retort: No such person exists.
