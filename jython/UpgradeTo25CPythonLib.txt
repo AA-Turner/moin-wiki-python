@@ -5,7 +5,7 @@ To Fix
 
 * test_builtin - may still have parse problems, mostly other issues
 * test_doctest - unicode problem
-* test_generators - tracebacks have extra blank lines apparently; different syntax errors causing doctest to reject; GC dependencies; also parser probs
+* test_generators - parser probs; ill-behaved generator doesn't finalize upon GC
 * test_inspect
 * test_list, test_userlist - test_set_subscript
 * test_multibytecodec
@@ -20,7 +20,6 @@ To Fix
 Flaky/arch?
 ===========
 
-* test_scope - sometimes fails due to GC - is this still the case?
 * test_socket - historically this is the case on SO_RCVBUF, SO_SNDBUF
 * test_tuple - sometimes OutOfMemoryErrors during regrtest (when creating a set from a large list of small tuples). maybe not the tests fault, but the fact that the regrtest progressively uses more and more memory as it goes: http://pylonshq.com/pasties/917
 
