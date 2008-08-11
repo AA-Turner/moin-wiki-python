@@ -3,6 +3,7 @@
 To Fix
 ======
 
+* test_builtin - may still have parse problems, mostly other issues
 * test_doctest - unicode problem
 * test_generators - tracebacks have extra blank lines apparently; different syntax errors causing doctest to reject; GC dependencies; also parser probs
 * test_inspect
@@ -11,7 +12,7 @@ To Fix
 * test_multibytecodec_support
 * test_site - del sys.setdefaultencoding does nothing
 * test_struct - needs new 2.5 struct.Struct type and pack_into/unpack_from
-* test_unicode - lack of idna encoding (which needs unicodedata)
+* test_unicode - no idna encoding (which needs unicodedata); raises wrong error for decode to int of unicode string
 * test_univnewlines - test_doctest failures don't restore sys.stdin -- causes to skip (it normally passes)
 * test_with - 1 failure, testNestedSingleStatements (__main__.ExceptionalTestCase), this is a tricky one
 * test_zipfile - possibly struct issues?
@@ -26,11 +27,8 @@ Flaky/arch?
 Parser
 ======
 
-* test_builtin - compile/exec/eval problems
-* test_compile - over acceptance of incorrect syntax; need to raise problems with unicode being declared to have an encoding!
-* test_contextlib - likely parser eval order
-* test_decorators - eval order
-* test_generator - parser probs
+* test_compiler - one line functions are not working compiler.parse (causing AttributeError: 'NoneType' object has no attribute 'suite')
+* test_decorators - compile(..., "eval") not working for test_dbcheck
 
 Development
 ===========
