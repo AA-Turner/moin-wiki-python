@@ -3,26 +3,23 @@
 To Fix
 ======
 
-* test_coercion - __cmp__ doesn't utilize __coerce__?
-* test_contextlib - 1 failure, test_contextmanager_trap_yield_after_throw
 * test_doctest - unicode problem
-* test_generators - tracebacks have extra blank lines apparently; different syntax errors causing doctest to reject; closing issues
-* test_genexps - need to test iterability of an object like int; similar syntax issues as test_generator
+* test_generators - tracebacks have extra blank lines apparently; different syntax errors causing doctest to reject; GC dependencies; also parser probs
 * test_inspect
+* test_list, test_userlist - test_set_subscript
 * test_multibytecodec
 * test_multibytecodec_support
 * test_site - del sys.setdefaultencoding does nothing
 * test_struct - needs new 2.5 struct.Struct type and pack_into/unpack_from
-* test_tempfile - 1 failure, test_usable_template
 * test_unicode - lack of idna encoding (which needs unicodedata)
 * test_univnewlines - test_doctest failures don't restore sys.stdin -- causes to skip (it normally passes)
-* test_with - 1 failure, testNestedSingleStatements (__main__.ExceptionalTestCase), this is likely the same issue as test_contextlib
+* test_with - 1 failure, testNestedSingleStatements (__main__.ExceptionalTestCase), this is a tricky one
 * test_zipfile - possibly struct issues?
 
 Flaky/arch?
 ===========
 
-* test_scope - sometimes fails due to GC
+* test_scope - sometimes fails due to GC - is this still the case?
 * test_socket - historically this is the case on SO_RCVBUF, SO_SNDBUF
 * test_tuple - sometimes OutOfMemoryErrors during regrtest (when creating a set from a large list of small tuples). maybe not the tests fault, but the fact that the regrtest progressively uses more and more memory as it goes: http://pylonshq.com/pasties/917
 
@@ -33,8 +30,7 @@ Parser
 * test_compile - over acceptance of incorrect syntax; need to raise problems with unicode being declared to have an encoding!
 * test_contextlib - likely parser eval order
 * test_decorators - eval order
-* test_future - bad line numbers
-* test_genexp, test_generator - parser probs
+* test_generator - parser probs
 
 Development
 ===========
