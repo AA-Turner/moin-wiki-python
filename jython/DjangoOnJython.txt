@@ -1,107 +1,54 @@
+== Using Django on Jython ==
+
+Finally, Django works on Jython, without any special patching. Right now you have to use the development version of both projects, but as soon as Django and Jython ship a new release, you will be able to use that too.
+
+So, here are the steps to get Django on Jython running:
+
+ 1. First, get a fresh version of Jython, and build it:
+
+    {{{
+$ svn co https://jython.svn.sourceforge.net/svnroot/jython/branches/asm/  jython-dev
+$ cd jython-dev
+$ ant
+}}}
+
+    This should create a `dist/` directory inside `jython-dev/`. The jython "executable" (a shell script, actually) is under `dist/bin`. You may want to alias the command to avoid typing the whole path each time, with the command: 
+
+    {{{
+$ alias jython25=/path/to/jython-dev/dist/bin/jython` 
+}}}
+
+    (or perhaps you prefer to add the directory to your `PATH`. Anyway, whatever works for you is OK)
+
+ 2. Check out and install Django:
+
+    {{{
+$ svn co http://code.djangoproject.com/svn/django/trunk/ django-dev
+$ cd django-dev
+$ jython25 setup.py install # Assuming you choose to use the "alias" trick explained on the previous point
+}}}
+
+    You may also like to make an alias for "django-admin.py". Very useful if you also use Django with CPython: 
+
+    {{{
+$ alias django-admin-jy="jython25  /path/to/jython-dev/dist/bin/django-admin.py"
+}}}
+
+ 3. Check out and install django-jython:
+
+    {{{
+$ svn co http://django-jython.googlecode.com/svn/trunk/ django-jython
+$ cd django-jython
+$ jython25 setup.py install
+}}}
+
+ 4. Start a project. 
+    {{{
+$ django-admin-jy startproject myproject
+}}}
+
+At this point, you can follow the great [http://djangoproject.com/documentation/ django documentation], remembering to use the `jython25` command instead of `python`, and the `JYTHONPATH` variable instead of `PYTHONPATH`. Have fun!
+
+== Community ==
+
 [http://pipes.yahoo.com/pipes/pipe.info?_id=jroxOD1f3BGgvtiIqGIyXQ RSS Aggregator for blog posts about Django on Jython]
-
-== Summary of Django on Jython: The Gaps ==
-
-The most important thing to know about Django on Jython is that we are almost there, and with clean code. End-to-end functionality is demonstrated by the admin tool running in full CRUD, along with more than 90% of successful tests.
-
-Moreover, we are part of the goals for the upcoming Django 1.0 release.
-
-== Running on Jython ==
-
-To run Django on Jython, with a PostgreSQL backend, the easiest way to get started is to follow the instructions outlined [http://blog.leosoto.com/2008/07/my-new-djangojython-developer-workflow.html here]. If you prefer you can manually get Jython asm branch and Django trunk to later apply the patches at https://hg.leosoto.com/django.patches/file and https://hg.leosoto.com/jython.patches/file 
-
-Additionaly, you will need the [http://code.google.com/p/django-jython django-jython integration code] which contains the JDBC database backends and some management utilities. 
-
-== Status ==
-
-'''This is mostly outdated. We are working on updated status and documentation. Sorry for the inconveniences.'''
-
-Here's what works:
-
-syncdb and the very cool Django admin run; many unit tests pass. You can run with internationalization enabled. You do need to run the dev server with --noreload for now. We need to document here how to run with [http://www.xhaus.com/modjy/ modjy], which is Alan Kennedy's servlet container for WSGI apps.
-
-In running the model unit tests, here are the things we seem to be missing:
-
- * We still have some encoding problems, again seen in doctests. An example where output is expected to be lower case hex, not upper case. I fixed the problem in {{{PyUnicode}}}, but there are more places. Our current plan is to make test_unicode.py pass (accounting for any UTF-16 vs UCS-2/UCS-4 issues).
-
- * Problem with the {{{ManagerDescriptor}}} handling, in {{{django.db.models.manager}}}.
-
- * No decorators yet! (But they are coming soon, and are now available experimentally for Jython.) 
-
-There may be some other rough categories, we need to look at the failures more systematically. 
-
-[http://dojstatus.leosoto.com Here are some unofficial test suite results]
-
-== Next Steps ==
-
-On the Django front, get more of the unit tests running!
-
-Modern is now in trunk. 
-
-----
-
-== Historical Notes ==
-
-(Preserved to show how much we had to go through...)
-
-=== Merging Modern into trunk ===
-
-With the Modern branch was recently merged in (and deleted), we have consolidated the bugs, workarounds, and patches found below -- plus a bunch more. The most important aspect is that we have tried to make Jython conform more to CPython, using Django as our guide, although there are some gaps - especially if Django already had incorporated fixes. Our driving goal is to converge on these gaps over time. Please note that is intended to be stable, performant code, and so far that looks to be the case!
-
-Here are some of the things we addressed:
-
- * The test_extcall unit test still fails. This appears to be a dependency on {{{dict traversal}}} being a specific arbitrary order different from CPython's. Google's GHOP produced an improved version for Python 2.6, so we will look at this as a starting point for further analysis.
-
- * Tristan King provided a near complete subset of the functionality for {{{time.strptime}}}, as implemented in {{{org.python.modules.time.Time}}}. This needs to be enhanced. All unit tests in the CPythonLib version of test_time now pass except for {{{strptime}}} -- specifically the conversion specifier {{{'%c'}}} -- so we can also move to that, and discard our Jython version, when this is completed. That should be soon! Done, and in trunk.
-
- * Decide whether we should use {{{ConcurentHashMap}}} or not as the backing hash map for {{{dict}}} and {{{__dict__}}}. CHM introduces creation overhead, but it should prove to be far more scalable on multicore systems. The programming model is also far nicer with respect to Jython. Done.
-
-
-=== Former Major Problems ===
-
- * Many doctests are fragile, because they depend on the dict traversal ordering; in Jython, this is different that CPython, and if we adopt {{{ConcurrentHashMap}}}, it's not even repeatable. This would seem to be a pervasive bug in Django. This was fixed on Django.
-
- * Jython does not support non-str keys in {{{__dict__}}} right now.  Jim Baker replaced the custom dictionary in {{{PyStringMap}}} with a {{{HashMap}}} (along Groves' earlier work). This change should resolve this problem.  Try the [https://jython.svn.sourceforge.net/svnroot/jython/branches/modern/ modern] branch. Problem encountered in {{{django/utils/_threading_local.py}}}. 
- * Something goes wrong with {{{re.compile(u"([\u0080-\uffff])")}}} in {{{django/utils/text.py}}} I think it is a lacking in our array implementation but this needs more investigation.
-   * See [http://sourceforge.net/tracker/index.php?func=detail&aid=1544953&group_id=12867&atid=112867 bug 1544953]
- * {{{django/views/debug.py}}} wants to know a function's {{{__module__}}}. functions don't have a {{{__module__}}} attribute in jython yet. [http://sourceforge.net/tracker/index.php?func=detail&aid=1800472&group_id=12867&atid=312867 patch]
- * {{{inspect.getargs()}}} doesn't work. 
-   * That's because {{{co_code}}} isn't supported by {{{PyTableCode}}}.
-     * '''But''', {{{co_code}}} is used by {{{getargs()}}} only to discover anonymous tuple arguments. Commenting such section seems to be enough to get the other cases working.
-     * workaround [https://dev.archer.edu.au/projects/kepler/svn/jython-django/trunk/jython-patches/co_code-workaround.patch patch]. just sets {{{co_code = ""}}}. i haven't come across any problems for this inside django yet, but i'm sure it'll break other python code -- TristanKing
- * {{{time}}} module lacks {{{strptime()}}}.
-   * workaround [https://dev.archer.edu.au/projects/kepler/svn/jython-django/trunk/jython-patches/time-strptime.patch patch]. this is incomplete, untested, and not optimal but works for the django tutorial -- TristanKing
- * inspect.isclass(time) shouldn't return True [http://sourceforge.net/tracker/index.php?func=detail&aid=1786009&group_id=12867&atid=112867 bug]
-   * Django [http://code.djangoproject.com/changeset/6194 works around this] until it's fixed.
-
-=== Former Minor annoyances ===
-
- * slice should be a type, not a function. [http://bugs.jython.org/issue1791931 bug] [http://bugs.jython.org/issue1798544 patch]
- * {{{PyBoolean.__tojava__}}} returns an {{{Integer}}}
-   * It affects zxJDBC unless a DataHandler sets the right type of boolean parameters. Fortunately, JDBC30DataHandler does this thing, at least on my limited tests -- LeonardoSoto
- * Jython does not have {{{__builtins__}}} as a module.  Django adds "_" as a convenience method for calling gettext in {{{django/conf/__init__.py}}}.
-    * According to the Python docs, {{{__builtins__}}} is a implementation detail and shouldn't be used by portable applications, so it's a Django problem.  (See note about {{{__builtins__}}} here: http://docs.python.org/ref/naming.html)
- * Jython methods are not descriptors. It seems a implementation detail. [http://code.djangoproject.com/ticket/5664 django patch]
- * Jython classes which extend dict cannot be compared to a dict. [http://bugs.jython.org/issue1804011 bug] [https://dev.archer.edu.au/projects/kepler/changeset/149?format=diff&new=149 django patch]
- * Jython doesn't recognize {{{__unicode__}}} methods assigned to instances. 
-    * But, this is the only {{{__*__}}} method where CPython allows this, and it's not documented anywhere. So, it's a implementation detail and should be fixed on Django. [http://code.djangoproject.com/ticket/5560 django patch]
-
-=== Already Fixed ===
-
-(And many more!)
-
- * Jython does not have {{{sys.stdout.isatty}}}.  Jython should get added to the exclusions around that call in {{{django/core/management.py}}} (win32 and 'Pocket PC' are already excluded).
-   * Fixed in [http://code.djangoproject.com/changeset/6032 Django changeset 6032]
- * stringmap (or the {{{__dict__}}} implementation) needs a {{{pop(o)}}} method.
- * Jython lists and tuples don't have {{{__iter__}}} . 
-   * Fixed in [http://code.djangoproject.com/changeset/6211 Django changeset 6211]
- * Jython does not have {{{os.getpid()}}}.
-   * Django workarounds it now.
- * Jython does not have {{{os.W_OK}}} needed in {{{django/core/management.py}}}.  This probably will not be hard to add this since {{{java.io.File}}} has a {{{canWrite()}}}.
-   * {{{os.chmod}}} should be implemented too (After checking for write permissions, Django will try to change them if necessary).
-     * That's hard. Maybe Django shouldn't check for permissions if running on Jython.
-   * Django don't check or change file permissions when running on Jython now
- * The {{{U}}} (Universal newlines) flag for {{{open()}}} isn't recognized on Jython
- * Unicode string interpolation doesn't work
- * {{{object}}} has a {{{__unicode__}}} attribute (it doesn't on CPython) [http://bugs.jython.org/issue1800378 bug] [http://bugs.jython.org/issue1800381 patch] -- TristanKing
- * metaclasses need to know the {{{__module__}}} of its classes  [http://bugs.jython.org/issue1781500 bug] [http://bugs.jython.org/issue1789137 patch]
