@@ -3,7 +3,12 @@
 To Fix
 ======
 
-* test_builtin - may still have parse problems, mostly other issues
+* test_builtin
+
+  * test_input_and_raw_input - del sys.stdin does nothing
+  * test_cmp - Jython can compare objects with cycles in them, at least for this test. 
+  * test_general_eval - Jython can use arbitrary maps for globals; this was discussed for CPython. Not in current 2.6, perhaps because it touched a lot of code or issues with performance (see http://bugs.python.org/issue1402289)
+
 * test_doctest - unicode problem
 * test_generators - parser probs; ill-behaved generator doesn't finalize upon GC; closure setup in visitLambda and visitGeneratorExp does not interact properly with a yield point, resulting in bad bytecode
 * test_inspect
