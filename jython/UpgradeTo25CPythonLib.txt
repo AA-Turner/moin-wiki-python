@@ -10,7 +10,7 @@ To Fix
   * test_general_eval - Jython can use arbitrary maps for globals; this was discussed for CPython. Not in current 2.6, perhaps because it touched a lot of code or issues with performance (see http://bugs.python.org/issue1402289)
   * test_execfile - on the other hand, Jython does not even validate that the locals or globals are in fact mapping objects
 
-* test_doctest - test_doctest2.txt, which is run by test_DocFileSuite, has some random Unicode characters, but no encoding declared (looks utf8). Does this rely on an implicit utf8 encoding?
+* test_doctest - test_doctest2.txt, which is run by test_DocFileSuite, includes the string u'\xef\xbb\xbf\xd0\x89\xd0\x8a\xd0\x88\xd0\x81\xd0\x82'. The encoding is declared to be utf8 in the call to doctest.DocFileSuite
 * test_generators
 
   * parser probs where we don't reject bad syntax
