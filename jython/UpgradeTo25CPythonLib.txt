@@ -24,7 +24,11 @@ To Fix
 
 * test_site - del sys.setdefaultencoding does nothing
 * test_struct - needs new 2.5 struct.Struct type and pack_into/unpack_from
-* test_unicode - no idna encoding (which needs unicodedata); raises wrong error for decode to int of unicode string
+* test_unicode
+
+  * test_codecs_errors - raises wrong error for decode to int of unicode string
+  * test_codecs_idna - no idna encoding (which needs unicodedata)
+
 * test_univnewlines - test_doctest failures don't restore sys.stdin -- causes to skip (it normally passes)
 * test_with - 1 failure, testNestedSingleStatements (__main__.ExceptionalTestCase), this is a tricky one
 
@@ -32,6 +36,7 @@ Flaky/arch?
 ===========
 
 * test_cpickle
+* test_descr
 * test_socket - historically this is the case on SO_RCVBUF, SO_SNDBUF
 * test_scope
 * test_tuple - sometimes OutOfMemoryErrors during regrtest (when creating a set from a large list of small tuples). maybe not the tests fault, but the fact that the regrtest progressively uses more and more memory as it goes: http://pylonshq.com/pasties/917
