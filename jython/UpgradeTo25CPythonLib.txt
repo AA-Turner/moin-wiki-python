@@ -38,6 +38,7 @@ Parser
 * test_decorators - compile(..., "eval") not working for test_dbcheck
 * test_doctest - in addition to the unicode problem, there is a parsing problem with newlines + comment -- the following fails: (try: pass<newline>except: pass<newlne>#comment)
 * test_syntax - lots of work needed to make exceptions look more like CPython
+* test_inspect.test_wrapped_decorator, the line number needs to be set for the wrapped function at the def, not at the decorators stacked above. right now node.getLine()  in CodeCompiler#visitFunctionDef must be reporting where the function def starts in the AST (which includes of course the decorators)
 
 Development
 ===========
