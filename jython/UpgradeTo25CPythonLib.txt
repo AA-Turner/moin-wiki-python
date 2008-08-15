@@ -8,12 +8,17 @@ To Fix
   * test_input_and_raw_input - del sys.stdin does nothing
   * test_cmp - Jython can compare objects with cycles in them, at least for this test. 
   * test_general_eval - Jython can use arbitrary maps for globals; this was discussed for CPython. Not in current 2.6, perhaps because it touched a lot of code or issues with performance (see http://bugs.python.org/issue1402289)
+  * test_execfile - on the other hand, Jython does not even validate that the locals or globals are in fact mapping objects
 
 * test_doctest - unicode problem
-* test_generators - parser probs; ill-behaved generator doesn't finalize upon GC; closure setup in visitLambda and visitGeneratorExp does not interact properly with a yield point, resulting in bad bytecode
+* test_generators
+
+  * parser probs where we don't reject bad syntax
+  * ill-behaved generator doesn't finalize upon GC
+  * closure setup in visitLambda and visitGeneratorExp does not interact properly with a yield point, resulting in bad bytecode
+
 * test_inspect
-* test_multibytecodec
-* test_multibytecodec_support
+
 * test_site - del sys.setdefaultencoding does nothing
 * test_struct - needs new 2.5 struct.Struct type and pack_into/unpack_from
 * test_unicode - no idna encoding (which needs unicodedata); raises wrong error for decode to int of unicode string
@@ -36,3 +41,4 @@ Development
 ===========
 
 * test__rawffi (for ctypes, ported from PyPy)
+* test_multibytecodec (implies test_multibytecodec_support)
