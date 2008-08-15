@@ -31,9 +31,10 @@ print an_A.hello()
 === Smart pointers ===
 
 Smart pointers, e.g. boost::shared_ptr<T>, is another common way to
-give away ownership of objects in C++. The following suggests a way to
-handle shared_ptr objects in Python, introducing the notation
-{{{(+ptr).foo()}}} in python to immitate C++'s {{{(*ptr).foo()}}}:
+give away ownership of objects in C++. Theese kind of smart pointer are automatically
+handled, if you declare their existence, when declaring the class to boost.python.
+
+E.g.
 
 {{{#include <boost/shared_ptr.h>
 using namespace boost;
@@ -45,21 +46,17 @@ struct A {
 
 BOOST_PYTHON_MODULE(shared_ptr)
 {
-    class_<A>("A",init<>())
-        .def("create",&A::create,return_value_policy<return_by_value>())
+    class_<A, shared_ptr<A> >("A",init<>())
+        .def("create",&A::create )
         .staticmethod("create")
         .def("hello",&A::hello)
-        ;
-
-    class_< shared_ptr<A> >("A_ptr", init<const shared_ptr<A>& >())
-        .def("__pos__",&boost::shared_ptr<A>::get,return_internal_reference<>())
-        ;
+    ;
 }
 }}}
 
 A sample python program:
 {{{
 from shared_ptr import *
-an_A = A_ptr.create()
-print (+an_A).hello()
+an_A = A.create()
+print an_A.hello()
 }}}
