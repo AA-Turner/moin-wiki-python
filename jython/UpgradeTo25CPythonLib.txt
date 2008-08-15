@@ -19,6 +19,9 @@ To Fix
 
 * test_inspect
 
+  * test_excluding_predicates - sys.exit, etc., are not really attributes of a module
+  * test_wrapped_decorator - the line number needs to be set for the wrapped function at the def, not at the decorators stacked above. right now node.getLine()  in CodeCompiler#visitFunctionDef must be reporting where the function def starts in the AST (which includes of course the decorators) 
+
 * test_site - del sys.setdefaultencoding does nothing
 * test_struct - needs new 2.5 struct.Struct type and pack_into/unpack_from
 * test_unicode - no idna encoding (which needs unicodedata); raises wrong error for decode to int of unicode string
@@ -38,10 +41,17 @@ Parser
 * test_decorators - compile(..., "eval") not working for test_dbcheck
 * test_doctest - in addition to the unicode problem, there is a parsing problem with newlines + comment -- the following fails: (try: pass<newline>except: pass<newlne>#comment)
 * test_syntax - lots of work needed to make exceptions look more like CPython
+
+---- /!\ '''Edit conflict - other version:''' ----
 * test_inspect.test_wrapped_decorator, the line number needs to be set for the wrapped function at the def, not at the decorators stacked above. right now node.getLine()  in CodeCompiler#visitFunctionDef must be reporting where the function def starts in the AST (which includes of course the decorators)
+
+---- /!\ '''Edit conflict - your version:''' ----
+
+---- /!\ '''End of edit conflict''' ----
 
 Development
 ===========
 
 * test__rawffi (for ctypes, ported from PyPy)
 * test_multibytecodec (implies test_multibytecodec_support)
+* test_unicodedata - need to implement unicodedata!
