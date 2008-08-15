@@ -10,7 +10,7 @@ To Fix
   * test_general_eval - Jython can use arbitrary maps for globals; this was discussed for CPython. Not in current 2.6, perhaps because it touched a lot of code or issues with performance (see http://bugs.python.org/issue1402289)
   * test_execfile - on the other hand, Jython does not even validate that the locals or globals are in fact mapping objects
 
-* test_doctest - unicode problem
+* test_doctest - test_doctest2.txt, which is run by test_DocFileSuite, has some random Unicode characters, but no encoding declared (looks utf8). Does this rely on an implicit utf8 encoding?
 * test_generators
 
   * parser probs where we don't reject bad syntax
@@ -31,7 +31,9 @@ To Fix
 Flaky/arch?
 ===========
 
+* test_cpickle
 * test_socket - historically this is the case on SO_RCVBUF, SO_SNDBUF
+* test_scope
 * test_tuple - sometimes OutOfMemoryErrors during regrtest (when creating a set from a large list of small tuples). maybe not the tests fault, but the fact that the regrtest progressively uses more and more memory as it goes: http://pylonshq.com/pasties/917
 
 Parser
