@@ -37,7 +37,7 @@ Parser
 ======
 
 * test_compiler - one line functions are not working compiler.parse (causing AttributeError: 'NoneType' object has no attribute 'suite')
-* test_decorators - compile(..., "eval") not working for test_dbcheck
+* test_decorators - eval(expr, globals, locals) on line 32 exposes a problem with eval -- it does not appear to be getting the globals and locals properly.  Just deleting "globals, locals" makes the test pass.
 * test_syntax - lots of work needed to make exceptions look more like CPython
 * test_inspect.test_wrapped_decorator, the line number needs to be set for the wrapped function at the def, not at the decorators stacked above. right now node.getLine()  in CodeCompiler#visitFunctionDef must be reporting where the function def starts in the AST (which includes of course the decorators)
 
