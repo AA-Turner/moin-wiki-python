@@ -5,12 +5,9 @@ To Fix
 
 * test_builtin
 
-  * test_input_and_raw_input - del sys.stdin does nothing
-  * test_cmp - Jython can compare objects with cycles in them, at least for this test. 
-  * test_general_eval - Jython can use arbitrary maps for globals; this was discussed for CPython. Not in current 2.6, perhaps because it touched a lot of code or issues with performance (see http://bugs.python.org/issue1402289)
-  * test_execfile - on the other hand, Jython does not even validate that the locals or globals are in fact mapping objects
+  * test_input_and_raw_input - del sys.stdin does nothing - fixed by pending patch http://codereview.appspot.com/2948
 
-* test_doctest - test_doctest2.txt, which is run by test_DocFileSuite, includes the string u'\xef\xbb\xbf\xd0\x89\xd0\x8a\xd0\x88\xd0\x81\xd0\x82'. The encoding is declared to be utf8 in the call to doctest.DocFileSuite
+* test_doctest - test_doctest4.txt has issues in String <=> PyString conversion; see email by LeoSoto to jython-dev 
 * test_generators
 
   * parser probs where we don't reject bad syntax
