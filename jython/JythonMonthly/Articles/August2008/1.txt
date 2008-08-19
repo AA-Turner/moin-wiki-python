@@ -7,7 +7,7 @@
 A new era in Jython development has arrived.  We Jython developers will soon be able to begin harnessing many of the powerful features of the current Python language distribution.  Using the latest alpha release of Jython (2.5a+), we can take a look at these new features today.  Python is a language whose popularity has grown tremendously over the past several years, partially due to the great features that have been added.  One of the newer features are known as decorators, which may appear daunting at first due to their odd syntax.  As many Jython developers are also Java gurus, the syntax may look strikingly similar to the JavaEE Annotation.  However, the Jython decorator is significantly different but equally as powerful.
 
 == What Is A Decorator? ==
-You can do a Google search on Python decorators and find about a thousand articles, blogs, and tutorials on the subject.  Rather than take up lots of your time with explanations, I will give give a basic definition and then provide a few examples of how can be used.
+You can do a Google search on Python decorators and find about a thousand articles, blogs, and tutorials on the subject.  One of the most useful references I found for decorator discussion came from an article written by Michele Simionato (reference below).  In the article, Michele explains that decorators are useful for helping to reduce boilerplate code and redundancy, and they also help to make code more organized and readable.
 
 Decorator:  A function that transforms another function.  A function can be passed into a decorator, modified, and then returned.
 
@@ -51,3 +51,54 @@ Both of the examples have the following result:
 >>> target.attribute
 1
 }}}
+
+
+Second, more useful example...the classic "Prime Number" scenario.
+
+{{{
+# time a function using time.time() and the a @ function decorator
+# tested with Python24    vegaseat    21aug2005
+
+import time
+
+def print_timing(func):
+    def wrapper(*arg):
+        t1 = time.time()
+        res = func(*arg)
+        t2 = time.time()
+        print res
+        print '%s took %0.3f ms' % (func.func_name, (t2-t1)*1000.0)
+        return res
+    return wrapper
+
+# declare the @ decorator just before the function, invokes print_timing()
+@print_timing
+def getPrimeList(n):
+    """ returns a list of prime numbers from 2 to < n using a sieve algorithm"""
+    if n < 2:  return []
+    if n == 2: return [2]
+    # do only odd numbers starting at 3
+    s = range(3, n+1, 2)
+    # n**0.5 may be slightly faster than math.sqrt(n)
+    mroot = n ** 0.5
+    half = len(s)
+    i = 0
+    m = 3
+    while m <= mroot:
+        if s[i]:
+            j = (m*m-3)//2
+            s[j] = 0
+            while j < half:
+                s[j] = 0
+                j += m
+        i = i+1
+        m = 2*i+3
+    return [2]+[x for x in s if x]
+
+if __name__ == "__main__":
+    print "prime numbers from 2 to <10,000,000 using a sieve algorithm"
+    primeList = getPrimeList(1000)
+    time.sleep(2.5)
+}}}
+
+This example has been slightly modified from the discussion found at http://www.daniweb.com/code/snippet368.html because of two reasons.  First, I wanted to print out the prime number listing so that you could see how this function was called and modified by the decorator a bit more clearly.  Second, the referenced discussion uses the number 10,000,000 and there are just too many primes to list out in that large of a number!
