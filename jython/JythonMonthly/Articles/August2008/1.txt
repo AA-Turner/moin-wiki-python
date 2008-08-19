@@ -52,12 +52,46 @@ Both of the examples have the following result:
 1
 }}}
 
+A second, more useful example shows how we can use a decorator to validate input on any Jython function.  For instance, in the example below we want to ensure that our function is only accepting numeric input.  We define a function which we will use to validate or data and return a boolean value.  The decorator function will be used to evaluate whether or not the input to our function is valid by using the boolean value which it receives.  We can pass the validation function into the decorator function as input in order to make this process occur.  Take a look at the code below as I think it speaks for itself.
 
-Second, more useful example...the classic "Prime Number" scenario.
+{{{
+# Return true if the value is numeric, false if it is not.
+def is_number(x):
+    for value in x:
+        if type(value) == type(1):
+            print type(value)
+            return True
+        else:
+            print type(value)
+            return False
+    
+# Apply to a function to determine whether data passed into it is valid
+def require(expr):
+    def decorator(func):
+        def wrapper(*__args,**__kw):
+            assert eval(expr),"Precondition failed...please pass valid input"
+            return func(*__args,**__kw)
+        return wrapper
+    return decorator
+
+# Decorate our test function to have our require function applied to it.  We
+# could pass any boolean value into require in order to check for compliance
+# at runtime.
+@require("is_number(__args)")
+def test(*args):
+    print args[0]
+test(363)
+test("Hello world")
+}}}
+
+The first call to our test function will return a the value that we passed into it.  This is obviously not a useful feature, but in a real-world application we would do something with that value once it was validated.  The second call to our test function will fail because the value passed into it is not numeric.  As you can see, the ''require'' decorator is passed the ''is_number(__args)'' function and evaluated at runtime...thus, giving us our validation.  Quite useful indeed!
+
+
+Lastly, another more complex example...the classic "Prime Number" scenario.  If nothing else, please use this example
 
 {{{
 # time a function using time.time() and the a @ function decorator
-# tested with Python24    vegaseat    21aug2005
+# tested with Jython 2.5a1+  
 
 import time
 
@@ -102,3 +136,7 @@ if __name__ == "__main__":
 }}}
 
 This example has been slightly modified from the discussion found at http://www.daniweb.com/code/snippet368.html because of two reasons.  First, I wanted to print out the prime number listing so that you could see how this function was called and modified by the decorator a bit more clearly.  Second, the referenced discussion uses the number 10,000,000 and there are just too many primes to list out in that large of a number!
+
+== Conclusion ==
+
+Decorators are bound to become a major benefit to Jython applications which are developed using the 2.5 release.  
