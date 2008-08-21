@@ -41,8 +41,8 @@ First, make sure that you really want to override attribute lookup. Then, overri
       final PyObject customobject___getattribute__(PyObject arg)
           String name = asName(arg);
           PyObject ret = customobject___findattr__(name);
-          if(ret == null)
-              noAttributeError(name);
+          if (ret == null)
+              noAttributeError(name); // raises Py.AttributeError
           return ret;
       }
       
