@@ -43,7 +43,7 @@ However, the cpython SSL API is extremely basic, and essentially only permits th
  * Non-blocking SSL support.
  * Server side SSL support.
 
-All of the above are possible, but since no other python version includes that support in the base distribution, I'm not going to do it for jython either; trying to design an API would complex enough; implementing would be a lot of work beyond that.
+All of the above are possible, but since no other python version includes that support in the base distribution, I'm not going to do it for jython either; trying to design an API would be complex enough; implementing would be a lot of work beyond that.
 
 If you have serious SSL or crypto requirements, then I '''strongly''' recommend using the java crypto libraries, or one of the excellent third-party crypto libraries for java, such as that from the [http://www.bouncycastle.org Legion of the Bouncy Castle].
 
@@ -51,15 +51,76 @@ If you have serious SSL or crypto requirements, then I '''strongly''' recommend 
 
 By default, the cpython socket library does not carry out certificate checking, which means that it will accept expired certificates, etc. This is acceptable when the validity of the remote certificate is not important, such as in testing.
 
-In Java, by default, certificate checking is '''enabled'''. This means that the jython ssl routines *will* verify the validity of the remote certificate, and refuse to form the connection if it is not valid. If this is a problem for you, then you can get around as described here.
+In Java, by default, certificate checking is '''enabled'''. This means that the jython ssl routines *will* verify the validity of the remote certificate, and refuse to form the connection if it is not valid. If this is a problem for you, then you can get around it as described here.
 
 ==== By configuring your JVM ====
 
 If you are using self-generated certificates for testing, then you can import those certificates into the JVM running your jython scripts, and the certificate will then be recognised. See this article from Sun on [http://java.sun.com/j2ee/1.4/docs/tutorial/doc/Security6.html how to install certificates on a JVM].
 
-==== BY installing your own SecurityManager ====
+==== BY installing your own Security Provider ====
 
-TODO: Need to write some code and documentation for how to install your own [http://java.sun.com/j2se/1.4.2/docs/api/java/lang/SecurityManager.html SecurityManager] so that it simply accepts all certificates. Here is a java article on [http://scv.bu.edu/Doc/Java/tutorial/networking/security/index.html  Providing Your Own Security Manager]
+The following technique has been adapted from the ZXTM Knowledge''''''Hub article [http://knowledgehub.zeus.com/articles/2006/01/03/using_the_control_api_with_java Using the Control API with Java].
+
+'''WARNING''': Installing this all-trusting security provider means that '''all''' certificates will be accepted, regardless of validity! '''Do not use this technique if you need to verify the trustworthiness of an SSL certificate!'''
+
+In order to accept all certificates, valid or not, you can install your own security provider. Here is a sample Security Provider, written in java, which trusts all certificates. This code should be saved in a file called '''My''''''Provider.java''', compiled and the resulting '''My''''''Provider.class''' file placed in the class path.
+
+{{{
+import java.security.Security;
+import java.security.KeyStore;
+import java.security.Provider;
+import java.security.cert.X509Certificate;
+import javax.net.ssl.ManagerFactoryParameters;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactorySpi;
+import javax.net.ssl.X509TrustManager;
+
+public class MyProvider extends Provider
+{
+  public MyProvider()
+  {
+    super("MyProvider", 1.0, "Trust certificates");
+    put("TrustManagerFactory.TrustAllCertificates", MyTrustManagerFactory.class.getName());
+  }
+
+  protected static class MyTrustManagerFactory extends TrustManagerFactorySpi
+  {
+    public MyTrustManagerFactory()
+      {}
+    protected void engineInit( KeyStore keystore )
+      {}
+    protected void engineInit(ManagerFactoryParameters mgrparams )
+      {}
+    protected TrustManager[] engineGetTrustManagers()
+    {
+      return new TrustManager[] {new MyX509TrustManager()};
+    }
+  }
+
+  protected static class MyX509TrustManager implements X509TrustManager
+  {
+    public void checkClientTrusted(X509Certificate[] chain, String authType)
+      {}
+    public void checkServerTrusted(X509Certificate[] chain, String authType)
+      {}
+    public X509Certificate[] getAcceptedIssuers()
+      { return null; }
+  }
+
+}
+}}}
+
+To install this custom Security Provider from jython, execute the following code
+
+{{{
+import java
+import MyProvider
+# Install the all-trusting trust manager
+java.security.Security.addProvider(MyProvider())
+java.security.Security.setProperty("ssl.TrustManagerFactory.algorithm", "TrustAllCertificates")
+}}}
+
+All code which creates SSL socket connections should now accept all certicates, whether they are valid or not.
 
 == Cpython versions ==
 
