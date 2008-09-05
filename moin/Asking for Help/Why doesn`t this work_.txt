@@ -44,3 +44,5 @@ The second example generates a list of generator objects, one per directory in S
 The third example generates an undefined variable error.
 
 What is wrong with the third example? If I pre-define {{{S = Source[1]}}}, it works correctly, generating a flat list, while if I predefine S equal to something else, it uses that value in violation of the semantics of list comprehensions as I understand them. Is something wrong with my list comprehension, with Python 2.5.2 itself, or with my understanding of the relavent semantics?
+
+My answer: In case someone reads this, the third example has got "for" loops in the wrong order. The first for loop runs first, and therefore it should be written as {{{[os.path.join(S, t) for S in Source[1:] for t in os.listdir(S)].}}}
