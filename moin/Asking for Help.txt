@@ -48,6 +48,8 @@ re.sub('"([^"]*)"', "\g<1>".replace(",", "|"), x)
 -> 'a|b, c, d, e|f|h, i|j|k' # It doesn't suppose to replace all "," with "|" like here?
 }}}
 
+No, it is doing what you told it to do. To realize this you must know that arguments are evaluated before they are passed to the functions. But what is the value of "\g<1>".replace(",", "|")? "\g<1>", of course, as there are no commas to replace in "\g<1>". re.sub therefore receives '"([^"]*)"' and "\g<1>" as arguments, which is the exact equivalent of the first call.
+
 
 == Answered (fully or partially) ==
  *["How to have a mutable buffer with python 2.3?"]
