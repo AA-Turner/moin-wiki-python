@@ -36,7 +36,9 @@ import sys
 log.startLogging(sys.stdout)
  
 class ProxyFactory(http.HTTPFactory):
-        protocol = proxy.Proxy
+    def __init__(self):
+        http.HTTPFactory.__init__(self)
+        self.protocol = proxy.Proxy
  
 reactor.listenTCP(8080, ProxyFactory())
 reactor.run()
