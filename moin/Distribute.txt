@@ -10,6 +10,8 @@ This page tries to synthetizes these threads and see what could be done to impro
 It is not clear right now if a new development will happen outside distutils or not. But this page can
 be the place where we structure things and decide of the best plan.
 
+Another great ressource to get the whole picture is [http://groups.google.com/group/django-developers/msg/5407cdb400157259 Kevin Teague's post] in Django Mailing list.
+
 = What do we have today ? =
 
 
@@ -22,8 +24,7 @@ Right now in Python, Distutils provides a set of commands to create a distributi
 that describes the package and build an archive with the source code. These metadata are described in [http://www.python.org/dev/peps/pep-0345/ PEP 345].
 
 Distutils uses "commands" that can be combined to build various distributions. 
-These commands are invoked through the command line,
-like this, as long as the package provides the distutils-enable setup.py file, but that is conventionnaly the case:
+These commands are invoked through the command line, as long as the package provides the distutils-enable setup.py file, but that is conventionnaly the case:
 
 {{{
 $ cd my_python_package
@@ -53,10 +54,62 @@ This command will inject the package into Python's site-packages so it is instal
 There are other commands available to make various flavors to distribute your package. Binary distributions,
 and even OS-specific distributions, like RPM, that maps some metadata to the RPM system ones.
 
+Distutils is also used to upload you package to PyPI or any website that implements the protocol.
+Some PyPI-enabled websites are starting to be launched. For instance plone.org is about to switch its products center
+to a PyPI-enabled system.
+
+So developers sends their package like this
+
+{{{
+$ python setup.py register sdist upload
+}}}
+
+This command registers the package to PyPI, builds a source archive, and upload it.
+
+Python 2.6 has been changed so you can do it with any website and several accounts, like this for instance:
+
+{{{
+$ python setup.py register sdist upload -r plone.org
+}}}
+
+
+
 
 == Setuptools ==
 
-xxx
+Setuptools can be seen as an enhancement of Distutils. It does a lot of things, and this section will not present everything. You might want to read [http://peak.telecommunity.com/DevCenter/setuptools Phillip's page on the project]. 
+
+But basically it adds 4 major features a lot of people use:
+
+ * a new metadata called install_requires where you can list the names of the packages the package uses
+ * a namespaced package feature à la Java, that let you create several package under the same namespace, without having
+ to distribute them in the same package.
+ * some new commands like:
+   * "develop", that will let you link a package you are currently working in into you Python environnement  
+      without having to install it for real. See it as a special symbolic link inside Python site-packages.
+   * "test", that will let you link a tets runner to the package tests
+ * easy_install (described later)
+
+
+=== real-world example ===
+
+Zope used setuptools namespace feature to split its huge code base into small packages. For instance zope.interface is distributed as 
+a single package and has its own developement cycle. In a way, Instead of downloading one 100MB package called Zope that contains the whole zope.* source tree, you download 100 packages of 1MB. And zope.whatever can use the new version of zope.interface, without having to wait for a 6 months-based release of Zope. 
+
+So zope.whatever, declares in its setup.py environment zope.interface, with the right version:
+
+{{{
+setup(name='zope.whatever',
+      ...
+      install_requires=['zope.interface>=1.2.4']
+      ...
+      )
+}}}
+
+This will tell Setuptools that zope.whatever needs zope.interface 1.2.4 or higher to work.
+
+And if you try to install it, Setuptools will check if it is installed. If not it will try to get it at [http://pypi.python.org PyPI] and instal it.
+
 
 == Other tools ==
 
