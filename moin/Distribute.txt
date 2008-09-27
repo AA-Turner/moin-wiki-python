@@ -1,19 +1,58 @@
 = Distribute is a project that tries to think about how distutils can evolve =
 
-Interesting discussion are happening in distutils-SIG. YOu can read the threads 
+Interesting discussion are happening in distutils-SIG. You can read the threads 
 
  * [http://mail.python.org/pipermail/distutils-sig/2008-September/010031.html Initial thread]
  * [http://mail.python.org/pipermail/distutils-sig/2008-September/010080.html Guido answer, followed by other answers]
 
 This page tries to synthetizes these threads and see what could be done to improve package managment in Python.
+
 It is not clear right now if a new development will happen outside distutils or not. But this page can
 be the place where we structure things and decide of the best plan.
 
 = What do we have today ? =
 
+
 == Distutils ==
 
-xxx
+This is a really high-level view of Distutils. It is just made to understand its mechanisms, so if
+you are not used to it you can get it.
+
+Right now in Python, Distutils provides a set of commands to create a distribution of your package. It uses a set of metadata
+that describes the package and build an archive with the source code. These metadata are described in [http://www.python.org/dev/peps/pep-0345/ PEP 345].
+
+Distutils uses "commands" that can be combined to build various distributions. 
+These commands are invoked through the command line,
+like this, as long as the package provides the distutils-enable setup.py file, but that is conventionnaly the case:
+
+{{{
+$ cd my_python_package
+$ python setup.py COMMAND
+}}}   
+
+So basically, building a source distribution is done by calling "sdist":
+
+{{{
+$ cd my_python_package
+$ python setup.py sdist
+}}}   
+
+"sdist" calls other commands ("low level" commands) and builds an archive in the "dist" directory.
+
+From there, someone who wants to install a package can get the source distribution, and run the "install" command:
+
+{{{
+$ wget http://example.com/my_python_package.tgz
+$ tar -xzvf my_python_package.tgz
+$ cd my_python_package
+$ python setup.py install
+}}}   
+
+This command will inject the package into Python's site-packages so it is installed.
+
+There are other commands available to make various flavors to distribute your package. Binary distributions,
+and even OS-specific distributions, like RPM, that maps some metadata to the RPM system ones.
+
 
 == Setuptools ==
 
@@ -42,7 +81,18 @@ xxx
 
 == Distutils ==
 
-xxx
+The problems in distutils that where listed by people:
+
+ * the code is old, and undertested
+ * It does too many things ! 
+ * The layout and the metadata are not complete enough. 
+ For instance, it is not clear for an OS vendor what files should be put where in a FHS PoV
+ * when you distribute your application with distutils, you have to prepare yourself all the binary
+ and os-specific versions. You can't just give a source distribution that can be understood
+ by everyone. Either it is push completely inside the Python installation, either
+ you provide OS-specific installers.   
+ 
+ * 
 
 == Setuptools ==
 
