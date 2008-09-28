@@ -18,42 +18,43 @@ PyPI protocol.
 
 distutils is responsible for too many things, and the register and upload
 commands are completely standalone. In other words they can be extracted from
-distutils and placed into a new package that would also provide the protocol
+distutils and placed into a new package that would also describe the protocol
 used by the PyPI server. 
 
 Secondly, there are a lot interactions in those two commands. They are 
-interacting with the user when the .pypirc file is created, and they 
-implement an authentication mecanism that push the user login and 
-password values into the HTTP requests. This is done by picking
+interacting at the prompt with the user when the .pypirc file is created, 
+and they implement an authentication mecanism that push the user login and 
+password values into the HTTP request. This is done by reading
 a clear text password in .pypirc and pushing it into the request.
 So users have to call a very precise sequence of command in order to
 upload or even upgrade their packages.
 
-Let's improve all of this ! Let the user be able to use better password
-handling if he wishes, using hashes for instance. Let the user control
-that his long_description compiles in reST for example.
+Let's improve all of this by:
 
-Let's define clearly in this new package what is the PyPI protocol. This 
-would let anyone implement this protocol for the 
+ * improving password handling
+ * improving the authentication process
+ * improving metadata controls
+ * provide a command line utility, independantly from setup.py
+ * clearly describe the PyPI protocol
+
+The last point would let anyone implement this protocol for the 
 client-side or the server-side, by using this package as a base.
 
-A first refactoring was made a few months ago to allow users to handle
-several PyPI logins and servers in .pypirc (http://bugs.python.org/issue1858)
-and the code responsible for .pypirc managment and for handling
-the registering and the upload was isolated. But this is a first step.
+=== improving password handling ===
 
-== Features the pypi module should bring ==
 
- * the same feature distutils's register and upload does
- * better password handling, with hash capabilities
- * better metadata controls, for instance:
+=== improving the authentication process ===
+
+
+=== improving metadata controls ===
+
   * make sure the long_description compiles if it was written in reST
   * make sure the author_email is the same that the email of the PyPI account 
   in usage
- * browsing capabilities using PyPI XML-RPC features
+ * 
  * an abstract definition of PyPI server
 
-== What ? ==
+=== provide a command line utility, independantly from setup.py ===
 
 Let's drop the setup.py command line to register and upload a package. The pypi
 module can handle this as long as the package is pointed. A high-level script
@@ -89,7 +90,15 @@ Here's a example
 The pypi command could also let you browse PyPI, like the Yolk project 
 does (see http://pypi.python.org/pypi/yolk)
 
+Browsing capabilities using PyPI XML-RPC features : XXX
+
+
 == How ? ==
+
+A first refactoring was made a few months ago to allow users to handle
+several PyPI logins and servers in .pypirc (http://bugs.python.org/issue1858)
+and the code responsible for .pypirc managment and for handling
+the registering and the upload were isolated. 
 
 The first action would be to create a new package called pypi and to 
 copy the code from distutils, in order to make it work on its own.
@@ -102,8 +111,3 @@ The files to use are:
 
 We can add deprecated flags into distutils, just to warn people to use
 the new module instead.
-
-
-== Detailed description ==
-
-XXX Will be done if people like the idea
