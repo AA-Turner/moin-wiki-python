@@ -23,7 +23,7 @@ used by the PyPI server.
 
 Secondly, there are a lot interactions in those two commands. They are 
 interacting with the user when the .pypirc file is created, 
-and they implement an authentication mecanism that push the user login and 
+and they implement an authentication mecanism that pushes the user login and 
 password values into the HTTP request. This is done by reading
 a clear text password in .pypirc.
 
@@ -67,7 +67,7 @@ A default value could be defined in the main section
 {{{
 [distutils]
 ...
-default-hash=sah1
+default-hash=sha1
 ...
 }}}
 
@@ -96,16 +96,17 @@ strict-verification=true
 }}}
 
 From there, the command line utility will be able to decide if it should
-continue or not.
+continue or not. The problem with the reST control is that it would require
+docutils.
 
 == Providing a command line utility, independantly from setup.py ==
 
 Let's drop the setup.py command line to register and upload a package. The pypi
 module can handle this as long as the package is pointed. A high-level script
 can be provided in the Scripts/ folder of Python, and a developer can use it
-to control, register or upload a package.
+to control, register or upload a package. And also to browse PyPI.
 
-Here's a example
+Here's a example of such a session:
 
 {{{
 
@@ -129,16 +130,26 @@ Here's a example
         ....
 
     Type the desired released, separated by a space [sdist] : _
+
+    $ pypi passwd tarek
+    Changing password for tarek
+    What kind of hash (default: sha1) ? sha1
+    Type password:
+    Type password again:
+    
+    Password changed
+
+
 }}}
  
 The pypi command could also let you browse PyPI, like the Yolk project 
 does (see http://pypi.python.org/pypi/yolk)
 
-Browsing capabilities using PyPI XML-RPC features : XXX
+Browsing capabilities using PyPI XML-RPC features : XXX TBD
 
 == Clearly describe the PyPI protocol ==
 
-XXX TBD
+XXX TBD : describe the methods inmplemented in the CheeseShop
 
 
 == How ? ==
@@ -159,3 +170,5 @@ The files to use are:
 
 We can add deprecated flags into distutils, just to warn people to use
 the new module instead.
+
+XXX to be finished
