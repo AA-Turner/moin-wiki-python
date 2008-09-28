@@ -22,19 +22,19 @@ distutils and placed into a new package that would also describe the protocol
 used by the PyPI server. 
 
 Secondly, there are a lot interactions in those two commands. They are 
-interacting at the prompt with the user when the .pypirc file is created, 
+interacting with the user when the .pypirc file is created, 
 and they implement an authentication mecanism that push the user login and 
 password values into the HTTP request. This is done by reading
-a clear text password in .pypirc and pushing it into the request.
-So users have to call a very precise sequence of command in order to
-upload or even upgrade their packages.
+a clear text password in .pypirc.
+
+The users have to call a very precise sequence of commandw with setup.py 
+in order to upload or even upgrade their packages. 
 
 Let's improve all of this by:
 
  * improving password handling
- * improving the authentication process
  * improving metadata controls
- * provide a command line utility, independantly from setup.py
+ * providing a command line utility, independantly from setup.py
  * clearly describe the PyPI protocol
 
 The last point would let anyone implement this protocol for the 
@@ -53,7 +53,7 @@ By default the password would be in clear text, but this could be configured in 
 for each password with a prefix to the password value when it is not in clear text.
 
 {{{
-[pypirc]
+[distutils]
 ...
 
 [pypi]
@@ -65,16 +65,14 @@ password=sha1:Xfsg434
 A default value could be defined in the main section
 
 {{{
-[pypirc]
+[distutils]
 ...
 default-hash=sah1
 ...
 }}}
 
-And teh command-line utility describe later in this PEP could use it to interact with the user
+And the command-line utility describe later in this PEP could use it to interact with the user
 if he wants to change his password.
-
-== Improving the authentication process ==
 
 
 == Improving metadata controls ==
@@ -86,9 +84,21 @@ done on the client-side in order to control it.
   * make sure the long_description compiles if it is written in reST
   * make sure the author_email is the same that the email of the PyPI account 
   in usage
-  
 
-== Provide a command line utility, independantly from setup.py ==
+A new variable in .pypirc can be added in order to block a registration
+or an upload if the metadata does not meet the minimum requirements:
+
+{{{
+[distutils]
+...
+strict-verification=true
+...
+}}}
+
+From there, the command line utility will be able to decide if it should
+continue or not.
+
+== Providing a command line utility, independantly from setup.py ==
 
 Let's drop the setup.py command line to register and upload a package. The pypi
 module can handle this as long as the package is pointed. A high-level script
