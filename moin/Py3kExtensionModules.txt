@@ -2,7 +2,7 @@ This is a list of suggestions about the migration of Python C extension modules 
 
  * Use conditional compilation to make your code able to compile under both Python 2.x and 3.0 C-API.
 
- * Now Python 3 uses Unicode as internal string representation, all the class name, method name, etc are Unicode strings. So check all the occurrences of PyString_*, most of them should be replaced with PyUnicode_*. When you suffer a segmentation fault, sometimes it's because you provided a PyString where the C-API is expecting a PyUnicode. Also, for the return value of your C extension function, you may use PyUnicode instead of PyString, otherwise you may broken your client's code.
+ * Now Python 3 uses Unicode as internal string representation, all the class name, method name, etc are Unicode strings. So check all the occurrences of PyString_*, most of them should be replaced with PyUnicode_*. When you suffer a segmentation fault, sometimes it's because you provided a PyString where the C-API is expecting a PyUnicode. Also, for the return value of your C extension function, you may use PyUnicode instead of PyString, otherwise you may break your client's code.
 
  * PyInt_* removed, but you can explicitly ``#include <intobject.h>`` to define aliases that redirect most PyInt_* symbols to PyLong_*.
  
