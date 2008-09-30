@@ -42,38 +42,9 @@ client-side or the server-side, by using this package as a base.
 
 == Improving password handling ==
 
-Currently, the password is in clear text. Let's add a new variable in the .pypirc file
-that would let the user define what kind of hash he wants to use, from:
-
- * clear
- * md5
- * sha1
-
-By default the password would be in clear text, but this could be configured in pypirc
-for each password with a prefix to the password value when it is not in clear text.
-
-{{{
-[distutils]
-...
-
-[pypi]
-user=tarek
-password=sha1:Xfsg434
-...
-}}}
-
-A default value could be defined in the main section
-
-{{{
-[distutils]
-...
-default-hash=sha1
-...
-}}}
-
-And the command-line utility describe later in this PEP could use it to interact with the user
-if he wants to change his password.
-
+Currently, the password and the user are in clear text in .pypirc. This is 
+a bit insecure.  Let's make it an optional and if not provided let the user type it
+at the prompt when needed.
 
 == Improving metadata controls ==
 
