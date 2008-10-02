@@ -7,12 +7,8 @@ to allow bytes filenames is accept which is not the case today.
 While I was writing this document I found poential problems in Python3. So 
 here is a TODO list (things to be checked):
 
- * FIXME: PyUnicode_DecodeFSDefaultAndSize(): errors="replace"!
- * FIXME: import.c uses ASCII if default file system is unknown, whereas other functions uses UTF-8
- * FIXME: Write a function in Python3 to convert a bytes filename to a nice string
  * FIXME: When bytearray is accepted or not?
  * FIXME: Allow bytes/str mix for shutil.copy*()? The ignore callback will get bytes or unicode?
- * FIXME: Use a shorter title for this PEP :-)
 
 Can anyone write a section about bytes encoding in Unicode using escape sequence?
 
@@ -81,6 +77,7 @@ Example: ::
 
 Both key and values are unicode strings. Empty key and/or value are allowed.
 
+Python ignores invalid variables, but values still exist in memory. If you run a child process (eg. using os.system()), the "invalid" variables will also be copied.
 
 == Filenames ==
 
