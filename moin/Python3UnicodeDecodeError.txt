@@ -28,15 +28,15 @@ This document present the behaviour of Python3 for the command line,
 environment variables and filenames.
 
 Example of an invalid bytes sequence: ::
-
-    >>> str(b'\xff', 'utf8')
-    UnicodeDecodeError: 'utf8' codec can't decode byte 0xff (...)
-
+{{{
+>>> str(b'\xff', 'utf8')
+UnicodeDecodeError: 'utf8' codec can't decode byte 0xff (...)
+}}}
 whereas the same byte sequence is valid in another charset like ISO-8859-1: ::
-
-    >>> str(b'\xff', 'iso-8859-1')
-    'ÿ'
-
+{{{
+>>> str(b'\xff', 'iso-8859-1')
+'ÿ'
+}}}
 
 == Default encoding ==
 
@@ -52,29 +52,29 @@ PyUnicode_FromStringAndSize().
 == Command line ==
 
 Python creates a nice unicode table for sys.argv using mbstowcs(): ::
-
-    $ ./python -c 'import sys; print(sys.argv)' 'Ho hé !'
-    ['-c', 'Ho hé !']
-
+{{{
+$ ./python -c 'import sys; print(sys.argv)' 'Ho hé !'
+['-c', 'Ho hé !']
+}}}
 On Linux, mbstowcs() uses LC_CTYPE environement variable to choose the
 encoding. On an invalid bytes sequence, Python quits directly with an exit
-code 1. Example with UTF-8 locale: ::
-
- $ python3.0 $(echo -e 'invalid:\xff')
- Could not convert argument 1 to string
-
+code 1. Example with UTF-8 locale:
+{{{
+$ python3.0 $(echo -e 'invalid:\xff')
+Could not convert argument 1 to string
+}}}
 
 == Environment variables ==
 
 Python uses "_wenviron" on Windows which are contains unicode (UTF-16-LE)
 strings.  On other OS, it uses "environ" variable and the UTF-8 charset. It
 drops a variable if its key or value is not convertible to unicode.
-Example: ::
-
-    env -i HOME=/home/my PATH=$(echo -e "\xff") python
-    >>> import os; list(os.environ.items())
-    [('HOME', '/home/my')]
-
+Example:
+{{{
+env -i HOME=/home/my PATH=$(echo -e "\xff") python
+>>> import os; list(os.environ.items())
+[('HOME', '/home/my')]
+}}}
 Both key and values are unicode strings. Empty key and/or value are allowed.
 
 Python ignores invalid variables, but values still exist in memory. If you run a child process (eg. using os.system()), the "invalid" variables will also be copied.
@@ -91,22 +91,22 @@ unicode filenames. Examples:
  * open() supports bytes and unicode
 
 Since listdir() mix bytes and unicode, you are not able to manipulate easily
-filenames: ::
-
-    >>> path=u'.'
-    >>> for name in os.listdir(path):
-    ...  print repr(name)
-    ...  print repr(os.path.join(path, name))
-    ...
-    u'valid'
-    u'./valid'
-    'invalid\xff'
-    Traceback (most recent call last):
-      ...
-      File "/usr/lib/python2.5/posixpath.py", line 65, in join
-        path += '/' + b
-    UnicodeDecodeError: 'ascii' codec can't decode byte 0xff (...)
-
+filenames:
+{{{
+>>> path=u'.'
+>>> for name in os.listdir(path):
+...  print repr(name)
+...  print repr(os.path.join(path, name))
+...
+u'valid'
+u'./valid'
+'invalid\xff'
+Traceback (most recent call last):
+...
+File "/usr/lib/python2.5/posixpath.py", line 65, in join
+    path += '/' + b
+UnicodeDecodeError: 'ascii' codec can't decode byte 0xff (...)
+}}}
 Python3 supports both types, bytes and unicode, but disallow mixing them. If
 you ask for unicode, you will always get unicode or an exception is raised.
 
@@ -160,11 +160,11 @@ uses a different charset.
 === Display a filename ===
 
 Example of a function formatting a filename to display it to human eyes: ::
-
-    from sys import getfilesystemencoding
-    def format_filename(filename):
-        return str(filename, getfilesystemencoding(), 'replace')
-
+{{{
+from sys import getfilesystemencoding
+def format_filename(filename):
+    return str(filename, getfilesystemencoding(), 'replace')
+}}}
 Example: format_filename('r\xffport.doc') gives 'r�port.doc' with the UTF-8
 encoding.
 
@@ -208,7 +208,6 @@ and unicode for the other argument
 === bytearray ===
 
 In most cases, bytearray() can be used as bytes for a filename.
-
 
 == Unicode normalisation ==
 
