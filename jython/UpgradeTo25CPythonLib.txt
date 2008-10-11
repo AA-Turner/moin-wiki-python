@@ -10,18 +10,15 @@ To Fix
   * ill-behaved generator doesn't finalize upon GC
   * closure setup in visitLambda and visitGeneratorExp does not interact properly with a yield point, resulting in bad bytecode
 
-* test_inspect
-
-  * test_excluding_predicates - sys.exit, etc., are not really attributes of a module
-  * test_wrapped_decorator - see below in the Parser section
-
 * test_struct - needs new 2.5 struct.Struct type and pack_into/unpack_from
 * test_unicode
 
   * test_codecs_errors - raises wrong error for decode to int of unicode string
   * test_codecs_idna - no idna encoding (which needs unicodedata)
 
-* test_univnewlines - test_doctest failures don't restore sys.stdin -- causes to skip (it normally passes)
+Parser
+======
+* test_with - with/as will be new keywords, we need to emit the appropriate warning
 
 Flaky/arch?
 ===========
@@ -32,12 +29,6 @@ Flaky/arch?
 * test_scope
 * test_tuple - sometimes OutOfMemoryErrors during regrtest (when creating a set from a large list of small tuples). maybe not the tests fault, but the fact that the regrtest progressively uses more and more memory as it goes: http://pylonshq.com/pasties/917
 
-Parser
-======
-
-* test_compiler - one line functions are not working compiler.parse (causing AttributeError: 'NoneType' object has no attribute 'suite')
-* test_inspect.test_wrapped_decorator, the line number needs to be set for the wrapped function at the def, not at the decorators stacked above. right now node.getLine()  in CodeCompiler#visitFunctionDef must be reporting where the function def starts in the AST (which includes of course the decorators)
-
 
 Under Development
 =================
@@ -47,4 +38,4 @@ Or perhaps more accurately, the following *should* be under development.
 * _rawffi (for ctypes, ported from PyPy)
 * bz2
 * multibytecodec (implies test_multibytecodec_support)
-* unicodedata
+* unicodedata - need a Java implementation, not our current Jython workaround (too slow to load, on the order of a couple of seconds)
