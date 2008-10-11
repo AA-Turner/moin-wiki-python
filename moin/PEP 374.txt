@@ -1,0 +1,134 @@
+= Mirroring infrastructure in PyPI =
+
+ * PEP: 374
+ * Title: Mirroring infrastructure in PyPI
+ * Author: Tarek Ziadé
+ * Discussions-To: Catalog SIG
+ * Status: Draft
+ * Python-Version: 2.6
+
+== Abstract ==
+
+This PEP describes a mirroring infrastructure for PyPI.
+
+== Motivation ==
+
+PyPI is hosting over 4000 package and is used on a daily-basis 
+by people to build applications. Systems like easy_install
+and zc.buildout makes a intensive usage of PyPI.
+
+In a sense, PyPI became a single point of failure, and people
+are starting to set up some mirrors, wether they are private
+or public. Those mirrors are active mirrors, which means that 
+they are browsing PyPI to get synced. 
+ 
+The motivation of this PEP is to set up a registering 
+mechanism in PyPI in order to list all the public PyPI mirrors
+and to provide an event based system where all mirrors get 
+informed via RPC when a package has been uploaded, modified,
+or removed, so they can eventually sync themselves.
+
+This PEP describes:
+
+ * mirror listing and registering  
+ * ping mechanism
+
+== Mirror listing and registering ==
+
+A new HTML page will be added at http://pypi.python.org/mirrors
+that can be browsed like the simple index. This page just 
+gives a list of the mirrors through a list of links.
+
+These links are the url of the simple index of each mirrors.
+The page will look like this:
+
+{{{
+<html>
+  <head><title>PyPI mirrors</title></head>
+  <body>
+    <p>PyPI mirrors
+    
+    If you want to register a new mirror, send a mail
+    to catalog-SIG@python.org with:
+        
+        - the url of your mirror.
+        - the name and email of the maintainer.
+        - the url to ping when PyPI is updated.
+
+    The registering is done manually and to become a
+    mirror, you need to strictly follow the package index
+    API defined here: 
+    http://peak.telecommunity.com/DevCenter/EasyInstall#package-index-api
+
+    </p> 
+    <a href="http://example.com/pypi">Mirror #1</a>
+    <a href="http://example2.com/pypi">Mirror #2</a>
+  </body>
+</html>
+}}}
+
+When a mirror is proposed on the mailing list, it is manually
+added in a dedicated SQL table in the PyPI application.
+
+The mirror list page is a simple html page that can be browsed 
+by the tool out there that wants to get a list of registered mirrors.
+
+== Ping mechanism ==
+
+Everytime a package is uploaded, removed or 
+modified at PyPI, the server will ping via XML-RPC all 
+the mirrors that are registered in order to tell them 
+that something has changed.
+
+The RPC request will use the following pseudo-code
+
+{{{
+
+    >>> import xmlrpclib
+    >>> from socket import setdefaulttimeout
+    >>> MIRROR_TIMEOUT = 2
+    >>> setdefaulttimeout(MIRROR_TIMEOUT)
+    >>> for mirror_url in mirror_urls:
+    ...     mirror = ServerProxy(mirror_url)
+    ...     try:
+    ...         mirror.removed_packages(removed_names)
+    ...         mirror.modified_packages(modified_names)
+    ...     except (timeout, xmlrpclib.ProtocolError):
+    ...         log_failure(mirror_url) 
+
+}}}
+
+ * removed_names and modified_names are the name of the packages
+ (the distutils ids).
+
+ * the MIRROR_TIMEOUT will prevent PyPI to slow down everytime
+ it calls the mirrors. The mirrors are responsible to do the 
+ synchronisation job and must do it asynchronously from that
+ call, which has to remain a ping for the sake of performances.
+ The mirror decides what to do with the information it gets from
+ PyPI.
+
+ * everytime a mirror fails, it is log in the SQL database
+ where we keep a "reliability ratio". It start with 1.0
+ and decreases after each failure. It is reset to 1.0
+ every 100 calls. If the number of failures during these 100
+ calls goes down to 0.75, the mirror is declared
+ unreliable, and a mail is sent to the distutils mailing list.
+ The mirror will then be eventually removed if the problem persists.
+
+== Costs ==
+
+Someone has to manage the list of mirrors. This work should
+not take too much time. I am willing to be that maintainer if 
+the people that maintain the server don't have the time, or
+don't trust me.
+
+== Implementation ==
+
+XXX
+
+
+== Third-party applications ==
+
+A sample module will be written and published to demonstrate how a mirror 
+can implement the RPC APIs in Python.
