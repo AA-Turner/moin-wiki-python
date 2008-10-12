@@ -57,7 +57,6 @@ The page will look like this:
     <ol>
         <li> The url of your mirror.</li>
         <li> The name and email of the maintainer.</li>
-        <li> The url to ping when PyPI is updated.</li>
     </ol>
 
     <p>
@@ -71,8 +70,10 @@ The page will look like this:
     </p>
     
     <ul id="mirror-links">
-        <li><a href="http://example.com/pypi">Mirror #1</a></li>
-        <li><a href="http://example2.com/pypi">Mirror #2</a></li>
+        <li>
+          <a class="mirrorLink" href="http://example.com/pypi">Mirror #1</a> |
+          <a class="mirrorPage" href="http://pypi.python.org/mirrors/1">more infos</a>
+        </li>
     </ul>
 
   </body>
@@ -85,47 +86,41 @@ added in a dedicated SQL table in the PyPI application.
 The mirror list page is a simple html page that can be browsed 
 by any tool that wants to get a list of registered mirrors.
 
-== Ping mechanism ==
+Each mirror gets its own page url at PyPI with extra information.
+The name of that page is the ID of the mirror in the PyPI system.
 
-Everytime a package is uploaded, removed or modified at PyPI, the server
-will ping via XML-RPC all the mirrors that are registered in order to tell
-them that something has changed.
-
-The XML-RPC request will use the following pseudo-code:
+This page contains extra information about the mirror, like its freshness
+date:
 
 {{{
+<html>
+  <head><title>PyPI mirror</title></head>
+  <body>
+  
+    <h1>PyPI mirror Mirror #1</h1>
+    
+    <div>Freshness data: <span id="freshness">Sun May 20 15:23:01 2007</span></div>
+  </body>
+</html>
 
-    >>> import xmlrpclib
-    >>> from socket import setdefaulttimeout
-    >>> MIRROR_TIMEOUT = 2
-    >>> setdefaulttimeout(MIRROR_TIMEOUT)
-    >>> for mirror_url in mirror_urls:
-    ...     mirror = ServerProxy(mirror_url)
-    ...     try:
-    ...         mirror.removed_packages(removed_names)
-    ...         mirror.modified_packages(modified_names)
-    ...     except (timeout, xmlrpclib.ProtocolError):
-    ...         log_failure(mirror_url) 
 
 }}}
 
- * The removed_names and modified_names are the distutils names of the
- module distributions.
 
- * The MIRROR_TIMEOUT will prevent PyPI to slow down everytime
- it calls the mirrors. The mirrors are responsible to do the 
- synchronisation job and must do it asynchronously from that
- call, which has to remain a ping for the sake of performance.
- The mirror decides what to do with the information it gets from
- PyPI.
+Other package indexes that are not mirrors of PyPI are not added in the 
+mirror list in PyPI.
 
- * Everytime a mirror fails, it is logged in the SQL database
- where we keep a "reliability ratio". It starts with 100
- and decreases after each failure. It is reset to 100
- every 100 calls. If the number of failures during these 100
- calls goes below a 75, the mirror is declared unreliable, and a
- mail is sent to the distutils mailing list. The mirror will then be
- eventually removed if the problem persists.
+Although they can provide theirselve the same mirroring list mechanism 
+for their own mirrors.
+
+== Freshness date ==
+
+CPAN uses a freshness date system where the mirror last synchronisation date is made available.
+
+For PyPI, the 'last-modified' header can be added in the root page of the index.
+
+Other mirrors can also maintain this header.
+
 
 == Costs ==
 
