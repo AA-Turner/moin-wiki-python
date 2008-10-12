@@ -110,7 +110,7 @@ The XML-RPC request will use the following pseudo-code:
 }}}
 
  * The removed_names and modified_names are the distutils names of the
-   module distributions.
+ module distributions.
 
  * The MIRROR_TIMEOUT will prevent PyPI to slow down everytime
  it calls the mirrors. The mirrors are responsible to do the 
@@ -120,10 +120,10 @@ The XML-RPC request will use the following pseudo-code:
  PyPI.
 
  * Everytime a mirror fails, it is logged in the SQL database
- where we keep a "reliability ratio". It starts with 1.0
- and decreases after each failure. It is reset to 1.0
+ where we keep a "reliability ratio". It starts with 100
+ and decreases after each failure. It is reset to 100
  every 100 calls. If the number of failures during these 100
- calls goes down to 0.75, the mirror is declared unreliable, and a
+ calls goes below a 75, the mirror is declared unreliable, and a
  mail is sent to the distutils mailing list. The mirror will then be
  eventually removed if the problem persists.
 
