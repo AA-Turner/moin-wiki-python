@@ -89,7 +89,15 @@ by any tool that wants to get a list of registered mirrors.
 Each mirror gets its own page url at PyPI with extra information.
 The name of that page is the ID of the mirror in the PyPI system.
 
-This page contains extra information about the mirror, like its freshness
+This page contains extra information about the mirror:
+
+ * mirror name
+ * maintainer name
+ * url
+ * freshness (last-modified header of the root page)
+ * http response time
+
+
 date:
 
 {{{
@@ -97,9 +105,12 @@ date:
   <head><title>PyPI mirror</title></head>
   <body>
   
-    <h1>PyPI mirror Mirror #1</h1>
-    
-    <div>Freshness data: <span id="freshness">Sun May 20 15:23:01 2007</span></div>
+    <h1 id="name">Mirror #1</h1>
+    <ul>
+      <li>Url: <a id="url" href="http://example.com/pypi">Mirror #1</a></li>
+      <li>Freshness data: <span id="freshness">Sun May 20 15:23:01 2007</span></li>
+      <li>HTTP response time: <span id="responseTime">0.7270 seconds</span></li>
+    </ul>
   </body>
 </html>
 
