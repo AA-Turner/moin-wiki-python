@@ -57,6 +57,7 @@ The page will look like this:
     <ol>
         <li> The url of your mirror.</li>
         <li> The name and email of the maintainer.</li>
+        <li> The url of the freshness date.</li>
     </ol>
 
     <p>
@@ -71,8 +72,9 @@ The page will look like this:
     
     <ul id="mirror-links">
         <li>
-          <a class="mirrorLink" href="http://example.com/pypi">Mirror #1</a> |
-          <a class="mirrorPage" href="http://pypi.python.org/mirrors/1">more infos</a>
+          <a class="link" href="http://example.com/pypi">Mirror #1</a> |
+          <a class="freshness" href="http://example.com/freshness">freshness</a> |
+          <a class="page" href="http://pypi.python.org/mirrors/1">more infos</a>
         </li>
     </ul>
 
@@ -94,11 +96,10 @@ This page contains extra information about the mirror:
  * mirror name
  * maintainer name
  * url
- * freshness (last-modified header of the root page)
- * http response time
+ * freshness (retrieved from the mirror)  
+ * http response time (calculated)
 
-
-date:
+exemple:
 
 {{{
 <html>
@@ -107,31 +108,31 @@ date:
   
     <h1 id="name">Mirror #1</h1>
     <ul>
+      <li>Maintainer: Some guy</li>
       <li>Url: <a id="url" href="http://example.com/pypi">Mirror #1</a></li>
-      <li>Freshness data: <span id="freshness">Sun May 20 15:23:01 2007</span></li>
+      <li>Freshness date: <span id="freshness">2008-10-12T15:23:01</span></li>
       <li>HTTP response time: <span id="responseTime">0.7270 seconds</span></li>
     </ul>
   </body>
 </html>
 
-
 }}}
-
 
 Other package indexes that are not mirrors of PyPI are not added in the 
 mirror list in PyPI.
 
-Although they can provide theirselve the same mirroring list mechanism 
+Although they can provide themselve the same mirroring list mechanism 
 for their own mirrors.
 
 == Freshness date ==
 
 CPAN uses a freshness date system where the mirror last synchronisation date is made available.
 
-For PyPI, the 'last-modified' header can be added in the root page of the index.
+Each mirror is maintaining an url with a simple txt/plain content
+that represents the last synchronisation date the mirror maintains.
 
-Other mirrors can also maintain this header.
-
+The date is provided in GMT time, using the iso 8601 format
+(http://en.wikipedia.org/wiki/ISO_8601)
 
 == Costs ==
 
@@ -139,13 +140,3 @@ Someone has to manage the list of mirrors. This work should
 not take too much time. I am willing to be that maintainer if 
 the people that maintain the server don't have the time, or
 don't trust me.
-
-== Implementation ==
-
-XXX
-
-
-== Third-party applications ==
-
-A sample module will be written and published to demonstrate how a mirror 
-can implement the XML-RPC APIs in Python.
