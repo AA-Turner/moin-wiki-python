@@ -2,10 +2,14 @@
 == Introduction and Background ==
 Recent versions of Xcode for Mac OS X 10.4 Tiger introduced the ability to create multi-architecture (PowerPC and x86) executables and libraries, known as ''Universal'' binaries. Most UNIX libraries build configurations have not adapted their build 'recipes' to utilize this capability, so they produce only the approriate binary for the platform on which they were compiled, resulting in slower or no execution on the other platform. This is certainly true of PIL, the Python Imaging Library, as of version 1.1.5. While each build 'recipe' differs depending upon the tools used by its maker and the libraries it is dependent upon, here are some instructions for builidng a Universal PIL and associated libraries, and a few tips on getting 'off-the-shelf' UNIX libraries to compile as Universal libraries.
 
-''Note: Prebuilt universal packages for Python 2.4 are available at http://pythonmac.org/packages/py24-fat/index.html"
+'''Note:''' 
+ * Prebuilt universal packages for Python 2.4 are available at
+[http://pythonmac.org/packages/py24-fat/index.html]
+ * Prebuilt universal packages for Python 2.5 are available at
+[http://pythonmac.org/packages/py25-fat/index.html]
 
 == PIL (Python Imaging Library) Example ==
-To build a Universal PIL, we must first build Universal versions of its depedent libraries:
+To build a Universal PIL, we must first build Universal versions of its dependent libraries:
  * freetype2,
  * jpeg-6b, and  
  * zlib* 
