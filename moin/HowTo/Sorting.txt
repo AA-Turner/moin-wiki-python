@@ -160,6 +160,14 @@ using {{{operator.itemgetter()}}}:
 [('d', 1), ('c', 2), ('b', 3), ('a', 4)]
 }}}
 
+If the invocation of {{{key}}} returns a tuple, second and subsequent items in the tuple will be treated as sub-keys in the same way that Python generally sorts tuples:
+
+{{{
+>>> L = [('d', 2), ('a', 4), ('b', 3), ('c', 2)]
+>>> sorted(L, key=lambda x:(x[1], x[0]))
+[('c', 2), ('d', 2), ('b', 3), ('a', 4)]
+}}}
+
 Versions of Python before 2.4 don't have the convenient
 {{{key}}} parameter of {{{sort()}}}, so you have to write a
 comparison function that embodies the key-generating logic:
