@@ -23,7 +23,17 @@ You will want to install all of these and ensure that the they reside in your cl
 
 Since we are using Jython, we can run our Django application on any Java servlet container.  We can also mix any Java library into our application as needed...this is one of the most powerful reasons to use Django on Jython.
 
+== Database ==
+
+Many of the major databases are supported at this time.  However, there are a few that will not yet function with the Django framework on Jython.  For instance, you will have to use an alternative to the DB2 database at this time.  For more information, please take a look at the [http://code.google.com/p/django-jython/wiki/DatabaseBackends django-jython site].  For the purposes of this article, I am advocating the [http://www.postgresql.org Postgresql] database to start out with Django.
+
+In order to make Postgresql work with Django in the Python world, you must install the [http://initd.org/pub/software/psycopg/ psycopg] package (bindings).  However, we have a bonus as Jython developers as this package is not required to run Django with Postgresql on Jython.  Instead, for the database engine we simply specify "doj.backends.zxjdbc.postgresql" within the settings.py module.
+
 == Creating the Project and Models ==
+
+The first step in creating a Django application is to choose a location in which to store your code.  Create a directory somewhere on your hard disk, and then open a command prompt or terminal.  Change directories until you are positioned within your newly created directory.  You also need to ensure that the jython and Django executables are in your CLASSPATH.  Once you've ensured this information you are ready to begin creating your project.
+
+ 
 
 == Working with the Framework ==
 
