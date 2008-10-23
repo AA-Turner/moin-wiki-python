@@ -8,7 +8,7 @@ You may ask why we need another web framework, or what a different web framework
 
 Now we come to Python, one of the most sexy, powerful, and easy to learn object oriented languages of our time.  Of course we have some great web frameworks for Python.  Pylons and Django are just a couple.  Now let's port those into the Jython arena and sprinkle a bit of Java into the Python mix to create some very attractive web frameworks.  Django does not disappoint, and I'd like to argue that it is one of the leading frameworks in the simplicity and ability arena.  Let's dig into some basics with Django and find out what makes this framework so appealing.
 
-This article is meant for the Django beginner.  More importantly, we will cover basics for getting started with Django development with Jython.  Rather than develop a separate set of examples for getting started, we will follow the Django documentation and I'll add extra information as needed.  I hope to pick up with more advanced topics in future articles, so please stay tuned to the Jython Monthly distribution for more details.
+This article is meant for the Django beginner.  More importantly, we will cover basics for getting started with Django development with Jython.  Rather than develop a separate set of examples for getting started, we will follow the [http://docs.djangoproject.com/en/dev/intro/tutorial01/#intro-tutorial01 Django documentation] and I'll add extra information as needed.  I hope to pick up with more advanced topics in future articles, so please stay tuned to the Jython Monthly distribution for more details.
 
 == Getting Ready to Tango with Django ==
 
@@ -31,9 +31,97 @@ In order to make Postgresql work with Django in the Python world, you must insta
 
 == Creating the Project and Models ==
 
+'''Create Project'''
+
 The first step in creating a Django application is to choose a location in which to store your code.  Create a directory somewhere on your hard disk, and then open a command prompt or terminal.  Change directories until you are positioned within your newly created directory.  You also need to ensure that the jython and Django executables are in your CLASSPATH.  Once you've ensured this information you are ready to begin creating your project.
 
- 
+{{{
+
+jython django-admin.py startproject newsite
+
+}}}
+
+When you "cd" into the newly created "newsite" directory, you will see the following three important Jython files:
+
+manage.py - Command-line utility for managing Django project
+settings.py - Configurations for the Django project
+urls.py - URL settings for the Django project
+
+
+You now have created a fully functional project.  You can start the test server now to ensure that everything is functional by issuing the following command:
+
+{{{
+
+jython manage.py runserver
+
+}}}
+
+You will see the following output:
+
+{{{
+
+Validating models...
+0 errors found
+
+Django version 1.0-final-SVN-unknown, using settings 'mysite3.settings'
+Development server is running at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+
+}}}
+
+You can optionally specify a different port by appending the port number that you wish to use after the ''runserver'' command.
+
+'''Database Setup'''
+
+If you haven't already done so, create your Postgresql database for the test application at this time.  Simply name the database ''test'' and create a user that we will use for our application to access the database.  In order to setup the database for the project, you must edit the ''settings.py'' module.  Remember, I am going to use the Postgresql database for the purposes of this article, but feel free to choose another if it is supported.  You will need to change the following settings for the database:
+
+{{{
+
+DATABASE_ENGINE = 'doj.backends.zxjdbc.postgresql'           # Our Jython Django Postgresql bindings
+DATABASE_NAME = 'test'                                       # Or path to database file if using sqlite3.
+DATABASE_USER = 'username'                                   # Not used with sqlite3.
+DATABASE_PASSWORD = 'passwd'                                 # Not used with sqlite3.
+DATABASE_HOST = ''                                           # Set to empty string for localhost. Not used with sqlite3.
+DATABASE_PORT = ''                                           # Set to empty string for default. Not used with sqlite3.
+
+}}}
+
+As the [http://docs.djangoproject.com/en/dev/intro/tutorial01/#intro-tutorial01 Django tutorial] points out, it is a good idea to take a note of some other sections of the ''settings.py'' file at this time.  Look at the following INSTALLED_APPS which are automatically included in your project for convienence:
+
+    * django.contrib.auth -- An authentication system.
+    * django.contrib.contenttypes -- A framework for content types.
+    * django.contrib.sessions -- A session framework.
+    * django.contrib.sites -- A framework for managing multiple sites with one Django installation.
+
+In order to create the tables for your database, run the following command:
+
+{{{
+
+jython manage.py syncdb
+
+}}}
+
+Once you issue the command above, you should see the following output which will prompt you to enter information for creating a superuser account.  It is important to do so at this time or you will need to take extra measures in order to create one later.  Simply follow the directions as they are displayed in the terminal or command line.
+
+{{{
+
+Creating table auth_permission
+Creating table auth_group
+Creating table auth_user
+Creating table auth_message
+Creating table django_content_type
+Creating table django_session
+Creating table django_site
+
+You just installed Django's auth system, which means you don't have any superusers defined.
+Would you like to create one now? (yes/no):
+
+}}}
+
+== Create Models ==
+
+At this point, the Django project is set up and we are ready to create an application within it.  In the Django environment, a project can contain one or more applications.  For the purposes of this article, we will create the same application as the [http://docs.djangoproject.com/en/dev/intro/tutorial01/#intro-tutorial01 Django tutorial] so that it is easier to follow along if you choose to do so.  In this case, we are interested in creating an application which manages poll questions and answers.
+
 
 == Working with the Framework ==
 
