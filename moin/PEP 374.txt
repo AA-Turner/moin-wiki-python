@@ -2,7 +2,7 @@
 
  * PEP: 374
  * Title: Mirroring infrastructure in PyPI
- * Author: Tarek Ziadé
+ * Author: Tarek Ziad√©
  * Discussions-To: Catalog SIG
  * Status: Draft
  * Python-Version: 2.6
@@ -11,31 +11,34 @@
 
 This PEP describes a mirroring infrastructure for PyPI.
 
-== Motivation ==
+== Motivations ==
 
 PyPI is hosting over 4000 projects and is used on a daily basis 
 by people to build applications. Especially systems like easy_install
-and Buildout make intensive usage of PyPI.
+and zc.buildout make intensive usage of PyPI.
 
-For people making extensive use of PyPI, it can act as a single point
+For people making intensive use of PyPI, it can act as a single point
 of failure. People have started to set up some mirrors, both private and
 public. Those mirrors are active mirrors, which means that they are
 browsing PyPI to get synced. 
- 
-The motivation of this PEP is to set up a registering 
-mechanism in PyPI in order to list all the public PyPI mirrors
-and to provide an event based system where all mirrors get 
-informed via RPC when a package has been uploaded, modified,
-or removed, so they can eventually sync themselves.
 
-This PEP describes:
+In order to make the system more reliable, this PEP describes:
 
- * Mirror listing and registering  
- * Ping mechanism
+- the mirror listing and registering at PyPI 
+
+- the pages a public mirror should maintain. 
+  these pages will be used by PyPI, in order to get 
+  hit counts and the last modified date.
+
+- how a mirror should synchronize with PyPI
+
+- how a client can implement a fail-over mechanism
+
+- a contact form for Package maintainers
 
 == Mirror listing and registering ==
 
-A new HTML page will be added at http://pypi.python.org/mirrors
+A new text page will be added at http://pypi.python.org/mirrors
 that can be browsed like the simple index. This page gives a list of
 the mirrors through a list of links.
 
@@ -43,100 +46,204 @@ These links are the URL of the simple index of each mirror.
 The page will look like this:
 
 {{{
-<html>
-  <head><title>PyPI mirrors</title></head>
-  <body>
-  
-    <h1>PyPI mirrors</h1>
-    
-    <p>
-    If you want to register a new mirror, send an email
-    to the catalog-SIG@python.org with:
-    </p>
+# PyPI mirrors
+#    
+# If you want to register a new mirror, send an email
+# to the catalog-SIG@python.org with:
+#
+# - The url of your mirror.
+# - The name and email of the maintainer.
+#   
+#   The registering is done manually and to become a
+#   mirror, you need to strictly follow the mirror protocol
+#   defined here:
+#
+#    http://wiki.python.org/PEP_374
 
-    <ol>
-        <li> The url of your mirror.</li>
-        <li> The name and email of the maintainer.</li>
-        <li> The url of the freshness date.</li>
-    </ol>
-
-    <p>
-    The registering is done manually and to become a
-    mirror, you need to strictly follow the package index
-    API defined here:
-    </p>
-    
-    <p>
-    http://peak.telecommunity.com/DevCenter/EasyInstall#package-index-api
-    </p>
-    
-    <ul id="mirror-links">
-        <li>
-          <a class="link" href="http://example.com/pypi">Mirror #1</a> |
-          <a class="freshness" href="http://example.com/freshness">freshness</a> |
-          <a class="page" href="http://pypi.python.org/mirrors/1">more infos</a>
-        </li>
-    </ul>
-
-  </body>
-</html>
+http://example.com/pypi
+http://example2.com/pypi
 }}}
 
 When a mirror is proposed on the mailing list, it is manually
-added in a dedicated SQL table in the PyPI application.
+added in the mirror list in the PyPI application after it
+has been checked to be compliant with the mirroring rules.
 
-The mirror list page is a simple html page that can be browsed 
+The mirror list page is a simple text page that can be browsed 
 by any tool that wants to get a list of registered mirrors.
 
-Each mirror gets its own page url at PyPI with extra information.
-The name of that page is the ID of the mirror in the PyPI system.
-
-This page contains extra information about the mirror:
-
- * mirror name
- * maintainer name
- * url
- * freshness (retrieved from the mirror)  
- * http response time (calculated)
-
-exemple:
-
-{{{
-<html>
-  <head><title>PyPI mirror</title></head>
-  <body>
-  
-    <h1 id="name">Mirror #1</h1>
-    <ul>
-      <li>Maintainer: Some guy</li>
-      <li>Url: <a id="url" href="http://example.com/pypi">Mirror #1</a></li>
-      <li>Freshness date: <span id="freshness">2008-10-12T15:23:01</span></li>
-      <li>HTTP response time: <span id="responseTime">0.7270 seconds</span></li>
-    </ul>
-  </body>
-</html>
-
-}}}
-
 Other package indexes that are not mirrors of PyPI are not added in the 
-mirror list in PyPI.
+mirror list in PyPI. Although they can provide themselve the 
+same mirroring list mechanism for their own mirrors.
 
-Although they can provide themselve the same mirroring list mechanism 
-for their own mirrors.
+== Special pages a mirror needs to provide == 
 
-== Freshness date ==
+A mirror needs to provide four pages:
 
-CPAN uses a freshness date system where the mirror last synchronisation date is made available.
+ * last-modified
+ * local-stats
+ * stats
+ * mirrors
+ 
+=== Last modified date ==
 
-Each mirror is maintaining an url with a simple txt/plain content
+CPAN uses a freshness date system where the mirror last synchronisation 
+date is made available.
+
+For PyPI, each mirror need to maintain an url with a simple text content
 that represents the last synchronisation date the mirror maintains.
 
 The date is provided in GMT time, using the iso 8601 format
 (http://en.wikipedia.org/wiki/ISO_8601)
 
-== Costs ==
+Each mirror will be responsible to maintain its last modified date. 
 
-Someone has to manage the list of mirrors. This work should
-not take too much time. I am willing to be that maintainer if 
-the people that maintain the server don't have the time, or
-don't trust me.
+Conventionaly, this page should be reachable at: "/last-modified".
+
+=== Local statistics ===
+
+Each mirror is responsible to count all the downloads
+that where done on it. This is used by PyPI to sum up all
+downloads, to be able to display the grand total.
+
+This page is a csv-like page, with a header at the first 
+line. It needs to obey PEP 305 http://www.python.org/dev/peps/pep-0305/#id19.
+basically, it should be readable by Python csv module.
+
+The fields in this file are:
+
+ * package: the distutils id of the package.
+ * filename: the filename that has been downloaded.
+ * useragent: the User-Agent of the client that has downloaded the package.
+ * count: the number of downloads.
+
+The page will look like this:
+
+{{{
+# package,filename,useragent,count
+zc.buildout,zc.buildout-1.6.0.tgz,MyAgent,142
+...
+}}}
+
+The counting starts the day the mirror is launched.
+
+Conventionaly, this page should be reachable at: "/local-stats".
+
+=== Statistics page ====
+
+PyPI and each mirror are responsible to provide the grand total
+page at "/stats". This page is calculated daily by PyPI,
+by reading all mirrors local stats and suming them. 
+
+Therefore the mirrors should not try to rebuild this stat page but simply
+get PyPI's one during each synchronization.
+
+It has the same structure than the local-stats page.
+
+Conventionaly, this page should be reachable at: "/stats".
+
+=== Mirrors listing page ====
+
+Like /stats, each mirror should get and provide the /mirrors
+page.
+
+Conventionaly, this page should be reachable at: "/mirrors".
+
+== How a mirror should synchronize with PyPI ==
+
+A mirroring protocol calls Simple Index was described 
+and implemented by Martin Loweis and Jim Fulton, based on 
+how easy_install works. This section synthesizes it
+and give a few relevant links, plus a small part about 
+User-Agent.
+
+=== The mirroring protocol ===
+
+XXX changelog, pje link + to be defined
+
+=== User-agent request header ====
+
+In order to be able to differentiate actions taken by clients
+over PyPI, a specific user agent name should be provided by all 
+mirroring softwares.
+
+This is also true for all clients like:
+
+ * zc.buildout
+ * setuptools
+ * pyinstaller
+ * etc.
+
+XXX user agent registering mechanism at PyPI ?
+
+== How a client can use PyPI and its mirrors ==
+
+XXX
+
+== Fail-over mechanism ==
+
+Clients that are browsing PyPI should be able to use 
+a fail-over mechanism when PyPI is not responding.
+
+This can be done by parsing the /mirrors page of PyPI
+or the one located on any PyPI mirror. 
+
+It is up to the client to decide wich mirror should
+be used, depending on its geographical location and
+its responsivness.
+
+This PEP does not describe how this fail-over
+mechanism should work, but it is strongly encouraged
+that the clients try to use the nearest mirror.
+
+The clients so far that could use this mechanism:
+
+ * setuptools
+ * zc.buildout (through setuptools)
+ * pyinstaller
+
+== Extra package indexes ==
+
+It is obvious that some package will not be uploaded
+to PyPI. Wether because they are private or wether because
+the project maintainer runs his own server where people
+get the project package. Although, it is strongly
+encouraged that a public package index follows PyPI
+and distutils protocols. In other words, the "register"
+and "upload" command should be compatible with any 
+package index server out there.
+
+Softwares that are compatible with PyPI and distutils:
+
+ * PloneSoftwareCenter
+ * EggBasket
+
+== Merging several indexes ==
+
+When a client needs to get some packages from several 
+distinct indexes, it should be able to use each one of them
+as a potential source of packages. Different indexes
+should be defined as a sorted list for the client to
+look for a package.
+
+Each independant index can of course provide a list of 
+its mirrors, if the /mirrors page is available.
+
+That permits all combinations at client level, for a reliable
+packaging system with all levels of privacy.
+
+== Other PyPI enhancements ==
+
+XXX
+
+=== Contact form for Package maintainers ===
+
+A form reachable from the package page will be added,
+where a registered user can submit a message to the package
+owner. This is to be used when someone wants to take over
+the distutils id name, or when someone (like a packager
+for example) would like to reach the package owner 
+for some questions.
+
+XXX isn't the mail in the metadata enough ?
+XXX the original whish here was to enforce the package owner
+to upload sdist.
