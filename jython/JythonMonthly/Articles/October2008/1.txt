@@ -37,11 +37,11 @@ The first step in creating a Django application is to choose a location in which
 
 {{{
 
-jython django-admin.py startproject newsite
+jython django-admin.py startproject mysite
 
 }}}
 
-When you "cd" into the newly created "newsite" directory, you will see the following three important Jython files:
+When you "cd" into the newly created "mysite" directory, you will see the following three important Jython files:
 
 manage.py - Command-line utility for managing Django project
 settings.py - Configurations for the Django project
@@ -118,9 +118,57 @@ Would you like to create one now? (yes/no):
 
 }}}
 
-== Create Models ==
+'''Create Models'''
 
 At this point, the Django project is set up and we are ready to create an application within it.  In the Django environment, a project can contain one or more applications.  For the purposes of this article, we will create the same application as the [http://docs.djangoproject.com/en/dev/intro/tutorial01/#intro-tutorial01 Django tutorial] so that it is easier to follow along if you choose to do so.  In this case, we are interested in creating an application which manages poll questions and answers.
+
+The first step is to create the application itself.  As stated above, we have create the project thus far but no application as yet.  To do so, ensure that you are within the project ''mysite'' directory and issue the following command:
+
+{{{
+jython manage.py startapp polls
+}}}
+
+As you can see, the manage.py script plays an important role in constructing our Django projects/applications.  At this point you should list the contents of the newly created ''polls'' directory and see that two jython modules have been created:  ''models.py'' and ''views.py''.  These two modules are going to play an important role in the development and construction of our application model and view (obviously).  As we continue to follow the Django tutorial, the next step is to open up the ''models.py'' file and edit the contents so that they look like this:
+
+{{{
+from django.db import models
+
+class Poll(models.Model):
+    question = models.CharField(max_length=200)
+    pub_date = models.DateTimeField('date published')
+
+class Choice(models.Model):
+    poll = models.ForeignKey(Poll)
+    choice = models.CharField(max_length=200)
+    votes = models.IntegerField()
+}}}
+
+This simply creates two classes which represent the Poll object itself and the Choice object for each poll.  To learn more about the details of the syntax used for these classes, please take a look at the [http://docs.djangoproject.com/en/dev/intro/tutorial01/#intro-tutorial01 Django tutorial].  For now, it is important to know that with this little bit of code, our application now has the information required to create database tables and views for controlling our Poll.  In order to have the application included in our Django project (''mysite''), we need to adjust the the ''settings.py'' module a bit by adding the application to the list of INSTALLED_APPS.  Open ''settings.py'' and go to the bottom of the file, adjust as follows:
+
+{{{
+INSTALLED_APPS = (
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.sites',
+    'mysite.polls'
+)
+}}}
+
+Django now knows about our application and it can create the SQL required for our database objects as well as perform the work of creating the objects itself.  In order to see the SQL that is required to create the objects for our database, issue the following command from within the ''mysite'' directory:
+
+{{{
+jython manage.py sql polls
+}}}
+
+In order to actually have Django create the objects, we use the following command from within the ''mysite'' directory:
+
+{{{
+jython manage.py syncdb
+}}}
+
+
+
 
 
 == Working with the Framework ==
