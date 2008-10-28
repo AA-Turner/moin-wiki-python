@@ -216,14 +216,26 @@ There is a poorly documented make_constructor() function for this purpose.  (The
 It may be used like this:
 
 {{{
-static boost::smart_ptr<MyClass> makeClass (const object& data)
+static boost::shared_ptr<MyClass> makeClass(const object& data)
 {
   long val = extract<long>(data);
-  return boost::smart_ptr<MyClass>(new MyClass(val));
+  return boost::shared_ptr<MyClass>(new MyClass(val));
 }
 
-class_<MyClass, boost::smart_ptr<MyClass> >("MyClass")
-     :  .def("__init__", make_constructor(makeClass))
+class_<MyClass, boost::shared_ptr<MyClass> >("MyClass")
+    .def("__init__", make_constructor(makeClass))
+}}}
+
+or simply like this:
+
+{{{
+static boost::shared_ptr<MyClass> makeClass(long val)
+{
+  return boost::shared_ptr<MyClass>(new MyClass(val));
+}
+
+class_<MyClass, boost::shared_ptr<MyClass> >("MyClass")
+    .def("__init__", make_constructor(makeClass))
 }}}
 
 
