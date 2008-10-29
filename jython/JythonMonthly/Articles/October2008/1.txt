@@ -159,21 +159,121 @@ Django now knows about our application and it can create the SQL required for ou
 
 {{{
 jython manage.py sql polls
+
+<<output>>
+
+BEGIN;
+CREATE TABLE "polls_poll" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "question" varchar(200) NOT NULL,
+    "pub_date" timestamp with time zone NOT NULL
+)
+;
+CREATE TABLE "polls_choice" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "poll_id" integer NOT NULL REFERENCES "polls_poll" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "choice" varchar(200) NOT NULL,
+    "votes" integer NOT NULL
+)
+;
+COMMIT;
+
 }}}
 
 In order to actually have Django create the objects, we use the following command from within the ''mysite'' directory:
 
 {{{
 jython manage.py syncdb
+
+<< output >>
+
+Creating table polls_poll
+Creating table polls_choice
+Installing index for polls.Choice model
 }}}
 
-
-
+You can now look at the database and see the objects that have been created.
 
 
 == Working with the Framework ==
 
-== Delving into the Administrative Controls == 
+At this point you can begin to work with the framework at the shell level if you choose to do so.  You can use the following command to get into the shell and then follow some of the ,http://docs.djangoproject.com/en/dev/intro/tutorial02/#intro-tutorial01 Django documentation] at the bottom of tutorial 1 to work with the model.  Working with the model through the shell will help you to understand how the Django framework functions.
+
+== Delving into the Administrative Controls ==
+
+In order to actually see your site up and running, you will need to activate the administrative controls.  In my belief, this is one of the most powerful features of the Django framework.  Years ago I began creating websites for clients that had all content stored in a database.  I then created an administrative interface for the clients to use so that they could update the website content (the database content) at any time via a nice WYSIWYG editor.  It is a great framework and the clients really enjoy using it to administer their sites.  The Django framework gives you an administrative interface for free with each application you create.  All site content is stored in the database, so it can all be updated via the use of the administrative console.  Cascading style sheets can also be added and modified to change the look and feel of the site.
+
+If you follow the [http://docs.djangoproject.com/en/dev/intro/tutorial02/#intro-tutorial02 Django Framework Tutorial 2], it will guide you into the right direction for creating and adjusting the administrative site.  In this article, I will show you how to get started.
+
+As the tutorial explains, the administrative site is not enabled by default.  You must perform a few simple measures in order to activate the site.  Follow the next few procedures to set up the administrative console for your Django website.
+
+1)  Add 'django.contrib.admin' to the ''settings.py'' INSTALLED_APPS setting.  It should now resemble the following:
+
+{{{
+INSTALLED_APPS = (
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.sites',
+    'mysite.polls',
+    'django.contrib.admin'
+)
+}}}
+
+2)  Create a file named ''admin.py'' within your ''polls'' directory.  Add the following to ''admin.py'' in order to register the Poll object to the administrative site:
+
+{{{
+from mysite.polls.models import Poll
+from django.contrib import admin
+
+admin.site.register(Poll)
+}}}
+
+3)  Synchronize your data by running:
+
+{{{
+
+jython manage.py syncdb
+
+}}}
+
+4)  Edit the ''urls.py'' file to resemble the following in order to allow access to the appropriate modules within your site:
+
+{{{
+from django.conf.urls.defaults import *
+
+# Uncomment the next two lines to enable the admin:
+from django.contrib import admin
+admin.autodiscover()
+
+urlpatterns = patterns('',
+    # Example:
+    # (r'^mysite/', include('mysite.foo.urls')),
+
+    # Uncomment the admin/doc line below and add 'django.contrib.admindocs'
+    # to INSTALLED_APPS to enable admin documentation:
+    # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
+
+    # Uncomment the next line to enable the admin:
+    (r'^admin/(.*)', admin.site.root),
+)
+}}}
+
+You can now start your application and log into it using the superuser account that you had created at the beginning of this article.
+
+{{{
+
+jython manage.py runserver
+
+}}}
+
+Please follow the [http://docs.djangoproject.com/en/dev/intro/tutorial02/#intro-tutorial02 Django Framework Tutorial 2] for more information on using the administrative site.
+
+Use the following URL to log into your administrative site:
+
+{{{
+http://127.0.0.1:8000/
+}}}
 
 == Conclusion ==
 
