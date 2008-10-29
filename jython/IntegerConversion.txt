@@ -1,0 +1,12 @@
+{{{#!rst
+
+}}}
+
+|| '''CPython function''' || '''Jython method''' ||
+|| long intobject::PyInt_AsLong(register PyObject *op) || int PyObject.asInt() ||
+|| PyObject* intobject::PyInt_FromString(char *s, char **pend, int base) || PyObject PyObject.{{{__int__}}}() ||
+|| Py_ssize_t intobject::PyInt_AsSsize_t(register PyObject *op) || int PyObject.{{{__int__}}}().asInt() ||
+|| Py_ssize_t abstract::PyNumber_AsSsize_t(PyObject *item, PyObject *err) || int PyObject.asIndex(err) ||
+|| int abstract.h::PyIndex_Check(PyObject *ob) || boolean PyObject.isIndex() ||
+
+When using asInt, consider whether you want to ensure the original object is an instanceof PyInteger/PyLong prior to calling asInt on it. It's common to do this check before calling asInt, but is not required -- otherwise asInt will attempt to implicitly convert non int/longs via user defined {{{__int__}}} methods.
