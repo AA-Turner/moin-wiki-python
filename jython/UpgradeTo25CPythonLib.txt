@@ -6,18 +6,14 @@ To Fix
 * test_doctest - test_doctest4.txt has issues in String <=> PyString conversion; see email by LeoSoto to Jython-dev: http://www.nabble.com/Parsing-and-non-ASCII-Input-td19007415.html
 * test_unicode
 
-  * test_codecs_errors - raises wrong error for decode to int of unicode string
-  * test_codecs_idna - no idna encoding (which needs unicodedata)
+  * test_codecs_errors - raises wrong error for decode to int of unicode string. Needs the equiv. of unicodeobject.c::PyUnicode_EncodeDecimal
+  * test_codecs_idna - no idna encoding (which needs unicodedata 3.2.0) http://bugs.jython.org/issue1153
+* test_stringprep - http://bugs.jython.org/issue1758320
 
 Flaky/arch?
 ===========
 
-* test_cpickle
-* test_descr
 * test_socket - historically this is the case on SO_RCVBUF, SO_SNDBUF
-* test_scope
-* test_tuple - sometimes OutOfMemoryErrors during regrtest (when creating a set from a large list of small tuples). maybe not the tests fault, but the fact that the regrtest progressively uses more and more memory as it goes: http://pylonshq.com/pasties/917
-
 
 Under Development
 =================
@@ -25,6 +21,6 @@ Under Development
 Or perhaps more accurately, the following *should* be under development.
 
 * _rawffi (for ctypes, ported from PyPy)
-* bz2
+* bz2 (Georgy Berdyshev is looking at this. Leo User's bz2 module code is available from here: http://underboss.org/~pjenvey/jython/jythonx-bits.tar.bz2 )
 * multibytecodec (implies test_multibytecodec_support)
 * unicodedata - need a Java implementation, not our current Jython workaround (too slow to load, on the order of a couple of seconds)
