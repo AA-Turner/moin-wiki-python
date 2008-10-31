@@ -2,8 +2,8 @@
 These are just some rough notes on the steps needed to make a full release of Jython.  I generally run ant full-build as a test beforehand, as well as testing many of these steps throughout, but since that isn't strictly necessary I'm not including it here.  full-build requires all of the optional jars for the build be available and named in ant.properties.  See build.xml for more information.
 
  1. Update files in trunk that have information on the current version
-  1. Py``System``State.java - version and PY_RELEASE_SERIAL at least.  Also PY_RELEASE_LEVEL, PY_MICRO_VERSION, PY_MINOR_VERSION and PY_MAJOR_VERSION depending on the level of version bumpage.
-  1. build.xml - <property name="jython.version", and make values in <target name="version" match Py``System``State.
+  1. build.xml - <property name="jython.version".  Also PY_RELEASE_LEVEL, PY_MICRO_VERSION, PY_MINOR_VERSION and PY_MAJOR_VERSION depending on the level of version bumpage.
+  1. imp.java - If there has been any compiler change, increment magic number APIVersion.
   1. NEWS
   1. README
  1. Run regrtest and the bugtests
