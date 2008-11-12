@@ -1,16 +1,16 @@
-You can no longer do PyFile(inputStream) directly from Jython code.  This is because a PyFile that gets an inputStream needs to know the encoding of the stream in order to work, so that the recommended approach is to replace code like:
+You can no longer do `PyFile`(inputStream) directly from Jython code.  This is because a `PyFile` that gets an `InputStream` needs to know the encoding of the stream in order to work, so that the recommended approach is to replace code like:
+
 {{{
 from java.io import FileInputStream
 from org.python.core import PyFile
-
 fis = FileInputStream("error.txt")
 pyf = FileUtil.wrap(fis)
 }}}
 with code like:
+
 {{{
 from java.io import FileInputStream
 from org.python.core.util import FileUtil
-
 fis = FileInputStream("error.txt")
 pyf = FileUtil.wrap(fis)
 }}}
