@@ -7,7 +7,7 @@ Generally, 'n' is the number of elements currently in the container.  'k' is eit
 The Average Case assumes parameters generated uniformly at random.
 
 Internally, a list is represented as an array; the largest costs come from growing beyond the current allocation size (because everything must move), or from inserting or deleting somewhere near the beginning (because everything after that must move).  If you need to add/remove at both ends, consider using a collections.deque instead.
-||<tablewidth="" tablestyle="">'''Operation''' ||'''Average Case''' ||'''[http://en.wikipedia.org/wiki/Amortized_analysis Amortized Worst Case]''' ||
+||<tablewidth="" tablestyle="">'''Operation''' ||'''Average Case''' ||'''[[http://en.wikipedia.org/wiki/Amortized_analysis|Amortized Worst Case]]''' ||
 ||Copy ||O(n) ||O(n) ||
 ||Append[1] ||O(1) ||O(1) ||
 ||Insert ||O(n) ||O(n) ||
@@ -19,7 +19,7 @@ Internally, a list is represented as an array; the largest costs come from growi
 ||Del Slice ||O(n) ||O(n) ||
 ||Set Slice ||O(k+n) ||O(k+n) ||
 ||Extend ||O(k) ||O(k) ||
-||[http://svn.python.org/projects/python/trunk/Objects/listsort.txt Sort] ||O(n log n) ||O(n log n) ||
+||[[http://svn.python.org/projects/python/trunk/Objects/listsort.txt|Sort]] ||O(n log n) ||O(n log n) ||
 ||Multiply ||O(nk) ||O(nk) ||
 ||x in s||O(n)||||
 ||min(s), max(s)||O(n)||||
@@ -43,12 +43,12 @@ A deque (double-ended queue) is represented internally as a doubly linked list. 
 See dict -- the implementation is intentionally very similar.
 ||'''Operation'''||'''Average case'''||'''Worst Case'''||
 ||x in s||O(1)||O(n)||
-||Union s|t||[http://wiki.python.org/moin/TimeComplexity_(SetCode) O(len(s)+len(t))]||||
+||Union s|t||[[http://wiki.python.org/moin/TimeComplexity_(SetCode)|O(len(s)+len(t))]]||||
 ||Intersection s&t||?||||
 ||Difference s-t||O(len(s))||||
 ||s.difference_update(t)||O(len(t))||||
 ||Symmetric Difference s^t||?||||
- * As seen in the [http://svn.python.org/projects/python/trunk/Objects/setobject.c source code] the complexities for set difference s-t or s.difference(t) ({{{set_difference()}}}) and in-place set difference s.difference_update(t) ({{{set_difference_update_internal()}}}) are different! The first one is O(len(s)) (for every element in s add it to the new set, if not in t). The second one is O(len(t)) (for every element in t remove it from s). So care must be taken as to which is preferred, depending on which one is the longest set and whether a new set is needed. 
+ * As seen in the [[http://svn.python.org/projects/python/trunk/Objects/setobject.c|source code]] the complexities for set difference s-t or s.difference(t) ({{{set_difference()}}}) and in-place set difference s.difference_update(t) ({{{set_difference_update_internal()}}}) are different! The first one is O(len(s)) (for every element in s add it to the new set, if not in t). The second one is O(len(t)) (for every element in t remove it from s). So care must be taken as to which is preferred, depending on which one is the longest set and whether a new set is needed. 
  * To perform set operations like s-t, both s and t need to be sets. However you can do the method equivalents even if t is any iterable, for example s.difference(l), where l is a list. 
 
 
