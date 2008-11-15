@@ -1,28 +1,28 @@
-[[TableOfContents(2)]]
+<<TableOfContents(2)>>
 
 = General information =
-[http://www.gnupg.org GNU Privacy Guard] is a GPLed implementation of the PGP encryption protocols.   Also known as "GnuPG" or "GPG".
+[[http://www.gnupg.org|GNU Privacy Guard]] is a GPLed implementation of the PGP encryption protocols.   Also known as "GnuPG" or "GPG".
 
 = PyMe Python interface to GPGME =
-[http://pyme.sourceforge.net/ PyMe] is a python interface to [http://www.gnupg.org/related_software/gpgme/ GnuPG Made Easy (GPGME)] library.
+[[http://pyme.sourceforge.net/|PyMe]] is a python interface to [[http://www.gnupg.org/related_software/gpgme/|GnuPG Made Easy (GPGME)]] library.
 
 GPGME is a library designed to make access to GnuPG easier for applications. It provides a high-level cryptography API for encryption, decryption, signing, signature verification, and key management. It currently uses GnuPG as its backend, but the API is not restricted to this engine. In fact, support for other backends is planned.
 
 PyMe's development model is GPGME + Python + SWIG (just like m2crypto is an OpenSSL + Python + SWIG) combination which means that most of the functions and types are converted from C into Python automatically by SWIG. In short, to be able to use PyMe you need to be familiar with GPGME.
 
 = Python/GnuPG interface =
-The original [http://www.amk.ca/python/code/gpg Python/GnuPG interface] is no longer actively maintained by amk.  Please record comments, recipes, and patches on this Wiki page.
-If anyone wants to maintain the module and needs a CVS repository to store the code, just ask for write permission to the [http://www.sf.net/projects/pycrypto/ pycrypto project on SourceForge].
+The original [[http://www.amk.ca/python/code/gpg|Python/GnuPG interface]] is no longer actively maintained by amk.  Please record comments, recipes, and patches on this Wiki page.
+If anyone wants to maintain the module and needs a CVS repository to store the code, just ask for write permission to the [[http://www.sf.net/projects/pycrypto/|pycrypto project on SourceForge]].
 
 = News Flash! =
 I've added a great deal to amk's GPG.py, building on Richard Jones' 1.3 update and adding more support for the decryption, signing, key management, bells, whistles, and so on which amk's original design implied.  This is still a pure-python implementation, and requires nothing that is not in Python 2.2.1 or later, other than the gpg executable itself.  This is *not* a drop-in replacement; I needed to make some interface changes to support decryption and to better abstract the internals of returned objects -- it might want to be called GPG2.py (or maybe something like GPGng.py to prevent confusion with anything related to gnupg version 2 -- ideas welcome, as well as opinions on whether the name needs to be changed in the first place).  
 
-I don't know yet where the new module's permanent home is going to be, but as of this writing (July 2005) you can find it in the [http://trac.t7a.org/isconf ISconf] SVN Repository at 
+I don't know yet where the new module's permanent home is going to be, but as of this writing (July 2005) you can find it in the [[http://trac.t7a.org/isconf|ISconf]] SVN Repository at 
 http://trac.t7a.org/isconf/file/trunk/lib/python/isconf/GPG.py.  The right thing for me (or someone) to do going forward will be to confirm the license with amk and/or re-publish under the GPL, and post it somewhere more permanent.  If you do any of this before I get to it, then please update this page.  -- SteveTraugott
 
 = GnuPGInterface =
 
-[http://py-gnupg.sourceforge.net/ GnuPGInterface] is a Python module to interface with GnuPG. (This is a different project than the one mentioned above.)
+[[http://py-gnupg.sourceforge.net/|GnuPGInterface]] is a Python module to interface with GnuPG. (This is a different project than the one mentioned above.)
 It concentrates on interacting with GnuPG via filehandles,
 providing access to control GnuPG via versatile and extensible means.
 
@@ -30,8 +30,8 @@ This module is based on GnuPG::Interface, a Perl module by the same author. Unfo
 
 = openpgp =
 
-Another worthy successor might be the [http://pypi.python.org/pypi/OpenPGP/ Python opengpg] which also uses the [http://www.amk.ca/python/code/crypto.html Python Crypto Toolkit].
+Another worthy successor might be the [[http://pypi.python.org/pypi/OpenPGP/|Python opengpg]] which also uses the [[http://www.amk.ca/python/code/crypto.html|Python Crypto Toolkit]].
 
 = cryptlib =
 
-[http://www.cs.auckland.ac.nz/~pgut001/cryptlib/ cryptlib] also offers access to [http://www.openpgp.org/ OpenPGP]  methods. It has a python-interface, but it's not natural at all.
+[[http://www.cs.auckland.ac.nz/~pgut001/cryptlib/|cryptlib]] also offers access to [[http://www.openpgp.org/|OpenPGP]]  methods. It has a python-interface, but it's not natural at all.
