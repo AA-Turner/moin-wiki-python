@@ -4,13 +4,13 @@
 
 == Introduction ==
 
-There are many features within the JDK 6 builds which are going to open new doors for Java programmers.  Perhaps one of the most unique new features of JDK 6 is the inclusion of a scripting project which allows usage of countless java scripting languages within Java applcations.  Sun's implementation of Java SE6 includes a script engine based upon [http://www.mozilla.org/rhino Rhino: JavaScript for Java].  However, this scripting framework has been implemented in such a way that it also supports third-party engines that implement [http://download.java.net/jdk6/docs/api/javax/script/package-summary.html JSR 223 Scripting APIs].
+There are many features within the JDK 6 builds which are going to open new doors for Java programmers.  Perhaps one of the most unique new features of JDK 6 is the inclusion of a scripting project which allows usage of countless java scripting languages within Java applcations.  Sun's implementation of Java SE6 includes a script engine based upon [[http://www.mozilla.org/rhino|Rhino: JavaScript for Java]].  However, this scripting framework has been implemented in such a way that it also supports third-party engines that implement [[http://download.java.net/jdk6/docs/api/javax/script/package-summary.html|JSR 223 Scripting APIs]].
 
-Of course, the topic for this article is the utilization of Jython within a Java application with the new JDK 6 scripting framework.  The jython engine is available for download along with the other scripting language implementations on the [https://scripting.dev.java.net/ scripting.java.net website].  While the Jython scripting engine only supports release 2.1, it's utilization provides seamless integration within Java applications...with a minor effort.
+Of course, the topic for this article is the utilization of Jython within a Java application with the new JDK 6 scripting framework.  The jython engine is available for download along with the other scripting language implementations on the [[https://scripting.dev.java.net/|scripting.java.net website]].  While the Jython scripting engine only supports release 2.1, it's utilization provides seamless integration within Java applications...with a minor effort.
 
 == Setting Up The Environment ==
 
-To begin using the JDK 6 scripting engine, you will need to obtain a copy of JDK6.  You can use [http://java.sun.com/javase/downloads/ea.jsp this link] to grab the latest release as of this writing.  You'll also need to visit the [https://scripting.dev.java.net/ scripting.java.net website] mentioned previously and obtain a copy of the JSR 223 engines.
+To begin using the JDK 6 scripting engine, you will need to obtain a copy of JDK6.  You can use [[http://java.sun.com/javase/downloads/ea.jsp|this link]] to grab the latest release as of this writing.  You'll also need to visit the [[https://scripting.dev.java.net/|scripting.java.net website]] mentioned previously and obtain a copy of the JSR 223 engines.
 
 Once you've installed the JDK and set up the Jython engine, you are ready to begin using the scripting framework.  A command line scripting environment is shipped along with JDK 6 and it is useful for testing scripts.  However, you can just as easily use the jython interactive command console.  Just in case you want to try your hand at using the scripting environment shipped with JDK 6, it is called jrunscript.  You will need to use the following syntax in order to invoke a jython command shell using jrunconsole.  Execute the following (plugging in your correct paths of course) from the command line:
 {{{
@@ -19,7 +19,7 @@ Once you've installed the JDK and set up the Jython engine, you are ready to beg
 
 == IDE Recommendation ==
 
-In order to facilitate the usage of Jython within your Java application, I recommend using an IDE which provides some support for the Jython language.  For instance, I use Netbeans along with the [https://coyote.dev.java.net/ Coyote] plugin.  You may prefer to use Eclipse or something else as it is personal preference.  Personally, I find it cumbersome to go from a Java IDE to a text editor for writing Jython scripts.
+In order to facilitate the usage of Jython within your Java application, I recommend using an IDE which provides some support for the Jython language.  For instance, I use Netbeans along with the [[https://coyote.dev.java.net/|Coyote]] plugin.  You may prefer to use Eclipse or something else as it is personal preference.  Personally, I find it cumbersome to go from a Java IDE to a text editor for writing Jython scripts.
 
 == Utilizing Jython from Java ==
 
@@ -27,7 +27,7 @@ In order to facilitate the usage of Jython within your Java application, I recom
 
 As stated previously, through the usage of this new JDK 6 scripting engine you can integrete Jython code with Java application code in a seamless manner.  I have found some nuances within the documentation for JDK 6 because most of the docs use javascript examples.  As I show you some examples, I will point out the differences that I have found between the implementations of Javascript and Jython so you do not run into the same issues.
 
-As stated earlier, the scripting API has support for a number of languages and this is orchestrated via the the ScriptEngineManager.  In order to select a specified scripting engine to use, you'll first need to obtain the scripting engine from the [https://scripting.dev.java.net/ scripting.java.net website].  Once you've extracted the engine of your choice, in our case Jython, you'll have to ensure that the engine resides within your classpath.  Once this task has been completed, it is easy to gain access to your scripting language.  
+As stated earlier, the scripting API has support for a number of languages and this is orchestrated via the the ScriptEngineManager.  In order to select a specified scripting engine to use, you'll first need to obtain the scripting engine from the [[https://scripting.dev.java.net/|scripting.java.net website]].  Once you've extracted the engine of your choice, in our case Jython, you'll have to ensure that the engine resides within your classpath.  Once this task has been completed, it is easy to gain access to your scripting language.  
 
 To list all of the available engines, you can use the following method:
 {{{
@@ -132,7 +132,7 @@ def calcNumbers(y, z):
 
 }}}
 
-We can utilize any of the functions defined within hello.py from inside our Java application.  However, I have been unable to utilize the scripting API as it is [http://developers.sun.com/learning/javaoneonline/2006/coreplatform/TS-1382.pdf documented for Javascript].  Within the other sources of documentation there are plenty of examples using Javascript and they all work as expected.  The Jython engine does not perform in the same fashion...I ran into error messages when I tried to use the ''Invocable'' interface.  Therefore, I had to use some ''Jython specific'' code in order to make external scripting function in a useful manner.
+We can utilize any of the functions defined within hello.py from inside our Java application.  However, I have been unable to utilize the scripting API as it is [[http://developers.sun.com/learning/javaoneonline/2006/coreplatform/TS-1382.pdf|documented for Javascript]].  Within the other sources of documentation there are plenty of examples using Javascript and they all work as expected.  The Jython engine does not perform in the same fashion...I ran into error messages when I tried to use the ''Invocable'' interface.  Therefore, I had to use some ''Jython specific'' code in order to make external scripting function in a useful manner.
 
 In the example below, I invoke the external Jython script by actually returning a reference to a named function.  In order to pass values to the script I've instantiated Jython objects.  The code below functions without issue.
 
@@ -181,10 +181,10 @@ The JDK 6 scripting API adds yet another way of integrating Jython code with you
 
 == Resources ==
 
-[http://developers.sun.com/learning/javaoneonline/2006/coreplatform/TS-1382.pdf Scripting for the Java Platform]
+[[http://developers.sun.com/learning/javaoneonline/2006/coreplatform/TS-1382.pdf|Scripting for the Java Platform]]
 
-[http://java.sun.com/javase/6/docs/technotes/tools/share/jrunscript.html JRunscript Command Line script Shell]
+[[http://java.sun.com/javase/6/docs/technotes/tools/share/jrunscript.html|JRunscript Command Line script Shell]]
 
-[https://jdk6.dev.java.net/ JDK 6 Project]
+[[https://jdk6.dev.java.net/|JDK 6 Project]]
 
-[https://scripting.dev.java.net/ scripting.dev.java.net]
+[[https://scripting.dev.java.net/|scripting.dev.java.net]]
