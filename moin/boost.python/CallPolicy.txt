@@ -1,7 +1,7 @@
-`CallPolicy` allows ["boost.python"] to deal with raw references and pointers.
+`CallPolicy` allows [[boost.python]] to deal with raw references and pointers.
 Different policies specifies different strategies of managing object ownership.
 
-[[TableOfContents]]
+<<TableOfContents>>
 
 == with_custodian_and_ward<M,N> ==
 Keeps N-th argument as long as M-th is alive.
@@ -30,10 +30,10 @@ with T one of:
 === reference_existing_object ===
 naïve (dangerous) approach
 
-["boost.python/ResultConverterGenerator"] which can be used to wrap C++ functions returning 
+[[boost.python/ResultConverterGenerator]] which can be used to wrap C++ functions returning 
 a reference or pointer to a C++ object. 
 
-When the wrapped function is called, the value referenced by its return value is not copied. [[BR]]
+When the wrapped function is called, the value referenced by its return value is not copied. <<BR>>
 A new Python object is created which contains an unowned U* pointer to the referent of the wrapped function's return value, and no attempt is made to ensure that the lifetime of the referent is at least as long as that of the corresponding Python object.
 
 This class is used in the implementation of return_internal_reference.
@@ -48,7 +48,7 @@ BoostPython v1 approach
 BoostPython/ResultConverterGenerator which can be used to wrap C++ functions returning 
 a pointer to an object allocated with a ''new-expression'' and
 expecting the caller to take responsibility for deleting that C++ object from heap.
-["boost.python"] will do it as part of Python object destruction.
+[[boost.python]] will do it as part of Python object destruction.
 
 Use case:
 {{{
@@ -60,6 +60,6 @@ def("Tfactory", factory, return_value_policy<manage_new_object>() );
 }}}
 
 === return_by_value ===
-["boost.python/ResultConverterGenerator"] which can be used to wrap C++ functions returning 
-any reference or value type.[[BR]]
+[[boost.python/ResultConverterGenerator]] which can be used to wrap C++ functions returning 
+any reference or value type.<<BR>>
 The return value is copied into a new Python object.
