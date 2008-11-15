@@ -1,6 +1,6 @@
 = UDP Communication =
 
-[[TableOfContents()]]
+<<TableOfContents>>
 
 See also SoapOverUdp, TcpCommunication
 
@@ -55,16 +55,16 @@ Extending UDP to add synchronization is basically writing TCP on top of it. You 
 
 == Multicasting? ==
 
-The ''official'' example of multicast can be found at /usr/share/doc/python2.3/examples/Demo/sockets/mcast.py (at least on Debian Sarge, after `apt-get install python-examples`). It worked on my machine, but I have yet to try it running on different machines. -- -- 200.138.245.121 [[DateTime(2006-08-09T03:20:30Z)]]
+The ''official'' example of multicast can be found at /usr/share/doc/python2.3/examples/Demo/sockets/mcast.py (at least on Debian Sarge, after `apt-get install python-examples`). It worked on my machine, but I have yet to try it running on different machines. -- -- 200.138.245.121 <<DateTime(2006-08-09T03:20:30Z)>>
 
 I've been googling for some time now, and ''still'' have yet to find a ''working'' example of Python multicast listening.
 
-(The example below has been updated to work -- Steven Spencer [[DateTime(2005-04-14T13:19:00Z)]])
+(The example below has been updated to work -- Steven Spencer <<DateTime(2005-04-14T13:19:00Z)>>)
 
 (I've replaced it with one that works. -- Asgeir S. Nilsen
-[[DateTime(2005-05-09T19:25:00Z)]])
+<<DateTime(2005-05-09T19:25:00Z)>>)
 
-(I've corrected the mreq according to the comment below -- Sebastian Setzer [[DateTime(2006-01-25T14:28:00Z)]])
+(I've corrected the mreq according to the comment below -- Sebastian Setzer <<DateTime(2006-01-25T14:28:00Z)>>)
 
 {{{
 #!python
@@ -83,7 +83,7 @@ while True:
   print sock.recv(10240)
 }}}
 
-The mreq packing is based on [http://www.senux.com/linux/network/multicast/ some code that I found,] ''that does not work.'' On my computer, at least.
+The mreq packing is based on [[http://www.senux.com/linux/network/multicast/|some code that I found,]] ''that does not work.'' On my computer, at least.
 
 Sending to multicast groups is just fine; Here's some functional text:
 {{{
@@ -142,15 +142,15 @@ def recv(port=50000, addr="239.192.1.100", buf_size=1024):
 
 At this point, I'm beginning to think: "Python multicast simply ''does not work.''"
 
-  Are you running on Windows 2000/XP (pre-SP2)/Server 2003 with more than one network adapter? If so, the problem is Windows, not Python. The original code works for me on Windows 2000 (1 network adapter), but fails under XP Pro (pre-SP2, 3 adapters though 2 are disabled). Microsoft has a [http://support.microsoft.com/default.aspx?scid=kb;en-us;827536 support page] on the issue. The problem appears to be in the receiver: with both machines running the receiver, the Win2K machine sees packets sent from both machines, while the receiver on XP sees messages sent from the Win2K machine only. This, despite specifying the local IP address of the appropriate adapter in the second part of the mreq structure in the IP_ADD_MEMBERSHIP call. -- VinaySajip
+  Are you running on Windows 2000/XP (pre-SP2)/Server 2003 with more than one network adapter? If so, the problem is Windows, not Python. The original code works for me on Windows 2000 (1 network adapter), but fails under XP Pro (pre-SP2, 3 adapters though 2 are disabled). Microsoft has a [[http://support.microsoft.com/default.aspx?scid=kb;en-us;827536|support page]] on the issue. The problem appears to be in the receiver: with both machines running the receiver, the Win2K machine sees packets sent from both machines, while the receiver on XP sees messages sent from the Win2K machine only. This, despite specifying the local IP address of the appropriate adapter in the second part of the mreq structure in the IP_ADD_MEMBERSHIP call. -- VinaySajip
 
-  ''Hm, that's interesting. No, I'm not running on Windows; I'm running on FC3. That said, I hadn't considered the machine as a possible problem. What I'll do is this: I'll run this on my ''home'' FC3 computer, and on my ''home'' Redhat 9 computer, and see if I can get it to work on one of them.'' -- LionKimbro [[DateTime(2005-01-20T02:07:18Z)]]
+  ''Hm, that's interesting. No, I'm not running on Windows; I'm running on FC3. That said, I hadn't considered the machine as a possible problem. What I'll do is this: I'll run this on my ''home'' FC3 computer, and on my ''home'' Redhat 9 computer, and see if I can get it to work on one of them.'' -- LionKimbro <<DateTime(2005-01-20T02:07:18Z)>>
 
-  ''The new version still doesn't work for me. I mean, it ''does'' work for local traffic: the host talking with itself. But as soon as I get to another link-local computer, and do the same over again, it doesn't work. I've replaced 127.0.0.1 with the actual IP address of the computer, and I've shut down the firewall (service iptables stop). No dice. This is all on my FC3 host, again.'' -- LionKimbro [[DateTime(2005-04-14T17:27:42Z)]]
+  ''The new version still doesn't work for me. I mean, it ''does'' work for local traffic: the host talking with itself. But as soon as I get to another link-local computer, and do the same over again, it doesn't work. I've replaced 127.0.0.1 with the actual IP address of the computer, and I've shut down the firewall (service iptables stop). No dice. This is all on my FC3 host, again.'' -- LionKimbro <<DateTime(2005-04-14T17:27:42Z)>>
 
-  ''When implementing multicast, it's important to understand the requirements of [ftp://ftp.rfc-editor.org/in-notes/rfc3376.txt IGMP], especially when working in a switched network.  IGMP describes how routers should exchange membership information, but does not describe how layer 2 switches should handle this.  Many switches have a feature called IGMP snooping, where the switch snoops for IGMP traffic, thereby gaining knowledge of which switch ports belong to a multicast group.  Cheap switches typically either does not handle this or handles it wrongly.'' -- Asgeir S. Nilsen [[DateTime(2005-05-09T19:39:00Z)]]
+  ''When implementing multicast, it's important to understand the requirements of [[ftp://ftp.rfc-editor.org/in-notes/rfc3376.txt|IGMP]], especially when working in a switched network.  IGMP describes how routers should exchange membership information, but does not describe how layer 2 switches should handle this.  Many switches have a feature called IGMP snooping, where the switch snoops for IGMP traffic, thereby gaining knowledge of which switch ports belong to a multicast group.  Cheap switches typically either does not handle this or handles it wrongly.'' -- Asgeir S. Nilsen <<DateTime(2005-05-09T19:39:00Z)>>
 
-  ''The first version, I tested side-by-side equivalent C code. The C code worked, the Python code did not. Thus, I ruled out special router, switch, hub issues. However, the second version, I just ran the Python code. I did not test vis-a-vis C code. Sol, I will have to try it vis-a-vis C code, again, to be sure." -- LionKimbro [[DateTime(2005-05-09T22:56:26Z)]]
+  ''The first version, I tested side-by-side equivalent C code. The C code worked, the Python code did not. Thus, I ruled out special router, switch, hub issues. However, the second version, I just ran the Python code. I did not test vis-a-vis C code. Sol, I will have to try it vis-a-vis C code, again, to be sure." -- LionKimbro <<DateTime(2005-05-09T22:56:26Z)>>
 
 
 It's too bad we don't have anything as simple as this:
@@ -172,7 +172,7 @@ UDP.send("Hello, world!", "239.192.0.100", 1000)
 
 ...or something like that.
 
--- LionKimbro [[DateTime(2005-01-19T19:54:19Z)]]
+-- LionKimbro <<DateTime(2005-01-19T19:54:19Z)>>
 
 You could do something like this:
 
@@ -222,4 +222,4 @@ How can it be definitive, if you have to download a whole project in order to re
 
 ----
 
-* [http://kamaelia.sourceforge.net/cgi-bin/blog/blog.cgi?rm=viewpost&nodeid=1113495151 How to Write New Components for Kamaelia] has example code for doing multicast send and receipt at the top.
+* [[http://kamaelia.sourceforge.net/cgi-bin/blog/blog.cgi?rm=viewpost&nodeid=1113495151|How to Write New Components for Kamaelia]] has example code for doing multicast send and receipt at the top.
