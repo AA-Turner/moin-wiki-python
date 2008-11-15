@@ -44,7 +44,7 @@ Something that's been requested, but needs much more thought and analysis to see
 == Development Environment Hints ==
 PyPI uses postgresql as a database, with a roll it yourself web framework based on different python modules.  It uses apache2 as the web server.
 
-It can run using cgi, fcgi and mod_python.
+It can run using wsgi, cgi, fcgi and mod_python.
 
 Before restoring database, "pypi" role must exists:
 
@@ -82,15 +82,12 @@ if your config.ini isn't in /tmp/pypi.ini.  You can leave it as 'config.ini' if 
 
 You will need to add cheesecake_password=yourpasshere into the config.ini in the webui section.
 
-If you wish to test functionality that requires login, then you will need to configure your apache to pass through basic auth. You do this by adding lines '''similar''' to the following to your apache2 conf file:
+To integrate it with Apache, we recommend to use WSGI through mod_wsgi. Your configuration should look like this:
 
 {{{
-  RewriteCond %{HTTP:Authorization}  ^(.+)$
-  RewriteRule ^/cgi-bin/pypi.cgi(.*) /Library/WebServer/CGI-Executables/pypi.cgi$1 [e=HTTP_CGI_AUTHORIZATION:%1,t=application/x-httpd-cgi,l]
-}}}
-If this doesn't work, then you can use these lines to debug:
-
-{{{
-  RewriteLog /var/log/httpd/rewrite.log
-  RewriteLogLevel 9
+   WSGIDaemonProcess pypi display-name=wsgi-pypi python-path=/usr/lib/zope2.9/lib/python processes=4
+   WSGIProcessGroup pypi
+   WSGIPassAuthorization On
+   WSGIScriptAlias /pypi /data/pypi/src/pypi/pypi.wsgi
+   WSGIScriptAlias /simple /data/pypi/src/pypi/pypi.wsgi
 }}}
