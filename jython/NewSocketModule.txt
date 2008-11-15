@@ -1,21 +1,21 @@
 = New Socket Module =
 
-[[TableOfContents(3)]]
+<<TableOfContents(3)>>
 
 == Introduction ==
 
-This page descibes the socket module for jython 2.2, which for the first time has support for [http://en.wikipedia.org/wiki/Non-blocking_I/O asynchronous or non-blocking operations]. Hopefully, this new support should make possible the use of event-based server frameworks on jython. Examples of cpython event-based frameworks are [http://twistedmatrix.com/ Twisted], [http://www.zope.org/ Zope] and [http://www.amk.ca/python/code/medusa.html Medusa]. It is considered by some that Asynchronous IO is the only way to address [http://www.kegel.com/c10k.html The C10K problem]
+This page descibes the socket module for jython 2.2, which for the first time has support for [[http://en.wikipedia.org/wiki/Non-blocking_I/O|asynchronous or non-blocking operations]]. Hopefully, this new support should make possible the use of event-based server frameworks on jython. Examples of cpython event-based frameworks are [[http://twistedmatrix.com/|Twisted]], [[http://www.zope.org/|Zope]] and [[http://www.amk.ca/python/code/medusa.html|Medusa]]. It is considered by some that Asynchronous IO is the only way to address [[http://www.kegel.com/c10k.html|The C10K problem]]
 
 The socket module is pretty much feature complete. It is written to use java.nio apis as much as possible, i.e. all reads and writes are carried out through the sockets java.nio.channel based interface. However, there are some circumstances, specifically timeout operations, where the java.net.socket interfaces have to be used.
 
-The socket module is quite stable; a [http://bugs.jython.org/issue?%40search_text=&title=&%40columns=title&id=&%40columns=id&creation=&creator=&activity=&%40columns=activity&%40sort=activity&actor=&nosy=&type=&components=&versions=&severity=&dependencies=&assignee=amak&keywords=&priority=&%40group=priority&status=&%40columns=status&resolution=&%40pagesize=50&%40startwith=0&%40action=search number of bugs in the functionality have been found and fixed]. 
+The socket module is quite stable; a [[http://bugs.jython.org/issue?%40search_text=&title=&%40columns=title&id=&%40columns=id&creation=&creator=&activity=&%40columns=activity&%40sort=activity&actor=&nosy=&type=&components=&versions=&severity=&dependencies=&assignee=amak&keywords=&priority=&%40group=priority&status=&%40columns=status&resolution=&%40pagesize=50&%40startwith=0&%40action=search|number of bugs in the functionality have been found and fixed]]. 
 
-There are necessarily some differences between the behaviour of the cpython and jython socket modules, because jython is implemented on the java socket model, which is more restrictive than the C language socket interface that cpython is based on. It is the purpose of this document to describe those differences. If you find a difference in behaviour between cpython and jython that is not documented here, and where jython is behaving differently to the cpython socket documentation, then [http://bugs.jython.org/ that should be considered a bug and reported, please].
+There are necessarily some differences between the behaviour of the cpython and jython socket modules, because jython is implemented on the java socket model, which is more restrictive than the C language socket interface that cpython is based on. It is the purpose of this document to describe those differences. If you find a difference in behaviour between cpython and jython that is not documented here, and where jython is behaving differently to the cpython socket documentation, then [[http://bugs.jython.org/|that should be considered a bug and reported, please]].
  
 == Requirements ==
 
 Non-blocking support
-  * JVM version with [http://java.sun.com/j2se/1.4.2/docs/guide/nio/ java.nio] support, i.e. >= version 1.4
+  * JVM version with [[http://java.sun.com/j2se/1.4.2/docs/guide/nio/|java.nio]] support, i.e. >= version 1.4
   * Any jython version >= 2.2
 
 SSL support
@@ -45,7 +45,7 @@ However, the cpython SSL API is extremely basic, and essentially only permits th
 
 All of the above are possible, but since no other python version includes that support in the base distribution, I'm not going to do it for jython either; trying to design an API would be complex enough; implementing would be a lot of work beyond that.
 
-If you have serious SSL or crypto requirements, then I '''strongly''' recommend using the java crypto libraries, or one of the excellent third-party crypto libraries for java, such as that from the [http://www.bouncycastle.org Legion of the Bouncy Castle].
+If you have serious SSL or crypto requirements, then I '''strongly''' recommend using the java crypto libraries, or one of the excellent third-party crypto libraries for java, such as that from the [[http://www.bouncycastle.org|Legion of the Bouncy Castle]].
 
 === Certificate Checking ===
 
@@ -55,11 +55,11 @@ In Java, by default, certificate checking is '''enabled'''. This means that the 
 
 ==== By configuring your JVM ====
 
-If you are using self-generated certificates for testing, then you can import those certificates into the JVM running your jython scripts, and the certificate will then be recognised. See this article from Sun on [http://java.sun.com/j2ee/1.4/docs/tutorial/doc/Security6.html how to install certificates on a JVM].
+If you are using self-generated certificates for testing, then you can import those certificates into the JVM running your jython scripts, and the certificate will then be recognised. See this article from Sun on [[http://java.sun.com/j2ee/1.4/docs/tutorial/doc/Security6.html|how to install certificates on a JVM]].
 
 ==== BY installing your own Security Provider ====
 
-The following technique has been adapted from the ZXTM Knowledge''''''Hub article [http://knowledgehub.zeus.com/articles/2006/01/03/using_the_control_api_with_java Using the Control API with Java].
+The following technique has been adapted from the ZXTM Knowledge''''''Hub article [[http://knowledgehub.zeus.com/articles/2006/01/03/using_the_control_api_with_java|Using the Control API with Java]].
 
 '''WARNING''': Installing this all-trusting security provider means that '''all''' certificates will be accepted, regardless of validity! '''Do not use this technique if you need to verify the trustworthiness of an SSL certificate!'''
 
@@ -132,12 +132,12 @@ The unit-tests provided with these modules should also run on all versions of cp
 
 The design of the cpython non-blocking API is derived from the UNIX C api, which deals with FILE DESCRIPTORS. Since file descriptors can describe any type of I/O channel on unix OSes, cpython can deal with selecting and polling on multiple channel types, such non-blocking files, pipes and named-pipes, fifos, etc.
 
-The java model for selecting on channels is much more restrictive. There is a java abstract class, java.nio.channels.SelectableChannel, which other channel classes must subclass if they are to be multiplexed. On 1.4 JVMs, only the following classes subclass [http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/SelectableChannel.html SelectableChannel].
+The java model for selecting on channels is much more restrictive. There is a java abstract class, java.nio.channels.SelectableChannel, which other channel classes must subclass if they are to be multiplexed. On 1.4 JVMs, only the following classes subclass [[http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/SelectableChannel.html|SelectableChannel]].
 
- * [http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/SocketChannel.html Socket channels]
- * Pipe [http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/Pipe.SourceChannel.html source] and [http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/Pipe.SinkChannel.html sink] channels
+ * [[http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/SocketChannel.html|Socket channels]]
+ * Pipe [[http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/Pipe.SourceChannel.html|source]] and [[http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/Pipe.SinkChannel.html|sink]] channels
 
-Specifically, [http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/FileChannel.html FileChannel's] do not subclass [http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/SelectableChannel.html SelectableChannel], and thus it is not possible to include files in non-blocking multiplex operations on Java platforms.
+Specifically, [[http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/FileChannel.html|FileChannel's]] do not subclass [[http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/SelectableChannel.html|SelectableChannel]], and thus it is not possible to include files in non-blocking multiplex operations on Java platforms.
 
 Of the two channel types listed above, these modules only support socket channels. This is because it was necessary to rewrite all of the socket creation calls to return SelectableChannels. To do so for Pipes, which are used for communication with sub-processes, it would be necessary to rewrite the jython sub-process creation modules, i.e. popen, etc, to create SelectableChannels. Although it should be reasonably straightforward to implement this, I have no plans to do this work.
 
@@ -197,9 +197,9 @@ However, due to the different semantics of java and C, there will be differences
 
 === Differences in the treatment of zero timeout values ===
 
-On cpython, when you specify a zero (i.e. 0 or 0.0) timeout value, the socket should behave the same as if the socket had been placed in non-blocking mode. See the [http://www.python.org/doc/lib/socket-objects.html cpython socket object documentation] for details.
+On cpython, when you specify a zero (i.e. 0 or 0.0) timeout value, the socket should behave the same as if the socket had been placed in non-blocking mode. See the [[http://www.python.org/doc/lib/socket-objects.html|cpython socket object documentation]] for details.
 
-However, [http://java.sun.com/j2se/1.4.2/docs/api/java/net/Socket.html#setSoTimeout(int) Java interprets a zero timeout value as an infinite timeout], i.e. the socket is placed in blocking mode.
+However, [[http://java.sun.com/j2se/1.4.2/docs/api/java/net/Socket.html#setSoTimeout(int)|Java interprets a zero timeout value as an infinite timeout]], i.e. the socket is placed in blocking mode.
 
 To solve this conflict, I decided that the best thing to do with zero timeouts is to adjust them to the smallest possible timeout in java, which is 1 millisecond. So if you do socket.settimeout(0) with the new jython socket module, what you will really get is equivalent to the cpython call socket.settimeout(0.001).
 
@@ -212,7 +212,7 @@ This means that you may get differing exception signatures when using zero timeo
 
 === Null address returned from UDP socket.recvfrom() in timeout mode ===
 
-This bug is reported on the jython bug tracker: [http://bugs.jython.org/issue1018 UDP recvfrom fails to get the remote address].
+This bug is reported on the jython bug tracker: [[http://bugs.jython.org/issue1018|UDP recvfrom fails to get the remote address]].
 
 ==== Description ====
 
