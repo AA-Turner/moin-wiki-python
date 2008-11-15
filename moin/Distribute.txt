@@ -2,28 +2,28 @@
 
 Interesting discussion are happening in distutils-SIG. You can read the threads 
 
- * [http://mail.python.org/pipermail/distutils-sig/2008-September/010031.html Initial thread]
- * [http://mail.python.org/pipermail/distutils-sig/2008-September/010080.html Guido answer, followed by other answers]
+ * [[http://mail.python.org/pipermail/distutils-sig/2008-September/010031.html|Initial thread]]
+ * [[http://mail.python.org/pipermail/distutils-sig/2008-September/010080.html|Guido answer, followed by other answers]]
 
 This page tries to synthetizes these threads and see what could be done to improve package managment in Python.
 
 It is not clear right now if a new development will happen outside distutils or not. But this page can
 be the place where we structure things and decide of the best plan.
 
-Another great ressource to get the whole picture is [http://groups.google.com/group/django-developers/msg/5407cdb400157259 Kevin Teague's post] in Django Mailing list.
+Another great ressource to get the whole picture is [[http://groups.google.com/group/django-developers/msg/5407cdb400157259|Kevin Teague's post]] in Django Mailing list.
 
-Chris Withers made a presentation called [http://www.simplistix.co.uk/presentations/python_package_management_08/python_package_management_08.pdf Python Package Management Sucks] at PyCon Uk in september 2008.
+Chris Withers made a presentation called [[http://www.simplistix.co.uk/presentations/python_package_management_08/python_package_management_08.pdf|Python Package Management Sucks]] at PyCon Uk in september 2008.
 
 = Related Docs =
 
- * [http://wiki.python.org/moin/Distribute/Functionality Functionality]
- * ["DistributeSprint #1"] : Starting a PEP series
+ * [[http://wiki.python.org/moin/Distribute/Functionality|Functionality]]
+ * [[DistributeSprint #1]] : Starting a PEP series
 
 
 = Related PEPs =
 
- * a new package dedicated to PyPI handling [http://wiki.python.org/moin/A_new_pypi_module PEP 373]
- * mirroring protocol for PyPI : ["PEP 374"]
+ * a new package dedicated to PyPI handling [[http://wiki.python.org/moin/A_new_pypi_module|PEP 373]]
+ * mirroring protocol for PyPI : [[PEP 374]]
  
 = What do we have today ? =
 
@@ -34,7 +34,7 @@ This is a really high-level view of Distutils. It is just made to understand its
 you are not used to it you can get it.
 
 Right now in Python, Distutils provides a set of commands to create a distribution of your package. It uses a set of metadata
-that describes the package and build an archive with the source code. These metadata are described in [http://www.python.org/dev/peps/pep-0345/ PEP 345].
+that describes the package and build an archive with the source code. These metadata are described in [[http://www.python.org/dev/peps/pep-0345/|PEP 345]].
 
 Distutils uses "commands" that can be combined to build various distributions. 
 These commands are invoked through the command line, as long as the package provides the distutils-enable setup.py file, but that is conventionnaly the case:
@@ -90,7 +90,7 @@ $ python setup.py register sdist upload -r plone.org
 
 == Setuptools ==
 
-Setuptools can be seen as an enhancement of Distutils. It does a lot of things, and this section will not present everything. You might want to read [http://peak.telecommunity.com/DevCenter/setuptools Phillip's page on the project]. 
+Setuptools can be seen as an enhancement of Distutils. It does a lot of things, and this section will not present everything. You might want to read [[http://peak.telecommunity.com/DevCenter/setuptools|Phillip's page on the project]]. 
 
 But basically it adds 4 major features a lot of people use:
 
@@ -121,7 +121,7 @@ setup(name='zope.whatever',
 
 This will tell Setuptools that zope.whatever needs zope.interface 1.2.4 or higher to work.
 
-And if you try to install it, Setuptools will check if it is installed. If not it will try to get it at [http://pypi.python.org PyPI] and instal it.
+And if you try to install it, Setuptools will check if it is installed. If not it will try to get it at [[http://pypi.python.org|PyPI]] and instal it.
 
 == Paver ==
 Paver subsumes the build tool portion of distutils/setuptools.  It allows python programmers to use all of the setuptools/distutils commands but makes it easy to add new commands and modify the existing ones.  Extensibility is easy in both the declarative portion of the files (adding new pieces of information about a package) and the imperative portion (adding new commands to perform.)
@@ -184,7 +184,7 @@ xxx
  * remove old-style Python code (work in progress, see latest patch in bugs.python.org)
  * finish the test coverage
  * propose an independant tool in a PEP, that knows how to register and upload a package at a PyPI compatible server
- this is started here: ["A new pypi module"]
+ this is started here: [[A new pypi module]]
 
 
 == Setuptools ==
