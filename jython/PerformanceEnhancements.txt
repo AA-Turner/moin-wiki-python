@@ -1,0 +1,18 @@
+#format rst
+Performance Enhancements Resources
+==================================
+
+Jython benchmarks (from PyPy's suite): http://freya.cs.uiuc.edu/~njriley/benchmark.html
+
+Benchmark plots (currently broken): http://freya.cs.uiuc.edu/~njriley/plots.html
+
+Ideas
+=====
+
+GC Expense
+----------
+Our algorithms are not always the problem, sometimes it's memory allocations that slow you down
+
+Frame creation
+--------------
+Frames are allocated for every Python method call, which is a GC expense. CPython (and JRuby?) recycle frame objects. Reducing the number of fields on the frame can also help (but this likely isn't possible)
