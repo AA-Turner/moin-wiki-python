@@ -1,21 +1,21 @@
 = New Select Module =
 
-[[TableOfContents(4)]]
+<<TableOfContents(4)>>
 
 == Introduction ==
 
-There is now select support in the [http://www.jython.org/Project/download.html jython distribution], as of version 2.2rc1.
+There is now select support in the [[http://www.jython.org/Project/download.html|jython distribution]], as of version 2.2rc1.
 
-The new module presents an API which is as close as possible to the [http://www.python.org/doc/lib/module-select.html cpython select module], Jython supports both the
+The new module presents an API which is as close as possible to the [[http://www.python.org/doc/lib/module-select.html|cpython select module]], Jython supports both the
 
    1. select.select function
-   1. [http://www.python.org/doc/lib/poll-objects.html select.poll objects].
+   1. [[http://www.python.org/doc/lib/poll-objects.html|select.poll objects]].
 
-When using the select module, you should be guided by the cpython documentation: any deviation from the behaviour described in that documentation, except for the the considerations mentioned below, should be considered a bug and [http://www.jython.org/bugs reported] as such.
+When using the select module, you should be guided by the cpython documentation: any deviation from the behaviour described in that documentation, except for the the considerations mentioned below, should be considered a bug and [[http://www.jython.org/bugs|reported]] as such.
 
 If you are starting a new project, it is recommended that you use select.poll objects, because
 
-   1. Poll objects are the most efficient mechanism to multiplex sockets on jython, being fairly much a direct mapping to [http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/Selector.html java.nio.channel.Selector objects].
+   1. Poll objects are the most efficient mechanism to multiplex sockets on jython, being fairly much a direct mapping to [[http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/Selector.html|java.nio.channel.Selector objects]].
    1. The select.select function is implemented using a poll object, which means that sockets are de/registered every single time, which is slightly less efficient.
 
 == Usage notes ==
@@ -49,7 +49,7 @@ Due to fundamental differences in the behaviour of java and C on various platfor
 
 On cpython, when a socket is passed to select.select or select.poll, it can either be in blocking or non-blocking mode.
 
-However, [http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/SelectableChannel.html#register(java.nio.channels.Selector,%20int) java will only permit multiplex operations on sockets that are in non-blocking mode]. Because jython must respect this java restriction, any attempt in jython to pass a socket in blocking mode to either select.select or select.poll().register will fail with an exception.
+However, [[http://java.sun.com/j2se/1.4.2/docs/api/java/nio/channels/SelectableChannel.html#register(java.nio.channels.Selector,%20int)|java will only permit multiplex operations on sockets that are in non-blocking mode]]. Because jython must respect this java restriction, any attempt in jython to pass a socket in blocking mode to either select.select or select.poll().register will fail with an exception.
 
 To summarise
 
@@ -94,7 +94,7 @@ from select import cpython_compatible_select as select
 
 Bug 1773955 describes the scenario. It is caused by a bug in the Sun Java implementation and there is no known Jython fix. A partial workaround is to call setOOBInline(True) on the jsocket within the Jython socket. This will cause the urgent data to be merged into the regular stream and will keep from confusing select() however you will have to ignore the urgent data at the application level.
 
-'''Addendum''': Support for socket options has been checked into the repo at [http://fisheye3.atlassian.com/changelog/jython/?cs=4494 revision 4494]. See NewSocketModule for more details on the options available. 
+'''Addendum''': Support for socket options has been checked into the repo at [[http://fisheye3.atlassian.com/changelog/jython/?cs=4494|revision 4494]]. See NewSocketModule for more details on the options available. 
 
 With the new support, you don't need to call the java API on the underlying socket; you can set the OOBINLINE flag using python syntax, like this
 {{{
