@@ -1,4 +1,4 @@
-[[TableOfContents]]
+<<TableOfContents>>
 
 This page is devoted to various tips and tricks that help improve the
 performance of your Python programs. Wherever the information comes from
@@ -16,10 +16,10 @@ method is faster than another. Good suggestions on profiling your python code ar
 http://web.archive.org/web/20060506162444/http://wingware.com/doc/howtos/performance-profiling-python-code 
 
 Also new since this was originally written are packages like
-[http://www.cosc.canterbury.ac.nz/~greg/python/Pyrex/ Pyrex],
-[http://psyco.sourceforge.net/ Psyco],
-[http://www.scipy.org/Weave Weave] and
-[http://pyinline.sourceforge.net/ PyInline], which can dramatically improve
+[[http://www.cosc.canterbury.ac.nz/~greg/python/Pyrex/|Pyrex]],
+[[http://psyco.sourceforge.net/|Psyco]],
+[[http://www.scipy.org/Weave|Weave]] and
+[[http://pyinline.sourceforge.net/|PyInline]], which can dramatically improve
 your application's performance by making it easier to push
 performance-critical code into C or machine language.
 
@@ -29,8 +29,8 @@ performance-critical code into C or machine language.
 
 == Overview: Optimize what needs optimizing ==
 
-You can only know what makes your program slow after first getting the program to give correct results, then running it to see if the correct program is slow. [[BR]]
-When found to be slow, profiling can show what parts of the program are consuming most of the time. A comprehensive but quick-to-run test suite can then ensure that future optimizations don't change the correctness of your program. [[BR]] In short:
+You can only know what makes your program slow after first getting the program to give correct results, then running it to see if the correct program is slow. <<BR>>
+When found to be slow, profiling can show what parts of the program are consuming most of the time. A comprehensive but quick-to-run test suite can then ensure that future optimizations don't change the correctness of your program. <<BR>> In short:
   1. Get it right.
   2. Test it's right.
   3. Profile if slow.
@@ -55,7 +55,7 @@ An alternative way to speed up sorts is to construct a list of tuples whose
 first element is a sort key that will sort properly using the default
 comparison, and whose second element is the original list element. This is
 the so-called
-[http://www.google.com/search?q=Schwartzian+Transform Schwartzian Transform],
+[[http://www.google.com/search?q=Schwartzian+Transform|Schwartzian Transform]],
 also known as DecorateSortUndecorate (DSU).
 
 Suppose, for example, you have a list of tuples that you want to sort by
@@ -191,7 +191,7 @@ most commonly used. It loops over the elements of a sequence, assigning each
 to the loop variable. If the body of your loop is simple, the interpreter
 overhead of the {{{for}}} loop itself can be a substantial amount of the
 overhead. This is where the
-[http://www.python.org/doc/lib/built-in-funcs.html map] function is handy.
+[[http://www.python.org/doc/lib/built-in-funcs.html|map]] function is handy.
 You can think of {{{map}}} as a {{{for}}} moved into C code. The only
 restriction is that the "loop body" of {{{map}}} must be a function call.  Besides the syntactic benefit of list comprehensions, they are often as fast or faster than equivilent use of {{{map}}}.
 
@@ -230,7 +230,7 @@ newlist = (s.upper() for s in oldlist)
 Which method is appropriate will depend on what version of Python you're
 using and the characteristics of the data you are manipulating.
 
-Guido van Rossum wrote a much more detailed (and succinct) examination of [http://www.python.org/doc/essays/list2str.html loop optimization] that is
+Guido van Rossum wrote a much more detailed (and succinct) examination of [[http://www.python.org/doc/essays/list2str.html|loop optimization]] that is
 definitely worth reading.
 
 
@@ -694,7 +694,7 @@ hotspots in my code, profile and trace. In later examples I also use the
 === Profile Module ===
 
 The
-[http://www.python.org/doc/current/lib/module-profile.html profile module]
+[[http://www.python.org/doc/current/lib/module-profile.html|profile module]]
 is included as a standard module in the Python distribution. Using
 it to profile the execution of a set of functions is quite easy. Suppose
 your main function is called {{{main}}}, takes no arguments and you want to
@@ -716,7 +716,7 @@ profiled as well.
 === Hotshot Module ===
 
 New in Python 2.2, the
-[http://www.python.org/doc/current/lib/module-hotshot.html hotshot package] is intended
+[[http://www.python.org/doc/current/lib/module-hotshot.html|hotshot package]] is intended
 as a replacement for the profile module. The underlying module is
 written in C, so using hotshot should result in a much smaller
 performance hit, and thus a more accurate idea of how your application
@@ -728,7 +728,7 @@ program under hotshot control from the command line.
 === Trace Module ===
 
 The
-[http://www.python.org/doc/current/lib/module-trace.html trace module]
+[[http://www.python.org/doc/current/lib/module-trace.html|trace module]]
 is a spin-off of the profile module I wrote originally
 to perform some crude statement level test coverage. It's been heavily
 modified by several other people since I released my initial crude
