@@ -1,6 +1,6 @@
 Here's a way to make wiki-like syntaxes in Python.
 
-[[TableOfContents()]]
+<<TableOfContents>>
 
 = Lines as Tokens =
 
@@ -58,7 +58,7 @@ multiple lines, and turn it into one paragraph.
 
 Our first task is to spec out the types of lines that exist.
 
-Use ["RegularExpression"]s!
+Use [[RegularExpression]]s!
 
 Let's start with just three types of lines. (It'll be clear how to add more.)
 
@@ -79,7 +79,7 @@ Look, a paragraph without a blank line above it!
 No problem, we can parse it!
 }}}
 
-Here are our ["RegularExpression"]s:
+Here are our [[RegularExpression]]s:
 {{{
 #!python
 header = re.compile(r"^(=+)(.+?)\1$")
@@ -387,7 +387,7 @@ This is how I figured out how to do these things. If you know of better
 ways, please- by all means, list them here, point to them, or- probably
 best, just edit this text in-place. :)
 
--- LionKimbro [[DateTime(2005-05-06T20:03:23Z)]]
+-- LionKimbro <<DateTime(2005-05-06T20:03:23Z)>>
 
 A whole book is dedicated to it: TextProcessingInPython. But thank you for this page which is very useful. I think that kind of thing should be also directly plugged into the official documentation a bit like the PHP doc. That might help a lot. A full HowToCreateaWiki with extensive code would be good too. It would help to have a modular architecture of it.
 
@@ -440,7 +440,7 @@ It's been almost 3 years now.  I have found a better technique for doing wiki-li
 
 The technique involves automatically turning {{{(?P<...>)}}} capture results into functions, and then recursing back into regexes.
 
-[http://oink.sheep.art.pl/WikiCreole_parser_in_python Sheep:WikiCreole_parser_in_python] demonstrates it, and is how I discovered it.
+[[http://oink.sheep.art.pl/WikiCreole_parser_in_python|Sheep:WikiCreole_parser_in_python]] demonstrates it, and is how I discovered it.
 
 From a high level, the technique is:
 
@@ -487,7 +487,7 @@ It expects the {{{_repl}}} methods to accept keyword arguments named the same as
 Note how the {{{link_text}}} group is optional, so the corresponding argument needs a default value.
 -- RadomirDopieralski
 
-See also: [http://sheep.art.pl/2007-10-25_Wiki_parser_in_python Sheep:2007-10-25_Wiki_parser_in_python]
+See also: [[http://sheep.art.pl/2007-10-25_Wiki_parser_in_python|Sheep:2007-10-25_Wiki_parser_in_python]]
 
 Key techniques:
  * dynamic linking by way of {{{re.sub}}}
