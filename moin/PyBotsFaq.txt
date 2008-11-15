@@ -9,13 +9,13 @@ application written in Python.  Does project Foo have to already have drunk the 
 
 No, you don't need to drink any buildbot Kool Aid at all :-)
 
-The idea is this: let's say you work on project Foo, or decide to help project Foo. You just need to figure out how to run project Foo's unit tests from the command line. Once you have a shell script or python script that does that, my [http://agiletesting.blogspot.com/2006/08/setting-up-pybots-buildslave.html instructions] show you how to set up a buildslave that runs that script every time a checkin is made into Python trunk, using the newly built Python binary. This way, both project Foo's developers and the Python core developers will know if things suddenly start breaking in project Foo because of new/modified code in Python trunk.
+The idea is this: let's say you work on project Foo, or decide to help project Foo. You just need to figure out how to run project Foo's unit tests from the command line. Once you have a shell script or python script that does that, my [[http://agiletesting.blogspot.com/2006/08/setting-up-pybots-buildslave.html|instructions]] show you how to set up a buildslave that runs that script every time a checkin is made into Python trunk, using the newly built Python binary. This way, both project Foo's developers and the Python core developers will know if things suddenly start breaking in project Foo because of new/modified code in Python trunk.
 
 === Question ===
 
 I've downloaded buildbot and made a buildbot.tac. I've also made a 
 python-tool directory and an empty run_tests.py file. Now what? From 
-the [http://agiletesting.blogspot.com/2006/08/setting-up-pybots-buildslave.html instructions], it's not entirely clear to me what I should  do next. What packages should I be testing? Can I keep those separated  from my "normal" Python install? Some more help would be appreciated.
+the [[http://agiletesting.blogspot.com/2006/08/setting-up-pybots-buildslave.html|instructions]], it's not entirely clear to me what I should  do next. What packages should I be testing? Can I keep those separated  from my "normal" Python install? Some more help would be appreciated.
 
 === Answer ===
 
@@ -67,7 +67,7 @@ project Foo to the pybots system?
 
 === Answer ===
 
-The way pybots is running the Twisted unit tests is: the Twisted buildslave checks out the latest Twisted code from the Twisted svn repository, then it uses the newly built python binary to run them. It's detailed in these [http://agiletesting.blogspot.com/2006/08/setting-up-pybots-buildslave.html instructions].
+The way pybots is running the Twisted unit tests is: the Twisted buildslave checks out the latest Twisted code from the Twisted svn repository, then it uses the newly built python binary to run them. It's detailed in these [[http://agiletesting.blogspot.com/2006/08/setting-up-pybots-buildslave.html|instructions]].
 
 If you prefer to test a released package against the latest python binary, we can do that too. The pybots buildslave just needs to know where to get the package from, then it can unpack it and run its automated tests. Basically, anything you can do from the command line, you can also run within a buildslave. 
 
