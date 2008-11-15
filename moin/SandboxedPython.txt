@@ -1,18 +1,18 @@
 = Sandboxed Python =
 
-Is there such a thing as "Sandboxed Python"? Something where you can run a Python that is limited in what it can do. (See also ["How can I run an untrusted Python script safely (i.e. Sandbox)"] from the AskingForHelp page.)
+Is there such a thing as "Sandboxed Python"? Something where you can run a Python that is limited in what it can do. (See also [[How can I run an untrusted Python script safely (i.e. Sandbox)]] from the AskingForHelp page.)
 
 You could do all ''sorts'' of cool things with a sandboxed Python:
 
   * You could turn a wiki into an RAD development platform. You just draw up your interface with Wiki:WikiSyntax, write up a little bit of Python code, and bam- instant application. :)
-    * This is somewhat similar to [http://www.tiddlywiki.com/ TiddlyWiki] - a JavaScript-based Wiki which behaves like a Web-based sandboxed application - although that approach utilises the JavaScript sandbox functionality in the Web browser, rather than accessing a sandboxed server-side application.
+    * This is somewhat similar to [[http://www.tiddlywiki.com/|TiddlyWiki]] - a JavaScript-based Wiki which behaves like a Web-based sandboxed application - although that approach utilises the JavaScript sandbox functionality in the Web browser, rather than accessing a sandboxed server-side application.
   * You could make a distributed code system, where not just resources, but functionality as well, can distribute safely over multiple computers.
 
 == Technical Mechanisms ==
 
-A "Sandboxed Python" would let you permit or forbid modules, limit execution slices, permit or deny network traffic, constrain filesystem access to a particular directory (floated as "/"), and so on. It is also referred to as [http://docs.python.org/lib/restricted.html RestrictedExecution], a topic brought up by Mitch Kapor at PyCon and noted on his [http://blogs.osafoundation.org/mitch/000559.html#000559 blog].
+A "Sandboxed Python" would let you permit or forbid modules, limit execution slices, permit or deny network traffic, constrain filesystem access to a particular directory (floated as "/"), and so on. It is also referred to as [[http://docs.python.org/lib/restricted.html|RestrictedExecution]], a topic brought up by Mitch Kapor at PyCon and noted on his [[http://blogs.osafoundation.org/mitch/000559.html#000559|blog]].
 
-Related topics include capabilities as mentioned in ["PythonThreeDotOh"], specifically [http://mail.python.org/pipermail/python-dev/2003-March/034149.html this message on "capability-mediated modules"]. Some work has been done to support capabilities in languages with similar heritage to Python, notably [http://caperl.links.org/ CaPerl].
+Related topics include capabilities as mentioned in [[PythonThreeDotOh]], specifically [[http://mail.python.org/pipermail/python-dev/2003-March/034149.html|this message on "capability-mediated modules"]]. Some work has been done to support capabilities in languages with similar heritage to Python, notably [[http://caperl.links.org/|CaPerl]].
 
 == Implementation/Realisation Strategies ==
 
@@ -28,17 +28,17 @@ Some operating systems support various levels of sandboxing, with the most extre
 
 === Modify the CPython Runtime ===
 
-Whilst suggestions about removing functionality from CPython have been generally rejected either as being too simplistic and naive with regard to the possibilities to subvert Python's introspection mechanisms, or too restrictive with regard to support for commonly used modules or language features, it is at least reasonable to entertain the notion that a version of CPython linked to special system libraries and built without the more "powerful" or "unsafe" extensions (see [http://plash.beasts.org/environment.html#table-glibc-calls Plash's sandboxing and libc call modifications] for one approach) would not have the ability to perform arbitrary operations on the filesystem or network. Indeed, this is the basis on which operating systems are hosted within each other using various virtualisation technologies.
+Whilst suggestions about removing functionality from CPython have been generally rejected either as being too simplistic and naive with regard to the possibilities to subvert Python's introspection mechanisms, or too restrictive with regard to support for commonly used modules or language features, it is at least reasonable to entertain the notion that a version of CPython linked to special system libraries and built without the more "powerful" or "unsafe" extensions (see [[http://plash.beasts.org/environment.html#table-glibc-calls|Plash's sandboxing and libc call modifications]] for one approach) would not have the ability to perform arbitrary operations on the filesystem or network. Indeed, this is the basis on which operating systems are hosted within each other using various virtualisation technologies.
 
 === Use a Sandbox as an Accessory ===
 
-In some cases, the functionality of untrusted code may be strictly defined. For example, mobile agent systems may, for the agents themselves, permit only a highly restricted style of program, or may only permit a very limited style of interaction with other components. One solution which can be considered within this particular domain is Zope's [http://svn.zope.org/RestrictedPython/ RestrictedPython] - restricted subset of Python - although that solution focuses on reducing the level of expression in the language subset employed.
+In some cases, the functionality of untrusted code may be strictly defined. For example, mobile agent systems may, for the agents themselves, permit only a highly restricted style of program, or may only permit a very limited style of interaction with other components. One solution which can be considered within this particular domain is Zope's [[http://svn.zope.org/RestrictedPython/|RestrictedPython]] - restricted subset of Python - although that solution focuses on reducing the level of expression in the language subset employed.
 
 == History ==
 
 Prior to Python 2.3, there were two modules, rexec and Bastion which were attempted to provide a sandboxed environment. Unfortunately there were known bugs and work-arounds in these modules, and the introduction of new-style classes in Python 2.3 simply made matters worse. Rather than provide a false sense of security, the modules were removed in Python 2.3.
 
-There are a number of people who are interested in creating a new sandboxing system for Python. Apart from the Zope [http://svn.zope.org/RestrictedPython/ RestrictedPython] implementation, some [http://svn.python.org/view/python/branches/bcannon-objcap/securing_python.txt work by Brett Cannon] is ongoing, and related works such as [http://www.egenix.com/files/python/mxProxy.html mxProxy] are also available (although the objectives of the latter and similar projects may be less ambitious than providing a full restricted execution environment).
+There are a number of people who are interested in creating a new sandboxing system for Python. Apart from the Zope [[http://svn.zope.org/RestrictedPython/|RestrictedPython]] implementation, some [[http://svn.python.org/view/python/branches/bcannon-objcap/securing_python.txt|work by Brett Cannon]] is ongoing, and related works such as [[http://www.egenix.com/files/python/mxProxy.html|mxProxy]] are also available (although the objectives of the latter and similar projects may be less ambitious than providing a full restricted execution environment).
 
 -------
 
@@ -60,9 +60,9 @@ Oh, sorry. No, Parrot doesn't refer to running bits of Python code in a seperate
 
 Parrot seems like a good target for running the sandboxed code in. I mean: ".NET" and all. Make it so you can secure the Parrot interpreter, and you're good. If a module requires custom C code links, or whatever, make it so you can close the gates to individual parts of C code, or something. And then make it so you can put various RestrictedExecution thingies on the Python code. -- LionKimbro
 
-Perhaps a better solution with the same approach would be ["Jython"]. Java provides excellent sandboxing capabilities, and ["Jython"] has the distinct advantage that it ''already exists and works''. -- MichaelChermside
+Perhaps a better solution with the same approach would be [[Jython]]. Java provides excellent sandboxing capabilities, and [[Jython]] has the distinct advantage that it ''already exists and works''. -- MichaelChermside
 
- * As does [http://boo.codehaus.org/ boo], which runs on the .NET and Mono runtimes, which also have excellent sandboxing capabilities (I do not claim that they are any better than java, however).  See [http://www.gamedev.net/community/forums/topic.asp?topic_id=264462 this thread] (you would have to convert the C# example posted by Viz''''''One to boo.  There is a C# to boo converter in the boo add-in for the free Sharp''''''Develop IDE).
+ * As does [[http://boo.codehaus.org/|boo]], which runs on the .NET and Mono runtimes, which also have excellent sandboxing capabilities (I do not claim that they are any better than java, however).  See [[http://www.gamedev.net/community/forums/topic.asp?topic_id=264462|this thread]] (you would have to convert the C# example posted by Viz''''''One to boo.  There is a C# to boo converter in the boo add-in for the free Sharp''''''Develop IDE).
 
 
 If there is a way to get Java running on Linux, I can't figure it out. I installed J2SE, the massive beast, as Sun recommends, ''once.'' It was a nightmare of a procedure. I had an easier time installing Oracle. After running the VM, my computer barely functioned.
@@ -71,7 +71,7 @@ Perhaps I've downloaded the wrong thing, right? But Sun doesn't make it easy. Th
 
 If you have any special clues for me, they'd be greatly appreciated.
 
-Whereas Parrot; I think Parrot will function just fine. It'll just take a little time. -- LionKimbro [[DateTime(2004-05-07T16:54:04Z)]]
+Whereas Parrot; I think Parrot will function just fine. It'll just take a little time. -- LionKimbro <<DateTime(2004-05-07T16:54:04Z)>>
 
 You downloaded the "right thing".  Sun's implementation of Java is huge, and so are the memory requirements -- which may be why your Linux box bogged down.  So that's my special clue: buy more memory, or try IBM's VM.  Or forget about Java as a sort of evolutionary dead end.
 -- LloydFlanagan
