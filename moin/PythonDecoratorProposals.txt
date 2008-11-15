@@ -1,6 +1,6 @@
 == Python Decorator Proposals ==
 
-See the [#head-f22ccf491766760d15b371b8ed27c8a81b7cde2f next section] for a categorization of different proposals; this section just provides concrete examples.
+See the [[#head-f22ccf491766760d15b371b8ed27c8a81b7cde2f|next section]] for a categorization of different proposals; this section just provides concrete examples.
 
 ----
 
@@ -166,7 +166,7 @@ That doesn't look particularly ugly to me.
 
 It also isn't very long.
 
-Here is an  [http://mail.python.org/pipermail/python-dev/2004-August/047112.html example Guido just sent to python-dev]:
+Here is an  [[http://mail.python.org/pipermail/python-dev/2004-August/047112.html|example Guido just sent to python-dev]]:
 {{{
 class C(object):
 
@@ -378,14 +378,14 @@ def bar(low,high):
  * + Looks ok for simple or complex decorators
  * + Won't break simplistic code analyzers or grep for function def
  * + Solves line wrap problem with above proposal
- * 0 There is a hack that implements this now [http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/286147 here].
+ * 0 There is a hack that implements this now [[http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/286147|here]].
  * - Guido's europython presentation said this didn't win out, but not why
  * - Adds 'magic' behavior to a normal python expression (lists). Not exactly true: there is nothing magic in string when it's used in docstring - it's a normal string in the "magic" place.
  * - Compatibility issue: program that is working under 2.4 will not work properly under earlier versions without any explanation (old syntax compatible decorators will not blow in your face)
  * 0 Perhaps decorators should be allowed before or after the docstring.  If you have to choose, I'd choose making it before the docstring.
  * - No implementation currently exists.
- * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [http://mail.python.org/pipermail/python-dev/2004-August/047279.html]
- * - [http://mail.python.org/pipermail/python-dev/2004-August/047289.html Guido rejects], because the function body should reflect what the function does; decorators are "outside" the function, for its callers.
+ * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [[http://mail.python.org/pipermail/python-dev/2004-August/047279.html]]
+ * - [[http://mail.python.org/pipermail/python-dev/2004-August/047289.html|Guido rejects]], because the function body should reflect what the function does; decorators are "outside" the function, for its callers.
 
 === D2. 'dot'decorators at top of function body syntax ===
 {{{
@@ -447,9 +447,9 @@ def func():
 
  * + Could use {{{.doc()}}} or {{{.doc =}}} or {{{.__doc__ =}}}  as a docstring alternative
 
- * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [http://mail.python.org/pipermail/python-dev/2004-August/047279.html]
+ * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [[http://mail.python.org/pipermail/python-dev/2004-August/047279.html]]
 
- * - [http://mail.python.org/pipermail/python-dev/2004-August/047289.html Guido rejects], because the function body should reflect what the function does; decorators are "outside" the function, for its callers.
+ * - [[http://mail.python.org/pipermail/python-dev/2004-August/047289.html|Guido rejects]], because the function body should reflect what the function does; decorators are "outside" the function, for its callers.
 
 
 === E1. pie decorator at top of function body syntax ===
@@ -466,8 +466,8 @@ def bar(low,high):
  * Same as above but with pie syntax.
  * Could use @doc too as a docstring alternative
  * - No implementation currently exists.
- * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [http://mail.python.org/pipermail/python-dev/2004-August/047279.html]
- * - [http://mail.python.org/pipermail/python-dev/2004-August/047289.html Guido rejects], because the function body should reflect what the function does; decorators are "outside" the function, for its callers.
+ * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [[http://mail.python.org/pipermail/python-dev/2004-August/047279.html]]
+ * - [[http://mail.python.org/pipermail/python-dev/2004-August/047289.html|Guido rejects]], because the function body should reflect what the function does; decorators are "outside" the function, for its callers.
 
 === E2. vbar decorator at top of function body syntax ===
 {{{
@@ -513,8 +513,8 @@ def longMethodNameForEffect(longArgumentOne=None,
  * - No implementation currently exists.
  * - When using just one bar, it isn't noticable enough.  It seems more a part of the actual decorator function name than something demarking the function. 
  * - When using multiple decorators, the pattern formed by the vertical bars draws the eyes too much and makes it hard to focus on the signature.
- * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [http://mail.python.org/pipermail/python-dev/2004-August/047279.html]
- * - [http://mail.python.org/pipermail/python-dev/2004-August/047289.html Guido rejects], because the function body should reflect what the function does; decorators are "outside" the function, for its callers.
+ * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [[http://mail.python.org/pipermail/python-dev/2004-August/047279.html]]
+ * - [[http://mail.python.org/pipermail/python-dev/2004-August/047289.html|Guido rejects]], because the function body should reflect what the function does; decorators are "outside" the function, for its callers.
 
 Restyled version:
 {{{
@@ -579,8 +579,8 @@ Basically it has the same characteristic than E2, with the following slight diff
  * - More difficult to parse? The end-of-statement rules in Python mandate the colon be on the same line as the close of the argument list (less any line continuations); this syntax breaks that rule. Either the rule would have to be changed (yikes!), or line continuations would have to be used.
  * - New syntax having no equivalent in other part of python (but all @ / | propositions suffer from that )
  * - No implementation currently exists.
- * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [http://mail.python.org/pipermail/python-dev/2004-August/047279.html]
- * - [http://mail.python.org/pipermail/python-dev/2004-August/047289.html Guido rejects], because the function body should reflect what the function does; decorators are "outside" the function, for its callers.
+ * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [[http://mail.python.org/pipermail/python-dev/2004-August/047279.html]]
+ * - [[http://mail.python.org/pipermail/python-dev/2004-August/047289.html|Guido rejects]], because the function body should reflect what the function does; decorators are "outside" the function, for its callers.
 
 === E4. keyword decorator at top of function body syntax ===
 {{{
@@ -778,8 +778,8 @@ def bar(low,high):
 
 }}}
 
-An extensive paper has been written by Robert Brewer: [http://www.aminus.org/rbre/python/pydec.html Optimal Syntax for Python Decorators].
-A patch implementing this syntax is available here: [http://www.python.org/sf/1013835].
+An extensive paper has been written by Robert Brewer: [[http://www.aminus.org/rbre/python/pydec.html|Optimal Syntax for Python Decorators]].
+A patch implementing this syntax is available here: [[http://www.python.org/sf/1013835]].
 
 (I have changed the keyword in the second example to "using", to match the recommendation in Robert's paper.  I have left the first example alone, to indicate that the precise choice of keyword is independent of the use of a suite.)
 
@@ -793,11 +793,11 @@ Note that this differs from J5 (and largely from J4) only in whether the functio
  * + Moves decorators, signature and implementation closer together for functions with a long docstring
  * + With the right keyword, e. g. "transform", a new user gets a clear notion of the suite's purpose
  * + Can smoothly be extended to a full-blown suite allowing for {{{if __debug__: trace}}} etc.
- * + Basic implementation has been posted here: [http://mail.python.org/pipermail/python-list/2004-August/233591.html]
+ * + Basic implementation has been posted here: [[http://mail.python.org/pipermail/python-list/2004-August/233591.html]]
  * - Requires new keyword
  * (- No one can agree on the right keyword to use.)  The consensus is "using".
  * - Keyword chosen may conflict with how keyword is used in other languages (like "using" in C# or "extends" in Java and other languages).
- * - Keyword may be confused with other keywords in current and future versions of Python (like "with" in ["Python3.0"], which is very similar to "using").  This would suggest choosing a less generic keyword like "decorate", "meta", or "predef".
+ * - Keyword may be confused with other keywords in current and future versions of Python (like "with" in [[Python3.0]], which is very similar to "using").  This would suggest choosing a less generic keyword like "decorate", "meta", or "predef".
  * (- Indented decorators put them visually in line with the function name.  When indented below the function declaration line this isn't a big deal, but right above the function declaration it can be a problem.)  This is so minor that it ought to be ignored.
  * (- Much more typing required than A1 pie syntax the more decorators you have.)  But less shifting.  (You also have to do more indentation checking.)  Any decent editor does this with one keystroke.  Try typing the two: {{{
 using:
@@ -1120,8 +1120,8 @@ Proposals also differ on exactly where the decorator declaration should be made.
   * + Won't break simplistic code analyzers or grep for function def
   * 0 Consistent with docstring location
   * - Decorators may look like part of the function's code, not its declaration.  (That is, they look like they're evaluated when the function is called, not when it is parsed.)  This is a problem for decorations that change the signature, like staticmethod.
- * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [http://mail.python.org/pipermail/python-dev/2004-August/047279.html]
- * - [http://mail.python.org/pipermail/python-dev/2004-August/047289.html Guido rejects], because the function body should reflect what the function does; decorators are "outside" the function, for its callers.
+ * - Guido ruled out any solution involving special syntax inside the block, because "you shouldn't have to peek inside the block to find out important external properties of the function." [[http://mail.python.org/pipermail/python-dev/2004-August/047279.html]]
+ * - [[http://mail.python.org/pipermail/python-dev/2004-August/047289.html|Guido rejects]], because the function body should reflect what the function does; decorators are "outside" the function, for its callers.
   * ''Some post-def options'':
    * Before docstring
    * After docstring
@@ -1165,12 +1165,12 @@ new block.  These include:
   * - Increases minimum ident level on decorated functions
   * - Inconsistent identation level between methods with/without decorators
   * - Can lead to "runaway" nesting
-  * - Seems to change flow control or namespace, but doesn't really.  [http://mail.python.org/pipermail/python-dev/2004-March/043080.html Phillip J. Eby]
+  * - Seems to change flow control or namespace, but doesn't really.  [[http://mail.python.org/pipermail/python-dev/2004-March/043080.html|Phillip J. Eby]]
  * Indent decorators only
   * + Makes locating the function definition easy
   * 0 Different semantics from that of other paired, nested blocks (e.g. if/elif/else, try/except, try/finally)
   * - Technical problems if a block *starts* with an optional part?  (Someone said yes, someone else said that they tried it and had no problems.)
-  * - [http://mail.python.org/pipermail/python-dev/2004-August/047666.html David Eppstein] points out that most indented suites can contain arbitrary code.  It isn't clear what should happen if someone uses a statement (does not return a value); should it be run once?  Should it cause an error?
+  * - [[http://mail.python.org/pipermail/python-dev/2004-August/047666.html|David Eppstein]] points out that most indented suites can contain arbitrary code.  It isn't clear what should happen if someone uses a statement (does not return a value); should it be run once?  Should it cause an error?
 
  * No indent
   * - Uncommon in Python that one line following another one with the same identation has a meaning like this.
@@ -1215,7 +1215,7 @@ with the following exceptions:
 
 == Thinking ahead to Python 3 ? ==
 
-[http://groups.google.com/groups?hl=en&lr=&ie=UTF-8&safe=off&selm=Pine.LNX.4.44.0408050856390.31290-100000%40ccc9.wpi.edu&rnum=1 Christopher King] makes the point that we are trying to do too much with decorators: declare class/static methods, describe function metadata, and mangle functions.  It might be best to think about what is best for each separately.
+[[http://groups.google.com/groups?hl=en&lr=&ie=UTF-8&safe=off&selm=Pine.LNX.4.44.0408050856390.31290-100000%40ccc9.wpi.edu&rnum=1|Christopher King]] makes the point that we are trying to do too much with decorators: declare class/static methods, describe function metadata, and mangle functions.  It might be best to think about what is best for each separately.
 
 How might fully loaded functions look in the future?
 
