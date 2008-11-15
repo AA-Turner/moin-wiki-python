@@ -85,7 +85,7 @@ You will need to add cheesecake_password=yourpasshere into the config.ini in the
 To integrate it with Apache, we recommend to use WSGI through mod_wsgi. Your configuration should look like this:
 
 {{{
-   WSGIDaemonProcess pypi display-name=wsgi-pypi python-path=/usr/lib/zope2.9/lib/python processes=4
+   WSGIDaemonProcess pypi display-name=wsgi-pypi python-path=/usr/lib/zope2.9/lib/python processes=4 threads=1
    WSGIProcessGroup pypi
    WSGIPassAuthorization On
    WSGIScriptAlias /pypi /data/pypi/src/pypi/pypi.wsgi
