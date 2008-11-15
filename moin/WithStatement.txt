@@ -1,10 +1,10 @@
-This page is dedicated to the public discussion of [http://www.python.org/peps/pep-0343.html PEP 343]: Anonymous Block Redux and Generator Enhancements.
+This page is dedicated to the public discussion of [[http://www.python.org/peps/pep-0343.html|PEP 343]]: Anonymous Block Redux and Generator Enhancements.
 
 I think this is a good one; I hope people agree. Its acceptance will
 obsolete about 4 other PEPs! (A sign that it fulfills a need and that
 the proposed solution is powerful.)
 
-Please read the PEP; then add your comments here.  Please sign your comments with your name.  ["GvR"] (Guido van Rossum)
+Please read the PEP; then add your comments here.  Please sign your comments with your name.  [[GvR]] (Guido van Rossum)
 
 ----
 
@@ -14,7 +14,7 @@ Can someone please speak to the implementation schedule for WithStatement?  I am
 
 I feel like PEP 343 and PEP 342 work together in some important way, but it's not clear what that is.  Does one depend on the other?  What kind of things are possible if both are accepted (vs. just one of them)?  I think this is important to understanding where PEP 343 is leading; some discussion of this would be appreciated.  -- IanBicking
 
-  No, they are quite independent.  PEP 342 is for making generators into real coroutines.  Maybe throw() can help a tiny bit there but I think it's not essential.  PEP 342 adds argument-less yield to PEP 343 which is a very minor improvement (no "yield None").  ["GvR"]
+  No, they are quite independent.  PEP 342 is for making generators into real coroutines.  Maybe throw() can help a tiny bit there but I think it's not essential.  PEP 342 adds argument-less yield to PEP 343 which is a very minor improvement (no "yield None").  [[GvR]]
 
 ----
 
@@ -27,21 +27,21 @@ or
 
     I'd be very surprised if an object supporting {{{__enter__}}} and {{{__exit__}}} would say "do not use this in a with-statement." :-)
     What makes sense, however, is to distinguish between objects that can be used at most once in a with-statement (like files)
-    and objects that can be used over and over (like locks).  ["GvR"]
+    and objects that can be used over and over (like locks).  [[GvR]]
 
-The solution to this problem recommended in PEP 346 is to throw an explicit exception in {{{__enter__}}} when a non-reusable template is reused. PEP 343 uses this approach for the [http://3d2f.com/tags/generator/based/templates/download/ generator-based templates], and I would expect an {{{__enter__}}} method on file objects to do the same thing. -- ''Nick Coghlan''
+The solution to this problem recommended in PEP 346 is to throw an explicit exception in {{{__enter__}}} when a non-reusable template is reused. PEP 343 uses this approach for the [[http://3d2f.com/tags/generator/based/templates/download/|generator-based templates]], and I would expect an {{{__enter__}}} method on file objects to do the same thing. -- ''Nick Coghlan''
 
 ----
 
 next_throw() is easier to grep with next(). ''Niki Spahiev''
 
-    Given that 99% of uses of both are implicit, I don't see how that matters. ["GvR"]
+    Given that 99% of uses of both are implicit, I don't see how that matters. [[GvR]]
 
 I don't want to teach beginners why python uses 'raise' sometimes and 'throw' other times. I predict: they're going to be coming from other languages, they're going to accidentally use 'throw' as the statement, and they're going to get mad at "all of python's weird quirks, like how it has both raise and throw". ''Drew Perttula''
 
-    I'm not so worried.  Your tolerance for language quirks seems rather low. :-) ["GvR"]
+    I'm not so worried.  Your tolerance for language quirks seems rather low. :-) [[GvR]]
 
-    Raymond Hettinger added on python-dev (copied here by ["GvR"]):
+    Raymond Hettinger added on python-dev (copied here by [[GvR]]):
 
       "This was intended.  There was much discussion about this for PEP 288 and
       this was more or less a concensus choice.  The term is already
@@ -66,7 +66,7 @@ A few immediate comments:
      of "where the generator g is currently suspended".
      By definition this implies that it is not running in another
      thread.  You must have had threads on your mind too much
-     recently to even think of this. :-)  ["GvR"]
+     recently to even think of this. :-)  [[GvR]]
 
          I will read it again, but I don't remember seeing anything that
          made me think the generator couldn't be suspended in another thread.  phr
@@ -76,11 +76,11 @@ A few immediate comments:
              another thread can resume it with next() or throw() -- but then
              the resumed generator executes in the thread that called next()
              or throw().  There's nothing new to this -- it's been like this
-             since generators were invented.  ["GvR"]
+             since generators were invented.  [[GvR]]
 
                 Well, throw() didn't exist when generators were invented, so throw hasn't always been like anything ;-).  If throw is supposed to resume execution in the throwing thread rather than the thread where the generator was last suspended, the PEP should clearly specify that.  --phr 
 
-                    It already says that throw() is just like next().  ["GvR"]
+                    It already says that throw() is just like next().  [[GvR]]
 
  1. I thought some of the original motivation of PEP 310 was to lessen the pain of giving up the idiom of expecting files to be closed when their last reference goes away.  So if 343 no longer guarantees that the exit method will be run when the "with" statement finishes, it's lost some of its main motivating functionality.  I  wonder if having a more serious treatment of block scope, so that destructors are guaranteed to be called when a scope exits (by falling through or via an exception), would also take care of this issue.
 
@@ -88,7 +88,7 @@ A few immediate comments:
     called upon exit from the with statement?  The translation explicitly
     calls it!  Read again.  
     You may be confused with g.close().  That's only relevant when you
-    use a for-loop without an explicit with-statement. ["GvR"]
+    use a for-loop without an explicit with-statement. [[GvR]]
 
 There was some good discussion on clpy a while ago that I'll try to locate, and add some more comments during the weekend.   --Paul Rubin (phr)  
 
@@ -111,7 +111,7 @@ Patrick Ellis
     Well, you have a choice not to use generators. :-)
     To many who participated in the discussion on python-dev, using generators
     to write templates is an essential part.  The more state you carry over
-    from {{{__enter__}}} to {{{__exit__}}} the more you will appreciate the generator.  ["GvR"]
+    from {{{__enter__}}} to {{{__exit__}}} the more you will appreciate the generator.  [[GvR]]
 
 ----
 
@@ -130,7 +130,7 @@ Thomas Leonard
     When this were combined with an except or finally clause, it would be
     confusing to the reader which applies to which -- does the except clause
     catch exceptions in the {{{__exit__}}} method, or does the {{{__exit__}}} method see
-    exceptions raised in the except clause?  ["GvR"]
+    exceptions raised in the except clause?  [[GvR]]
 
         Python already has this problem when combining except and finally. If we take the same solution
         (make them mutually exclusive) then there's no problem. You still get a more readable syntax and
@@ -142,7 +142,7 @@ Thomas Leonard
             (At the very least you can use this to remember the rule.)
             But when combining with & except (or finally), the handler for with is implicit,
             so there is no parallel heuristic to decide which one handles which.
-            ["GvR"]
+            [[GvR]]
 
                 I meant, don't allow combining with & except or with & finally. Ie, the try: has neither
                 an except nor a finally clause if it has an expression. After all, the proposed with: syntax
@@ -162,7 +162,7 @@ I do understand the reluctance to pick the one-and-only way an object can be use
     the experience with this yet to know which pattern is better.
     Personally I'd like to be cautious -- use explicit wrapper methods
     like opening() and locking() first, and add {{{__enter__}}} and
-    {{{__exit__}}} methods to some objects later.  ["GvR"]
+    {{{__exit__}}} methods to some objects later.  [[GvR]]
 
 ----
 
@@ -181,7 +181,7 @@ Adding features is always a problem, but adding them gradually just makes it tha
     and {{{__exit__}}} to file objects is ''wrong'',
     but for lock objects it is ''right''.  Does that help?
 
-    ["GvR"]
+    [[GvR]]
 
         So you don't think we should detect {{{with open(X)}}} as a special language construct?!?  Sorry, just trying to think about how Perl would approach this... ;)
 
