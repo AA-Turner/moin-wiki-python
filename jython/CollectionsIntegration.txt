@@ -40,7 +40,7 @@ Approach 2 offers the best integration options.  Jython is primarily an implemen
 
 === Discussion ===
 ----
-ClarkUpdike Mar 2 2005 PM [[BR]]
+ClarkUpdike Mar 2 2005 PM <<BR>>
 Reflecting further on Py``Array, we may want to consider not having it implement `List`.  When I read the docs on the jarray and array modules at the respective jython and python websites, I find the following:
 
  *jython's jarray moduleis primarily for interaction with java 
@@ -74,7 +74,7 @@ PySequence <--+-- PSequenceList <---- (PyList, PyTuple)
 }}}
 
 ----
-ClarkUpdike Mar 2 2005 AM [[BR]]
+ClarkUpdike Mar 2 2005 AM <<BR>>
 This is in response to <waiting for post to show up on sourceforge>.  It is a work in progress--but feel free to comment.  I've concentrated on the impact of implementing the `List` interface:
  
  `List`:: `java.util.List`
@@ -113,7 +113,7 @@ Other general improvements:
 
 ----
  ClarkUpdike Feb 12 2005
-  [http://java.sun.com/j2se/1.3/docs/api/java/util/Collections.html java.util.Collections]: Is there a need to provide a jython version of this class (especially the synchronized and unmodifiable wrapper methods)?  If it is not implemented and the java.util.Collections wrappers are used on new collection objects, the returned objects will only proxy for the java.util interface and will be broken in jython.  There is also a Py``Immutable``Set in BrianZimmer's SetsModule, but I don't think there is an immutable dictionary equivalent.
+  [[http://java.sun.com/j2se/1.3/docs/api/java/util/Collections.html|java.util.Collections]]: Is there a need to provide a jython version of this class (especially the synchronized and unmodifiable wrapper methods)?  If it is not implemented and the java.util.Collections wrappers are used on new collection objects, the returned objects will only proxy for the java.util interface and will be broken in jython.  There is also a Py``Immutable``Set in BrianZimmer's SetsModule, but I don't think there is an immutable dictionary equivalent.
 
  BrianZimmer Feb 13 2005
   I'm inclinded to say ''no''.  Consider this code:
