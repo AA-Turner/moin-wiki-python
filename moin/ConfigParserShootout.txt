@@ -1,14 +1,14 @@
-[[TableOfContents]]
+<<TableOfContents>>
 There has been some recent debate about
-[http://python.org/doc/current/lib/module-ConfigParser.html ConfigParser]
+[[http://python.org/doc/current/lib/module-ConfigParser.html|ConfigParser]]
 on the Python mailing lists.  For more, see these
 threads:
 
- * [http://mail.python.org/pipermail/python-dev/2004-October/049167.html ConfigParser patches]
- * [http://groups.google.com/groups?hl=en&lr=&c2coff=1&selm=mailman.5093.1098051158.5135.python-list%40python.org ConfigParser shootout, preliminary entry; comp.lang.python]
- * [http://mail.python.org/pipermail/python-dev/2004-October/049454.html ConfigParser shootout, preliminary entry; python-dev]
- * [http://botanicus.net/dw/tmp/ConfigParser2/ConfigParser.py ConfigParser shootout, DW's K.I.S.S. entry]
- * [http://mail.python.org/pipermail/python-dev/2004-October/049527.html What are the goals for ConfigParser 3000?]
+ * [[http://mail.python.org/pipermail/python-dev/2004-October/049167.html|ConfigParser patches]]
+ * [[http://groups.google.com/groups?hl=en&lr=&c2coff=1&selm=mailman.5093.1098051158.5135.python-list%40python.org|ConfigParser shootout, preliminary entry; comp.lang.python]]
+ * [[http://mail.python.org/pipermail/python-dev/2004-October/049454.html|ConfigParser shootout, preliminary entry; python-dev]]
+ * [[http://botanicus.net/dw/tmp/ConfigParser2/ConfigParser.py|ConfigParser shootout, DW's K.I.S.S. entry]]
+ * [[http://mail.python.org/pipermail/python-dev/2004-October/049527.html|What are the goals for ConfigParser 3000?]]
 
 This page serves as a place to record alternatives, and discuss (in a
 semi-permanent way) the features such a library might have.  A new
@@ -27,7 +27,7 @@ Please list interesting implementations of config parsers here.
 
 == ConfigObj 4 ==
 
-[http://www.voidspace.org.uk/python/configobj.html ConfigObj - A simple to use config file parser]
+[[http://www.voidspace.org.uk/python/configobj.html|ConfigObj - A simple to use config file parser]]
 
 This is now a very powerful config file parser that addresses many of the issues raised here.
 
@@ -61,7 +61,7 @@ The type specification is kept in a separate schema (which has a simple ``key = 
 This means a ConfigObj is an abstraction of *config data* - not just the config file, at no cost to the *user*. The validation system is simple and extendable.
 
 == M. Chermside's candidate ==
-[http://www.mcherm.com/publish/2004-10-17/config.py code] and [http://www.mcherm.com/publish/2004-10-17/configTest.py test cases].  Currently allows files in either str or unicode, with sensible defaults.  Allows dictionary or dotted-name access (though dotted-name can fail in some cases). Allows subsections of arbitrary length.  For example,
+[[http://www.mcherm.com/publish/2004-10-17/config.py|code]] and [[http://www.mcherm.com/publish/2004-10-17/configTest.py|test cases]].  Currently allows files in either str or unicode, with sensible defaults.  Allows dictionary or dotted-name access (though dotted-name can fail in some cases). Allows subsections of arbitrary length.  For example,
 {{{
     x.y = True
     x.y.z = 47
@@ -94,7 +94,7 @@ Available at:
 In my use of INI files I've always been annoyed that I couldn't nest sections to an arbitrary depth
 and had to resort to baroque XML APIs to accomplish that sort of task.
 I also figured a structure defined by indentation would be a good way to go, though YAML always seemed too complex.
-I worked up a little [http://www.musi-cal.com/~skip/python/cfgparse.py config file parser] that
+I worked up a little [[http://www.musi-cal.com/~skip/python/cfgparse.py|config file parser]] that
 reads and writes files like
 
 {{{
@@ -146,7 +146,7 @@ Dan Gass -- dan.gass@gmail.com
 
 == Vinay Sajip's implementation ==
 
-The [http://www.red-dove.com/python_config.html config] module allows a hierarchical configuration scheme with support for mappings and sequences, cross-references between one part of the configuration and another, the ability to flexibly access real Python objects without full-blown eval(), an include facility, simple expression evaluation and the ability to change, save, cascade and merge configurations.  It has been developed on python 2.3 but should work on version 2.2 or greater.
+The [[http://www.red-dove.com/python_config.html|config]] module allows a hierarchical configuration scheme with support for mappings and sequences, cross-references between one part of the configuration and another, the ability to flexibly access real Python objects without full-blown eval(), an include facility, simple expression evaluation and the ability to change, save, cascade and merge configurations.  It has been developed on python 2.3 but should work on version 2.2 or greater.
 
 A simple example - with the example configuration file:
 {{{
@@ -201,7 +201,7 @@ If someone could show me a way to meet the above desires whilst using Python syn
 
 == cfgparse ==
 
-[http://www.cs.wisc.edu/~param/software/cfgparse/ cfgparse] - cfgparse is a Python module that provides mechanisms for managing configuration information. It is backward compatible with ConfigParser, in addition to having the following features:
+[[http://www.cs.wisc.edu/~param/software/cfgparse/|cfgparse]] - cfgparse is a Python module that provides mechanisms for managing configuration information. It is backward compatible with ConfigParser, in addition to having the following features:
 
  * Preserves structure of INI files: Order of sections & options, indentation (to some extent), comments, and blank lines are preserved when data is updated.
  * More convenient than ConfigParser: Values can be accessed using dotted notation, or using container syntax (cfg[key]).
@@ -211,7 +211,7 @@ If someone could show me a way to meet the above desires whilst using Python syn
 
 == ZConfig ==
 
-[http://www.zope.org/Members/fdrake/zconfig/ ZConfig] - This Python package is a bit larger than some of the others, but provides for schema-based development of configuration structures.  The schema language uses XML, but the configuration language is more like Apache's.  Sections are typed and completely nestable.  The basic implementation does have some limitations that are tedious to work around if you run into them.  One that can bite quickly is that names in the configuration language are case-insensitive by default; for versions before 2.3.1 this was terribly difficult to work around without copying lots of code, and even with 2.3.1 it takes more than it should.
+[[http://www.zope.org/Members/fdrake/zconfig/|ZConfig]] - This Python package is a bit larger than some of the others, but provides for schema-based development of configuration structures.  The schema language uses XML, but the configuration language is more like Apache's.  Sections are typed and completely nestable.  The basic implementation does have some limitations that are tedious to work around if you run into them.  One that can bite quickly is that names in the configuration language are case-insensitive by default; for versions before 2.3.1 this was terribly difficult to work around without copying lots of code, and even with 2.3.1 it takes more than it should.
 
 
 == tconfpy ==
@@ -221,22 +221,22 @@ OK, I'll Toss My Hat Into The Ring.  I just found this discussion tonight for th
 
 == configparse ==
 
-[http://www.gustaebel.de/lars/configparse/ configparse] is an extension that is built on top of the command line parsing library optparse. It provides the same interface and is intended to be uses as a drop-in-replacement for optparse. configparse is very limited in its abilities, there's no support for sections, recursiveness or sophisticated value checking etc. Its advantage is that it takes only a few modifications to existing code to add simple support for config files which can be quite handy sometimes.
+[[http://www.gustaebel.de/lars/configparse/|configparse]] is an extension that is built on top of the command line parsing library optparse. It provides the same interface and is intended to be uses as a drop-in-replacement for optparse. configparse is very limited in its abilities, there's no support for sections, recursiveness or sophisticated value checking etc. Its advantage is that it takes only a few modifications to existing code to add simple support for config files which can be quite handy sometimes.
 
 == plistlib ==
 
-[http://svn.red-bean.com/pyobjc/branches/branch_1_0/pyobjc/MPCompat/plistlib.py plistlib] plistlib is a small module for generating and parsing Mac OS X .plist files.  It supports:
+[[http://svn.red-bean.com/pyobjc/branches/branch_1_0/pyobjc/MPCompat/plistlib.py|plistlib]] plistlib is a small module for generating and parsing Mac OS X .plist files.  It supports:
 
   * lists
   * dictionaries
   * arbitrary nesting
   * bool, int, float, string and date types
 
-As the default config format on OS X, plist files are already used by hundreds of apps.  Though popular on the Mac, the format can be used from any platform or language since it's a [http://developer.apple.com/documentation/MacOSX/Conceptual/BPRuntimeConfig/Articles/ConfigFiles.html subset of XML].  Graphical editors are available from Apple as part of its free developer tools, as well as from [http://homepage.mac.com/bwebster/plisteditpro.html third party developers]
+As the default config format on OS X, plist files are already used by hundreds of apps.  Though popular on the Mac, the format can be used from any platform or language since it's a [[http://developer.apple.com/documentation/MacOSX/Conceptual/BPRuntimeConfig/Articles/ConfigFiles.html|subset of XML]].  Graphical editors are available from Apple as part of its free developer tools, as well as from [[http://homepage.mac.com/bwebster/plisteditpro.html|third party developers]]
 
 == PyOptionTree ==
 
-[http://pyoptiontree.sourceforge.net PyOptionTree] is a hierarchical parameter parser that I wrote with the goal being to allow the user to both specify parameters *and* modify, control, structure, copy, and record them in a efficient and intuitive way.  I've been using and refining it for over a year, and it has many of the options that people seem to find desirable, plus a few more, so I thought it'd be worthwhile to post here.  If people have any comments, please let me know.
+[[http://pyoptiontree.sourceforge.net|PyOptionTree]] is a hierarchical parameter parser that I wrote with the goal being to allow the user to both specify parameters *and* modify, control, structure, copy, and record them in a efficient and intuitive way.  I've been using and refining it for over a year, and it has many of the options that people seem to find desirable, plus a few more, so I thought it'd be worthwhile to post here.  If people have any comments, please let me know.
 
 It supports:
  * Lists, tuples, and dictionaries (through dict() and list of 2-tuples).  Also supports nesting lists and tuples.
@@ -291,7 +291,7 @@ desired.
 
  * Uses a human-editable source file format.  Everyone seems fairly
  happy with INI files as a basis, but
- [http://cvs.zope.org/Zope3/doc/zcml/ ZCML] is an example of a
+ [[http://cvs.zope.org/Zope3/doc/zcml/|ZCML]] is an example of a
  different syntax.
 
  * Has a simple API, especially for the simplest case (read a bunch of
@@ -379,7 +379,7 @@ I think it is reasonable to ask the setting code to create the object (possibly 
 
 A marriage of the two would make a lot of sense to me.  My thought is for the user (script) to instantiate a parser and add options to it much like optparse does today.  When the parser processes the command line args (or args passed to it) it should also look at the configuration file (possibly using the long setting name) for the option settings.  Its first priority would be command line args.
 
-  I don't believe that a configuration module should need to interface directly to command line options. Rather, an application should inspect command line arguments, select one or more configuration files to load, and then examine the configuration data together with command line options to determine behaviour. My [http://www.red-dove.com/python_config.html#integrating-with-command-line-options config module documentation] shows one way to easily interface with optparse. -- VinaySajip
+  I don't believe that a configuration module should need to interface directly to command line options. Rather, an application should inspect command line arguments, select one or more configuration files to load, and then examine the configuration data together with command line options to determine behaviour. My [[http://www.red-dove.com/python_config.html#integrating-with-command-line-options|config module documentation]] shows one way to easily interface with optparse. -- VinaySajip
 
   An easy way, maybe, but it doesn't seem very useful to me. What's the advantage of fetching a command-line option from cfg.cmdline_values.verbose instead of options.verbose? Also, we need to specify every option twice, once for optparse and once in the configuration file itself. For docutils, this would mean every config file would have 40(!) lines which are, essentially, implementation details.
 
@@ -485,7 +485,7 @@ A hierarchical “key” or “namespace” scheme should exist so that multiple
 
 My last proposal for today is to change the “options” interface a bit from optparse.  Instead of returning a static object of options it should be an object with a get() method so that additional keys can be used to get at settings in the configuration “on the fly”.  One application where this is important is in test frameworks.  “Test specification” input files may have additional “keys” to be used and aren’t known when the parser is instantiated.
 
-  Please take a look at [http://www.red-dove.com/python_config.html this config module] and let me know how you think it fails to meet the particular use case you have in mind. I don't see any need to change optparse to work well with a configuration module  -- VinaySajip
+  Please take a look at [[http://www.red-dove.com/python_config.html|this config module]] and let me know how you think it fails to meet the particular use case you have in mind. I don't see any need to change optparse to work well with a configuration module  -- VinaySajip
 
   I looked and here is where it falls short from my perspecitve.  To get a setting using your module you would use "cfg.setting".  Instead a method should be offered so that keys may be passed "cfg.setting.get('key1')".  Sometimes a script needs more than one instance of the setting.  Other times the script processes an input file (after the configuration has already been read) which specifies the key.  I'm sure there are other cases as well.  -- dan.gass@gmail.com
 
@@ -510,7 +510,7 @@ One benefit of this marriage is that the help messages available from the comman
 
 The part that isn’t addressed here that bothers me yet is how to weave in the ability to pass in real python objects as settings.  It would be good to have both a secure (restricted to strings and simple settings) and a second less than secure parser for those applications that need the flexibility of python.  I’d like to see the API’s of the same for both the parser and the configuration file.  -- dan.gass@gmail.com
 
-  I (VinaySajip) believe that I have covered this in [http://www.red-dove.com/python_config.html this config module] - if you feel something fundamental is missing, please let me know.
+  I (VinaySajip) believe that I have covered this in [[http://www.red-dove.com/python_config.html|this config module]] - if you feel something fundamental is missing, please let me know.
 
   When I use python to set up objects to pass in as settings I often use multiple lines of code to do it.  Sometimes I need to import modules so that I can instantiate a class.  Other times I'm using the os module to figure out where the configuration file is located because I need the path information to figure out the absolute paths of other things that are located relative to it.  Don't change yours on my account I'm holding tight with mine until a new and improved standard is available (so long as it works for me).   Who is concerned about the security hole of executing Python and what restrictions do they want? -- dan.gass@gmail.com
 
@@ -571,11 +571,11 @@ So where are we? The wiki hasn't seen much activity since January. Are any of th
 'language' in the file is way too much. Keeping to a similar (or even matching) API to optparse is important to me.
 But where are we? -- HunterMatthews (showing up as 82 in the edit log)
 
-GuidoVanRossum has discussed possible changes to ConfigParser in a thread on [http://mail.python.org/pipermail/python-dev/2006-January/060138.html python-dev]. He doesn't see a great deal of need to improve on ConfigParser. He dislikes *most* of the suggestions on this page because he doesn't want to see nested sections in configuration files.
+GuidoVanRossum has discussed possible changes to ConfigParser in a thread on [[http://mail.python.org/pipermail/python-dev/2006-January/060138.html|python-dev]]. He doesn't see a great deal of need to improve on ConfigParser. He dislikes *most* of the suggestions on this page because he doesn't want to see nested sections in configuration files.
 
 His reason for this is that he wants to discourage developers from mixing configuration options with application data more suited to a data persistence format. For this he recommends an XML type solution.
 
-I personally think that complex configuration use cases are reasonably common, and that nested sections is a reasonable requirement. Editing/reading XML is not fun, whether it's for configuration *or* data persistence. For this reason ConfigObj is listed as an [http://www.pault.com/xmlalternatives.html XML Alternative].
+I personally think that complex configuration use cases are reasonably common, and that nested sections is a reasonable requirement. Editing/reading XML is not fun, whether it's for configuration *or* data persistence. For this reason ConfigObj is listed as an [[http://www.pault.com/xmlalternatives.html|XML Alternative]].
 
   I agree that nested configurations may be overkill for non-technical users, but they definitely have a useful place. I don't like to use XML everywhere, one notable exception being where interoperability is a factor. Even if a new non-backward-compatible module doesn't make it into the standard library, the community would still benefit from a peer review of the available offerings on this page. -- VinaySajip
 
@@ -599,14 +599,14 @@ cases.
 
 I also do not understand the allergy to nesting, conditionals, and
 hierarchical namespaces. I implemented all three of these in
-[http://www.tundraware.com/Software/tconfpy tconfpy] precisely because
+[[http://www.tundraware.com/Software/tconfpy|tconfpy]] precisely because
 they make the resultant configuration file ''simpler'' - both to
 understand by the human reader and to subsequently maintain.
 
 I realize there is always the danger of backing into a configuration
 language that becomes Turing-complete in its own right, but there is a
 balance to be struck between utility and simplicity. (One
-[http://www.tundraware.com/Software/tconfpy tconfpy] tester kiddingly
+[[http://www.tundraware.com/Software/tconfpy|tconfpy]] tester kiddingly
 said I was on my way to a reimplementation of ''m4'' <shudder> ;)
 My general view on this tradeoff is that configuration "languages"
 should be more-or-less entirely about lexical replacement and not carry
@@ -623,4 +623,4 @@ not preclude the other.
 ----
 With an eye to "simple configuration scripts and storing data in a user-friendly
 way", Babar K. Zafar worked out his 
-[http://www.zafar.se/dump/safe.py idea of a safe evaluator].
+[[http://www.zafar.se/dump/safe.py|idea of a safe evaluator]].
