@@ -1,6 +1,6 @@
 This page discusses the benefits of replacing the current `print` statement with an equivalent builtin. The `write` and `writeln` functions presented below do everything the `print` statement does without requiring any hacking of the grammar, and also make a number of things significantly easier.
 
-Guido has made it clear he wants to get rid of the `print` statement in ["Python3.0"]. This page considers why we would want to go that way, and how we can actually get there. It should be turned into a PEP eventually.
+Guido has made it clear he wants to get rid of the `print` statement in [[Python3.0]]. This page considers why we would want to go that way, and how we can actually get there. It should be turned into a PEP eventually.
 
 === Benefits of using a function instead of a statement ===
  * Extended call syntax provides better interaction with sequences
@@ -87,11 +87,11 @@ of common sense, as always).
 === Getting there from here ===
 The example implementation below shows that creating a function with the desired behaviour is quite straightforward. However, calling the builtin `print` is a problem due to the fact that `print` is a reserved word in Python 2.x. Since the `print` statement will be around until Py3K allows us to break backwards compatibility, devising a transition plan that lets programmers 'get ready early' for the Py3K transition becomes a significant challenge.
 
-If, on the other hand, the builtin has a different name, it is quite feasible to introduce it during the 2.x series. In [http://www.python.org/peps/pep-3000.html PEP 3000], it is suggested that the `print` statement be replaced by two builtins: `write` and `writeln`. These names are used in the example below. By using alternative names, and providing the builtins in the 2.x series, it is possible to 'future-proof' code against the removal of the `print` statement in Py3k.
+If, on the other hand, the builtin has a different name, it is quite feasible to introduce it during the 2.x series. In [[http://www.python.org/peps/pep-3000.html|PEP 3000]], it is suggested that the `print` statement be replaced by two builtins: `write` and `writeln`. These names are used in the example below. By using alternative names, and providing the builtins in the 2.x series, it is possible to 'future-proof' code against the removal of the `print` statement in Py3k.
 
 This technique of having two printing operations is not uncommon - Java has both `print` and `println` methods, and C# has `Write` and `WriteLine`. The main problem with the approach is that the `writeln` form will actually be more commonly used, but has the longer, less obvious name of the two proposed functions. This perception of relative use is based on a comparison of relative usage levels of the two current forms of the `print` statement (i.e., with and without the trailing comma) by some of the developers on python-dev.
 
- [["lwickjr"]: Why TWO functions? Why can't we specify {{{printFunc(....,"\n")}}}?]
+ [[[lwickjr]]: Why TWO functions? Why can't we specify {{{printFunc(....,"\n")}}}?]
 
 Some other names for the builtins which have been suggested are:
  * `print` - excellent name, but causes transition problems as described above
@@ -107,10 +107,10 @@ Some other names for the builtins which have been suggested are:
 
     Maybe file-objects should have `write()`- and `writeln()`-methods similar to the built-in functions? ''-- TS''
 
- [["lwickjr"]: don't they already have something similar?]
+ [[[lwickjr]]: don't they already have something similar?]
 
 === Sample implementation ===
-This is a Python 2.4 compatible sample implementation of the approach currently in [http://www.python.org/peps/pep-3000.html PEP 3000]. This version of `writeln` doesn't provide a `linesep` keyword argument in order to keep things simple. Some other variations are covered further down this Wiki page.
+This is a Python 2.4 compatible sample implementation of the approach currently in [[http://www.python.org/peps/pep-3000.html|PEP 3000]]. This version of `writeln` doesn't provide a `linesep` keyword argument in order to keep things simple. Some other variations are covered further down this Wiki page.
 
 {{{#!python
 def write(*args, **kwds):
@@ -209,7 +209,7 @@ The default case should be to insert a newline.
     Oh, and you will never get away with using the final empty string to mean "no newline". This would be very confusing
     for someone who printed a variable like so: {{{print("The value is:", x)}}} when the variable happens to be empty.
 
- [["lwickjr"]: I quite agree. Ugly, but explicit is better than implicit. Function with NO seperator and NO newline: +5 How about {{{def printFunc(*args): print "".join(map(str, args))}}}]
+ [[[lwickjr]]: I quite agree. Ugly, but explicit is better than implicit. Function with NO seperator and NO newline: +5 How about {{{def printFunc(*args): print "".join(map(str, args))}}}]
 
 === Iterating Iterables ===
 
@@ -226,12 +226,12 @@ writeln((x*x for x in range(10)), iter=1)
 This behaviour could be optionally triggered by a keyword argument "iter".
 Another possibility would be to always do the iteration and to force the caller to str() the generator if he wants to print it without iteration (happens rarely).
 
-  Nailing down this kind of behaviour is trickier than one might think. The python-dev discussion of the Python 2.5 candidate library function [http://mail.python.org/pipermail/python-dev/2005-March/052215.html itertools.walk] goes over some of the potential problems. We've survived without fancy iterator handling in the print statement - let's avoid adding anything we don't have a demonstrated need for (the extended call syntax stuff comes 'for free' with the conversion to using a function). - ''Nick Coghlan''
+  Nailing down this kind of behaviour is trickier than one might think. The python-dev discussion of the Python 2.5 candidate library function [[http://mail.python.org/pipermail/python-dev/2005-March/052215.html|itertools.walk]] goes over some of the potential problems. We've survived without fancy iterator handling in the print statement - let's avoid adding anything we don't have a demonstrated need for (the extended call syntax stuff comes 'for free' with the conversion to using a function). - ''Nick Coghlan''
 
     ''BDFL comments:'' bah. implicitly exhausting iterables has side effects, which is a bad idea for a print function.
     It would not be a good idea if commenting out a print() call changes the behavior of the program.
 
- [["lwickjr"]: How about this? Define {{{repr(iterator)}}} to return {{{"<iteratorData>"}}} and {{{str(iterator)}} to return something like {{{" ".join([i for i in iterator])}}}? -5]
+ [[[lwickjr]]: How about this? Define {{{repr(iterator)}}} to return {{{"<iteratorData>"}}} and {{{str(iterator)}} to return something like {{{" ".join([i for i in iterator])}}}? -5]
 
 === Another Strawman ===
 Here's my own strawman implementation of {{{write()}}} and {{{writef()}}} using semantics I think are pretty useful.  I'll post to python-dev about the details. - ''Barry Warsaw''
@@ -339,7 +339,7 @@ write()}}}
     the possibility.  Also, we need to spend more time researching the formatting language.
     (See a post in python-dev by Steven Bethard: "string formatting options and removing {{{basestring.__mod__}}}".
 
- [["lwickjr"]: {{{def printf(format, *args): print(format(format, *args))}}}? This definition will actually work with {{{print}}} either a statement or function. Further, formatting and printing are seperate concepts and should not be tightly coupled.]
+ [[[lwickjr]]: {{{def printf(format, *args): print(format(format, *args))}}}? This definition will actually work with {{{print}}} either a statement or function. Further, formatting and printing are seperate concepts and should not be tightly coupled.]
 
 === Another variant - `format` builtin ===
 Barry's `writef` builtin cuts down a little on the typing, but is somewhat inflexible in that it only supports `string %` or `string.Template` formatting when printing directly to a stream. It also causes problems by preventing the use of `to` or `nl` as keywords in the format string. A separate `format` builtin would deal with both of those problems, at the expense of some extra typing when using it. Such a builtin would also help with avoiding some of the tuple related quirks of the string mod operator, as well as making it easy to write code that supports both types of string formatting. The version below is based on Barry's, but eliminates the `Separator` concept, and replaces `writef` with `format` - ''Nick Coghlan''
@@ -412,7 +412,7 @@ write()
 === Displaying iterators ===
 I'm looking into an approach which adds explicit support for displaying iterators into the string mod operator. The intent is that `"%''j" % (my_seq,)` will become roughly equivalent to `''.join(map(str, my_seq))`. - ''Nick Coghlan''
  
-[http://sourceforge.net/tracker/?func=detail&aid=1281573&group_id=5470&atid=305470 SF Patch #1281573] for anyone who wants to play with it. Only strings are supported so far (no Unicode), but it illustrates the concept quite well.
+[[http://sourceforge.net/tracker/?func=detail&aid=1281573&group_id=5470&atid=305470|SF Patch #1281573]] for anyone who wants to play with it. Only strings are supported so far (no Unicode), but it illustrates the concept quite well.
 
 {{{#!python
 # Print a simple sequence
@@ -425,7 +425,7 @@ print "%' 'j" % (x*x for x in range(10))
 }}}
 
     ''BDFL comments:'' again, please don't do this.
- [["lwickjr"]: I prefer that {{{repr()}}} and {{{str()}}} be the Official Pythonic Way to decide which representation gets written. How about {{{def printFunc(*args): print "".join(map(str, args))}}} and {{{def writeFunc(*args): print "".join(map(repr, args))}}}?]
+ [[[lwickjr]]: I prefer that {{{repr()}}} and {{{str()}}} be the Official Pythonic Way to decide which representation gets written. How about {{{def printFunc(*args): print "".join(map(str, args))}}} and {{{def writeFunc(*args): print "".join(map(repr, args))}}}?]
 
 === Scrap C-Style Formatting ===
 What's one more strawman, right? :)  My approach is tailor-made for gettext (although I'm no expert in gettext usage).  Keywords become the default and positionals disappear completely.
@@ -446,7 +446,7 @@ Or maybe even something that allows arbitrary arguments to be passed to the form
 
 === Another idea ===
 String formatting with %* is a bad idea, imho. Since python is anyway dynamic by nature,
-why not add built-in string evaluation, as in boo [http://boo.codehaus.org]. for example:
+why not add built-in string evaluation, as in boo [[http://boo.codehaus.org]]. for example:
 {{{
 x = "lucy"
 write("i love ${x}")
@@ -473,8 +473,8 @@ which is much more readable and easier to maintain. imagine working with 20 '%s'
 string! it's a disaster. even using the silly %(name) is bad, since you then have to fill a 
 huge dict after your string. 
 
-(*) backticks: yes, backticks mean repr(), but did anyone ever hear of them? [["lwickjr"]: I use them regularly.] i think they are
-depricated anyway. [["lwickjr"]: Why?] adding a new built-in type, evalstr ("evaluating string"), marked by
+(*) backticks: yes, backticks mean repr(), but did anyone ever hear of them? [[[lwickjr]]: I use them regularly.] i think they are
+depricated anyway. [[[lwickjr]]: Why?] adding a new built-in type, evalstr ("evaluating string"), marked by
 backticks, is very simple and almost completely backwards compatible. and it works not only
 in the context of printing output.
 
