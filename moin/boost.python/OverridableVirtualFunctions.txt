@@ -15,7 +15,7 @@ class hello
     ...
 };
 }}}
-We'll need a derived class[[FootNote(You may ask, "Why do we need this derived class? This could have been designed so that everything gets done right inside of hello." One of the goals of Boost.Python is to be minimally intrusive on an existing C++ design. In principle, it should be possible to expose the interface for a 3rd party library without changing it. To unintrusively hook into the virtual functions so that a Python override may be called, we must use a derived class.)]] to help us dispatch the call to Python. In our derived class, we need the following elements:
+We'll need a derived class<<FootNote(You may ask, "Why do we need this derived class? This could have been designed so that everything gets done right inside of hello." One of the goals of Boost.Python is to be minimally intrusive on an existing C++ design. In principle, it should be possible to expose the interface for a 3rd party library without changing it. To unintrusively hook into the virtual functions so that a Python override may be called, we must use a derived class.)>> to help us dispatch the call to Python. In our derived class, we need the following elements:
 
  1. A Py``Object* data member (usually called `self`) that holds a pointer to the Python object corresponding to our C++ ''hello'' instance.
  1. For each exposed constructor of the base class `T`, a constructor which takes the same parameters preceded by an initial Py``Object* argument. The initial argument should be stored in the `self` data member described above.
@@ -63,7 +63,7 @@ Now our Python subclass of `hello` behaves as expected:
 >>> invite(hi2)
 'Hello from Florida, where the weather is fine! Please come soon!'
 }}}
-[[FootNote]]
+<<FootNote>>
 
 == Pure Virtual Functions ==
 A pure virtual function with no implementation is actually a lot easier to deal with than a virtual function with a default implementation. First of all, you obviously don't need to supply a default implementation. Secondly, you don't need to call ''def()'' on the `extension_class<>` instance for the virtual function. In fact, you wouldn't want to: if the corresponding attribute on the Python class stays undefined, you'll get an ''Attribute``Error'' in Python when you try to call the function, indicating that it should have been implemented. For example:
@@ -116,5 +116,5 @@ AttributeError: pure
 1100
 }}}
 == Private Non-Pure Virtual Functions ==
-This is one area where some minor intrusiveness on the wrapped library is required. Once it has been overridden, the only way to call the base class implementation of a private virtual function is to make the derived class a friend of the base class. You didn't hear it from me, but most C++ implementations will allow you to change the declaration of the base class in this limited way without breaking binary compatibility (though it will certainly break the [http://cs.calvin.edu/c++/C++Standard-Nov97/basic.html#basic.def.odr ODR]).
+This is one area where some minor intrusiveness on the wrapped library is required. Once it has been overridden, the only way to call the base class implementation of a private virtual function is to make the derived class a friend of the base class. You didn't hear it from me, but most C++ implementations will allow you to change the declaration of the base class in this limited way without breaking binary compatibility (though it will certainly break the [[http://cs.calvin.edu/c++/C++Standard-Nov97/basic.html#basic.def.odr|ODR]]).
 
