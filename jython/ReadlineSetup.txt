@@ -1,16 +1,15 @@
-#acl MoinPagesEditorGroup:read,write,delete,revert All:read
 ## Please edit (or translate) system/help pages on the moinmaster wiki ONLY.
 ## For more information, please see MoinMaster:MoinPagesEditorGroup.
 #language en
-'''Contents''' [[TableOfContents]]
+'''Contents''' <<TableOfContents>>
 
 === Configuring Readline for Jython ===
 
-Jython can support line editing and history via the [http://java-readline.sourceforge.net/ Java-Readline] library on unix systems. Java-Readline wraps [http://directory.fsf.org/readline.html GNU Readline] with a JNI interface to provide advanced editing support to Java console programs. However, Java-Readline is not bundled with the standard Jython distribution. This note describes how to configure Readline support into an existing Jython install. It is not necessary to rebuild Jython from source, but you will need to build/install Java-Readline if a prebuilt version doesn't exist for your platform/OS distribution (which is likely the case).
+Jython can support line editing and history via the [[http://java-readline.sourceforge.net/|Java-Readline]] library on unix systems. Java-Readline wraps [[http://directory.fsf.org/readline.html|GNU Readline]] with a JNI interface to provide advanced editing support to Java console programs. However, Java-Readline is not bundled with the standard Jython distribution. This note describes how to configure Readline support into an existing Jython install. It is not necessary to rebuild Jython from source, but you will need to build/install Java-Readline if a prebuilt version doesn't exist for your platform/OS distribution (which is likely the case).
 
 These instructions were tested on a Fedora linux system, with Jython-2.1, Sun JDK1.5 (note GCJ does not work at this time), and GCC. It as assumed that Jython has already been installed.
 
-1. [http://sourceforge.net/cvs/?group_id=48669 Checkout Java-Readline], uncomment the correct OS_FLAVOR line in java-readline/Makefile and follow the included build instructions. This will require both java and C compilers. If the necessary compilers can be found in your path, building should be as simple as:
+1. [[http://sourceforge.net/cvs/?group_id=48669|Checkout Java-Readline]], uncomment the correct OS_FLAVOR line in java-readline/Makefile and follow the included build instructions. This will require both java and C compilers. If the necessary compilers can be found in your path, building should be as simple as:
 
 {{{
 $ cvs -d:pserver:anonymous@java-readline.cvs.sourceforge.net:/cvsroot/java-readline login 
@@ -27,7 +26,7 @@ The build results in the creation of following two files:
 
 These can be copied to a convient location, but the rest of these instructions assume they remain in /home/myname/java-readline.
 
-2. Jython needs to be configured to use the Java-Readline library. Edit the jython [http://www.jython.org/docs/registry.html registry] file, setting the following two lines:
+2. Jython needs to be configured to use the Java-Readline library. Edit the jython [[http://www.jython.org/docs/registry.html|registry]] file, setting the following two lines:
 
 {{{
 python.console=org.python.util.ReadlineConsole
@@ -90,7 +89,7 @@ Then its possible the shared library libJavaReadline.so isn't being found by the
 
 === Enhancements ===
 
-A [http://sourceforge.net/tracker/index.php?func=detail&aid=795831&group_id=12867&atid=312867 patch] on the jython patch-tracker implements TAB support for indentation in !ReadlineConsole. However, it has not yet been accepted into Jython. 
+A [[http://sourceforge.net/tracker/index.php?func=detail&aid=795831&group_id=12867&atid=312867|patch]] on the jython patch-tracker implements TAB support for indentation in !ReadlineConsole. However, it has not yet been accepted into Jython. 
 
 === Readline Alternatives ===
 
@@ -98,7 +97,7 @@ While these instructions are for Java-Readline compiled against GNU Readline, Ja
 
 Other alternatives include programs that function as console wrappers and provide history & command-editing without requiring any changes to the Jython other than the way you invoke the application itself. Examples include:
 
-  * [http://utopia.knoware.nl/~hlub/uck/rlwrap/ rlwrap] which also wraps GNU Readline, but can be used by invoking jython with:
+  * [[http://utopia.knoware.nl/~hlub/uck/rlwrap/|rlwrap]] which also wraps GNU Readline, but can be used by invoking jython with:
 
 {{{
 rlwrap jython
@@ -107,7 +106,7 @@ rlwrap jython
 This provides command line history and editing, but does not support
 the readline API (for application controlled TAB completion, etc).
 
-  * [http://jline.sourceforge.net/ jline] is a java console command editor distributed in the form of a jar file. It can be used as a wrapper by putting the jline jar file in the CLASSPATH, and changing jython invokation to:
+  * [[http://jline.sourceforge.net/|jline]] is a java console command editor distributed in the form of a jar file. It can be used as a wrapper by putting the jline jar file in the CLASSPATH, and changing jython invokation to:
 
 {{{
 java.exe -Dpython.home="C:\jython2.2" -cp "jython.jar;jline-0_9_5.jar" jline.ConsoleRunner org.python.util.jython
@@ -119,29 +118,29 @@ For Unix:
 java -Dpython.home="${HOME}/jython2.2" -cp "jython.jar:jline-0.9.91.jar" jline.ConsoleRunner org.python.util.jython
 }}}
 
-Note that jline can also be used programically to provide an alternative jython console, as in [http://thread.gmane.org/gmane.comp.lang.jython.devel/713 JLineConsole].
+Note that jline can also be used programically to provide an alternative jython console, as in [[http://thread.gmane.org/gmane.comp.lang.jython.devel/713|JLineConsole]].
 
-There are several Jython swing console's in various states of completion that provide command editing features in a cross-platform way. The simplest is the demo console bundled with jython in the [http://cvs.sourceforge.net/viewcvs.py/jython/jython/Demo/swing/Console.py?rev=1.1&view=auto Demo/swing/Console.py] subdir which provides a command history via the cursor-up and cursor-down keys. Others GUI console's include:
+There are several Jython swing console's in various states of completion that provide command editing features in a cross-platform way. The simplest is the demo console bundled with jython in the [[http://cvs.sourceforge.net/viewcvs.py/jython/jython/Demo/swing/Console.py?rev=1.1&view=auto|Demo/swing/Console.py]] subdir which provides a command history via the cursor-up and cursor-down keys. Others GUI console's include:
 
-  * [http://don.freeshell.org/jython/ Jython Console] featuring code completion.
-  * The interstingly named [http://www-iis.unil.ch/~jiglesia/apps/yatisewobe/doc/html/sec-cons.html YaTiSeWoBe] has a Jython console.  
-  * [http://cvs.sourceforge.net/viewcvs.py/jydle/Jydle/Console/ jydle] is an attempt at an IDLE-like environment for Jython, and includes an interactive console.
-  * [http://webpages.charter.net/edreamleo/front.html jyleo] contains !JythonShell. This appears to be actively developed but requires the alpha jython 2.2 release.
+  * [[http://don.freeshell.org/jython/|Jython Console]] featuring code completion.
+  * The interstingly named [[http://www-iis.unil.ch/~jiglesia/apps/yatisewobe/doc/html/sec-cons.html|YaTiSeWoBe]] has a Jython console.  
+  * [[http://cvs.sourceforge.net/viewcvs.py/jydle/Jydle/Console/|jydle]] is an attempt at an IDLE-like environment for Jython, and includes an interactive console.
+  * [[http://webpages.charter.net/edreamleo/front.html|jyleo]] contains !JythonShell. This appears to be actively developed but requires the alpha jython 2.2 release.
 
 === References ===
 
-The Java-Readline library includes [http://cvs.sourceforge.net/viewcvs.py/java-readline/java-readline/contrib/jpython/jython-install.txt?rev=1.1&view=markup contributed instructions] on building Jython with Readline support that have been very useful in sorting the process out. Many thanks to the author SteveC.
+The Java-Readline library includes [[http://cvs.sourceforge.net/viewcvs.py/java-readline/java-readline/contrib/jpython/jython-install.txt?rev=1.1&view=markup|contributed instructions]] on building Jython with Readline support that have been very useful in sorting the process out. Many thanks to the author SteveC.
 
-Charlie Moad [http://article.gmane.org/gmane.comp.lang.jython.user/4018 summarizes] setup instructions on ubuntu using a pre-built Java-Readline package, as well as mentioning the CLASSPATH perils of invoking Jython using {{{java -jar}}}.
+Charlie Moad [[http://article.gmane.org/gmane.comp.lang.jython.user/4018|summarizes]] setup instructions on ubuntu using a pre-built Java-Readline package, as well as mentioning the CLASSPATH perils of invoking Jython using {{{java -jar}}}.
 
-The Readline wrapper rlwrap was recommended by [http://article.gmane.org/gmane.comp.lang.jython.user/4245 Dave Kuhlman].
+The Readline wrapper rlwrap was recommended by [[http://article.gmane.org/gmane.comp.lang.jython.user/4245|Dave Kuhlman]].
  
-The use of JLine and the JL''''''ineConsole implementation itself are due to [http://thread.gmane.org/gmane.comp.lang.jython.devel/713 Robert Andre].
+The use of JLine and the JL''''''ineConsole implementation itself are due to [[http://thread.gmane.org/gmane.comp.lang.jython.devel/713|Robert Andre]].
 
-Don Coleman introduced his Jython Console with [http://thread.gmane.org/gmane.comp.lang.jython.user/779 this] post to the jython-user mailing list.
+Don Coleman introduced his Jython Console with [[http://thread.gmane.org/gmane.comp.lang.jython.user/779|this]] post to the jython-user mailing list.
 
-YaTiSeWoBe is due to [http://article.gmane.org/gmane.comp.lang.jython.user/2787 Javier Iglesias].
+YaTiSeWoBe is due to [[http://article.gmane.org/gmane.comp.lang.jython.user/2787|Javier Iglesias]].
 
-Jydle owes its development to [http://article.gmane.org/gmane.comp.lang.jython.user/1001 Michel Pelletier].
+Jydle owes its development to [[http://article.gmane.org/gmane.comp.lang.jython.user/1001|Michel Pelletier]].
 
-!JythonShell was [http://thread.gmane.org/gmane.comp.lang.jython.user/4177 introduced] by the enigmatic "Leo User".
+!JythonShell was [[http://thread.gmane.org/gmane.comp.lang.jython.user/4177|introduced]] by the enigmatic "Leo User".
