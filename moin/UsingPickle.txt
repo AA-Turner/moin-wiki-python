@@ -2,9 +2,9 @@
 
 = Using Pickle =
 
- * [http://www.python.org/doc/current/lib/node64.html Official Pickle Use Documentation]
- * [http://www.python.org/doc/current/lib/pickle-example.html Official Pickle Example]
- * [http://www.python.org/doc/current/lib/module-pickle.html Official Pickle Module Documentation]
+ * [[http://www.python.org/doc/current/lib/node64.html|Official Pickle Use Documentation]]
+ * [[http://www.python.org/doc/current/lib/pickle-example.html|Official Pickle Example]]
+ * [[http://www.python.org/doc/current/lib/module-pickle.html|Official Pickle Module Documentation]]
 
 == Pickle Example ==
 
@@ -27,7 +27,7 @@ favorite_color = pickle.load( open( "save.p" ) )
 # favorite_color is now { "lion": "yellow", "kitty": "red" }
 }}}
 
-For a more complex example, see [http://www.python.org/doc/current/lib/pickle-example.html the official Pickle example,] and for API details, see the [http://www.python.org/doc/current/lib/node64.html official Pickle use documentation.]
+For a more complex example, see [[http://www.python.org/doc/current/lib/pickle-example.html|the official Pickle example,]] and for API details, see the [[http://www.python.org/doc/current/lib/node64.html|official Pickle use documentation.]]
 
 == cPickle ==
 
@@ -40,7 +40,7 @@ The only difference is that you write...
 import cPickle as pickle
 }}}
 
-...at the top of your file, and now all your pickle calls are ''much'' faster. [http://www.python.org/doc/current/lib/module-cPickle.html ("...up to 1000 times faster.")]
+...at the top of your file, and now all your pickle calls are ''much'' faster. [[http://www.python.org/doc/current/lib/module-cPickle.html|("...up to 1000 times faster.")]]
 
 Why would you ever use native pickle, rather than cPickle? I don't know.
  ''Because pickle handles unicode objects.''
@@ -61,7 +61,7 @@ You ''cannot'' pickle open file objects, network connections, or database connec
 
 == Contributors ==
 
-LionKimbro, IanBicking, ["lwickjr"]
+LionKimbro, IanBicking, [[lwickjr]]
 
 == Discussion ==
 
@@ -69,7 +69,7 @@ Pickles can cause problems if you save a pickle, then update your code and read 
 
 For this reason, you should be wary of using pickles for long-term storage where the underlying code is not highly stable.
 
-[["lwickjr"]]: Another possibility re unpicklable objects is to register pickling and unpickling functions with {{{copy_reg}}}. Regarding renaming modules/classes/functions: I've had to deal with this repeatedly in my own code. I have developed an ad-hock procedure that works for me:
+[[[lwickjr]]]: Another possibility re unpicklable objects is to register pickling and unpickling functions with {{{copy_reg}}}. Regarding renaming modules/classes/functions: I've had to deal with this repeatedly in my own code. I have developed an ad-hock procedure that works for me:
 
  1 Edit the source code to create the object under the new name AND store a copy under the old name.
  2 Unpickle and re-pickle EVERY pickle affected by the change.
@@ -77,4 +77,4 @@ For this reason, you should be wary of using pickles for long-term storage where
 
 A more robust approach would be to perform step one above, and just leave it at that, in case you missed a pickle or two. If desired, you can then perform step 3 after you judge normal processing to have performed step 2 for you, say, a couple years later. ;)
 
-Awkward, but it works. Anyone have any ideas for a better way to do this? --["lwickjr"]
+Awkward, but it works. Anyone have any ideas for a better way to do this? --[[lwickjr]]
