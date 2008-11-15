@@ -1,14 +1,14 @@
 Notes/Discussion/Decisions on having `PySequence` implement `java.util.List`...
 === Topics ===
- *[#initmodule InitModule]
+ *[[#initmodule|InitModule]]
 
 ----
-Topic: `InitModule` [[BR]]
-[[Anchor(initmodule)]]
-ClarkUpdike Feb 26 2005 [[BR]]
+Topic: `InitModule` <<BR>>
+<<Anchor(initmodule)>>
+ClarkUpdike Feb 26 2005 <<BR>>
 I had originally put in here a detailed anaysis of conflicts between the comments and the source code regarding the `InitModule` interface.  The comments seemed to indicate that `PySequence` should implement `InitModule` but couldn't because the class was abstract and `PyJavaClass` would try to instatiate it erroneously.  But `PyJavaClass` was already correctly using reflection to give an error message in `PyObject __call__(PyObject[] args, String[] keywords)` if an abstract class was passed in.  So then I was trying to track down why the `PyList` wasn't implementing `ClassDictInit`.  It was providing the required static method classDictInit() but it was a do-nothing method and it wasn't calling `PySequence.classDictInit()` like the comments said it should.  So then I diff'd the changes from 2.2a to the tip with new style class changes.  Apparently, all this changed with new style classes.  A case of comments being 2 to 3 generations old. 
 
-<whine>[[BR]]My personal opinion:
+<whine><<BR>>My personal opinion:
  *Under-commenting code is bad (only comment the unobvious)
  *Over-commented code can also be bad, and potentially leads to...
  *Wrong/Out-Of-Date comments are worst of all
