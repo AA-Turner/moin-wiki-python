@@ -8,7 +8,7 @@ You may ask why we need another web framework, or what a different web framework
 
 Now we come to Python, one of the most sexy, powerful, and easy to learn object oriented languages of our time.  Of course we have some great web frameworks for Python.  Pylons and Django are just a couple.  Now let's port those into the Jython arena and sprinkle a bit of Java into the Python mix to create some very attractive web frameworks.  Django does not disappoint, and I'd like to argue that it is one of the leading frameworks in the simplicity and ability arena.  Let's dig into some basics with Django and find out what makes this framework so appealing.
 
-This article is meant for the Django beginner.  More importantly, we will cover basics for getting started with Django development with Jython.  Rather than develop a separate set of examples for getting started, we will follow the [http://docs.djangoproject.com/en/dev/intro/tutorial01/#intro-tutorial01 Django documentation] and I'll add extra information as needed.  I hope to pick up with more advanced topics in future articles, so please stay tuned to the Jython Monthly distribution for more details.
+This article is meant for the Django beginner.  More importantly, we will cover basics for getting started with Django development with Jython.  Rather than develop a separate set of examples for getting started, we will follow the [[http://docs.djangoproject.com/en/dev/intro/tutorial01/#intro-tutorial01|Django documentation]] and I'll add extra information as needed.  I hope to pick up with more advanced topics in future articles, so please stay tuned to the Jython Monthly distribution for more details.
 
 == Getting Ready to Tango with Django ==
 
@@ -19,15 +19,15 @@ First things first, we have to set up our environment.  For those of you who wou
 - Django (1.0 at the time of this writing) http://www.djangoproject.com/
 - django-jython libraries http://code.google.com/p/django-jython/
 
-You will want to install all of these and ensure that the they reside in your classpath.  Please visit the [http://docs.djangoproject.com/en/dev/howto/jython/ Django on Jython documentation] for more details on setting up your environment.
+You will want to install all of these and ensure that the they reside in your classpath.  Please visit the [[http://docs.djangoproject.com/en/dev/howto/jython/|Django on Jython documentation]] for more details on setting up your environment.
 
 Since we are using Jython, we can run our Django application on any Java servlet container.  We can also mix any Java library into our application as needed...this is one of the most powerful reasons to use Django on Jython.
 
 == Database ==
 
-Many of the major databases are supported at this time.  However, there are a few that will not yet function with the Django framework on Jython.  For instance, you will have to use an alternative to the DB2 database at this time.  For more information, please take a look at the [http://code.google.com/p/django-jython/wiki/DatabaseBackends django-jython site].  For the purposes of this article, I am advocating the [http://www.postgresql.org Postgresql] database to start out with Django.
+Many of the major databases are supported at this time.  However, there are a few that will not yet function with the Django framework on Jython.  For instance, you will have to use an alternative to the DB2 database at this time.  For more information, please take a look at the [[http://code.google.com/p/django-jython/wiki/DatabaseBackends|django-jython site]].  For the purposes of this article, I am advocating the [[http://www.postgresql.org|Postgresql]] database to start out with Django.
 
-In order to make Postgresql work with Django in the Python world, you must install the [http://initd.org/pub/software/psycopg/ psycopg] package (bindings).  However, we have a bonus as Jython developers as this package is not required to run Django with Postgresql on Jython.  Instead, for the database engine we simply specify "doj.backends.zxjdbc.postgresql" within the settings.py module.
+In order to make Postgresql work with Django in the Python world, you must install the [[http://initd.org/pub/software/psycopg/|psycopg]] package (bindings).  However, we have a bonus as Jython developers as this package is not required to run Django with Postgresql on Jython.  Instead, for the database engine we simply specify "doj.backends.zxjdbc.postgresql" within the settings.py module.
 
 == Creating the Project and Models ==
 
@@ -86,7 +86,7 @@ DATABASE_PORT = ''                                           # Set to empty stri
 
 }}}
 
-As the [http://docs.djangoproject.com/en/dev/intro/tutorial01/#intro-tutorial01 Django tutorial] points out, it is a good idea to take a note of some other sections of the ''settings.py'' file at this time.  Look at the following INSTALLED_APPS which are automatically included in your project for convienence:
+As the [[http://docs.djangoproject.com/en/dev/intro/tutorial01/#intro-tutorial01|Django tutorial]] points out, it is a good idea to take a note of some other sections of the ''settings.py'' file at this time.  Look at the following INSTALLED_APPS which are automatically included in your project for convienence:
 
     * django.contrib.auth -- An authentication system.
     * django.contrib.contenttypes -- A framework for content types.
@@ -120,7 +120,7 @@ Would you like to create one now? (yes/no):
 
 '''Create Models'''
 
-At this point, the Django project is set up and we are ready to create an application within it.  In the Django environment, a project can contain one or more applications.  For the purposes of this article, we will create the same application as the [http://docs.djangoproject.com/en/dev/intro/tutorial01/#intro-tutorial01 Django tutorial] so that it is easier to follow along if you choose to do so.  In this case, we are interested in creating an application which manages poll questions and answers.
+At this point, the Django project is set up and we are ready to create an application within it.  In the Django environment, a project can contain one or more applications.  For the purposes of this article, we will create the same application as the [[http://docs.djangoproject.com/en/dev/intro/tutorial01/#intro-tutorial01|Django tutorial]] so that it is easier to follow along if you choose to do so.  In this case, we are interested in creating an application which manages poll questions and answers.
 
 The first step is to create the application itself.  As stated above, we have create the project thus far but no application as yet.  To do so, ensure that you are within the project ''mysite'' directory and issue the following command:
 
@@ -143,7 +143,7 @@ class Choice(models.Model):
     votes = models.IntegerField()
 }}}
 
-This simply creates two classes which represent the Poll object itself and the Choice object for each poll.  To learn more about the details of the syntax used for these classes, please take a look at the [http://docs.djangoproject.com/en/dev/intro/tutorial01/#intro-tutorial01 Django tutorial].  For now, it is important to know that with this little bit of code, our application now has the information required to create database tables and views for controlling our Poll.  In order to have the application included in our Django project (''mysite''), we need to adjust the the ''settings.py'' module a bit by adding the application to the list of INSTALLED_APPS.  Open ''settings.py'' and go to the bottom of the file, adjust as follows:
+This simply creates two classes which represent the Poll object itself and the Choice object for each poll.  To learn more about the details of the syntax used for these classes, please take a look at the [[http://docs.djangoproject.com/en/dev/intro/tutorial01/#intro-tutorial01|Django tutorial]].  For now, it is important to know that with this little bit of code, our application now has the information required to create database tables and views for controlling our Poll.  In order to have the application included in our Django project (''mysite''), we need to adjust the the ''settings.py'' module a bit by adding the application to the list of INSTALLED_APPS.  Open ''settings.py'' and go to the bottom of the file, adjust as follows:
 
 {{{
 INSTALLED_APPS = (
@@ -203,7 +203,7 @@ At this point you can begin to work with the framework at the shell level if you
 
 In order to actually see your site up and running, you will need to activate the administrative controls.  In my belief, this is one of the most powerful features of the Django framework.  Years ago I began creating websites for clients that had all content stored in a database.  I then created an administrative interface for the clients to use so that they could update the website content (the database content) at any time via a nice WYSIWYG editor.  It is a great framework and the clients really enjoy using it to administer their sites.  The Django framework gives you an administrative interface for free with each application you create.  All site content is stored in the database, so it can all be updated via the use of the administrative console.  Cascading style sheets can also be added and modified to change the look and feel of the site.
 
-If you follow the [http://docs.djangoproject.com/en/dev/intro/tutorial02/#intro-tutorial02 Django Framework Tutorial 2], it will guide you into the right direction for creating and adjusting the administrative site.  In this article, I will show you how to get started.
+If you follow the [[http://docs.djangoproject.com/en/dev/intro/tutorial02/#intro-tutorial02|Django Framework Tutorial 2]], it will guide you into the right direction for creating and adjusting the administrative site.  In this article, I will show you how to get started.
 
 As the tutorial explains, the administrative site is not enabled by default.  You must perform a few simple measures in order to activate the site.  Follow the next few procedures to set up the administrative console for your Django website.
 
@@ -267,7 +267,7 @@ jython manage.py runserver
 
 }}}
 
-Please follow the [http://docs.djangoproject.com/en/dev/intro/tutorial02/#intro-tutorial02 Django Framework Tutorial 2] for more information on using the administrative site.
+Please follow the [[http://docs.djangoproject.com/en/dev/intro/tutorial02/#intro-tutorial02|Django Framework Tutorial 2]] for more information on using the administrative site.
 
 Use the following URL to log into your administrative site:
 
@@ -286,4 +286,4 @@ I hope to cover more details about the Django framework in future articles.
 
 Leo Soto - Thanks for your assistance!
 
-[http://www.djangoproject.com/ Django Project]
+[[http://www.djangoproject.com/|Django Project]]
