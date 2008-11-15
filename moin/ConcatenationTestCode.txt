@@ -30,7 +30,7 @@ print 'duration:', time()-t
 On the win32 Python 2.4 I'm seeing the join sample above complete in less than half the time of the concatenating sample.
  -db
 
-Usually the join() is located ''outside'' the loop, that code makes this extremely hard though (becuase of the self-referencing of the generated string). But that situation is not the norm. -- JürgenHermann [[DateTime(2005-08-01T06:07:51Z)]]
+Usually the join() is located ''outside'' the loop, that code makes this extremely hard though (becuase of the self-referencing of the generated string). But that situation is not the norm. -- JürgenHermann <<DateTime(2005-08-01T06:07:51Z)>>
 
 Are you guys kidding? The whole page is contrieved.
 Correct implementation of "join" is:
@@ -51,12 +51,12 @@ which gives on PythonWin 2.4 (#60, Nov 30 2004, 09:34:21) [MSC v.1310 32 bit (In
 1st  duration: 54.4060001373
 Last duration: 0.0160000324249
 }}}
--- -- MikeRovner [[DateTime(2005-08-02T10:19:06Z)]]
+-- -- MikeRovner <<DateTime(2005-08-02T10:19:06Z)>>
 
- Mike, that code generates a very different (and much shorter) s. Note how the original code takes the half of the ''preconcatenated'' s, making the size grow exponentially (which generates megabytes of data). -- JürgenHermann [[DateTime(2005-08-30T18:44:05Z)]]
+ Mike, that code generates a very different (and much shorter) s. Note how the original code takes the half of the ''preconcatenated'' s, making the size grow exponentially (which generates megabytes of data). -- JürgenHermann <<DateTime(2005-08-30T18:44:05Z)>>
 
 
--- -- DavidFord [[DateTime(2005-10-18T10:19:06Z)]]
+-- -- DavidFord <<DateTime(2005-10-18T10:19:06Z)>>
 A few notes (your mileage may vary - this is a 4Mb file being stripped of unprintable characters)
  * Regex replacement rather than creating a list and joining it is 2.5x faster than the tooling above
  * This is far slower than the equivalent Java code (around 4x slower) using String.charAt() and StringBuffers
