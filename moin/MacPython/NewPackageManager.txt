@@ -1,10 +1,10 @@
 = Notes about what we need to do =
 
-Also see:  [http://www.python.org/cgi-bin/moinmoin/DistUtils20 http://www.python.org/cgi-bin/moinmoin/DistUtils20]
+Also see:  [[http://www.python.org/cgi-bin/moinmoin/DistUtils20|http://www.python.org/cgi-bin/moinmoin/DistUtils20]]
 
 == Extending PEP-241 ( http://www.python.org/peps/pep-0241.html ) ==
 
-As per Sarwat's suggestion for canonical version numbers, we do have somewhat of a solution that I was unaware of:  the [http://epydoc.sourceforge.net/stdlib/public/distutils.version.StrictVersion-class.html StrictVersion] and [http://epydoc.sourceforge.net/stdlib/public/distutils.version.LooseVersion-class.html LooseVersion] classes in [http://epydoc.sourceforge.net/stdlib/public/distutils.version-module.html distutils.version].  [http://epydoc.sourceforge.net/stdlib/public/distutils.version.LooseVersion-class.html LooseVersion] will pretty much allow us to compare arbitrary 1.0a2 vs 1.0b2 version numbers reliably.  If they don't compare reliably or can not be parsed by [http://epydoc.sourceforge.net/stdlib/public/distutils.version.LooseVersion-class.html LooseVersion], the package author is not following spec and should be smacked around :)
+As per Sarwat's suggestion for canonical version numbers, we do have somewhat of a solution that I was unaware of:  the [[http://epydoc.sourceforge.net/stdlib/public/distutils.version.StrictVersion-class.html|StrictVersion]] and [[http://epydoc.sourceforge.net/stdlib/public/distutils.version.LooseVersion-class.html|LooseVersion]] classes in [[http://epydoc.sourceforge.net/stdlib/public/distutils.version-module.html|distutils.version]].  [[http://epydoc.sourceforge.net/stdlib/public/distutils.version.LooseVersion-class.html|LooseVersion]] will pretty much allow us to compare arbitrary 1.0a2 vs 1.0b2 version numbers reliably.  If they don't compare reliably or can not be parsed by [[http://epydoc.sourceforge.net/stdlib/public/distutils.version.LooseVersion-class.html|LooseVersion]], the package author is not following spec and should be smacked around :)
 
 We need more metadata, here's what we need:
 
@@ -30,7 +30,7 @@ For our platform, PEP-262 has one inherent deficiency: INSTALLDB (the location f
 I think that we can deprecate the REQUIRES and PROVIDES files by adding Depends, Package-Name, and Recommends to PKG-INFO.  I don't think that the "PROVIDES" file makes a whole lot of sense, unless the strings used in provides means it corresponds to a definitive module interface.  There is not currently any sort of registry or PEP for this kind of thing, so it's probably not at all useful.  Since we have upgraded PEP-241, we should also upgrade the Package class in PEP-262 to include the new metadata.
 
 = Notes for NewPackageManager =
- * Read "[http://mail.python.org/pipermail/pythonmac-sig/2003-October/thread.html#8891 Package Manager idea, adding URL scheme]" thread on pythonmac-sig very carefully
+ * Read "[[http://mail.python.org/pipermail/pythonmac-sig/2003-October/thread.html#8891|Package Manager idea, adding URL scheme]]" thread on pythonmac-sig very carefully
  * Needs to have a receipt database for each installation location (PEP-262 extension)
  * Needs extra metadata from PKG-INFO (PEP-241 extension)
  * Must work without mandatory crypto support see commentary started by MichaelHudson
@@ -56,7 +56,7 @@ I think that we can deprecate the REQUIRES and PROVIDES files by adding Depends,
  * Make it a responsive application, show a lot of progress indications
  * Probably fork python to do most things and communicate over TCP or some such
  * Try not to import modules to check versions
- * ["../PyObjC"] implementation would be awesome, should also do WxPython implementation for win32?
+ * [[../PyObjC]] implementation would be awesome, should also do WxPython implementation for win32?
  * Allow user to install from local files (downloaded binary packages or source packages themselves)
  * Lots of version checks so the user is unlikely to break something by accident (package X v1.0 isn't known to work with package Y v1.1 yet, are you sure you want to upgrade Y?)
  * Display package dependencies, maybe (advanced) let user decide which of them to install.
