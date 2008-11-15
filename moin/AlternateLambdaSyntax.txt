@@ -1,4 +1,4 @@
-As it stands, Guido van Rossum has suggested that lambda forms will disappear in ["Python3.0"].  This started a number of threads on comp.lang.python suggesting alternate syntaxes for lambda in the hopes that one of them might be more amenable to GvR's tastes.  This pages summarizes these suggestions.
+As it stands, Guido van Rossum has suggested that lambda forms will disappear in [[Python3.0]].  This started a number of threads on comp.lang.python suggesting alternate syntaxes for lambda in the hopes that one of them might be more amenable to GvR's tastes.  This pages summarizes these suggestions.
 
   Update: GvR has changed his tune; lambda will remain unchanged.
   (Reference: http://mail.python.org/pipermail/python-dev/2006-February/060415.html).
@@ -42,7 +42,7 @@ lambda *a, **k: x.bar(*a, **k)
 
 === Args Before Expression ===
 
-Nick Coghlan: def-to syntax [[#a 1]]
+Nick Coghlan: def-to syntax [[[#a|1]]]
 {{{#!python
 (def (a, b, c) to f(a) + o(b) - o(c))
 (def (x) to x * x)
@@ -51,7 +51,7 @@ Nick Coghlan: def-to syntax [[#a 1]]
 ((def (x=x, a=a, k=k) to x(*a, **k)) for x, a, k in funcs_and_args_list)
 }}}
 
-Nick Coghlan: def-arrow syntax [[#a 1]]
+Nick Coghlan: def-arrow syntax [[[#a|1]]]
 {{{#!python
 (def (a, b, c) -> f(a) + o(b) - o(c))
 (def (x) -> x * x)
@@ -60,7 +60,7 @@ Nick Coghlan: def-arrow syntax [[#a 1]]
 ((def (x=x, a=a, k=k) -> x(*a, **k)) for x, a, k in funcs_and_args_list)
 }}}
 
-Alex Martelli: def-as syntax [[#b 2]]
+Alex Martelli: def-as syntax [[[#b|2]]]
 {{{#!python
 (def (a, b, c) as f(a) + o(b) - o(c))
 (def (x) as x * x)
@@ -69,7 +69,7 @@ Alex Martelli: def-as syntax [[#b 2]]
 ((def (x=x, a=a, k=k) as x(*a, **k)) for x, a, k in funcs_and_args_list)
 }}}
 
-Dave Benjamin: fun syntax [[#g 7]]
+Dave Benjamin: fun syntax [[[#g|7]]]
 {{{#!python
 (fun(a, b, c): f(a) + o(b) - o(c))
 (fun(x): x * x)
@@ -78,7 +78,7 @@ Dave Benjamin: fun syntax [[#g 7]]
 ((fun(x=x, a=a, k=k): x(*a, **k)) for x, a, k in funcs_and_args_list)
 }}}
 
-Roman Suzi: quote-colon syntax [[#i 9]]
+Roman Suzi: quote-colon syntax [[[#i|9]]]
 {{{#!python
 ` a, b, c:f(a) + o(b) - o(c)
 ` x: x * x
@@ -105,7 +105,7 @@ to x
 ((x=x, a=a, k=k) to x(*a, **k) for x, a, k in funcs_and_args_list)
 }}}
 
-Tom Anderson: anonymous def syntax, normal form [[#j 12]]
+Tom Anderson: anonymous def syntax, normal form [[[#j|12]]]
 {{{#!python
 def (a, b, c): return f(a) + o(b) - o(c)
 def (x): return x * x
@@ -114,7 +114,7 @@ def (*a, **k): return x.bar(*a, **k)
 ((def (x=x, a=a, k=k): return x(*a, **k)) for x, a, k in funcs_and_args_list)
 }}}
 
-Tom Anderson: anonymous def syntax, shorthand form [[#j 12]]
+Tom Anderson: anonymous def syntax, shorthand form [[[#j|12]]]
 {{{#!python
 def (a, b, c) = f(a) + o(b) - o(c)
 def (x) = x * x
@@ -145,7 +145,7 @@ with generator expressions, list comprehensions and PEP 308 conditional expressi
 ((x(*a, **k) def (x=x, a=a, k=k)) for x, a, k in funcs_and_args_list)
 }}}
 
-Nick Coghlan: for syntax [[#f 6]]
+Nick Coghlan: for syntax [[[#f|6]]]
 {{{#!python
 (f(a) + o(b) - o(c) for (a, b, c))
 (x * x for (x))
@@ -154,7 +154,7 @@ Nick Coghlan: for syntax [[#f 6]]
 ((x(*a, **k) for (x=x, a=a, k=k)) for x, a, k in funcs_and_args_list)
 }}}
 
-Robert Brewer: for (no-parens) syntax [[#c 3]]
+Robert Brewer: for (no-parens) syntax [[[#c|3]]]
 {{{#!python
 (f(a) + o(b) - o(c) for a, b, c)
 (x * x for x)
@@ -163,7 +163,7 @@ Robert Brewer: for (no-parens) syntax [[#c 3]]
 ((x(*a, **k) for (x=x, a=a, k=k)) for x, a, k in funcs_and_args_list)
 }}}
 
-Nick Coghlan: def-from syntax [[#d 4]]
+Nick Coghlan: def-from syntax [[[#d|4]]]
 {{{#!python
 (def f(a) + o(b) - o(c) from (a, b, c))
 (def x * x from (x))
@@ -181,7 +181,7 @@ Nick Coghlan: from syntax (posted to clp, no reference handy)
 ((x(*a, **k) from (x=x, a=a, k=k)) for x, a, k in funcs_and_args_list)
 }}}
 
-Michael Spencer: from-args syntax [[#e 5]]
+Michael Spencer: from-args syntax [[[#e|5]]]
 {{{#!python
 (f(a) + o(b) - o(c) from args(a, b, c))
 (x * x from args(x))
@@ -190,7 +190,7 @@ Michael Spencer: from-args syntax [[#e 5]]
 ((x(*a, **k) from args(x=x, a=a, k=k)) for x, a, k in funcs_and_args_list)
 }}}
 
-Michael Spencer: for-args syntax [[#e 5]]
+Michael Spencer: for-args syntax [[[#e|5]]]
 {{{#!python
 (f(a) + o(b) - o(c) for args(a, b, c))
 (x * x for args(x))
@@ -199,7 +199,7 @@ Michael Spencer: for-args syntax [[#e 5]]
 ((x(*a, **k) for args()) for x, a, k in funcs_and_args_list)
 }}}
 
-Bengt Richter: colon-function-application syntax [[#h 8]]
+Bengt Richter: colon-function-application syntax [[[#h|8]]]
 {{{#!python
 (:f(a) + o(b) - o(c))(a, b, c)
 (:x*x)(X)
@@ -218,7 +218,7 @@ Talin: 'given' keyword (Same as the 'for no parens' except uses a different keyw
 }}}
 
 === functional syntax ===
-["lwickjr"]: How about converting the {{{lambda}}} functionality into a function? For example, in pure can-do-now Python:
+[[lwickjr]]: How about converting the {{{lambda}}} functionality into a function? For example, in pure can-do-now Python:
 
 {{{#!python
 from types import FunctionType as function
@@ -248,7 +248,7 @@ Real closures subsume the functionality of lambda plus allow for multi-line stat
 
 ----
 
-Curly braces for single-line and anonymous def for multi-line (from [[#h 10]], boo [[#h 11]], and this is also very similar to how Ruby does it):
+Curly braces for single-line and anonymous def for multi-line (from [[[#h|10]]], boo [[[#h|11]]], and this is also very similar to how Ruby does it):
 {{{#!python
 #single-line (similar to ruby syntax)
 {a,b,c | return f(a) + o(b) - o(c)}
@@ -277,15 +277,15 @@ foo.addCallback(def (result, myExtra, args):
 Tom Anderson's syntax (which is subtly different - it still wants a return in single-line anonymous defs) could also be used for multi-line closures in this way.
 
 == References ==
- * [[Anchor(a)]] [1] http://mail.python.org/pipermail/python-list/2004-December/256859.html
- * [[Anchor(b)]] [2] http://mail.python.org/pipermail/python-list/2004-December/256881.html
- * [[Anchor(c)]] [3] http://mail.python.org/pipermail/python-list/2004-December/257023.html
- * [[Anchor(d)]] [4] http://boredomandlaziness.skystorm.net/2004/12/anonymous-functions-in-python.html
- * [[Anchor(e)]] [5] http://mail.python.org/pipermail/python-list/2004-December/257893.html
- * [[Anchor(f)]] [6] http://mail.python.org/pipermail/python-list/2004-December/257977.html
- * [[Anchor(g)]] [7] http://mail.python.org/pipermail/python-list/2005-January/258441.html
- * [[Anchor(h)]] [8] http://mail.python.org/pipermail/python-list/2005-January/258578.html
- * [[Anchor(i)]] [9] http://mail.python.org/pipermail/python-list/2005-January/258581.html
- * [[Anchor(i)]] [10] http://mail.python.org/pipermail/python-list/2005-January/258113.html
- * [[Anchor(i)]] [11] http://boo.codehaus.org/Closures
- * [[Anchor(j)]] [12] http://mail.python.org/pipermail/python-list/2005-June/287966.html
+ * <<Anchor(a)>> [1] http://mail.python.org/pipermail/python-list/2004-December/256859.html
+ * <<Anchor(b)>> [2] http://mail.python.org/pipermail/python-list/2004-December/256881.html
+ * <<Anchor(c)>> [3] http://mail.python.org/pipermail/python-list/2004-December/257023.html
+ * <<Anchor(d)>> [4] http://boredomandlaziness.skystorm.net/2004/12/anonymous-functions-in-python.html
+ * <<Anchor(e)>> [5] http://mail.python.org/pipermail/python-list/2004-December/257893.html
+ * <<Anchor(f)>> [6] http://mail.python.org/pipermail/python-list/2004-December/257977.html
+ * <<Anchor(g)>> [7] http://mail.python.org/pipermail/python-list/2005-January/258441.html
+ * <<Anchor(h)>> [8] http://mail.python.org/pipermail/python-list/2005-January/258578.html
+ * <<Anchor(i)>> [9] http://mail.python.org/pipermail/python-list/2005-January/258581.html
+ * <<Anchor(i)>> [10] http://mail.python.org/pipermail/python-list/2005-January/258113.html
+ * <<Anchor(i)>> [11] http://boo.codehaus.org/Closures
+ * <<Anchor(j)>> [12] http://mail.python.org/pipermail/python-list/2005-June/287966.html
