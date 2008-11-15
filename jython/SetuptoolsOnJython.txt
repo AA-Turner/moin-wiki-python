@@ -1,16 +1,16 @@
 === setuptools includes Jython trunk support as of version 0.6c8! ===
 
-Setuptools trunk and its 0.6 branch have had [http://svn.python.org/view?rev=60062&view=rev a couple of changes] (discussed [http://mail.python.org/pipermail/distutils-sig/2008-January/008617.html here on distutils-sig]) made to fix incompatibilities with Jython.
+Setuptools trunk and its 0.6 branch have had [[http://svn.python.org/view?rev=60062&view=rev|a couple of changes]] (discussed [[http://mail.python.org/pipermail/distutils-sig/2008-January/008617.html|here on distutils-sig]]) made to fix incompatibilities with Jython.
 
 Even as of these changes, there are a couple improvements that can be made to running setuptools on Jython:
 
- * Most importantly, the lack of os.chmod. chmod can be implemented with JNA. setuptools simply avoids chmod if it does not exist as of '''''[http://svn.python.org/view?rev=60062&view=rev r60062])'''''
+ * Most importantly, the lack of os.chmod. chmod can be implemented with JNA. setuptools simply avoids chmod if it does not exist as of '''''[[http://svn.python.org/view?rev=60062&view=rev|r60062]])'''''
 
  * setuptools' use of marshal: setuptools uses marshal.load in two places -- to get a code object from a .pyc file, so it can scan the code object's co_names and co_consts (basically to read a module's variables without importing it). This isn't portable: Jython's compiled .pys (actually Java .class files) can't be read via marshal, nor do Jython's code objects support co_names and co_consts
 
   the two places this is used:
 
-  1. when a package doesn't mark itself as zip_safe, setuptools will scan it for special variable names (like '__file__') to determine zip_safetyness. '''''(setuptools defaults to zip_safe=False for archives that don't set it as of [http://svn.python.org/view?rev=60062&view=rev r60062])'''''
+  1. when a package doesn't mark itself as zip_safe, setuptools will scan it for special variable names (like '__file__') to determine zip_safetyness. '''''(setuptools defaults to zip_safe=False for archives that don't set it as of [[http://svn.python.org/view?rev=60062&view=rev|r60062]])'''''
 
   We could get around the lack of marshal compatibility here by using the tokenize module to read the source code. This wouldn't work in the rare case of a byte-code only egg.
   
@@ -36,7 +36,7 @@ The Jython changes made for setuptools:
 
  * a site-packages dir (jython needs to include it on sys.path by default). required by setuptools and distutils '''''Added in r3886'''''
 
- * distutils: requires [http://hg.underboss.org/jython-pjenvey/rev/1026fe32c01c a number of small patches]:
+ * distutils: requires [[http://hg.underboss.org/jython-pjenvey/rev/1026fe32c01c|a number of small patches]]:
   
   * a valid sys.executable '''''Added in r3867'''''
 
