@@ -1,6 +1,6 @@
 There are various fixes and improvements that should form part of a 2.0 version of Distutils.
 
-Note: many of these features are being implemented in [http://peak.telecommunity.com/DevCenter/setuptools setuptools], which is where most distutils-related development is happening at this time (Sept 2005).  I've noted features that setuptools supports below -- IanBicking
+Note: many of these features are being implemented in [[http://peak.telecommunity.com/DevCenter/setuptools|setuptools]], which is where most distutils-related development is happening at this time (Sept 2005).  I've noted features that setuptools supports below -- IanBicking
 
 The ultimate goal:
  * '''Must be backwards-compatible with existing setup.py scripts.'''
@@ -15,24 +15,24 @@ Other ideas:
  * Move various utility methods out of command implementations and onto the Distribution class.
  * Implement the package database described by PEP PEP:0262.
  * Consider always regenerating the MANIFEST from MANIFEST.in. ''(setuptools can generate MANIFEST files more automatically, and triest to keep MANIFEST in proper shape)''
- * Finish bdist_dpkg.py ``([http://easy-deb.sourceforge.net/ easy-deb] is doing deb generation)''
+ * Finish bdist_dpkg.py ``([[http://easy-deb.sourceforge.net/|easy-deb]] is doing deb generation)''
  * Use optparse instead of fancy_getopt.py, and deprecate fancy_getopt.py.
  * sdist: Include scripts, data automatically in the source distribution.
  * Drop Python 1.5.2 compatibility. Keep Python 2.0 compatiblity.  (2.3, 2.4 compatibility?) ''(setuptools is currently only 2.3+ compatible; feature accomplished! ;)''
  * Improve test coverage.  (See the DistutilsTesting page for ideas.)
- * Finish the documentation! (AnthonyBaxter has worked on a reference guide; his text has been added to [http://docs.python.org/dist/dist.html Distributing Python Modules] as the [http://docs.python.org/dist/api-reference.html API Reference] chapter, but a lot more work is needed.)
+ * Finish the documentation! (AnthonyBaxter has worked on a reference guide; his text has been added to [[http://docs.python.org/dist/dist.html|Distributing Python Modules]] as the [[http://docs.python.org/dist/api-reference.html|API Reference]] chapter, but a lot more work is needed.)
  * Package installation from PyPI (probably driven by the pythonmac-sig) ''(EasyInstall, included with setuptools, handles this)''
  * Add more autoconf-like tests to the config command
  * Make the design more extensible w.r.t. 'foreign' module compilation, specifically:
    * Allow the integration of autoconf/make based build systems for C/C++ extensions
    * Allow 'Extension' to be composed of components, each with their own build rules
    * Provide a means for scripts / modules to access installation parameters such as datafile directories
- * Define more default commands to build documentation, run (unit) tests, etc. '' (setuptools adds a test command, and can be extended easily with more commands; [http://buildutils.lesscode.org/ buildutils] adds some more development-related commands) ''
+ * Define more default commands to build documentation, run (unit) tests, etc. '' (setuptools adds a test command, and can be extended easily with more commands; [[http://buildutils.lesscode.org/|buildutils]] adds some more development-related commands) ''
  * Look at setuptools by Phillip J. Eby and buildutils (on PyPI) for further improvements.
 
   -- StefanSeefeld
 
-Wouldn't it be a good idea to look into [http://scons.sf.net scons] and try to let both converge as far as practical ? -- StefanSeefeld
+Wouldn't it be a good idea to look into [[http://scons.sf.net|scons]] and try to let both converge as far as practical ? -- StefanSeefeld
 
 Maybe some traditional package concepts:
 
@@ -66,7 +66,7 @@ Maybe some traditional package concepts:
 
   -- Phil Rittenhouse
 
- Benji York at [http://www.zope.com/ Zope Corporation] has done some work on this; hopefully he'll be able to finish and release it at some point.
+ Benji York at [[http://www.zope.com/|Zope Corporation]] has done some work on this; hopefully he'll be able to finish and release it at some point.
 
  * bdist_wininst currently runs the 'install' command to a temporary directory, then zips up this directory, and then creates a program which will unpack the archive on the target system. It should become much smarter. Maybe only running 'build_ext' on the source system, and running the full 'install' on the target system.
 
@@ -125,14 +125,14 @@ Maybe some traditional package concepts:
 
   -- BobIppolito
 
- * Extend bdist_rpm for 'hardcoding' the python interpreter into the RPM and generate different Package names depending on the interpreter. See ["Changes for bdist_rpm"] for reasoning and codesnippets.
+ * Extend bdist_rpm for 'hardcoding' the python interpreter into the RPM and generate different Package names depending on the interpreter. See [[Changes for bdist_rpm]] for reasoning and codesnippets.
 
   --- Hartmut Goebel
 
- * Zope Corporation is looking at having some better packaging tools, including support for dependencies and automated package composition. The initial implementation of [http://www.zope.org/Members/fdrake/zpkgtools/ zpkg] is available and has been used for recent Zope 3 and ZODB releases.  There is also a [http://dev.zope.org/Zope3/Zope3PackagingProposal discussion document] in the [http://dev.zope.org/Zope3/ Zope 3 wiki] which describes some of the goals of the '''zpkg''' application.
+ * Zope Corporation is looking at having some better packaging tools, including support for dependencies and automated package composition. The initial implementation of [[http://www.zope.org/Members/fdrake/zpkgtools/|zpkg]] is available and has been used for recent Zope 3 and ZODB releases.  There is also a [[http://dev.zope.org/Zope3/Zope3PackagingProposal|discussion document]] in the [[http://dev.zope.org/Zope3/|Zope 3 wiki]] which describes some of the goals of the '''zpkg''' application.
 
   --- FredDrake
 
- * Include bdist_nsi [http://bdist-nsi.sourceforge.net/] to have a complementary tool for creating smart win32 installers (silent install, MUI, internationalization, uninstall) on both linux and windows using the [http://nsis.sourceforge.net/ Nullsoft Scriptable Install System] (NSIS).
+ * Include bdist_nsi [[http://bdist-nsi.sourceforge.net/]] to have a complementary tool for creating smart win32 installers (silent install, MUI, internationalization, uninstall) on both linux and windows using the [[http://nsis.sourceforge.net/|Nullsoft Scriptable Install System]] (NSIS).
 
   --- jcg
