@@ -1,17 +1,17 @@
 = A Python Graph API? =
 
 This wiki page is a resource for some brainstorming around the possibility of a Python Graph API in the
-form of an informational PEP, similar to [http://www.python.org/peps/pep-0249.html PEP 249, the Python DB API].
+form of an informational PEP, similar to [[http://www.python.org/peps/pep-0249.html|PEP 249, the Python DB API]].
 The goal would be, in other words,
 to define how a graph (or various kinds of graphs) would be expected to behave (possibly from different perspectives) in order to increase interoperability among graph algorithms.
-[http://numeric.scipy.org/array_interface.shtml The numeric array interface], recently
+[[http://numeric.scipy.org/array_interface.shtml|The numeric array interface]], recently
 developed by the Numeric Python community to increase interoperability between
 array-handling software, illustrates the general idea.
 
 A comp.lang.python thread discussing this (with some useful ideas) may be found
-[http://groups-beta.google.com/group/comp.lang.python/browse_thread/thread/cbca60cb36be39ed/313113af1aa077af here].
+[[http://groups-beta.google.com/group/comp.lang.python/browse_thread/thread/cbca60cb36be39ed/313113af1aa077af|here]].
 
-This is not about plotting; for a definition of the kind of graph we're talking about, see [http://mathworld.wolfram.com/Graph.html here].
+This is not about plotting; for a definition of the kind of graph we're talking about, see [[http://mathworld.wolfram.com/Graph.html|here]].
 
 If you have interest in this, please feel free to add your ideas here. If you'd like to be named as a contributor
 in the case that some "standard" should emerge, please add your name to the list of contributors. (You might
@@ -47,41 +47,41 @@ is only to mediate between developers of the two.
 === General thoughts ===
 
 Ideas so far include basing the API on the standard notion of using adjacency maps (such as dicts of neighbor lists),
-as described in [http://www.python.org/doc/essays/graphs.html Guido's well-known essay] and used
-in [http://www.ics.uci.edu/~eppstein/PADS these examples by David Eppstein], and using object adaptation
-(through the adapt() function, as described in [http://www.python.org/peps/pep-0246.html PEP 246] and as used
-in [http://peak.telecommunity.com/PyProtocols.html PyProtocols]) to allow access to graphs through
+as described in [[http://www.python.org/doc/essays/graphs.html|Guido's well-known essay]] and used
+in [[http://www.ics.uci.edu/~eppstein/PADS|these examples by David Eppstein]], and using object adaptation
+(through the adapt() function, as described in [[http://www.python.org/peps/pep-0246.html|PEP 246]] and as used
+in [[http://peak.telecommunity.com/PyProtocols.html|PyProtocols]]) to allow access to graphs through
 various perspectives (such as adjacency maps,
 incidence maps, adjacency arrays, edge lists...). This would also allow graphs implementations with completely different
 interfaces to be adapted to a standard interface, and thus be used by generic graph algorithms.
 
 An example of an existing graph library for Python, written by István Albert,
-may be found [http://pygraphlib.sourceforge.net/ here].
+may be found [[http://pygraphlib.sourceforge.net/|here]].
 
-[http://networkx.lanl.gov NetworkX] is  
+[[http://networkx.lanl.gov|NetworkX]] is  
 another example of a graph library in Python.
 
-[http://gadfly.sourceforge.net/kjbuckets.html kjbuckets] is a C extension and very fast, but imcomplete.
+[[http://gadfly.sourceforge.net/kjbuckets.html|kjbuckets]] is a C extension and very fast, but imcomplete.
 
-[http://cvs.zope.org/Packages/pypes/ pypes] appears never to have been released officially.
+[[http://cvs.zope.org/Packages/pypes/|pypes]] appears never to have been released officially.
 
-Bruno Preiss offers a very complete but somewhat unPythonic Graph type as part of an online [http://www.brpreiss.com/books/opus7/html/page519.html book on data structures in Python].  (Downloadable at the Opus7 package.)
+Bruno Preiss offers a very complete but somewhat unPythonic Graph type as part of an online [[http://www.brpreiss.com/books/opus7/html/page519.html|book on data structures in Python]].  (Downloadable at the Opus7 package.)
 
-[http://www.ece.arizona.edu/~denny/python_nest/graph_lib.py Nathan Denny's graph library] appears to be a fairly simplistic implementation.
+[[http://www.ece.arizona.edu/~denny/python_nest/graph_lib.py|Nathan Denny's graph library]] appears to be a fairly simplistic implementation.
 
-[http://www.bioinformatics.ucla.edu/pygr/ Pygr] is billed as a "Python graph database framework for bioinformatics", and clearly aims to be more than just a graph library.
+[[http://www.bioinformatics.ucla.edu/pygr/|Pygr]] is billed as a "Python graph database framework for bioinformatics", and clearly aims to be more than just a graph library.
 
-[http://www.zpr.uni-koeln.de/~gato/ Gato], the Graph Animation Toolkit, is a visual tool intended to teach graph algorithms.  It contains a fully functional graph library.
+[[http://www.zpr.uni-koeln.de/~gato/|Gato]], the Graph Animation Toolkit, is a visual tool intended to teach graph algorithms.  It contains a fully functional graph library.
 
-[http://sourceforge.net/projects/pynetwork/ pynetwork]
+[[http://sourceforge.net/projects/pynetwork/|pynetwork]]
 
-[http://boost.org/libs/graph/doc/python.html BOOST] - how about BOOST? it seems to be well developed and has already Python bindings
+[[http://boost.org/libs/graph/doc/python.html|BOOST]] - how about BOOST? it seems to be well developed and has already Python bindings
 
-[http://alpha-leonis.lids.mit.edu/nlp/pygraph/ pygraph], Beracah Yankama's pure python a/cyclic tk grapher for tk contains spring and hierarchical node placement algorithms, along with some basic classes for creating nodes & edges.  
+[[http://alpha-leonis.lids.mit.edu/nlp/pygraph/|pygraph]], Beracah Yankama's pure python a/cyclic tk grapher for tk contains spring and hierarchical node placement algorithms, along with some basic classes for creating nodes & edges.  
 
-[http://bloodgate.com/perl/graph/manual/overview.html Graph::Easy] for perl allows flowcharts to be defined in plain text and then outputted in multiple formats which is quite handy for web applications and creating diagrams via wiki-like mechanisms.
+[[http://bloodgate.com/perl/graph/manual/overview.html|Graph::Easy]] for perl allows flowcharts to be defined in plain text and then outputted in multiple formats which is quite handy for web applications and creating diagrams via wiki-like mechanisms.
 
-One possible underlying technology for graphs would be adjacency matrices using [http://www.stsci.edu/resources/software_hardware/numarray numarray].
+One possible underlying technology for graphs would be adjacency matrices using [[http://www.stsci.edu/resources/software_hardware/numarray|numarray]].
 This approach would need to use sparse matrices to be practical for large graphs.
 
 ''Add your ideas here (Go wild, folks...)''
@@ -130,7 +130,7 @@ wrappers. (Magnus)
 
 I also think that one important use case for a generalized graph api would be tree representations.    Any standard graph representation should as a subset present a standard tree, with the classic algorithms being portable between them. (As a minimum, pre-, in-, and post-order traversal; preferably depth-first and breadth-first searches.) (VanL)
 
-Andrew Dalke [http://groups.google.com/groups?selm=yyq0d.3041%24xA1.1224%40newsread3.news.pas.earthlink.net&output=gplain suggests] using a template system that can transform code using a standard API into code using a custom API.
+Andrew Dalke [[http://groups.google.com/groups?selm=yyq0d.3041%24xA1.1224%40newsread3.news.pas.earthlink.net&output=gplain|suggests]] using a template system that can transform code using a standard API into code using a custom API.
 This differs from a solution using object adaptation in that it works at the source level, and thus can
 have some performance advantages.
 
@@ -230,19 +230,19 @@ are only minor tweaks of the basic structure? How about more radical departures 
 an arbitrary number of nodes per edge)?
 "oops, didn't read this far. Well you know my answer: make every graph a hypergraph. (Nick)"
 
-One possibility would be to base the API definition on the [http://www.gupro.de/GXL Graph eXchange Language] (GXL). It is derived from many separate graph representation languages and seems quite
+One possibility would be to base the API definition on the [[http://www.gupro.de/GXL|Graph eXchange Language]] (GXL). It is derived from many separate graph representation languages and seems quite
 complete (it even supports hypergraphs and hierarchical graphs!), logical, and well-thought-out.
 The language itself
 consists of an XML and a UML notation,
 but it is based on a clearly defined
-[http://www.gupro.de/GXL/GraphModel/graphModel.html object model/ADT], which we could adapt to a Python interface.
+[[http://www.gupro.de/GXL/GraphModel/graphModel.html|object model/ADT]], which we could adapt to a Python interface.
 I'm not sure about how (or whether) they model graph modification (although I think there is
 some support for transformations of some kind) but that could probably be done as a simple, logical
 extension. We might not want to support ''all'' of the GXL model, of course. We might even want
 to define several layers of standard compliance, with Layer 0 being only the current de facto
 standard graph API, for example. (Magnus)
 
-I think [http://graphml.graphdrawing.org/ GraphML] would be great to be supported for reading and writing graphs. (Ralf)
+I think [[http://graphml.graphdrawing.org/|GraphML]] would be great to be supported for reading and writing graphs. (Ralf)
 
 With the goal of designing an API for Python in mind, I would think one of the first decisions that needs to be made is whether to use multiple classes (ala Vertex, Edge, Graph) or just one (ala Graph); also, are those classes going to be "Pythonic" in that they provide various methods in terms of Python operators or not (let's call the "not" alternative "Textbookish")? It seems to me that without settling this first, discussing the details of the API further is moot. But maybe I am wrong? (Peter)
 
