@@ -53,11 +53,11 @@ also useful for doing a user preferences engine.
 
 My presentation comes with all sorts of goodies:
 
- * [http://www.crummy.com/devel/PyCon2003/Beyond%20The%20Config%20File.htm A scholarly paper], with footnotes and everything.
+ * [[http://www.crummy.com/devel/PyCon2003/Beyond%20The%20Config%20File.htm|A scholarly paper]], with footnotes and everything.
 
- * [http://www.crummy.com/devel/PyCon2003/slides/ Presentation slides.]
+ * [[http://www.crummy.com/devel/PyCon2003/slides/|Presentation slides.]]
 
- * A full-featured configuration interface library called I Want Options (as used in NewsBruiser; you can  [http://newsbruiser.tigris.org/source/browse/newsbruiser/nb/lib/IWantOptions.py view it in CVS])
+ * A full-featured configuration interface library called I Want Options (as used in NewsBruiser; you can  [[http://newsbruiser.tigris.org/source/browse/newsbruiser/nb/lib/IWantOptions.py|view it in CVS]])
 
  * Three implementations of a silly text generation program, illustrating the "three ages of App" mentioned above. 
 
@@ -67,15 +67,15 @@ My presentation comes with all sorts of goodies:
 
   * An implementation which reads its configuration from a file, and provides a web interface to that same file through I Want Options.
 
-  You can [http://www.crummy.com/devel/PyCon2003/examples.tar.gz download these examples] as a tarball.
+  You can [[http://www.crummy.com/devel/PyCon2003/examples.tar.gz|download these examples]] as a tarball.
 
- * An implementation of a simple portal program, which uses I Want Options both to provide an interface to user preferences and an interface to site options. You can [http://www.crummy.com/devel/PyCon2003/examples.tar.gz download this example] in the same tarball as the other examples.
+ * An implementation of a simple portal program, which uses I Want Options both to provide an interface to user preferences and an interface to site options. You can [[http://www.crummy.com/devel/PyCon2003/examples.tar.gz|download this example]] in the same tarball as the other examples.
 
 = About Me =
 
-Hello! I'm Leonard. This was my first conference talk. If you're interested in me personally, you can visit [http://www.crummy.com/ my homepage].
+Hello! I'm Leonard. This was my first conference talk. If you're interested in me personally, you can visit [[http://www.crummy.com/|my homepage]].
 
-The code in this talk is almost all code I wrote for [http://newsbruiser.tigris.org/ NewsBruiser],
+The code in this talk is almost all code I wrote for [[http://newsbruiser.tigris.org/|NewsBruiser]],
 a weblogging application which you might be interested in independently of the subject of this talk.
 
 = Work Log =
@@ -102,7 +102,7 @@ I actually gave a talk at work today about our configuration framework (a differ
 02/27: Just wrote the same app three times. The last time was the most interesting, as I'd never before implemented a context or a configuration CGI within the framework of I Want Options. When I originally wrote what is now IWO, it was a big blob of NewsBruiser-specific code; the framework per se is less than a week old. I've now got ideas about more things I can move into IWO (an example context implementation, and some more configuration CGI logic). The other two implementations also gave me some ideas; if I changed it so that the user pass the context into the OptionConfig constructor, instead of passing it in to all the methods (which seems reasonable), I could turn getOptionValue into a __getitem__ implementation, which would be cool.
 
 02/21: Got all the NewsBruiser-specific code out of Options.py. To celebrate, moved it out of NewsBruiser proper and into the lib/
-directory. It's now a reusable library called [http://newsbruiser.tigris.org/source/browse/newsbruiser/nb/lib/IWantOptions.py I Want Options].
+directory. It's now a reusable library called [[http://newsbruiser.tigris.org/source/browse/newsbruiser/nb/lib/IWantOptions.py|I Want Options]].
 
 To get all the code moved out I had to define a plugin class (it's currently called 'wrapper', but that doesn't make much sense) which contains application-specific code and is passed into the OptionGroup and Option constructors. It basically simulates a superclass of all the Option classes, so that you can change the generic Option behavior without having to change all the Option classes to subclass a different class. There might be a design pattern that describes this which would make renaming it easy. Or it might just be an OO hack, in which case I'll probably call it "Implementation" or "ImplementationDetails".
 
