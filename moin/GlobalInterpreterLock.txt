@@ -1,7 +1,7 @@
 ## page was renamed from GIL
 In CPython, the '''global interpreter lock''', or '''GIL''', is a mutex that prevents multiple native threads from executing Python bytecodes at once.  This lock is necessary mainly because CPython's memory management is not thread-safe.  (However, since the GIL exists, other features have grown to depend on the guarantees that it enforces.)
 
-CPython extensions must be GIL-aware in order to avoid defeating threads.  For an explanation, see [http://docs.python.org/api/threads.html Global interpreter lock].
+CPython extensions must be GIL-aware in order to avoid defeating threads.  For an explanation, see [[http://docs.python.org/api/threads.html|Global interpreter lock]].
 
 The GIL is controversial because it prevents multithreaded CPython programs from taking full advantage of multiprocessor systems in certain situations.  Note that potentially blocking or long-running operations, such as I/O, image processing, and NumPy number crunching, happen ''outside'' the GIL.   Therefore it is only in multithreaded programs that spend a lot of time inside the GIL, interpreting CPython bytecode, that the GIL becomes a bottleneck.
 
@@ -20,7 +20,7 @@ Getting rid of the GIL is an occasional topic on the python-dev mailing list.  N
 
  * '''Concurrency.'''  The point of eliminating the GIL would be to improve the performance of multithreaded programs.  So any proposal must show that it actually does so in practice.
 
- * '''Speed.'''  The ["BDFL"] has said he will reject any proposal in this direction that slows down single-threaded programs. (citation needed)  Note that this is harder than it looks.  The existing reference count mechanism is very fast in the non-concurrent case, but means that almost any reference to an object is a modification (at least to the refcount); many concurrent GC algorithms assume that modifications are rare.
+ * '''Speed.'''  The [[BDFL]] has said he will reject any proposal in this direction that slows down single-threaded programs. (citation needed)  Note that this is harder than it looks.  The existing reference count mechanism is very fast in the non-concurrent case, but means that almost any reference to an object is a modification (at least to the refcount); many concurrent GC algorithms assume that modifications are rare.
 
  * '''Features.'''  The proposal must support existing CPython features including `__del__` and weak references.
 
@@ -34,7 +34,7 @@ Getting rid of the GIL is an occasional topic on the python-dev mailing list.  N
 
             To fix this (without adding a memory model to the language) requires you run `__del__` in a dedicated system thread and require you to use locks (such as those provided by a monitor.)  (Non-blocking algorithms are possible in assembly, but insanely overcomplicated from a Python perspect.)  --Rhamphoryncus
 
- * '''API compatibility.'''  The proposal should be source-compatible with the macros used by all existing CPython extensions (`Py_INCREF` and friends).  See [http://docs.python.org/api/countingRefs.html Python/C API Reference Manual: Reference Counting].
+ * '''API compatibility.'''  The proposal should be source-compatible with the macros used by all existing CPython extensions (`Py_INCREF` and friends).  See [[http://docs.python.org/api/countingRefs.html|Python/C API Reference Manual: Reference Counting]].
 
  * '''Prompt destruction''' (nice to have?).  The existing reference-counting scheme destroys objects as soon as they become unreachable, except for objects in reference cycles.  Those are collected later by Python's cycle collector.  Some CPython programs depend on this, e.g. to close `file`s promptly, so it would be nice to keep this feature.
 
@@ -42,7 +42,7 @@ Getting rid of the GIL is an occasional topic on the python-dev mailing list.  N
 
     I'd say this is necessary for Python.  There's very little you can usefully do with a half-destroyed object.  That which you can do, you could also do without being exposed to half-destroyed objects.  --Rhamphoryncus 
 
-        The [http://docs.python.org/ref/customization.html language reference] doesn't require this. I doubt Jython or IronPython provides it.  --jorendorff
+        The [[http://docs.python.org/ref/customization.html|language reference]] doesn't require this. I doubt Jython or IronPython provides it.  --jorendorff
 
             They seem deliberately vague.  Java distinguishes finalized from non-finalized objects, and a single finalizer is ordered with regard to non-finalized objects.  The catch is that it's not ordered with regard to other finalizers, so you need to program as if they may already be deleted.  In practise this means avoiding finalizers unless absolutely necessary, and if necessary they must not depend on each other.
 
