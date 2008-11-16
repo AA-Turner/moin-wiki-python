@@ -12,6 +12,8 @@ Summaries
 Looking for VCS usage scenarios
 -------------------------------
 
+Brett Cannon solicits any use cases and scenarios that would give an understanding for the motivations in proposing Python move to or mirror officially via some distributed version control. Much discussion ensued that I didn't have the time to follow. This thread was over 100 posts, so anyone who followed it well, please give as concise an overview as you can.
+
 Contributing thread:
 
 - `Looking for VCS usage scenarios <http://mail.python.org/pipermail/python-dev/2008-November/083272.html>`__
@@ -19,6 +21,10 @@ Contributing thread:
 ---------------------------------------------------
 Optionally using GMP to implement long if available
 ---------------------------------------------------
+
+The suggestion of using the GMP library to implement Python's long numbers was brought in the context of an compile time option, falling back to the current in-house implementation when GMP is not available. However, the discussion points out that most distribution of Python is binary and so the LGPL issues that keep us from using GMP still apply.
+
+Some of the conversation also suggestion various improvements to our own implementation, mostly focused on increasing size of the base long values are stored in, particularly on 64bit systems.
 
 Contributing thread:
 
@@ -28,6 +34,8 @@ Contributing thread:
 Fwd: Removal of GIL through refcounting removal.
 ------------------------------------------------
 
+Yet Another Attempt At Removing The GIL was proposed, and had a more positive reception than most of the times it has been brought up (in my memory). While the removal of the GIL has been both proposed and successfully attempted in the past, there have always been outstanding issues that keep the lock around. One of the primary issues is that of the C API and extension modules, which all expect reference counting. A technique used in IronClad, a project that provides use of CPython extensions in the IronPython implementation of the language, was suggested to provide reference counting semantics to legacy extensions, even if the internal objects no longer require them.
+
 Contributing thread:
 
 - `Fwd: Removal of GIL through refcounting removal. <http://mail.python.org/pipermail/python-dev/2008-November/083256.html>`__
@@ -35,6 +43,8 @@ Contributing thread:
 ----------------------------------
 Using Cython for standard library?
 ----------------------------------
+
+Without much expectation that any action will actually be taken any time soon, the possibility of using Cython (and, by extension, similar solutions) was given consideration. While the benefits of these solutions are obvious, there is no particular best of breed nor yet a point of stability that a mature project might stand on. It would be exciting to one day see some variation of this happen, but that day is not today.
 
 Contributing thread:
 
@@ -44,6 +54,8 @@ Contributing thread:
 n.numbits: method or property?
 ------------------------------
 
+The basic question of a proposed method or property, numbits, drew into a small discussion about the inherent assumption of binary representation of our numbers. The numbits method or property would provide the smallest number of bits required to represent a given integer.
+
 Contributing thread:
 
 - `n.numbits: method or property? <http://mail.python.org/pipermail/python-dev/2008-November/083528.html>`__
@@ -51,6 +63,8 @@ Contributing thread:
 ----------------------------
 XXX do we need a new policy?
 ----------------------------
+
+Some concerns were raised for the number of XXX, TODO, and other types of comment markers in the Python source. While the OP appears to worry about the number of open issues this represents, the general concensus seems to conclude that any real issues have associated tickets, there is little benefit in dealing with all of these at once, and the 2000 or so of them represents nothing significant, in the first place.
 
 Contributing thread:
 
@@ -60,6 +74,8 @@ Contributing thread:
 DVCS PEP update
 ---------------
 
+It was announced that git is being included as one of the distributed version control solutions in consideration for any proposal to move from Subversion. Some back and forth on the various questions against each option and who is representing each was also given.
+
 Contributing thread:
 
 - `DVCS PEP update <http://mail.python.org/pipermail/python-dev/2008-November/083412.html>`__
@@ -67,6 +83,8 @@ Contributing thread:
 ------------------------------------------------
 Released fixes for CVE-2008-2315 for Python 2.4?
 ------------------------------------------------
+
+It was confirmed that an additional bugfix release of 2.4 will be made, 2.4.6 in a simultaneous release with 2.5.3. However, this accepts only security fixes so the multiprocessing module backport is not eligable.
 
 Contributing thread:
 
@@ -83,6 +101,8 @@ Contributing thread:
 -----------------------------
 Optimize Python long integers
 -----------------------------
+
+Several outstanding patches to optimize int and especially long objects were benchmarked and applied to the 2.6 branch for comparison. Although they are not eligable for the bugfix releases of 2.6 or 3.0, they may be likely improvements we'll see in 2.7 and 3.1 releases in the future. However, some related and minor bug fixes to long are likely to be applied much sooner.
 
 Contributing thread:
 
