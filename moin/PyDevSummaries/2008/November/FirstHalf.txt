@@ -94,6 +94,8 @@ Contributing thread:
 hg branch gone?
 ---------------
 
+Some access and URL issues were brought up and fixed with the Mercurial mirror of Python.
+
 Contributing thread:
 
 - `hg branch gone? <http://mail.python.org/pipermail/python-dev/2008-November/083292.html>`__
@@ -112,6 +114,8 @@ Contributing thread:
 file open in python interpreter
 -------------------------------
 
+Adrian Golding inquired on where in the source code the python modules are actually opened for reading, and was pointed to import.c and a case in main.c. It was pointed out that runpy.py can indirectly open them when executing from a directory or zipfile, which does not actually match Adrian's specific use case.
+
 Contributing thread:
 
 - `file open in python interpreter <http://mail.python.org/pipermail/python-dev/2008-November/083279.html>`__
@@ -119,6 +123,8 @@ Contributing thread:
 ----------
 My patches
 ----------
+
+Victor Stinner sparked a myriad of concerns and suggestions about any possibly slowing response between patch submission and acceptance. While the core dev team cannot easily grow without compromising quality, it is suggested that a lot of work could be done to triage patches and mine the open tickets in a way that would make the job of the core developers a lot easier. Further, this spawned the heavy discussions of distributed version control we've seen lately. The hope is that taking it out of the hands of volunteers to allow others to make new branches and demonstrate their patches.
 
 Contributing thread:
 
@@ -128,6 +134,8 @@ Contributing thread:
 compiler optimizations: collecting ideas
 ----------------------------------------
 
+Daniel Furrer, as one of a group of students, solicits for optimization possibilities they might tackle. With a few suggestions, the focus came to optimizing Cython and chains of if/elif/else blocks, although a previous PEP on the later matter had been rejected.
+
 Contributing thread:
 
 - `compiler optimizations: collecting ideas <http://mail.python.org/pipermail/python-dev/2008-November/083557.html>`__
@@ -135,6 +143,8 @@ Contributing thread:
 ------------------------------
 Python 2.5.3: call for patches
 ------------------------------
+
+Preparing for the impending release of 2.5.3, the last bug-fixing version of 2.5, any last patches or issues to include were called for. The issues from the tracker 3677, 3367, 2588, 2589, 1040026, 2231, 2246, and 2321 were suggested, some of which were confirmed to be already included. Several issues from CVE were also given, most of which need to back-port fixes into the 2.5 branch. (CVE-2007-4965, CVE-2008-1679, CVE-2008-1721, CVE-2008-2315, CVE-2008-3144, CVE-2008-1887, CVE-2008-4864)
 
 Contributing thread:
 
@@ -144,19 +154,12 @@ Contributing thread:
 datetime and timedelta enhancement
 ----------------------------------
 
+Several enhancements to the datetime and timedelta objects are proposed, including converting timedelta to specific units, finding the ratio of two deltas, and easily obtaining a timestamp from  a datetime object. However, patches exist for the datetime to timestamp conversion that seem to be rejected at http://bugs.python.org/issue1665292
+
 Contributing thread:
 
 - `datetime and timedelta enhancement <http://mail.python.org/pipermail/python-dev/2008-November/083564.html>`__
 
-
-
-================
-Deferred Threads
-================
-
-==================
-Previous Summaries
-==================
 
 ===============
 Skipped Threads
