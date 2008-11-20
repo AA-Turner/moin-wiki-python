@@ -171,3 +171,21 @@ With either form, there can be only one ``@ExposedNew`` per class.
 Final Step
 ===========
 The generated code is invoked from the static block of the exposed class, so that static block must be run for the exposed type to be used.  Unfortunately, Java doesn't invoke the static block whenever a class is referenced as a constant like having ``PyObject.class`` in your code.  Instead it waits for something on the class to be accessed, either a static field or method or through the creation of an instance.  To make sure the exposed type functions properly, you must access a field on the class before any Python code attempts to use the type.  To do this for builtin Jython types, we've been adding a static field like ``public static final PyType TYPE = PyType.fromClass(<whatever the class is>.class);`` and then using that field to load the type into the module where it lives ie for adding the list type to the builtins we call ``dict.__setitem__("list", PyList.TYPE);`` as it's filling the builtins dict.
+
+Post-processing
+===============
+
+Exposing Python types involves creating classes that the class loader can find, and then (as above) calling PyType.fromClass() on some Class. The classes get created by the ExposedTypeProcessor class in org.python.expose.generate, but as of this writing (r5593), these classes are not included in the Jython jar. It is intended that eventually ExposedTypeProcessor and related classes will be shipped separately, as a support jar. Your build.xml should also have a clause that runs the ExposeTask on the relevant classes, like this:
+
+    <taskdef name="expose" classname="org.python.expose.generate.ExposeTask">
+      <classpath>
+        <path refid="classpath" />
+        <pathelement path="${compile.dir}" />
+      </classpath>
+    </taskdef>
+
+    <expose srcdir="${compile.dir}"
+            destdir="${exposed.dir}"
+            includesfile="${base.dir}/JythonExposed.includes"/>
+
+(Taken from jython's build.xml.) You probably want to make your non-preprocessed classes (all the ones in JythonExposed.includes) get compiled someplace else, and only have the compiled ones show up in this "exposed" directory, so that you don't have two versions of each class on your classpath, and be careful if you're using an IDE.
