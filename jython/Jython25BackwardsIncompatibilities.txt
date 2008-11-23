@@ -1,4 +1,4 @@
-You can no longer do `PyFile`(inputStream) directly from Jython code.  This is because a `PyFile` that gets an `InputStream` [INSERT REAL REASON], so that the recommended approach is to replace code like:
+o You can no longer do `PyFile`(inputStream) directly from Jython code.  This is because a `PyFile` that gets an `InputStream` [INSERT REAL REASON], so that the recommended approach is to replace code like:
 
 {{{
 from java.io import FileInputStream
@@ -14,3 +14,7 @@ from org.python.core.util import FileUtil
 fis = FileInputStream("error.txt")
 pyf = FileUtil.wrap(fis)
 }}}
+
+o types.ArrayType has been removed as CPython never had it. Used array.ArrayTypes instead
+
+o The pre and xreadlines modules have been removed
