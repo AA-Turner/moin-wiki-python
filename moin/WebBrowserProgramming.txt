@@ -1,6 +1,13 @@
 = Web Browser Programming in Python =
 
-This topic covers ways in which python can be used in web browsers to control, create or manipulate the content within a user's web browser, or a web-based technology (such as [[http://webkit.org|webkit]], the technology behind Safari, Midori, the OLPC Browser, Adobe AIR, Google Chrome and much more; Gecko, the engine behind [[http://mozilla.com/firefox|Firefox]], XULRunner and much more; and KDE's KHTMLPart).  Specifically excluded from the list is technology that simply generates static HTML content; technology that generates or compiles javascript definitely counts, but technology that simply *uses* javascript or depends on javascript libraries (such as mochikit, extjs or prototype) does not.
+This topic covers ways in which python can be used in web browsers to control, create or manipulate the content within a user's web browser, or a web-based technology (such as [[http://webkit.org|webkit]], the technology behind Safari, Midori, the OLPC Browser, Adobe AIR, Google Chrome and much more; Gecko, the engine behind [[http://mozilla.com/firefox|Firefox]], XULRunner and much more; and KDE's KHTMLPart).
+
+To clarify what type of technology goes onto this page, some examples of types of technology that can and cannot be added to this section:
+ * Specifically excluded from the list is technology that simply generates static HTML content.  So, an HTML pretty-printer library, as the resultant HTML simply uses the browser for "display" purposes rather than using the browser as an "application execution environment", is out.
+ * Python-based technology that auto-generates or compiles javascript definitely counts, as the resultant javascript would be executed by the web browser.
+ * Technology that simply *uses* javascript or depends on javascript libraries (such as mochikit, extjs or prototype) does not count, but a python-based wrapper library around a javascript library definitely counts.
+
+This latter example requires some further explanation: Pyjamas, for example, is a python-to-javascript compiler that can include inline javascript.  So, although the input to Pyjamas is part-python, part-javascript, the output is pure-javascript that runs in a web browser, and so any such "mixed" language libraries should be included on this page.
 
 == Python to Javascript Compilers ==
 
