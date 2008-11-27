@@ -22,16 +22,19 @@ Adding @ExposedType and generating bytecode
 ==============================================
 
 The first step in exposing a class is to use the
-``org.python.expose.ExposedType`` annotation on the actual class to indicate that
-it should be exposed.  This annotation goes on the class itself and has
-two optional fields.  The first, ``name``, defines what the type will be called in
-Python.  If it isn't specified, the type's name is just assumed to be the same
-as the Java class name.  The second field, ``base``, indicates the base type this
-type extends.  It must be another Java class that's likewise been annotated
-with ``@ExposedType`` and sets up the type hierarchy in Python.  If
-unspecified, it's assumed that this type extends from the base newstyle Python
-type, ``object``.  Unlike classes defined in Python code, types defined in Java can
-only use single inheritance.
+``org.python.expose.ExposedType`` annotation on the actual class to indicate
+that it should be exposed.  This annotation goes on the class itself and has
+three optional fields.  The first, ``name``, defines what the type will be
+called in Python.  If it isn't specified, the type's name is just assumed to be
+the same as the Java class name.  The second field, ``base``, indicates the
+base type this type extends.  It must be another Java class that's likewise
+been annotated with ``@ExposedType`` and sets up the type hierarchy in Python.
+If unspecified, it's assumed that this type extends from the base newstyle
+Python type, ``object``.  Unlike classes defined in Python code, types defined
+in Java can only use single inheritance. The third, ``isBaseType``, defines if
+this type can be subclassed from Python code. When unspecified this value
+defaults to true. Any type defined in CPython that lacks a Py_TPFLAGS_BASETYPE
+bit in its tp_flags should have isBaseType set to false in Jython.
 
 Once the class has ``@ExposedType`` on it, it can be fed into the type bytecode
 processor to fill in the additional bytecode necessary to actually make the
