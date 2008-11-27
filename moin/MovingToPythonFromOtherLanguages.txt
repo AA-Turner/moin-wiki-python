@@ -55,4 +55,52 @@ The following was taken from a post in comp.lang.python from Mel Wilson, which I
 
  * The docs at python.org are very, very good.  Hold onto that wallet, you don't need a trip to the bookstore to learn Python!
 
- * Scan the full list of built-in module names early on
+ * Scan the full list of built-in module names early on.  Python is advertised as "batteries included", so knowledge of the built-in modules could reduce the lines of code by a factor of ten.
+
+ * Learn Python slice notation, you will be using it a lot.  I have this chart taped to my monitor:
+
+{{{
+Python indexes and slices for a six-element list.
+Indexes enumerate the elements, slices enumerate the spaces between the elements.
+
+Index from rear:    -6  -5  -4  -3  -2  -1      a=[0,1,2,3,4,5]    a[1:]==[1,2,3,4,5]
+Index from front:    0   1   2   3   4   5      len(a)==6          a[:5]==[0,1,2,3,4]
+                   +---+---+---+---+---+---+    a[0]==0            a[:-2]==[0,1,2,3]
+                   | a | b | c | d | e | f |    a[5]==5            a[1:2]==[1]
+                   +---+---+---+---+---+---+    a[-1]==5           a[1:-1]==[1,2,3,4]
+Slice from front:  :   1   2   3   4   5   :    a[-2]==4
+Slice from rear:   :  -5  -4  -3  -2  -1   :
+                                                b=a[:]
+                                                b==[0,1,2,3,4,5] (shallow copy of a)
+}}}
+
+ * Lose the braces, as you know them, and most of the semicolons, obviously.
+
+ * Backslash can be used to allow continuing the program line past a carriage-return, but you almost never have to use it.  Python is smart enough to do the right thing when it sees an open bracket, a comma separated list, and a carriage-return.
+
+ * Strings are immutable.  Whenever you think you have changed a string, remember that you really created a new string.
+
+ * Where you would use `<vector T>`, use lists, or tuples, that is [] or (). Where you would use `<map T1, T2>`, use dictionaries, that is {} .
+
+ * The semantics of iterators is available, but most of the syntax goes away.  `for item in alist:` iterates over all the items in alist, one by one .. where `alist` is a sequence, i.e. a list, tuple, or string.  To iterate over a sublist, use slices:  `for item in alist[1:-1]:` does as above, but omits the first and last items.
+
+ * For trickier iterations, read and re-read the Library doc on the topic of general-purpose functions.  There are some functions that apply to sequences:  map, filter, reduce, zip. that can work wonders.  Hidden somewhere under the documentation for sequences there is a description of string methods that you'll want to read.
+
+ * Hidden under the docs for 'Other Types' are the descriptions of all the file methods.  There are no iostreams per se, but the class method __str__ can get some of the effect for your own classes, and there are surely other angles I haven't thought of.
+
+ * Forget overloading.  You can define a function, and call it with anything you want, but if it has to behave differently for different type operands, you have to use the run-time type identification `type` function explicitly within the single definition of the function.  Default arguments to functions are just as powerful a tool as in C++. ''Actually polymorphism does work as expected, it just doesn't require deriving from a base class as in C++ or Java.''
+
+ * In class definitions the equivalents of operator methods are covered in a chapter in the Python Language Reference.  (Look for the double-underscore methods like `__cmp__`, `__str__`, `__add__`, etc.)
+
+ * In C, the gotcha for new users is probably about pointers; they're tricky and they can't be avoided.  The gotchas in Python are situations when you use different references to a single object, thinking you are using different objects.  I believe the difference between mutable and immutable objects comes into play.  I have no clear answers here .. I still get caught once in a while .. keep your eyes open.
+
+ * Read the Tutorial once, skim the Library Reference .. at least the table of contents, then skim the Language Reference and you will probably have encountered everything you need.
+
+ * For reference the excellent [[http://rgruet.free.fr/PQR24/PQR2.4.html|Python Quick Reference]] and the [[http://docs.python.org/modindex.html|Module Index]] of the Python docs are generally sufficient. 
+
+== Python Culture ==
+
+ * [[http://www.python.org/dev/culture.html|Python Culture (Tim Peters channeling Guido)]]
+
+----
+See also: MovingToPythonFromPerl
