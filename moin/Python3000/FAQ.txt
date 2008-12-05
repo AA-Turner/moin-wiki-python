@@ -2,8 +2,38 @@
 
 = What changed in Python 3.0? =
 
+Read [[http://docs.python.org/3.0/whatsnew/3.0.html|What's New in Python 3.0]], 
+which lists the changes between Python 2.6 and Python 3.0.
+
 = What will happen to the Python 2.x versions? =
 
 = How should I port existing Python code to Python 3.0? =
+
+XXX describe 2to3.
+
+One approach is to use 3.0's build_py_2to3 implementation of
+the build_py command. See `Demo/distutils/test2to3`.
+
+You will have a single lib.py, written in 2.x. When you install
+in 3.0, lib2to3 will convert it to 3.x in the build area, and
+then install the 3.0 version.
+
+That, of course, requires you to adjust lib.py in such a way that
+2to3 will successfully and completely convert it. 
+In two experiments, Martin von Loewis
+ported Django  and Mark Hammond ported PythonWin to 3.0, 
+and found that these adjustments were quite feasible.
+You look at what 2to3
+does, find out what additional modifications need to be done, and
+apply them to the input of 2to3 so that
+
+* 2to3 leaves these changes in place
+* they either have no effect or still work correctly when run in 2.x.
+
+[[http://www.artima.com/weblogs/viewpost.jsp?thread=227041|In this weblog posting]],
+Guido van Rossum strongly suggests not changing 
+your APIs when porting to 3.0, because API changes will 
+make it difficult for users to tell whether test suite failures 
+are due to the 2.6->3.0 transition or to the API changes.
 
 = How do I find out what packages have been ported to 3.0? =
