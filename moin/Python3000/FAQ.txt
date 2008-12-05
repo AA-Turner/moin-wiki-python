@@ -1,5 +1,7 @@
 = What's Python 3000/Python 3.0? =
 
+XXX add description.
+
 = What changed in Python 3.0? =
 
 Read [[http://docs.python.org/3.0/whatsnew/3.0.html|What's New in Python 3.0]], 
@@ -7,12 +9,30 @@ which lists the changes between Python 2.6 and Python 3.0.
 
 = What will happen to the Python 2.x versions? =
 
+There will be at least one more 2.x release, Python 2.7.
+2.7 will 
+
 = How should I port existing Python code to Python 3.0? =
 
-XXX describe 2to3.
+Python 2.6 and 3.0 include a tool called 2to3
+that parses Python 2.x code and rewrites it to work in Python 3.0.
+2to3 includes a large set of ''fixers'', each one updating a particular language feature.
 
-One approach is to use 3.0's build_py_2to3 implementation of
-the build_py command. See `Demo/distutils/test2to3`.
+We suggest the following steps for porting a package to 3.0:
+
+* Have a test suite that exercises significant portions of 
+your library or application's functionality, the more the better.
+
+* Run the `2to3` script over the code.  If `2to3` can't perform the conversion due to code constructs that can't be automatically translated, modify your 2.x code to use 3.0-compatible 
+features.
+
+* Once `2to3` can convert your code without complaint, try running the test suite using the 3.0-transformed version.  Examine any test failures and modify the 2.x code responsible to be 3.0-compatible until the test suite succeeds using the transformed version.
+
+
+Consult [[http://docs.python.org/3.0/library/2to3.html|the 2to3 documentation]] for more information.
+
+One approach to distributing your 3.0 package is to use 3.0's build_py_2to3 implementation of
+the build_py command. See `Demo/distutils/test2to3` for an example.
 
 You will have a single lib.py, written in 2.x. When you install
 in 3.0, lib2to3 will convert it to 3.x in the build area, and
@@ -37,3 +57,5 @@ make it difficult for users to tell whether test suite failures
 are due to the 2.6->3.0 transition or to the API changes.
 
 = How do I find out what packages have been ported to 3.0? =
+
+XXX have a weblog?  have a web page?
