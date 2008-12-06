@@ -746,3 +746,14 @@ In Python 2.4 it's even easier to run.  Just execute {{{python -m trace}}}.
 
 There's no separate documentation, but you can execute "pydoc trace" to
 view the inline documentation.
+
+=== Visualizing Profiling Result ===
+
+[[http://code.google.com/p/jrfonseca/wiki/Gprof2Dot|Gprof2Dot]] is a python based tool that can transform profiling results output into a graph that can be converted into a PNG image or SVG.
+
+A typical profiling session with python 2.5 looks like this (on older platforms you will need to use actual script instead of the -m option):
+{{{
+python -m cProfile -o stat.prof MYSCRIPY.PY [ARGS...]
+python -m pbp.scripts.gprof2dot -f pstats -o stat.dot stat.prof
+dot -ostat.png -Tpng stat.dot
+}}}
