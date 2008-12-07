@@ -25,27 +25,12 @@ Martin's notes from psycopg2
   but converting them to the connection encoding as early as possible
   probably would have worked as well.
 
-- bytes vs. strings 2. To keep the implementation portable across 2.x
-  and 3.x, I added a number of macros. Most useful was Text_FromUTF8,
-  particularly when applied to the (many) string literals. It is
-  defined as PyString_FromString for 2.x, and PyUnicode_FromString for
-  3.x.
-
-- RO is gone, you need to use READONLY (which also works in 2.x).
-
-- PyVarObject_HEAD_INIT needs to be used for types. I define it for
-  2.x if it isn't already defined.
-
 - the buffer object is gone; I use memoryview in 3.x.
 
 - various tests where in the code of the form
   if version_major ==  and version_minor > 4 (say, or 5)
   This will break for 3.x; you have to write
   if (version_major == 2 and version_minor > 4) or version_major > 2
-
-- module initialization is different. I moved the majority of the
-  code into a static function, which then gets conditionally called from
-  either the 2.x or 3.x init routine.
 
 - Python code 1: I used the 2to3 support in distutils
 
