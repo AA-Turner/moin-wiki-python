@@ -1,0 +1,65 @@
+#format rst
+
+**************************
+Porting Python Code to 3.0
+**************************
+
+
+Rough outline of what needs to be covered
+=========================================
+
+* Using 2to3.  *(-> Benjamin)*
+* Bringing code up to shape to work with 2.6 and 2to3->3.0.
+* What about 2.3/2.4/2.5 compatibility?
+
+
+Martin's notes from psycopg2
+============================
+
+- bytes vs. strings 1. Design decisions needs to be taken what exactly
+  must be represented as bytes, and what as strings. In many cases, that
+  was easy for psycopg, except for the question how SQL queries are
+  represented. It appears clear that they are plain text, however, the
+  Postgres API requires them to be transmitted in the connection
+  encoding. I still decided to represent them internally in Unicode,
+  but converting them to the connection encoding as early as possible
+  probably would have worked as well.
+
+- bytes vs. strings 2. To keep the implementation portable across 2.x
+  and 3.x, I added a number of macros. Most useful was Text_FromUTF8,
+  particularly when applied to the (many) string literals. It is
+  defined as PyString_FromString for 2.x, and PyUnicode_FromString for
+  3.x.
+
+- RO is gone, you need to use READONLY (which also works in 2.x).
+
+- PyVarObject_HEAD_INIT needs to be used for types. I define it for
+  2.x if it isn't already defined.
+
+- the buffer object is gone; I use memoryview in 3.x.
+
+- various tests where in the code of the form
+  if version_major ==  and version_minor > 4 (say, or 5)
+  This will break for 3.x; you have to write
+  if (version_major == 2 and version_minor > 4) or version_major > 2
+
+- module initialization is different. I moved the majority of the
+  code into a static function, which then gets conditionally called from
+  either the 2.x or 3.x init routine.
+
+- Python code 1: I used the 2to3 support in distutils
+
+- Python code 2: setup.py needs to run in both versions. I had to
+  replace popen2 with subprocess if available. Also, map() now
+  returns an iterator, which I explicitly convert into list, and
+  so on.
+
+- Python code 3: the test suite doesn't get installed, and hence
+  not auto-converted with 2to3 support. I explicitly added a 2to3
+  conversion into the test runner, which copies the py3 version of
+  the test into a separate directory.
+
+Links
+=====
+
+* `PortingDjangoToPy3k`_
