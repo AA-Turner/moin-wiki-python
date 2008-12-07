@@ -225,3 +225,22 @@ Other options
 If you are writing a new extension module, you might consider `Cython
 <http://www.cython.org>`_.  It translates a Python-like language to C.  The
 extension modules it creates are compatible with Python 3.x and 2.x.
+
+************************************
+Martin's notes from psycopg2 porting
+************************************
+
+- bytes vs. strings 2. To keep the implementation portable across 2.x
+  and 3.x, I added a number of macros. Most useful was Text_FromUTF8,
+  particularly when applied to the (many) string literals. It is
+  defined as PyString_FromString for 2.x, and PyUnicode_FromString for
+  3.x.
+
+- RO is gone, you need to use READONLY (which also works in 2.x).
+
+- PyVarObject_HEAD_INIT needs to be used for types. I define it for
+  2.x if it isn't already defined.
+
+- module initialization is different. I moved the majority of the
+  code into a static function, which then gets conditionally called from
+  either the 2.x or 3.x init routine.
