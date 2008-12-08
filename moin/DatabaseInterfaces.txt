@@ -1,48 +1,89 @@
 <<TableOfContents>>
 
-The contents of this page are being merged into the ChoosingDatabase page.
+Note: The contents of the ChoosingDatabase page are being merged back into this page.
 
-= Relational database =
+= Generic Database Interfaces and APIs =
 
-Databases based on a relational model, with support for SQL.
+ * The Python standard for database interfaces is the [[http://www.python.org/dev/peps/pep-0249/|Python DB-API (PEP 249)]]
 
-== ODBC ==
+ Most Python database interfaces adhere to this standard.
 
-ODBC allows you to use a single library and API to connect to many different databases, including most of those below.
+ * Most databases have ODBC support; see the section below on ODBC modules.
+ * Java databases usually support JDBC, and can be used from Jython.
+ * See also DbApiModuleComparison
 
- * pyodbc: http://code.google.com/p/pyodbc Open source, mature DB API library
+== ODBC Support ==
 
-== MySQL ==
- * mysql-python: http://sourceforge.net/projects/mysql-python 
+ * ceODBC: http://ceodbc.sourceforge.net
 
-== PostgreSQL ==
+ * pyodbc: http://pyodbc.sourceforge.net
 
- * psycopg
-  * psycopg1: http://initd.org/projects/psycopg1
-  * psycopg2: http://initd.org/projects/psycopg2
+ * [[http://www.egenix.com/products/python/mxODBC|mxODBC]]: A commercial Python extension that provides ODBC connectivity on Windows, Linux, Mac OS X, FreeBSD and many other Unix platforms.
 
- * pyPgSQL: http://pypgsql.sourceforge.net/
+ * [[http://www.egenix.com/products/python/mxODBCConnect|mxODBC Connect]]: A commercial client-server product that allows connecting Python to ODBC compatible databases running on remote servers without requiring an ODBC driver on the client side.
 
- * PyGreSQL: http://www.pygresql.org/
+ * ODBTPAPI: http://benjiyork.com/odbtp.html
 
- * PoPy: http://sourceforge.net/projects/popy
-  * PoPy and PyGreSQL are [[http://www.zope.org/Members/tm/Full_Announce|merging]]
+== ADO Support ==
 
- * pg/python: http://python.projects.postgresql.org/
-  * pg_proboscis: DB-API 2.0 and GreenTrunk Interfaces http://python.projects.postgresql.org/project/pg_proboscis.html
-  * pg_pqueue: PQ 3.0 Protocol elements http://python.projects.postgresql.org/project/pg_pqueue.html
+ * adodbapi (http://adodbapi.sourceforge.net/):  A Python module that makes it easy to use Microsoft ADO for connecting to databases and other data sources. 
 
- * pgasync: http://jamwt.com/pgasync/
-  * Asynchronous and pure Python. Speed comparable to C bindings. Special support for Twisted.
+= Database Interfaces for Relational Database Systems =
 
- * bpgsql: http://barryp.org/software/bpgsql/
-  * Barebones pure-Python PostgreSQL client
+Database systems employing a relational model, with support for SQL.
 
- * [[sipPQ]]
+== General Purpose Database Systems ==
 
- * mxODBC: http://www.egenix.com/products/python/mxODBC/
-  * Supports the [[http://www.postgresql.org/ftp/odbc/versions/|PostgreSQL ODBC driver]] on both Windows and Unix. 
-Note that you have to enable the advanced option "Use bytea for lo" in case you want to work with BLOBs.
+ * IBM [[DB2]]
+ * [[Firebird]] (and Interbase)
+ * [[Informix]]
+ * [[Ingres]]
+ * [[MySQL]]
+ * [[Oracle]]
+ * [[PostgreSQL]]
+ * [[SAP DB]] (also known as "MaxDB")
+ * Microsoft [[SQL Server]]
+ * [[Sybase]]
+
+(To add new entries, please choose DatabaseTemplate when creating the page.)
+
+== Database Systems for Embedding Into Applications ==
+
+The following database systems are more oriented towards embedded applications:
+
+  * GadFly
+  * [[SQLite]]
+  * [[ThinkSQL]]
+
+(To add new entries, please choose DatabaseTemplate when creating the page.)
+
+== Non-Relational Databases ==
+
+  * MetaKit
+  * [[ZODB]]
+  * [[BerkeleyDB]]
+  * [[KirbyBase]]
+  * [[Durus]]
+  * [[atop]]
+  * [[buzhug]]
+
+= Native Python Databases =
+
+== buzhug ==
+
+[[http://buzhug.sourceforge.net/|buzhug]] is a pure-Python database engine, using a Pythonic, no-SQL syntax.
+
+The data is stored and accessed on disk (it is not an in-memory database). The implementation has been designed to make all operations, and especially selection, as fast as possible with an interpreted language.
+
+A limited benchmark using the same use cases as SQLite's author shows that buzhug is much faster than other pure-Python modules (KirbyBase, gadfly). SQLite, which is implemented in C, is faster, but only less than 3 times on the average.
+
+== SnakeSQL ==
+
+[[http://www.pythonweb.org/projects/snakesql/|SnakeSQL]] is a pure Python SQL database written to remove the dependence of the Python Web Modules on 3rd party drivers for non-Python databases like MySQL but designed to be a useful database in its own right.
+
+-----
+
+These entries still need to be merged into the resp. sub-pages:
 
 == Oracle ==
 
@@ -95,21 +136,3 @@ Note that you have to enable the advanced option "Use bytea for lo" in case you 
 == Ingres ==
 
  * ingresdbi: http://www.ingres.com
-
-== Microsoft SQL Server ==
-
- * See [[SQL Server]]
-
-= Native Python Databases =
-
-== buzhug ==
-
-[[http://buzhug.sourceforge.net/|buzhug]] is a pure-Python database engine, using a Pythonic, no-SQL syntax.
-
-The data is stored and accessed on disk (it is not an in-memory database). The implementation has been designed to make all operations, and especially selection, as fast as possible with an interpreted language.
-
-A limited benchmark using the same use cases as SQLite's author shows that buzhug is much faster than other pure-Python modules (KirbyBase, gadfly). SQLite, which is implemented in C, is faster, but only less than 3 times on the average.
-
-== SnakeSQL ==
-
-[[http://www.pythonweb.org/projects/snakesql/|SnakeSQL]] is a pure Python SQL database written to remove the dependence of the Python Web Modules on 3rd party drivers for non-Python databases like MySQL but designed to be a useful database in its own right.
