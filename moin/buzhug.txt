@@ -11,9 +11,13 @@
 
 == Programming Model ==
 
-buzhug is a fast, portable, pure-Python database engine, using a pythonic syntax for all operations
+buzhug is a fast, portable, pure-Python database engine, using a pythonic non-SQL syntax for all operations
 
-A database is an iterator, yielding objects with attributes matching the fields defined for the base ; requests can be expressed as list comprehensions or generator expressions, instead of SQL
+A database is an iterator, yielding objects with attributes matching the fields defined for the base . Requests can be expressed as list comprehensions or generator expressions, instead of SQL.
+
+The data is stored and accessed on disk (it is not an in-memory database). The implementation has been designed to make all operations, and especially selection, as fast as possible with an interpreted language.
+
+A limited benchmark using the same use cases as SQLite's author shows that buzhug is much faster than other pure-Python modules (KirbyBase, gadfly). SQLite, which is implemented in C, is faster, but only less than 3 times on the average.
 
 == Pros ==
  * most operations are faster than on other pure-Python databases
