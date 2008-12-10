@@ -221,6 +221,23 @@ both 2.x and 3.0 is tricky.  The following simple example demonstrates how. ::
    }
 
 
+Embedding
+---------
+
+When defining a module for an embedded interpreter, the module has to be
+registered in the PyImport_Inittab table; simply calling :cfunc:`PyModule_Create`
+or the module's init function is not enough. Use :cfunc:`PyImport_AppendInittab`
+to register your module with its init function::
+
+   PyImport_AppendInittab("myextension", initmyextension);
+
+This call should occur before Py_Initialize(), but this is not mandatory.
+
+Note that this method also works for python 2.4 at least.
+
+
+
+
 Other options
 =============
 
