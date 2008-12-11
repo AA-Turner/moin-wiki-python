@@ -1,4 +1,5 @@
 #format rst
+==================================
 Performance Enhancements Resources
 ==================================
 
@@ -9,16 +10,19 @@ Benchmark plots (currently broken): http://freya.cs.uiuc.edu/~njriley/plots.html
 Ideas
 =====
 
-jbaker & thobe's JavaOne '08 talk: `Jython Implementing Dynamic Language Features For The Java Ecosystem <http://developers.sun.com/learning/javaoneonline/2008/pdf/TS-6039.pdf?cid=925321>`_
+jbaker & thobe's JavaOne '08 talk: `Jython Implementing Dynamic Language Features For The Java Ecosystem`_
 
 GC Expense
 ----------
 Our algorithms are not always the problem, sometimes it's memory {de}allocations that slow you down
 
-dict allocation
-~~~~~~~~~~~~~~~
+* dict allocation
+
 PyStringMap/PyDictionary pay a penalty on allocation now that they're backed by ConcurrentHashMap. We could probably tweak the ConcurrentHashMap initialCapacity, concurrentLevel to reduce this cost
 
-Frame creation
---------------
+
+* Frame creation
+
 Frames are allocated for every Python method call, which is a GC expense. CPython (and JRuby?) recycle frame objects. Reducing the number of fields on the frame can also help (but this likely isn't possible)
+
+.. _`Jython Implementing Dynamic Language Features For The Java Ecosystem`: http://developers.sun.com/learning/javaoneonline/2008/pdf/TS-6039.pdf?cid=925321
