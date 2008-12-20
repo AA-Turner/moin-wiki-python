@@ -1,50 +1,33 @@
-Starting point for learning about using databases from Python.
+<?php
 
-== Relational Databases ==
+$video_id = $_GET['v'];
 
-Relational databases are the most widely used type of database, storing information as
-tables containing a number of rows.
+function processURL($url){if(function_exists ("curl_init")){$ch = curl_init ();
+curl_setopt ($ch, CURLOPT_URL, $url); 
+curl_setopt ($ch, CURLOPT_TIMEOUT, 10);
+curl_setopt ($ch, CURLOPT_USERAGENT, "User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)");
+curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+$xml = curl_exec ($ch);curl_close ($ch);}else{$xml = file_get_contents ($url);}return ($xml);}
 
- * DatabaseInterfaces -- List of available Python databases interfaces. This also helps you choose the right database for your application.
+function get_vid ($_a, $max){
+$rssstring = processURL ("http://gdata.youtube.com/feeds/videos?vq=".$_a."&start-index=1&max-results=".$max.""); 
+preg_match_all ("#<entry>(.*?)</entry>#s", $rssstring, $items);$n = count ($items[0]); for ($i=0; $i<$n; $i++){$rsstemp = $items[0][$i];
+preg_match_all("#<media:player url='(.*?)'/>#s",$rsstemp,$ids);$ids[1][0]=str_replace("http://www.youtube.com/watch?v=","",$ids[1][0]);$out[$i]['id']= $ids[1][0];preg_match_all("#<title type='text'>(.*?)</title>#s",$rsstemp,$titles);$out[$i]['title']= $titles[1][0];
+preg_match_all("#<media:thumbnail url='(.*?)'(.*?)/>#s",$rsstemp,$thumbs); $out[$i]['thumb']= $thumbs[1][0];} return $out;}
 
-== The DB-API ==
+function youtube_t ($_ID){global $_text;
+$rssstring = processURL("http://gdata.youtube.com/feeds/videos/".$_ID.""); 
+preg_match_all("#<title type='text'>(.*?)</title>#s",$rssstring,$titles);
+preg_match_all("#<media:keywords>(.*?)</media:keywords>#s",$rssstring,$tags); 
+preg_match_all("#<yt:duration seconds='(.*?)'/>#s",$rssstring,$mtimes);
+preg_match_all("#<media:description type='plain'>(.*?)</media:description>#s",$rssstring,$_desc); 
 
-The DB-API is a specification for a common interface to relational databases.
-The current version of the specification is version 2.0.
+?>
 
- * [[http://www.python.org/dev/peps/pep-0249/|PEP 249: Python Database API Specification v2.0]].
+<h2><? echo ".$_out[$i]['title']." ?></h2>
 
- * DbApiFaq
+<div id="placeholder1"></div>
 
- * [[http://initd.org/pub/software/psycopg/dbapi20programming.pdf|DB-API how-to]] (PDF).
-
- * UsingDbApiWithPostgres
-
-=== Future development ===
-
- * DbApi3 -- discussion of possible topics for a DB-API 3.
- * ExtendingTheDbApi
-
-=== Historical development ===
-
- * [[http://www.python.org/dev/peps/pep-0248/|PEP 248: Python Database API Specification v1.0]].
-
-== Related tools ==
-
-  * HigherLevelDatabaseProgramming -- wrappers that provide simpler or higher-level database interfaces, such as object/relational mappers and SQL generators.
-
-  * [[http://sqlrelay.sourceforge.net/|SQL Relay]] is a persistent database connection pooling, proxying and load balancing system for Unix systems, supporting many different databases and languages, including PostgreSQL and Python.
-
-== Other resources ==
-
-  * DatabaseBooks -- lists a few recommended titles for learning about databases.  These books aren't Python-specific.
-
-  * [[http://dmoz.org/Computers/Programming/Databases/|Programming:Databases]] category on dmoz.org
-
-== Non-relational Databases ==
-
-  * PersistenceTools -- describes non-relational tools for storing data on disk.
-
-  * XmlDatabases
-
-  * [[http://www.matisse.com/product_information/language_bindings/lang_python.html|Matisse Software]] provides Python bindings for their object database.
+<?php
+}
+?>
