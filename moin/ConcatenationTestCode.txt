@@ -7,7 +7,7 @@ t = time()
 s = 'lksdajflakjdsflku09uweoir'
 for x in range(40):
     s += s[len(s)/2:]
-    
+
 print 'duration:', time()-t
 }}}
 
@@ -21,7 +21,7 @@ t = time()
 s = 'lksdajflakjdsflku09uweoir'
 for x in range(40):
     s = "".join((s, s[len(s)/2:]))
-    
+
 print 'duration:', time()-t
 }}}
 
@@ -60,3 +60,127 @@ Last duration: 0.0160000324249
 A few notes (your mileage may vary - this is a 4Mb file being stripped of unprintable characters)
  * Regex replacement rather than creating a list and joining it is 2.5x faster than the tooling above
  * This is far slower than the equivalent Java code (around 4x slower) using String.charAt() and StringBuffers
+
+----
+I tend to create a stream of strings in a loop that should be concatenated. I generated the script to test the join vs += performance for some randomly generated data and found that for 100,000 strings of length up to ten characters, join is maybe 20% faster than using +=. It certainly was not an order of magnitude faster.
+The results tended to vary each time through the outer loop, even though I attempted to control the garbage collection and ensured my Windows XP machine was 95% idle apart from running the script.
+{{{#!python
+from time import time
+import random, gc
+
+'''
+Check speed of string concatenation vs joining in different versions of Python
+
+
+
+Python 2.6.1 (r261:67517, Dec  4 2008, 16:51:00) [MSC v.1500 32 bit (Intel)] on win32
+Type "copyright", "credits" or "license()" for more information.
+
+    ****************************************************************
+    Personal firewall software may warn about the connection IDLE
+    makes to its subprocess using this computer's internal loopback
+    interface.  This connection is not visible on any external
+    interface and no data is sent to or received from the Internet.
+    ****************************************************************
+
+IDLE 2.6.1
+>>> ================================ RESTART ================================
+>>>
+ jointime =      0.063  concattime =  0.0780001  join/concat =  80.77%
+ jointime =      0.062  concattime =  0.0780001  join/concat =  79.49%
+ jointime =      0.063  concattime =  0.0780001  join/concat =  80.77%
+ jointime =      0.062  concattime =  0.0780001  join/concat =  79.49%
+ jointime =      0.062  concattime =  0.0780001  join/concat =  79.49%
+ jointime =      0.063  concattime =  0.0780001  join/concat =  80.77%
+ jointime =      0.062  concattime =  0.0779998  join/concat =  79.49%
+ jointime =      0.062  concattime =  0.0780001  join/concat =  79.49%
+ jointime =      0.062  concattime =  0.0940001  join/concat =  65.96%
+ jointime =  0.0469999  concattime =  0.0780001  join/concat =  60.26%
+
+
+
+Python 2.5.3 (r253:67855, Dec 19 2008, 16:58:30) [MSC v.1310 32 bit (Intel)] on win32
+Type "copyright", "credits" or "license()" for more information.
+
+    ****************************************************************
+    Personal firewall software may warn about the connection IDLE
+    makes to its subprocess using this computer's internal loopback
+    interface.  This connection is not visible on any external
+    interface and no data is sent to or received from the Internet.
+    ****************************************************************
+
+IDLE 1.2.3
+>>> ================================ RESTART ================================
+>>>
+ jointime =  0.0779998  concattime =      0.063  join/concat = 123.81%
+ jointime =  0.0780001  concattime =  0.0780001  join/concat = 100.00%
+ jointime =      0.109  concattime =  0.0939999  join/concat = 115.96%
+ jointime =  0.0780001  concattime =      0.062  join/concat = 125.81%
+ jointime =      0.063  concattime =  0.0780001  join/concat =  80.77%
+ jointime =  0.0780001  concattime =  0.0779998  join/concat = 100.00%
+ jointime =      0.063  concattime =  0.0780001  join/concat =  80.77%
+ jointime =      0.062  concattime =      0.172  join/concat =  36.05%
+ jointime =      0.079  concattime =  0.0779998  join/concat = 101.28%
+ jointime =      0.063  concattime =  0.0780001  join/concat =  80.77%
+>>>
+
+
+PythonWin 2.4.3 - Enthought Edition 1.0.0 (#69, Aug  2 2006, 12:09:59) [MSC v.1310 32 bit (Intel)] on win32.
+Portions Copyright 1994-2004 Mark Hammond (mhammond@skippinet.com.au) - see 'Help/About PythonWin' for further copyright information.
+>>>  jointime =      0.062  concattime =  0.0940001  join/concat =  65.96%
+ jointime =  0.0929999  concattime =  0.0780001  join/concat = 119.23%
+ jointime =      0.063  concattime =  0.0780001  join/concat =  80.77%
+ jointime =      0.062  concattime =  0.0780001  join/concat =  79.49%
+ jointime =      0.062  concattime =      0.062  join/concat = 100.00%
+ jointime =      0.063  concattime =  0.0780001  join/concat =  80.77%
+ jointime =  0.0780001  concattime =  0.0780001  join/concat = 100.00%
+ jointime =  0.0940001  concattime =  0.0940001  join/concat = 100.00%
+ jointime =      0.063  concattime =  0.0780001  join/concat =  80.77%
+ jointime =  0.0780001  concattime =  0.0780001  join/concat = 100.00%
+
+
+'''
+
+def stringstotest(n=100000, rmin=0, rmax=10):
+    ' Returns a list of random strings of between rmin to rmax characters in length'
+    allchars = 'qwertyuiopasdfghjklzxcvbnm'
+    allchars += allchars.upper()
+
+    return [ "".join( random.choice(allchars)
+                      for i in xrange(random.randint(rmin, rmax)) )
+             for j in xrange(n) ]
+
+strings = stringstotest()
+
+for i in xrange(10):
+    gc.collect()
+    gc.disable()
+    # JOIN
+    t0 = time()
+    l = []  # list to "".join()
+    for string in strings:
+        l.append(string)
+    joined = "".join(l)
+    jointime = time() - t0
+
+    gc.enable()
+    del l, joined
+    gc.collect()
+    gc.disable()
+
+    # CONCATENATION
+    t0 = time()
+    s = ''  # string to +=, concatenate
+    for string in strings:
+        s += string
+    concattime = time() - t0
+
+    del s
+
+    print " jointime = %10g  concattime = %10g  join/concat = %6.2f%%" % (
+        jointime, concattime, jointime/float(concattime)*100 )
+
+gc.enable()
+}}}
+
+-- Paddy3118 2009-01-01 09:48:00
