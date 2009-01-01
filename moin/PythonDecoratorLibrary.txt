@@ -1473,9 +1473,10 @@ def logprintinfo(func):
         stdobak = sys.stdout
         lpinstance = LogPrinter()
         sys.stdout = lpinstance
-        res = func(*arg)
-        sys.stdout = stdobak
-        return res
+        try:
+            return func(*arg)
+        finally:
+            sys.stdout = stdobak
     return pwrapper
 }}}
   <!> This code needs a try/finally!
