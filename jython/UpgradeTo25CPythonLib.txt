@@ -1,23 +1,33 @@
 #format rst
 
+Buildbots
+=========
+
+* http://freya.cs.uiuc.edu:8009/waterfall
+* http://bob.underboss.org:8080/
+
 To Fix
 ======
 
-* test_unicode
-
-  * test_codecs_idna - no idna encoding (which needs unicodedata 3.2.0) http://bugs.jython.org/issue1153
-* test_stringprep - http://bugs.jython.org/issue1758320
+* test_import_jy - ?
+* Windows failures - files not being properly closed
 
 Flaky/arch?
 ===========
 
-* test_socket - historically this is the case on SO_RCVBUF, SO_SNDBUF
+* test_socket - historically this is the case on SO_RCVBUF, SO_SNDBUF. particularly flakey on solaris buildbots
+* test_select - flakey on FreeBSD hudson buildbot
 
 Under Development
 =================
 
 Or perhaps more accurately, the following *should* be under development.
 
+
+* test_unicode
+
+  * test_codecs_idna - no idna encoding (which needs unicodedata 3.2.0) http://bugs.jython.org/issue1153
+* test_stringprep - http://bugs.jython.org/issue1758320
 * _rawffi (for ctypes, ported from PyPy)
 * bz2 (Georgy Berdyshev is looking at this. Leo User's bz2 module code is available from here: http://underboss.org/~pjenvey/jython/jythonx-bits.tar.bz2 )
 * multibytecodec (implies test_multibytecodec_support)
