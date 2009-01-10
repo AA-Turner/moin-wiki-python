@@ -16,11 +16,7 @@ from python3.0. To add that support, I first made 2to3 a standard library (named
 
 This approach mostly works, and has the following flaws:
 
- * conversion is rather slow (takes 17min on my machine) (#2431)
-
- * conversion leaves a number of .bak files in the build/ directory; these are redundant
- as the build directory is temporary, anyway (the original files are not touched by 2to3
- here).
+ * conversion is rather slow (takes 6min on my machine)
 
 = Changes =
 
@@ -29,14 +25,18 @@ The changes can be roughly grouped into the following categories
 == Naming Changes ==
 
 A number of modules that django uses have been removed, or renamed:
- * md5 is no longer; instead of md5.md5 or md5.init, use hashlib.md5. 
- For this change, a fixer could be written (#2454).
 
  * all modules in the email package got renamed to lower-case. 
  I haven't actually tested whether any of the email functionality 
  in Django still works (I don't even know what that functionality could be).
 
+ * in gettext, the u* methods have disappeared.
+
  * cStringIO is no longer; Django should use io.BytesIO instead.
+
+ * the .next method of iterators got renamed to __next__. A builtin
+   next() was added, but is not available in 2.x; I added an emulation
+   of it in the py3 utility module.
 
 In addition, a few functions and attributes got renamed:
 
@@ -107,16 +107,14 @@ To fix these problems, I made the following changes:
   (`__weakref__` and `__dict__`). I copy the dict, then clear it. I don't understand
   why it is important to clear the dict, other than checking that all attributes
   have been processed completely, so I hope this change is correct.
+  * __cmp__ cannot be used anymore for comparison; classes need to implement
+  __lt__, etc.
 
 == Other changes ==
 
  * the hex codec does not exist anymore, use binhex.unhexlify
  * list.sort doesn't support the sort function anymore. In the specific case,
  rewriting it to use a key= function was straight-forward.
- * Django sorts Fields by creation_counter, to get the declaration order. It
- uses `__cmp__` as a relationship. I added `__lt__`, and it seems to work, but
- I think a fixer should be added to 2to3, or the entire `__cmp__` story be
- thought over again.
  * In AdminLogNode, limit shows up as a string, not as an int, and slice() will complain. 
  I'm not sure why that works in 2.x.
 
