@@ -16,3 +16,25 @@ There is a file called `Modules/Setup.local` which is designed for customizing h
 GCC (and LD) offer a `-static` option to create static executables.
 
 It would be nice to have a `--enable-all-static` option in the `configure` script which would take care of all this for you.  For an example, try building [[http://subversion.tigris.org|Subversion]].
+
+== Static Modules Built Into libpythonX.X.a ==
+
+Haven't figured out how to make {{{python}}} static, but here is how to make all of the modules static.
+
+{{{
+./configure
+}}}
+
+Edit Modules/Setup.local and add the line:
+
+{{{
+*static*
+}}}
+
+then...
+
+{{{
+./configure
+make
+make install
+}}}
