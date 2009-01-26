@@ -69,3 +69,5 @@ Each library has its own tricks but there are some standard way of changing the 
 [Reader note:  Copying the files /usr/share/libtool/config.sub and config.guess into your 
 build directory will cause the ./configure script to work properly for
 jpeg-6a and freetype2]
+
+[Note on building PIL for Intel Macs: ppc libraries for zlib are not included by default in some versions of OS X. You will either have to install universal zlib libraries yourself or configure distutils to only build for the i386 architecture. You can do the latter by removing all references to "-arch ppc" from lib/pythonX.Y/config/Makefile. This procedure works if using the Python installed from python.org which resides by default in /Library/Frameworks/Python.framework/Versions/Current (not the system python).]
