@@ -5,13 +5,12 @@
 
   * <open question>
 
-
  * How do you organize your application code most of the time ? (one answer)
 
   1. I put everything in one package
-  2. I create several packages and use one main package to launch the application
+  2. I create several packages and use a main package or script to launch the application
   3. I create several packages and use a tool like zc.buildout or Paver to distribute the whole application
-
+  4. I use my own mechanism for aggregating packages into a single install.
 
  * What is the main tool or combination of tools you are using to package and distribute your Python application ? (one answer)
 
@@ -27,6 +26,8 @@
 
  * How do you install a package that does not provide an installer most of the time ? (one answer)
 
+   >> in this question, does "installer" mean setup.py or some other facility? <<
+
   1. I use easy_install
   2. I use pip
   3. I download it and run manually the install command
@@ -39,12 +40,16 @@
   1. manually, by removing the folder and fixing the .pth files
   2. using the packaging tool (apt, yum, etc)
   3. I use one virtualenv per application, so the main python is never polluted
+  4. I change PYTHONPATH to include a directory of the packages used by my application, then remove just that directory
 
 
  * Do you work with namespaced packages ? (one answer)
 
   1. Yes
   2. No
+  3. What are "namespaced packages"?
+
+  >> seriously, you want to know if there is a feature that people don't know about <<
 
  * Did PyPI became mandatory in your everyday work (if you use zc.buildout for exampel) ? (one answer)
 
@@ -87,11 +92,19 @@
   * <open question>
 
 
+ * What are the 5 most important problems in Setuptools?
+
+  * <open question>
+
  * Would you like to see Python's Distutils package provide an uninstall command that removes just the files installed, and cleanup the .pth, even if it does undesirable things ? (one answer)
 
   1. Yes
   2. No
 
+ * Would you like to see Python's Distutils package provide an uninstall command that correctly removes the files installed by a package, without undesirable side-effect? (one answer)
+
+  1. Yes
+  2. No
 
  * What are the 5 most important features that exists in third-party tools, you would like to see included by the Python standard Library ?
 
