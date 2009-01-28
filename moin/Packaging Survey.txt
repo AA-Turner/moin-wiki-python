@@ -14,6 +14,11 @@ This survey will be put online in a SurveyMonkey-like system whenever it is read
   3. I create several packages and use a tool like zc.buildout or Paver to distribute the whole application
   4. I use my own mechanism for aggregating packages into a single install.
 
+ * For libraries you don't distribute publicly, do you you create a setup.py script? (one answer)
+
+  1. Yes
+  2. No
+
  * What is the main tool or combination of tools you are using to package and distribute your Python application ? (one answer)
 
   1. None
@@ -32,23 +37,35 @@ This survey will be put online in a SurveyMonkey-like system whenever it is read
   2. I use pip
   3. I download it and run manually the install command
   4. I use the packaging tool provided in my system (apt, yum, etc)
-  5. Other : <say which>
+  5. I move files around and create symlinks manually
+  6. Other : <say which>
 
 
- * How do you remove a package ? (one answer)
+ * How do you remove a package ? (check all that apply)
 
   1. manually, by removing the folder and fixing the .pth files
   2. using the packaging tool (apt, yum, etc)
-  3. I use one virtualenv per application, so the main python is never polluted
+  3. I use one virtualenv per application, so the main python is never polluted, and only remove entire environments
   4. I change PYTHONPATH to include a directory of the packages used by my application, then remove just that directory
+  5. I don't know / I fail at uninstallation
 
+ * How do you manage using more than one version of a library on a system? (check all that apply)
+
+  1. I don't use multiple versions of a library
+  2. I use setuptools' multi-version features
+  3. I use virtualenv
+  4. I use zc.buildout
+  5. I build fresh Python interpreter from source for each project
+  6. I set PYTHONPATH to select particular libraries
+  7. I set sys.path in my scripts
+  8. Other: <say what>
 
  * Do you work with setuptools' namespaced packages ? A namespace package is a package that may be split across multiple project distributions.  For example, Zope 3's zope package is a namespace package, because subpackages like zope.interface and zope.publisher may be distributed separately (see http://peak.telecommunity.com/DevCenter/setuptools) (one answer)
 
   1. Yes
   2. No
 
- * Did PyPI became mandatory in your everyday work (if you use zc.buildout for exampel) ? (one answer)
+ * Has PyPI become mandatory in your everyday work (if you use zc.buildout for exampel) ? (one answer)
 
   1. Yes
   2. No
@@ -84,16 +101,16 @@ This survey will be put online in a SurveyMonkey-like system whenever it is read
 
 = Part 2, What's missing ? What is wrong ? =
 
- * What are in your opinion, the 5 most important problems (bad behaviors or lacks) in Distutils today ?
+ * What are in your opinion, the 5 most important problems (bad behaviors or missing features) in Distutils today ?
 
   * <open question>
 
- * Would you like to see Python's Distutils package provide an uninstall command that removes just the files installed, and cleanup the .pth, even if it does undesirable things ? (one answer)
+ * Would you like to see Python's Distutils package provide an uninstall command that removes just the files installed, and cleans up .pth files, even if it does undesirable things ? (one answer)
 
   1. Yes
   2. No
 
- * Would you like to see Python's Distutils package provide an uninstall command that correctly removes the files installed by a package (without taking care of possible side-effect) **effects ti be listed here** ? (one answer)
+ * Would you like to see Python's Distutils package provide an uninstall command that correctly removes the files installed by a package (without taking care of possible side-effect) **effects to be listed here** ? (one answer)
 
   1. Yes
   2. No
