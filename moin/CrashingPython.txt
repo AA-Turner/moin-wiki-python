@@ -15,6 +15,27 @@ be crashed -- although most of these are very unlikely to crop up in real code.
 
 There is also [[http://svn.python.org/view/python/trunk/Lib/test/crashers/|a directory in SVN repository]] that demonstrates known ways to crash Python.
 
+== ctypes ==
+
+{{{
+def crash():
+        '''\
+        crash the Python interpreter...
+        '''
+        i = ctypes.c_char('a')
+        j = ctypes.pointer(i)
+        c = 0
+        while 1:
+                j[c] = 'a'
+                c += 1
+        j
+
+}}}
+
+from [[https://www.pooryorick.com/secure/wiki/Pub/Pyl|pyl]] 
+
+
+
 == Bogus Input ==
 
 Through Python 2.4 you could crash the interpreter by redirecting stdin from
