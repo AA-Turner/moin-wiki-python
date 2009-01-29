@@ -189,6 +189,14 @@ linger_enabled, linger_time = struct.unpack('ii', linger_status)
 
 == Differences between cpython and jython ==
 
+=== Socket shutdown ===
+
+On sockets, the '''shutdown''' method is closely related to the '''close''' method, in that it terminates network communication on the socket. However, there are differences, because '''close''' relates to the file descriptor connected to the socket, whereas the '''shutdown''' method relates to the socket itself. But java doesn't have file descriptors, and doesn't have the shutdown method for sockets in general; only TCP client sockets have shutdown methods; for TCP server sockets and UDP sockets, the method to shutdown a socket is the '''close''' method. For a detailed discussion of these issues, see this blog post: [[http://jython.xhaus.com/?p=65|Socket shutdown versus socket close on cpython, jython and java]]. On jython, the socket method is implemented as follows, for each type of socket
+
+   1. '''TCP Client sockets'''. When '''shutdown''' is called on TCP client sockets, the '''how''' parameter determines how the read and write streams of the socket are treated. This is standard cpython behaviour, and follows the cpython documentation.
+   1. '''TCP Server sockets'''. When '''shutdown''' is called on TCP server sockets, the effect should be to close the listening socket, and discard all incoming connections in the listen queue. However, in java there is no '''shutdown''' method for server sockets (see [[http://java.sun.com/j2se/1.5/docs/api/java/net/ServerSocket.html|ServerSocket]] and [[http://java.sun.com/j2se/1.5/docs/api/java/nio/channels/ServerSocketChannel.html|ServerSocketChannel]]), there is only a '''close''' method. So in jython, the '''shutdown''' method on TCP server sockets is a no-op, i.e. it '''does nothing'''. If you want to stop accepting incoming requests, then you should call the '''close()''' method on the socket.
+   1. '''UDP sockets'''. When '''shutdown''' is called on an UDP socket, as with TCP server sockets, the effect should be to stop accepting incoming packets. However, in java there is no '''shutdown''' method on udp sockets (see [[http://java.sun.com/j2se/1.5/docs/api/java/net/DatagramSocket.html|DatagramSocket]] and [[http://java.sun.com/j2se/1.5/docs/api/java/nio/channels/DatagramChannel.html|DatagramChannel]]), there is only a '''close''' method. So in jython, the '''shutdown''' method on UDP sockets is a no-op, i.e. it '''does nothing'''. If you want to stop accepting incoming packets, then you should call the '''close()''' method on the socket.
+   
 === Error handling ===
 
 These modules have been coded so that the error handling is as close to the error handling of cpython as possible. So, ideally, cpython socket and select code run on jython should exhibit identical behaviour to cpython, in terms of exception types raised, error numbers returned, etc. 
