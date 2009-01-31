@@ -1,0 +1,61 @@
+## page was renamed from DistutilsAutoDataDiscovery
+= Problem =
+
+Distutils requires that you manually specify each directory and data-file to be included in the distribution. For packages with large and deep sub-package hierarchies it can be a pain to keep this list in sync with the code, particularly as forgetting an entry is not noticable until a user happens to report that a resource is missing.
+
+= Solution =
+
+Use an automatic scanning mechanism to generate the data_files parameter for setup:
+
+{{{
+import os
+def npFilesFor( dirname ):
+    """Return all non-python-file filenames in dir"""
+    result = []
+    allResults = []
+    for name in os.listdir(dirname):
+        path = os.path.join( dirname, name )
+        if (
+            os.path.isfile( path) and
+            os.path.splitext( name )[1] not in
+                ('.py','.pyc','.pyo')
+        ):
+            result.append( path )
+        elif os.path.isdir( path ) and name.lower() !='cvs':
+            allResults.extend( npFilesFor(path))
+    if result:
+        allResults.append( (dirname, result))
+    return allResults
+}}}
+
+Then call it for the directories which contain data-files you want to include.
+
+{{{
+dataFiles = (
+    npFilesFor( 'pytable') +
+    npFilesFor( os.path.join('pytable','doc'))
+)
+}}}
+
+and pass the result to setup:
+
+{{{
+setup (
+    name = "pytable",
+    version = "0.7.7a",
+    data_files = dataFiles,
+    cmdclass = {'install_data':smart_install_data},
+    **extraArguments
+)
+}}}
+
+(See DistutilsInstallDataScattered for the smart_install_data command.)
+
+You can see a real-world usage example in the [[http://cvs.sourceforge.net/viewcvs.py/pytable/table/setup.py?view=markup|PyTable setup script]]
+
+= Discussion =
+
+Again, there should be some way to do this with a distutils template processing call or something, but this direct processing approach works well enough.  This approach is very similar to DistutilsAutoPackageDiscovery.
+
+----
+CategoryDistutilsCookbook
