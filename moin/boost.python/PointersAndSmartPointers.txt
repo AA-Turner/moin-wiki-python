@@ -6,7 +6,8 @@ Since Python handles memory allocation and garbage collection automatically, the
 
 The life time of C++ objects created by "new A" can be handled by Python's garbage collection by using the {{{manage_new_object}}} storage policy: 
 
-{{{struct A {
+{{{
+struct A {
     static A*   create () { return new A; }
     std::string hello  () { return "Hello, is there anybody in there?"; }
 };
