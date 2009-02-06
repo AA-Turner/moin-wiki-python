@@ -28,7 +28,7 @@ of writing this,  '''python2.4-examples'''.
 On my system, at least, the output is this:
 
 {{{
- 
+
   Name                      File
   ----                      ----
 m BaseHTTPServer            /usr/lib/python2.3/BaseHTTPServer.py
@@ -132,7 +132,7 @@ m urlparse                  /usr/lib/python2.3/urlparse.py
 m uu                        /usr/lib/python2.3/uu.py
 m warnings                  /usr/lib/python2.3/warnings.py
 m webbrowser                /usr/lib/python2.3/webbrowser.py
- 
+
 Missing modules:
 ? Carbon.File imported from macpath
 ? Carbon.Folder imported from tempfile
@@ -154,7 +154,7 @@ Missing modules:
 ? riscospath imported from os
 ? rourl2path imported from urllib
 ? sitecustomize imported from site
- 
+
 freezing BaseHTTPServer ...
 freezing FixTk ...
 freezing SocketServer ...
@@ -236,7 +236,7 @@ Warning: unknown modules remain: _locale _random _socket _ssl _tkinter array bin
 Now run "make" to build the target: hello
 }}}
 
-As you can see, it doesn't seem to be so discriminating about what modules to put in or take out. 
+As you can see, it doesn't seem to be so discriminating about what modules to put in or take out.
 (Either this, or I severly misunderstand "freeze.")
 
 [[[lwickjr]]]: Unless I miss my guess, that looks suspiciously like the list of .py files that Python loads on start-up to implement built-in features with Python code.
@@ -419,7 +419,7 @@ ta da!
 
 == See Also ==
 
- * [[Py2Exe]] -- like Freeze, but makes Windows executables 
+ * [[Py2Exe]] -- like Freeze, but makes Windows executables
  * PythonInstalledByDefault -- OS/desktop distributions that come with Python installed
  * README -- the README file for the "freeze" utility that comes with Python
 
@@ -554,6 +554,25 @@ When I execute the makefile I get:
 I then changed the permission on the file to be executable and get the following error:
 {{{./config.o: ./config.o: cannot execute binary file}}}
 
-The program is a simple print helloworld app. Any ideas? 
+The program is a simple print helloworld app. Any ideas?
 
 You shouldn't have made it executable, instead try chown USERNAME config.o
+
+--------------------------------
+This doesn't seem to work right:
+
+Two systems:
+ * A redhat9 system with python 2.5.2 compiled and installed.
+ * A normal Ubuntu 8.10 box.
+{{{
+redhat9: (echo "import os, sys, time" ; echo "print repr(time)") > test.py
+redhat9: python freeze/freeze.py test.py
+redhat9: make
+redhat9: scp test ubuntu8:/tmp/test
+ubuntu8: /tmp/test
+Traceback (most recent call last):
+  File "test.py", line 2, in <module>
+ImportError: No module named time
+}}}
+
+It's as if the dynload libraries aren't frozen. :-(
