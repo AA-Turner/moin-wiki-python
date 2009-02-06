@@ -567,6 +567,10 @@ Two systems:
 {{{
 redhat9: (echo "import os, sys, time" ; echo "print repr(time)") > test.py
 redhat9: python freeze/freeze.py test.py
+...
+generating table of frozen modules
+Warning: unknown modules remain: _bisect _heapq _locale _random _socket _ssl _struct _tkinter array binascii cStringIO collections fcntl itertools math operator readline select strop termios time
+Now run "make" to build the target: test
 redhat9: make
 redhat9: scp test ubuntu8:/tmp/test
 ubuntu8: /tmp/test
@@ -576,3 +580,12 @@ ImportError: No module named time
 }}}
 
 It's as if the dynload libraries aren't frozen. :-(
+
+...
+
+Reply to self: That *is* the case.  The Warning is saying that those modules will not be in the binary! (Shouldn't that be an error?)
+
+The fix is to rebuild it [[http://groups.google.com/group/comp.lang.python/browse_frm/thread/9407982ad24b62ec/5018f9abebaa285a?lnk=st&q=build+python+static&rnum=3&hl=en#5018f9abebaa285a|using static modules]].  See {{{Modules/Setup}}} for docs.  The short fix is to run this before you run {{{./configure}}} to build python:
+{{{
+perl -pi -e 's!(^#\*shared\*)!*static*\n$1!' Modules/Setup.dist
+}}}
