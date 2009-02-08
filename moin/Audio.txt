@@ -1,55 +1,49 @@
-Python 2.6 (r26:66721, Oct  2 2008, 11:35:03) [MSC v.1500 32 bit (Intel)] on win32
-Type "copyright", "credits" or "license()" for more information.
+= Audio in python =
 
-    ****************************************************************
-    Personal firewall software may warn about the connection IDLE
-    makes to its subprocess using this computer's internal loopback
-    interface.  This connection is not visible on any external
-    interface and no data is sent to or received from the Internet.
-    ****************************************************************
-    
-IDLE 2.6      
->>> print 'hello world'
-hello world
->>> name = raw_input('What is your name?\n') # \n is a newline
-What is your name?
-print 'Hi', name
->>> my_list = ['john', 'pat', 'gary', 'michael']
-for i, name in enumerate(my_list):
-    print "iteration %i is %s" % (i, name)
+This page tries to provide a starting point for those who want to work with audio in combination with python. If you are looking for podcast and such on Python you are not at the right place here, but PythonAudioMaterial is. If you are creating a game, most of what you are looking for may already be included in the many PythonGameLibraries that are available.
 
->>> def greet(name):
-    print 'hello', name
-greet('Jack')
-greet('Jill')
-greet('Bob')
-import re
-for test_string in ['555-1212', 'ILL-EGAL']:
-    if re.match(r'^\d{3}-\d{4}$', test_string):
-        print test_string, 'is a valid US local phone number'
-    else:
-        print test_string, 'rejected'
-prices = {'apple': 0.40, 'banana': 0.50}
-my_purchase = {
-    'apple': 1,
-    'banana': 6}
-grocery_bill = sum(prices[fruit] * my_purchase[fruit]
-                   for fruit in my_purchase)
-print 'I owe the grocer $%.2f' % grocery_bill
-#!/usr/bin/env python
-# This program adds up integers in the command line
-import sys
-try:
-    total = sum(int(arg) for arg in sys.argv[1:])
-    print 'sum =', total
-except ValueError:
-    print 'Please supply integer arguments'
-# indent your Python code to put into an email
-import glob
-# glob supports Unix style pathname extensions
-python_files = glob.glob('*.py')
-for fn in sorted(python_files):
-    print '    ------', fn
-    for line in open(fn):
-        print '    ' + line.rstrip()
-    print
+== Built in modules ==
+
+The [[http://docs.python.org/lib/mmedia.html|Multimedia Services]] allow for some basic audio functionality in python. It consists of the following modules:
+
+[[http://docs.python.org/lib/module-audioop.html|audioop]]
+   Manipulate raw audio data.
+[[http://docs.python.org/lib/module-aifc.html|aifc]]
+   Read and write audio files in AIFF or AIFC format.
+[[http://docs.python.org/lib/module-sunau.html|sunau]]
+   Provide an interface to the Sun AU sound format.
+[[http://docs.python.org/lib/module-wave.html|wave]]
+   Provide an interface to the WAV sound format.
+[[http://docs.python.org/lib/module-chunk.html|chunk]]
+   Module to read IFF (e.g. AIFF) chunks.
+[[http://docs.python.org/lib/module-sndhdr.html|sndhdr]]
+   Determine type of a sound file.
+[[http://docs.python.org/lib/module-ossaudiodev.html|ossaudiodev]]
+   Access to OSS-compatible audio devices (mainly important for Linux / FreeBSD)
+
+== Beyond the default modules ==
+Alternatively, you might want to learn about audio programming in Python.  There is a veritable forest of stuff out there, but here are some good starting points.
+
+For a complete overview have a look at PythonInMusic.
+
+=== Platform independent ===
+
+[[http://people.csail.mit.edu/hubert/pyaudio/|pyAudio]]
+   pyAudio provides Python bindings for PortAudio, the cross-platform audio I/O library. Only for audio input and output, other operations can be done using e.g. python's built in wave module.
+
+[[http://www.speech.kth.se/snack/|Snack]] 
+   Snack has commands for basic sound handling, such as playback, recording, file and socket I/O. Snack also provides primitives for sound visualization, e.g. waveforms and spectrograms.
+
+[[http://sourceforge.net/projects/audiotools/|Python Audio Tools]]
+   Python programs for CD-ripping and conversion between audio file formats.
+
+=== Platform dependent ===
+[[http://gstreamer.freedesktop.org/modules/gst-python.html]]
+
+
+=== Modules relying on closed source ===
+
+[[http://pysonic.sourceforge.net/|pysonic]]
+   A wrapper around the [[http://www.fmod.org|FMOD]]-library offering plenty of options including 3D sound and effects. FMOD is a popular closed, but free for own use, that is used in many commercial game titles.
+----
+CategoryDocumentation
