@@ -159,6 +159,8 @@ Also: +1 for standard API so that algorithms can be described in a standard way.
 Also: I see that the requirement about allowing "Object" has already been raised on usenet
 Also: I missed a type of graph, the multigraph, where more than one type of relation is defined. You can fake this with multiple separate graphs, and in many ways I prefer this (then you can attach descriptive data to each relation...) but I can see that some algorithms might be more naturally expressed as operating on a multigraph. (Nick)
 
+I second the notion of hypergraphs. I have a graph implementation that uses a base hypergraph class which contains Node, Edge, NodeContainer, and EdgeContainer classes, each of which can have its behavior modified via mixins. As examples, the modification from a hypergraph to a DAG is accomplished by subclassing Graph and mixing in a new edge container that raises an exception if an illegal edge insertion is attempted, the more implementation-centric question of storing nodes in a database backend is handled by exchanging the standard list-based NodeContainer with one that overrides add_node to a DB insertion operation, and the question of edge and node attributes is handled by simple keyword arguments which are passed to the base node and edge constructors, optionally made mandatory by subclassing Node or Edge. Please contact me if interested. (Geremy)
+
 (Multigraphs are mentioned. - Magnus)
 
 I'm new here, so here goes: I would like to see a standard api for Graph ''objects'', concentrating on two dimensional graphs. Hyper-graphs, multi-graphs, two-structures, etc shouldn't really be considered, imo, as they're much too esoteric and don't really map to many common usages (I'm sure I'll get argument here from the graph researchers). Also, I don't want to define ''what'' a graph or a vertex or an edge actually is, other than the standard mathematical definition that an edge is some dort of a ''relationship'' between vertices.
@@ -336,6 +338,7 @@ As far as hypergraphs are concerned, a hypergraph is equivalent to a bi-partite 
   * Beracah Yankama
   * David McNamara
   * Jason Connor
+  * Geremy Condra
 
 
 (See also the Usenet discussion above for more contributors.)
