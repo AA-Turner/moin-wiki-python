@@ -96,11 +96,12 @@ You need to install psycopg or psycopg2. Download it from http://www.initd.org, 
 
 == Checkout spambayes_integration ==
 
-Even if you don't intend to use the !SpamBayes detector you must still check out the {{{spambayes_integration}}} instance.  If you do intend to use it, you will need to also install !SpamBayes proper and configure it appropriately (see below).
-
+Even if you don't intend to use the !SpamBayes detector you must still check out the {{{spambayes_integration}}} instance.
 {{{
   svn co http://svn.python.org/projects/tracker/instances/spambayes_integration
 }}}
+
+If you do intend to use it, you will need to also [[#SpamBayesSetup | install SpamBayes proper and configure it appropriately]]. Otherwise, a [[#SpamBayesdummyconfiguration |dummy configuration]] should work.
 
 == Checkout and Configure your Development Roundup Instance ==
 
@@ -168,7 +169,6 @@ get a roundup instance that looks just like http://bugs.python.org, except for s
 The IDs for values in a given field might be different from those in the Python Tracker. This should only be a problem if you try to import CSV files from one tracker into the other.
 
 == SpamBayes Setup ==
-
 If you intend to use the !SpamBayes detector to weed out spam from your tracker you will need to install it and start an instance of its {{{core_server}}} application.
 Briefly:
 
@@ -226,16 +226,20 @@ Finally, run it:
 
  BAYESCUSTOMIZE=$SBDIR/bayescustomize.ini core_server.py -m XMLRPCPlugin
 }}}
- * If you are seeing image spam (this seems not to be a problem with wiki spam - yet), download and install [[http://jocr.sourceforge.net/|GOCR]]. 
+ * If you are seeing image spam (this seems not to be a problem with wiki spam - yet), download and install [[http://jocr.sourceforge.net/|GOCR]].
 
 == Common Problems ==
 
- Incomplete/Missing !SpamBayes setup:: In your config.ini file set {{{spambayes_uri}}} to a syntactically valid, but nonexistent URI, e.g.:
+=== SpamBayes dummy configuration ===
+Incomplete/Missing !SpamBayes setup:: In your config.ini file set {{{spambayes_uri}}} to a syntactically valid, but nonexistent URI, e.g.:
 
 {{{
     spambayes_uri = "http://localhost:9999/nobodyhere"
 }}}
 
+Check [[http://mail.python.org/pipermail/tracker-discuss/2008-February/001549.html |other available workarounds]].
+
+=== Problems with detectors ===
 Problematic detectors may be disabled by returning from their init() function, as was the case of detectors/audit2to3.py (no longer present). Note that this would be a temporary solution before a graceful fix became available. Reporting issues with local instances is the best way help solving the problem.
 
 = Resources for Tracker Development =
