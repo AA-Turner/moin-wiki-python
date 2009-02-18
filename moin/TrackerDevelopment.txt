@@ -1,3 +1,5 @@
+<<TableOfContents>>
+
 = Getting Your Own python-dev Tracker =
 
 This page describes how to setup a roundup tracker instance that works
@@ -5,7 +7,7 @@ exactly as the tracker for python-dev on http://bugs.python.org. The
 intended audience is people that want to help out with the tracker,
 developing new features etc.
 
-= Requirements =
+== Requirements ==
 
  * Roundup, from the vendor branch used for python-dev (see below).
 
@@ -15,15 +17,15 @@ developing new features etc.
 
  * A checkout of the spambayes_integration.
 
- * A checkout of the python-dev instance from python's subversion    repository.
+ * A checkout of the python-dev instance from python's subversion repository.
 
 == Installing roundup ==
 
-For python-dev, we use a slighly modified version of roundup which has
-some features that are not yet in the core roundup. To keep track of
+For python-dev, we use a slightly modified version of Roundup which has
+some features that are not yet in the core Roundup. To keep track of
 the changes, we keep a vendor branch of roundup.
 
-Check out /tracker/roundup-src from the python subversion
+Check out [[http://svn.python.org/view/tracker/roundup-src|/tracker/roundup-src]] from the python subversion
 repository as documented on http://python.org/dev/tools/. For
 example, here's how to do anonymous checkout:
 
@@ -54,7 +56,7 @@ tracker runs in.
 
 Details on how to install PostgreSQL is outside the scope of this Wiki
 Page. Both version 7.4 and 8.1 of PostgreSQL has been tested without
-any known problems.
+any known problems. It has been reported that 8.2 works well. It's necessary to apply a [[http://issues.roundup-tracker.org/issue2030479 |patch for 8.3 compatibility]].
 
 Access configuration of postgresql can be tricky. You need to make
 sure that the user you're running roundup as (your unix/windows user)
@@ -90,7 +92,7 @@ postgres=# alter user roundup with createdb;
 
 == Installing psycopg or psycopg2 ==
 
-You need to install psycopg or psycopg2. Download it from http://www.initd.org.
+You need to install psycopg or psycopg2. Download it from http://www.initd.org, as pre-packaged versions have been reported to cause problems.
 
 == Checkout spambayes_integration ==
 
@@ -102,11 +104,19 @@ Even if you don't intend to use the !SpamBayes detector you must still check out
 
 == Checkout and Configure your Development Roundup Instance ==
 
-The python-dev tracker instance is version-controlled with subversion,
+The [[http://svn.python.org/view/tracker/instances/python-dev/ |python-dev]] tracker instance is version-controlled with subversion,
 and resides in the python subversion repository.
 
 {{{
   svn co http://svn.python.org/projects/tracker/instances/python-dev
+}}}
+
+Keep in mind that the python-dev instance has relative symlinks to {{{../../spambayes_integration/[...]}}}, so if your directory layout is different you have to update these links:
+{{{
+extensions/spambayes.py -> ../../spambayes_integration/extensions/spambayes.py
+
+detectors/spambayes.py -> ../../spambayes_integration/detectors/spambayes.py
+
 }}}
 
 Now enter the python-dev directory, and create the 'db' directory (not
@@ -130,8 +140,6 @@ most settings should be OK.
 If you need to do development on the busybody or tellteam detectors,
 copy detectors/config.ini.template into detectors/config.ini, and
 adjust the e-mail addresses accordingly.
-
-For python-dev instance, you need to disable the audit2to3 detector by returning from init() in detectors/audit2to3.py . Note that this is only a temporary solution before a graceful fix is available. 
 
 Initialize your roundup instance:
 
@@ -211,14 +219,6 @@ Finally, run it:
 }}}
  * If you are seeing image spam (this seems not to be a problem with wiki spam - yet), download and install [[http://jocr.sourceforge.net/|GOCR]]. 
 
-== Getting Help ==
-
-Subscribe to and ask your question on the tracker-discuss mailing list. See http://mail.python.org/mailman/listinfo/tracker-discuss
-
-== Learn more About the Importer(s) ==
-
-http://svn.python.org/projects/tracker/importer/README.rst has some information about the importer(s) written to convert sourceforge data into roundup data.
-
 == Common Problems ==
 
  Incomplete/Missing !SpamBayes setup:: In your config.ini file set {{{spambayes_uri}}} to a syntactically valid, but nonexistent URI, e.g.:
@@ -227,6 +227,23 @@ http://svn.python.org/projects/tracker/importer/README.rst has some information 
     spambayes_uri = "http://localhost:9999/nobodyhere"
 }}}
 
+Problematic detectors may be disabled by returning from their init() function, as was the case of detectors/audit2to3.py (no longer present). Note that this would be a temporary solution before a graceful fix became available. Reporting issues with local instances is the best way help solving the problem.
+
+= Resources for Tracker Development =
+
+== Getting Help ==
+
+Subscribe to and ask your question on the tracker-discuss mailing list. See http://mail.python.org/mailman/listinfo/tracker-discuss
+
+Since the Python Tracker is a slightly modified version of [[http://www.roundup-tracker.org |Roundup]], both Roundup's [[http://www.roundup-tracker.org/docs.html |Documentation]] and [[http://issues.roundup-tracker.org/ |issue tracker]] contain relevant information about how the Python Tracker works and problems one might find working with its code.
+
+== The Meta Tracker ==
+
+A [[http://psf.upfronthosting.co.za/roundup/meta/ |Meta Tracker]] is available for  handling bugs and features requests for the [[http://bugs.python.org/ |Python Tracker]].
+
+== Learn more About the Importer(s) ==
+
+http://svn.python.org/projects/tracker/importer/README.rst has some information about the importer(s) written to convert sourceforge data into roundup data.
 
 ----
 CategoryTracker
