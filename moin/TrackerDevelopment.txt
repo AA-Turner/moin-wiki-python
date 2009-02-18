@@ -138,9 +138,10 @@ according to your site. Pay special attention to settings marked with
 ''NO DEFAULT''. However, if you've configure your PostgreSQL as above,
 most settings should be OK.
 
-If you need to do development on the busybody or tellteam detectors,
+If you need to do development on the '''busybody''' or '''tellteam''' detectors,
 copy detectors/config.ini.template into detectors/config.ini, and
-adjust the e-mail addresses accordingly. The CIA.vc detector sends emails about issue changes and in on by default. Disable it by adding a {{{return}}} to its init() function (detectors/cia.py):
+adjust the e-mail addresses accordingly. <<Anchor(ciavc)>> The '''CIA.vc''' detector sends emails about issue changes and is on by default. Disable it by adding a {{{return}}} to its init() function (detectors/cia.py):
+
 
 {{{
  def init(db):
@@ -239,8 +240,8 @@ Incomplete/Missing !SpamBayes setup:: In your config.ini file set {{{spambayes_u
 
 Check [[http://mail.python.org/pipermail/tracker-discuss/2008-February/001549.html |other available workarounds]].
 
-=== Problems with detectors ===
-Problematic detectors may be disabled by returning from their init() function, as was the case of detectors/audit2to3.py (no longer present). Note that this would be a temporary solution before a graceful fix became available. Reporting issues with local instances is the best way help solving the problem.
+=== Misbehaving detectors ===
+Problematic detectors may be disabled by [[#ciavc |returning from their init() function]], as was the case of detectors/audit2to3.py (no longer present). Note that this would be a temporary solution before a graceful fix became available. Reporting issues with local instances is the best way help solving the problem.
 
 = Resources for Tracker Development =
 
