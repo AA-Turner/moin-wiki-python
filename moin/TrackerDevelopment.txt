@@ -139,7 +139,14 @@ most settings should be OK.
 
 If you need to do development on the busybody or tellteam detectors,
 copy detectors/config.ini.template into detectors/config.ini, and
-adjust the e-mail addresses accordingly.
+adjust the e-mail addresses accordingly. The CIA.vc detector sends emails about issue changes and in on by default. Disable it by adding a {{{return}}} to its init() function (detectors/cia.py):
+
+{{{
+ def init(db):
+     return # <--
+     db.issue.react('create', sendcia)
+     db.issue.react('set', sendcia)
+}}}
 
 Initialize your roundup instance:
 
@@ -156,7 +163,9 @@ Start your roundup instance:
 }}}
 
 You should now be able to browse http://localhost:9999/python-dev/ and
-get a roundup instance that looks just like http://bugs.python.org.
+get a roundup instance that looks just like http://bugs.python.org, except for some missing new values for fields like Stages and Keywords.
+
+The IDs for values in a given field might be different from those in the Python Tracker. This should only be a problem if you try to import CSV files from one tracker into the other.
 
 == SpamBayes Setup ==
 
