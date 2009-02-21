@@ -34,14 +34,11 @@ A number of modules that django uses have been removed, or renamed:
 
  * cStringIO is no longer; Django should use io.BytesIO instead.
 
- * the .next method of iterators got renamed to __next__. A builtin
-   next() was added, but is not available in 2.x; I added an emulation
-   of it in the py3 utility module.
+ * the .next method of iterators got renamed to __next__. A builtin next() was added, but is not available in 2.x; I added an emulation of it in the py3 utility module.
 
 In addition, a few functions and attributes got renamed:
 
- * to test whether something is a function, don't look at 
- `func_code` anymore; use `__code__` instead.
+ * to test whether something is a function, don't look at `func_code` anymore; use `__code__` instead.
 
 == Bytes vs. Strings ==
 
@@ -82,8 +79,7 @@ To fix these problems, I made the following changes:
 
  * When Django reads a file, it typically uses the pattern
    {{{ open(name).read().decode(encoding)... }}}
- This breaks, as .read() now returns a (unicode) string, which is already
- decoded. This can be fixed by adding {{{'rb'}}} as a parameter to open().
+ This breaks, as .read() now returns a (unicode) string, which is already decoded. This can be fixed by adding {{{'rb'}}} as a parameter to open().
 
  * Django builds keyword dictionaries to be passed as ** arguments into
  functions, and puts str() objects into them. As now all str() objects
@@ -103,10 +99,7 @@ To fix these problems, I made the following changes:
   this should be done by 2to3, though (#2366)
   * Django relies on clearing the dictionary of the class called Meta in a
   Model. This a) doesn't work anymore, as the dictionary proxy is immutable,
-  and b) leaves over a number of attributes in the class that are new in 3.x
-  (`__weakref__` and `__dict__`). I copy the dict, then clear it. I don't understand
-  why it is important to clear the dict, other than checking that all attributes
-  have been processed completely, so I hope this change is correct.
+  and b) leaves over a number of attributes in the class that are new in 3.x (`__weakref__` and `__dict__`). I copy the dict, then clear it. I don't understand why it is important to clear the dict, other than checking that all attributes have been processed completely, so I hope this change is correct.
   * __cmp__ cannot be used anymore for comparison; classes need to implement
   __lt__, etc.
 
@@ -121,10 +114,7 @@ To fix these problems, I made the following changes:
 = Open Issues =
 
  * I have worked with sqlite3 and psycopg2 only; all the other databases have not been tested.
- * The manage module has an "import settings", this gets fixed to "from . import settings"
- by 2to3. When manage.py is then run as the main script, Python complains that the relative
- import is incorrect. However, that *would* be correct if the script is imported as
- <site>.manage
+ * The manage module has an "import settings", this gets fixed to "from . import settings" by 2to3. When manage.py is then run as the main script, Python complains that the relative import is incorrect. However, that *would* be correct if the script is imported as <site>.manage
  * checks for `im_func` need to be replaced with checks for `__func__`.
  * ... (many more things; this just barely works)
 
