@@ -1,6 +1,6 @@
 Writing a module extension Java for use by Jython can be done a couple of different ways.
 
- * Write a POJO with the same API as the Python module.
+ * Write a POJO (Plain Old Java Object see http://en.wikipedia.org/wiki/POJO) with the same API as the Python module.
  * Write a subclass of PyObject.
 
 The advantage to writing a POJO is the class can be reused in Java without any dependency on Jython's runtime.  The downside to this approach is the class cannot take advantage of the dynamic nature of Python.  The class cannot be modified at runtime with new methods or have its `__dict__` modified.  It also means features such as iterators must go unimplemented.
