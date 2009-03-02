@@ -29,7 +29,15 @@ A useful addition to Python source files is this comment:
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
 }}}
 
-This tells Vim that when the file is loaded, tabs are always expanded to spaces and that the width of each tab is four characters. Type the following in command mode to achieve the same effect:
+This may need the modeline option enabled in your `~/.vimrc` file:
+
+{{{
+set modeline
+}}}
+
+(In some versions of Ubuntu, for example, the modeline option has apparently been disabled for security reasons.)
+
+The above `# vim: ...` text, when embedded in a source file, tells Vim that when the file is loaded, tabs are always expanded to spaces and that the width of each tab is four characters. Type the following in command mode to achieve the same effect:
 
 {{{
 :set tabstop=4 expandtab shiftwidth=4 softtabstop=4
@@ -57,22 +65,23 @@ set background=dark
 
 === Alternative ===
 
-Some find that the methods described above does not work. An alternative method is adding:
+Some find that the methods described above does not work. An alternative method is adding...
+
 {{{
-    set autoindent
-    set tabstop=4
-    set expandtab
-    set shiftwidth=4
-    filetype indent on 
+set autoindent
+set tabstop=4
+set expandtab
+set shiftwidth=4
+filetype indent on 
 }}}
-to your ~/.vimrc file. The first rule sets automatic tab indentation. The second rule sets tab stops to four characters wide. The third converts tabs to white space. {{{set shiftwidth}}} sets the width for autoindents. Finally, the last rule allows auto-indenting depending on file type. With this method, tab settings do not need to be set in your python file and the {{{
-# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4}}} line in the template below is not needed.
+
+...to your `~/.vimrc` file. The first rule sets automatic tab indentation. The second rule sets tab stops to four characters wide. The third converts tabs to white space. `set shiftwidth` sets the width for autoindents. Finally, the last rule allows auto-indenting depending on file type. With this method, tab settings do not need to be set in your python file and the `# vim: ...` line in the template below is not needed.
 
 === A Simple Template ===
 
 You could copy the following simple template and save it to a file somewhere. Then, when you need to make a new source file, just copy it to the intended location with a name of your choice.
 
-{{{
+{{{#!python
 #!/usr/bin/env python
 
 """
@@ -82,7 +91,7 @@ Python source code - replace this with a description of the code and write the c
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
 }}}
 
-This contains useful UNIX-related information on the first line, and a docstring which can be used to describe what your program or module is about.
+This contains useful UNIX-related information on the first line, and a docstring which can be used to describe what your program or module is about. As noted above, to work this requires modeline support to be enabled.
 
 === Scripting Vim with Python ===
 
