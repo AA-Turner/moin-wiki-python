@@ -1,0 +1,268 @@
+= Experimental Bazaar Branches =
+
+Python's source code is maintained under the
+[[http://subversion.tigris.org|Subversion]] revision control
+system.  We are experimenting with
+[[http://en.wikipedia.org/wiki/Distributed_Version_Control_System|distributed revision control systems]]
+(dvcs) because of their greatly improved workflow, accessibility and merging
+facilities over Subversion.  While there are several serious dvcs contenders
+in the open source world, this page describes the experimental
+[[http://bazaar-vcs.org|Bazaar]] mirrors
+of the Python Subversion tree that we are making available to developers.
+
+Please note that we are making these branches available for experimental
+purposes, so that developers (both core and otherwise) can try them out, and
+so that we can debug our code hosting facilities should we decide to switch to
+a dvcs.  We have not selected a dvcs, nor have we even decided to switch from
+Subversion yet.  [[http://www.python.org/dev/peps/pep-0374/|PEP 374]] tracks this decision.
+
+
+== What is available? ==
+
+We are making a mirror of the Python 2.5, 2.6, trunk (2.7), 3.0, and 3.1
+branches available to the public.  These branches are synchronized in
+near-real time with the Subversion master.  This means that as commits are
+made to Subversion, they will be available in Bazaar.  There's a bit of a lag
+because we currently do the sync via cron.
+
+There is a second mirror that is never automatically sync'd from Subversion,
+although developers can sync to these branches manually.  Core developers can
+also push their own revisions to the official upstream branches, but these are
+not sync'd to Subversion.  The purpose of this mirror is primarily for us to
+debug the workflow, authentication, pre- and post-hooks, etc.  You'll probably rarely want to use this mirror, so it's not documented here.
+
+We are also making code hosting available for core developers.  This means
+anybody with write access to the Subversion repository can push their own
+branches to python.org.  Of course, core developers are not ''required'' to
+push their branches to python.org, and in fact can (if they wish) publish
+their Bazaar branches anywhere, including free code hosting facilities such as
+[[https://code.launchpad.net/python|Launchpad]].
+
+
+== What do I need? ==
+
+* [[http://bazaar-vcs.org/Download|Bazaar 1.9 or newer]].  As of this writing (02-Mar-2009) Bazaar 1.12 is the most recent release.  As Bazaar is written in Python (yay!), it is available for all major platforms, See the Bazaar home page for information about versions for your platform.
+
+* Python 2.4 or newer.  Bazaar requires at least Python 2.4.
+
+* If you are a core developer and you want to develop branches in Bazaar but
+push them into the Subversion master, you will need to install the
+[[http://bazaar-vcs.org/BzrForeignBranches/Subversion|bzr-svn plugin]].  This requires Subversion 1.5.  The bzr-svn page and its [[https://launchpad.net/bzr-svn||Launchpad project page]] has details about how to install this plugin on your platform.
+
+
+== How do I get started? ==
+
+There are many ways to use Bazaar.  Some like to use it the same way they use
+Subversion.  Others like to take advantage of the disconnected and distributed
+features, so that they can develop code while off the net.  The Bazaar web
+site outlines all these options.  The documentation here will describe just
+one way of working with it.
+
+You will definitely want to create what Bazaar calls a ''shared repository'' on
+your system.  Because Bazaar (by default) keeps the entire branch history on
+the local system, you will want to share this history across all your
+branches.  Having all the history local means you have a fully functional
+revision control system even when you are not on the 'net, however the first
+time you grab a branch, it can take a while.  We're making snapshots of the
+history and putting it in a downloadable tarball to get you bootstrapped much
+more quickly.
+
+Start by downloading and unpacking the repository snapshot.  This file is
+approximately 200MB, so plan accordingly::
+
+{{{
+% wget http://code.python.org/snapshots/python-bzr-snapshot.tar.bz2
+% tar jxf python-bzr-snapshot.tar.bz2
+% cd python
+}}}
+
+This will leave you with a 'python' directory which will act as your shared
+repository.
+
+Now, you can create a branch.  Let's say you want a copy of the Python 3.0
+branch from the sync'd Subversion master.  Here's what you would do if you are
+a core Python developer with write access::
+
+{{{
+% bzr branch bzr+ssh://pythonbzr@code.python.org/python/3.0
+}}}
+
+This will create a working directory called `3.0` in your shared repository
+directory.  Generally, you will want to keep this upstream branch fairly
+pristine, updating it occasionally, as commits are made to the upstream
+master.  Here's how you can pull in new revisions as they are committed to
+Subversion and sync'd to the mirror (remember our lag due to cron)::
+
+{{{
+% cd 3.0
+% bzr pull
+% cd ..
+}}}
+
+Now let's say you want to work on a fix for [[http://bugs.python.org/issue1974|bug 1974]].  Bazaar encourages (but doesn't
+require!)  small, frequent branches focused on just the task at hand.  So
+branch the pristine 3.0 branch for this bug fix:
+
+{{{
+% bzr branch 3.0 bug1974
+% cd bug1974
+}}}
+
+Now you hack the code.  You like your changes and want to commit them.  Again,
+Bazaar encourages but does not require frequent commits.  Unlike Subversion
+though, by default commits in Bazaar are completely local (although there is a
+style of workflow where commits happen to the remote repository).  Here's how
+you could commit your changes::
+
+{{{
+% bzr commit
+}}}
+
+This will pop up an editor, but you could also use the `-m` or `-F` arguments
+to supply a commit message on the command line.
+
+You can keep iterating on the hack-commit cycle as much as you want, until you
+are ready to share your code with someone.  If you are a core developer with
+commit privileges to Python, you can do one of several things.  We're making
+space available for your own branches on `code.python.org`.  You will not be
+able to push your branches onto the sync'd master (yet... unless we someday
+switch to Bazaar and turn off Subversion <wink>).  In the meantime, you can
+push your branch like so (the first time you do this, you will need to add
+`--create-prefix`):
+
+{{{
+% bzr push bzr+ssh://pythonbzr@code.python.org/python/users/barry/bug1974
+}}}
+
+Obviously you should replace `barry` with your own user name, but this really
+can be anything.  As long as you put your branches under `users` you're fine.
+
+Now everyone (not just core developers) will be able to merge your branch, say
+to do a code review.
+
+If you are not a core developer and do not have write access to `code.python.org`,
+you can find a code hosting service for your branches.  One option for example
+is Launchpad, a free code hosting service.  If you register on Launchpad
+you can push your branches to it like this, and Launchpad will automatically
+associate it with the Python project on Launchpad:
+
+{{{
+% bzr push bzr+ssh://bazaar.launchpad.net/~barry/python/bug1974
+}}}
+
+Again, replace `barry` with your Launchpad user name.
+
+Now you can attach this URL to the issue in the Python bug tracker, and it
+will be much easier for a core developer to review and apply your changes.
+
+
+== Branch details ==
+
+Most people will use the Subversion mirrors.  If you are a core developer with
+commit access, use these branches.  Note that `trunk` currently means the
+future Python 2.7 code base, and `py3k` means the future Python 3.1 code base:
+
+{{{
+bzr+ssh://pythonbzr@code.python.org/python/py3k
+bzr+ssh://pythonbzr@code.python.org/python/3.0
+bzr+ssh://pythonbzr@code.python.org/python/2.6
+bzr+ssh://pythonbzr@code.python.org/python/2.5
+bzr+ssh://pythonbzr@code.python.org/python/trunk
+}}}
+
+You cannot push new revisions to these branches, as updates are restricted to
+the svn mirror process.
+
+If you do not have commit access, use these branches::
+
+{{{
+http://code.python.org/python/py3k
+http://code.python.org/python/3.0
+http://code.python.org/python/2.6
+http://code.python.org/python/2.5
+http://code.python.org/python/trunk
+}}}
+
+All of these branches are mirrored on Launchpad, so you are welcome to
+use those instead.  Although the mirrors can lag in updates somewhat,
+you might have better connectivity to Launchpad.  See these urls for details:
+
+{{{
+https://code.launchpad.net/~python-dev
+https://code.launchpad.net/python
+}}}
+
+
+
+== Loggerhead ==
+
+[[https://launchpad.net/loggerhead|Loggerhead]] is the [[http://www.viewvc.org/|ViewVC]] of Bazaar.  It's a web interface that lets you
+explore Python's bzr branches, view history, etc.  Loggerhead is available for
+all the [[http://code.python.org/loggerhead/|branches on python.org]].
+
+
+
+== Anything else? ==
+
+You want to create or edit your `~/.bazaar/bazaar.conf` file to set a few things
+up.  Unlike Subversion, Bazaar commits happen locally, so you have control
+over the email address that gets associated with your changes.  You should use
+an email address that is identifiably you in the Python community.  You may
+also decide to [[http://www.gnupg.org|GPG]] sign your commits, though this is not required.  Here for
+example is my `bazaar.conf` file::
+
+{{{
+[DEFAULT]
+email=Barry Warsaw <barry@python.org>
+create_signatures=always
+gpg_signing_command=gpgv4
+smtp_server = mail.example.com
+[ALIASES]
+last = log -r-10..-1 --line
+commit = commit --strict
+}}}
+ 
+(The `gpgv4` command is a local script that lets me choose which GPG key gets
+used to sign commits, since I have more than one key and Bazaar's config file
+doesn't support an option to choose it, yet.)
+
+See the Bazaar documentation for more options on
+[[http://bazaar-vcs.org/ConfiguringBzr|configuring Bazaar]].
+
+Christian Heimes points out the following instructions for getting the latest
+bzr on Ubuntu:
+
+{{{
+sudo vi /etc/apt/sources.list.d/bzr.list
+--- add ---
+deb http://ppa.launchpad.net/bzr/ubuntu gutsy main
+deb-src http://ppa.launchpad.net/bzr/ubuntu gutsy main
+--- eof ---
+
+sudo apt-get update
+
+#  --force-yes because the packages aren't signed yet
+sudo apt-get --force-yes -y install bzr bzr-gtk bzrtools
+}}}
+
+Also read https://launchpad.net/~bzr/+archive and
+http://bazaar-vcs.org/DistroDownloads
+
+
+== Where do I get help? ==
+
+Start by reading the [[http://bazaar-vcs.org/Documentation|Bazaar documentation]].  There are many ways to use
+Bazaar and many options, commands and plugins (such as
+[[https://edge.launchpad.net/bzr-loom|looms]] which rock)
+which are not described above.  Explore!
+
+Ask your questions on the python-dev@python.org mailing list.  We'll keep
+an eye on things and try to help as much as possible.
+
+Log onto [[http://freenode.net/|irc.freenode.net]] and ask around on the
+`#python`, `#python-dev`, or `#bzr` channels.  The former two are better for
+specific questions about Python's Bazaar branches, while the latter is better
+for more general Bazaar questions.
+
+Keep refreshing this page!  We'll try to keep it updated with new information
+and examples, based on your feedback.
