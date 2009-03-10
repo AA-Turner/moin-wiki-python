@@ -515,6 +515,27 @@ and later:{{{
   const char* res = extract<const char*>(main_namespace["result"]);
 }}}
 
+== How to make... ==
+
+=== dynamic template to-python converters. ===
+
+Assume you want to create a wrapper that will quickly allow you to define a converter for any std::pair.
+
+{{{
+template<class T1, class T2>
+struct PairToTupleConverter {
+  static PyObject* convert(const std::pair<T1, T2>& pair) {
+    return PyTuple_Pack(2, typename return_by_value::apply<T1>::type()(pair.first), typename return_by_value::apply<T2>::type()(pair.second));
+  }
+};
+}}}
+
+Then for every pair you want to be convertible from c++ to python you add
+{{{
+  to_python_converter<std::pair<int, int>, PairToTupleConverter<int, int> >();
+}}}
+in your exports (BOOST_PYTHON_MODULE() definition). Of course, the above example is for a pair of ints.
+
 == Howto debug your extensions.. ==
 
 === [NOTE] Problems using MS Visual C++ Debugger ===
