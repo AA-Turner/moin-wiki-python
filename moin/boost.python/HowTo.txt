@@ -517,24 +517,36 @@ and later:{{{
 
 == How to make... ==
 
-=== dynamic template to-python converters. ===
+=== Dynamic template to-python converters. ===
 
-Assume you want to create a wrapper that will quickly allow you to define a converter for any std::pair.
+Assume you want to create a wrapper that will quickly allow you to define a converter for an std::pair holding any two types. Create the following templated static structure.
 
 {{{
 template<class T1, class T2>
 struct PairToTupleConverter {
   static PyObject* convert(const std::pair<T1, T2>& pair) {
-    return PyTuple_Pack(2, typename return_by_value::apply<T1>::type()(pair.first), typename return_by_value::apply<T2>::type()(pair.second));
+    return incref(make_tuple(pair.first, pair.second).ptr());
   }
 };
 }}}
 
-Then for every pair you want to be convertible from c++ to python you add
+If you have a look at the specifications for python object converters for the to_python_object template in the boost::python documentation, you will notice that the above satisfies the requirements of being an object with a static function convert() that accepts the type-to-be-converted and returns a python object pointer(PyObject*). This is reusable for an std::pair holding any two types like so:
+
 {{{
   to_python_converter<std::pair<int, int>, PairToTupleConverter<int, int> >();
 }}}
-in your exports (BOOST_PYTHON_MODULE() definition). Of course, the above example is for a pair of ints.
+
+Such a statement would be present in your exports (BOOST_PYTHON_MODULE() definition) for any std::pair you wish to export to python as a result of function return values; of course, the above example is for a pair of ''int''s. Another thing one will notice is that these may be used recursively. If we first register a to_python_converter for a pair of ''int''s, then we can later register a pair of int-pairs like so:
+
+{{{
+  typedef std::pair<int, int> IntPair;
+  // This is our previous registration function (as above) using the cleaner typedef.
+  to_python_converter<IntPair, PairToTupleConverter<int, int> >();
+  // Registers a converter for a pair of int-pairs.
+  to_python_converter<std::pair<IntPair, IntPair>, PairToTupleConverter<IntPair, IntPair> >();
+}}}
+
+The second registration function call (actually an instantiation) will delve recursively into the to_python_converter registry to find our previous registration of a converter for ''int''-pairs. The lifetime of the object depends on the return_value_policy that you apply to the export of the function which returns one of these manually registered convertible types. A similar thing can be done for containers; std::vector to boost::python::tuple, std::vector to boost::python::list, std::map to boost::python::dict.
 
 == Howto debug your extensions.. ==
 
