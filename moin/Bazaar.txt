@@ -22,8 +22,8 @@ Subversion yet.  [[http://www.python.org/dev/peps/pep-0374/|PEP 374]] tracks thi
 We are making a mirror of the Python 2.5, 2.6, trunk (2.7), 3.0, and 3.1
 branches available to the public.  These branches are synchronized in
 near-real time with the Subversion master.  This means that as commits are
-made to Subversion, they will be available in Bazaar.  There's a bit of a lag
-because we currently do the sync via cron.
+made to Subversion, they will be available in Bazaar very soon thereafter.
+There's a lag of a minute or few because we currently do the sync via cron.
 
 There is a second mirror that is never automatically sync'd from Subversion,
 although developers can sync to these branches manually.  Core developers can
@@ -49,6 +49,7 @@ their Bazaar branches anywhere, including free code hosting facilities such as
 push them into the Subversion master, you will need to install the
 [[http://bazaar-vcs.org/BzrForeignBranches/Subversion|bzr-svn plugin]].  This requires Subversion 1.5.  The bzr-svn page and its [[https://launchpad.net/bzr-svn||Launchpad project page]] has details about how to install this plugin on your platform.
 
+* You will probably want Karl Fogel's [[http://bazaar.launchpad.net/~kfogel/pydev/trunk/annotate/head%3A/README|pydev plugin]].  This isn't required, but it makes accessing branches much easier by providing a `py:` branch prefix.
 
 == How do I get started? ==
 
@@ -80,8 +81,15 @@ This will leave you with a 'python' directory which will act as your shared
 repository.
 
 Now, you can create a branch.  Let's say you want a copy of the Python 3.0
-branch from the sync'd Subversion master.  Here's what you would do if you are
-a core Python developer with write access::
+branch from the sync'd Subversion master.  If you have Karl's pydev plugin
+mentioned above, then it's as easy as this::
+
+{{{
+% bzr branch py:3.0
+}}}
+
+If you don't have the plugin, and you are a core Python developer with write
+access, do this::
 
 {{{
 % bzr branch bzr+ssh://pythonbzr@code.python.org/python/3.0
@@ -126,9 +134,17 @@ are ready to share your code with someone.  If you are a core developer with
 commit privileges to Python, you can do one of several things.  We're making
 space available for your own branches on `code.python.org`.  You will not be
 able to push your branches onto the sync'd master (yet... unless we someday
-switch to Bazaar and turn off Subversion <wink>).  In the meantime, you can
-push your branch like so (the first time you do this, you will need to add
-`--create-prefix`):
+switch to Bazaar and turn off Subversion <wink>).
+
+In the meantime, you can push your branch like so (the first time you do this,
+you will need to add `--create-prefix`).  If you have Karl's pydev plugin and
+you've set the `pydev_user` option::
+
+{{{
+% bzr push py:~barry/bug1974
+}}}
+
+If you don't have Karl's plugin, do this instead::
 
 {{{
 % bzr push bzr+ssh://pythonbzr@code.python.org/python/users/barry/bug1974
@@ -148,10 +164,11 @@ you can push your branches to it like this, and Launchpad will automatically
 associate it with the Python project on Launchpad:
 
 {{{
-% bzr push bzr+ssh://bazaar.launchpad.net/~barry/python/bug1974
+% bzr push lp:~barry/python/bug1974
 }}}
 
-Again, replace `barry` with your Launchpad user name.
+Again, replace `barry` with your Launchpad user name.  Note the `lp:` prefix;
+this is built into Bazaar and is used to reference Launchpad branches.
 
 Now you can attach this URL to the issue in the Python bug tracker, and it
 will be much easier for a core developer to review and apply your changes.
@@ -159,9 +176,21 @@ will be much easier for a core developer to review and apply your changes.
 
 == Branch details ==
 
-Most people will use the Subversion mirrors.  If you are a core developer with
-commit access, use these branches.  Note that `trunk` currently means the
-future Python 2.7 code base, and `py3k` means the future Python 3.1 code base:
+Most people will use the Subversion mirrors.  If you have Karl's `pydev`
+plugin mentioned above, everyone can access the branches with these URLs.
+Note that `trunk` currently means the future Python 2.7 code base, and `py3k`
+means the future Python 3.1 code base::
+
+{{{
+py:py3k
+py:3.0
+py:2.6
+py:2.5
+py:trunk
+}}}
+
+If you don't have the plugin, and are a core developer with commit access, use
+these branches::
 
 {{{
 bzr+ssh://pythonbzr@code.python.org/python/py3k
