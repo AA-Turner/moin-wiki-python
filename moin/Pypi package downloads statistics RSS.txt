@@ -26,3 +26,24 @@ listed when you search PyPI for "lockfile".  Collecting download stats must be a
 ----
 
 [http://wiki.python.org/moin/PyPiXmlRpc Pypi XMLRPC]. I must say that the XMLRPC interface could be augmented to make it easier to derive per-package-version statistics.
+
+Thanks.  Got it now:
+
+{{{
+>>> server.release_urls('lockfile', '0.7')
+[]
+>>> server.release_urls('lockfile', '0.6')
+[]
+>>> server.release_urls('lockfile', '0.5')
+[]
+>>> server.release_urls('lockfile', '0.4')
+[]
+>>> server.release_urls('lockfile', '0.3')
+[]
+>>> server.release_urls('lockfile', '0.2')
+[{'has_sig': False, 'upload_time': <DateTime '20071209T14:31:52' at 81de40c>, 'comment_text': '', 'python_version': 'source', 'url': 'http://pypi.python.org/packages/source/l/lockfile/lockfile-0.2.tar.gz', 'md5_digest': 'd5fb6d5c39a791c6fd218917707651eb', 'downloads': 163, 'filename': 'lockfile-0.2.tar.gz', 'packagetype': 'sdist', 'size': 9538}]
+>>> server.release_urls('lockfile', '0.1')
+[]
+}}}
+
+Kind of a weird download distribution, but it explains things (I think).  Delete all this stuff when you tire of seeing it... -- Skip
