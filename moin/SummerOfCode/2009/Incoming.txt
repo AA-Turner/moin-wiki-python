@@ -2,7 +2,7 @@ Drop new project ideas here, make sure to include a list of skills that'd be nee
 
 In most cases we'll add it to the list within an hour.  We've made this page to avoid edit conflicts and because some people have had trouble editing the large table on the main ideas page.
 
-= Overhaul struct + PEP 3118 =
+=== Overhaul struct + PEP 3118 ===
 
 There are many open issues for the struct module, and [[http://bugs.python.org/msg81911|a suggestion]] that many others fixes should happen. The problems include inconsistencies in input handling and backwards-compatibility code that should be gone from 3.x.
 
@@ -11,5 +11,13 @@ As [[http://www.python.org/dev/peps/pep-3118/|PEP 3118]] also requires [[http://
 To tackle this, a student should know C and have some familiarity with the CPython codebase. The proposal should include an overview of open issues and, if possible, of problems in current code.
 
 Mentors for this task should have a good understanding of the struct module, the buffer interface and PEP 3118.
+
+=== Clean up and improve the socket module ===
+
+The socket module is the foundation of many important parts of the stdlib. It has many open issues and RFEs, with many more being indirectly dependent on it. Major pain areas are cross-platform problems, shortcomings for a few use cases and some missing bits from the API (e.g. recvall(), sendmsg() and recvmsg()). If these can be solved quickly, going through the uses of the socket module in the stdlib to would make this project even more useful.
+
+This project has some ugly cross-platform needs, but these can be handled by the student and the mentor together (maybe [[http://www.snakebite.org/|snakebite]] could help?). For students wanting to work on this, knowing C is a must, being familiar with CPython and the stdlib would be desirable. Having some prior knowledge of POSIX and Windows interfaces the socket module uses would be a nice perk. 
+
+Mentors should be able to help the student to test their code on many different platforms. Knowing the socket API in different platforms would be desirable.
 
 ----
