@@ -42,7 +42,7 @@ from myframework import run_sanity_checks, move_app_to_expected_location
 from myframework import move_tests_to_expected_location, move_docs_to_expected_location
 
 def install_app(appname, appversion):
-    app = appinfra.fetch.fetch(settings.APPSTORE_URL, appaname, appversion)
+    app = appinfra.fetch.fetch_descriptor(settings.APPSTORE_URL, appaname, appversion)
     if not appinfra.verify.python_version_supported(app.python_versions):
         raise RuntimeError("Unsupported Python version.")
     if not appinfra.verify.platform_supported(app.platforms):
@@ -53,7 +53,7 @@ def install_app(appname, appversion):
             best_version = appinfra.deps.best_version(dep.versions)
             install_app(dep.appname, best_version)
 
-    app_package = appinfra.fetch.download_package(app.download_url)
+    app_package = appinfra.fetch.fetch_package(app.download_url)
     if not appinfra.verify.package_is_valid(app.digest, app_package):
         raise RuntimeError("Digest does not match package file.")
 
@@ -81,7 +81,7 @@ def main():
 The `fetch` or `download` module contains the following functions:
 
 {{{
-fetch(base_url, appname, appversion=None) -> App instance
+fetch_descriptor(base_url, appname, appversion=None) -> App instance
 }}}
 
 Downloads the app descriptor for central app descriptor store and converts it to an App instance. Note that the `base_url` concept makes it possible to create app stores that support '''namespaces''', e.g. `http://foo.com/apps` - the base index, `http://foo.com/django/apps` - only apps coupled to Django, `http://foo.com/zope/apps` - only apps coupled to Zope etc.
@@ -93,7 +93,7 @@ Behaviour:
  * construct an App object with the dict, return it.
 
 {{{
-download_package(download_url) -> path to filename
+fetch_package(download_url) -> path to filename
 }}}
 
 Downloads the packaged application to local filesystem.
@@ -104,6 +104,7 @@ Behaviour:
 == Dependency API ==
 
 The `deps` module contains the following functions:
+
 {{{
 is_installed(dependency, additional_paths=None) -> True, False
 }}}
@@ -116,6 +117,12 @@ Behaviour:
  * tries to `__import__` app name, if that fails, returns `False`
  * if import is successful, compares the installed app's version against the required versions with the specified comparison operator
  * if the version matches any of the required versions, returns `True`, else `False`
+
+{{{
+best_version(supported_versions) -> version string
+}}}
+
+Selects the "best" version from `supported_version`, a list of strings. "Best" version is the highest released version (this may need more thought).
 
 == Version API ==
 
