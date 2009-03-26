@@ -47,20 +47,28 @@ def install_app(appname, appversion):
         raise RuntimeError("Unsupported Python version.")
     if not appinfra.verify.platform_supported(app.platforms):
         raise RuntimeError("Unsupported platform.")
+
     for dep in app.dependencies:
         if not appinfra.deps.is_installed(dep):
             install_app(dep.appname, dep.appversion)
+
     app_package = appinfra.fetch.download_package(app.download_url)
     if not appinfra.verify.package_is_valid(app.digest, app_package):
         raise RuntimeError("Digest does not match package file.")
+
     package_dir = appinfra.unpack(app_package)
     if not appinfra.verify.package_dir_has_expected_structure(package_dir):
         raise RuntimeError("Package directory does not have the required structure")
+
     appinfra.compile_package()
+
     run_sanity_checks(app, package_dir)
+
     move_app_to_expected_location(app, package_dir)
     move_tests_to_expected_location(app, package_dir)
     move_docs_to_expected_location(app, package_dir)
+
+    run_any_additional_hooks(app) # e.g. update settings etc
 
 def main():
     appname, appversion = sys.argv[1:]
@@ -69,7 +77,8 @@ def main():
 
 == Fetch API ==
 
-The `fetch` or `download` module contains a single function with the following signature:
+The `fetch` or `download` module contains the following functions:
+
 {{{
 fetch(base_url, appname, appversion=None) -> App instance
 }}}
@@ -79,6 +88,14 @@ Functionality:
  * urlopen the resulting URL, retrieve contents. The contents represent the App object in JSON.
  * decode the result with the json module, resulting in a dict with metadata fields.
  * construct an App object with the dict, return it.
+
+{{{
+download_package(download_url) -> path to filename
+}}}
+
+Functionality:
+ * downloads the application package from `download_url` to system temporary directory, returns the full path to the resulting file
+
 
 == Dependency API ==
 
