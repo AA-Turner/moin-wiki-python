@@ -236,3 +236,27 @@ def _to_int_or_none(value, label):
         return value
     return _to_int(value, label)
 }}}
+
+Samples of version ordering:
+
+{{{
+def test_ordering():
+    v0 = Version(0,1)
+    v1 = Version(1,2)
+    v2 = Version(1,2,1)
+    v3 = Version(1,2,1,2,2)
+    v4 = Version(1,2,1,2,3)
+    v5 = Version(major=1, patch=1, minor=2, subrellevel=2, subrelease=2)
+
+    assert v1 > v0
+    assert v1 >= v0
+    assert v0 < v1
+    assert v0 <= v1
+    assert v2 > v1
+    assert v0 > v3
+    assert v4 > v3
+
+    assert v1 != v2
+    assert v3 == v5
+}}}
+}}}
