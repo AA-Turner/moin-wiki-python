@@ -22,11 +22,48 @@ Specifics:
  * specifying the location where applications should be installed to -- it doesn't always make sense to install pack
  * there will be rigid guidelines for app versioning (see below) for sensible version parsing and ordering
 
+Lets assume that the API is called `appinfra`.
+
 == Application descriptors ==
 
 Application descriptors are instances of `App` class. The latter is a struct-like container class for all application meta-data. See  http://docs.python.org/distutils/setupscript.html#additional-meta-data for the main fields, also http://peak.telecommunity.com/DevCenter/PkgResources.
 
-The propsed API uses the following fields that are described below: `version`, `depends`, `python_versions`, `download_url`, `platform`.
+The propsed API uses the following fields that are described below: `version`, `depends`, `python_versions`, `download_url`, `platforms`.
+
+== A sample `main()` that uses the API ==
+
+This illustrates a high-level use case for the API, both system-level tools and framework-specific tools would be implemented in similar manner:
+{{{
+import sys
+import appinfra
+from myframework import run_sanity_checks, move_app_to_expected_location
+from myframework import move_tests_to_expected_location, move_docs_to_expected_location
+
+def install_app(appname, appversion):
+    app = appinfra.fetch.fetch(settings.APPSTORE_URL, appaname, appversion)
+    if not appinfra.verify.python_version_supported(app.python_versions):
+        raise RuntimeError("Unsupported Python version.")
+    if not appinfra.verify.platform_supported(app.platforms):
+        raise RuntimeError("Unsupported platform.")
+    for dep in app.dependencies:
+        if not appinfra.deps.is_installed(dep):
+            install_app(dep.appname, dep.appversion)
+    app_package = appinfra.fetch.download_package(app.download_url)
+    if not appinfra.verify.package_is_valid(app.digest, app_package):
+        raise RuntimeError("Digest does not match package file.")
+    package_dir = appinfra.unpack(app_package)
+    if not appinfra.verify.package_dir_has_expected_structure(package_dir):
+        raise RuntimeError("Package directory does not have the required structure")
+    appinfra.compile_package()
+    run_sanity_checks(app, package_dir)
+    move_app_to_expected_location(app, package_dir)
+    move_tests_to_expected_location(app, package_dir)
+    move_docs_to_expected_location(app, package_dir)
+
+def main():
+    appname, appversion = sys.argv[1:]
+    install_app(appname, appversion)
+}}}
 
 == Fetch API ==
 
@@ -40,6 +77,14 @@ Functionality:
  * urlopen the resulting URL, retrieve contents. The contents represent the App object in JSON.
  * decode the result with the json module, resulting in a dict with metadata fields.
  * construct an App object with the dict, return it.
+
+== Dependency API ==
+
+The `deps` module contains the following functions:
+{{{
+handle_deps(app : App instance) ->
+is_installed(appname, ver_descriptor)
+}}}
 
 == Version API ==
 
