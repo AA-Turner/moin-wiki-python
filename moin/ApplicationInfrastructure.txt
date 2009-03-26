@@ -101,6 +101,28 @@ Downloads the packaged application to local filesystem.
 Behaviour:
  * downloads the application package from `download_url` to system temporary directory, returns the full path to the resulting file
 
+== Verification API ==
+
+The `verify` module contains the following functions:
+
+{{{
+python_version_supported(python_versions) -> True, False
+}}}
+
+Verifies if the running Python version is in `python_versions`, a list of strings.
+
+{{{
+platform_supported(platforms) -> True, False
+}}}
+
+Verifies if the string representation of current platform is in `platforms`, a list of strings.
+
+{{{
+package_is_valid(digest, package_file) -> True, False
+}}}
+
+Verifies if the digest matches the package file's digest. Digest is in the form `algoname:digest_value_in_base64`.
+
 == Dependency API ==
 
 The `deps` module contains the following functions:
