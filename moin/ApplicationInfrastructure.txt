@@ -30,7 +30,7 @@ Application descriptors are instances of `App` class. The latter is a struct-lik
 
 The propsed API uses the following fields that are described below: `version`, `depends`, `python_versions`, `download_url`, `platforms`.
 
-== A sample `main()` that uses the API ==
+== A sample main() that uses the API ==
 
 This illustrates a high-level use case for the API, both system-level tools and framework-specific tools would be implemented in similar manner:
 {{{
@@ -84,7 +84,7 @@ The `fetch` or `download` module contains the following functions:
 fetch(base_url, appname, appversion=None) -> App instance
 }}}
 
-Downloads the app descriptor for central app descriptor store and converts it to an App instance.
+Downloads the app descriptor for central app descriptor store and converts it to an App instance. Note that the `base_url` concept makes it possible to create app stores that support '''namespaces''', e.g. `http://foo.com/apps` - the base index, `http://foo.com/django/apps` - only apps coupled to Django, `http://foo.com/zope/apps` - only apps coupled to Zope etc.
 
 Behaviour:
  * urljoin `appname` to `base_url`; if `appversion` is not None, add it as a query parameter, resulting in e.g. `http://foo.com/appstore/appname?version=1.2`
@@ -100,7 +100,6 @@ Downloads the packaged application to local filesystem.
 
 Behaviour:
  * downloads the application package from `download_url` to system temporary directory, returns the full path to the resulting file
-
 
 == Dependency API ==
 
