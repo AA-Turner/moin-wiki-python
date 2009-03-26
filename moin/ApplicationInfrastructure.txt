@@ -57,11 +57,12 @@ def install_app(appname, appversion):
     if not appinfra.verify.package_is_valid(app.digest, app_package):
         raise RuntimeError("Digest does not match package file.")
 
-    package_dir = appinfra.unpack(app_package)
-    if not appinfra.verify.package_dir_has_expected_structure(package_dir):
+    package_dir = appinfra.package.unpack(app_package)
+    if not appinfra.package.dir_has_expected_structure(package_dir):
         raise RuntimeError("Package directory does not have the required structure")
 
-    appinfra.compile_package()
+    if app.needs_compiling():
+        appinfra.package.compile_package(app, package_dir)
 
     run_sanity_checks(app, package_dir) # e.g. CheeseCake http://pycheesecake.org/
 
@@ -145,6 +146,28 @@ best_version(supported_versions) -> version string
 }}}
 
 Selects the "best" version from `supported_version`, a list of strings. "Best" version is the highest released version (this may need more thought).
+
+== Package API ==
+
+The `package` module contains the following functions:
+
+{{{
+unpack(package_file) -> package_dir
+}}}
+
+Unpacks the package to a temporary location and returns the full path to the resulting directory. 
+
+{{{
+dir_has_expected_structure(package_dir) -> True, False
+}}}
+
+Verifies if the unpacked package directory has expected structure. There will be '''strict, defined requirements''' on how the directory should be laid out (e.g. tests in 'tests', documentation in 'docs' etc).
+
+{{{
+compile(app, package_directory)
+}}}
+
+Compiles the C/C++/whatnot sources to binaries.
 
 == Version API ==
 
