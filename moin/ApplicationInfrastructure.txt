@@ -49,8 +49,9 @@ def install_app(appname, appversion):
         raise RuntimeError("Unsupported platform.")
 
     for dep in app.dependencies:
-        if not appinfra.deps.is_installed(dep):
-            install_app(dep.appname, dep.appversion)
+        if not appinfra.deps.is_installed(dep, ['/my/framework/libs']):
+            best_version = appinfra.deps.best_version(dep.versions)
+            install_app(dep.appname, best_version)
 
     app_package = appinfra.fetch.download_package(app.download_url)
     if not appinfra.verify.package_is_valid(app.digest, app_package):
@@ -62,7 +63,7 @@ def install_app(appname, appversion):
 
     appinfra.compile_package()
 
-    run_sanity_checks(app, package_dir)
+    run_sanity_checks(app, package_dir) # e.g. CheeseCake http://pycheesecake.org/
 
     move_app_to_expected_location(app, package_dir)
     move_tests_to_expected_location(app, package_dir)
@@ -83,7 +84,9 @@ The `fetch` or `download` module contains the following functions:
 fetch(base_url, appname, appversion=None) -> App instance
 }}}
 
-Functionality:
+Downloads the app descriptor for central app descriptor store and converts it to an App instance.
+
+Behaviour:
  * urljoin `appname` to `base_url`; if `appversion` is not None, add it as a query parameter, resulting in e.g. `http://foo.com/appstore/appname?version=1.2`
  * urlopen the resulting URL, retrieve contents. The contents represent the App object in JSON.
  * decode the result with the json module, resulting in a dict with metadata fields.
@@ -93,7 +96,9 @@ Functionality:
 download_package(download_url) -> path to filename
 }}}
 
-Functionality:
+Downloads the packaged application to local filesystem.
+
+Behaviour:
  * downloads the application package from `download_url` to system temporary directory, returns the full path to the resulting file
 
 
@@ -101,9 +106,17 @@ Functionality:
 
 The `deps` module contains the following functions:
 {{{
-handle_deps(app : App instance) ->
-is_installed(appname, ver_descriptor)
+is_installed(dependency, additional_paths=None) -> True, False
 }}}
+
+Checks whether a prerequisite application is installed
+
+Behaviour:
+ * the dependency is a tuple `(app_name, supported_versions)`, where `supported_versions` is a list of strings in the format `comparison_operator version_string`. Comparison operator can be any of `<|<=|!=|==|>=|>` and version string has to be in supported format for the `version` module (see below). 
+ * if `additonal_paths` is given, inserts (or appends?) them into `sys.path`
+ * tries to `__import__` app name, if that fails, returns `False`
+ * if import is successful, compares the installed app's version against the required versions with the specified comparison operator
+ * if the version matches any of the required versions, returns `True`, else `False`
 
 == Version API ==
 
@@ -111,7 +124,9 @@ Responsibilities:
  * parse from strings,
  * consistent ordering.
 
-=== Example implementation ===
+== Example implementation ==
+
+=== Version handling ===
 
 {{{
 """
@@ -343,3 +358,5 @@ def test_ordering():
     assert v1 != v2
     assert v3 == v5
 }}}
+
+=== Dependency handling ===
