@@ -50,7 +50,7 @@ def install_app(appname, appversion):
         raise RuntimeError("Unsupported platform.")
 
     for dep in app.dependencies:
-        if not appinfra.deps.is_installed(dep, ['/my/framework/libs']):
+        if not appinfra.deps.is_installed(dep.name, dep.versions, ['/my/framework/libs']):
             best_version = appinfra.deps.best_version(dep.versions)
             install_app(dep.appname, best_version)
 
@@ -130,15 +130,15 @@ Verifies if the digest matches the package file's digest. Digest is in the form 
 The `deps` module contains the following functions:
 
 {{{
-is_installed(dependency, additional_paths=None) -> True, False
+is_installed(app_name, app_versions, additional_paths=None) -> True, False
 }}}
 
-Checks whether a prerequisite application is installed
+Checks whether a prerequisite application is installed.
 
 Behaviour:
- * the dependency is a tuple `(app_name, supported_versions)`, where `supported_versions` is a list of strings in the format `comparison_operator version_string`. Comparison operator can be any of `<|<=|!=|==|>=|>` and version string has to be in supported format for the `version` module (see below). 
+ * `app_versions` is a list of strings in the format `comparison_operator version_string`. Comparison operator can be any of `<|<=|!=|==|>=|>` and version string has to be in supported format for the `version` module (see below). 
  * if `additonal_paths` is given, inserts (or appends?) them into `sys.path`
- * tries to `__import__` app name, if that fails, returns `False`
+ * tries to `__import__(app_name)`, if that fails, returns `False`
  * if import is successful, compares the installed app's version against the required versions with the specified comparison operator
  * if the version matches any of the required versions, returns `True`, else `False`
 
@@ -215,7 +215,7 @@ VERSION = version.Version(1, 0, version.ALPHA, 1)
 
 === Version handling ===
 
-`appinfra.version` module:
+`appinfra.version` module (tested, working code):
 
 {{{
 import re
@@ -417,7 +417,49 @@ def test_ordering():
 
 === Dependency handling ===
 
-... pending ...
+`deps` module (untested code, may break horribly):
+
+{{{
+import re, sys, operator
+
+from plugit import version, install
+
+CMP_OP_MAP = {
+    '<':  operator.lt,
+    '<=': operator.le,
+    '==': operator.eq,
+    '!=': operator.ne,
+    '>=': operator.ge,
+    '>':  operator.gt,
+}
+# ",?\s*(?=%s)" % "|".join(CMP_OP_MAP.keys())
+DEP_SPLIT_RE = re.compile(r',?\s*(?=<|<=|!=|==|>=|>)')
+VER_DEP_RE = re.compile(r'(?P<cmp><|<=|!=|==|>=|>)\s*(?P<ver>[-a-z0-9. ]+)')
+
+def _parse(ver_deps):
+    chunks = DEP_SPLIT_RE.split(ver_deps)
+    ret = []
+    for chunk in chunks:
+        ret.append(VER_DEP_RE.match(chunk).groupdict())
+    return ret
+
+def is_installed(appname, ver_deps, additional_paths=None):
+    if additional_paths:
+        for path in additional_paths:
+            sys.path.insert(0, path)
+    try:
+        __import__(appname)
+        app = sys.modules[appname]
+    except ImportError:
+        return False
+
+    for ver in _parse(ver_deps):
+        if CMP_OP_MAP[ver['cmp']](app.__version__,
+                version.from_string(ver['ver'])):
+            return True
+
+    return False
+}}}
 
 == Copyright ==
 
