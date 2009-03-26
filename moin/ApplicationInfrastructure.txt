@@ -13,13 +13,33 @@ Installing an application consists of:
  1. verify the app package with the digest given in the descriptor
  1. unpack the app package to a temporary location
  1. run any required sanity checks on the unpacked source
- 1. move the source to a configurable location to install it (currently site-packages, but apps may have different needs, e.g. Google App Engine frameworks need a plain directory as the target location)
+ 1. move the source to a configurable location to install it (currently `site-packages`, but apps may have different needs, e.g. Google App Engine frameworks need a plain directory as the target location)
+ 1. optionally move documentation and tests to specific locations as well 
 
 Specifics:
  * writing a tool that can be told to install an application (pip, easy_install, project-specific enhanced tool) should be entirely trivial with the API
+  * it should be easy for frameworks to implement e.g. `trac-admin install pluginname [pluginversion]` or `django-admin.py install reusableapp [appversion]` with the API
  * specifying the location where applications should be installed to -- it doesn't always make sense to install pack
  * there will be rigid guidelines for app versioning (see below) for sensible version parsing and ordering
 
+== Application descriptors ==
+
+Application descriptors are instances of `App` class. The latter is a struct-like container class for all application meta-data. See  http://docs.python.org/distutils/setupscript.html#additional-meta-data for the main fields, also http://peak.telecommunity.com/DevCenter/PkgResources.
+
+The propsed API uses the following fields that are described below: `version`, `depends`, `python_versions`, `download_url`, `platform`.
+
+== Fetch API ==
+
+The `fetch` or `download` module contains a single function with the following signature:
+{{{
+fetch(base_url, appname, appversion=None) -> App instance
+}}}
+
+Functionality:
+ * urljoin `appname` to `base_url`; if `appversion` is not None, add it as a query parameter, resulting in e.g. `http://foo.com/appstore/appname?version=1.2`
+ * urlopen the resulting URL, retrieve contents. The contents represent the App object in JSON.
+ * decode the result with the json module, resulting in a dict with metadata fields.
+ * construct an App object with the dict, return it.
 
 == Version API ==
 
@@ -258,5 +278,4 @@ def test_ordering():
 
     assert v1 != v2
     assert v3 == v5
-}}}
 }}}
