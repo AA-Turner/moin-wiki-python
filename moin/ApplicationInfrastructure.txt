@@ -85,10 +85,10 @@ The `fetch` or `download` module contains the following functions:
 fetch_descriptor(base_url, appname, appversion=None) -> App instance
 }}}
 
-Downloads the app descriptor for central app descriptor store and converts it to an App instance. Note that the `base_url` concept makes it possible to create app stores that support '''namespaces''', e.g. `http://foo.com/apps` - the base index, `http://foo.com/django/apps` - only apps coupled to Django, `http://foo.com/zope/apps` - only apps coupled to Zope etc.
+Downloads the app descriptor for central app descriptor store and converts it to an App instance. Note that the `base_url` concept makes it possible to create app stores that support '''namespaces''', e.g. `http://foo.com/apps/` - the base index, `http://foo.com/django/apps/` - only apps coupled to Django, `http://foo.com/zope/apps/` - only apps coupled to Zope etc.
 
 Behaviour:
- * urljoin `appname` to `base_url`; if `appversion` is not None, add it as a query parameter, resulting in e.g. `http://foo.com/appstore/appname?version=1.2`
+ * urljoin `appname` to `base_url`; if `appversion` is not None, add it as a query parameter, resulting in e.g. `http://foo.com/appstore/appname/?version=1.2`
  * urlopen the resulting URL, retrieve contents. The contents represent the App object in JSON.
  * decode the result with the json module, resulting in a dict with metadata fields.
  * construct an App object with the dict, return it.
