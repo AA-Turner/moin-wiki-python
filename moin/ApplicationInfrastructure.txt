@@ -21,6 +21,7 @@ Specifics:
   * it should be easy for frameworks to implement e.g. `trac-admin install pluginname [pluginversion]` or `django-admin.py install reusableapp [appversion]` with the API
  * specifying the location where applications should be installed to -- it doesn't always make sense to install pack
  * there will be rigid guidelines for app versioning (see below) for sensible version parsing and ordering
+ * there will be rigid guidelines for app directory layout to help Linux distribution packagers to put docs and tests to system-specific locations (e.g. '/usr/share/docs` and `/usr/something/python/site-packages/tests`)
 
 Lets assume that the API is called `appinfra`.
 
@@ -171,18 +172,14 @@ Compiles the C/C++/whatnot sources to binaries.
 
 == Version API ==
 
-Responsibilities:
- * parse from strings,
- * consistent ordering.
+Version format will be strictly defined (both the string representation and capabilities of the `Version` class) according to best practices.
 
-== Example implementation ==
+The responsibilities of the `Version` class will be to provide canonical string representation of `Version` objects, parser version strings and create corresponding `Version` objects, and consistent and intuitive ordering of versions.
 
-=== Version handling ===
+Possible specification:
 
-{{{
-"""
-Uniform version handling module. Plugit-conforming packages MUST use the
-`Version` objects defined here to declare their versions.
+`appinfra`-confirming packages MUST use the
+`appinfra.version.Version` objects to declare their versions.
 
 Version strings are in "major.minor[.patch] [sub]" format. The major number is
 0 for initial, experimental releases of software. It is incremented for
@@ -200,22 +197,30 @@ it cannot have a sub-release version number. A release without sub-release
 information is considered final.
 
 Packages have to utilise the `Version` class below for specifying their
-versions, e.g.::
+versions, e.g.:
 
- from plugit import version
+{{{
+from appinfra import version
 
- VERSION = version.Version(0, 1)
- # or
- VERSION = version.Version(0, 1, 2)
- # or
- VERSION = version.Version(1, 0, 3, version.PRE_ALPHA)
- # or
- VERSION = version.Version(1, 0, version.ALPHA, 1)
+VERSION = version.Version(0, 1)
+# or
+VERSION = version.Version(0, 1, 2)
+# or
+VERSION = version.Version(1, 0, 3, version.PRE_ALPHA)
+# or
+VERSION = version.Version(1, 0, version.ALPHA, 1)
+}}}
 
-"""
+== Example implementation ==
+
+=== Version handling ===
+
+`appinfra.version` module:
+
+{{{
 import re
 
-from plugit.exceptions import VersionError
+from appinfra.exceptions import VersionError
 
 PRE_ALPHA, ALPHA, BETA, PRERELEASE, FINAL = range(5)
 
