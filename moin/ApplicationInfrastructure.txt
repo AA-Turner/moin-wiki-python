@@ -75,7 +75,9 @@ def install_app(appname, appversion):
     move_tests_to_expected_location(app, package_dir)
     move_docs_to_expected_location(app, package_dir)
 
-    run_any_additional_hooks(app) # e.g. update settings etc
+    run_any_additional_hooks(app) # e.g. update settings, register in a package registry etc
+
+    appinfra.package.cleanup(app_package, package_dir)
 
 def main():
     appname, appversion = sys.argv[1:]
