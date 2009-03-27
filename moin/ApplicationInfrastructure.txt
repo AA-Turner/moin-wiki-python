@@ -52,7 +52,7 @@ def install_app(appname, appversion):
     for dep in app.dependencies:
         if not appinfra.deps.is_installed(dep.name, dep.versions, ['/my/framework/libs']):
             best_version = appinfra.deps.best_version(dep.versions)
-            install_app(dep.appname, best_version)
+            install_app(dep.name, best_version)
 
     app_package = appinfra.fetch.fetch_package(app.download_url)
     if not appinfra.verify.package_is_valid(app.digest, app_package):
