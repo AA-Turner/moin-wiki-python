@@ -5,7 +5,7 @@ A quick overview of components needed for a reusable application infrastructure.
 This is a proposal for the API, not for particular tools.
 
 Installing an application consists of:
- 1. fetching the app descriptor from a configurable location (currently PyPi, there should be no default in the API)
+ 1. fetching the app descriptor from a configurable location (currently PyPI, there should be no default in the API)
  1. parse the app descriptor to a Python app descriptor object
  1. parse the dependencies listed in the descriptor
  1. check if dependencies are installed, if not, install each of them by going to step 1 (recursively)
@@ -19,7 +19,8 @@ Installing an application consists of:
 Specifics:
  * writing a tool that can be told to install an application (pip, easy_install, project-specific enhanced tool) should be entirely trivial with the API
   * it should be easy for frameworks to implement e.g. `trac-admin install pluginname [pluginversion]` or `django-admin.py install reusableapp [appversion]` with the API
- * specifying the location where applications should be installed to -- it doesn't always make sense to install pack
+ * it's possible to specify the location where applications are installed (to cater for virtualenv and "lump all libs into `/some/where/lib/` and `sys.path.insert('/some/where/lib/')`" workflows)
+ * it's possible to specify the package index URL, to facilitate PyPI mirrors, framework-specific "PyPI"s etc
  * there will be rigid guidelines for app versioning (see below) for sensible version parsing and ordering
  * there will be rigid guidelines for app directory layout to help Linux distribution packagers to put docs and tests to system-specific locations (e.g. '/usr/share/docs` and `/usr/something/python/site-packages/tests`)
 
