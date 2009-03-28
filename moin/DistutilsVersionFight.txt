@@ -31,13 +31,31 @@ This obviously trades away the flexibility of roll-your-own naming entirely, but
 
 === Trent Mick ===
 
+The proposal that I believe we tentatively were agreeing on towards the end of last night's OpenSpace
+is basically distutil's StrictVersion plus the allowance of 'c' for "release candidates".
+
+    Good:
+        1.2         # equivalent to "1.2.0"
+        1.2.0
+        1.2a1
+        1.2.3a2
+        1.2.3b1
+        1.2.3c1
+    Bad:
+        1           # mininum two numbers
+        1.2.3.4     # max 3 numbers
+        1.2a        # release level must have a release serial
+        1.2.3b
+
+
+
 A link from RubyGems that might be interesting:
 
 * Version Policy: http://rubygems.org/read/chapter/7
 
     Because RubyGems provides support for version comparisons, we want to pick a policy that works well with the RubyGems comparisons and gives the end user what they expect. We call such a policy “rational”. Also, if we call non-working policies “irrational”, then we apply a little bit of social engineering to gently prod offenders to conform.
 
-I hope to have some code up soon, as well.
+
 
 === Georg Brandl ===
 
