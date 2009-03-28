@@ -31,8 +31,8 @@ This obviously trades away the flexibility of roll-your-own naming entirely, but
 
 === Trent Mick ===
 
-The proposal that I believe we tentatively were agreeing on towards the end of last night's OpenSpace
-is basically distutil's StrictVersion plus the allowance of 'c' for "release candidates".
+The proposal that I believe we tentatively were agreeing on towards the end of last night's Open Space
+is basically distutil's `StrictVersion` plus the allowance of 'c' for "release candidates".
 
 {{{
     Good:
@@ -47,6 +47,38 @@ is basically distutil's StrictVersion plus the allowance of 'c' for "release can
         1.2.3.4     # max 3 numbers
         1.2a        # release level must have a release serial
         1.2.3b
+}}}
+
+Code for this: [[attachment:verlib.py]]
+
+Two stabs and what we discussed. We should pick *one* of these (or, of course, one of the
+other proposals here):
+
+* `RationalVersion1`
+  Close to distutils' `StrictVersion` in that it only allows between 2 and 3
+  `<num>.` sections. I.e. "1.2.3", but not "1.2.3.4".
+
+* `RationalVersion2`
+  Allows any number of `<num>.` sections (still must be at least 2 of them).
+
+
+{{{
+>>> from verlib import *
+>>> V = RationalVersion1
+
+>>> V('1.2.3')
+1.2.3
+>>> V('1.2.3').info
+(1, 2, 3, None, 0)
+
+>>> V('1.2.3a4')
+'1.2.3a4'
+>>> V('1.2.3a4').info
+(1, 2, 3, 'a', 4)
+
+>>> (V('1.0.0') > V('1.0.0c2') > V('1.0.0c1') > V('1.0.0b2') > V('1.0.0b1') 
+...  > V('1.0.0a2') > V('1.0.0a1'))
+True
 }}}
 
 
