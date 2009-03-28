@@ -198,4 +198,13 @@ Package repositories must provide a way to:
 
 Ideally, they should display the version string to the user and allow searches based on these as well.
 
+==Brian Sutherland==
+This is more a statement of what we want/don't want than a specific implementation.
+
+* A method of expressing "alpha", "beta"... releases in ways that sort lower than the final release
+* Would be nice if python version numbers were directly usable by system packagers, or, in the worst case, reliably transformed
+* No special casing of certain words, i.e. "pre" or "alpha". i.e. A simple/reliable sorting that you can explain to people
+* A standard way to format the version number to fit on the filesystem
+
+
 @MAL: One of the issues is being able to specify dependencies (e.g. in the current "setup_requires" or whatever). For example: "simplejson > 3.0.1". That means either a deterministic translation btwn version tuple and version string is necessary OR dependencies need to specify version *tuples*. The latter might be painful. --TrentMick
