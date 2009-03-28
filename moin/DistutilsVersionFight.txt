@@ -1,1 +1,16 @@
 Describe DistutilsVersionFight here.
+
+=== Larry Hastings ===
+Sorry for the crazy moon proposal here, but I have example code that I think even works.  (Though I'm not operating on enough sleep, so sorry 'cause I already know the code is crappy.)
+[[attachment:lch.version.py]]
+
+The basic idea:
+* A version string should be transformable into a version tuple.
+* Version tuples are tuples of arbitrary length containing only integers.
+* A version tuple conceptually ends with an infinite number of 0 fields; (1,3) == (1, 3, 0, 0, 0)
+* While you see integers, accumulate them, and when it's done int().
+* While you see alphanumerics, accumulate them, and when it's done map it if it's a known string ("alpha", "beta") otherwise break up the characters into individual numbers.
+* Pre-releases (alpha, beta) are represented by having a negative number in the version tuple.  
+* When you compare version tuples, if there are any negative fields, split there and compare the non-negative parts first.
+
+I doubt y'all will go for this.  But I thought you should at least consider supporting a more flexible format.  People like to express their version numbers a wide variety of ways, and most folks could find a way to map their personal weird approach to something this approach would make consistent.
