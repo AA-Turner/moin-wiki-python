@@ -14,3 +14,17 @@ The basic idea:
  * When you compare version tuples, if there are any negative fields, split there and compare the non-negative parts first.
 
 I doubt y'all will go for this.  But I thought you should at least consider supporting a more flexible format.  People like to express their version numbers a wide variety of ways, and most folks could find a way to map their personal weird approach to something this approach would make consistent.
+
+=== Erik LaBianca ===
+
+Just throwing this out there since it's a little different from what was discussed earlier, but I think has some merit:
+
+Versions are a series of integers. Ie 0.0.1, 1.0.0, or 12.5.7. Versions define the "intended API level" of the software in question.
+
+Pre-release versions are denoted by a version, followed by a string (I suggest "pre" but it doesn't really matter), followed by a series of integers, seperated by periods if needed. Pre-releases are important because while they may be an implementation of a future API version, they are likely to be buggy or incomplete.
+
+For instance 1.0.0pre2.1 > 1.0.0pre2 > 1.0.0pre1 < 1.0.0.
+
+Or for the case of daily builds, 1.0.0pre1 > 1.0.0pre0.20090327 < 1.0.0
+
+This obviously trades away the flexibility of roll-your-own naming entirely, but makes up for it by defining a standard that leaves enough flexibility to represent most cases easily. It is easily extremely easy to parse and explain, reasonably extensible, and should be able to cover most cases aside from that of "backported bug fixes". I believe that eliminating words will be a net positive because it eliminates any complaints along the lines of "you included alpha, beta, and rc but where's pre-release or testing?!".
