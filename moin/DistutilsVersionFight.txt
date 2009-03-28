@@ -1,4 +1,6 @@
-Describe DistutilsVersionFight here.
+= Distutils Version Fight =
+
+== Proposals ==
 
 === Larry Hastings ===
 Sorry for the crazy moon proposal here, but I have example code that I think even works.  (Though I'm not operating on enough sleep, so sorry 'cause I already know the code is crappy.)
@@ -170,3 +172,28 @@ Examples:
 
   3.1~~svn20090328 < 3.1~alpha1 < 3.1
 }}}
+
+=== Marc-Andre Lemburg ===
+
+The approach I'd like to see is simple and avoids all complicated and error prone parsing of string versions:
+
+ * The package ''must'' provide a string version of the package version in any format the author likes to use
+
+ This is for humans to read and should provide enough information for a potential user to identify the version as right for his or her use.
+
+ * The package ''must'' provide a tuple version which follows a strict ordering
+
+ The tuple may contain integers and/or ASCII strings and can (theoretically) have arbitrary length. It is meant for computers to read and must therefore provide the version information in a lexically correct order.
+
+ The Python sys.version_info and its approach to providing the version information in lexically correct order is a good example of such a version tuple: (major, minor, patch_level, status, status_version).
+
+ Some authors may also want to include the release date/time and/or the repository revision used to cut the release as extra tuple entries.
+
+Package management software should always use the tuple version for version comparison and display the string version to the user.
+
+Package repositories must provide a way to:
+
+ * get a list of available versions (in tuple form)
+ * convert a version tuple for a package to a download URL
+
+Ideally, they should display the version string to the user and allow searches based on these as well.
