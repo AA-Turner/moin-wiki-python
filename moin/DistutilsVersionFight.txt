@@ -126,3 +126,23 @@ This would enable a version numbering scheme per packaging scheme and would also
 the tags can be processed downstream by packaging organisations.
 
 The idea put forward by Larry Hastings is an excellent method for converting pre-release and post release tags to a numeric based schema. It could be included as an example of tag scheme conversion from the setuptools versioning scheme to a completely numeric packaging scheme. 
+
+=== Dan Callahan ===
+
+Rough sketch of an idea:
+
+A version is a series of "."-separated numeric fields. The introduction of a
+non-numeric character anywhere in the version string marks the version as a
+pre-release.
+
+For sorting: Compare numeric fields as tuples of integers. For equivalent
+numeric versions, prefer ones that do not have any trailing non-numeric fields.
+
+In essence: '3.1' == '3.1.0' > '3.1.rc' > '3.1.0.funtime32'
+
+This simply and flexibly handles pre-release versioning. Post-releases are
+handled by incrementing the least significant numeric field.
+
+This is, in essence, the inverse of Loose Version in distutils -- it handles
+pre-releases instead of post-releases, but still has room for "non-standard"
+annotations.
