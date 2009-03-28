@@ -38,3 +38,9 @@ A link from RubyGems that might be interesting:
     Because RubyGems provides support for version comparisons, we want to pick a policy that works well with the RubyGems comparisons and gives the end user what they expect. We call such a policy “rational”. Also, if we call non-working policies “irrational”, then we apply a little bit of social engineering to gently prod offenders to conform.
 
 I hope to have some code up soon, as well.
+
+=== Georg Brandl ===
+
+Simple modification of Larry's proposal: split the tuple at the "tag" (defined by an alpha part in the version number), and allow only one tag. Map alpha, beta and rc to known negative values, and every other tag to a value lower than all of these (so that setuptools' .dev-r102 would still work correctly).
+
+Sample implementations at [[attachment:gb.version.py]].
