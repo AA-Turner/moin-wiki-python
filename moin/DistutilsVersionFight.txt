@@ -146,3 +146,26 @@ handled by incrementing the least significant numeric field.
 This is, in essence, the inverse of Loose Version in distutils -- it handles
 pre-releases instead of post-releases, but still has room for "non-standard"
 annotations.
+
+=== Matthias Klose ===
+
+Pointing to the [[http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Version|version numbering scheme used by Debian]], which is in production use for many years. Pointing out some points:
+
+ * It is a strict system, not relying on heuristics and any special meanings of strings like alpha, beta, rc, pre.
+
+ * It allows correction of a bad version number by allowing prefixing the version by an epoch (: character).
+
+ * It allows to write a version number very close to the upstream version, handling parts of the version number which should be considered less than another version (using the tilde character), e.g. 1.0~alpha1 < 1.0.
+
+ * The paragraph about the "debian_revision" mentioned in the referenced URL is not appropriate for a python version. It would be nice if the version system could handle this revisions usually by packages for distributions of operating systems.
+
+ * Characters which cannot directly be encoded on the filesystem can be encoded using %<hexvalue> and be used when the version number needs to be encoded in a file name.
+
+Examples:
+{{{
+  1.0 < 1.0.0 < 1.0.1 < 1.1 < 1.10
+
+  2.1 < 1:1.0
+
+  3.1~~svn20090328 < 3.1~alpha1 < 3.1
+}}}
