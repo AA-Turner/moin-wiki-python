@@ -44,3 +44,22 @@ I hope to have some code up soon, as well.
 Simple modification of Larry's proposal: split the tuple at the "tag" (defined by an alpha part in the version number), and allow only one tag. Map alpha, beta and rc to known negative values, and every other tag to a value lower than all of these (so that setuptools' .dev-r102 would still work correctly).
 
 Sample implementations at [[attachment:gb.version.py]].
+
+
+=== Tom Crawley ===
+
+The setuptools versioning scheme is described [[http://peak.telecommunity.com/DevCenter/setuptools#specifying-your-project-s-version|here]]. It is pretty similiar to the schemes which have been proposed so far. The setuptools versioning scheme should meet most of our needs and has found wide acceptance in the community.  Neither of the two current distuils versioning schemes are widely used. The setuptools versioning scheme is geared to the needs of developers who are the primary audience of distuils and provides a useful scheme for controlling software releases.
+
+Third party packagers each have their own version schemes with their own features and idiosyncracies . We cannot accomodate every third party packager within the Python versioning scheme. We should focus primarily on the needs of developers as without developer buyin the scheme will not be adopted. We can accomodate third parties by allowing inclusion of packager specific version numbers with the metadata that is distributed with the Python application distribution. This would look something like:
+{{{
+version = 1.0.pre1
+
+[rpm]
+version = 1.0
+
+}}}
+
+This would enable a version numbering scheme per packaging scheme and would also allow for extensibility as new packaging schemes are developed. The information in
+the tags can be processed downstream by packaging organisations.
+
+The idea put forward by Larry Hastings is an excellent method for converting pre-release and post release tags to a numeric based schema. It could be included as an example of tag scheme conversion from the setuptools versioning scheme to a completely numeric packaging scheme. 
