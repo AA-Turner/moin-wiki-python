@@ -17,6 +17,58 @@ The basic idea:
 
 I doubt y'all will go for this.  But I thought you should at least consider supporting a more flexible format.  People like to express their version numbers a wide variety of ways, and most folks could find a way to map their personal weird approach to something this approach would make consistent.
 
+==== Larry Hastings: Round 2--Fight! ====
+
+You want strict?  I can do ''strict''.  Peep dis, my homies.  First we define a "version number".
+ * A "version number" is a sequence of numbers punctuated by periods.
+  * You may have an arbitrary number of fields in a version number.
+  * You may not use negative numbers.
+  * You may not use a leading zero unless the number is 0.
+  * You may not use two (or more) periods in a row.
+  * You may not end with a period.
+
+Now we can define a "version string":
+ * A "version string" must begin with a "version number".  This identifies the "release version".
+ * If you follow the "release version number" with one of the letters "a", b", or "c", this "version string" represents a "pre-release".
+  * The characters "a", "b", and "c" are called "pre-release markers".
+  * A "pre-release marker" must be followed by another "version number".  "1.0c" is not a legal version.
+  * Collectively the "pre-release marker" followed by a "version number" identifies the "pre-release version".
+  * You may only use at most one "pre-release" marker.
+  * "a" maps to Alpha, "b" to Beta, and "c" to Release Candidate.
+  * Any version with a "pre-release marker" is older than one without; lower-ord() letters represent "older" releases. "1.0" > "1.0c1" > "1.0b2" > "1.0b1" > "1.0a1".
+ * If you follow a "pre-release marker" (and subsequent "version string") with "dev", "r", or "~", this version represents a "development release".
+  * The strings "dev", "r", and "~" are called "development release markers".
+  * You may use at most one "development release marker".
+  * ''You may only use a "development release marker"'' after ''a "pre-release marker".''  "1.0dev4095" is not a valid version.
+  * You must follow the "development release marker" with another "version number".  "1.0c48dev" is not a valid version.
+  * Any version with a "development release marker" is older than one without.
+  * All the "development release markers" are equivalent.  "1.0c1r400" == "1.0c1dev400" == "1.0c1~400".
+ * Any characters not specifically permitted are hereby illegal.  For instance, no whitespace is allowed.  Upper-case characters are not allowed.
+
+Though I think we should relent and allow dashes to be ''equivalent'' to periods.  But I'm not going to fight about it.
+
+For comparison purposes, a version string should be converted to a "version tuple".  If we have a free hand to specify this, I suggest:
+ * The version tuple should ''always'' contain three tuples.  Those tuples represent the "release version", the "pre-release version", and the "development release version" respectively.
+ * The sub-tuples are of arbitrary length.
+ * If a version string did not specify a particular sub-version ("1.0" does not specify a pre-release version), then that tuple is empty.
+ * All tuples contain only integers, with one exception: the first entry in a non-empty pre-release tuple is the "pre-release marker" used.
+ * Trailing zero fields are removed.
+
+For example:
+ "1.0" -> ( (1,), (), () )
+
+ "1.0.1" -> ( 1, 0, 1), (), () )
+
+ "1.0a3" -> ( 1,), ("a", 3), () )
+
+ "1.2b1~20090401" -> "(1, 2), ("b", 1), (20090401) )
+
+When you compare two version tuples, for each sub-tuple:
+ * If the tuples are equivalent, go to the next field.
+ * If one tuple is empty, that version is newer.
+ * Otherwise, the larger of the two tuples indicates the newer version.
+ * If you run out of tuples, the two versions are equivalent.
+
 === Erik LaBianca ===
 
 Just throwing this out there since it's a little different from what was discussed earlier, but I think has some merit:
