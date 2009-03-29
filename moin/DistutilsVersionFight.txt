@@ -262,3 +262,13 @@ This is more a statement of what we want/don't want than a specific implementati
  * Would be nice if python version numbers were directly usable by system packagers, or, in the worst case, reliably transformed
  * No special casing of certain words, i.e. "pre" or "alpha". i.e. A simple/reliable sorting that you can explain to people
  * A standard way to format the version number to fit on the filesystem
+
+=== Toshio Kuratomi ===
+
+Something that could be important is specifying a meaning for the version numbers (especially the first three version numbers).  Blessing something like Enthought's Versioning would have several advantages.
+
+  https://svn.enthought.com/enthought/wiki/EnthoughtVersionNumbers
+
+ * Version numbers then provide a clue to consumers (users, app developers, packagers) whether the new version is compatible with the former version.
+ * Using this scheme will let people specify version dependencies in the metadata better by reliably being able to say you're dependent on foo >= X.Y foor < (X+1).0
+ * If we ever get to the point where we use this consistently, we can write more intelligent import loaders that can use the MAJOR/MINOR version to load different versions automatically.
