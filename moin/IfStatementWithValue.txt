@@ -19,22 +19,18 @@ else:
    x=cos(sin(x))
 }}}
 
-See also SwitchStatement
+= Accepted Solution =
 
-= Current Python Idioms =
+This is now part of Python 2.5:
 
-There are a few ways in Python do achieve the evaluation only of the statement used when the predicate is true:
-
-
-
-= Proposed Solutions =
-
-= If always returns a value =
 {{{
-x = if test:
-    A()
- else:
-     B()
+A if predicate else B
+}}}
+
+which would convert the above snippet to:
+
+{{{
+x = sin(cos(x)) if test else cos(sin(x))
 }}}
 
 = Discussion =
