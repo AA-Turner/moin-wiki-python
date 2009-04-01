@@ -38,8 +38,13 @@ handled, if you declare their existence, when declaring the class to boost.pytho
 E.g.
 
 {{{
-#include <boost/shared_ptr.h>
+#include <string>
+#include <boost/shared_ptr.hpp>
+#include <boost/python.hpp>
+
 using namespace boost;
+using namespace std;
+using namespace boost::python;
 
 struct A {
     static shared_ptr<A> create () { return shared_ptr<A>(new A); }
