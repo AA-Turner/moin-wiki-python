@@ -21,4 +21,11 @@ Tools:
  * submit-review-request - A tool to submit diff to rietveld/reviewboard
  * grab-tracker-patch - A tool to grab/apply patches attached to a tracker issue
  * submit-tracker-patch - A tool to submit patches to a specific tracker issue
- * mercurial-simpleshare - A tool for simple sharing of mercurial branches
+ * mercurial-simpleshare - A tool for simple sharing of mercurial branches (while [[http://www.selenic.com/mercurial/wiki/index.cgi/HgWebDirStepByStep#head-746ca383e3a62df34279ec2fca888113497da022|"hg serve" or hgwebdir.cgi]] fill this slot, it could be made easier, see below).
+
+=== Use cases ===
+
+==== mercurial-simpleshare ====
+This would have the advantage of avoiding the need to remember "hg serve" details and edit config files, allowing one to share a local branch (locally or in a public server) with the same tool, so network topology doesn't make it harder to "hg serve".
+
+Examples: 'hg-share rw' to serve a local branch allowing anyone to push to it. The same tool could be used to share branches in public repositories, read-only or read-write: 'hg-share -s code.python.org'.
