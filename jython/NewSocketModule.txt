@@ -51,7 +51,7 @@ If you have serious SSL or crypto requirements, then I '''strongly''' recommend 
 
 By default, the cpython socket library does not carry out certificate checking, which means that it will accept expired certificates, etc. This is acceptable when the validity of the remote certificate is not important, such as in testing.
 
-In Java, by default, certificate checking is '''enabled'''. This means that the jython ssl routines *will* verify the validity of the remote certificate, and refuse to form the connection if it is not valid. If this is a problem for you, then you can get around it as described here.
+In Java, by default, certificate checking is '''enabled'''. This means that the jython ssl routines '''will''' verify the validity of the remote certificate, and refuse to form the connection if it is not valid. If this is a problem for you, then you can get around it as described here.
 
 ==== By configuring your JVM ====
 
@@ -169,11 +169,14 @@ For UDP sockets
 
 If an option is not explicitly listed above, it is explicitly not supported, i.e. jython cannot because java does not support the option.
 
+Note that the '''level''' at which all but one of the options above are get and set is '''socket.SOL_SOCKET'''. The exception is '''TCP_NODELAY''', which is at level '''socket.IPPROTO_TCP'''.
+
 All but one of the above take either a single boolean/integer or a single integer as a parameter, so they might be called like so
 
 {{{
 mysock.setsockopt(socket.SOL_SOCKET, socket.SO_OOBINLINE, 1)
 mysock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 32768)
+mysock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 }}}
 
 The exception is SO_LINGER, which (thanks to cpython's C heritage) takes a packed struct containing two values, the first is the flag to enable or disable SO_LINGER, the second specifies the linger time. The return value from getting the option is similarly packed. Here is a code snippet
@@ -237,3 +240,41 @@ This bug has been reported to Sun, but is not yet public on the Java bug databas
 
    1. Until the java bug is fixed, only use sockets in either blocking or non-blocking mode; the problem will not occur in this case.
    1. If you need timeouts, then until the java bug is fixed, you should probably create your own DatagramSockets, directly through the java.net APIs.
+
+=== Multiple use of select.select result in an Exception on Windows ===
+
+This bug is reported on the jython bug tracker: [[http://bugs.jython.org/issue1291|select() crashes with IOException]].
+
+==== Description ====
+
+When the '''select.select()''' function is repeatedly called, on Microsoft Windows, the call eventually fails with the following exception.
+
+{{{
+Exception in thread "main" java.io.IOException: Unable to establish loopback connection
+        at sun.nio.ch.PipeImpl$Initializer.run(PipeImpl.java:106)
+        at java.security.AccessController.doPrivileged(Native Method)
+        at sun.nio.ch.PipeImpl.<init>(PipeImpl.java:122)
+        at sun.nio.ch.SelectorProviderImpl.openPipe(SelectorProviderImpl.java:27)
+        at java.nio.channels.Pipe.open(Pipe.java:133)
+        at sun.nio.ch.WindowsSelectorImpl.<init>(WindowsSelectorImpl.java:106)
+        at sun.nio.ch.WindowsSelectorProvider.openSelector(WindowsSelectorProvider.java:26)
+        at java.nio.channels.Selector.open(Selector.java:209)
+        at server$handler.process(server.java:42)
+        at server.main(server.java:91)
+Caused by: java.net.BindException: Address already in use: connect
+        at sun.nio.ch.Net.connect(Native Method)
+        at sun.nio.ch.SocketChannelImpl.connect(SocketChannelImpl.java:464)
+        at java.nio.channels.SocketChannel.open(SocketChannel.java:146)
+        at sun.nio.ch.PipeImpl$Initializer.run(PipeImpl.java:78)
+        ... 9 more
+}}}
+
+This issue is casued by a bug in the underlying java socket libraries, and is described in detail in the jython bug tracker, along with java source code to reproduce the problem: [[http://bugs.jython.org/issue1291|select() crashes with IOException]]
+
+==== Workaround ====
+
+The  best workaround in this case is to use '''select.poll()''' objects instead of the '''select.select()''' function.
+
+By necessity, the jython '''select.select()''' function creates and destroys a [[http://java.sun.com/j2se/1.5.0/docs/api/java/nio/channels/Selector.html|java.nio.channels.Selector]] object every single time the function is called. Selector objects are not designed to be continually created and destroyed in this way; doing so consumes too many system resources on Windows, leading to the crash described above.
+
+If that workaround is not possible, due to your code design, then running on a platform other than Microsoft Windows is currently the only other workaround available.
