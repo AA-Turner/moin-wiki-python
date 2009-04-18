@@ -1,0 +1,82 @@
+== example ==
+
+
+{{{
+        class MyCmd(sdist):
+
+            # this is a regular user option
+            manifest_makers = ['svn', 'template', 'hg']
+
+            # this manages all extensions
+            extensions = Extensible('manifest_makers')
+
+            def run(self):
+                # this will build the filelist by running the plugins
+                self.extensions.run('manifest_makers')
+
+
+        dist = Distribution()
+        cmd = MyCmd(dist)
+        cmd.ensure_finalized()
+        cmd.run()
+}}}
+
+
+Notice that self.extensions.load(self) is implicitely called by Command.
+
+== code ==
+
+{{{
+"""Extendable command"""
+import os
+import pkg_resources
+
+class Extensible(object):
+
+    def __init__(self, *options):
+        self.options = options
+        self._ext = {}
+
+    def load(self, cmd):
+        for opt in self.options:
+            ep = ExtensionPoint(cmd, opt)
+            ep.load()
+            self._ext[opt] = ep
+
+    def run(self, name):
+        self._ext[name].run()
+
+class ExtensionPoint(object):
+
+    def __init__(self, cmd, name):
+        self.name = name
+        self.cmd = cmd
+        self.entries = []
+
+    def load(self, name=None):
+        if name is None:
+            name = self.cmd.get_command_name()
+            entry_point = 'distutils.%s:%s' % (name, self.name)
+        else:
+            entry_point = name
+        self._entries = [entry for entry in [self._load(ep) for ep in
+                         pkg_resources.iter_entry_points(entry_point)]
+                         if entry is not None]
+
+    def _load(self, entry_point):
+        values = getattr(self.cmd, self.name)
+        if not isinstance((list, tuple), values):
+            values = [values]
+        entry_point = entry_point.load()
+        if entry_point.name not in values:
+            return None
+        return entry_point
+
+    def run(self):
+        for ep in self._entries:
+            entry_point(self.cmd, self.name)
+
+    def apply(self, name=None):
+        self.load(name)
+        self.run()
+}}}
