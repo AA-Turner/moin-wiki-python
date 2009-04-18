@@ -2,6 +2,28 @@ This page explains how to use the new Roundup-based bug tracker:
 
  * Bug tracker for Python: http://bugs.python.org
  * Meta-tracker (bug reporting for the bug trackers): http://psf.upfronthosting.co.za/roundup/meta/
+ * Mailing list about the bug tracker: http://mail.python.org/mailman/listinfo/tracker-discuss
+
+= Reporting (or fixing) a bug =
+
+=== Reporting ===
+Check the [[http://docs.python.org/dev/bugs.html|Reporting Bugs in Python]] documentation for an overview of the bug reporting process. Understanding the usual [[http://www.python.org/dev/workflow/|Issue Workflow]] also helps in creating good bug reports, raising the chances of your bug report (or feature request) being resolved efficiently.
+
+In a nutshell, it's more important to provide a good description of the issue than it is to set all fields and options correctly. Some pointers to keep in mind:
+
+ * Small code examples that don't depend on external code are a great way to help confirming and fixing the bug you report (providing them as [[http://www.python.org/dev/workflow/#unit-test-needed|unittests]] is ideal, but not required).
+ * Precise details about the version(s) and environment in which you have found the problem make it easier for developers to confirm your report.
+ * If you find a bug in previous Python releases, confirming it in the latest versions helps getting it fixed.
+ * Checking whether the issue was previously reported is good, but duplicates will eventually be merged by triagers.
+ * If you find out the issue you submitted is invalid (or a duplicate), you can close it yourself (or triagers will get to it).
+ * For non-conforming behavior bugs, citing the relevant RFCs and standards is a plus.
+ * An objective appraisal of potential or realized harm from the bug helps developers in prioritizing issues.
+
+=== Fixing and triaging ===
+
+If you want to get started in [[http://www.python.org/dev/why/|developing Python]], triaging bugs, writing tests for open issues (or undertested modules) and submitting patches are great ways to [[http://www.python.org/dev/contributing/|contribute]].
+
+The [[http://www.python.org/dev/workflow/|Issue Workflow]] doc is even more important here, as well as taking a look at some [[http://www.python.org/dev/intro/#general-roundup-guidelines|general Roundup guidelines]]. For working with tests, docs and patches, the [[http://www.python.org/dev/|Developer Documentation]] is your main guide to the procedures and [[http://www.python.org/dev/tools|tools of the trade]]. The PythonBugDay volunteer docs offers an overview focused at newcomer developers.
 
 = Logging into Roundup =
 
@@ -54,60 +76,4 @@ A details specification of the access control to the tracker is given in the tab
 
  Type:: Specify what kind of issue it is (crasher, compile error, etc.).
 
- Components:: '''DIFFERENT''': What area of Python is the issue dealing with?  This section allows for multiple selections.
-
- Versions:: '''DIFFERENT''': The specific versions that are affected.  This is a multiple selection box so all known versions that are affected can be set.
-
-== Process ==
-
- Status:: '''DIFFERENT''': Specify whether the issue is open, pending (tentatively closed, but still waiting for OP reaction), or closed.
-
- Resolution:: Resolution once the issue is in closed or pending state.
-
- Dependencies:: '''NEW''': If the issue depends on another issue(s), list them here.  A complete list of issues can be found by clicking on the ''list'' link.
-
- Superseder:: '''NEW''': If the issue is superseded by another issue, list it here.  The ''list'' link pops up a window to help find the superseding issue.
-
- Assigned To:: Who is in charge of the issue.
-
- Nosy List:: '''NEW''': List of usernames who will be notified when anything changes on the issue.  The original poster (OP) and all commenters are automatically added.
-
- Priority:: How quickly must this bug be fixed?  Different from ''Severity'' by specifying how quickly it must be dealt with, not how severe the issue is.
-
- Keywords:: '''NEW''': Multiple selection list of keywords to set to help classify the issue.
-
-  '''26backport''': A 3.0 feature needing backporting to 2.x
-
-  '''patch''': Issue has a patch attached (or was imported from the SF patches tracker).
-
-  '''64bit''': Bug only applies to 64bit platforms
-
-  '''easy''': A bug that is easy to fix. This might be a good task for a bug day beginner.
-
- Change Note:: Add a comment, which will appear as a new Message.
-
-= Learning about Changes =
-
-The tracker will send email messages when a message gets added
-(currently not if just a file gets attached, or the status is
-changed). These messages get sent to
-
-  * on submission of a new item, to    [[http://mail.python.org/mailman/listinfo/new-bugs-announce|new-bugs-announce@mail.python.org]], [[http://mail.python.org/mailman/listinfo/new-bugs-announce|python-bugs-list@python.org]], and to the assignee (if any)
-  * on changes to an item, to python-bugs-list@mail.python.org, and to all people on the nosy list. Anybody adding a message is automatically put on the nosy list.
-
-Furthermore, http://bugs.python.org/@@file/recent-changes.xml is updated for each message or file addition, and can be used to programmatically track changes.
-
-= Linking from Messages =
-
-The tracker converts some specially formatted words in messages into links. The list includes
-
-  * "#<number>" links to the issue <number>
-  * "msg<number>" links to the message <number>
-  * "r<number>, "rev<number>", "revision <number>" links to svn.python.org displaying the checked in changes.
-
-= Developing the Tracker =
-
-For information on how to setup your own instance of the python tracker to help with development, see TrackerDevelopment.
-
-----
-CategoryTracker
+ Components::
