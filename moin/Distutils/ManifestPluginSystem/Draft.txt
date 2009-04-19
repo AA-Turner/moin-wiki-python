@@ -46,8 +46,14 @@ It will load them at the end of the option finalization.
 
 Then, a new API called "run_extension" allows !MyCmd to run these plugins.
 
-Each plugin received the command and the name of the option in argument and is free
+Each plugin receives the command and the name of the option in argument and is free
 to work over the command and its distribution.
+
+For example, the signature for the svn plugin is :
+{{{
+def svn(cmd, name):
+    # work done here on the command
+}}}
 
 Read more about how to create plugins with entry points, and what they are, here : http://lucumr.pocoo.org/2006/7/30/setuptools-plugins
 
