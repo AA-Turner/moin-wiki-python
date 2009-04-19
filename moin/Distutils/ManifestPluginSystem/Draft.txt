@@ -42,13 +42,13 @@ class MyCmd(Command):
 What happened ? In the initialize options, we declared default values for
 the manifest_makers attribute : three plugins called 'svn', 'template' and 'hg'.
 
-The Command will load these plugins using setuptools entry point called: "distutils.MyCmd.manifest_makers".
+The Command will load these plugins using setuptools entry point called: "distutils.!MyCmd.manifest_makers".
 It will load them at the end of the option finalization.
 
-Then, a new API called "run_extension" allows MyCmd to run these plugins.
+Then, a new API called "run_extension" allows !MyCmd to run these plugins.
 
 Each plugin received the command and the name of the option in argument and is free
-to work over the command, the distribution and so forth.
+to work over the command and its distribution.
 
 = Implementation =
 
