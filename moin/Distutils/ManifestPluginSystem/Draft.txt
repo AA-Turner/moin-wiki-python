@@ -1,82 +1,57 @@
-== example ==
+= Example =
+
+This is a generalization of the technique used in setuptools so people
+can write plugins to add files registered in special index files from 
+various version control systems.
 
 
-{{{
-        class MyCmd(sdist):
+You have a command where you create a list of files to build a manifest. 
 
-            # this is a regular user option
-            manifest_makers = ['svn', 'template', 'hg']
-
-            # this manages all extensions
-            extensions = Extensible('manifest_makers')
-
-            def run(self):
-                # this will build the filelist by running the plugins
-                self.extensions.run('manifest_makers')
+You provide a default system to build this list but you know some people 
+will probably provide other strategies to build that list.
 
 
-        dist = Distribution()
-        cmd = MyCmd(dist)
-        cmd.ensure_finalized()
-        cmd.run()
-}}}
+So let's declare a user option, called "manifest-makers", where an
+ordered list of plugins name can be declared.
 
-
-Notice that self.extensions.load(self) is implicitely called by Command.
-
-== code ==
+We also declare a new attribute called `extensible_options`, 
+like `boolean_options`, that points the user options that are used
+to extend the command.
 
 {{{
-"""Extendable command"""
-import os
-import pkg_resources
+class MyCmd(Command):
 
-class Extensible(object):
+    user_options = [('manifest-makers', None,
+                     'Plugins to build the manifest file')]
 
-    def __init__(self, *options):
-        self.options = options
-        self._ext = {}
+    extensible_options = ['manifest_makers']
 
-    def load(self, cmd):
-        for opt in self.options:
-            ep = ExtensionPoint(cmd, opt)
-            ep.load()
-            self._ext[opt] = ep
+    def initialize_options(self):
+        # this is a regular user option
+        self.manifest_makers = ['svn', 'template', 'hg']
+        self.files = []
 
-    def run(self, name):
-        self._ext[name].run()
-
-class ExtensionPoint(object):
-
-    def __init__(self, cmd, name):
-        self.name = name
-        self.cmd = cmd
-        self.entries = []
-
-    def load(self, name=None):
-        if name is None:
-            name = self.cmd.get_command_name()
-            entry_point = 'distutils.%s:%s' % (name, self.name)
-        else:
-            entry_point = name
-        self._entries = [entry for entry in [self._load(ep) for ep in
-                         pkg_resources.iter_entry_points(entry_point)]
-                         if entry is not None]
-
-    def _load(self, entry_point):
-        values = getattr(self.cmd, self.name)
-        if not isinstance((list, tuple), values):
-            values = [values]
-        entry_point = entry_point.load()
-        if entry_point.name not in values:
-            return None
-        return entry_point
+    def finalize_options(self):
+        pass
 
     def run(self):
-        for ep in self._entries:
-            entry_point(self.cmd, self.name)
-
-    def apply(self, name=None):
-        self.load(name)
-        self.run()
+        # this will build the filelist by running the plugins
+        self.run_extension('manifest_makers')
 }}}
+
+
+What happened ? In the initialize options, we declared default values for
+the manifest_makers attribute : three plugins called 'svn', 'template' and 'hg'.
+
+The Command will load these plugins using setuptools entry point called: "distutils.MyCmd.manifest_makers".
+It will load them at the end of the option finalization.
+
+Then, a new API called "run_extension" allows MyCmd to run these plugins.
+
+Each plugin received the command and the name of the option in argument and is free
+to work over the command, the distribution and so forth.
+
+= Implementation =
+
+ * http://svn.plone.org/svn/collective/collective.releaser/branches/refactor/collective/releaser/commands/extendable.py
+ * http://svn.plone.org/svn/collective/collective.releaser/branches/refactor/collective/releaser/tests/test_extendable.py
