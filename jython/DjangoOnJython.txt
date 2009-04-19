@@ -4,35 +4,20 @@ Finally, Django works on Jython, without any special patching. Right now it is r
 
 So, here are the steps to get Django on Jython running.
 
- 1. First, get a fresh version of Jython, and build it:
+ 1. First, get a fresh version of Jython. Any release after 2.5b2 should work fine.
 
-    {{{
-$ svn co https://jython.svn.sourceforge.net/svnroot/jython/trunk/jython/  jython-dev
-$ cd jython-dev
-$ ant
-}}}
-
-    This should create a `dist/` directory inside `jython-dev/`. The jython "executable" (a shell script, actually) is under `dist/bin`. You may want to alias the command to avoid typing the whole path each time, with the command: 
-
-    {{{
-$ alias jython25=/path/to/jython-dev/dist/bin/jython
-}}}
-
-    (or perhaps you prefer to add the directory to your `PATH`. Anyway, whatever works for you is OK)
-
- 2. Check out and install Django 1.0.X (The 1.0.2 release mostly work, but contains [http://code.djangoproject.com/ticket/9789 this bug]).
+ 2. Check out and install Django 1.0.X (The 1.0.2 release mostly work, but you will have to manually apply this patch: http://code.djangoproject.com/ticket/9789 .
 
     {{{
 $ svn co http://code.djangoproject.com/svn/django/branches/releases/1.0.X/ django-1.0.X
 $ cd django-1.0.X
-$ jython25 setup.py install # Assuming you choose to use the "alias" trick explained on the previous point
+$ jython setup.py install
 }}}
     
-
     You may also like to make an alias for "django-admin.py". Very useful if you also use Django with CPython: 
 
     {{{
-$ alias django-admin-jy="jython25  /path/to/jython-dev/dist/bin/django-admin.py"
+$ alias django-admin-jy="jython /path/to/jython-dev/dist/bin/django-admin.py"
 }}}
 
  3. Check out and install django-jython:
@@ -40,7 +25,7 @@ $ alias django-admin-jy="jython25  /path/to/jython-dev/dist/bin/django-admin.py"
     {{{
 $ svn co http://django-jython.googlecode.com/svn/trunk/ django-jython
 $ cd django-jython
-$ jython25 setup.py install
+$ jython setup.py install
 }}}
 
  4. Start a project. 
