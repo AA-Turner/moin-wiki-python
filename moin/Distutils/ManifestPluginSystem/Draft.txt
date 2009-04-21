@@ -67,6 +67,8 @@ Read more about how to create plugins with entry points, and what they are, here
 Some simple usecase, need solutions with the above design
 
 == Creating a command to build and install documentation ==
+ 
+(by DavidCournapeau)
 
 A python distribution package foo 1.0 is set-up as follows:
 
@@ -81,12 +83,16 @@ The documentation is in rest format and can be built by sphinx (e.g. (cd doc && 
 
 == Installing a C library meant to be used by other extensions ==
 
+(by DavidCournapeau)
+
 Example: in numpy, some core, portable mathematical routines are built in a pure C library (built through build_clib command). We want to install this library and makes it available to other python packages which are based on numpy. Problems:
 
  * how to install it ? The usual solution is to handle this in the install command. Only build_clib knows where the library is built in the build directory (which is platform dependent and hardcoded in the build_clib command), so the install command has no way to know the location without hacking more into communication between both commands. More fundamentally, it seems very complicated to extend commands to just install one file.
  * how to install the corresponding library API declaration (the .h file) in a known location (could be done through install_data, I guess).
 
 == Configuring external dependencies locations ==
+
+(by DavidCournapeau)
 
 Many python packages rely on some external libraries, often written in C/C++. How to detect them if they are installed in a non standard location ? In autoconf, there is a simple mechanism:
 
@@ -99,10 +105,14 @@ and the foo header will be looked for in /some/path/include + /some/path/lib for
 
 == Building a ctypes extension ==
 
+(by DavidCournapeau)
+
 A ctypes extension (i.e. a library which can be opened through dlopen/LoadLibrary/etc...) cannot be built with ctypes in a portable manner ATM. The problem is that some link options are different compared to a python extension (on windows in particular, where the symbols to export through /EXPORT are not the same). The compiler classes are too difficult to use/extend in their current state (they don't have the same interface, they sometimes fail for mysterious reasons, in particular the MSVCCompiler class which has not the same interface as the UnixCCompiler class).
 
 How to write a build_ctypes command ?
 
 == Controlling compiler flags ==
+
+(by DavidCournapeau)
 
 Sometimes, it is needed to control compiler flags. For example, gcc offer a very useful variety of warning flags which are not always enabled, or we may want to add option for profiling/debugging/code coverage/etc... There is also the problem that different source files may need different compilation options.
