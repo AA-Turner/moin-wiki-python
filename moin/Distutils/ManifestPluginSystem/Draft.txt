@@ -70,23 +70,29 @@ Some simple usecase, need solutions with the above design
 
 A python distribution package foo 1.0 is set-up as follows:
 
+{{{
 foo-1.0/setup.py
         foo/__init__.py
         foo/..
         doc/
+}}}
 
 The documentation is in rest format and can be built by sphinx (e.g. (cd doc && make html)). The author wants to build the documentation automatically, and include it in a sdist-generated tarball. Two commands are needed: build_doc and install_doc.
 
 == Installing a C library meant to be used by other extensions ==
 
 Example: in numpy, some core, portable mathematical routines are built in a pure C library (built through build_clib command). We want to install this library and makes it available to other python packages which are based on numpy. Problems:
- - how to install it ? The usual solution is to handle this in the install command. Only build_clib knows where the library is built in the build directory (which is platform dependent and hardcoded in the build_clib command), so the install command has no way to know the location without hacking more into communication between both commands. More fundamentally, it seems very complicated to extend commands to just install one file.
- - how to install the corresponding library API declaration (the .h file) in a known location (could be done through install_data, I guess).
+
+ * how to install it ? The usual solution is to handle this in the install command. Only build_clib knows where the library is built in the build directory (which is platform dependent and hardcoded in the build_clib command), so the install command has no way to know the location without hacking more into communication between both commands. More fundamentally, it seems very complicated to extend commands to just install one file.
+ * how to install the corresponding library API declaration (the .h file) in a known location (could be done through install_data, I guess).
 
 == Configuring external dependencies locations ==
 
 Many python packages rely on some external libraries, often written in C/C++. How to detect them if they are installed in a non standard location ? In autoconf, there is a simple mechanism:
 
-./configure --with-foo=/some/path (or ./configure --with-foo-include=/some/path/include --with-foo-lib=/some/path/lib)
+{{{
+./configure --with-foo=/some/path 
+(or ./configure --with-foo-include=/some/path/include --with-foo-lib=/some/path/lib)
+}}}
 
-and the foo header will be looked for in /some/path/include + /some/path/lib for the library.
+and the foo header will be looked for in /some/path/include + /some/path/lib for the library. How to add those options to the config command ? How to pass the related information to other commands ?
