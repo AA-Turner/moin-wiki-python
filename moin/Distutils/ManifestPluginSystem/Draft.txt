@@ -96,3 +96,9 @@ Many python packages rely on some external libraries, often written in C/C++. Ho
 }}}
 
 and the foo header will be looked for in /some/path/include + /some/path/lib for the library. How to add those options to the config command ? How to pass the related information to other commands ?
+
+== Building a ctypes extension ==
+
+A ctypes extension (i.e. a library which can be opened through dlopen/LoadLibrary/etc...) cannot be built with ctypes in a portable manner ATM. The problem is that some link options are different compared to a python extension (on windows in particular, where the symbols to export through /EXPORT are not the same). The compiler classes are too difficult to use/extend in their current state (they don't have the same interface, they sometimes fail for mysterious reasons, in particular the MSVCCompiler class which has not the same interface as the UnixCCompiler class).
+
+How to write a build_ctypes command ?
