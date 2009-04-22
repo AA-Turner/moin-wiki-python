@@ -9,32 +9,34 @@ Use an automatic scanning mechanism to generate the data_files parameter for set
 
 {{{
 import os
-def npFilesFor( dirname ):
-    """Return all non-python-file filenames in dir"""
-    result = []
-    allResults = []
-    for name in os.listdir(dirname):
-        path = os.path.join( dirname, name )
+import imp
+
+def non_python_files(path):
+    """ Return all non-python-file filenames in path """
+    all_results = []
+    module_suffixes = [info[0] for info in imp.get_suffixes()]
+    ignore_dirs = ['cvs']
+    for item in os.listdir(path):
+        name = os.path.join(path, item)
         if (
-            os.path.isfile( path) and
-            os.path.splitext( name )[1] not in
-                ('.py','.pyc','.pyo')
-        ):
-            result.append( path )
-        elif os.path.isdir( path ) and name.lower() !='cvs':
-            allResults.extend( npFilesFor(path))
+            os.path.isfile(name) and
+            os.path.splitext(item)[1] not in module_suffixes
+            ):
+            result.append(name)
+        elif os.path.isdir(name) and item.lower() not in ignore_dirs:
+            all_results.extend(non_python_files(name))
     if result:
-        allResults.append( (dirname, result))
-    return allResults
+        all_results.append((path, result))
+    return all_results
 }}}
 
 Then call it for the directories which contain data-files you want to include.
 
 {{{
-dataFiles = (
-    npFilesFor( 'pytable') +
-    npFilesFor( os.path.join('pytable','doc'))
-)
+data_files = (
+    non_python_files('pytable') +
+    non_python_files(os.path.join('pytable', 'doc'))
+    )
 }}}
 
 and pass the result to setup:
@@ -43,9 +45,9 @@ and pass the result to setup:
 setup (
     name = "pytable",
     version = "0.7.7a",
-    data_files = dataFiles,
+    data_files = data_files,
     cmdclass = {'install_data':smart_install_data},
-    **extraArguments
+    **extra_arguments
 )
 }}}
 
