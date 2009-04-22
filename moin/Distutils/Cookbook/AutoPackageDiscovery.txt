@@ -9,42 +9,44 @@ Use an automatic sub-package scanning mechanism to generate the package_dir and 
 
 {{{
 import os
-def isPackage( filename ):
+
+def is_package(path):
     return (
-        os.path.isdir(filename) and
-        os.path.isfile( os.path.join(filename,'__init__.py')
-    )
-def packagesFor( filename, basePackage="" ):
-    """Find all packages in filename"""
-    set = {}
-    for item in os.listdir(filename):
-        dir = os.path.join(filename, item)
-        if isPackage( dir ):
-            if basePackage:
-                moduleName = basePackage+'.'+item
+        os.path.isdir(path) and
+        os.path.isfile(os.path.join(path, '__init__.py')
+        )
+
+def find_packages(path, base="" ):
+    """ Find all packages in path """
+    packages = {}
+    for item in os.listdir(path):
+        dir = os.path.join(path, item)
+        if is_package( dir ):
+            if base:
+                module_name = "%(base)s.%(item)s" % vars()
             else:
-                moduleName = item
-            set[ moduleName] = dir
-            set.update( packagesFor( dir, moduleName))
-    return set
+                module_name = item
+            packages[module_name] = dir
+            packages.update(find_packages(dir, module_name))
+    return packages
 }}}
 
-Then call packagesFor to get the set of packages to be included (note that this call assumes that the packages are sub-directories of the directory where setup.py resides).
+Then call {{{find_packages}}} to get the set of packages to be included (note that this call assumes that the packages are sub-directories of the directory where setup.py resides).
 
 {{{
-packages = packagesFor( "." )
+packages = find_packages(".")
 }}}
 
-Then use packages as the source within your call to setup:
+Then use {{{packages}}} as the source within your call to setup:
 
 {{{
 setup (
     name = "pytable",
     package_dir = packages,
-...
+#...
     packages = packages.keys(),
-    **extraArguments
-)
+    **extra_arguments
+    )
 }}}
 
 You can see a real-world usage example in the [[http://pytable.cvs.sourceforge.net/pytable/table/setup.py?view=markup|PyTable setup script]]
