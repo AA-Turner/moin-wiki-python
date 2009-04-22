@@ -609,3 +609,24 @@ if __name__ == '__main__':
     demo.setLocation(30, 30)
     demo.show()
 }}}
+
+=== Decorator to add a function to SwingUtilities.invokeLater ===
+{{{#!python
+from java.lang import Runnable
+from javax.swing import SwingUtilities
+ 
+class RunnableWrapper(Runnable):
+    def __init__(self, func, *args, **kwargs):
+        self.func = func
+        self.args = args
+        self.kwargs = kwargs
+ 
+    def run(self):
+        self.func(*self.args, **self.kwargs)
+ 
+def runswing(func):
+    """Schedules the given function for execution in the Event Dispatch Thread."""
+    def wrapper(*args, **kwargs):
+        SwingUtilities.invokeLater(RunnableWrapper(func, *args, **kwargs))
+    return wrapper
+}}}
