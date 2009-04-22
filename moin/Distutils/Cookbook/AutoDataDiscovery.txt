@@ -13,6 +13,7 @@ import imp
 
 def non_python_files(path):
     """ Return all non-python-file filenames in path """
+    result = []
     all_results = []
     module_suffixes = [info[0] for info in imp.get_suffixes()]
     ignore_dirs = ['cvs']
@@ -48,7 +49,7 @@ setup (
     data_files = data_files,
     cmdclass = {'install_data':smart_install_data},
     **extra_arguments
-)
+    )
 }}}
 
 (See DistutilsInstallDataScattered for the smart_install_data command.)
