@@ -362,7 +362,9 @@ void* extract_swig_wrapped_pointer(PyObject* obj)
     if (thisAttr == NULL)
         return NULL;
     //This Python Object is a SWIG Wrapper and contains our pointer
-    return (((PySwigObject*)thisAttr)->ptr);
+    void* pointer = ((PySwigObject*)thisAttr)->ptr;
+    Py_DECREF(thisAttr);
+    return pointer;
 }
 }}}
 
