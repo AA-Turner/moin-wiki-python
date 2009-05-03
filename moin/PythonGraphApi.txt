@@ -88,9 +88,9 @@ Bruno Preiss offers a very complete but somewhat unPythonic Graph type as part o
 One possible underlying technology for graphs would be adjacency matrices using [[http://www.stsci.edu/resources/software_hardware/numarray|numarray]].
 This approach would need to use sparse matrices to be practical for large graphs.
 
-''Add your ideas here (Go wild, folks...)''
+=== Add your ideas here (Go wild, folks...) ===
 
-I think that the graph representation should be a redundant one, that
+- I think that the graph representation should be a redundant one, that
 allows the fast traversals, quick node, edge and neighbour lookups 
 as well as fast iterations over all nodes or all edges. This will of course 
 come at the expense of storage and/or graph initialization efficieny. 
@@ -99,42 +99,42 @@ after LEDA) the nodes and the edges
 are stored in a separate dictionaries. Each edge_id maps to a tuple of the head_id and the tail_id  
 (the nodes) that form the edge. (Edge_ids are automatically created as they are added.)
 At the same time each node_id maps to a tuple of two lists corresponding 
-to incoming and outgoing edges.  (Istvan)
+to incoming and outgoing edges.  ''(Istvan)''
 
-IMO, one of the points of a standard interface is to let people choose their own
-representations. (Magnus). 
+- IMO, one of the points of a standard interface is to let people choose their own
+representations. ''(Magnus)''. 
 
-I believe that just as most people don't care how lists 
+- I believe that just as most people don't care how lists 
 and dictionaries work behind the scenes they won't care (or want to have to deal with) 
 picking a graph representation. The two representation that are listed in just about every computer science book,
 the adjacency matrix and the adjecency list representations are just about useless 
 in the real world. These are what I would call a '''node''' centric view of the 
 graph. It turns out in many probelms edges have far more utility.Graphs are a very rich methaphor and one rarely uses them in the stripped 
 down version. What we need is a representation that is simple, fast and efficient enough 
-in every case. (Istvan)
+in every case. ''(Istvan)''
 
-This is not about giving people a graph library, but letting people who write graph representations and people
+- This is not about giving people a graph library, but letting people who write graph representations and people
 who write graph algorithms interoperate more easily, by giving them a common interface. If people want
 to use a ready-made library, that's fine. The point is that people (like me) might want to represent graphs
 completely differently from the "textbook" version (in fact, compact graph representations is what
 my current research is about). It's the same with the DB API; by fixing a standard API, people can write
 programs that use databases without having to worry about which database or database library they use.
 I've added a use-case above to clear this up a bit.
-(Magnus)
+''(Magnus)''
 
-To write '''any''' graph algorithm, you need a set of standard methods. As far as I know, there are only two ways of getting this - either agree on a fixed interface which implementations ''must'' follow (the DB API approach) or define an interface and require that implementations ''can'' be adapted to it (the adaptation approach). I don't like Andrew Dalke's suggestion of code-generating template systems, it seems to me that this would make writing algorithms far too hard, and where multiple graph representations are in use, result in code explosion (a well-known problem with C++ templates). My preference is for adaptation. It's ideal for this sort of thing, the only downside is that it isn't standard. But getting PEP 246 accepted would be easier with more use cases - avoiding its use is self-defeating. Better to lobby for its use, on the basis that we need it for this type of situation. (PaulMoore)
+- To write '''any''' graph algorithm, you need a set of standard methods. As far as I know, there are only two ways of getting this - either agree on a fixed interface which implementations ''must'' follow (the DB API approach) or define an interface and require that implementations ''can'' be adapted to it (the adaptation approach). I don't like Andrew Dalke's suggestion of code-generating template systems, it seems to me that this would make writing algorithms far too hard, and where multiple graph representations are in use, result in code explosion (a well-known problem with C++ templates). My preference is for adaptation. It's ideal for this sort of thing, the only downside is that it isn't standard. But getting PEP 246 accepted would be easier with more use cases - avoiding its use is self-defeating. Better to lobby for its use, on the basis that we need it for this type of situation. ''(PaulMoore)''
 
-I share your view here. One possibility is to specify how a graph can be adapted to the (or one of) the standard
+- I share your view here. One possibility is to specify how a graph can be adapted to the (or one of) the standard
 interface(s) as part of the (hypothetical) Graph PEP, using adapter/factory functions. This can then be the
 same mechanism used by adapt(), but we don't have to require its use. (Or we could use it, of course...)
 
-On the other hand, it isn't really necessary for us (if we go down this road) to specify how such adaptation should
+- On the other hand, it isn't really necessary for us (if we go down this road) to specify how such adaptation should
 be done. We could define the graph interface, and graph libraries could supply their own adapter functions or
-wrappers. (Magnus)
+wrappers. ''(Magnus)''
 
-I also think that one important use case for a generalized graph api would be tree representations.    Any standard graph representation should as a subset present a standard tree, with the classic algorithms being portable between them. (As a minimum, pre-, in-, and post-order traversal; preferably depth-first and breadth-first searches.) (VanL)
+- I also think that one important use case for a generalized graph api would be tree representations.    Any standard graph representation should as a subset present a standard tree, with the classic algorithms being portable between them. (As a minimum, pre-, in-, and post-order traversal; preferably depth-first and breadth-first searches.) ''(VanL)''
 
-Andrew Dalke [[http://groups.google.com/groups?selm=yyq0d.3041%24xA1.1224%40newsread3.news.pas.earthlink.net&output=gplain|suggests]] using a template system that can transform code using a standard API into code using a custom API.
+- Andrew Dalke [[http://groups.google.com/groups?selm=yyq0d.3041%24xA1.1224%40newsread3.news.pas.earthlink.net&output=gplain|suggests]] using a template system that can transform code using a standard API into code using a custom API.
 This differs from a solution using object adaptation in that it works at the source level, and thus can
 have some performance advantages.
 
@@ -142,10 +142,9 @@ Perhaps we should try to keep the edge and node attributes/decorations separate 
 The API should specify that each node and edge store a pointer.  The pointer would be set to an object that
 handles all decorations and manipulations of those decorations.  The graph algorithms would work on the
 graph structure itself -- not the decorations -- and the user would need to interface those results to the decorations. 
-(dschult)
+''(dschult)''
 
-(Nick)
-I think that to be the most general the API should support hypergraphs, with regular graphs being a subclass. A hypergraph is defined by two sets of objects (a.k.a. nodes & edges).
+- I think that to be the most general the API should support hypergraphs, with regular graphs being a subclass. A hypergraph is defined by two sets of objects (a.k.a. nodes & edges).
 So if we have 'nodes' A={a1,a2,a3} and 'edges' B={B1,B2,B3} and then we make make a map d = {a1: (B1,B2), a2: (B2), a3: (B1,B2,B3)} Then G(A,B,d) is the hypergraph. The representation can be inverted too, so that B becomes the nodes and A the edges (if you start out with an incidence matrix with actors A down the rows and events they attend B across the columns the first form is the ties between the actors and the second is the ties between the This hypergraph has a
 As said before, a graph is a special case of a hypergraph where the number of points 'in' each edge is 2 (i.e. len(d[Bi])=2 for all i); and of course, a directed graph is a special case of that where d[Bi][0] is taken to be the sender and d[Bi][1] the receiver.
 
@@ -155,19 +154,19 @@ It has to support attributes on the nodes/edges _with ease_, to be able to suppo
 
 The nodes/edges could be arbitrary python objects. Besides just allowing python's natural expressive freedom to be made full use of, this would solve the attributes problem with ease: 
 An implementation wrinkle would be that the map would have to distinguish between seperate nodes/edges even though the actual items might have identical values, such as in the case of a signed graph where all edges are either -1 or +1 (perhaps index them when they get entered, and store them as (obj, index)?). This is basically dschult's suggestion, but I want to flesh out the bit about "it's up to the user..."; for example, if a library was written to calculate various measures on the graph it would be important that the values of the edges are numeric.
-(/Nick)
+''(Nick)''
 
-Also: +1 for standard API so that algorithms can be described in a standard way.
+- Also: +1 for standard API so that algorithms can be described in a standard way.
 Also: I see that the requirement about allowing "Object" has already been raised on usenet
-Also: I missed a type of graph, the multigraph, where more than one type of relation is defined. You can fake this with multiple separate graphs, and in many ways I prefer this (then you can attach descriptive data to each relation...) but I can see that some algorithms might be more naturally expressed as operating on a multigraph. (Nick)
+Also: I missed a type of graph, the multigraph, where more than one type of relation is defined. You can fake this with multiple separate graphs, and in many ways I prefer this (then you can attach descriptive data to each relation...) but I can see that some algorithms might be more naturally expressed as operating on a multigraph. ''(Nick)''
 
-I second the notion of hypergraphs. I have a graph implementation that uses a base hypergraph class which contains Node, Edge, NodeContainer, and EdgeContainer classes, each of which can have its behavior modified via mixins. As examples, the modification from a hypergraph to a DAG is accomplished by subclassing Graph and mixing in a new edge container that raises an exception if an illegal edge insertion is attempted, the more implementation-centric question of storing nodes in a database backend is handled by exchanging the standard list-based NodeContainer with one that overrides add_node to a DB insertion operation, and the question of edge and node attributes is handled by simple keyword arguments which are passed to the base node and edge constructors, optionally made mandatory by subclassing Node or Edge. Please contact me if interested. (Geremy)
+- I second the notion of hypergraphs. I have a graph implementation that uses a base hypergraph class which contains Node, Edge, NodeContainer, and EdgeContainer classes, each of which can have its behavior modified via mixins. As examples, the modification from a hypergraph to a DAG is accomplished by subclassing Graph and mixing in a new edge container that raises an exception if an illegal edge insertion is attempted, the more implementation-centric question of storing nodes in a database backend is handled by exchanging the standard list-based NodeContainer with one that overrides add_node to a DB insertion operation, and the question of edge and node attributes is handled by simple keyword arguments which are passed to the base node and edge constructors, optionally made mandatory by subclassing Node or Edge. Please contact me if interested. ''(Geremy)''
 
-(Multigraphs are mentioned. - Magnus)
+- (Multigraphs are mentioned. - ''Magnus'')
 
-I'm new here, so here goes: I would like to see a standard api for Graph ''objects'', concentrating on two dimensional graphs. Hyper-graphs, multi-graphs, two-structures, etc shouldn't really be considered, imo, as they're much too esoteric and don't really map to many common usages (I'm sure I'll get argument here from the graph researchers). Also, I don't want to define ''what'' a graph or a vertex or an edge actually is, other than the standard mathematical definition that an edge is some dort of a ''relationship'' between vertices.
+- I'm new here, so here goes: I would like to see a standard api for Graph ''objects'', concentrating on two dimensional graphs. Hyper-graphs, multi-graphs, two-structures, etc shouldn't really be considered, imo, as they're much too esoteric and don't really map to many common usages (I'm sure I'll get argument here from the graph researchers). Also, I don't want to define ''what'' a graph or a vertex or an edge actually is, other than the standard mathematical definition that an edge is some dort of a ''relationship'' between vertices.
 
-The graph api should be graph-class agnositc. That is, it should not care if the graph is a connected, disconnected, directed, undirected, etc. It should only care about vertex and edge properties, other than adjacency, where a callback can be provided to account for the property's selection. I'll provide a proposal in the section below. (jconnor)
+The graph api should be graph-class agnositc. That is, it should not care if the graph is a connected, disconnected, directed, undirected, etc. It should only care about vertex and edge properties, other than adjacency, where a callback can be provided to account for the property's selection. I'll provide a proposal in the section below. ''(jconnor)''
 
 === Specifics ===
 
@@ -186,18 +185,18 @@ Static graphs:
   * Node decoration: labels, weights, colors, capacities (can be done with external maps)
   * Edge decoration: labels, weights, colors, capacities
 
-(dschult) would add:
+''(dschult)'' would add:
   * Size of Graph:  Report the number of edges in the graph.
   * Order of Graph: Report the number of nodes in the graph.
   * Degree of node: Report the number of neighbors for a node (or sum of edge weights incident on the node).
-"well this is tricky; the edges aren't neccessarily numbers, remember? (nick)"
+"well this is tricky; the edges aren't neccessarily numbers, remember? ''(nick)''"
 
-(I wasn't talking about numbers. "The number of X" means "how many Xs" there are. - Magnus)
+- (I wasn't talking about numbers. "The number of X" means "how many Xs" there are. - ''Magnus'')
 
-Accessing incident edges based on their labels can also be useful (e.g. in FSAs).
-"again tricky because it requires defining that a node/edge ""must"" have a label. Does this mean having `class LabeledGraph(Graph)`? (nick)"
+- Accessing incident edges based on their labels can also be useful (e.g. in FSAs).
+"again tricky because it requires defining that a node/edge ""must"" have a label. Does this mean having `class LabeledGraph(Graph)`? ''(nick)''"
 
-(The access here would, of course, only be available if the edges or labels do indeed have labels; not otherwise. - Magnus)
+- (The access here would, of course, only be available if the edges or labels do indeed have labels; not otherwise. - ''Magnus'')
 
 Dynamic graphs:
 
@@ -207,14 +206,14 @@ Dynamic graphs:
   * Edge deletion
   * Node decoration modification
   * Edge decoration modification
-  * Edge contraction  (Can't this be done using the add and delete above? Do we want to get this specialized? (dschult))
+  * Edge contraction  (Can't this be done using the add and delete above? Do we want to get this specialized? ''(dschult)'')
   * Node and edge hiding?
 
-"these all seem to revolve around the notion of a graph-update operation of some sort. So then the question is how to record what specific operation to perform? Also, do we just record which event comes before the others or do we attach a time to each? (nick)"
+- "these all seem to revolve around the notion of a graph-update operation of some sort. So then the question is how to record what specific operation to perform? Also, do we just record which event comes before the others or do we attach a time to each? ''(nick)''"
 
-(Not sure what you mean here. Why would we need to record anything like this? Why not simply modify the graph? That was the idea... - Magnus)
+- (Not sure what you mean here. Why would we need to record anything like this? Why not simply modify the graph? That was the idea... - ''Magnus'')
 
-It may be that a given representation only supports a subset of the given operations, and that
+- It may be that a given representation only supports a subset of the given operations, and that
 subset might not necessarily be easy to predict. For example, even though it might seem that
 neighbor iteration and adjacency testing go hand in hand, for implicit graph representation they
 are quite separate. For such a representation, you can only check whether two given nodes are
@@ -227,16 +226,16 @@ graphs, but needn't be part of the standard.
 Should there be separate functionality for directed and undirected graphs? Should all graphs be chain graphs
 (which allow both directed and undirected edges)? Should two-way directed edge be treated as an undirected
 edge (and vice versa)?
-"Chain graphs are the most general, so we must have them. However, would they be a superset or simply next to normal graphs? (nick)"
+"Chain graphs are the most general, so we must have them. However, would they be a superset or simply next to normal graphs? ''(nick)''"
 
-(Chain graphs are a generalization of both directed and undirected graphs. - Magnus)
+- (Chain graphs are a generalization of both directed and undirected graphs. - ''Magnus'')
 
-How do we handle the proliferation of other graph classes (such as multigraphs, pseudographs, ...), all of which
+- How do we handle the proliferation of other graph classes (such as multigraphs, pseudographs, ...), all of which
 are only minor tweaks of the basic structure? How about more radical departures such as hypergraphs (which allow
 an arbitrary number of nodes per edge)?
-"oops, didn't read this far. Well you know my answer: make every graph a hypergraph. (Nick)"
+"oops, didn't read this far. Well you know my answer: make every graph a hypergraph. ''(Nick)''"
 
-One possibility would be to base the API definition on the [[http://www.gupro.de/GXL|Graph eXchange Language]] (GXL). It is derived from many separate graph representation languages and seems quite
+- One possibility would be to base the API definition on the [[http://www.gupro.de/GXL|Graph eXchange Language]] (GXL). It is derived from many separate graph representation languages and seems quite
 complete (it even supports hypergraphs and hierarchical graphs!), logical, and well-thought-out.
 The language itself
 consists of an XML and a UML notation,
@@ -246,21 +245,21 @@ I'm not sure about how (or whether) they model graph modification (although I th
 some support for transformations of some kind) but that could probably be done as a simple, logical
 extension. We might not want to support ''all'' of the GXL model, of course. We might even want
 to define several layers of standard compliance, with Layer 0 being only the current de facto
-standard graph API, for example. (Magnus)
+standard graph API, for example. ''(Magnus)''
 
-I think [[http://graphml.graphdrawing.org/|GraphML]] would be great to be supported for reading and writing graphs. (Ralf)
+- I think [[http://graphml.graphdrawing.org/|GraphML]] would be great to be supported for reading and writing graphs. ''(Ralf)''
 
-With the goal of designing an API for Python in mind, I would think one of the first decisions that needs to be made is whether to use multiple classes (ala Vertex, Edge, Graph) or just one (ala Graph); also, are those classes going to be "Pythonic" in that they provide various methods in terms of Python operators or not (let's call the "not" alternative "Textbookish")? It seems to me that without settling this first, discussing the details of the API further is moot. But maybe I am wrong? (Peter)
-
-
-No, defining Vertex and Edge interfaces makes working with graphs just that much more difficult. That's the Java way, don't go there. (Nick)
+- With the goal of designing an API for Python in mind, I would think one of the first decisions that needs to be made is whether to use multiple classes (ala Vertex, Edge, Graph) or just one (ala Graph); also, are those classes going to be "Pythonic" in that they provide various methods in terms of Python operators or not (let's call the "not" alternative "Textbookish")? It seems to me that without settling this first, discussing the details of the API further is moot. But maybe I am wrong? ''(Peter)''
 
 
+- No, defining Vertex and Edge interfaces makes working with graphs just that much more difficult. That's the Java way, don't go there. ''(Nick)''
 
 
-Well, the "Java way" can also be the "OO way" and thus could also be the "Python way". Theoretically a Graph G is defined a set of vertices and a set of Edges. '''G=(V,E)'''. (Nick V.)
 
-The only requirement on a vertex is that it can be represented in a set, which I think maps to supporting testing for equality and hashing.  In Python, this does not require a dedicated Vertex class or interface.
+
+- Well, the "Java way" can also be the "OO way" and thus could also be the "Python way". Theoretically a Graph G is defined a set of vertices and a set of Edges. '''G=(V,E)'''. (Nick V.)
+
+- The only requirement on a vertex is that it can be represented in a set, which I think maps to supporting testing for equality and hashing.  In Python, this does not require a dedicated Vertex class or interface.
 
 I tend to prefer/develop graph implementations that support representing the nodes with arbitrary objects:
 
@@ -276,9 +275,9 @@ g.add_vertex( some_object2 )
 
 new_edge=g.add_edge( some_object1, some_object2)
 
-So that I do not have to maintain a mapping from the objects (that I care about) to some integers that uniquely label the nodes (which I don't care about). (/David McNamara)
+So that I do not have to maintain a mapping from the objects (that I care about) to some integers that uniquely label the nodes (which I don't care about). ''(/David McNamara)''
   
-Proposal for Graph interface:
+- Proposal for Graph interface:
 
 I think that algorithms should assume that a graph is immutable, so if it needs to add an artificial vertex or delete edges, etc, it should take care of all that accounting behind the scenes. As a result, I do not propose any interface that would alter the graph, though, perhaps, standard names may be in order (e.g. add_vertex(v))
 
@@ -302,7 +301,7 @@ Some notes:
 
 I would leave it to the graph implementors to provide a set of comparison callables that would be passed into a graph algorithm. Perhaps some standardization of names may be in order, but I don't see the need right now.
 
-I believe that the majority of graph algorithms can be implemented with this interface. (jconnor)
+I believe that the majority of graph algorithms can be implemented with this interface. ''(jconnor)''
 
 = Vertices and Edges as Separate Objects =
 
@@ -317,11 +316,11 @@ I believe that the majority of graph algorithms can be implemented with this int
 5. Providing a way to obtain edges to neighbour vertices in this scheme would ammount to an exhaustive search of the edges set. Therefore edges would be held in a nested dict like edges[v1][v2]=edge12 . To quickly access the edges to neighbours of v1 would be G.edges[v1].values()
 (Nick V.)
 
-6. We must note that Edges and Vertices are defined as sets in standar graph theory, so, we must also think how to joind the graph data structure to the standard python (set) builtin data type. (Jose Antonio Martin H.)
+6. We must note that Edges and Vertices are defined as sets in standar graph theory, so, we must also think how to joind the graph data structure to the standard python (set) builtin data type. ''(Jose Antonio Martin H.)''
 
 = Hypergraphs =
 
-As far as hypergraphs are concerned, a hypergraph is equivalent to a bi-partite graph, with two different set of nodes. One represents the regular nodes, the other a set of edges (<- these are not edges of the Graph itself, but separate Edge(s) created earlier. So it is probably not necessary to include a separate mechanism for hypergraphs. (Nick V.)
+- As far as hypergraphs are concerned, a hypergraph is equivalent to a bi-partite graph, with two different set of nodes. One represents the regular nodes, the other a set of edges (<- these are not edges of the Graph itself, but separate Edge(s) created earlier. So it is probably not necessary to include a separate mechanism for hypergraphs. ''(Nick V.)''
 
 = GraphABC =
 
