@@ -283,3 +283,9 @@ Something that could be important is specifying a meaning for the version number
  * Version numbers then provide a clue to consumers (users, app developers, packagers) whether the new version is compatible with the former version. [Could easily add `major`, `minor`, `patch` attributes to the `RationalVersion` class in my `verlib.py` above. --TrentMick]
  * Using this scheme will let people specify version dependencies in the metadata better by reliably being able to say you're dependent on `foo >= X.Y foor < (X+1).0`. 
  * If we ever get to the point where we use this consistently, we can write more intelligent import loaders that can use the MAJOR/MINOR version to load different versions automatically.
+
+=== Kay Schluehr ===
+
+I basically like the initial versioning scheme proposed by Trent Mick and would just stick to it. However I wouldn't interpret too much into it. Version numbers are an incredibly poor way to express compatibility issues and they serve as a simplistic heuristics at best that is open to interpretation. 
+
+The WP article about [[http://en.wikipedia.org/wiki/Software_versioning|versioning]] also mentions political and psychological implications of using version numbers. Remember that Django was long considered unstable due to not having reached v1.0. Better stick to static metadata for more reliable information and to [[http://en.wikipedia.org/wiki/Directed_acyclic_graph|DAGs]] for modeling dependencies. OO did the latter about 30 years ago. It's time to grow up.
