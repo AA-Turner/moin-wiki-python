@@ -1,11 +1,61 @@
 == Integration With Postfix ==
 
-TBD.
+!SpamBayes is integrated into the mail processing on mail.python.org in a daemon process, {{{mpo_smtpd}}}.  This server does more than run !SpamBayes, but it does that, rejecting messages which are spam during the SMTP session, passing along messages which appear to be good and delaying, then later holding messages for moderator review which score in the middle (unsure).  The source for the server is in {{{/usr/local/src/mpo_proxy}}}.
+
+You are not likely to need to edit mpo_smtpd.py but you might need to extend the list of people in {{{.../mpo_proxy/people}}}.  By agreed upon policy, emails destined for individuals with {{{python.org}}} email addresses is passed through unfiltered.  When a new user is added to the system the {{{people}}} file must be edited, the server reinstalled, and the proxy restarted::
+
+{{{
+(vi|emacs) people
+svn commit people
+sh install.sh
+}}}
 
 == Filtering Usenet Posts ==
 
-TBD.
+Usenet news postings from {{{comp.lang.python}}} are distributed to the {{{python-list@python.org}}} mailing list using Mailman's {{{gate_news}}} script.  A locally modified version uses !SpamBayes to score these posts.  Messages which score as spam or unsure are held for moderator approval.  Messages which score as ham are forwarded to the mailing list.  These changes have been (are being? will be?) propagated upstream to the Mailman 2.2 code base.
 
 == Care and Feeding ==
 
-TBD.
+!SpamBayes scores messages based on the collected wisdom stored in a set of known good (ham) and bad (spam) messages.  Messages can be scored as ham, spam or unsure.  Messages which score as spam are discarded, ham messages are forwarded to their destination and unsure messages are held for a moderator's review.
+
+Both messages held by {{{mpo_smtpd}}} and {{{gate_news}}} will land in the moderator's queue(s).  {{{mpo_smtpd}}} is a little cleaner in its implementation, saving unsure messages to {{{/var/spool/spambayes/unsure}}}, one message per file.  {{{gate_news}}} only holds messages for the moderator.  It's the responsibility of the moderator to forward such messages to someone who can incorporate it into the training database.  (Since this only affects those of us who moderate the {{{python-list}}} mailing list, only a couple of us need to understand this process.  It's thus omitted from this document.)
+
+I have a typically idiosyncratic way of processing the held messages.  I rely heavily on bash history to recall the and execute the necessary steps.  YMMV.  For all of this you need to be root.  Feedback on streamlining the process is welcome.
+
+ * Collect all unsure messages into an mbox file:
+{{{
+(cd /var/spool/spambayes/unsure ; rm -f /tmp/u.mbox ; for m in *.msg ; do cat $m >> /tmp/u.mbox; echo "" >> /tmp/u.mbox; rm $m; done)
+}}}
+ * Get them to your computer where you can process u.mbox using your favorite mail toolchain.  (I use VM inside XEmas which gives me full access to the Emacs command/macro facility, speeding up the process for me.)  You need to use your judgement about some messages.  Things like subscription confirmation or mailer daemon messages I simply delete.  I generally only save one message with a given subject.
+ * When you're finished, assume you have segregated the messages into {{{~/tmp/s.mbox}}} and {{{~/tmp/h.mbox}}}.  There should be no messages left in {{{u.mbox}}}.  It can be deleted.  Copy the {{{[sh].mbox}}} files back to albatross:
+{{{
+touch ~/tmp/s.mbox ~/tmp/h.mbox ; scp ~/tmp/[sh].mbox mail.python.org:/tmp && rm -f ~/tmp/[sh].mbox
+}}}
+ * Back on albatross (again, you need to {{{sudo bash}}}), tack those new messages onto the end of the proper training database and move the result into place for the next training run:
+{{{
+cd /usr/local/spambayes-corpus
+cat /tmp/h.mbox >> ham.mbox.cull ; cat /tmp/s.mbox >> spam.mbox.cull
+mv ham.mbox.cull ham.mbox ; mv spam.mbox.cull spam.mbox
+}}}
+ * Now train:
+{{{
+sh train.sh
+}}}
+The training scheme currently in use is called "train to exhaustion".  I provide no description here.  Google for "spambayes train to exhaustion" for links.  You will get some progress output:
+{{{
+round:  1, msgs:  576, ham misses: 149, spam misses: 203, 2.6s
+round:  2, msgs:  576, ham misses:  16, spam misses:  30, 2.1s
+round:  3, msgs:  576, ham misses:   2, spam misses:   1, 2.0s
+round:  4, msgs:  576, ham misses:   0, spam misses:   0, 2.0s
+writing new ham mbox...
+  324 of   324
+writing new spam mbox...
+  252 of   252
+}}}
+It typically only takes three to five rounds to converge to no misses.  If it takes longer than that take a look at {{{tte.log}}} in the current directory.  It lists message ids of the misses.  You might have a misclassified message which needs to be removed from the training database or moved from ham to spam, or vice versa.  The "writing" messages will often write fewer messages into the output {{{ {spam,ham}.mbox.cull }}} than the input.  If that's the case, just reexecute the {{{mv}}} command an retrain.
+ * Install the result:
+{{{
+sh install.sh
+}}}
+
+(That's it for now.  Feedback welcome.  I'll try to refine this soon.)
