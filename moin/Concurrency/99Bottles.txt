@@ -11,7 +11,7 @@ Solutions to common concurrent problems in different styles/toolkits. Inspired b
 
 Include a brief description if you add to this page.  Please make sure your source is well commented - concurrency is hard!
 
-== The problem ==
+== The Problem ==
 Implement
 
 {{{#!sh
@@ -116,7 +116,6 @@ def follow(fname, next):
     # setup
     f = file(fname)
     f.seek(0,2) # go to the end
-
     # do stuff
     while True:
         l = f.readline()
@@ -130,8 +129,7 @@ def grep(pattern, next):
     regex = re.compile(pattern)
     
     def do_stuff(l):
-        parent = greenlet.getcurrent().parent
-        
+        parent = greenlet.getcurrent().parent        
         while True:
             if regex.match(l):
                 l = next.switch(l)
@@ -143,16 +141,13 @@ def grep(pattern, next):
 def printer(l):
     # no setup
     parent = greenlet.getcurrent().parent
-
     # do stuff
     while True:
         print l.strip()
         l = parent.switch()
 
-# parents == main greenlet - HERE!
 g_printer = greenlet.greenlet(printer) 
 g_grep = greenlet.greenlet(grep(".*pants.*", g_printer))
-
 follow("/var/log/system.log", g_grep)
 }}}
 
