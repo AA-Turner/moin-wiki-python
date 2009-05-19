@@ -1,0 +1,23 @@
+= Concurrency Tips & Tricks =
+
+== Use with statement to manage locks ==
+Starting in Python 2.5, the `with` statement is a far easier way to manage locks:
+
+{{{#!python
+some_lock = threading.Lock()
+
+with some_lock:
+    do_stuff_requiring_lock()
+}}}
+
+This is equivalent to:
+
+{{{#!python
+some_lock = threading.Lock()
+
+some_lock.acquire():
+try:
+    do_stuff_requiring_lock()
+finally:
+    some_lock.release()
+}}}
