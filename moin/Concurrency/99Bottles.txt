@@ -1,0 +1,212 @@
+= 99 Concurrency Bottles of Beer =
+{{{
+99 bottles of beer on the wall, 99 bottles of beer.
+Take one down, pass it around,
+97 bottles of beer on the wall, 97 bottles of beer
+Take one down, pass it around,
+}}}
+
+Solutions to common concurrent problems in different styles/toolkits. Inspired by [[http://99-bottles-of-beer.net/ | 99 Bottles of Beer]].
+
+Include your name and a brief description if you add to this page.  Please make sure your source is well commented - concurrency is hard!
+
+== The problem ==
+Implement
+
+{{{#!sh
+#!/bin/sh
+tail -f /var/log/system.log |grep pants
+}}}
+
+in concurrent Python. On unix, you can send syslog messages via `logger`; filenames may vary.
+
+== Generator ==
+Generators implement a "pull-style" approach to concurrency.
+
+{{{#!python
+import time
+import re
+
+def follow(fname):
+    f = file(fname)
+    f.seek(0,2) # go to the end
+    while True:
+        l = f.readline()
+        if not l: # no data
+            time.sleep(.1)
+        else:
+            yield l
+
+def grep(lines, pattern):
+    regex = re.compile(pattern)
+    for l in lines:
+        if regex.match(l):
+            yield l
+
+def printer(lines):
+    for l in lines:
+        print l.strip()
+
+f = follow('/var/log/system.log')
+g = grep(f, ".*pants.*")
+p = printer(g)
+
+for i in p:
+    pass
+}}}
+
+== Coroutines ==
+The inversion of the generator example above, coroutines use a "push-style" approach to concurrency:
+
+{{{#!python
+import time
+import re
+from functools import wraps
+
+
+def coroutine(func):
+    @wraps(func)
+    def thing(*args, **kwargs):
+        gen = func(*args, **kwargs)
+        gen.next() # advance to the first yield
+        return gen
+    return thing
+
+@coroutine
+def follow(fname, next):
+    f = file(fname)
+    f.seek(0,2) # go to the end
+    while True:
+        l = f.readline()
+        if not l: # no data
+            time.sleep(.1)
+        else:
+            next.send(l)
+
+@coroutine
+def grep(pattern, next):
+    regex = re.compile(pattern)
+    while True:
+        l = yield
+        if regex.match(l):
+            next.send(l)
+
+@coroutine
+def printer():
+    while True:
+        l = yield
+        print l.strip()
+        
+
+p = printer()
+g = grep('.*pants.*', p)
+f = follow('/var/log/system.log', g)
+}}}
+
+== Greenlets ==
+Greenlets are similar to coroutines.
+
+{{{#!python
+import greenlet
+import time
+import re
+
+def follow(fname, next):
+    # setup
+    f = file(fname)
+    f.seek(0,2) # go to the end
+
+    # do stuff
+    while True:
+        l = f.readline()
+        if not l: # no data
+            time.sleep(.1)
+        else:
+            next.switch(l)
+    
+def grep(pattern, next):
+    # setup
+    regex = re.compile(pattern)
+    
+    def do_stuff(l):
+        parent = greenlet.getcurrent().parent
+        
+        while True:
+            if regex.match(l):
+                l = next.switch(l)
+            else:
+                l = parent.switch() # subtle!
+
+    return do_stuff
+
+def printer(l):
+    # no setup
+    parent = greenlet.getcurrent().parent
+
+    # do stuff
+    while True:
+        print l.strip()
+        l = parent.switch()
+
+# parents == main greenlet - HERE!
+g_printer = greenlet.greenlet(printer) 
+g_grep = greenlet.greenlet(grep(".*pants.*", g_printer))
+
+follow("/var/log/system.log", g_grep)
+}}}
+
+== Kamelia ==
+{{{#!python
+import time
+import re
+
+import Axon
+from Kamaelia.Chassis.Pipeline import Pipeline
+
+# threaded due to the time.sleep() call
+# No yield since a threaded component
+class Follow(Axon.ThreadedComponent.threadedcomponent):
+    def __init__(self, fname, **argv):
+        self.fname = fname
+        super(Follow,self).__init__(**argv)
+    def main(self):
+        f = file(self.fname)
+        f.seek(0,2) # go to the end
+        while not self.dataReady("control"):
+            l = f.readline()
+            if not l: # no data
+                time.sleep(.1)
+            else:
+                self.send(l, "outbox")
+
+        self.send(self.recv("control"), "signal")
+
+class Grep(Axon.Component.component):
+    # Default pattern, override in constructor with pattern="some pattern"
+    # See below
+    pattern = "." 
+    def main(self):
+        regex = re.compile(self.pattern)
+        while not self.dataReady("control"):
+           for l in self.Inbox("inbox"):
+               if regex.match(l):
+                   self.send(l, "outbox")
+           self.pause()
+           yield 1
+        self.send(self.recv("control"), "signal")
+
+class Printer(Axon.Component.component):
+    def main(self):
+        while not self.dataReady("control"):
+            for l in self.Inbox("inbox"):
+                print l.strip()
+            self.pause()
+            yield 1
+        self.send(self.recv("control"), "signal")
+
+Pipeline(
+    Follow('tail -f /var/log/system.log'),
+    Grep(".*pants.*"),
+    Printer(),
+).run()
+}}}
