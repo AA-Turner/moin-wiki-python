@@ -97,7 +97,7 @@ def printer():
     while True:
         l = yield
         print l.strip()
-        
+
 
 p = printer()
 g = grep('.*pants.*', p)
@@ -123,13 +123,13 @@ def follow(fname, next):
             time.sleep(.1)
         else:
             next.switch(l)
-    
+
 def grep(pattern, next):
     # setup
     regex = re.compile(pattern)
-    
+
     def do_stuff(l):
-        parent = greenlet.getcurrent().parent        
+        parent = greenlet.getcurrent().parent
         while True:
             if regex.match(l):
                 l = next.switch(l)
@@ -146,9 +146,9 @@ def printer(l):
         print l.strip()
         l = parent.switch()
 
-g_printer = greenlet.greenlet(printer) 
-g_grep = greenlet.greenlet(grep(".*pants.*", g_printer))
-follow("/var/log/system.log", g_grep)
+p = greenlet.greenlet(printer)
+g = greenlet.greenlet(grep(".*pants.*", p))
+follow("/var/log/system.log", g)
 }}}
 
 == Kamelia ==
@@ -180,7 +180,7 @@ class Follow(Axon.ThreadedComponent.threadedcomponent):
 class Grep(Axon.Component.component):
     # Default pattern, override in constructor with pattern="some pattern"
     # See below
-    pattern = "." 
+    pattern = "."
     def main(self):
         regex = re.compile(self.pattern)
         while not self.dataReady("control"):
@@ -201,7 +201,7 @@ class Printer(Axon.Component.component):
         self.send(self.recv("control"), "signal")
 
 Pipeline(
-    Follow('tail -f /var/log/system.log'),
+    Follow('/var/log/system.log'),
     Grep(".*pants.*"),
     Printer(),
 ).run()
