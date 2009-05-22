@@ -47,7 +47,9 @@ A [[attachment:PySymbols.html|symbol glossary]] is also available.
 
  * '''function''' - A block of code that is invoked by a "calling" program, best used to provide an autonomous service or calculation.  
 
- * '''generator''' - A function that returns an '''iterator'''. It looks like a normal function except that the keyword `yield` is used instead of `return`. Generator functions often contain one or more `for` or `while` loops that `yield` elements. The function execution is stopped at the `yield` keyword (returning the result) and its resumed there when the next element is requested by calling the `next()` method of the returned iterator.
+ * '''generator function''' - A function that returns a '''generator''' '''iterator'''. Its definition looks like a normal function definition except that it uses the keyword `yield`. Generator functions often contain one or more `for` or `while` loops that `yield` elements. The function execution is stopped at the `yield` keyword (returning the result) and its resumed there when the next element is requested (e.g., by the builtin function `next()`). For details see PEP 0255 and PEP 0342.
+
+ * '''generator''' - The common name for a generator '''iterator'''. The type of iterator returned by a generator function or a generator expression.
 
  * '''global interpreter lock''' or '''GIL''' - the lock used by Python threads to assure that only one thread can be run at a time.  This simplifies Python by assuring that no two processes can access the same memory at the same time.  Locking the entire interpreter makes it easier for the interpreter to be multi-threaded, at the expense of some parallelism on multi-processor machines.  Efforts have been made in the past to create a "free-threaded" interpreter (one which locks shared data at a much finer granularity), but performance suffered in the common single-processor case.  See GlobalInterpreterLock.
 
