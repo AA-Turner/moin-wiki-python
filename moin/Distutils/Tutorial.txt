@@ -358,9 +358,9 @@ recursive-include fontypythonmodules/help *
 I tell it to recurse all those subfolders. I include 'fp', 'fontypython', 'README' and 'COPYING' because they are in the root - perhaps there's a better way to do it, but this works.
 
 === The Magic Code ===
-The magic stuff is in the two functions called '''opj''' and '''find_data_files'''. They work together to build a list of all the files in a given path. This list is in the right shape for distutils to swallow. You pass it in via the data_files variable in the setup() call.
+The magic stuff is in the two functions called '''opj''' and '''find_data_files''' that you put in your '''setup.py''' file. They work together to build a list of all the files in a given path. This list is in the right shape for distutils to swallow. You pass it in via the data_files variable in the setup() call.
 
-(Ignore all my fontypythonmodules.stuff - that's just getting strings from another module.)
+(Ignore all my fontypythonmodules dot stuff - that's just to get strings from another module.)
 
 After making these changes, a normal '''python setup.py sdist''' works without oddball errors and the tarball has all the files you'd expect it to.
 {{{
@@ -454,6 +454,33 @@ setup(name = "fontypython",
 )
 }}}
 
+== NEW VERSION OF def walk_helper() ==
+Given that you may want to exclude files that contain ''more'' than just .pyc in them, we need something handy. Replace the def in the code above with this code.
+{{{
+## A list of partials within a filename that would disqualify it
+## from appearing in the tarball.
+badnames=[".pyc","~","no_"]
+def walk_helper(arg, dirname, files):
+    if 'CVS' in dirname:
+        return
+    names = []
+    lst, wildcards = arg
+    for wc in wildcards:
+        wc_name = opj(dirname, wc)
+        for f in files:
+            filename = opj(dirname, f)
+            #if ".pyc" not in filename:
+            ## This hairy looking line excludes the filename
+            ## if any part of one of  badnames is in it:
+            L=len([bad for bad in badnames if bad in filename])
+            if L > 0:
+                if fnmatch.fnmatch(filename, wc_name) and not os.path.isdir(filename):
+                    names.append(filename)
+    if names:
+        lst.append( (dirname, names ) )
+}}}
+
+The secret is the list '''badnames''' which you can fill as you please.
 
 == Fin ==
 I hope this helps someone.
@@ -461,4 +488,4 @@ Happy coding.
 
 [[mailto:donn.ingle@gmail.com|DonnIngle]]
 ----
-CategoryFaq
+CategoryFaq CategoryDistutilsCookbook
