@@ -3,13 +3,12 @@
 Windows regrtest failures
 =========================
 
-11 fails unexpected:
-    test_classpathimporter test_gettext test_java_integration
+9 fails unexpected:
+    test_classpathimporter test_java_integration
     test_marshal test_netrc test_old_mailbox test_pkgimport
-    test_popen test_shutil test_tarfile test_urllib2
+    test_popen test_shutil test_urllib2
 
 * test_classpathimporter - file handles, though not a straightforward fix, org.python.core.ClasspathPyImporter is the culprit
-* test_gettext - ?
 * test_java_integration - jython.bat needs (or 'should' as there's absolutely nothing subprocess can do about it) to strip surrounding quotes from command line arguments
 * test_marshal - recursion tests blow out stack. jython.bat sets Xss512k (and posix sets Xss1024k) but windows seems to need Xss1280k to pass
 * test_netrc - file handles
@@ -17,7 +16,6 @@ Windows regrtest failures
 * test_pkgimport - file handles? but passes over here..
 * test_popen - http://bugs.python.org/issue1559298
 * test_shutil - apparently java.io.File.delete completely ignores ntfs permissions set by test_on_error???
-* test_tarfile - mostly fixed but still flakey I guess
 * test_urllib2 - ?
 
 Also test_mailbox fails horribly and is temporarily disabled from regrtest --expected
