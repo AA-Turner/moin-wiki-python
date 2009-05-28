@@ -461,7 +461,7 @@ Given that you may want to exclude files that contain ''more'' than just .pyc in
 ## from appearing in the tarball.
 badnames=[".pyc","~","no_"]
 def walk_helper(arg, dirname, files):
-    if 'CVS' in dirname:
+    if 'CVS' in dirname: ## ADD/CHANGE as you need here too.
         return
     names = []
     lst, wildcards = arg
@@ -473,7 +473,7 @@ def walk_helper(arg, dirname, files):
             ## This hairy looking line excludes the filename
             ## if any part of one of  badnames is in it:
             L=len([bad for bad in badnames if bad in filename])
-            if L > 0:
+            if L == 0:
                 if fnmatch.fnmatch(filename, wc_name) and not os.path.isdir(filename):
                     names.append(filename)
     if names:
