@@ -206,3 +206,56 @@ Pipeline(
     Printer(),
 ).run()
 }}}
+
+
+== Twisted ==
+{{{
+from twisted.protocols.basic import LineReceiver
+from twisted.python import log
+
+SLOW_INTERVAL = 1.0
+FAST_INTERVAL = 0.001
+SEEK_END = 2
+BLOCKSIZE = 8192
+
+class TailTransport(object):
+  def __init__(self, fileobj, protocol):
+      self.fileobj = fileobj
+      self.protocol = protocol
+      self.disconnecting = False
+
+  def start(self, clock):
+      self.clock = clock
+      self.fileobj.seek(0, SEEK_END)
+      self.protocol.makeConnection(self)
+      self.tick()
+
+  def tick(self):
+      anyData = self.fileobj.read(BLOCKSIZE)
+      try:
+          self.protocol.dataReceived(anyData)
+      except:
+          log.err()
+      if anyData:
+          interval = FAST_INTERVAL
+      else:
+          interval = SLOW_INTERVAL
+      self.clock.callLater(interval, self.tick)
+
+class Grep(LineReceiver):
+  delimiter = '\n'
+  def __init__(self, term):
+      self.term = term
+
+  def lineReceived(self, line):
+      if self.term in line:
+          print line.rstrip("\n")
+
+def main():
+  from twisted.internet import reactor
+  TailTransport(file("/var/log/syslog", "rb"),
+                Grep("pants")).start(reactor)
+  reactor.run()
+
+main()
+}}}
