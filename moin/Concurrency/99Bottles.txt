@@ -21,6 +21,11 @@ tail -f /var/log/system.log |grep pants
 
 in concurrent Python. On unix, you can send syslog messages via `logger`; filenames may vary.
 
+== Errata ==
+Solutions using readline() will exhibit bugs if less than a full line is flushed to disk.  If your input file is syslog, this shouldn't be a problem however.
+
+Glyph makes the very valid point that these examples are in fact serial programs (ie, they don't do more than one thing at a time).  A better example would be following multiple files simultaneously.
+
 == Generator ==
 Generators implement a "pull-style" approach to concurrency.
 
