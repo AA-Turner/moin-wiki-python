@@ -72,7 +72,10 @@ The following solution was difficult to discover with the available documentatio
 After creating a new row in a table that uses AUTOINCREMENT to create the PRIMARY KEY, one may wish to determine the value of the new row-id, for example if the value is need for a new row in a related table that will be inserted next. The answer is to use the ''lastrowid'' property of the ''cursor'' class as in   {{{newId=c.lastrowid }}} shown below in a demo context. Tested in Python2.5.1 with the sqlite3 module:
 
 {{{
-           import sqlite3
+           import sqlite3 
+
+# for py24 use from pysqlite2 import dbapi2 as sqlite
+
            con = sqlite3.connect('demo.db')
            con.execute("""CREATE TABLE tbl (
                id INTEGER PRIMARY KEY AUTOINCREMENT,
