@@ -7,7 +7,7 @@ Take one down, pass it around,
 98 bottles of beer on the wall, 98 bottles of beer
 }}}
 
-Solutions to common concurrent problems in different styles/toolkits. Inspired by [[http://99-bottles-of-beer.net/ | 99 Bottles of Beer]].
+The purpose of this page is to show solutions to common concurrent problems in different styles/toolkits. Inspired by [[http://99-bottles-of-beer.net/ | 99 Bottles of Beer]].  It is not intended to demonstrate high-performance code, but rather to give potential users a sense of what typical code using the various libraries looks like.
 
 Include a brief description if you add to this page.  Please make sure your source is well commented - concurrency is hard!
 
@@ -25,8 +25,6 @@ in concurrent Python. On unix, you can send syslog messages via `logger`; filena
 Solutions using readline() will exhibit bugs if less than a full line is flushed to disk.  If your input file is syslog, this shouldn't be a problem however.
 
 Glyph makes the very valid point that these examples are in fact serial programs (ie, they don't do more than one thing at a time).  A better example would be following multiple files simultaneously.
-
-The method of waiting for the file to change is inefficient. Perhaps the [[http://www.gnome.org/~veillard/gamin/python.html|Python bindings]] for [[http://www.gnome.org/~veillard/gamin/|Gamin]] would be of interest.
 
 == Generator ==
 Generators implement a "pull-style" approach to concurrency.
