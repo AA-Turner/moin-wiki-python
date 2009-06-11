@@ -265,3 +265,33 @@ def main():
 
 main()
 }}}
+
+== Fibra ==
+
+{{{#!python
+import fibra
+import re
+
+def tail(f, output):
+    f.seek(0,2)
+    while True:
+        line = f.readline()
+        yield output.push(line) if line else 0.1 
+
+def grep(pattern, input, output):
+    regex = re.compile(pattern)
+    while True:
+        line = yield input.pop()
+        if regex.match(line):
+            yield output.push(line) 
+
+def printer(input):
+    while True:
+        line = yield input.pop()
+        print line.strip()
+    
+schedule = fibra.schedule()
+schedule.install(tail(open("test.log","r"), fibra.Tube("T2G")))
+schedule.install(grep(".*pants.*", fibra.Tube("T2G"), fibra.Tube("G2P")))
+schedule.install(printer(fibra.Tube("G2P")))
+schedule.run()}}}
