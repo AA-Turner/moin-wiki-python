@@ -295,3 +295,41 @@ schedule.install(tail(open("test.log","r"), fibra.Tube("T2G")))
 schedule.install(grep(".*pants.*", fibra.Tube("T2G"), fibra.Tube("G2P")))
 schedule.install(printer(fibra.Tube("G2P")))
 schedule.run()}}}
+
+== Stackless ==
+
+{{{#!python
+import stackless
+import time
+import re
+
+@stackless.tasklet
+def tail(f, output):
+    f.seek(0,2)
+    while True:
+        line = f.readline()
+        if line:
+            output.send(line)
+        else:
+            time.sleep(0.1)
+
+@stackless.tasklet
+def grep(pattern, input, output):
+    regex = re.compile(pattern)
+    while True:
+        line = input.receive()
+        if regex.match(line):
+            output.send(line)
+
+@stackless.tasklet
+def printer(input):
+    while True:
+        line = input.receive()
+        print line.strip()
+
+T2G = stackless.channel()
+G2P = stackless.channel()
+tail(open("test.log","r"), T2G)
+grep(".*pants.*", T2G, G2P)
+printer(G2P)
+stackless.run()}}}
