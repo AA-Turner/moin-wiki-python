@@ -293,7 +293,7 @@ def printer(input):
         print line.strip()
     
 schedule = fibra.schedule()
-schedule.install(tail(open("test.log","r"), fibra.Tube("T2G")))
+schedule.install(tail(open("/var/log/syslog.log","r"), fibra.Tube("T2G")))
 schedule.install(grep(".*pants.*", fibra.Tube("T2G"), fibra.Tube("G2P")))
 schedule.install(printer(fibra.Tube("G2P")))
 schedule.run()}}}
@@ -331,7 +331,7 @@ def printer(input):
 
 T2G = stackless.channel()
 G2P = stackless.channel()
-tail(open("test.log","r"), T2G)
+tail(open("/var/log/syslog.log","r"), T2G)
 grep(".*pants.*", T2G, G2P)
 printer(G2P)
 stackless.run()}}}
