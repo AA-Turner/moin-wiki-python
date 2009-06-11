@@ -278,7 +278,7 @@ def tail(f, output):
     f.seek(0,2)
     while True:
         line = f.readline()
-        yield output.push(line) if line else 0.1 
+        yield output.push(line) if line else 0.1 #push line, or sleep.
 
 def grep(pattern, input, output):
     regex = re.compile(pattern)
