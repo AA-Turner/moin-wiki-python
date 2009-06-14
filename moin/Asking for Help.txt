@@ -6,19 +6,19 @@ See Also: [[Asking for Help/Why doesn`t this work?]]
 
  * How can I add or substract two to the last digit of a float? Like 4.9999 should be 5.0001 or 4.9997. The problem is  
 
-  {{{
-  >>> 4.9999
-  4.9999000000000002
-  would yield 4.9999000000000000 or 4.9999000000000004 which is not right.
-  I could make a str(4.9999), convert each character to an int and work on each character from right   
-  to left, but there must be a better way.
-  this is not what I want as well:
-  >>> ( 4.9999 * 10000 + 2 ) / 10000.0
-  5.0000999999999998 -> this should be 5.0001
-  this makes it somehow :))
-  >>> str(( 4.9999 * 10000 + 2 ) / 10000)
-  '5.0001'
-  }}}
+ {{{
+ >>> 4.9999
+ 4.9999000000000002
+ would yield 4.9999000000000000 or 4.9999000000000004 which is not right.
+ I could make a str(4.9999), convert each character to an int and work on each character from right   
+ to left, but there must be a better way.
+ this is not what I want as well:
+ >>> ( 4.9999 * 10000 + 2 ) / 10000.0
+ 5.0000999999999998 -> this should be 5.0001
+ this makes it somehow :))
+ >>> str(( 4.9999 * 10000 + 2 ) / 10000)
+ '5.0001'
+ }}}
 
  * I'm working with embedding Python into my applications. However, the Py_Initialize() is producing an " 'import site' failed " message on non-dev computers. I was wondering if there is a way to fix this or is it just a bug with Python? Thank you.
 
@@ -29,17 +29,17 @@ See Also: [[Asking for Help/Why doesn`t this work?]]
  * I just installed MacPython. Unfortunately it doesn't seem to include the CoreGraphics-Python Module. Where ist my old system python? How can I uninstall MacPython?
 
  * I am new to Python from Java background, I have following structure
-   {{{
+ {{{
 /root
 	/folder1
 		Class1.py
 		Class2.py
 	/folder2
 		Class3.py
-   }}}
+ }}}
 
-   I am in the folder2 and want to run class3.py but it need to import a module from Class1.py
-   Could someone please help me?
+ I am in the folder2 and want to run class3.py but it need to import a module from Class1.py
+ Could someone please help me?
 
    * I believe you just need to add folder1 to your path variable. Should be something along the lines of: import sys; sys.path.append('/root/folder1'); import Class1 (with ; replaced by newlines). If that doesn't work, look through the documentation for info on how the sys.path variable works--I may just have the syntax slightly off
 
@@ -50,11 +50,8 @@ See Also: [[Asking for Help/Why doesn`t this work?]]
  * Is there any way to determine if the C implementation under my Python uses IEEE 754 for floating point numbers? If yes, what is it?
 
  * I am trying to run Python script in ABAQUS, but there is a error "Import Error: No Module named " Tkinter"". So how can I handle the problem? Thanks
- *[[How to store information in variable arrays?]]
 
  *[[Why do I call conctructor of Cmd class in my Cmd subclass __init__ method?]]
-
- *[[How to run Python based softwares from sourceforge? !!!Newbie]]
 
  *[[How to use Python with MySQL on Windows]]
 
@@ -125,11 +122,10 @@ See Also: [[Asking for Help/Why doesn`t this work?]]
 
  * [[LocalVariablesInFunctions|"How do I use local variables in a function within a class? (I do not want to use self.x, as this makes the instance have variables. I want variables local to my function, that get destroyed at the end of it.) I can only think of using del at the end of the function, is there a better way?"]]
 
-
  * [[PythonFramework-x.x.pkg installation fails. Is there a workaround?]]
 
  * I'm trying to split a string, but without breaking the quotes
-  {{{
+ {{{
 x = '"a,b", c, d, "e,f,h", "i,j,k"'
 re.sub('"([^"]*)"', "\g<1>", x) 
 -> 'a,b, c, d, e,f,h, i,j,k' # Ok for me
@@ -140,9 +136,13 @@ re.sub('"([^"]*)"', "|\g<1>|", x)
 re.sub('"([^"]*)"', "\g<1>".replace(",", "|"), x)
 -> 'a,b, c, d, e,f,h, i,j,k' # The same result!
 -> 'a|b, c, d, e|f|h, i|j|k' # It doesn't suppose to replace all "," with "|" like here?
-   }}}
+ }}}
 
   * No, it is doing what you told it to do. To realize this you must know that arguments are evaluated before they are passed to the functions. But what is the value of "\g<1>".replace(",", "|")? "\g<1>", of course, as there are no commas to replace in "\g<1>". re.sub therefore receives '"([^"]*)"' and "\g<1>" as arguments, which is the exact equivalent of the first call.
+
+ * [[How to store information in variable arrays?]]
+
+ * [[How do I run Python based software from SourceForge?]]
 
 ----
 CategoryFaq
