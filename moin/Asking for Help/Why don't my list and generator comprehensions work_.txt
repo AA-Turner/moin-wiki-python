@@ -47,3 +47,27 @@ The third example generates an undefined variable error.
 What is wrong with the third example? If I pre-define {{{S = Source[1]}}}, it works correctly, generating a flat list, while if I predefine S equal to something else, it uses that value in violation of the semantics of list comprehensions as I understand them. Is something wrong with my list comprehension, with Python 2.5.2 itself, or with my understanding of the relavent semantics?
 
 My answer: In case someone reads this, the third example has got "for" loops in the wrong order. The first for loop runs first, and therefore it should be written as {{{[os.path.join(S, t) for S in Source[1:] for t in os.listdir(S)].}}}
+
+Answer from PaulBoddie:
+
+ * In the second example, you get generator objects because that is what a generator comprehension produces, and these generators must then be "materialised" (or consumed by something like `list` in order to get a list of objects).
+
+ * In the third example, you have to remember that the loops read from left to right, starting with the outermost loop and ending at the innermost. The way to think about this is to move the expression from the beginning to the end and then write the loops out as you normally would:
+
+ {{{#!python
+ os.path.join(S, t) for t in os.listdir(S) for S in Source[1:]
+
+ # becomes...
+ for t in os.listdir(S) for S in Source[1:] ... os.path.join(S, t)
+
+ # then...
+ for t in os.listdir(S):
+     for S in Source[1:] ... os.path.join(S, t)
+
+ # and finally...
+ for t in os.listdir(S):
+     for S in Source[1:]:
+         ... os.path.join(S, t)
+ }}}
+
+ Here, `...` refers to the operation which yields the results of the comprehension. Now, it should be obvious why `S` is not defined.
