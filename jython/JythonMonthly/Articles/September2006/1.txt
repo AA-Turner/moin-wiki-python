@@ -64,7 +64,7 @@ import org.python.util.PythonInterpreter;
 public class JythonFactory {
    private static JythonFactory instance = null;
     
-   public static JythonFactory getInstance(){
+   public synchronized static JythonFactory getInstance(){
         if(instance == null){
             instance = new JythonFactory();
         }
