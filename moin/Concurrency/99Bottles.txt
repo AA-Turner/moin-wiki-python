@@ -382,3 +382,57 @@ class Grep(Component):
 
 (Follow("/tmp/foo") + LineBuffer() + Grep("pants")).run()
 }}}
+
+== pprocess ==
+
+This example needs pprocess 0.5. The activity functions are similar to the generator (and other) solutions, and the differences lie in the use of the `multigrep` function, which is invoked to provide `grep` functionality for each pattern in a separate process, and in the way the `multigrep` function itself follows several files using the `multifollow` callable (the `follow` function invoked in a separate process). A channel is used in the `follow` function to communicate new lines which are then consumed via a queue in the `grep` function, which in turn communicates matching lines via a channel which are then consumed by the `printer` function.
+
+{{{#!python
+import pprocess
+import time
+import re
+
+def follow(ch, fname):
+    f = file(fname)
+    f.seek(0,2) # go to the end
+    while True:
+        l = f.readline()
+        if not l: # no data
+            time.sleep(.1)
+        else:
+            ch.send(l)
+
+def grep(ch, lines, pattern):
+    regex = re.compile(pattern)
+    for l in lines:
+        if regex.match(l):
+            ch.send(l)
+
+def printer(lines):
+    for l in lines:
+        print l.strip()
+
+def multigrep(ch, pattern):
+    queue = pprocess.Queue(continuous=1)
+    multifollow = queue.manage(follow)
+
+    # Launch concurrent following activities.
+    multifollow('/var/log/system.log')
+    multifollow('/var/log/other.log')
+    multifollow('/var/log/another.log')
+
+    # Handle incoming lines using the specified pattern.
+    grep(ch, queue, pattern)
+
+# Permit multiple simultaneous grep activities.
+queue = pprocess.Queue(continuous=1)
+multigrep = queue.manage(multigrep)
+
+# Launch concurrent grep activities.
+multigrep(".*pants.*")
+multigrep(".*trousers.*")
+multigrep(".*shorts.*")
+
+# Print incoming lines.
+p = printer(queue)
+}}}
