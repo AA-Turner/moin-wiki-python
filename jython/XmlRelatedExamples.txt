@@ -27,6 +27,7 @@ Download element tree from http://effbot.org/downloads/
 
 {{{
 from  elementtree import ElementTree as ET
+
 root = ET.Element("html")
 head = ET.SubElement(root, "head")
 title = ET.SubElement(head, "title")
@@ -36,13 +37,14 @@ body.set("bgcolor", "#ffffff")
 body.text = "Hello, World!"
 tree = ET.ElementTree(root)
 tree.write("page.xhtml")
+
 import sys
 tree.write(sys.stdout)
 }}}
 
 which produces:
-{{{ <html><head><title>Page Title</title></head><body bgcolor="#ffffff">Hello, World
-!</body></html>>>>
+{{{
+<html><head><title>Page Title</title></head><body bgcolor="#ffffff">Hello, World!</body></html>
 }}}
 
 
