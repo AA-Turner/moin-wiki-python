@@ -1,0 +1,210 @@
+#!/usr/bin/env python
+from Tkinter import *
+import tkFileDialog
+import tkMessageBox
+import os
+import sys
+
+root = Tk()
+
+class Editor:
+	def __init__(self,master):
+		self.master = master
+		self.thisfile = ()
+		self.autoindent = True
+
+		menubar = Menu(root)
+
+		# create a pulldown menu, and add it to the menu bar
+		filemenu = Menu(menubar, tearoff=0)
+		filemenu.add_command(label="New", command=self.fileNew)
+		filemenu.add_command(label="Open", command=self.fileOpen)
+		filemenu.add_command(label="Save Ctrl-s", command=self.fileSave)
+		filemenu.add_command(label='Save As', command=self.fileSaveAs)
+		filemenu.add_separator()
+		filemenu.add_command(label="Exit", command=self.controlQuit)
+		menubar.add_cascade(label="File", menu=filemenu)
+
+		# create more pulldown menus
+		editmenu = Menu(menubar, tearoff=0)
+		editmenu.add_command(label="Cut    Ctrl-x", command=self.editCut)
+		editmenu.add_command(label="Copy  Ctrl-c", command=self.editCopy)
+		editmenu.add_command(label="Paste Ctrl-v", command=self.editPaste)
+		menubar.add_cascade(label="Edit", menu=editmenu)
+		
+		pythonmenu = Menu(menubar, tearoff = 0)
+		pythonmenu.add_command(label="Run   F5", command=self.controlRun)
+		pythonmenu.add_command(label="Edit editor", command=lambda:self.fileOpen(sys.argv[0]))
+		menubar.add_cascade(label="Python", menu = pythonmenu)
+
+		helpmenu = Menu(menubar, tearoff=0)
+		helpmenu.add_command(label="License", command=self.license)
+		helpmenu.add_command(label="About", command=self.about)
+		menubar.add_cascade(label="Help", menu=helpmenu)
+
+		self.master.config(menu=menubar)
+		self.master.protocol('WM_DELETE_WINDOW',self.controlQuit)
+		
+		# Create text field and crossbind with scrollbar		
+		self.edit = Text(master)
+		self.edit.pack(fill=BOTH,expand=YES,side=LEFT)
+		self.escroll = Scrollbar(master)
+		self.escroll.pack(side=RIGHT,fill=Y)
+		self.edit.config(yscrollcommand=self.escroll.set)
+		self.escroll.config(command=self.edit.yview)
+		
+		
+		# Bind keyboard controls
+		self.edit.bind('<Control-c>',lambda x :self.editCopy())
+		self.edit.bind('<Control-v>',lambda x :self.editPaste())
+		self.edit.bind('<Control-x>',lambda x :self.editCut())
+		self.edit.bind('<Control-s>',lambda x :self.fileSave())
+		self.edit.bind('<Control-q>',lambda x :self.controlQuit())
+		self.edit.bind('<Return>',lambda x :self.controlIndent()) # Bind enter to handle autoindentation
+		self.edit.bind('<Control-i>',lambda x :self.controlChangeIndent())
+		self.edit.bind('<Control-f>', lambda x :self.controlFlipComment())
+		self.edit.bind('<F5>',lambda x :self.controlRun())
+		
+		self.controlSetTitle()
+		
+	def fileNew(self,*args):
+		if (not self.edit.edit_modified()) or tkMessageBox.askokcancel('New', 'Your current file is unsaved, continue?'):
+			self.controlClear()
+			self.thisfile = ()
+			self.edit.edit_modified(False)
+	
+	def fileOpen(self,filename = False):
+		if (not self.edit.edit_modified()) or tkMessageBox.askokcancel('New', 'Your current file is unsaved, continue?'):
+			if filename == False:
+				filename = tkFileDialog.askopenfilename()
+			if len(filename) == 0:
+				return
+			try:
+				file = open(filename,'r')
+				self.controlClear()
+				self.edit.insert("1.0",file.read())
+				self.thisfile = filename
+				file.close()
+				self.edit.edit_modified(False)
+			except:
+				self.controlClear()
+				self.thisfile = filename
+				self.edit.edit_modified(False)
+
+	def controlQuit(self):
+		if (not self.edit.edit_modified()) or tkMessageBox.askokcancel('Quit', 'Are you sure you want to quit without saving?'):
+			self.master.quit()
+		
+	def controlSetTitle(self):
+		if len(self.thisfile) == 0:
+			self.master.title('Unnamed : ' + self.edit.index(INSERT))
+		else:
+			if self.edit.edit_modified():
+				self.master.title(self.thisfile+'* : '+self.edit.index(INSERT))
+			else:
+				self.master.title(self.thisfile+' : ' +self.edit.index(INSERT))
+		self.master.after(100,self.controlSetTitle)
+		
+	def controlRun(self):
+		self.fileSave()
+		os.system('python ' +self.thisfile)
+	
+	def controlClear(self):	
+		self.edit.delete("1.0",END)
+		
+	def controlSel(self):
+		sel = self.edit.tag_ranges(SEL)
+		if len(sel) == 0:
+			return False
+		else:
+			return sel
+		
+	def controlChangeIndent(self):
+		self.autoindent = not self.autoindent
+
+	def controlIndent(self,*args):
+		if self.autoindent:
+			row,col = self.edit.index(INSERT).split('.')	
+			try:
+				ncur = row + '.0'
+				firstchar = self.edit.get(ncur,INSERT).strip()[0]
+				pos = self.edit.search(firstchar,ncur,INSERT)
+				root.after(1,lambda : self.edit.insert(INSERT,self.edit.get(ncur,pos))) # The hackiest of hacks
+			except IndexError:
+				pass			
+	
+	def controlFlipComment(self,*args):
+		sel = self.controlSel()
+		if len(sel) == 0:
+			row,col = self.edit.index(INSERT).split('.')
+			ncur = row + '.0'
+			if(self.edit.get(ncur) == '#'):
+				self.edit.delete(ncur)
+			else:
+				self.edit.insert(ncur,'#')
+		else:
+			start = sel[0].split('.')
+			end = sel[1].split('.')
+			for i in range(int(start[0]),int(end[0])+1):
+				ncur = str(i) + '.0'
+				if(self.edit.get(ncur) == '#'):
+					self.edit.delete(ncur)
+				else:
+					self.edit.insert(ncur,'#')
+
+	def fileSave(self):
+		if self.thisfile == False:
+			self.fileSaveAs()
+		file = open(self.thisfile,'w')
+		file.write(self.edit.get("1.0",END))
+		file.close()
+		self.edit.edit_modified(False)
+
+	def fileSaveAs(self,filename = False):
+		if filename == False:
+			filename = tkFileDialog.asksaveasfilename()
+		if len(filename) == 0:
+			return
+		file = open(filename,'w')
+		file.write(self.edit.get("1.0",END))
+		self.thisfile = filename
+		self.edit.edit_modified(False)
+
+	def editCopy(self):
+		sel = self.controlSel()
+		if sel != False:
+			self.edit.clipboard_clear()
+			self.edit.clipboard_append(self.edit.get(*sel))
+
+	def editCut(self):
+		sel = self.controlSel()
+		if sel != False:
+			self.edit.clipboard_clear()
+			self.edit.clipboard_append(self.edit.get(*sel))
+			self.edit.delete(*sel)		
+		
+	def editPaste(self):
+		try:
+			self.edit.insert(INSERT,self.edit.selection_get(selection='CLIPBOARD'))
+			self.master.after(1,lambda : self.edit.see(INSERT))
+		except TclError: # raised if the clipboard is empty, for example.
+			pass 
+
+	def about(self):
+		tkMessageBox.showinfo('About', 'Pye - A free customizeable\nPython editor\nMade by Juuso Valli\nReleased under GPL.\n')
+	def license(self):
+		tkMessageBox.showinfo('Licensing information',"This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n\nThis release does not contain a copy of the GNU General Public License. It may be viewed at <http://www.gnu.org/licenses/>.")
+		
+editor = Editor(root)
+if len(sys.argv) > 1:
+	filename = sys.argv[1]
+	editor.fileOpen(filename)
+root.mainloop()
+
+
+
+
+
+
+
+
