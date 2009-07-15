@@ -1,9 +1,5 @@
 #format rst
 
-.. |stable.installer.jar| replace:: jython_installer-2.2.1.jar
-
-.. _Jython-2.2.1: http://downloads.sourceforge.net/jython/jython_installer-2.2.1.jar
-
 =================
 Jython User Guide
 =================
@@ -50,9 +46,9 @@ Invoking the Jython Interpreter
 -------------------------------
 Jython is invoked using the "jython" script, a short script that invokes your local JVM, sets the Java
 property install.path to an appropriate value, and then runs the Java
-classfile org.python.util.jython.  
+classfile org.python.util.jython. ::
 
-jython [options] [-jar jar | -c cmd | file | -] [args]
+    jython [options] [-c cmd | -m mod | file | -] [arg] ...
 
 options
 	-i: Inspect interactively after running script; force prompts even if stdin is not a terminal.
@@ -60,25 +56,25 @@ options
 	-Dprop=[value]: Set the jython property prop to value.
 
 -jar jar
-	the program to run is read from the __run__.py file in the specified jar file   
+	the program to run is read from the __run__.py file in the specified jar file
 
 -c cmd
 	program to run is passed in as the cmd string. This option terminates the options list file run file as the program script file
 
 -
 	program is read from standard-in (default; interactive mode is 	used if on a tty).  This flag allows you to pipe a file into Jython and have it be treated correctly. For example:
-		filter file | jython - 
+		filter file | jython -
 
 args
-	arguments passed to the program in sys.argv[1:] 
+	arguments passed to the program in sys.argv[1:]
 
 --help
-	print a usage message and exit                                                                                             
+	print a usage message and exit
 
 --version
-	print Jython version number and exit                                                                                      
-  
-                                               
+	print Jython version number and exit
+
+
 
 
 
@@ -89,12 +85,12 @@ To make a jython ".py" file executable on a Unix system:
 
 * Make sure that jython is on your standard PATH.
 * Make the ".py" file executable.  Typically, this is done with the command chmod +x foo.py
-* Add the following line to the top of the file:
+* Add the following line to the top of the file::
 
-#! /usr/bin/env jython
+    #!/usr/bin/env jython
 
 .. Note:: "#! <...>/jython" will generally not work to make your script
-  executable. This is because "jython" is itself a script, and  #! 
+  executable. This is because "jython" is itself a script, and  #!
   requires that the file to execute is a binary executable on most Unix
   variants. Using "/usr/bin/env" will get around this problem - and make
   your scripts more portable in the bargain.
@@ -434,7 +430,7 @@ Methods, Properties and Event Properties
 ========================================
 Jython have only one namespace for these three class attributes. Java can be seen as having a unique namespace for each of the three types. As a consequense, there can be conflicts between methods, properties and event properties. These conflicts are resolved so that:
 
-    properties < event-properties < fields < methods 
+    properties < event-properties < fields < methods
 
 This means that a method will override a field with the same name. Some carefull handling of properties and static fields allow for the existence of, and access to, both an instance property and a static field with the same name.
 
@@ -451,7 +447,7 @@ The jarray module exports two functions::
 
 array will create a new array of the same length as the input sequence and will populate it with the values in sequence. zeros will create a new array of the given length filled with zeros (or null's if appropriate).
 
-type can either be a single character typecode (using the same mappings as Python's array module) or it can be an instance of a JavaClass object. The valid typecodes are shown in the following table: 
+type can either be a single character typecode (using the same mappings as Python's array module) or it can be an instance of a JavaClass object. The valid typecodes are shown in the following table:
 
 +--------------------+-------------------------+
 | Character Typecode | Corresponding Java Type |
@@ -626,7 +622,7 @@ Embedding Jython
 
 There are two options for embedding Jython in a Java application.  You can make
 a real Java class out of a Python class, and then call it from your Java code,
-as previously described, or you can use the PythonInterpreter object 
+as previously described, or you can use the PythonInterpreter object
 
 Information on the PythonInterpreter can be found in the JavaDoc documentation for `org.python.util.PythonInterpreter`_.
 
@@ -665,7 +661,7 @@ The java code required to execute the python program:
             System.out.println("x: " + x);
         }
     }
-    
+
 Using JSR 223
 =============
 
@@ -704,6 +700,9 @@ so it can always set the classloader to the thread's context classloader.  This
 means if you want to do anything Jython specific to PySystemState, like adding
 to sys.path or setting sys.stdin and sys.stdout, you should do it after
 creating the ScriptEngine.
+
+Note that JSR 223 currently only works with Jython 2.2.1.
+Support for JSR 223 should be restored in Jython 2.5.1.
 
 ---------------------------------------------------
 Java Reload (experimental) simple Support - JReload
@@ -875,11 +874,9 @@ performance penalty (rebuilding the wrapped version is expensive). On
 the other hand this is a good setting for testing if unloading actually
 happens or some references hunting around prevent it.
 
-[Note: With jdk 1.3 java -verbose:class can help tracking class unloads,
-and System.gc forces class unloading. With jdk 1.2 java -verbose:gc should
-give some information on class unloading, but unloading of classes happen
-at unpredictable points and System.gc does not trigger it. Also weak-refs
-allow testing for unloading and gc.]
+With Java 1.3 and later, `java -verbose:class` can help tracking
+class unloads, and System.gc forces class unloading.  Also,
+weak-refs allow testing for unloading and gc.
 
 internalTablesImpl = soft --Sets implementation using soft-refs. Table
 entries for not referenced (outside the table) wrapped
@@ -889,32 +886,6 @@ so the actual behavior will depend on the concrete jvm. But if actual
 (jvm) implementations are not too bad, this should be a good setting
 for production code, which relies on unloading to avoid out of memory
 failures.
-
-Java 1.1
-========
-
-To be honest the unloading support that jython can offer under java
-1.1 (given the absence of weak/soft-refs) is error-prone and anything
-serious would require "too much" caution, but this should not be a real
-issue. Support is offered only for "jreload" needs, in these forms:
-
-# Before reload(X) one can issue X.unload(). X.unload() discards all the
-entries for the old versions of the classes in X. This is safe only if
-all python subclasses and all instances of them have been destroyed.
-# One can "extract" the information needed in order to discard the
-entries for the versions actually present in X at a later point (after
-a whole series of reloads):
-
-    u_t1=X.unload # extract unload info for time t1 versions
-    ... reloads ...
-    u_t1() # discard entries for time t1 versions
-
-u_t1() is safe only if at that point all subclasses/instances of the
-involved versions have been destroyed.
-
-.. note:: these idioms work also with the standard internal tables
-   implementation under java2, and for compatibility even with the weak/soft
-   implementations.
 
 JReload Example Source Files
 ============================
@@ -1438,7 +1409,7 @@ Example session
 
   >>>
 
-.. _JavaDoc documentation: http://www.jython.org/docs/javadoc/index.html 
+.. _JavaDoc documentation: http://jython.sourceforge.net/docs/javadoc/
 .. _`Python Tutorial`: http://www.python.org/doc/tut/tut.html
 .. _Python Library Reference: http://www.python.org/doc/lib/lib.html
 .. _Python Language Reference: http://www.python.org/doc/current/ref/ref.html
