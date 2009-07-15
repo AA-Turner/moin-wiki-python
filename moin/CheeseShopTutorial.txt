@@ -1,12 +1,55 @@
-= Installing Packages from the Package Index (Start Here) =
+= Installing Distributions from the Package Index (Start Here) =
 
-To install packages from the [[http://pypi.python.org/pypi|Package Index (PyPI)]] into your Python, you have several options:
+To install distributions from the [[http://pypi.python.org/pypi|Package Index (PyPI)]] into your Python, you have several choices of tools for installation:
 
-== Manual Installation ==
+== Distutils Installation ==
 
-To install a package manually under UNIX, the usual method is to extract the package into your system's built-in or optional site-packages directory. For Python 2.5, this is frequently either /usr/lib/python2.5/site-packages/ or /usr/local/lib/python2.5/site-packages.
+Download and extract the distribution and then from the command prompt type:
 
-For Windows, please review [[http://www.python.org/dev/peps/pep-0250/|PEP 250, Using site-packages on Windows]]
+    $ python setup.py install
+
+If you have more than one Python interpreter installed on your system, then
+the Python that the distribution is installed into will be the same one that
+you run the 'setup.py install' command with.
+
+This will install the library files (packages and modules) into the
+'site-packages' directory of the Python interpreter used to run the
+install command, and the application scripts into the 'bin' directory of
+the Python interpreter.
+
+Take note that Distutils will not install any dependencies! If a distribution
+requries that packages be available for import that are part of another 
+distribution, then you need to determine what those distributions are and
+manually install each distribution one by one.
+
+Commonly you will see in the install instructions for a Python distribution:
+
+    $ sudo python setup.py install
+    
+Be very careful when running this command with 'sudo'! The packages and 
+scripts installed will be placed in a operating system specific location,
+and it's possible that this will break your operating system. Furthermore,
+the distutils installation does not have an uninstall command, so if you
+do break your system, it may not be easy to restore it back to working
+condition!
+
+There are two ways to avoid having to install as the root user:
+
+ 1. If using Python 2.6 or greater, a [[http://docs.python.org/whatsnew/2.6.html#pep-370-per-user-site-packages-directory|per-user 'site-packages' directory]]
+    is available. This will only work with distributions that only supply
+    modules and packages though. You can not use this technique to install
+    distributions that also supply command-line scripts. This may also 
+    interfere with applications supplied by your operating system, but this
+    interference is limited to only the user account which was used to
+    install these packages with, other user accounts (including the root user)
+    should be left untouched.
+
+ 2. The [[http://pypi.python.org/pypi/virtualenv|VirtualEnv]] tool allows you to clone your system Python, so that you
+    have a complete, isolated copy of Python available for installing into.
+    Typically you will install the 'virtualenv' distribution as root, but it
+    is possible to extract the virtualenv.py module from the 'virtualenv'
+    distribution and also create virtual environments without having to use
+    the root account at all.
 
 == Easy Installation ==
 
@@ -16,7 +59,7 @@ Please see [[http://peak.telecommunity.com/DevCenter/EasyInstall|EasyInstall]] f
 
 == Buildout Installation ==
 
-Buildout is a configuration-driven build tool designed for automating application installation. It has a number of recipes that allow you to declare the the set(s) of packages required for a Python application, and automatically install them.
+Buildout is a configuration-driven build tool designed for automating application installation. It has a number of recipes that allow you to declare the working set(s) of packages required for a Python application, and automatically install them.
 
 Please see [[http://pypi.python.org/pypi/zc.buildout|Buildout]] for more information.
 
