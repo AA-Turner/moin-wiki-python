@@ -341,7 +341,9 @@ you could also use the {{{dict.setdefault}}} method, e.g.
 ...
     wdict.setdefault(key, []).append(new_element)
 }}}
-This avoids having to look up the key twice.
+You might think that this avoids having to look up the key twice.
+It actually doesn't (even in python 3.0), but at least the double 
+lookup is performed in C.
 
 == Import Statement Overhead ==
 
