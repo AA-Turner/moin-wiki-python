@@ -96,6 +96,8 @@ sock.sendto("robot", ("239.192.0.100", 1000))
 }}}
 (You might want to reconsider the IP_MULTICAST_TTL setting here -- the recommended value for local-network multicasts is < 32, whilst a value > 32 indicates multicasts which should traverse onto the Internet -- Asgeir S. Nilsen)
 
+''Note the above example is missing a bind() call.  This will work OK if there is a multicast route setup in the IP routing table  {i.e. os.system('route add 224.51.105.104 eth0')}  But without a bind() nor route, the kernel will not determine which network interface to send the data on, and will return an error.  There may be other ways for the "socket to network interface" mapping to be defined, but I forget what they are.  (Chris David)''
+
 The above multicasting examples do not work on my computer, but I was able to fix them using code from http://sourceforge.net/projects/pyzeroconf. Try these examples:
 {{{#!python
 # UDP multicast examples, Hugo Vincent, 2005-05-14.
