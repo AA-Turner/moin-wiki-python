@@ -2,26 +2,17 @@ This page should cover pros and cons of current stdlib logging package.
 
 = Pros =
 
-* Almost every feature you could want from logging package is there
+ * Almost every feature you could want from logging package is there
 
 = Cons =
 
-* Docs are not complete
-
-* Config files are a little bit hard to comprehend
-
+ * Docs are not complete
+ * Config files are a little bit hard to comprehend
   An alternate configuration mechanism is provided by the [[http://www.zope.org/Members/fdrake/zconfig/|ZConfig]] package ([[http://pypi.python.org/pypi/ZConfig/|PyPI]]).  (Note ZConfig is not a small package to pull in.)
-
-* API uses camelCase (goes against PEP8 recommendation and most of the stdlib)
-
-* Rather slow considering the large number of function calls performed internally to check which handler to use
-
-* Doesn't have runtime scoping (i.e., log messages handled based on the call stack)
-
-* Difficult to extend log records
-
-* Difficult to add general context to log messages (e.g., add the request URL to all logging messages during the request)
-
-* By default it does nothing; basicConfig makes it do something but makes it hard to tweak logging.
-
-* filters are an abstract class instead of callables
+ * API uses camelCase (goes against PEP8 recommendation and most of the stdlib)
+ * Rather slow considering the large number of function calls performed internally to check which handler to use
+ * Doesn't have runtime scoping (i.e., log messages handled based on the call stack)
+ * Difficult to extend log records
+ * Difficult to add general context to log messages (e.g., add the request URL to all logging messages during the request)
+ * By default it does nothing; basicConfig makes it do something but makes it hard to tweak logging.
+ * filters are an abstract class instead of callables
