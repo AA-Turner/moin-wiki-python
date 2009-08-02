@@ -270,9 +270,9 @@ behavior might change if it is shown to cause problems.
 +----------------------------------+-------------------------------------------------------------------------------------------------------+
 | Java Types                       | Allowed Python Types                                                                                  |
 +==================================+=======================================================================================================+
-| char                             | String (must have length 1)                                                                           |
+| char                             | str (must have length 1)                                                                           |
 +----------------------------------+-------------------------------------------------------------------------------------------------------+
-| boolean                          | Integer (true = nonzero)                                                                              |
+| boolean                          | bool, int (true = nonzero)                                                                              |
 +----------------------------------+-------------------------------------------------------------------------------------------------------+
 | byte, short, int, long           | Integer                                                                                               |
 +----------------------------------+-------------------------------------------------------------------------------------------------------+
@@ -300,19 +300,19 @@ those coercions.
 +----------------------------------------+---------------------------------------------------------+
 | Java Type                              | Returned Python Type                                    |
 +========================================+=========================================================+
-| char                                   | String (of length 1)                                    |
+| char                                   | unicode (of length 1)                                    |
 +----------------------------------------+---------------------------------------------------------+
-| boolean                                | Integer (true = 1, false = 0)                           |
+| boolean                                | bool (true = 1, false = 0)                           |
 +----------------------------------------+---------------------------------------------------------+
-| byte, short, int, long                 | Integer                                                 |
+| byte, short, int, long                 | int                                                 |
 +----------------------------------------+---------------------------------------------------------+
-| float, double                          | Float                                                   |
+| float, double                          | float                                                   |
 +----------------------------------------+---------------------------------------------------------+
-| java.lang.String                       | String                                                  |
+| java.lang.String                       | unicode                                                  |
 +----------------------------------------+---------------------------------------------------------+
 | java.lang.Class                        | JavaClass which represents given Java class             |
 +----------------------------------------+---------------------------------------------------------+
-| Foo[]                                  | Array (containing objects of class or subclass of Foo)  |
+| Foo[]                                  | array (containing objects of class or subclass of Foo)  |
 +----------------------------------------+---------------------------------------------------------+
 | org.python.core.PyObject (or subclass) | Unchanged                                               |
 +----------------------------------------+---------------------------------------------------------+
@@ -437,13 +437,14 @@ This means that a method will override a field with the same name. Some carefull
 -----------
 Java Arrays
 -----------
-Java Arrays in Jython - JArray
-Many Java methods require Java array objects as arguments. The way that these arguments are used means that they must correspond to fixed-length, mutable sequences, sometimes of primitive data types. The PyArray class is added to support these Java arrays and instances of this class will be automatically returned from any Java method call that produces an array. In addition, the "jarray" module is provided to allow users of Jython to create these arrays themselves, primarily for the purpose of passing them to a Java method.
+Java Arrays in Jython use the standard Python array type. (Formerly the Jython-specific jarray module was used, although it is still available, we recommend use of the standard Python array type.)
 
-The jarray module exports two functions::
+Many Java methods require Java array objects as arguments. The way that these arguments are used means that they must correspond to fixed-length, mutable sequences, sometimes of primitive data types. 
 
-    array(sequence, type)
-    zeros(length, type)
+The array module exports two factory functions::
+
+    array(type, sequence)
+    zeros(type, length)
 
 array will create a new array of the same length as the input sequence and will populate it with the values in sequence. zeros will create a new array of the given length filled with zeros (or null's if appropriate).
 
@@ -471,12 +472,12 @@ type can either be a single character typecode (using the same mappings as Pytho
 
 A quick example::
 
-    from jarray import array
-    a = array([ 1 ], 'i')
+    from array import array
+    a = array('i', [1])
     print a
     from java.net import URL
     u = URL('http://jython.org')
-    b = array([], URL)
+    b = array(URL, [])
     print b
 
 ----------------------------------
