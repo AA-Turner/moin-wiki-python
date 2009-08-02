@@ -2,22 +2,70 @@ This page should cover pros and cons of current stdlib logging package.
 
 = Pros =
 
- * Almost every feature you could want from logging package is there
+ * Almost every feature you could want from a logging package is there
 
 = Cons =
 
- * Docs are not complete
- * Config files are a little bit hard to comprehend
-  An alternate configuration mechanism is provided by the [[http://www.zope.org/Members/fdrake/zconfig/|ZConfig]] package ([[http://pypi.python.org/pypi/ZConfig/|PyPI]]).  (Note ZConfig is not a small package to pull in.)
- * API uses camelCase (goes against PEP8 recommendation and most of the stdlib)
- * Rather slow considering the large number of function calls performed internally to check which handler to use
- * Doesn't have runtime scoping (i.e., log messages handled based on the call stack)
- * Difficult to extend log records
- * Difficult to add general context to log messages (e.g., add the request URL to all logging messages during the request)
- * By default it does nothing; basicConfig makes it do something but makes it hard to tweak logging.
- * filters are an abstract class instead of callables
- * Thread-local handlers aren't easy to setup
- * Nothing like keywords or tags for doing multi-dimensional categorization or grouping of messages
- * No clear way to introduce HTML-formatted messages (or an HTML formatting option)
- * Not fast enough to do pervasive logging in libraries (we've encountered this with Paste/Pylons, where we'd like to put lots of logging in that people could turn on, but it becomes a notable performance hit).
- * Too complicated, with logging levels, namespaces, handlers, and other things -- they took all the terrible things from java.util.logging and log4j, which are incredibly slow (but powerful) in python.
+I have made sections of each of the points in the original bulleted list to facilitate further discussion. -- VinaySajip
+
+== Docs are not complete ==
+
+Please add below here areas where you think the docs are not complete. Feel free to post patches on bugs.python.org, but even if not, please be *specific*. It's hard to work from e.g. "the docs need to be clearer." -- VinaySajip
+
+
+== Config files are a little bit hard to comprehend ==
+
+An alternate configuration mechanism is provided by the [[http://www.zope.org/Members/fdrake/zconfig/|ZConfig]] package ([[http://pypi.python.org/pypi/ZConfig/|PyPI]]).  (Note ZConfig is not a small package to pull in.)
+
+Another alternative is provided by the [[http://www.red-dove.com/python_config.html|config]] package, which is a single module and easy to incorporate into logging. However, what say people to the question of backward compatibility? -- VinaySajip
+
+If you want to suggest an alternative mechanism which uses ConfigParser, please suggest alternatives to the format. -- VinaySajip
+== API uses camelCase (goes against PEP8 recommendation and most of the stdlib) ==
+
+There's no objection on my part to changing the library to use PEP8 naming while retaining camelCase aliases for backward compatibility. Comments on this below here, please: -- VinaySajip
+
+== Rather slow considering the large number of function calls performed internally to check which handler to use ==
+
+Is this a subjective measurement? See Knuth on premature optimisation. While a package for general use like logging can be too slow in some specialised scenarios, can people provide some more objective metrics than "what a lot of function calls!"? -- VinaySajip
+
+== Doesn't have runtime scoping (i.e., log messages handled based on the call stack) ==
+
+Please give some more details on what you mean here. How exactly would you want to log messages based on the call stack? -- VinaySajip
+
+== Difficult to extend log records ==
+
+LogRecords need to be pickleable to be sent across the wire. You can add arbitrary attributes to LogRecords by using the "extra" keyword parameter to logging calls. Exactly how would you like to extend LogRecords in a way which is difficult at the moment, and why? -- VinaySajip
+
+== Difficult to add general context to log messages (e.g., add the request URL to all logging messages during the request) ==
+
+There's information on this very topic at [[http://docs.python.org/library/logging.html#adding-contextual-information-to-your-logging-output|Adding contextual information to your logging output]]. Can you provide more details on how the mechanism provided fails to meet your needs? -- VinaySajip
+
+== By default it does nothing; basicConfig makes it do something but makes it hard to tweak logging. ==
+
+How would you want to tweak logging in a way which basicConfig doesn't make easy? Suggest improvements which can be made to basicConfig, I'm receptive. Remember to consider backward compatibility. -- VinaySajip
+
+== filters are an abstract class instead of callables ==
+
+Filter is not an abstract class it's a concrete class with a reasonable default implementation, but is this really a major design flaw? It would be easy to modify the package to add callables to the filter list, and the system could expect either a Filter instance or a callable. -- VinaySajip
+
+== Thread-local handlers aren't easy to setup ==
+
+Please suggest how you would like these to work, and why you need thread-local handlers? You already have the ability to insert thread-local context information into messages using non-thread-local handlers. -- VinaySajip
+
+== Nothing like keywords or tags for doing multi-dimensional categorization or grouping of messages ==
+
+How many use cases need this? How would you see this being implemented? Buffering of messages is already possible. -- VinaySajip
+
+== No clear way to introduce HTML-formatted messages (or an HTML formatting option) ==
+
+You can post messages to web sites, and present messages in HTML format in numerous ways; is this a common use case and would we get common agreement on how this would work (i.e. a specific HTML representation) ? -- VinaySajip
+
+== Not fast enough to do pervasive logging in libraries (we've encountered this with Paste/Pylons, where we'd like to put lots of logging in that people could turn on, but it becomes a notable performance hit). ==
+
+Please clarify - how much of a performance hit is it if logging is turned off for particular modules? When you encountered performance issues, what mitigating strategies did you try? (e.g. isEnabledFor) -- VinaySajip
+
+== Too complicated, with logging levels, namespaces, handlers, and other things -- they took all the terrible things from java.util.logging and log4j, which are incredibly slow (but powerful) in python ==
+
+Good ideas don't only come from Python people, folks. These ideas were proven in log4j and other packages and they are based on the ideas of "what happened? where did it happen? how important is it? who wants to know?" and if you think about it, these ideas are hardly Java-specific. OTOH, they are pretty central to the problem domain addressed by logging. So - "what happened?" is the details of the logging call, "where did it happen?" is the namespace, "how important is it?" is the level, and "who wants to know?" is the handler. Hardly that complicated, and AFAICT pretty much a minimum requirement for any logging package that aspires to the name.
+
+And, "incredibly slow" is pretty emotive. Care to back that up with some hard data? Also, anyone who bothers to look at log4j in detail will see that Python logging is not a mindless translation - it's fairly Pythonic. Beyond the basic abstractions of "What? Where? How Important? Who Needs To Know?", there's no real correspondence between the Java artifacts and the Python ones. log4j = around 27 source files, 8K SLOC; Python logging = 3 source files, < 3K SLOC. To me the Java connection and inferences that people draw from the "Java heritage" is bordering on FUD a lot of the time, I have to say. But feel free to put me right with *specific* comments rather than vague arm-waving, and you'll find me receptive. -- VinaySajip
