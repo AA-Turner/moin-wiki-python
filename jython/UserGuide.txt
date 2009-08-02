@@ -23,9 +23,8 @@ Since Jython is an implementation of Python for the JVM, most of
 the standard Python documentation applies.  Look in the following places for general information:
 
 * The `Python Tutorial`_ (start here)
-* The `Python Library Reference`_. Although many of these modules are not
-  yet implemented (those coded in C for CPython must be re-implemented
-  in Java for Jython), those that are implemented follow the library
+* The `Python Library Reference`_. Most of these modules are available, although some coded in C for CPython must be re-implemented
+  in Java for Jython. In general, those that are implemented follow the library
   reference as closely as possible.
 * The `Python Language Reference`_ (for language lawyers).
 
@@ -36,7 +35,8 @@ Other Useful Links
   same language. There are naturally some differences between the
   two implementations, sometimes reflecting undefined aspects of
   the Python language, sometimes reflecting quirks of the independent
-  implementations.
+  implementations. In general, Jython has no global interpreter lock and
+  does not use reference counting.
 * The `Jython FAQ`_ may already contain the answer to your question.
 * If it doesn't, then check  `Jython-users mailing list archives`_.
 * If you are still stuck you can post a question to the `Jython-users mailing list`_
@@ -187,10 +187,6 @@ packages.
   use from Python.
 * Special care is necessary to build and use Java arrays from Python.
 * This document describes how to subclass Java classes in Python.
-* The jythonc_ utility compiles Python source code to real Java classes,
-  and is used for building applets, servlets, beans, etc.
-* Unloading of java classes and internalTablesImpl option.
-* Reloading java classes.
 
 Accessing Java from Jython
 ==========================
@@ -203,22 +199,23 @@ The following example of an interactive session with Jython shows how
 a user could create an instance of the Java random number class (found
 in java.util.Random) and then interact with that instance. ::
 
-    C:\jython>jython
-    Jython 2.0 on java1.2.1
-    Type "copyright", "credits" or "license" for more information.
+    $ jython2.5
+    Jython 2.5.0 (Release_2_5_0:6476, Jun 16 2009, 13:33:26) 
+    [Java HotSpot(TM) 64-Bit Server VM (Apple Inc.)] on java1.6.0_13
+    Type "help", "copyright", "credits" or "license" for more information.
     >>> from java.util import Random
     >>> r = Random()
     >>> r.nextInt()
-    -790940041
-    >>> for i in range(5):
+    501203849
+    >>> for i in xrange(5):
     ...     print r.nextDouble()
-    ...
-    0.23347681506123852
-    0.8526595592189546
-    0.3647833839988137
-    0.3384865260567278
-    0.5514469740469587
-    >>>
+    ... 
+    0.435789109087
+    0.0702903104743
+    0.962867215318
+    0.674547069552
+    0.434106849824
+    >>> 
 
 More Details
 ============
@@ -232,14 +229,16 @@ Importing
 
 ::
 
-    Jython 2.0 on java1.2.1
-    Type "copyright", "credits" or "license" for more information.
+    $ jython2.5
+    Jython 2.5.0 (Release_2_5_0:6476, Jun 16 2009, 13:33:26) 
+    [Java HotSpot(TM) 64-Bit Server VM (Apple Inc.)] on java1.6.0_13
+    Type "help", "copyright", "credits" or "license" for more information.
     >>> from java.util import *
     >>> Random
-    <jclass java.util.Random at 31702169>
-    >>> Hashtable
-    <jclass java.util.Hashtable at 7538094>
-    >>>
+    <type 'java.util.Random'>
+    >>> HashMap
+    <type 'java.util.HashMap'>
+    >>> 
 
 Creating Class Instances
 ========================
@@ -310,13 +309,13 @@ those coercions.
 +----------------------------------------+---------------------------------------------------------+
 | java.lang.String                       | unicode                                                 |
 +----------------------------------------+---------------------------------------------------------+
-| java.lang.Class                        | JavaClass which represents given Java class             |
+| java.lang.Class                        | type for the given Java class                           |
 +----------------------------------------+---------------------------------------------------------+
 | Foo[]                                  | array (containing objects of class or subclass of Foo)  |
 +----------------------------------------+---------------------------------------------------------+
 | org.python.core.PyObject (or subclass) | Unchanged                                               |
 +----------------------------------------+---------------------------------------------------------+
-| Foo                                    | JavaInstance which represents the Java Class Foo        |
+| Foo                                    | instance which represents the Java Class Foo            |
 +----------------------------------------+---------------------------------------------------------+
 
 Overloaded Java Method Signatures
@@ -660,6 +659,10 @@ The java code required to execute the python program:
         }
     }
 
+Note that the term "PythonInterpreter" does not mean the Python code is interpreted;
+in all cases, Python programs in Jython are compiled to Java bytecode before execution,
+even when run from the command line or through the use of methods like `exec`.
+
 Using JSR 223
 =============
 
@@ -691,12 +694,13 @@ The usage of PythonInterpreter above translates to the following using JSR 223:
     }
 
 
-For Jython 2.5.1 (as of r6622 of trunk), JSR 223 is now bundled in the jython.jar
+For Jython 2.5.1 (as of r6622 of trunk), a full implementation of JSR 223 is now bundled in the jython.jar
 (or jython-dev.jar). Simply add to your CLASSPATH and use.
 
 For Jython 2.2.1, you need to `download the engine`_ and add it to your classpath
 along with Jython.  Then use code like the above to create and use an engine. Note
-that this engine does not support Jython 2.5.0.
+that this engine does not support Jython 2.5.0, and it is also substantially more limited
+in its functionality.
 
 One difference between embedding with JSR 223 and using PythonInterpreter
 directly is that the scripting engine manages its own PySystemState per thread
@@ -714,7 +718,9 @@ interface for database connectivity in Jython. It is implemented entirely
 in Java and makes use of the JDBC API. This means any database capable
 of being accessed through JDBC, either directly or using the JDBC-ODBC
 bridge, can be manipulated using zxJDBC.
+
 Getting a Connection
+====================
 
 First, make sure a valid JDBC driver is in your classpath. Then start
 Jython and import the zxJDBC connection factory.
