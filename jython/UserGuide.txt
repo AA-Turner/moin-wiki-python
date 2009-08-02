@@ -692,8 +692,14 @@ The usage of PythonInterpreter above translates to the following using JSR 223:
         }
     }
 
-To use JSR 223 with Jython, `download the engine`_ and add it to your classpath
-along with Jython.  Then use code like the above to create and use an engine.
+
+For Jython 2.5.1 (as of r6622 of trunk), JSR 223 is now bundled in the jython.jar
+(or jython-dev.jar). Simply add to your CLASSPATH and use.
+
+For Jython 2.2.1, you need to `download the engine`_ and add it to your classpath
+along with Jython.  Then use code like the above to create and use an engine. Note
+that this engine does not support Jython 2.5.0.
+
 One difference between embedding with JSR 223 and using PythonInterpreter
 directly is that the scripting engine manages its own PySystemState per thread
 so it can always set the classloader to the thread's context classloader.  This
@@ -701,127 +707,6 @@ means if you want to do anything Jython specific to PySystemState, like adding
 to sys.path or setting sys.stdin and sys.stdout, you should do it after
 creating the ScriptEngine.
 
-Note that JSR 223 currently only works with Jython 2.2.1.
-Support for JSR 223 should be restored in Jython 2.5.1.
-
----------------------------------------------------
-Java Reload (experimental) simple Support - JReload
----------------------------------------------------
-
-Introduction and usage, plus some notes on java classes unloading and
-internalTablesImpl option
-
-The "jreload" module is not the definitive word about java classes
-reloading under jython. It is still experimental and its interface may
-improve or change to become more pythonic.
-
-"jreload" cannot cover all the possible reload-flavors, and its goal
-is to offer a simple interface for the most common cases, e.g. quick
-trial-and-error experimenting.
-
-Java classes reloading in jython is not enabled by "jreload", some of
-the modifications occurred to jython run-time have made it possible. Now
-jython can deal with java classes with the same name (without clashes)
-and run-time supports unloading of java classes by different ways,
-which is a must feature for some uses of reloading
-
-[The expert user can now play directly with class-loaders and reloading
-as he would from java.]
-
-The main idea of the "jreload" interface is that of a load-set. A
-load-set is a package-like object that can host a complete hierarchy of
-java packages, which can be reloaded as a whole.
-
-Why there is no support for reloading a single class? Java classes are
-loaded through class-loaders, actually there is no support in java to
-redefine an already loaded class through its class-loader. In order to
-reload a class one should create a new class-loader, but classes from
-different class-loaders cannot interoperate, so we need to reload all
-related classes through the new class-loader. Note: The normal python
-reload built-in does nothing for java classes and simply returns the
-old version.
-
-The "jreload" module exports the following functions: ::
-
-    makeLoadSet(name, path)
-    reload(loadSet)
-
-makeLoadSet creates and returns a new load-set with the given name. The
-created load-set will behave like a package and import statement related
-to it can be issued. name should be a valid python identifier like any
-python module name and should not clash with any module that has been
-or will be imported. Internally the created load-set will be added to
-sys.modules, the same way it happens to modules on import. You can issue
-the same makeLoadSet from many places, it is idempotent like modules
-imports are.
-
-path should be a list of directory or jar paths. The created load-set will
-enable importing the classes present there. path should be disjoint from
-both sys.path and java classpath, otherwise one can get very confusing
-results.
-
-For example: if a load-set 'X' is created and its hierarchy contains
-java packages 'p' and 'p.q', then the following references can be used
-in import statements: 'X', 'X.p', 'X.p.q'.
-
-reload(loadSet) reloads all the classes in the package hierarchy hosted
-by loadSet and returns loadSet.
-
-.. note:: The current version of "jreload" (jreload.__version__=='0.3')
-   does not support removing or substituting jars on the fly.
-
-Example
-=======
-
-The following example should help make things clearer: (its files should
-be present in the jython Demo dir)
-# Demo/jreload/example.jar contains example.Version (source) and
-example.PrintVer (source)
-# Demo/jreload/_xample contains a slightly modified version of
-example.Version (source) ::
-
-  >>> import sys
-  >>> import os
-  >>> import jreload
-  >>> def xp(name): return os.path.join(sys.prefix,'Demo/jreload/'+name)
-  # builds a path under 'Demo/jreload'
-  ...
-  >>> X=jreload.makeLoadSet('X',[xp('.'),xp('example.jar')])
-  >>> from X import example
-  >>> dir(example)
-  ['PrintVer', 'Version', '__name__']
-  >>> X.example.Version
-  <jclass example.Version at 6781345>
-  >>> from X.example import * # works but in general import * from java
-  pkgs is not for production code
-  >>> v=Version(1)
-  >>> PrintVer.print(v)
-  version 1
-  >>> os.rename(xp('_xample'),xp('example')) # _xample becomes example,
-  hiding and "patching" jar contents
-  >>> jreload.reload(X) # (re)loads example dir example.Version and
-  jar example.PrintVer
-  <java load-set X>
-  >>> nv2=example.Version(2)
-  >>> example.PrintVer.print(nv2)
-  new version 2
-  >>> PrintVer.print(nv2)
-  Traceback (innermost last):
-    File "<console>", line 1, in ?
-  TypeError: print(): 1st arg can't be coerced to example.Version
-  >>> example.PrintVer.print(v)
-  Traceback (innermost last):
-    File "<console>", line 1, in ?
-  TypeError: print(): 1st arg can't be coerced to example.Version
-  >>> os.rename(xp('example'),xp('_xample'))
-
-.. note:: Differently from python packages reload, load-sets reload the
-   complete hosted hierarchy.
-.. note:: Class versions across reloads are not interoperable.
-
-Like for python classes and python reload, old versions are kept around,
-if there are still references to them. But what happens if they are no
-longer used?
 
 Java Classes Unloading
 ======================
