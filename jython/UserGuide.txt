@@ -270,27 +270,27 @@ behavior might change if it is shown to cause problems.
 +----------------------------------+-------------------------------------------------------------------------------------------------------+
 | Java Types                       | Allowed Python Types                                                                                  |
 +==================================+=======================================================================================================+
-| char                             | str (must have length 1)                                                                           |
+| char                             | str (must have length 1)                                                                              |
 +----------------------------------+-------------------------------------------------------------------------------------------------------+
-| boolean                          | bool, int (true = nonzero)                                                                              |
+| boolean                          | bool, int (true = nonzero)                                                                            |
 +----------------------------------+-------------------------------------------------------------------------------------------------------+
-| byte, short, int, long           | Integer                                                                                               |
+| byte, short, int, long           | int                                                                                                   |
 +----------------------------------+-------------------------------------------------------------------------------------------------------+
-| float, double                    | Float                                                                                                 |
+| float, double                    | float                                                                                                 |
 +----------------------------------+-------------------------------------------------------------------------------------------------------+
-| java.lang.String, byte[], char[] | String                                                                                                |
+| java.lang.String, byte[], char[] | string (will be encoded), unicode                                                                     |
 +----------------------------------+-------------------------------------------------------------------------------------------------------+
 | java.lang.Class Class            | (only if class subclasses from exactly one Java class; mutiple inheritance from more than one Java    |
-| or JavaClass                     | class is now illegal)                                                                                 |
+| or JavaClass                     | class is illegal)                                                                                     |
 +----------------------------------+-------------------------------------------------------------------------------------------------------+
-| Foo[]                            |Array (must contain objects of class or subclass of Foo)                                               |
+| Foo[]                            | array (must contain objects of class or subclass of Foo), jarray (legacy)                             |
 +----------------------------------+-------------------------------------------------------------------------------------------------------+
-| java.lang.Object                 | String->java.lang.String, all others unchanged                                                        |
+| java.lang.Object                 | string or unicode -> java.lang.String, all others unchanged                                           |
 +----------------------------------+-------------------------------------------------------------------------------------------------------+
 | org.python.core.PyObject         | All unchanged                                                                                         |
 +----------------------------------+-------------------------------------------------------------------------------------------------------+
-| Foo                              |Instance->Foo (if Instance is subclass of Foo);                                                        |
-|                                  |JavaInstance -> Foo (if JavaInstance is instance of Foo or subclass)                                   |
+| Foo                              | Instance->Foo (if Instance is subclass of Foo);                                                       |
+|                                  | JavaInstance -> Foo (if JavaInstance is instance of Foo or subclass)                                  |
 +----------------------------------+-------------------------------------------------------------------------------------------------------+
 
 Returned values from a Java method are also possibly coerced back to an
@@ -300,15 +300,15 @@ those coercions.
 +----------------------------------------+---------------------------------------------------------+
 | Java Type                              | Returned Python Type                                    |
 +========================================+=========================================================+
-| char                                   | unicode (of length 1)                                    |
+| char                                   | unicode (of length 1)                                   |
 +----------------------------------------+---------------------------------------------------------+
-| boolean                                | bool (true = 1, false = 0)                           |
+| boolean                                | bool                                                    |
 +----------------------------------------+---------------------------------------------------------+
-| byte, short, int, long                 | int                                                 |
+| byte, short, int, long                 | int                                                     |
 +----------------------------------------+---------------------------------------------------------+
 | float, double                          | float                                                   |
 +----------------------------------------+---------------------------------------------------------+
-| java.lang.String                       | unicode                                                  |
+| java.lang.String                       | unicode                                                 |
 +----------------------------------------+---------------------------------------------------------+
 | java.lang.Class                        | JavaClass which represents given Java class             |
 +----------------------------------------+---------------------------------------------------------+
@@ -343,9 +343,6 @@ call the second method you could write the following: ::
     from java.lang import Byte
     foo(Byte(10))
 
-I'm not convinced that any better solution to this problem is possible.
-
-.. Note:: Look into IronPython's solution to this for ideas.
 
 Naming Conflicts with Python Keywords
 =====================================
