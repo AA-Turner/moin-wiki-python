@@ -5,11 +5,6 @@ JythonFaq
 <<TableOfContents>>
 
 ----
-== What is JPython? ==
-
-JPython is an implementation of the Python programming language which is designed to run on the Java(tm) Platform. It consists of a compiler to compile Python source code down to Java bytecodes which can run directly on a JVM, a set of support libraries which are used by the compiled Java bytecodes, and extra support to make it trivial to use Java packages from within JPython. JPython has been renamed and superseded by Jython.
-
-----
 
 == What is Jython? ==
 
@@ -17,36 +12,27 @@ Jython is the successor to JPython. The Jython project was created in accordance
 
 Mailing lists, CVS and all current information on the Jython project is available at SourceForge, at http://sourceforge.net/projects/jython
 
+----
+== What is JPython? ==
+
+JPython is an implementation of the Python programming language which is designed to run on the Java(tm) Platform. It consists of a compiler to compile Python source code down to Java bytecodes which can run directly on a JVM, a set of support libraries which are used by the compiled Java bytecodes, and extra support to make it trivial to use Java packages from within JPython. JPython has been renamed and superseded by Jython.
+
 The name had to be changed to something other than JPython, because of paragraph 4 in the JPython-1.1 license:
 
 {{{
  4. Licensee may not use CNRI trademarks or trade name, including
     JPython [...] to endorse or promote products [...]
 }}}
-----
-
-== Is Jython the same language as Python? ==
-
-Yes. Jython is an implementation of the Python language in Java. We strive to ensure that Jython remains as compatible with CPython as possible. Jython release 2.2 implements the same language as CPython 2.2 and many of the CPython standard library modules.
-
-There are two incompatibilities with modern CPython that often trip newcomers. First, Jython 2.1 does not implement any features added to CPython in version 2.2 or later. This includes language features such as generators, and library modules such as optparse. A more modern version of Jython is under active development.
-
-Second, Jython programs cannot use CPython extension modules written in C. These modules usually have files with the extension .so, .pyd or .dll. If you want to use such a module, you should look for an equivalent written in pure Python or Java.
-
-There are a number of other differences between the two implementations that are unlikely to go away. These range from the trivial - Jython's code objects don't have a co_code attribute because they don't have any Python bytecodes; to the significant - Jython uses Java's true garbage collection rather than Python's reference counting scheme.
-
-  http://jython.sourceforge.net/docs/differences.html
-
-Python has never really had much of a language definition beyond its C-based implementation. The existence of Jython changed that for the first time and will hopefully lead to a much clearer sense of what Python the language is; independent of any specific implementation.
-
-We will be preparing a version of Python's regression test that would be appropriate for new implementations of the language. This is a good first step towards defining what parts of Python are essential and which are incidental
-
-----
-
-== What is the current status of JPython? ==
 
 JPython 1.1 was released on 28-Jan-2000. Since then, there have been no further developments on JPython.
 
+== Is Jython the same language as Python? ==
+
+Yes. Jython is an implementation of the Python language for the Java platform. Jython 2.5 implements the same language as CPython 2.5, and nearly all of the Core Python standard library modules. (CPython is the C implementation of the Python language.) Jython 2.5 uses the same regression test suite as CPython, with some minor modifications.
+
+There are a number of differences. First, Jython programs cannot use CPython extension modules written in C. These modules usually have files with the extension .so, .pyd or .dll. If you want to use such a module, you should look for an equivalent written in pure Python or Java. Although it is technically feasible to support such extensions - IronPython does so - there are no plans to do so in Jython.
+
+Other There are a number of other differences between the two implementations that are unlikely to go away. These range from the trivial - Jython's code objects currently do not have a co_code attribute because it is not possible to directly access Java bytecode from a class, without loading the file; to the significant - Jython uses Java's true garbage collection rather than Python's reference counting scheme.
 
 ----
 
@@ -56,26 +42,20 @@ The Jython project was announced on 19-oct-2000. The first alpha release occured
 
 The final release of Jython-2.0 occurred on 17-jan-2001. The final release of Jython-2.1 occurred on 31-dec-2001.
 
-Jython 2.2 was released on August 22, 2007.
+Jython 2.2 was released on August 22, 2007, with 2.2.1 released on October 13, 2007.
 
-Current work includes improvements to java integration and implementing the latest features from CPython 2.2/3.
+Jython 2.5.0 was released on June 16, 2009, with a release candidate for 2.5.1 scheduled for August 20, 2009.
 
 ----
 == How fast is Jython? ==
 
-The startup time and runtime performance for Jython are largely determined by the JVM.
+The startup time and runtime performance for Jython are largely determined by the JVM. Startup time can be mitigated by using a tool like Nailgun.
 
-Current status is that CPython 2.3 on Windows2000 is about twice as fast as Jython 2.1 on JDK1.4 on Windows2000. However, because of Java's slow startup time, Jython starts much more slowly (2.4 s) than CPython (80 ms). This means you don't want to do standard CGI in Jython, but long-running processes are fine.
+Jython is approximately as fast as CPython, sometimes faster, sometimes slower. Because most JVMs - certainly the fastest ones do - long running, hot code will run faster over time.
 
-The following notes are retained for historical interest.
+Areas that are known to be slower include the expat emulation (which is used by ElementTree), bisect, datetime, decimal, heapq, and unicodedata, since these are all currently written in Python instead of Java; in CPython, these are all written in C. Future releases of Jython will address this situation.
 
-At IPC-6 JimH reported speeds equal to CPython 1.4 on the pystone benchmark. When Guido released CPython 1.5 he succeeded in making it about 2x faster than the 1.4 release. The current release of CPython is 1.5.2 which might be only slightly faster than 1.5. JimH re-ran his benchmark tests against CPython 1.5 and his then current release of Jython, finding that Jython was about 2.5x slower than CPython 1.5. I have recently run a few informal benchmarks and found some interesting numbers: using Sun's JDK 1.2.1 with JIT on a Solaris 2.6 Sparc Ultra 2, I found Jython 1.1beta3 to produce pystone numbers equal to (or very slightly better than) CPython 1.5.2+.
-
-The problem, of course, is that JITs are still not reliable enough for Jython. Turning off the JIT on the above platform, can slow Jython down by a factor of 10.
-
-The speed of Jython is tied very tightly to the speed of the underlying JVM. The benchmark results that JimH reported were all using Microsoft's JVM from Internet Explorer 4.0. The next fastest JVM that he used was almost a factor of 2 slower than this. Since the performance of JVMs changes nearly every day, at some point I'll need to collect a set of scores comparing pystone performance on a wider variety of JVM's.
-
-Finally, pystone is not the last word in benchmarking. At the moment I'm more concerned with making Jython complete and correct than with performance. We will continually be revisiting performance issues both to examine better benchmark's for comparing Jython and CPython (as well as other scripting languages for the JVM) and work at optimizing Jython's performance.
+If you find a specific area where Jython performance is worse than CPython, please file a bug at http://bugs.jython.org.
 
 ----
 == How do I learn more about Jython? ==
@@ -85,9 +65,9 @@ There are many excellent choices available and can be found easily by using your
 
 These are a good starting points for learning python but by no means a complete list:
 
- * The official Python documentation - http://python.org/doc/
- * Dive into Python is a great learning resource - http://diveintopython.org
+ * The official Python documentation - http://python.org/doc/ (note this covers the 2.6 version of the language and libraries). This is currently being patched against the small changes seen in Jython. Note that class decorators, the ast module, and the namedtuple factory function from 2.6 were implemented in Jython 2.5.0.
 
+ * Dive into Python is a great learning resource - http://diveintopython.org
 
 for Jython specific starting points try these:
  * The Jython Users Guide - http://www.jython.org/Project/userguide.html
@@ -97,6 +77,6 @@ for Jython specific starting points try these:
 
 Be sure to check out the references at the bottom of the online course.
 
-These are just a sampling of what's available.  There is a lot out there and it covers a wide variety of topics. This will get you started and on you way to becoming a jython developer and when you are ready for more, it's just a few clicks away.
+These are just a sampling of what's available.  There is a lot out there and it covers a wide variety of topics. This will get you started and on you way to becoming a Jython developer and when you are ready for more, it's just a few clicks away.
 
 ----
