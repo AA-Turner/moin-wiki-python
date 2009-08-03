@@ -176,6 +176,8 @@ Post-processing
 
 Exposing Python types involves creating classes that the class loader can find, and then (as above) calling PyType.fromClass() on some Class. The classes get created by the ExposedTypeProcessor class in org.python.expose.generate, but as of this writing (r5593), these classes are not included in the Jython jar. It is intended that eventually ExposedTypeProcessor and related classes will be shipped separately, as a support jar. Your build.xml should also have a clause that runs the ExposeTask on the relevant classes, like this:
 
+::
+
     <taskdef name="expose" classname="org.python.expose.generate.ExposeTask">
       <classpath>
         <path refid="classpath" />
