@@ -39,17 +39,6 @@ By default, as in Java, these methods are protected from external access, but th
 
 ----
 
-== Can I reload a java class as is possible for python modules? ==
-
-The support for reloading java classes through reload(java-class), is disabled. The reload(java-class) only worked when the java class was a standalone class without any dependencies on other java classes (except the system class). When there was more than one class involved, the simple reload(java-class) no longer worked.
-
-Now on the other hand Jython 2.0 comes with some alternative (experimental) user-level support for java classes reloading ("jreload" module).
-
-See: http://www.jython.org/docs/jreload.html
-
-Further Jython 2.0 internal changes enable the expert user to play with reloading and class-loaders as he would from native java.
-
-----
 
 == How can I access Java protected (static) members from a Jython subclass? ==
 
@@ -100,50 +89,20 @@ Assigning __debug__=0 has been used to get -O behavior from things like "assert"
 
 == When I write to a file, it's empty. Why? ==
 
-The addition of buffering to the org.python.core.PyFile class in the 2.1 development cycle changed the autoflushing of Jython file objects. In Jython 2.1x, you must explicitly flush() and/or close() a file object opened for writing or appending before any data will actually be saved.
+You need to close the file (or flush the buffer). You can ensure this happens by using finally. The best way to do this in Python, Jython included, is through the with-statement:
 
-This reflects the current status and is not meant to imply this will always be the case for Jython (but it may be for certain java versions).
-
-Currently, For example:
 {{{#!python
-    f = open("myFile", "w")
-    # if the program terminates here, the file is empty
-    f.flush() # or f.close()
-    # If the program terminates here ,the file has data
+    from __future__ import with_statement
+    # some code...
+    with open("myFile", "w") as f:
+        f.write("some data")
 }}}
-Another example:
-{{{#!python
-    open("myFile", "w").write("some data")
-}}}
-This will create an empty file, but note that the standard lib does not use write on anonymouse file objects as it is considered poor practice anyway.
 
 ----
 
 == The Jython's os module is missing some functions, why? ==
 
-Python's and Jython's os modules differ necessarily because of differences Java imposes on native system access. For example, Java does not have a chdir equivalent, so it does not exist in Jython's os.
-
-There is an alternative os module that does provide additional functionality, and it is the jnios module found at:
-
-    http://sourceforge.net/projects/jnios
-
-The jnios module replaces the default os module with a Java/JNI implementation of Python's os and posix modules.
-
-Jython CVS also has more functions in the os module (like system and the popen* functions). See ''The Jython's os module is missing some functions, why?'' below.
-
-----
-
-== The Jython's os module is missing some functions, why? ==
-
-Use the os.system or os.popen* functions from Jython CVS.
-
-To use these functions, you'll need javaos.py, javashell.py, and popen2.py:
-
-    http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/jython/jython/Lib/
-
-You'll need to delete the 'from __future__ import division' line from javaos.py (this is a Python 2.2 feature not supported in Jython 2.1)
-
-Alternatively, you could use java.lang.Runtime.exec() directly, but the os functions handle a lot of complexity for you.
+For Posix and Windows, Jython implements most of the os module seen in CPython (excluding most notably fork). Under certain sandbox settings, it's not possible to run the necessary JNA code for this (using JNI), so instead a pure Java version is substituted. This is also what is available when running under other OS's, such as zOS.
 
 ----
 
@@ -162,13 +121,11 @@ Example:
 
 ----
 
-== The future of jythonc with Jython v2.2b2 or greater ==
+== jythonc ==
 
-It is true that jythonc __in its current implementation__ will be gone in the next release (not 2.2 -- but the release after that).  There will still be a command called "jythonc" that will hopefully cover all of the use cases that the current jythonc covers -- but instead of having a separate compiler it will use the same compiler as interpreted jython (which does compile down to bytecodes).  This is still largely in the planning stages though. The point of such a move is having just one implementation to work on-- hopefully this will result in a better jython AND a better jythonc.
-[from: FrankW on jython-users 7/12/07] 
+jythonc is no longer available as of 2.5.
 
 for more info on jythonc see http://www.jython.org/Project/jythonc.html
-
 
 ----
 
