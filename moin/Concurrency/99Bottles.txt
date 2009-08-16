@@ -456,7 +456,7 @@ class Tail(Component):
     def run(self):
         self.fp.seek(0,2)
 
-        # pypes components should run infintiley and never return
+        # pypes components should run infinitely and never return
         while True:
 	    # pull any input data off our 'in' port and disregard it
             self.recv('in')
@@ -476,7 +476,7 @@ class Grep(Component):
         self.regex = re.compile(pattern)
 
     def run(self):
-	# pypes components should run infintiley and never return 
+	# pypes components should run infinitely and never return 
         while True:
 	    # for each piece of data on our 'in' port
             for line in self.recvall('in'):
@@ -493,7 +493,7 @@ class Printer(Component):
         Component.__init__(self)
 
     def run(self):
-       # pypes components should run infintiley and never return
+       # pypes components should run infinitely and never return
         while True:
 	   # for each piece of data on our 'in' port
             for data in self.recvall('in'):
