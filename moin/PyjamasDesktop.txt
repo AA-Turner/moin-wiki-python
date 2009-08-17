@@ -1,4 +1,4 @@
-PyjamasDesktop is a cross-platform framework and applications widget set, based on [[http://webkit.org|WebKit]] and [[http://pyxpcomext.mozdev.org|python-xpcom]].  XULrunner python-xpcom and hulahop, and PyWebkitGtk are currently the two engine options for Pyjamas-Desktop, with MSHTML on the roadmap.  PyjamasDesktop is similar to [[http://www.async.com.br/projects/kiwi|KiWi]] in that it provides an easy-to-use API, where you need not know - at all - that you are running PyGTK, Gecko or MSHTML underneath.
+PyjamasDesktop is a cross-platform framework and applications widget set for the desktop.  There are three back-ends: [[http://webkit.org|WebKit]], [[http://pyxpcomext.mozdev.org|python-xpcom]] and MSHTML.  The XULrunner port uses python-xpcom and hulahop; the Webkit port uses PyWebkitGtk and the MSHTML port uses python win32 comtypes.  PyjamasDesktop is similar to [[http://www.async.com.br/projects/kiwi|KiWi]] in that it provides an easy-to-use API, where you need not know - at all - that you are running PyGTK, XULrunner or MSHTML underneath.
 
 PyjamasDesktop is actually a port of [[http://code.google.com/p/pyjamas|PyJamas]] which is a web toolkit, so you also have the option of running PyjamasDesktop applications as web applications - unmodified.
 
@@ -12,14 +12,14 @@ The [PyJamas] Widget set is exceptionally comprehensive and yet is easy to use, 
  * Form Submit Panel (providing file upload).
  * Treeview, Menu and Menubar (vertical and horizontal).
 
-Additional features, thanks to the underlying use of webkit, include:
+Additional features, thanks to the underlying use of web engines, include:
 
  * Full CSS Stylesheet functionality, both local, remote and direct and simple API manipulation.
  * Option of executing javascript, for full and complete manipulation of the application.
  * Loading of complete HTML Pages, both local and remote; full URL support.
  * Plugin support for multimedia plugins such as Flash (obsoleting the need for gtk-mozplugin)
  * Access to XML, XSLT and AJAX.
- * (Future: full SVG Canvas support, like HippoCanvas)
+ * Full SVG Canvas support, like HippoCampus, if the web engine supports it (currently only XULRunner)
 
 It's specifically worth noting that due to PyjamasDesktop's history, it purely provides the "V" in "MVC" applications design.  To communicate with the "C" in "MVC", it is recommended that you keep to XML and HTTP, and use, for example, the JSONRPC proxy client included with the distribution.  In this way, the same application front-end source code can be compiled with PyJamas (into Javascript/AJAX) - with no modifications - to run with exactly the same back-end HTTP server that your PyjamasDesktop application uses.  However, as you have access to the full Python core (unlike in Pyjamas, which is restricted to AJAX), you do not have to follow these guidelines.
 
@@ -33,7 +33,7 @@ Pre-built AMD64 .deb packages for the webkit-glib and pywebkitgtk dependencies a
 
  * [[http://sourceforge.net/project/showfiles.php?group_id=236659|Packages for pywebkitgtk-1.0 and libwebkit-1.0-2]]
 
-Note that pywebkitgtk patched (or pre-built) is only required for the webkit back-end option.  If the XULrunner option is to be used, then install XULrunner with python-xpcom, and python-hulahop (on debian systems: apt-get install python-xpcom hulahop).
+Note that pywebkitgtk patched (or pre-built) is only required for the webkit back-end option.  If the XULrunner option is to be used, then install XULrunner with python-xpcom, and python-hulahop (on debian systems: apt-get install python-xpcom hulahop).  If the MSHTML engine is used, the only python-comtypes is required.
 
 Documentation
 
