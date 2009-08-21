@@ -1,10 +1,10 @@
 == Pointers and smart pointers ==
 
-Since Python handles memory allocation and garbage collection automatically, the concept "pointer" is not meaningful within Python. However, many C++ API exposes either raw pointers or shared pointers, and to wrap such APIs one would need to deal with pointers.
+Since Python handles memory allocation and garbage collection automatically, the concept of a "pointer" is not meaningful in Python. However, many C++ APIs expose either raw pointers or shared pointers, to wrap these APIs we need to deal with pointers.
 
-=== Pointers (raw C++ pointers) ===
+=== Raw C++ Pointers ===
 
-The life time of C++ objects created by "new A" can be handled by Python's garbage collection by using the {{{manage_new_object}}} storage policy: 
+The lifetime of C++ objects created by {{{new A}}} can be handled by Python's garbage collection by using the {{{manage_new_object}}} return policy: 
 
 {{{
 struct A {
@@ -15,7 +15,7 @@ struct A {
 BOOST_PYTHON_MODULE(shared_ptr)
 {
     class_<A>("A",no_init)
-        .def("create",&A::create,return_value_policy<manage_new_object>())
+        .def("create",&A::create, return_value_policy<manage_new_object>())
         .staticmethod("create")
         .def("hello",&A::hello)
         ;
@@ -31,11 +31,7 @@ print an_A.hello()
 
 === Smart pointers ===
 
-Smart pointers, e.g. boost::shared_ptr<T>, is another common way to
-give away ownership of objects in C++. Theese kind of smart pointer are automatically
-handled, if you declare their existence, when declaring the class to boost.python.
-
-E.g.
+The usage of smart pointers (e.g. {{{boost::shared_ptr<T>}}}) is another common way to give away ownership of objects in C++. These kinds of smart pointer are automatically handled if you declare their existence when declaring the class to boost::python.  This is done by including the holding type as a template parameter to {{{class_<>}}}, like in the following example:
 
 {{{
 #include <string>
@@ -62,6 +58,7 @@ BOOST_PYTHON_MODULE(shared_ptr)
 }}}
 
 A sample python program:
+
 {{{
 from shared_ptr import *
 an_A = A.create()
