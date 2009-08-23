@@ -5,3 +5,44 @@ Describe ComparisonJavaJython here.
 ||Size of array || mx = data.length;  || mx = len(data)  ||
 ||array assignment || double re = reFun.evaluate(new double[] {data[i][j][0], data[i][j][1]}); || re = self.reFun.evaluate([data[i][j][0], data[i][j][1]]) ||
 || Declaring a class type ||  public class CalcComplexPlotApp implements Calculation { || class CalcComplexPlotApp(Calculation): ||
+
+
+NEW STYLE: General table layout and HTML like options::
+ ||||||<tablestyle="width: 80%">'''Heading'''||
+ ||cell 1||cell2||cell 3||
+ ||<rowspan=2> spanning rows||||<style="background-color: #E0E0FF;"> spanning 2 columns||
+ ||<rowstyle="background-color: #FFFFE0;">cell2||cell 3||
+ Cell width::
+ || narrow ||<style="width: 99%; text-align: center;"> wide ||
+ Spanning rows and columns::
+ ||<|2> 2 rows || row 1 ||
+ || row 2 ||
+ ||<-2> row 3 over 2 columns ||
+ Alignment::
+ ||<style="text-align: left;">left ||<style="vertical-align: top; text-align: center;"|3> top ||<style="vertical-align: bottom;"|3> bottom ||
+ ||<style="text-align: center;"> centered ||
+ ||<style="text-align: right;"> right ||
+ Fonts::
+ || normal ||<style="font-weight: bold;"> bold ||<style="color: #FF0000;"> red ||<style="color: #FF0000; font-weight: bold;"> boldred ||
+ Colors::
+ ||<style="background-color: red;"> red ||<style="background-color: green;"> green ||<style="background-color: blue;"> blue ||
+
+ OLD STYLE: General table layout and HTML like options::
+ ||||||<tablewidth="80%">'''Heading'''||
+ ||cell 1||cell2||cell 3||
+ ||<rowspan=2> spanning rows||||<bgcolor="#E0E0FF"> spanning 2 columns||
+ ||<rowbgcolor="#FFFFE0">cell2||cell 3||
+ Cell width::
+ || narrow ||<:99%> wide ||
+ Spanning rows and columns::
+ ||<|2> 2 rows || row 1 ||
+ || row 2 ||
+ ||<-2> row 3 over 2 columns ||
+ Alignment::
+ ||<(> left ||<^|3> top ||<v|3> bottom ||
+ ||<:> centered ||
+ ||<)> right ||
+ Colors::
+ ||<#FF8080> red ||<#80FF80> green ||<#8080FF> blue ||
+ Line breaks within cells::
+ || line 1[[BR]]line 2||
