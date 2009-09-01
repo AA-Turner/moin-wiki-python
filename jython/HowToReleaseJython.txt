@@ -2,7 +2,7 @@
 These are just some rough notes on the steps needed to make a full release of Jython.  I generally run ant full-build as a test beforehand, as well as testing many of these steps throughout, but since that isn't strictly necessary I'm not including it here.  full-build requires all of the optional jars for the build be available and named in ant.properties.  See build.xml for more information.
 
  1. Update files in trunk that have information on the current version
-  1. build.xml - <property name="jython.version">.  Also version.noplus, jython.major_version, jython.minor_version, jython.micro_version, and jython.release_serial.
+  1. build.xml - update properties jython.version, version.noplus, jython.major_version, jython.minor_version, jython.micro_version, and jython.release_serial.
   1. imp.java - If there has been any compiler change, increment magic number APIVersion.
   1. NEWS
   1. README
@@ -10,6 +10,14 @@ These are just some rough notes on the steps needed to make a full release of Jy
  1. Copy maint to a tag
   1. svn cp https://jython.svn.sourceforge.net/svnroot/jython/branches/Release_2_2maint https://jython.svn.sourceforge.net/svnroot/jython/tags/Release_2_2_1
  1. build from tag
+  1. set local properties, mine for 2.5.1rc1 in file ~/ant.properties:
+    * informix.jar=${basedir}/extlibs/ifxjdbc.jar
+    * oracle.jar=${basedir}/extlibs/ojdbc14.jar
+    * svn.revision=6742
+    * svn.main.dir=tags/Release_2_5_1rc1
+    * jython.version=2.5.1
+    * jython.version.noplus=2.5.1
+
   1. set svn.main.dir to tags/Release_2_2_1 in ant.properties
   1. ant full-build
  1. upload installer
