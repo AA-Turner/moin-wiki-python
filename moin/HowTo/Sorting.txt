@@ -346,6 +346,17 @@ to sort a list:
    If the items in the iterable are not sensibly compared,
    it will still return a canonical ordering, unless 
    someone went out of their way to prevent one.
+ * Small info about locale aware sorting, eg:
+   {{{
+>>> l = [u'\xc4\x85', u'a', u'z']
+>>> sorted(l, reverse=False)
+['a', 'z', '\xc4\x85']
+>>> import locale
+>>> locale.setlocale(locale.LC_ALL, "pl_PL.UTF-8")
+>>> sorted(l, cmp=locale.strcoll, reverse=False)
+['a', '\xc4\x85', 'z']
+   }}}
+
 
 == See Also ==
 
