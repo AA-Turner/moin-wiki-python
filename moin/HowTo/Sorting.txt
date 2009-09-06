@@ -172,6 +172,15 @@ If the invocation of {{{key}}} returns a tuple, second and subsequent items in t
 [('c', 2), ('d', 2), ('b', 3), ('a', 4)]
 }}}
 
+To reverse sort based on the second item in each tuple, but forward sort based on the first item when a tie is met, then forward sort first and then reverse sort based on 2nd item:
+{{{
+>>> L = [('a', 2), ('d', 4), ('b', 3), ('c', 2)]
+>>> L.sort(); L
+[('a', 2), ('b', 3), ('c', 2), ('d', 4)]
+>>> sorted(L,key=operator.itemgetter(1),reverse=True)
+[('d', 4), ('b', 3), ('a', 2), ('c', 2)]
+}}}
+
 Versions of Python before 2.4 don't have the convenient
 {{{key}}} parameter of {{{sort()}}}, so you have to write a
 comparison function that embodies the key-generating logic:
