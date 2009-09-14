@@ -666,10 +666,9 @@ even when run from the command line or through the use of methods like `exec`.
 Using JSR 223
 =============
 
-JSR 223, Scripting for the Java language, added the javax.script pacakge to
+JSR 223, Scripting for the Java language, added the javax.script package to
 Java 6.  It allows multiple scripting languages to be used through the same API
-as long as the language provides a script engine.  The `scripting project`_
-contains such an engine for Jython.  It can be used to embed Jython in your
+as long as the language provides a script engine.  It can be used to embed Jython in your
 application alongside many other languages that have script engines such as JRuby or Groovy.
 
 The usage of PythonInterpreter above translates to the following using JSR 223:
@@ -694,20 +693,17 @@ The usage of PythonInterpreter above translates to the following using JSR 223:
     }
 
 
-For Jython 2.5.1 (as of r6622 of trunk), a full implementation of JSR 223 is now bundled in the jython.jar
-(or jython-dev.jar). Simply add to your CLASSPATH and use.
+As of Jython 2.5.1 an implementation of JSR 223 is bundled in jython.jar.   Simply add jython to your CLASSPATH and ask for the python script engine.
 
-For Jython 2.2.1, you need to `download the engine`_ and add it to your classpath
-along with Jython.  Then use code like the above to create and use an engine. Note
-that this engine does not support Jython 2.5.0, and it is also substantially more limited
-in its functionality.
+To customize the path and other variables in sys for a ScriptEngine instance, you need to create a PySystemState and make it active before creating the engine:
+::
+   PySystemState engineSys = new PySystemState();
+   engineSys.path.append(Py.newString("my/lib/directory"));
+   Py.setSystemState(engineSys);
+   ScriptEngine engine = new ScriptEngineManager().getEngineByName("python");
 
-One difference between embedding with JSR 223 and using PythonInterpreter
-directly is that the scripting engine manages its own PySystemState per thread
-so it can always set the classloader to the thread's context classloader.  This
-means if you want to do anything Jython specific to PySystemState, like adding
-to sys.path or setting sys.stdin and sys.stdout, you should do it after
-creating the ScriptEngine.
+
+After that, any calls engine will use the sys from engineSys.  This can be used to make separate system states for individual engines.
 
 -------------------------------
 Database connectivity in Jython
