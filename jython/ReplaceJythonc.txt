@@ -4,15 +4,15 @@ jythonc doesn't handle generators and is difficult to debug and improve.  The cu
  * statically compile proxy classes for Python classes that extend Java classes
  * remove code from core that is only there to support jythonc
 
-The annotation goes on any method in a Python class that needs to be visible from Java and `__init__` for the constructor.  It's called javamethod since it would be similar to the Python constructs classmethod and staticmethod.  Given the following annotated Python class
+The annotation goes on any method in a Python class that needs to be visible from Java and `__init__` for the constructor.  Given the following annotated Python class
 
 
 {{{#!python numbers=disable
 class Simple(object):
-  @javamethod
+  @java
   def __init__(self):
 
-  @javamethod(String, String)
+  @java(String, String)
   def firstWord(self, param):
     return param.split(' ')[0]
 }}}
