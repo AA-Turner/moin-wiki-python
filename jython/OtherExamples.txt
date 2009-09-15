@@ -43,3 +43,26 @@ class Simple(HttpServlet):
 ApacheDerby Example(s)
 
 Apache Derby is a Java relational database management system that can be embedded in Java programs and used for online transaction processing. for more information on Apache Durby see http://db.apache.org/derby/index.html or http://en.wikipedia.org/wiki/Apache_Derby
+
+
+=== BioJava ===
+Bioinformatic analysis using [[http://biojava.org|BioJava]] can be simplified using Jython.  
+A Genebank file, like the once used to describe the Chromosome in the Human Genome, can be open and parsed with a few lines of Jython.
+{{{
+#!/usr/bin/env jython
+
+import sys
+from java.io import *
+from java.util import *
+from org.biojava.bio import *
+from org.biojava.bio.seq.db import *
+from org.biojava.bio.seq.io import *
+from org.biojava.bio.symbol import *
+
+if __name__ == "__main__":
+    br = BufferedReader( FileReader( sys.argv[1] ) )
+    sequences = SeqIOTools.readGenbank(br)
+    while sequences.hasNext():
+        seq = sequences.nextSequence()
+        print seq.seqString()
+}}}
