@@ -64,6 +64,20 @@ You can post messages to web sites, and present messages in HTML format in numer
 
 Please clarify - how much of a performance hit is it if logging is turned off for particular modules? When you encountered performance issues, what mitigating strategies did you try? (e.g. isEnabledFor) -- VinaySajip
 
+I set up a very simple script to time logging calls, available [[http://gist.github.com/191065|here]]. Output looks like this:
+{{{
+log_noop              0.13 microseconds
+log_simple           57.36 microseconds
+log_filtered          4.19 microseconds
+log_mitigated         3.78 microseconds
+log_disabled          0.98 microseconds
+No caller, thread, process info...
+log_simple           49.89 microseconds
+log_filtered          4.19 microseconds
+log_mitigated         3.79 microseconds}}}
+
+which means that a simple logging call takes around 57 microseconds, reduced to around 50 microseconds if you opt to not collect caller, thread or process info. That's for logging to a file. So what are your expectations for performance? These numbers don't look too shabby to me. Of course, it's a simplistic test, but at least there are some actual numbers there. --VinaySajip
+
 == Too complicated, with logging levels, namespaces, handlers, and other things -- they took all the terrible things from java.util.logging and log4j, which are incredibly slow (but powerful) in python ==
 
 Good ideas don't only come from Python people, folks. These ideas were proven in log4j and other packages and they are based on the ideas of "what happened? where did it happen? how important is it? who wants to know?" and if you think about it, these ideas are hardly Java-specific. OTOH, they are pretty central to the problem domain addressed by logging. So - "what happened?" is the details of the logging call, "where did it happen?" is the namespace, "how important is it?" is the level, and "who wants to know?" is the handler. Hardly that complicated, and AFAICT pretty much a minimum requirement for any logging package that aspires to the name.
