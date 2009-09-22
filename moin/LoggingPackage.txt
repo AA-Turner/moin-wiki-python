@@ -10,7 +10,7 @@ I have made sections of each of the points in the original bulleted list to faci
 
 == Docs are not complete ==
 
-Please add below here areas where you think the docs are not complete. Feel free to post patches on bugs.python.org, but even if not, please be ''specific''. It's hard to work from e.g. "the docs need to be clearer." -- VinaySajip
+According to some people, docs are ''never'' complete. Please add below here areas where you think the docs are not complete. Feel free to post patches on bugs.python.org, but even if not, please be ''specific''. It's hard to work from e.g. "the docs need to be clearer." -- VinaySajip
 
 
 == Config files are a little bit hard to comprehend ==
@@ -20,13 +20,14 @@ An alternate configuration mechanism is provided by the [[http://www.zope.org/Me
 Another alternative is provided by the [[http://www.red-dove.com/python_config.html|config]] package, which is a single module and easy to incorporate into logging. However, what say people to the question of backward compatibility? -- VinaySajip
 
 If you want to suggest an alternative mechanism which uses ConfigParser, please suggest alternatives to the format. -- VinaySajip
+
 == API uses camelCase (goes against PEP8 recommendation and most of the stdlib) ==
 
 There's no objection on my part to changing the library to use PEP8 naming while retaining camelCase aliases for backward compatibility. Comments on this below here, please: -- VinaySajip
 
 == Rather slow considering the large number of function calls performed internally to check which handler to use ==
 
-Is this a subjective measurement? See Knuth on premature optimisation. While a package for general use like logging can be too slow in some specialised scenarios, can people provide some more objective metrics than "what a lot of function calls!"? -- VinaySajip
+Is this a subjective measurement? See Knuth on premature optimisation. While a package for general use like logging can be too slow in some specialised scenarios, can people provide some more objective metrics than "what a lot of function calls!"? See below for (very simple) timing test results. -- VinaySajip
 
 == Doesn't have runtime scoping (i.e., log messages handled based on the call stack) ==
 
@@ -54,7 +55,7 @@ Please suggest how you would like these to work, and why you need thread-local h
 
 == Nothing like keywords or tags for doing multi-dimensional categorization or grouping of messages ==
 
-How many use cases need this? How would you see this being implemented? Buffering of messages is already possible. -- VinaySajip
+How many use cases need this? How would you see this being implemented? Buffering of messages is already possible. Talk is cheap, so please describe your use cases in more detail and how you think an "ideal" API for "multi-dimensional categorization" or "grouping" would look. -- VinaySajip
 
 == No clear way to introduce HTML-formatted messages (or an HTML formatting option) ==
 
@@ -82,4 +83,4 @@ which means that a simple logging call takes around 57 microseconds, reduced to 
 
 Good ideas don't only come from Python people, folks. These ideas were proven in log4j and other packages and they are based on the ideas of "what happened? where did it happen? how important is it? who wants to know?" and if you think about it, these ideas are hardly Java-specific. OTOH, they are pretty central to the problem domain addressed by logging. So - "what happened?" is the details of the logging call, "where did it happen?" is the namespace, "how important is it?" is the level, and "who wants to know?" is the handler. Hardly that complicated, and AFAICT pretty much a minimum requirement for any logging package that aspires to the name.
 
-And, "incredibly slow" is pretty emotive. Care to back that up with some hard data? Also, anyone who bothers to look at log4j in detail will see that Python logging is not a mindless translation - it's fairly Pythonic. Beyond the basic abstractions of "What? Where? How Important? Who Needs To Know?", there's no real correspondence between the Java artifacts and the Python ones. Using David A. Wheeler's SLOCCount, log4j 1.2.15 = 168 source files, around 16K SLOC; Python 2.6 logging = 3 source files, < 1.5K SLOC. To me the Java connection and inferences that people draw from the "Java heritage" is bordering on FUD a lot of the time, I have to say. But feel free to put me right with ''specific'' comments rather than vague arm-waving, and you'll find me receptive. -- VinaySajip
+And, "incredibly slow" is pretty emotive. Care to back that up with some hard data? See the numbers above for some ideas. Also, anyone who bothers to look at log4j in detail will see that Python logging is not a mindless translation - it's fairly Pythonic. Beyond the basic abstractions of "What? Where? How Important? Who Needs To Know?", there's no real correspondence between the Java artifacts and the Python ones. Using David A. Wheeler's SLOCCount, log4j 1.2.15 = 168 source files, around 16K SLOC; Python 2.6 logging = 3 source files, < 1.5K SLOC. To me the Java connection and inferences that people draw from the "Java heritage" is bordering on FUD a lot of the time, I have to say. But feel free to put me right with ''specific'' comments rather than vague arm-waving, and you'll find me receptive. -- VinaySajip
