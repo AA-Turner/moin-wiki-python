@@ -94,3 +94,9 @@ This script generates a "one-liner" from make's point of view.
 python -c "print unichr(234)"
 }}}
 This script echo "ê"
+
+
+== Apply regular expression to lines from stdin ==
+{{{
+[another command] | python -c "import sys,re;[sys.stdout.write(re.compile('PATTERN').sub('SUBSTITUTION', line)) for line in sys.stdin]"
+}}}
