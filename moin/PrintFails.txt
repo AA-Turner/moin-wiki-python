@@ -9,13 +9,66 @@ UnicodeEncodeError: 'charmap' codec can't encode character u'\u1234' in position
  0: character maps to <undefined>
 }}}
 
-That means you're using legacy, limited or misconfigured console. If you're just trying to play with unicode at interactive prompt move to a modern unicode-aware console. Most modern Python distributions come with IDLE where you'll be able to print all unicode characters.
+This means that the python console app can't write the given character to the console's encoding.
 
-===== Standard Microsoft Windows console =====
+More specifically, the python console app created a _io.TextIOWrapperd instance with an encoding that cannot represent the given character.
 
-By default console in Microsoft Windows is able to display 256 characters. Python will automatically detect what characters are supported by this console. If you try to print unprintable character you will get {{{UnicodeEncodeError}}}.
+'''sys.stdout''' --> '''_io.TextIOWrapperd''' --> (your console)
 
-===== Various UNIX consoles =====
+To understand it more clearly, look at:
+ * sys.stdout
+ * sys.stdout.encoding --  /!\ note: cannot be altered!
+ * sys.stdout.errors --  /!\ note: cannot be altered!
+
+
+== Solutions ==
+
+One solution is to use IDLE.  IDLE can print all unicode characters.
+
+Another is to put an intercept between sys.stdout, and the text wrapper.
+
+{{{
+#!python
+
+import sys
+
+class StdoutTee:
+    def __init__(self):
+        self.out = sys.stdout
+        sys.stdout = self
+        self.encoding = 'utf-8'
+    def write(self, s):
+        s = self.intercept(s)
+        self.out.write(s)
+    def intercept(self, s):
+        return s
+    def __getattr__(self, name):
+        return getattr(self.out, name)
+    def __setattr__(self, name, value):
+        return setattr(self.out, name, value)
+
+
+class SafeStdoutFilter(StdoutTee):
+    """Convert utf-8 traffic to sys.stdout to something safe."""
+    def __init__(self):
+        StdoutTee.__init__(self)
+        self.encoding = 'utf-8'
+        self.errors = 'replace'
+        self.encode_to = self.out.encoding        
+    def intercept(self, s):
+        return s.encode(self.encode_to, self.errors).decode(self.encode_to)
+
+x = SafeStdoutFilter()
+}}}
+
+
+=== Windows ===
+
+By default, the console in Microsoft Windows only displays 256 characters (cp437, of [http://en.wikipedia.org/wiki/Code_page_437 "Code page 437,"] the original IBM-PC 1981 extended ASCII character set.)
+
+If you try to print unprintable character you will get {{{UnicodeEncodeError}}}.
+
+=== Various UNIX consoles ===
 
 There is no standard way to query UNIX console for find out what characters it supports but fortunately there is a way to find out what characters are considered to be printable. Locale category LC_CTYPE defines what characters are printable. To find out its value type at python prompt:
 {{{
@@ -28,7 +81,7 @@ There is no standard way to query UNIX console for find out what characters it s
 If you got any other value you won't be able to print all unicode characters. As soon as you try to print a unprintable character you will get {{{UnicodeEncodeError}}}. To fix this situation you need to set the environment variable LANG to one of supported by your system unicode locales. To get the full list of locales use command "locale -a", look for locales that end with string ".utf-8". If you have set LANG variable but now instead of {{{UnicodeEncodeError}}} you see garbage on your screen you need to set up your terminal to use font unicode font. Consult terminal manual on how to do it. 
 
 
-===== print, write and Unicode in pre-3.0 Python =====
+== print, write and Unicode in pre-3.0 Python ==
 
 Because file operations are 8-bit clean, reading data from the original {{{stdin}}} will return {{{str}}}'s containing data in the input character set.  Writing these {{{str}}}'s to {{{stdout}}} without any codecs will result in the output identical to the input.
 {{{
