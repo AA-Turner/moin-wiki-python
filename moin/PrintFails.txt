@@ -29,36 +29,43 @@ Another is to put an intercept between sys.stdout, and the text wrapper.
 
 {{{
 #!python
-
-import sys
-
-class StdoutTee:
-    def __init__(self):
-        self.out = sys.stdout
-        sys.stdout = self
-        self.encoding = 'utf-8'
+class StreamTee:
+    
+    """Intercept a stream.
+    
+    Invoke like so:
+    sys.stdout = StreamTee(sys.stdout)
+    
+    See: grid 109 for notes on older version (StdoutTee).
+    """
+    
+    def __init__(self, target):
+        self.target = target
+    
     def write(self, s):
         s = self.intercept(s)
-        self.out.write(s)
+        self.target.write(s)
+    
     def intercept(self, s):
+        """Pass-through -- Overload this."""
         return s
-    def __getattr__(self, name):
-        return getattr(self.out, name)
-    def __setattr__(self, name, value):
-        return setattr(self.out, name, value)
 
 
-class SafeStdoutFilter(StdoutTee):
-    """Convert utf-8 traffic to sys.stdout to something safe."""
-    def __init__(self):
-        StdoutTee.__init__(self)
+class SafeStreamFilter(StreamTee):
+    """Convert string traffic to to something safe."""
+    def __init__(self, target):
+        StreamTee.__init__(self, target)
         self.encoding = 'utf-8'
         self.errors = 'replace'
-        self.encode_to = self.out.encoding        
+        self.encode_to = self.target.encoding
     def intercept(self, s):
         return s.encode(self.encode_to, self.errors).decode(self.encode_to)
 
-x = SafeStdoutFilter()
+
+def console_mode():
+    """Console mode."""
+    import sys
+    sys.stdout = SafeStreamFilter(sys.stdout)
 }}}
 
 
