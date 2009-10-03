@@ -265,10 +265,14 @@ Kernighan and Knuth, potent endorsements!
 
 This works because each subtraction "borrows" from the lowest 1-bit.
 For example:
-*        loop pass 1                 loop pass 2
-*      101000     101000           100000     100000
-*    -      1   & 100111         -      1   & 011111
-*    = 100111   = 100000         = 011111   =      0
+
+{{{#!Python
+#       loop pass 1                 loop pass 2
+#      101000     101000           100000     100000
+#    -      1   & 100111         -      1   & 011111
+#    = 100111   = 100000         = 011111   =      0
+
+}}}
 
 It is an excellent technique for Python, since the size of the integer need not be determined beforehand.
 
@@ -304,10 +308,13 @@ def parityOf(int_type):
 
 To determine the bit number of the ''lowest'' bit set in an integer, in twos-complement notation '''i & -i''' zeroes all but the lowest set bit. The bitLen() proceedure then determines its position. Obviously, negative numbers return the same result as their opposite. In this version, an input of 0 returns -1, in effect an error condition.
 
+{{{#!Python
+
 For example:
-*    00111000     # 56
-*    11001000     # twos complement, -56
-* &= 00001000
+#    00111000     # 56
+#    11001000     # twos complement, -56
+# &= 00001000
+}}}
 
 {{{#!Python
 
@@ -353,7 +360,17 @@ def toggleBit(int_type, offset):
 
 }}}
 
+== References ==
 
+ref.1. "Bit Twiddling Hacks" By Sean Eron Anderson
+    http://graphics.stanford.edu/~seander/bithacks.html
+
+ref.2. "The Art of Assembly Language" by Randall Hyde
+    http://webster.cs.ucr.edu/AoA/index.html
+    Volume 4, Chapter 5 "Bit Manipulation"
+
+ref.3. Hacker's Delight
+    http://www.hackersdelight.org/
 == Research Links ==
 
 this is the sort of thing we're looking for:
