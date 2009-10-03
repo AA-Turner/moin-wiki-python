@@ -243,10 +243,15 @@ The proceedure and the information below were found in "Bit Twiddling Hacks"(ref
  - - - - - - - - - - - - - - - - - - - - - - - -
 
 Counting bits set, Brian Kernighan's way*
+
+{{{#!C
+
 unsigned int v;          // count the number of bits set in v
 unsigned int c;          // c accumulates the total bits set in v
 for (c = 0; v; c++)
 {   v &= v - 1;  }       //clear the least significant bit set
+
+}}}
 
 This method goes through as many iterations as there are set bits. So if we have a 32-bit word with only the high bit set, then it will only go once through the loop.
 
