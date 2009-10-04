@@ -1,0 +1,134 @@
+##master-page:HelpTemplate
+##master-date:Unknown-Date
+#format wiki
+#language en
+
+Bit arrays, bitstrings, bit vectors, bit fields.
+
+Whatever they are called, these useful objects are often the most compact way to store data. If you can depict your data as boolean values, and can correlate each value with a unique integer, a bit array is a natural choice.
+
+Sets of positive integers are straightforward. The set containing 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31 (the prime numbers less than 32) can be represented in 4 bytes by:
+
+{{{#!Python
+# bit 31                          bit 0
+#      |                              |
+#      10100000100010100010100010101100  =  0xA08A28AC
+}}}
+
+The entire set of signed bytes can be represented in 256 bits, where '''bit n''' corresponds to the number '''n - 128'''. The set of all integers can be mapped to the positive integers:
+
+{{{#!Python
+for n in range(17):
+    if (n & 1):                   # if n is odd, n
+        i = -((n + 1) >> 1)       # represents a negative number
+    else:
+        i = (n >> 1)
+    print(i, end = ' ')
+
+# result: 0 -1 1 -2 2 -3 3 -4 4 -5 5 -6 6 -7 7 -8 8
+}}}
+
+Increasingly sophisticated modules are available for generating and using bit arrays (see bit* in the Python package index) but it isn't hard to set up and use a simple bit array. The following demonstration calculates the number of 32-bit integers needed for all the data bits requested and builds an array initialized to all 0's or all 1's. The program reports the number of "excess" bits if the number requested was not an exact multiple of 32.
+
+{{{#!Python
+# A bit array demo - written for Python 3.0
+import array
+def makeBitArray(bitSize, fill = 0):
+    intSize = bitSize >> 5                   # number of 32 bit integers
+    if (bitSize & 31):                      # if bitSize != (32 * n) add
+        intSize += 1                        #    a record for stragglers
+    if fill == 1:
+        fill = 4294967295                                 # all bits set
+    else:
+        fill = 0                                      # all bits cleared
+    bitArray = array.array('I')       # 'I' = unsigned integer = 32 bits
+    count = 0
+    while (intSize):
+        if(intSize & 1):                           # for each power of 2
+            tempArray = array.array('I')           # in intSize, add
+            tempArray.append(fill)                 # that many integers
+            for index in range(count):             # to the array
+                tempArray.extend(tempArray)
+            bitArray.extend(tempArray)
+        count += 1
+        intSize >>= 1
+    return(bitArray)
+
+# testBit() returns a nonzero result, 2**offset, if the bit at 'offset' is one.
+def testBit(int_type, offset):
+    mask = 1 << offset
+    return(int_type & mask)
+
+# setBit() returns an integer with the bit at 'offset' set to 1.
+def setBit(int_type, offset):
+    mask = 1 << offset
+    return(int_type | mask)
+
+# clearBit() returns an integer with the bit at 'offset' cleared.
+def clearBit(int_type, offset):
+    mask = ~(1 << offset)
+    return(int_type & mask)
+
+# toggleBit() returns an integer with the bit at 'offset' inverted, 0 -> 1 and 1 -> 0.
+def toggleBit(int_type, offset):
+    mask = 1 << offset
+    return(int_type ^ mask)
+
+#* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+bits = 65536                     # change these numbers to 
+
+ini = 1                          # test the function
+
+myArray = makeBitArray(bits, ini)
+
+# array info: input bits; final length; excess bits; fill pattern
+print(bits, len(myArray), (len(myArray) * 32) - bits, bin(myArray[0]))
+}}}
+
+For a more "real world" example, the following code uses the Sieve of Eratosthenes (for an explanation, see Wikipedia) to find all of the primes less than 65536 (2 to the 16th power) and leaves them in a bit array. This is not the place to go into all the details of how the Sieve works, so it is left in an informal form. To run the Sieve, change the main body of the program (everything after the fuction definitions) to:
+
+{{{#!Python
+# Python 3.0
+
+bits = 65536                             # upper limit on primes
+
+ini = 1
+
+myArray = makeBitArray(bits, ini)
+
+# 0 and 1 are not prime, and not included in the Sieve of Eratosthenes:
+bit = 0
+myArray[0] = clearBit(myArray[0], bit)
+bit = 1
+myArray[0] = clearBit(myArray[0], bit)
+
+for index in range(256):            # range is to *square root* of limit
+    record = index >> 5
+    bit = index & 31
+    test = testBit(myArray[record], bit)
+    if test:
+        zeroBit = index * index
+        while zeroBit < 65536:
+            record = zeroBit >> 5
+            bit = zeroBit & 31
+            myArray[record] = clearBit(myArray[record], bit)
+            zeroBit += index
+
+for index in range(65536):
+    record = index >> 5
+    bit = index & 31
+    test = testBit(myArray[record], bit)
+    if test:
+        print(index)
+}}}
+
+You might want to redirect output to a file, especially if you increase the limits.
+
+The above demo does not use either setBit() or toggleBit(), and storage of lists of integers only scratches the surface of what can be done with bits as data. There is a huge amount of work out there, dating back to the days when computers had memories and storage measured in bytes, on this topic.
+
+See also:
+
+BitManipulation
+
+BitwiseOperators
