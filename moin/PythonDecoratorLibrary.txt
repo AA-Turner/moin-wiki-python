@@ -1480,3 +1480,58 @@ def logprintinfo(func):
     return pwrapper
 }}}
   <!> This code needs a try/finally!
+
+== Access control ==
+
+This example prevents users from getting access to places where they are not authorised to go
+
+{{{
+
+
+class LoginCheck:
+    """
+    This class checks whether a user
+    has logged in properly via 
+    the global "CheckFunction". If so,
+    the requested routine is called.
+    Otherwise, an alternative page is
+    displayed via the gloabl "altFunction"
+    """
+    def __init__(self, f):
+        self._f = f
+        
+    def __call__(self, *args):
+        Status = checkFunction()
+        if Status==1:
+            return self._f(*args)
+        else:
+            return altFunction()
+
+def checkFunction():
+    return test
+
+def altFunction():
+    return 'Sorry - this is the forced behaviour'
+
+@LoginCheck
+def DisplayMembersPage():
+    print 'This is the members page'
+
+
+}}}
+
+Example:
+
+{{{
+
+
+test = 0
+DisplayMembersPage()
+# Displays "Sorry - this is the forced behaviour"
+
+test=1
+DisplayMembersPage()
+# Displays "This is the members page"
+
+
+}}}
