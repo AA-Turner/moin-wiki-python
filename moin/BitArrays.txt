@@ -54,28 +54,37 @@ def makeBitArray(bitSize, fill = 0):
         intSize >>= 1
     return(bitArray)
 
-# testBit() returns a nonzero result, 2**offset, if the bit at 'offset' is one.
-def testBit(int_type, offset):
+# testBit() returns a nonzero result, 2**offset, if the bit at 'bit_num' is set to 1.
+def testBit(array_name, bit_num):
+    record = bit_num >> 5
+    offset = bit_num & 31
     mask = 1 << offset
-    return(int_type & mask)
+    return(array_name[record] & mask)
 
-# setBit() returns an integer with the bit at 'offset' set to 1.
-def setBit(int_type, offset):
+# setBit() returns an integer with the bit at 'bit_num' set to 1.
+def setBit(array_name, bit_num):
+    record = bit_num >> 5
+    offset = bit_num & 31
     mask = 1 << offset
-    return(int_type | mask)
+    array_name[record] |= mask
+    return(array_name[record])
 
-# clearBit() returns an integer with the bit at 'offset' cleared.
-def clearBit(int_type, offset):
+# clearBit() returns an integer with the bit at 'bit_num' cleared.
+def clearBit(array_name, bit_num):
+    record = bit_num >> 5
+    offset = bit_num & 31
     mask = ~(1 << offset)
-    return(int_type & mask)
+    array_name[record] &= mask
+    return(array_name[record])
 
-# toggleBit() returns an integer with the bit at 'offset' inverted, 0 -> 1 and 1 -> 0.
-def toggleBit(int_type, offset):
+# toggleBit() returns an integer with the bit at 'bit_num' inverted, 0 -> 1 and 1 -> 0.
+def toggleBit(array_name, bit_num):
+    record = bit_num >> 5
+    offset = bit_num & 31
     mask = 1 << offset
-    return(int_type ^ mask)
-
-#* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
+    array_name[record] ^= mask
+    return(array_name[record])
+#* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 bits = 65536                     # change these numbers to 
 
 ini = 1                          # test the function
@@ -86,39 +95,32 @@ myArray = makeBitArray(bits, ini)
 print(bits, len(myArray), (len(myArray) * 32) - bits, bin(myArray[0]))
 }}}
 
-For a more "real world" example, the following code uses the Sieve of Eratosthenes (for an explanation, see Wikipedia) to find all of the primes less than 65536 (2 to the 16th power) and leaves them in a bit array. This is not the place to go into all the details of how the Sieve works, so it is left in an informal form. To run the Sieve, change the main body of the program (everything after the fuction definitions) to:
+For a more "real world" example, the following code uses the Sieve of Eratosthenes (for an explanation, see Wikipedia) to find all of the primes less than 65536 (2 to the 16th power) and leaves them in a bit array. This is not the place to go into all the details of how the Sieve works, so it is left in an informal form. To run the Sieve, change the main body of the program (everything after the function definitions) to:
 
 {{{#!Python
 # Python 3.0
-
 bits = 65536                             # upper limit on primes
-
 ini = 1
-
 myArray = makeBitArray(bits, ini)
-
+#* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 # 0 and 1 are not prime, and not included in the Sieve of Eratosthenes:
 bit = 0
-myArray[0] = clearBit(myArray[0], bit)
+clearBit(myArray, bit)
 bit = 1
-myArray[0] = clearBit(myArray[0], bit)
+clearBit(myArray, bit)
 
-for index in range(256):            # range is to *square root* of limit
-    record = index >> 5
-    bit = index & 31
-    test = testBit(myArray[record], bit)
+for index in range(256):            # range is to ''square root'' of limit
+    test = testBit(myArray, index)
+
     if test:
-        zeroBit = index * index
+        zeroBit = index * index     # prime squared is lowest multiple left
+
         while zeroBit < 65536:
-            record = zeroBit >> 5
-            bit = zeroBit & 31
-            myArray[record] = clearBit(myArray[record], bit)
+            clearBit(myArray, zeroBit)
             zeroBit += index
 
 for index in range(65536):
-    record = index >> 5
-    bit = index & 31
-    test = testBit(myArray[record], bit)
+    test = testBit(myArray, index)
     if test:
         print(index)
 }}}
