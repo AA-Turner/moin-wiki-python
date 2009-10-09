@@ -3,11 +3,23 @@
 = MySQL =
 
   URL:: http://www.mysql.com/
-  license:: GPL
-  platforms:: Unix, win32
+  license:: GPLv2
+  platforms:: Unix, win32, win64, MacOS X, i5/OS
 
 == Pros ==
 
+ * Easy to install and administer
+ * Support for many SQL Features (v5.0 and up):
+  * Good compliance with SQL standards
+  * Foreign Keys (using InnoDB)
+  * Stored Routines
+  * Views
+  * Triggers
+ * Subqueries (as of v4.1)
+ * Partitioning (as of v5.1)
+ * ACID compliant (InnoDB and NDB storage engines)
+ * Character set support
+ * Build-in Replication
  * Many administration tools from third parties
  * Widely deployed
  * Regarded as being fast
@@ -15,8 +27,8 @@
 
 == Cons ==
 
- * Reputation for only basic SQL support (entry-level SQL 92) and deviations from the standards. Many interesting features (subqueries, views, triggers, ...) are included in the latest version (5 and above), but are missing in prior versions.
- * Some [[http://sql-info.de/mysql/gotchas.html|gotchas]] (documented but unexpected features).
+ * Early versions (v4.1 and earlier) have the reputation for only basic SQL support (entry-level SQL 92) and deviations from the standards. Many interesting features (views, triggers,..) are included in the latest version (5 and above), but are missing in prior versions. Check [[http://dev.mysql.com/doc/refman/5.1/en/server-sql-mode.html|SQL Modes]] for making MySQL more strict.
+ * Some [[http://sql-info.de/mysql/gotchas.html|gotchas]] for MySQL v4.1 and earlier.
 
 ----
 
@@ -56,7 +68,10 @@ Precompiled binaries are available for Windows.  Red Hat Enterprise Linux, Cento
   URL:: https://launchpad.net/myconnpy
   License:: GNU GPL v2
   Platforms:: Any (presumably)
-  Python versions:: 2.3 or greater
+  Python versions:: 2.4 or greater
+
+ * Pure Python implementation of the MySQL protocol.
+ * Maintained by Sun Microsystems, Inc.
 
 ----
 
