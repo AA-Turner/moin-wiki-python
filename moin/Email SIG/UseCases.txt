@@ -54,7 +54,7 @@ that 'strings' are python3 unicode strings.
  (typically to provide headers recording degree of spamminess, trace
  headers, maybe a body heading; in some cases, a new message may be
  generated with the suspected spam as a message/rfc822 MIME body part).
- This use case requires that feeding am input stream to the email package
+ This use case requires that feeding an input stream to the email package
  always produces a valid Message object, along with a defect report.
  The defect report and inspection of the valid parts of the message will
  be used in making decisions about the nature of message.
@@ -76,7 +76,9 @@ that 'strings' are python3 unicode strings.
  valid Message objects.  Input and output could be strings or bytes in
  any combination, depending on the application.  This use case requires
  the ability within the API to optionally output lines that are longer
- than the maximum specified by the email RFCs (RFC 5322).
+ than the maximum specified by the email RFCs (RFC 5322).  This use case may
+ also require acceptance of UTF-16 or UTF-32 (and -BE/-LE variants) charsets,
+ even though CR LF are no longer bytes in those charsets.
 
  Handling non-email data in MIME format::  The MIME format is used in
  places other than email (http, for example).  The email package MIME
