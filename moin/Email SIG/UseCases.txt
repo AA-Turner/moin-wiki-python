@@ -103,10 +103,17 @@ that 'strings' are python3 unicode strings.
  this means that headers in wire format may be obtained and parsed
  separately from the message body.
 
- Handling pathological data::  Suppose an email-based MTA/LDA is handed
+ Handling pathological data #1::  Suppose an email-based MTA/LDA is handed
  a stream of random bytes.  The 'correct' response of the MTA/LDA (eg:
  if it is sendmail compatible) may well be to accept that data, prepend
  default From, Date, and Message-ID headers and send it on its way.
+
+ Handling pathological data #2::  Suppose an incoming email has data that cannot
+ be correctly parsed into MIME parts and/or decoded from wire format and/or decoded
+ to Unicode.  Salvage heuristics should be made available that can help determined
+ clients to obtain as much data as they can from the message.  Truncated MIME parts
+ may still contain useful data in the part that exists; parts of the data may be
+ able to be decoded, even if not all.
 
  Multipart/report:: An email-based MTA would want a way to take an
  existing Message object and generate new Message object that embodies
