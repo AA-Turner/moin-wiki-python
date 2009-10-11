@@ -79,7 +79,90 @@ See also [LanguageComparisons].
 
 == Using both Python & Haskell with ctypes (-; ==
 
-Since, Python is the ultimate glue language (not counting Perl), these Python vs. XLang pages should be replaced with Python "and" XLang. This technique works for windows and ghc:
+You can have your cake and eat it too. This is a technique using ctypes to interface with a  haskell library compiled with ghc:
+
+=== On Linux ===
+Most of this technique is thanks to Tomáš Janoušek's incredibly useful blog entry at http://blog.haskell.cz/pivnik/building-a-shared-library-in-haskell/. I will merely include the content of the files to show how it can be done. Please visit his site for more details:
+
+First create a test haskell library (Test.hs):
+
+{{{
+{-# LANGUAGE ForeignFunctionInterface #-}
+module Test where
+ 
+import Foreign.C.Types
+ 
+hsfun :: CInt -> IO CInt
+hsfun x = do
+    putStrLn "Hello World"
+    return (42 + x)
+ 
+foreign export ccall
+    hsfun :: CInt -> IO CInt
+
+}}}
+
+Now create Tomas' shared library entry point (module_init.c):
+
+{{{
+#define CAT(a,b) XCAT(a,b)
+#define XCAT(a,b) a ## b
+#define STR(a) XSTR(a)
+#define XSTR(a) #a
+
+#include <HsFFI.h>
+
+extern void CAT (__stginit_, MODULE) (void);
+
+static void library_init (void) __attribute__ ((constructor));
+static void
+library_init (void)
+{
+  /* This seems to be a no-op, but it makes the GHCRTS envvar work. */
+  static char *argv[] = { STR (MODULE) ".so", 0 }, **argv_ = argv;
+  static int argc = 1;
+
+  hs_init (&argc, &argv_);
+  hs_add_root (CAT (__stginit_, MODULE));
+}
+
+static void library_exit (void) __attribute__ ((destructor));
+static void
+library_exit (void)
+{
+  hs_exit ();
+}
+
+}}}
+
+Then create a build script to compile it all and clean up residuals (build.sh):
+
+{{{
+
+ghc -O2 --make \
+      -no-hs-main -optl '-shared' -optc '-DMODULE=Test' \
+      -o Test.so Test.hs module_init.c
+
+rm *.hi *.h *.o
+rm Test_stub.c
+
+}}}
+
+You can now easily access the shared library using ctypes (test.py)::
+
+{{{
+
+from ctypes import *
+lib = cdll.LoadLibrary("./Test.so")
+lib.hsfun(5)
+
+}}}
+
+Contributers: AliaKhouri
+
+=== On Windows ===
+
+(Note this is a dated technique and should be updated to the newer hierarchical libraries in Haskell)
 
 First a test haskell program (mylib.hs):
 
