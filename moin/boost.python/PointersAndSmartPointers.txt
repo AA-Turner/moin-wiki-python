@@ -88,4 +88,4 @@ BOOST_PYTHON_MODULE(Node) {
     ;
 }
 }}}
-This module must be imported once (and only once) by the Python app.  If Node.pyd is in a package directory, importing it in the __init__.py file in that directory seems to be a simple, workable solution.
+This creates an opaque Node pointer.  The only thing a Python app can do with it is move Node pointers between C++ modules.  For that application, the module must still be imported by the Python app.  If Node.pyd is in a package directory, importing it in the __init__.py file in that directory seems to be a simple, workable solution.
