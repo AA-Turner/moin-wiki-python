@@ -64,3 +64,28 @@ from shared_ptr import *
 an_A = A.create()
 print an_A.hello()
 }}}
+
+=== Smart Pointer Example with OpenSceneGraph ===
+The Node.cpp file:
+{{{
+#include <boost/python.hpp>
+#include <osg/ref_ptr>
+#include <osg/Node>
+
+using namespace boost::python;
+using namespace osg;
+
+// Tag the OpenSceneGraph ref_ptr type as a smart pointer.
+namespace boost {
+  namespace python {
+    template <class T> struct pointee< ref_ptr<T> >
+    { typedef T type; };
+  }}
+
+// Declare the actual type
+BOOST_PYTHON_MODULE(Node) {
+  class_<Node, ref_ptr<Node> >("Node")
+    ;
+}
+}}}
+This module must be imported once (and only once) by the Python app.  If Node.pyd is in a package directory, importing it in the __init__.py file in that directory seems to be a simple, workable solution.
