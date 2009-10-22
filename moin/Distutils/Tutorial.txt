@@ -472,8 +472,7 @@ def walk_helper(arg, dirname, files):
             #if ".pyc" not in filename:
             ## This hairy looking line excludes the filename
             ## if any part of one of  badnames is in it:
-            L=len([bad for bad in badnames if bad in filename])
-            if L == 0:
+            if not any(bad in filename for bad in badnames):
                 if fnmatch.fnmatch(filename, wc_name) and not os.path.isdir(filename):
                     names.append(filename)
     if names:
