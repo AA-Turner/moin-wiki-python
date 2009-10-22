@@ -38,7 +38,7 @@ class Listener(object):
     def processEvent(self,event):
         funcName = "process%sEvent" % event.eventType
         if hasattr(self,funcName):
-            apply(getattr(self,funcName),[event])
+            getattr(self,funcName)(event)
 
 class Source(object):
     """ Object that produce Event Message """
@@ -74,7 +74,7 @@ class CommandListener(Listener):
     def processCommandEvent(self,event):
         funcName = "do%s" % event.action.capitalize()
         if hasattr(self,funcName):
-            apply(getattr(self,funcName),[event])
+            getattr(self,funcName)(event)
 
 class CommandSource(Source):
     """ here the producer of command Event """
