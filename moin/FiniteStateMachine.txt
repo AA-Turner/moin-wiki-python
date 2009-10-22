@@ -91,7 +91,7 @@ class FSM:
             self.dbg.write('State: %s / Input: %s /'
                            'Next State: %s / Action: %s\n' %
                            (self.state, input, newstate, action))
-        apply(action, (self.state, input))
+        action(self.state, input)
         self.state = newstate
 
     def start(self, state):
