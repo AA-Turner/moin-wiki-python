@@ -26,3 +26,14 @@
   * Removed obsolete egg-info writers
   * Waiting on the manifest generation feature to finish this one
   * Will implement PEP 376 egg-info writers when possible
+
+ * PEP 376 compatible installs
+  * Observations
+   * Current setuptools egg-info metadata is written in a separate pre-install in-place step, which can be run independently (python setup.py egg-info). PEP 376 metadata (RECORD, INSTALLER and REQUESTED) can only be generated at install time, not in a separate step (RECORD needs actual installed paths, and REQUESTED and INSTALLED are determined by who does the install and why).
+   * RECORD generation is similar to distutils' existing --record option, but that is implemented in a non-extendable way (buried in the midst of run() method)
+   * PEP 376 specifies APIs as they are to appear in distutils, not in a third-party package
+  * Decided that a proof-of-concept implementation of PEP 376 installs would be cleaner and clearer if implemented directly in distutils (in a standalone branch for now), rather than layering it into distribute 0.7 on top of current distutils. Ideally this distutils branch could be installed for testing just like the distutils nightly builds at http://nightly.ziade.org on all recent Python versions.
+  * Converted distutils into standalone hg repo at http://bitbucket.org/carljm/python-distutils/
+  * Currently working on testing strategy. 
+   * Can distutils tests be made to run apart from the full Python build tree?
+   * First step will be to modify/add tests to specify PEP 376 behavior.
