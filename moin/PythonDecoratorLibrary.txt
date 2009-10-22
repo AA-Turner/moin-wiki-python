@@ -1145,7 +1145,7 @@ class STState(object):
         for de in self.fctn_dict.values():
             next_state_name = de[1]
             if next_state_name:
-                if state_dict.has_key(next_state_name):
+                if next_state_name in state_dict:
                     de[1] = state_dict[next_state_name]
                 else:
                     raise StateMachineError('Invalid Name for next state: %s' % next_state_name)
