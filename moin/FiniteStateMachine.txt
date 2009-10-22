@@ -82,10 +82,10 @@ class FSM:
         si = (self.state, input)
         sn = (self.state, None)
         # exact state match?
-        if self.states.has_key(si):
+        if si in self.states:
             newstate, action = self.states[si]
         # no, how about a None (catch-all) match?
-        elif self.states.has_key(sn):
+        elif sn in self.states:
             newstate, action = self.states[sn]
         if self.dbg != None:
             self.dbg.write('State: %s / Input: %s /'
