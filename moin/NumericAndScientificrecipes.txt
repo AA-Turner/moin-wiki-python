@@ -507,14 +507,14 @@ If the first non-whitespace is not valid number characters
 '(+-.0123456789', then the line will be skipped.
 """
 def getv(s=''):
-    import sys, string
+    import sys
     if s == '':
         f = sys.stdin
     else:
         f = open(s, 'r')
     x = []
     for a in f.readlines():
-        a = string.strip(a)
+        a = a.strip()
         if a != '' and a[0] in '(+-.0123456789':
             x.append(eval(a))
     return x
@@ -524,16 +524,16 @@ If the first non-whitespace is not valid number characters
 '(+-.0123456789', then the line will be skipped.
 """
 def getv2(s=''):
-    import sys, string
+    import sys
     if s == '':
         f = sys.stdin
     else:
         f = open(s, 'r')
     x, y = [], []
     for a in f.readlines():
-        a = string.strip(a)
+        a = a.strip()
         if a != '' and a[0] in '(+-.0123456789':
-            b = string.split(a)
+            b = a.split()
             x.append(eval(b[0]))
             y.append(eval(b[1]))
     return x, y
