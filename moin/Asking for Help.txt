@@ -61,6 +61,73 @@ while 1:
 
 The program doesn't quite do what it should, but I can't find anything wrong with the source.
 
+
+---- /!\ '''Edit conflict - other version:''' ----
+ * I have a problem with a program for Conway's Game of Life.  Here's the source code:
+{{{
+#! /usr/bin/env python
+# Conway's game of life on a finite rectangular universe
+# The boundary is considered to be perpetually dead.
+
+def disp(state):
+    h, v, zz = len(state[0])-2, len(state)-2, "+"
+    for t in range(h):
+        zz = zz + "--"
+    print zz + "+"
+    for t in range(v):
+        z = "|"
+        for u in range(h):
+            z = z + ["  ", "88"][state[t+1][u+1]]
+        print z + "|"
+    print zz + "+"
+    for t in range(3):
+        print
+
+def iterate(state):
+    h, v, new = len(state[0])-2, len(state)-2, state
+    r = [[0,0,0,1,0,0,0,0,0],[0,0,1,1,0,0,0,0,0]]
+    for t in range(v):
+        for u in range(h):
+            aa = state[t][u]
+            ab = state[t][u+1]
+            ac = state[t][u+2]
+            ba = state[t+1][u]
+            bb = state[t+1][u+1]
+            bc = state[t+1][u+2]
+            ca = state[t+2][u]
+            cb = state[t+2][u+1]
+            cc = state[t+2][u+2]
+            s = aa+ab+ac+ba+bc+ca+cb+cc
+            new[t+1][u+1] = r[bb][s]
+    return new
+
+state, s, iters = [], [], 0
+for t in range(20):
+    state.append([])
+    for u in range(20):
+        state[t].append(0)
+
+state[3][3] = 1
+state[4][4] = 1
+state[5][4] = 1
+state[5][3] = 1
+state[5][2] = 1
+
+while 1:
+    print iters
+    disp(state)
+    for t in range(1000000):
+        pass
+    state = iterate(state)
+    iters = iters + 1
+}}}
+
+The program doesn't quite do what it should, but I can't find anything wrong with the source.
+
+
+---- /!\ '''Edit conflict - your version:''' ----
+
+---- /!\ '''End of edit conflict''' ----
  * How (aside from reading gobs and gobs of source code) can I find out the asymptotic time behaviour of various primitive Python operations?  For example, for list xs, does xs.append(x) take amortized O(1) time or O(n) time?
 
  * [[Asking for Help/Why does IDLE refuse to start on Windows?|Why does IDLE refuse to start on Windows?]]
