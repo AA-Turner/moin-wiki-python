@@ -4,3 +4,16 @@
  1. Select your Jython checkout directory as the root
 
 This could be made to work entirely in Eclipse with a few more additions to the external builders.  For now, it requires running ant in the first step to make the build/gensrc and build/jarjar directories and then every time after a clean.
+
+'''Proposed new instructions'''
+
+Using Eclipse 3.5 + Subversive:
+
+ 1. Open the SVN Repository Exploring perspective and create a new repository for the Jython SVN repository.
+ 1. Open the new repository, expand trunk, right click on Jython, and select Check Out.  (You'll be prompted to accept an SSL certificate.)
+ 1. Once the project is finished checking out, it will show build errors.  Right click on the jython-trunk project.  Select Build Path > Configure Build Path.
+ 1. In the Libraries tab, Add Variable > Configure Variables, and add a classpath variable for ANT_HOME.
+ 1. In the Package Explorer, open the build.xml file under jython-trunk.
+ 1. In the Outline view, find the "developer build" target.  Right click and Run As > Ant Build.
+ 1. In the Package Explorer view, right click on the jython-trunk project, and select Refresh.
+ 1. The problems view should no longer show any errors.
