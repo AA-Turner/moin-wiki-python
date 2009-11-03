@@ -1,0 +1,113 @@
+#FORMAT rst
+
+RFCs of Relevance to the Email Package Implementation
+=====================================================
+
+Base Email RFCs
+---------------
+
+- rfc0733_ Standard for the Format of ARPA Network Text Messages
+- rfc0822_ Standard for the Format of ARPA Internet Text Messages
+- rfc2822_ Internet Message Format
+- rfc5322_ Internet Message Format
+
+Each of these RFC's obsoletes the one that came before [#]_, but often
+reference the earlier RFC.  We must also pay attention to the
+obsolete formats because of the `Postel principle`_
+
+.. _rfc0722: http://tools.ietf.org/html/rfc0722
+.. _rfc0733: http://tools.ietf.org/html/rfc0733
+.. _rfc0822: http://tools.ietf.org/html/rfc0822
+.. _rfc2822: http://tools.ietf.org/html/rfc2822
+.. _rfc5322: http://tools.ietf.org/html/rfc5322
+.. _Postel principle: http://en.wikipedia.org/wiki/Robustness_principle
+
+
+The parser should have two modes (or there should be two parsers):
+strict and lax.  The lax parser (probably with optional logging) would
+be for everyday use in handling email received from other sources,
+the strict parser would be for validation and/or data produced by an
+application itself.
+
+The email package should produce output that strictly conforms to
+RFC 5322.
+
+
+Mime
+----
+
+- rfc2045_ MIME Part One: Format of Internet Message Bodies
+- rfc2046_ MIME Part Two: Media Types
+- rfc2047_ MIME Part Three: Message Header Extensions for Non-ASCII Text
+- rfc2048_ MIME Part Four: Registration Procedures
+- rfc2049_ MIME Part Five: Conformance Criteria and Examples
+- rfc2231_ MIME Parameter Value and Encoded Word Extensions:
+           Character Sets, Languages, and Continuations
+
+.. _rfc2045: http://tools.ietf.org/html/rfc2045
+.. _rfc2046: http://tools.ietf.org/html/rfc2046
+.. _rfc2047: http://tools.ietf.org/html/rfc2047
+.. _rfc2048: http://tools.ietf.org/html/rfc2048
+.. _rfc2049: http://tools.ietf.org/html/rfc2049
+.. _rfc2231: http://tools.ietf.org/html/rfc2231
+
+
+Mailing List Headers
+--------------------
+
+- rfc2369_ The Use of URLs as Meta-Syntax for Core Mail List Commands
+           and their Transport through Message Header Fields
+- rfc2919_ A Structured Field and Namespace for the
+           Identification of Mailing Lists
+
+.. _rfc2369: http://tools.ietf.org/html/rfc2369
+.. _rfc2919: http://tools.ietf.org/html/rfc2919
+
+
+Additional Considerations
+-------------------------
+
+An auxiliary module should provide access to the registered IANA data
+specified by the RFCs.  We make use of the data from the mimetimes module,
+which overlaps with this requirement, so we need to coordinate with the
+maintainers of that module [#]_.
+
+We also make use of URLs (rfc3986_), and will need to coordinate with
+the maintainers of urllib for that support.
+
+.. _rfc3986: http://tools.ietf.org/html/rfc3986
+
+We also need to be aware of the RFCs that are relevant to the modules
+that share concerns with the email package and/or are consumers
+of email package services:
+
+HTTP
+****
+
+- RFC2616_ Hypertext Transfer Protocol -- HTTP/1.1
+
+
+Netnews
+*******
+
+- RFC1036_ Standard for Interchange of USENET Messages
+- RFC3977_ Network News Transfer Protocol (NNTP)
+
+.. _rfc2616: http://tools.ietf.org/html/rfc2616
+.. _rfc1036: http://tools.ietf.org/html/rfc1036
+.. _rfc3977: http://tools.ietf.org/html/rfc3977
+
+
+Extensions
+----------
+
+There are also email extensions that we will want to support,
+but we'll fill that in later when we get to it.
+
+
+
+.. [#] In fact, rfc0733 obsoletes several previous RFCs.
+
+.. [#] mimetypes does not currently have a maintainer
+       listed in maintainers.rst, which may mean we get to
+       tackle it as well.
