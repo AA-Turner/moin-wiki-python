@@ -5,25 +5,32 @@ You should be able to run them simply by copying/pasting the code into a file an
 
     ------ 1 line: Output
 {{{#!python
-print('Hello, world!')
+print 'Hello, world!'
 }}}
 
-    ------ 10 lines: Input, assignment, and (mostly) comments
-
+    ------ 2 lines: Input, assignment
 {{{#!python
-name = input('What is your name?\n')
-# Usually, the input command will prompt for a user's input on
-# the same line. Writing "\n" will prompt the user on a new line.
-print('Hi, ' + name + '.')
-# Here, we add the strings together. If we did not, and instead
-# wrote "print('Hi,',name,'.')", we would get "Hi, Jamie ." Notice
-# how there are spaces that we did not ask Python to write? These
-# unasked for spaces occur when using commas to separate strings
-# when using the print command. Rather, it may work better
-# visually to use addition as I did in the example.
+name = raw_input('What is your name?\n')
+print 'Hi, ' + name + '.'
 }}}
 
-    ------ 3 lines: For loop, builtin enumerate function
+ 1. Usually, the `raw_input` function (renamed to `input` in Python 3) will prompt for a user's input on the same line. Writing `\n` will prompt the user on a new line.
+ 1. The `print` command is a function in Python 3.
+ 1. Here, we add the strings together. If we did not, and instead wrote
+
+ {{{#!python start=2 numbers=off
+ print 'Hi,',name,'.'
+ }}}
+
+ we would get
+
+ {{{
+ Hi, Jamie .
+ }}}
+
+ Notice how there are spaces that we did not ask Python to write? These unasked for spaces occur when using commas to separate strings when using the `print` command. Rather, it may work better visually to use addition as I did in the example.
+
+    ------ 3 lines: For loop, built-in enumerate function
 {{{#!python
 my_list = ['john', 'pat', 'gary', 'michael']
 for i, name in enumerate(my_list):
@@ -328,9 +335,8 @@ Minor cleanups are welcome, but if you want to do major restructuring of this pa
 
 Some goals for this page:
 
-   1) All examples should be simple.
-
-   2) There should be a gentle progression through Python concepts.
+ 1. All examples should be simple.
+ 2. There should be a gentle progression through Python concepts.
 
 ----
 CategoryDocumentation
