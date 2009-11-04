@@ -53,6 +53,22 @@ Manual changes (not done by 2to3)
 
 .. _issue4601: http://bugs.python.org/issue4601
 
+Tips & Tricks
+=============
+- As of Python 2.6 the 2.x line includes a "bytes = str" alias in the builtins. Along with the bytes literal syntax, this allows binary data stored in a str instance to be clearly flagged so that it will use the correct type when the code is run in 3.x (either directly or via the 2to3 conversion tool). The reason it is done this way rather than backporting the 3.x bytes type is that most 2.x APIs that expect immutable binary data expect it as an 8-bit str instance - trying to pass in a backported 3.x bytes type wouldn't have the desired effect. To support versions earlier than 2.6, it is possible to define the alias at the type of the module:
+   try:
+     bytes # Forward compatibility with Py3k
+   except NameError:
+     bytes = str
+
+
+- When using "from __future__ import unicode_literals" in a module, it may also be useful to insert "str = unicode" near the top of the module. This will ensure that "isinstance('', str)" remains true in that module:
+   try:
+     str = unicode
+   except NameError:
+     pass # Forward compatibility with Py3k
+
+
 Links
 =====
 
