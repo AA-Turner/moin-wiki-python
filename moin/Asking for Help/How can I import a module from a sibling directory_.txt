@@ -1,0 +1,28 @@
+= Asking for Help: How can I import a module from a sibling directory? =
+
+I am new to Python from Java background, I have following structure
+
+{{{
+/root
+	/folder1
+		Class1.py
+		Class2.py
+	/folder2
+		Class3.py
+}}}
+
+I am in the folder2 and want to run class3.py but it need to import a module from Class1.py
+Could someone please help me?
+
+Answer: I believe you just need to add folder1 to your path variable. Should be something along the lines of...
+
+{{{#!python
+import sys
+sys.path.append('/root/folder1')
+import Class1
+}}}
+
+If that doesn't work, look through the documentation for info on how the sys.path variable works -- I may just have the syntax slightly off
+
+----
+CategoryAskingForHelp CategoryAskingForHelpAnswered
