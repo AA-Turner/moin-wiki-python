@@ -38,34 +38,18 @@ The page will be automatically added to the [[#LongerQuestions|longer questions]
 
  *[[When I import Tkinter, Python exits.  Why?]]
 
+ * I am new at python, I have python 2.5 and every time i open the shell python resets my moniter to 800x600.  How do I keep python from messing with my monitor settings? -Travis
+
 <<Anchor(LongerQuestions)>>
 == Longer Questions ==
 
-Pages containing longer questions should appear in a list below.
+Pages containing longer questions should appear in this list:
 
 <<FullSearch(category:CategoryAskingForHelp -category:CategoryAskingForHelpAnswered -title:AskingForHelpTemplate)>>
 
-These questions will be moved to the [[#AnsweredLongerQuestions|section below]] when they are added to the CategoryAskingForHelpAnswered category (upon being answered, hopefully).
+These questions will be moved to the [[#AnsweredLongerQuestions|answered longer questions section]] below when they are answered (having been added to the CategoryAskingForHelpAnswered category).
 
 == Answered (fully or partially) ==
-
- * How can I add or substract two to the last digit of a float? Like 4.9999 should be 5.0001 or 4.9997. The problem is  
-
- {{{
- >>> 4.9999
- 4.9999000000000002
- would yield 4.9999000000000000 or 4.9999000000000004 which is not right.
- I could make a str(4.9999), convert each character to an int and work on each character from right   
- to left, but there must be a better way.
- this is not what I want as well:
- >>> ( 4.9999 * 10000 + 2 ) / 10000.0
- 5.0000999999999998 -> this should be 5.0001
- this makes it somehow :))
- >>> str(( 4.9999 * 10000 + 2 ) / 10000)
- '5.0001'
- }}}
-
- http://www.python.org/doc/current/library/decimal.html?highlight=round#decimal-faq
 
  *[[MultiLineStringsInDocTest|How do I write multi-line strings in doctest tests?]]
 
@@ -111,8 +95,6 @@ These questions will be moved to the [[#AnsweredLongerQuestions|section below]] 
 
   * Have you tried using the [[http://pyserial.sourceforge.net/pyparallel.html|pyParallel]] module? -- DavidBoddie
 
- I am new at python, I have python 2.5 and every time i open the shell python resets my moniter to 800x600.  How do I keep python from messing with my monitor settings? -Travis
-
  *[[I wish to generate graphics and images directly into a file, but I'm confused as to just what i need to do this with python]]
 
  *[[How can I run an untrusted Python script safely (i.e. Sandbox)]]
@@ -129,47 +111,9 @@ These questions will be moved to the [[#AnsweredLongerQuestions|section below]] 
 
  * [[PythonFramework-x.x.pkg installation fails. Is there a workaround?]]
 
- * I'm trying to split a string, but without breaking the quotes
- {{{
-x = '"a,b", c, d, "e,f,h", "i,j,k"'
-re.sub('"([^"]*)"', "\g<1>", x) 
--> 'a,b, c, d, e,f,h, i,j,k' # Ok for me
-
-re.sub('"([^"]*)"', "|\g<1>|", x)
--> '|a,b|, c, d, |e,f,h|, |i,j,k|'   # To show the separation of the groups, also Ok
-
-re.sub('"([^"]*)"', "\g<1>".replace(",", "|"), x)
--> 'a,b, c, d, e,f,h, i,j,k' # The same result!
--> 'a|b, c, d, e|f|h, i|j|k' # It doesn't suppose to replace all "," with "|" like here?
- }}}
-
-  * No, it is doing what you told it to do. To realize this you must know that arguments are evaluated before they are passed to the functions. But what is the value of "\g<1>".replace(",", "|")? "\g<1>", of course, as there are no commas to replace in "\g<1>". re.sub therefore receives '"([^"]*)"' and "\g<1>" as arguments, which is the exact equivalent of the first call.
-
  * [[How to store information in variable arrays?]]
 
  * [[How do I run Python based software from SourceForge?]]
-
- * I am new to Python from Java background, I have following structure
- {{{
-/root
-	/folder1
-		Class1.py
-		Class2.py
-	/folder2
-		Class3.py
- }}}
-
- I am in the folder2 and want to run class3.py but it need to import a module from Class1.py
- Could someone please help me?
-
-   * I believe you just need to add folder1 to your path variable. Should be something along the lines of...
-   {{{#!python
-import sys
-sys.path.append('/root/folder1')
-import Class1
-   }}}
-
-   If that doesn't work, look through the documentation for info on how the sys.path variable works -- I may just have the syntax slightly off
 
  * I was browsing the Python source code, trying to find out how str.strip() is implemented as a string method. I found string.py in the Lib directory, but that didn't seem to hold the answer. Could you please help me learn where to look?
 
@@ -178,11 +122,11 @@ import Class1
 <<Anchor(LongerQuestionsAnswered)>>
 == Answered Longer Questions ==
 
-Pages containing ''answered'' longer questions should appear in a list below.
+Pages containing ''answered'' longer questions should appear in this list:
 
 <<FullSearch(category:CategoryAskingForHelpAnswered)>>
 
-Questions appear here when they are added to the CategoryAskingForHelpAnswered category.
+Questions appear here when they are added to the CategoryAskingForHelpAnswered category (having been answered).
 
 ----
 CategoryFaq
