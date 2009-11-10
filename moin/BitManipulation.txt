@@ -166,18 +166,23 @@ Python 3 supports binary literals (e.g. 0b10011000) and has a bin() function. Fo
 }}}
 
 
-
 == Python Integers ==
 
 From "The Python Language Reference" page on the Data Model:
 
 "Integers (int)  These represent numbers in an unlimited range, subject to available (virtual) memory only. For the purpose of shift and mask operations, a binary representation is assumed, and negative numbers are represented in a variant of 2’s complement which gives the illusion of an infinite string of sign bits extending to the left."
 
-Unless you know you are working with numbers that are less than a certain length, for instance numbers from arrays of integers, shifts, rotations, etc. may give unexpected results. There does not seem to be a way to determine how Python represents a specific integer internally, i.e. how many bytes are used.
+Prior to Python 3.1, there was no easy way to determine how Python represented a specific integer internally, i.e. how many bits were used. Python 3.1 adds a bit_length() method to the int type that does exactly that.
+
+Unless you know you are working with numbers that are less than a certain length, for instance numbers from arrays of integers, shifts, rotations, etc. may give unexpected results.
 
 The number of the highest bit set is the highest power of 2 less than or equal to the input integer. This is the same as the exponent of the floating point representation of the integer, and is also called its "integer log base 2".(ref.1)
 
-The easiest way to determine the highest bit set is:
+In versions before 3.1, the easiest way to determine the highest bit set is*:
+
+* There is a long discussion on this topic in "Issue 3439" at Python.org:
+http://bugs.python.org/issue3439
+This discussion led up to the addition of bit_length() in Python 3.1.
 
 {{{#!Python
 
@@ -234,11 +239,11 @@ def bitLenCount(int_type):
 
 == Operations on Integers of Unknown Magnitude ==
 
-Some proceedures don't need to know the magnitude of an integer to give meaningful results.
+Some procedures don't need to know the magnitude of an integer to give meaningful results.
 
 === bitCount() ===
 
-The proceedure and the information below were found in "Bit Twiddling Hacks"(ref.1)
+The procedure and the information below were found in "Bit Twiddling Hacks"(ref.1)
 
  - - - - - - - - - - - - - - - - - - - - - - - -
 
