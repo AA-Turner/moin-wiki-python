@@ -9,43 +9,55 @@ are deprecated as incorrect or ambiguous, and why.
 
 NOTE: this is a proposed draft, not a final document!
 
-idempotent
-    *Deprecated*  This term has in the past been used to describe the
-    property we now call "invertable".  Idempotent really means you
-    can apply a function to an input, and if you apply the function
-    again to the output from the first application, you get back the
-    same result.  That's not what the email package does.
+**idempotent**
+    A property of certain operations in computer science and
+    mathematics.  An operation is idempotent if multiple applications
+    of the operation do not change the result.  Formally, given an
+    operation 'g', 'g' is idempontent if and only if:
 
-invertible
+        g(g(x)) = g(x)
+
+    For example, the 'lowercase' operation is idempotent.  There are
+    operations provided by the email package where it makes sense to
+    require either strict idempotence, or idempotence when possible.
+
+**invertible**
     The email package attempts to maintain *invertibility*.  By this we
     mean that if you feed an input into the package, and later ask for
     that data to be serialized back out, you should get out the data you
-    put in.  For well-formed input, this is an absolute guarantee, and
+    put in.  For well-formed input, this is an absolute requirement, and
     any deviation is a bug.  For other input, we may find it necessary
-    to break invertibility.
+    to break invertibility.  Note that invertibility is a stronger
+    requirement on an operation than idempotence, but it applies only
+    when an inverse operation exists.
 
-raw data
-    *Deprecated* because its usage has been ambiguous.  In some cases
+**conformant**
+    Conforming to a particular specification or standard.  The Internet
+    RFCs use this term to refer to implementations and data that
+    conform to the requirements of the RFC.
+
+**raw data**
+    **Deprecated** because its usage has been ambiguous.  In some cases
     it is another term for wire-format, used especially when the data
     is expected to not be RFC compliant.  But it has also been used to
     refer to transfer-decoded bytes, on the theory that the decoded bytes
     are the 'raw data' that went into the transfer-encoding pipeline at
     the originating MTA.
 
-string
+**string**
     python3 unicode string
 
-text
+**text**
     unicode text (stored in a python3 string)
 
-transfer-decoded
+**transfer-decoded**
     Data that has been decoded from wire-format into 8 bit bytes.
 
-transfer-encoded
+**transfer-encoded**
     Bytes that have been validly encoded per the RFCs for transmission
     "over the wire", ie: to wire-format.
 
-wire-format
+**wire-format**
     The format that data is in when transmitted "over the wire"; which is
     to say in a binary format rather than unicode, said binary format
     containing the data of the message nominally transfer-encoded.
