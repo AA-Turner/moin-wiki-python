@@ -41,17 +41,9 @@ def makeBitArray(bitSize, fill = 0):
         fill = 4294967295                                 # all bits set
     else:
         fill = 0                                      # all bits cleared
-    bitArray = array.array('I')       # 'I' = unsigned integer = 32 bits
-    count = 0
-    while (intSize):
-        if(intSize & 1):                           # for each power of 2
-            tempArray = array.array('I')           # in intSize, add
-            tempArray.append(fill)                 # that many integers
-            for index in range(count):             # to the array
-                tempArray.extend(tempArray)
-            bitArray.extend(tempArray)
-        count += 1
-        intSize >>= 1
+
+    bitArray = array.array('I', fill) * intSize       # 'I' = unsigned
+                                                      #   32-bit integer
     return(bitArray)
 
 # testBit() returns a nonzero result, 2**offset, if the bit at 'bit_num' is set to 1.
@@ -95,7 +87,7 @@ myArray = makeBitArray(bits, ini)
 print(bits, len(myArray), (len(myArray) * 32) - bits, bin(myArray[0]))
 }}}
 
-For a more "real world" example, the following code uses the Sieve of Eratosthenes (for an explanation, see Wikipedia) to find all of the primes less than 65536 (2 to the 16th power) and leaves them in a bit array. This is not the place to go into all the details of how the Sieve works, so it is left in an informal form. To run the Sieve, change the main body of the program (everything after the function definitions) to:
+For a more concrete example, the following code uses the Sieve of Eratosthenes (for an explanation, see Wikipedia) to find all of the primes less than 65536 (2 to the 16th power) and leaves them in a bit array. This is not the place to go into all the details of how the Sieve works, so it is left in an informal form. To run the Sieve, change the main body of the program (everything after the function definitions) to:
 
 {{{#!Python
 # Python 3.0
@@ -109,7 +101,7 @@ clearBit(myArray, bit)
 bit = 1
 clearBit(myArray, bit)
 
-for index in range(256):            # range is to ''square root'' of limit
+for index in range(256):            # range is to "square root" of limit
     test = testBit(myArray, index)
 
     if test:
