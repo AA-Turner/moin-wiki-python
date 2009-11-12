@@ -37,12 +37,17 @@ NOTE: this is a proposed draft, not a final document!
     conform to the requirements of the RFC.
 
 **raw data**
-    **Deprecated** because its usage has been ambiguous.  In some cases
-    it is another term for wire-format, used especially when the data
-    is expected to not be RFC compliant.  But it has also been used to
-    refer to transfer-decoded bytes, on the theory that the decoded bytes
-    are the 'raw data' that went into the transfer-encoding pipeline at
-    the originating MTA.
+    Data in the form it enters the email module parser, or exits the
+    email module generator (primarily the former). [*]_  A related term
+    is 'wire-format', the difference being that wire-format data is
+    understood to be RFC conformant.  Raw data may or may not be RFC
+    conformant, and may or may not be bytes (if, for example, it comes
+    from a doctest or other text input source).
+
+    .. [*] Note that in the past this term has been used ambiguously to
+       also refer to the original source data that was transfer-encoded
+       into the form that is the actual raw data that the email module
+       deals with.
 
 **string**
     python3 unicode string
@@ -55,11 +60,13 @@ NOTE: this is a proposed draft, not a final document!
 
 **transfer-encoded**
     Bytes that have been validly encoded per the RFCs for transmission
-    "over the wire", ie: to wire-format.
+    "over the wire", ie: to wire-format.  Mostly used in the verb form
+    (ex: "after the data has been transfer-encoded") in discussing
+    operations involving the RFC defined transfer encodings Quoted
+    Printable and BASE64.
 
 **wire-format**
     The format that data is in when transmitted "over the wire"; which is
     to say in a binary format rather than unicode, said binary format
-    containing the data of the message nominally transfer-encoded.
-    Wire-format data may or may not be well formed according the RFCs;
-    the term refers to the data actually found in the wild.
+    containing the data of the message transfer-encoded according
+    to the RFCs.
