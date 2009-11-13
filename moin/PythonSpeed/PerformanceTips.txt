@@ -9,11 +9,12 @@ python" page in about 1996, which means that some of the orderings will have
 changed. I migrated it to the Python wiki in hopes others will help maintain
 it.
 
-'''Note:''' You should always test these tips with your application and the
-version of Python you intend to use and not just blindly accept that one
-method is faster than another. Good suggestions on profiling your python code are found here (archived version):
+{{{#!wiki tip
 
-http://web.archive.org/web/20060506162444/http://wingware.com/doc/howtos/performance-profiling-python-code 
+You should always test these tips with your application and the
+version of Python you intend to use and not just blindly accept that one
+method is faster than another. See the [[#Profiling|profiling]] section for more details.
+}}}
 
 Also new since this was originally written are packages like
 [[http://www.cosc.canterbury.ac.nz/~greg/python/Pyrex/|Pyrex]],
@@ -61,7 +62,7 @@ also known as DecorateSortUndecorate (DSU).
 Suppose, for example, you have a list of tuples that you want to sort by
 the n-th field of each tuple. The following function will do that.
 
-{{{
+{{{#!python numbers=disable
 def sortby(somelist, n):
     nlist = [(x[n], x) for x in somelist]
     nlist.sort()
@@ -71,7 +72,7 @@ def sortby(somelist, n):
 Matching the behavior of the current list sort method (sorting in place)
 is easily achieved as well:
 
-{{{
+{{{#!python numbers=disable
 def sortby_inplace(somelist, n):
     somelist[:] = [(x[n], x) for x in somelist]
     somelist.sort()
@@ -81,7 +82,7 @@ def sortby_inplace(somelist, n):
 
 Here's an example use:
 
-{{{
+{{{#!python numbers=disable
 >>> somelist = [(1, 2, 'def'), (2, -4, 'ghi'), (3, 6, 'abc')]
 >>> somelist.sort()
 >>> somelist
@@ -104,14 +105,14 @@ From Python 2.3 sort is guaranteed to be stable.
 
 Python 2.4 adds an optional key parameter which makes the transform a lot easier to use:
 
-{{{
+{{{#!python numbers=disable
 import operator
 sort(nlist, key=operator.itemgetter(n))
 }}}
 
 Note that the original item is never used for sorting, only the returned key - this is equivalent to doing:
 
-{{{
+{{{#!python numbers=disable
 nlist = [(x[i], i, x) for (i, x) in enumerate(nlist)]
 nlist.sort()
 nlist = [val for (key, index, val) in nlist]
@@ -134,7 +135,7 @@ significant inefficiencies in Python programs. -> ConcatenationTestCode
 
 Avoid this:
 
-{{{
+{{{#!python numbers=disable
 s = ""
 for substring in list:
     s += substring
@@ -144,7 +145,7 @@ Use {{{s = "".join(list)}}} instead. The former is a very common and
 catastrophic mistake when building large strings. Similarly, if you are
 generating bits of a string sequentially instead of:
 
-{{{
+{{{#!python numbers=disable
 s = ""
 for x in list:
     s += some_function(x)
@@ -152,27 +153,27 @@ for x in list:
 
 use
 
-{{{
+{{{#!python numbers=disable
 slist = [some_function(elt) for elt in somelist]
 s = "".join(slist)
 }}}
 
 Avoid:
 
-{{{
+{{{#!python numbers=disable
 out = "<html>" + head + prologue + query + tail + "</html>"
 }}}
 
 Instead, use
 
-{{{
+{{{#!python numbers=disable
 out = "<html>%s%s%s%s</html>" % (head, prologue, query, tail)
 }}}
 
 Even better, for readability (this has nothing to do with efficiency
 other than yours as a programmer), use dictionary substitution:
 
-{{{
+{{{#!python numbers=disable
 out = "<html>%(head)s%(prologue)s%(query)s%(tail)s</html>" % locals()
 }}}
 
@@ -198,7 +199,7 @@ restriction is that the "loop body" of {{{map}}} must be a function call. Beside
 Here's a straightforward example. Instead of looping over a list of
 words and converting them to upper case:
 
-{{{
+{{{#!python numbers=disable
 newlist = []
 for word in oldlist:
     newlist.append(word.upper())
@@ -207,14 +208,14 @@ for word in oldlist:
 you can use {{{map}}} to push the loop from the interpreter into compiled C
 code:
 
-{{{
+{{{#!python numbers=disable
 newlist = map(str.upper, oldlist)
 }}}
 
 List comprehensions were added to Python in version 2.0 as well. They
 provide a syntactically more compact and more efficient way of writing the above for loop:
 
-{{{
+{{{#!python numbers=disable
 newlist = [s.upper() for s in oldlist]
 }}}
 
@@ -223,7 +224,7 @@ more-or-less like list comprehensions or {{{map}}} but avoid the overhead of
 generating the entire list at once. Instead, they return a generator object
 which can be iterated over bit-by-bit:
 
-{{{
+{{{#!python numbers=disable
 newlist = (s.upper() for s in oldlist)
 }}}
 
@@ -242,7 +243,7 @@ with the for loop. The for loop example has another inefficiency. Both
 reevaluated each time through the loop. The original loop can be
 replaced with:
 
-{{{
+{{{#!python numbers=disable
 upper = str.upper
 newlist = []
 append = newlist.append
@@ -263,7 +264,7 @@ loop is to use local variables wherever possible. If the above loop is
 cast as a function, {{{append}}} and {{{upper}}} become local variables. Python
 accesses local variables much more efficiently than global variables.
 
-{{{
+{{{#!python numbers=disable
 def func():
     upper = str.upper
     newlist = []
@@ -292,7 +293,7 @@ Suppose you are building a dictionary of word frequencies and you've
 already broken your text up into a list of words. You might execute
 something like:
 
-{{{
+{{{#!python numbers=disable
 wdict = {}
 for word in words:
     if word not in wdict:
@@ -306,7 +307,7 @@ probably occur multiple times. In a situation where the initialization
 of a value is only going to occur once and the augmentation of that
 value will occur many times it is cheaper to use a {{{try}}} statement:
 
-{{{
+{{{#!python numbers=disable
 wdict = {}
 for word in words:
     try:
@@ -323,7 +324,7 @@ A third alternative became available with the release of Python 2.x.
 Dictionaries now have a get() method which will return a default value
 if the desired key isn't found in the dictionary. This simplifies the loop:
 
-{{{
+{{{#!python numbers=disable
 wdict = {}
 get = wdict.get
 for word in words:
@@ -337,10 +338,11 @@ other), more or less independent of the properties of the list of words.
 
 Also, if the value stored in the dictionary is an object or a (mutable) list,
 you could also use the {{{dict.setdefault}}} method, e.g.
-{{{
-...
+
+{{{#!python start=4
     wdict.setdefault(key, []).append(new_element)
 }}}
+
 You might think that this avoids having to look up the key twice.
 It actually doesn't (even in python 3.0), but at least the double 
 lookup is performed in C.
@@ -359,7 +361,7 @@ I believe - I found it unattributed in a comp.lang.python
 python-list@python.org posting and later attributed to him in another
 source):
 
-{{{
+{{{#!python numbers=disable
 def doit1():
     import string ###### import statement inside function
     string.lower('Python')
@@ -370,7 +372,7 @@ for num in range(100000):
 
 or:
 
-{{{
+{{{#!python numbers=disable
 import string ###### import statement outside function
 def doit2():
     string.lower('Python')
@@ -384,7 +386,7 @@ to the string module is global in {{{doit2}}}. Here's a Python interpreter
 session run using Python 2.3 and the new {{{timeit}}} module, which shows how
 much faster the second is than the first:
 
-{{{
+{{{#!python numbers=disable
 >>> def doit1():
 ... import string
 ... string.lower('Python')
@@ -405,7 +407,7 @@ much faster the second is than the first:
 String methods were introduced to the language in Python 2.0. These
 provide a version that avoids the import completely and runs even faster:
 
-{{{
+{{{#!python numbers=disable
 def doit3():
     'Python'.lower()
 
@@ -415,7 +417,7 @@ for num in range(100000):
 
 Here's the proof from {{{timeit}}}:
 
-{{{
+{{{#!python numbers=disable
 >>> def doit3():
 ... 'Python'.lower()
 ...
@@ -439,7 +441,7 @@ To see what modules are loaded in the system look in {{{sys.modules}}}.
 
 A good way to do lazy imports is:
 
-{{{
+{{{#!python numbers=disable
 email = None
 
 def parse_email():
@@ -459,7 +461,7 @@ with the execution speed of a builtin function. This strongly suggests
 that where appropriate, functions should handle data aggregates. Here's
 a contrived example written in Python.
 
-{{{
+{{{#!python numbers=disable
 import time
 x = 0
 def doit1(i):
@@ -476,7 +478,7 @@ print "%.3f" % (time.time()-t)
 
 vs.
 
-{{{
+{{{#!python numbers=disable
 import time
 x = 0
 def doit2(list):
@@ -492,7 +494,7 @@ print "%.3f" % (time.time()-t)
 
 Here's the proof in the pudding using an interactive session:
 
-{{{
+{{{#!python numbers=disable
 >>> t = time.time()
 >>> for i in list:
 ... doit1(i)
@@ -543,7 +545,7 @@ example serves to demonstrate:
 
 Now consider the similar C programs (only the add version is shown):
 
-{{{
+{{{#!cplusplus numbers=disable
 #include <stdio.h>
 
 int
@@ -596,7 +598,7 @@ while (<>) {
 
 into Python code that looks something like
 
-{{{
+{{{#!python numbers=disable
 import fileinput
 
 for line in fileinput.input():
@@ -609,15 +611,17 @@ some things and faster for others. Relative performance also often
 depends on your experience with the two languages.
 
 == Use xrange instead of range ==
- Note: This section no longer applies if you're using python 3.0, where I think range now
- uses xrange's functionality, but now also working with values of arbitrary size.
- xrange no longer exists.
+
+{{{#!wiki tip
+
+This section no longer applies if you're using Python 3, where `range` now provides an iterator over ranges of arbitrary size, and where `xrange` no longer exists.
+}}}
 
 Python has two ways to get a range of numbers: {{{range}}} and {{{xrange}}}. Most people know about {{{range}}}, because of its obvious name. {{{xrange}}}, being way down near the end of the alphabet, is much less well-known.
 
 {{{xrange}}} is a generator object, basically equivalent to the following Python 2.3 code:
 
-{{{
+{{{#!python numbers=disable
 def xrange(start, stop=None, step=1):
     if stop is None:
         stop = start
@@ -640,7 +644,7 @@ It does, however, save gobs of memory, and unless you store the yielded objects 
 
 {{{xrange}}}, on the other hand, creates ''no'' numbers immediately - only the range object itself. Number objects are created only when you pull on the generator, e.g. by looping through it. For example:
 
-{{{
+{{{#!python numbers=disable
 xrange(sys.maxint) # No loop, and no call to .next, so no numbers are instantiated
 }}}
 
@@ -649,8 +653,10 @@ And for this reason, the code runs instantly. If you substitute {{{range}}} ther
 In Python versions before 2.2, {{{xrange}}} objects also supported optimizations such as fast membership testing ({{{i in xrange(n)}}}). These features were removed in 2.2 due to lack of use.
 
 == Re-map Functions at runtime ==
+
 Say you have a function
-{{{
+
+{{{#!python numbers=disable
  class Test:
    def check(self,a,b,c):
      if(a):
@@ -667,11 +673,11 @@ Say you have a function
  profile.run("example()")
 }}}
 
-And suppose this function gets called from somewhere else many times
+And suppose this function gets called from somewhere else many times.
 
 Well, your check will have an if statement slowing you down all the time except the first time, so you can do this:
 
-{{{
+{{{#!python numbers=disable
  class Test2:
    def check(self,a,b,c):
      self.str = b*100
@@ -690,6 +696,7 @@ Well, your check will have an if statement slowing you down all the time except 
 
 Well, this example is fairly inadequate, but if the 'if' statement is a pretty complicated expression (or something with lots of dots), you can save yourself evaluating it, if you know it will only be true the first time.
 
+<<Anchor(Profiling)>>
 == Profiling Code ==
 
 The first step to speeding up your program is learning where the
@@ -710,7 +717,7 @@ your main function is called {{{main}}}, takes no arguments and you want to
 execute it under the control of the profile module. In its simplest form you
 just execute
 
-{{{
+{{{#!python numbers=disable
 import profile
 profile.run('main()')
 }}}
@@ -721,6 +728,9 @@ class included with the module. In Python 2.4 profile will allow the
 time consumed by Python builtins and functions in extension modules to be
 profiled as well.
 
+A slightly longer description of profiling using the `profile` and `pstats` modules can be found here (archived version):
+
+http://web.archive.org/web/20060506162444/http://wingware.com/doc/howtos/performance-profiling-python-code 
 
 === Hotshot Module ===
 
