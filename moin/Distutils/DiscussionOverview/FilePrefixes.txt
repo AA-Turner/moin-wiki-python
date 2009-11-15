@@ -1,0 +1,117 @@
+= Rationale =
+
+It is not possible to retrieve the installation paths of data, or other, files for all installation 
+schemes supported by distutils right now. I propose the inclusion of a PREFIX file within the 
+.egg-info directory that holds information on all prefixes set at installation time and a 
+suitable API within pkgutil.
+
+= Proposal=
+
+== PREFIX ==
+
+The RECORD file is a CSV file, composed of records, one line per prefix. The csv module is used to read the 
+file, with these options:
+
+ * field delimiter : `,`
+ * quoting char : `"`
+ * line terminator : `os.linesep` (so `\r\n` or `\n`)
+
+Each record is composed of two elements:
+
+  * '''prefix identifier'''
+
+    Prefix identifiers differentiate between the various prefixes used within the installation process. 
+    Valid identifiers must adhere to the regular expression `^$[a-z_]+`, i.e a `$` followed by any 
+    combination of lowercase ASCII characters and the underscore.
+
+  * '''path'''
+
+    The full path for the prefix identifier for this distribution. A `/` seperated path will be used 
+    regardless of the target system. All paths except those for `$base` and `$platbase` are relative to
+    those two as detailed below.
+
+=== Identifiers ===
+
+The list of standard identifiers comprises:
+
+  * `$base` - Base prefix
+  * `$platbase` - Platform specific base prefix
+  * `$purelib` - Pure Python distribution
+  * `$platlib` - Non-pure Python distribution (i.e one with extensions)
+  * `$scripts` - Executable Python scripts
+  * `$data` -  Data files
+
+=== Example ===
+
+Standard scheme installation on posix:
+
+{{{
+$base,/usr
+$platbase,/usr
+$purelib,lib/pythonX.Y/site-packages
+$platlib,lib/pythonX.Y/site-packages
+$scripts,bin
+$data,share
+}}}
+
+User scheme installation on posix:
+
+{{{
+$base,/home/sirrobin/.local
+$platbase,/home/sirrobin/.local
+$purelib,lib/pythonX.Y/site-packages
+$platlib,lib/pythonX.Y/site-packages
+$scripts,bin
+$data,share
+}}}
+
+=== Default values ===
+
+Tables summarising the default values on different operating systems:
+
+==== posix ====
+
+|| '''Prefix identifier''' || '''Default value: Standard scheme''' || '''Default value: User scheme''' || '''Environment variable''' || '''Command line option''' ||
+|| `$base` || `sys.prefix` || `~/.local` || `$PYDIST_BASE` || `--prefix` ||
+|| `$platbase` || `sys.exec_prefix` || `~/.local` || `$PYDIST_PLATBASE` || `--exec-prefix` ||
+|| `$purelib` || `$base/lib/pythonX.Y/site-packages` || `$base/lib/pythonX.Y/site-packages` || `$PYDIST_PURELIB` || `--install-purelib` ||
+|| `$platlib` || `$platbase/lib/pythonX.Y/site-packages` || `$platbase/lib/pythonX.Y/site-packages` || `$PYDIST_PLATLIB` || `--install-platlib` ||
+|| `$scripts` || `$base/bin` || `$base/bin` || `$PYDIST_SCRIPTS` || `--install-scripts` ||
+|| `$data` || `$base/share` || `$base/share` || `$PYDIST_DATA` || `--install-data` ||
+
+==== nt ====
+
+|| '''Prefix identifier''' || '''Default value: Standard scheme''' || '''Default value: User scheme''' || '''Environment variable''' || '''Command line option''' ||
+|| `$base` || `sys.prefix` || `os.environ.get('%APPDATA%')` || `$PYDIST_BASE` || `--prefix` ||
+|| `$platbase` || `sys.exec_prefix` || `os.environ.get('%APPDATA%')` || `$PYDIST_PLATBASE` || `--exec-prefix` ||
+|| `$purelib` || `$base/Python` || `$base/Python/PythonXY/site-packages` || `$PYDIST_PURELIB` || `--install-purelib` ||
+|| `$platlib` || `$platbase/Python` || `$platbase/Python/PythonXY/site-packages` || `$PYDIST_PLATLIB` || `--install-platlib` ||
+|| `$scripts` || `$base/Scripts` || `$base/Python/Scripts` || `$PYDIST_SCRIPTS` || `--install-scripts` ||
+|| `$data` || `$base/Data` || `$base/Python/Python26` || `$PYDIST_DATA` || `--install-data` ||
+
+==== mac ====
+
+==== os2 ====
+
+==== ce ====
+
+==== java ====
+
+==== riscos ====
+
+== API ==
+
+The Distribution class will get the following new methods:
+
+ * `get_prefixes()` returns a dictionary with prefix identifiers as keys and local absolute paths as values
+
+Usage example:
+
+{{{
+>>> prefixes = pkgutil.get_distribution('foo').get_prefixes()
+>>> prefixes['$base']
+'/usr'
+>>> prefixes[$data']
+'/usr/share'
+>>> data_file = open(os.path.join(prefixes['$data'], 'foo', 'beautifulpicture.jpg'))
+}}}
