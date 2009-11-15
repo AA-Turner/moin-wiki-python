@@ -36,7 +36,7 @@ schemes supported by distutils right now. I propose the inclusion of a PREFIX fi
 .egg-info directory that holds information on all prefixes set at installation time and a suitable
 API within pkgutil.
 
-  -- Wolodja Wentland
+ -- Wolodja Wentland
 
 '''Discussion''':  [[Distutils/DiscussionOverview/FilePrefixes]]
 
@@ -61,9 +61,9 @@ a distribution like configuration files, examples, shared data files, ...
 
 == Change the default installation scheme ==
 
-Distribute packaged distributions get installed into the system paths, that are typically under
-the aegis of the system's package manager. I propose to change the default installation scheme
-to the (PEP 370) `--user` one.
+Distribute packaged distributions get installed into paths that are typically under the aegis 
+of the system's package manager. I propose to change the default installation scheme to 
+the (PEP 370) `--user` one.
 
   -- Wolodja Wentland
 
@@ -72,3 +72,17 @@ to the (PEP 370) `--user` one.
 '''Status''': Under Consideration
 
 '''Affected PEPs''': None
+
+== User defined prefix identifiers ==
+
+It could be advantageous to provide a method to define arbitrary installation prefixes. This
+would enable users to split a package into `foo` and `foo-plugin` while still being able to
+install the data files shipped with `foo-plugin` into the correct location.
+
+  -- Wolodja Wentland
+
+'''Discussion''':  [[Distutils/DiscussionOverview/UserPrefixes]]
+
+'''Status''': Under Consideration
+
+'''Affected PEPs''': 376
