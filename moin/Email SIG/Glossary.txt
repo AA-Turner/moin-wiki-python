@@ -9,6 +9,35 @@ are deprecated as incorrect or ambiguous, and why.
 
 NOTE: this is a proposed draft, not a final document!
 
+**charset**
+    The term used in the email RFCs for the identifier that specifies
+    how to interpret a set of bytes so as to reconstruct the text
+    characters of the original content.  'charset' is also the keyword
+    used in MIME headers when specifying a charset.  What the RFCs refer
+    to as a charset is more generally called a `character encoding`_.
+    Python documentation generally shortens this to simply "encoding".
+    This unfortunately conflicts with the email RFCs use of the term
+    "encoding"; see the "encoding" entry for more.
+
+    The charset identifiers used in (among other things) MIME are listed
+    in a `special document`_ on the IANA web site.
+
+    .. _character encoding: http://en.wikipedia.org/wiki/Character_encoding
+
+    .. _special document: http://www.iana.org/assignments/character-sets
+
+**conformant**
+    Conforming to a particular specification or standard.  The Internet
+    RFCs use this term to refer to implementations and data that
+    conform to the requirements of the RFC.
+
+**encoding**
+    In Python documentation, this is short for `character encoding`_.
+    In the email RFCs, encoding is short for "transfer encoding", and
+    refers to the way in which arbitrary bytes are encoded into US-ASCII
+    so as to produce an RFC conformant byte stream.  The RFC defined
+    encodings are "quoted printable" and "base64".
+
 **idempotent**
     A property of certain operations in computer science and
     mathematics.  An operation is idempotent if multiple applications
@@ -30,11 +59,6 @@ NOTE: this is a proposed draft, not a final document!
     to break invertibility.  Note that invertibility is a stronger
     requirement on an operation than idempotence, but it applies only
     when an inverse operation exists.
-
-**conformant**
-    Conforming to a particular specification or standard.  The Internet
-    RFCs use this term to refer to implementations and data that
-    conform to the requirements of the RFC.
 
 **raw data**
     Data in the form it enters the email module parser, or exits the
