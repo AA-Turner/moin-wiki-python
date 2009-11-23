@@ -444,10 +444,7 @@ VER_DEP_RE = re.compile(r'(?P<cmp><|<=|!=|==|>=|>)\s*(?P<ver>[-a-z0-9. ]+)')
 
 def _parse(ver_deps):
     chunks = DEP_SPLIT_RE.split(ver_deps)
-    ret = []
-    for chunk in chunks:
-        ret.append(VER_DEP_RE.match(chunk).groupdict())
-    return ret
+    return [VER_DEP_RE.match(chunk).groupdict() for chunk in chunks]
 
 def is_installed(appname, ver_deps, additional_paths=None):
     if additional_paths:
