@@ -21,14 +21,17 @@ Each record is composed of two elements:
   * '''prefix identifier'''
 
     Prefix identifiers differentiate between the various prefixes used within the installation process. 
-    Valid identifiers must adhere to the regular expression `^$[a-z_]+`, i.e a `$` followed by any 
-    combination of lowercase ASCII characters and the underscore.
+    Valid identifiers must adhere to the regular expression `^[a-z_]+`, i.e any combination of lowercase 
+    ASCII characters and the underscore.
 
   * '''path'''
 
-    The full path for the prefix identifier for this distribution. A `/` seperated path will be used 
-    regardless of the target system. All paths except those for `$base` and `$platbase` are relative to
-    those two as detailed below.
+    The path for the prefix identifier for this distribution. 
+
+    A `/` seperated path will be used regardless of the target system. The path definition can be 
+    either absolute or prefixed with one of the identifiers defined below. An absolute path is only 
+    used if the installation location is not relative to sys.prefix ($base) or sys.exec_prefix 
+    ($platbase).
 
 === Identifiers ===
 
@@ -63,6 +66,17 @@ purelib,$base/lib/pythonX.Y/site-packages
 platlib,$platbase/lib/pythonX.Y/site-packages
 scripts,$base/bin
 data,share
+}}}
+
+Custom installation scheme:
+
+{{{
+base,/home/sirrobin/.local
+platbase,/home/sirrobin/.local
+purelib,$base/lib/pythonX.Y/site-packages
+platlib,$platbase/lib/pythonX.Y/site-packages
+scripts,/usr/local/bin
+data,/usr/local/share/
 }}}
 
 === Default values ===
@@ -101,22 +115,17 @@ Tables summarising the default values on different operating systems:
 
 == API ==
 
-The Distribution class will get the following new methods:
+The Distribution class will get a new attribute `prefixes` which holds a dictionary
+mapping prefix identifiers to their absolute paths.
 
- * `get_prefixes()` returns a dictionary with prefix identifiers as keys and local absolute paths as values
- * `get_prefix(identifier)` returns the local absolute path for prefix with given identifier
 Usage example:
 
 {{{
->>> prefixes = pkgutil.get_distribution('foo').get_prefixes()
->>> prefixes['$base']
-'/usr'
->>> prefixes[$data']
-'/usr/share'
->>> ni_wish = open(os.path.join(prefixes['$data'], 'foo', 'shrubbery.jpg'))
-
 >>> foo_dist = pkgutil.get_distribution('foo')
->>> foo_dist.get_prefix('$base')
+>>> foo_dist.prefixes['$base']
 '/usr'
->>> unladen = open(os.path.join(foo_dist.get_prefix('$data'), 'foo', 'european.swallow'))
+>>> foo_dist.prefixes['$data']
+'/usr/share'
+>>> ni_wish = open(os.path.join(foo_dist.prefixes.get('$data'), 'foo', 'shrubbery.jpg'))
+>>> unladen = open(os.path.join(foo_dist.prefixes['$data'], 'foo', 'european.swallow'))
 }}}
