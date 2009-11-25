@@ -1409,11 +1409,11 @@ for my $family ( sort { @{$HoL{$b}} <=> @{$HoL{$a}} } keys %HoL ) {
 {{{
 HoL['simpsons'] += ['Lisa']
 
-def cmpNumberMembers(a,b):
-  return cmp(len(a[1]), len(b[1]))
+def keyNumberMembers(x):
+  return len(x[1])
 
 families = HoL.items()
-families.sort(cmpNumberMembers)
+families.sort(key=keyNumberMembers)
 for surname, members in families:
     print "%s:" % surname, " ".join(members)
 }}}
@@ -1423,7 +1423,7 @@ it very readable:
 {{{
 HoL['simpsons'] += ['Lisa']
 families = HoL.items()
-families.sort(lambda a, b: cmp(len(a[1]), len(b[1])))
+families.sort(key=lambda x: len(x[1]))
 for surname, members in k:
     print "%s:" % surname, " ".join(members))
 }}}
@@ -1447,7 +1447,7 @@ for my $family ( sort { @{$HoL{$b}} <=> @{$HoL{$a}} } keys %HoL ) {
 {{{
 
 families = HoL.items()
-families.sort(lambda a, b: cmp(len(a[1]), len(b[1])))
+families.sort(key=lambda x: len(x[1]))
 for surname, members in families:
     members.sort()
     print "%s: %s" % (family, ", ".join(members))
