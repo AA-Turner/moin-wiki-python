@@ -325,6 +325,44 @@ print "\n".join(". "*q + "Q " + ". "*(BOARD_SIZE-q-1) for q in queens)
 
 }}}
 
+    ------ 33 lines: "Guess the Number" Game from http://inventwithpython.com
+{{{#!python
+import random
+
+guessesTaken = 0
+
+print 'Hello! What is your name?'
+myName = raw_input()
+
+number = random.randint(1, 20)
+print 'Well, ' + myName + ', I am thinking of a number between 1 and 20.'
+
+while guessesTaken < 6:
+    print 'Take a guess.'
+    guess = raw_input()
+    guess = int(guess)
+
+    guessesTaken = guessesTaken + 1
+
+    if guess < number:
+        print 'Your guess is too low.'
+
+    if guess > number:
+        print 'Your guess is too high.'
+
+    if guess == number:
+        break
+
+if guess == number:
+    guessesTaken = str(guessesTaken)
+    print 'Good job, ' + myName + '! You guessed my number in ' + guessesTaken + ' guesses!'
+
+if guess != number:
+    number = str(number)
+    print 'Nope. The number I was thinking of was ' + number
+
+}}}
+
     ------
 
 Hi, I started this page in May 2007, and I provided the first 10+ or so examples (which may have changed since then).  -- SteveHowell
