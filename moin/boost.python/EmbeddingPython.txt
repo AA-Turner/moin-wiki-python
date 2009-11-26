@@ -1,3 +1,7 @@
+<<TableOfContents>>
+
+= Full example =
+
 While Boost.Python does not provide all the constructs necessary for embedding Python in a C++ application, using it will still dramatically help with the task.
 
 '''Note: ''' Because there is very little documentation on a lot of this, I am not entirely sure that the methods I am describing are the best to accomplish the task. If there is a better way, please write it up here.
@@ -82,3 +86,34 @@ Scripts are now able to access the `cpp` instance of `CppClass` from the `CppMod
 While this is certainly not complete, hopefully it will provide a starting point for using Boost.Python to embed Python scripts in your applications.
 
 --Thomas Stephens <spiralman at gmail.com>
+
+= Tips and Tricks =
+
+== Loading a module by full or relative path ==
+
+The main benefit of this approach is that you don't need to worry about escaping strings.
+
+{{{
+boost::python::object
+myapp::python::import( const myapp::Path & s )
+{
+  using namespace boost::python;
+  try
+  {
+    // If path is /Users/whatever/blah/foo.py
+    dict locals;
+    locals["modulename"] = s.filebase(); // foo -> module name
+    locals["path"]   = s.get(); // /Users/whatever/blah/foo.py
+    exec("import imp\n"
+         "newmodule = imp.load_module(modulename,open(path),path,('py','U',imp.PY_SOURCE))\n",
+         globals(),locals);
+    return locals["newmodule"];
+  }
+  catch( error_already_set )
+  {
+    error(currentException());
+    return object();
+  }
+}
+
+}}}
