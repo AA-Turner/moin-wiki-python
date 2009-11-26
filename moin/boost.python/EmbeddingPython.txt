@@ -117,3 +117,32 @@ myapp::python::import( const myapp::Path & s )
 }
 
 }}}
+
+== Extracting Python exceptions ==
+
+{{{#!cplusplus
+myapp::String
+myapp::python::currentException()
+{
+  using namespace boost::python;
+  namespace py = boost::python;
+
+  PyObject *exc,*val,*tb;
+  PyErr_Fetch(&exc,&val,&tb);
+  handle<> hexc(exc),hval(val),htb(tb);
+  if(!htb || !hval)
+  {
+    MYAPP_ASSERT_BUG(hexc);
+    return extract<myapp::String>(str(hexc));
+  }
+  else
+  {
+    object traceback(py::import("traceback"));
+    object format_exception(traceback.attr("format_exception"));
+    object formatted_list(format_exception(hexc,hval,htb));    
+    object formatted(str("\n").join(formatted_list));
+    return extract<myapp::String>(formatted);
+  }
+}
+
+}}}
