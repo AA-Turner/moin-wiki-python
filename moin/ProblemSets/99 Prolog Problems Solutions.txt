@@ -119,7 +119,7 @@ If you're not allowed to dismantle the input argument, you can take a preliminar
 {{{
     def encode_direct(alist):
         def aux(k, g):
-            l = sum(1 for x in g)
+            l = len(list(g))
             if l>1: return [l, k]
             else: return k
         return [aux(key, group) for key, group in groupby(alist)]
