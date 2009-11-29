@@ -1093,17 +1093,17 @@ class StateVar(object):
 
         LeaveState and EnterState functions are called as needed when state transitions.
         '''
-        if not (self.next_state is self._current_state):
-            if (hasattr(self._current_state, "leave")):
+        if self.next_state is not self._current_state:
+            if hasattr(self._current_state, "leave"):
                 leave = self._current_state.leave
                 leave(owner)
-            elif (hasattr(self, "leave")):
+            elif hasattr(self, "leave"):
                  self.leave(owner)
             self._current_state =  self.next_state
-            if (hasattr(self._current_state, "enter")):
+            if hasattr(self._current_state, "enter"):
                 enter = self._current_state.enter
                 enter(owner)
-            elif (hasattr(self, "enter")):
+            elif hasattr(self, "enter"):
                 self.enter(owner)
 
     def __fctn(self, func_name):
@@ -1170,10 +1170,10 @@ class StateTable(object):
         Multiple state machines within a parent class. Call this method for each
         '''
         statevar= StateVar(self._initial_state)
-        parent.__dict__[self.machine_var] =statevar
-        if (hasattr(self, "enter")):
+        setattr(parent, self.machine_var, statevar)
+        if hasattr(self, "enter"):
             statevar.enter = self.enter
-        if (hasattr(self, "leave")):
+        if hasattr(self, "leave"):
             statevar.leave = self.leave
         #Magic happens here - in the 'next state' table, translate names into state objects.
         if  self.need_initialize:
@@ -1187,7 +1187,7 @@ class StateTable(object):
         are called for corresponding events. name is the name of the state.
         '''
         state_table_row = STState(name)
-        if (len(event_hdlr_list) != len(self._event_list)):
+        if len(event_hdlr_list) != len(self._event_list):
             raise StateMachineError('Mismatch between number of event handlers and the methods specified for the state.')
 
         state_table_row.set_events(self._event_list, event_hdlr_list, None)
@@ -1199,9 +1199,9 @@ class StateTable(object):
 
     def state(self, name, event_hdlr_list, next_states):
         state_table_row = STState(name)
-        if (len(event_hdlr_list) != len(self._event_list)):
+        if len(event_hdlr_list) != len(self._event_list):
             raise StateMachineError('Mismatch between number of event handlers and the methods specified for the state.')
-        if ((not next_states is None) and len(next_states) != len(self._event_list)):
+        if next_states is not None and len(next_states) != len(self._event_list):
             raise StateMachineError('Mismatch between number of event handlers and the next states specified for the state.')
         
         state_table_row.set_events(self._event_list, event_hdlr_list, next_states)
@@ -1226,9 +1226,9 @@ def event_handler(state_class):
     def wrapper(func):
         state_class._StateTable__add_ev_hdlr(func.__name__)
         def obj_call(self, *args, **keywords):
-            state_var = self.__dict__[state_class.machine_var]
+            state_var = getattr(self, state_class.machine_var)
             funky, next_state = state_var._StateVar__fctn(func.__name__)
-            if not next_state is None:
+            if next_state is not None:
                 state_var.next_state = next_state
             rv = funky(self, *args, **keywords)
             state_var._StateVar__to_next_state(self)
@@ -1354,7 +1354,7 @@ class DecoTraceWithArgs(object):
             kw.update(self.dec_kw)
 
             # Does this wrap a class instance?
-            if (fargs and getattr(fargs[0], '__class__', None)):
+            if fargs and getattr(fargs[0], '__class__', None):
 
                 # pull out the instance and combine function and
                 # decorator args
