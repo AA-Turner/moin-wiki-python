@@ -8,7 +8,6 @@ from pprint import pprint
 from appscript import *
 from Carbon.File import FSSpec
 import codecs
-from sets import Set
 
 DBPATH = '/Users/SOMEUSER/Desktop/Library.fp7'
 DBNAME = 'Library'
@@ -93,7 +92,7 @@ if qry3.exists():
 	pprint(zip(qry3.fields['title'].get(), qry3.fields['author'].get()))
 
 print "\nselect distinct author from library:"
-pprint(Set(t1.fields['author'].get())) # [XXX]
+pprint(set(t1.fields['author'].get())) # [XXX]
 
 # show "List" layout with the records from qry3, sorted by authors
 
