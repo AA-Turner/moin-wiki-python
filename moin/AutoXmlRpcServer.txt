@@ -74,7 +74,6 @@ value is None.
 
 import time
 import os
-import sets
 import imp
 import types
 
@@ -89,7 +88,7 @@ def find_modules(path="."):
     ".pyc" are considered to be modules. The extension is not included
     in the returned list.
     """
-    modules = sets.Set()
+    modules = set()
     for filename in os.listdir(path):
         module = None
         if filename.endswith(".py"):
