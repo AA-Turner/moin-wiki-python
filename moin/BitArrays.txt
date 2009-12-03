@@ -42,8 +42,10 @@ def makeBitArray(bitSize, fill = 0):
     else:
         fill = 0                                      # all bits cleared
 
-    bitArray = array.array('I', fill) * intSize       # 'I' = unsigned
-                                                      #   32-bit integer
+    bitArray = array.array('I')          # 'I' = unsigned 32-bit integer
+
+    bitArray.extend((fill,) * intSize)
+
     return(bitArray)
 
 # testBit() returns a nonzero result, 2**offset, if the bit at 'bit_num' is set to 1.
