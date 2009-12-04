@@ -18,11 +18,10 @@ cbrt(x) = x^{1/3},  if x >= 0
         = -|x|^{1/3},  if x < 0
 """
 def cbrt(x):
-    from math import pow
     if x >= 0:
-        return pow(x, 1.0/3.0)
+        return x ** (1.0/3.0)
     else:
-        return -pow(abs(x), 1.0/3.0)
+        return - abs(x) ** (1.0/3.0)
 
 
 """
@@ -30,25 +29,25 @@ Convert from polar (r,w) to rectangular (x,y)
     x = r cos(w)
     y = r sin(w)
 """
-def rect(r, w, deg=0):          # radian if deg=0; degree if deg=1
-    from math import cos, sin, pi
+def rect(r, w, deg=False):          # radian if deg=False; degree if deg=True
+    from math import cos, sin, radians
     if deg:
-        w = pi * w / 180.0
+        w = radians(w)
     return r * cos(w), r * sin(w)
 """
 Convert from rectangular (x,y) to polar (r,w)
     r = sqrt(x^2 + y^2)
     w = arctan(y/x) = [-\pi,\pi] = [-180,180]
 """
-def polar(x, y, deg=0):         # radian if deg=0; degree if deg=1
-    from math import hypot, atan2, pi
+def polar(x, y, deg=False):         # radian if deg=False; degree if deg=True
+    from math import hypot, atan2, degrees
     if deg:
-        return hypot(x, y), 180.0 * atan2(y, x) / pi
+        return hypot(x, y), degrees(atan2(y, x))
     else:
         return hypot(x, y), atan2(y, x)
 
-   Normally, rect() and polar() uses radian for angle; but, if deg=1
-   specified (any non-zero will do), degree is used instead.
+   Normally, rect() and polar() uses radian for angle; but, if deg=True
+   specified, degree is used instead.
 
 """
 p(x) = polyeval(a, x)
@@ -57,10 +56,8 @@ p(x) = polyeval(a, x)
 """
 def polyeval(a, x):
     p = 0
-    a.reverse()
-    for coef in a:
+    for coef in a[::-1]:
         p = p * x + coef
-    a.reverse()
     return p
 
 
@@ -71,9 +68,7 @@ where
     b[i] = (i+1)a[i+1]
 """
 def polyderiv(a):
-    b = []
-    for i in range(1, len(a)):
-        b.append(i * a[i])
+    b = [i * a[i] for i in range(1, len(a))]
     return b
 
 
@@ -136,7 +131,7 @@ def cubic(a, b, c, d=None):
     t = a / 3.0
     p, q = b - 3 * t**2, c - b * t + 2 * t**3
     u, v = quadratic(q, -(p/3.0)**3)
-    if type(u) == type(0j):     # complex cubic root
+    if type(u) is complex:     # complex cubic root
         r, w = polar(u.real, u.imag)
         y1 = 2 * cbrt(r) * cos(w / 3.0)
     else:                       # real root
@@ -158,12 +153,12 @@ compromise between
 def newton(func, funcd, x, TOL=1e-6):   # f(x)=func(x), f'(x)=funcd(x)
     f, fd = func(x), funcd(x)
     count = 0
-    while 1:
+    while True:
         dx = f / float(fd)
         if abs(dx) < TOL * (1 + abs(x)): return x - dx
-        x = x - dx
+        x -= dx
         f, fd = func(x), funcd(x)
-        count = count + 1
+        count += 1
         print "newton(%d): x=%s, f(x)=%s" % (count, x, f)
 
 
@@ -175,16 +170,16 @@ where oldx = x[i-1] and x = x[i].
 """
 def secant(func, oldx, x, TOL=1e-6):    # f(x)=func(x)
     oldf, f = func(oldx), func(x)
-    if (abs(f) > abs(oldf)):            # swap so that f(x) is closer to 0
+    if abs(f) > abs(oldf):            # swap so that f(x) is closer to 0
         oldx, x = x, oldx
         oldf, f = f, oldf
     count = 0
-    while 1:
+    while True:
         dx = f * (x - oldx) / float(f - oldf)
         if abs(dx) < TOL * (1 + abs(x)): return x - dx
         oldx, x = x, x - dx
         oldf, f = f, func(x)
-        count = count + 1
+        count += 1
         print "secant(%d): x=%s, f(x)=%s" % (count, x, f)
 
 
@@ -217,18 +212,18 @@ def closedpoints(func, a, b, TOL=1e-6):         # f(x)=func(x)
     h = b - a
     old2 = old = h * (func(a) + func(b)) / 2.0
     count = 0
-    while 1:
-        h = h / 2.0
+    while True:
+        h /= 2.0
         x, sum = a + h, 0
         while x < b:
-            sum = sum + func(x)
-            x = x + 2 * h
+            sum += func(x)
+            x += 2 * h
         new = old / 2.0 + h * sum
         new2 = (4 * new - old) / 3.0
         if abs(new2 - old2) < TOL * (1 + abs(old2)): return new2
         old = new       # Trapezoid
         old2 = new2     # Simpson
-        count = count + 1
+        count += 1
         print 'closedpoints(%d): Trapezoid=%s, Simpson=%s' % (count, new, new2)
 
 
@@ -261,18 +256,18 @@ def openpoints(func, a, b, TOL=1e-6):           # f(x)=func(x)
     h = b - a
     old2 = old = h * func((a + b) / 2.0)
     count = 0
-    while 1:
-        h = h / 3.0
+    while True:
+        h /= 3.0
         x, sum = a + 0.5 * h, 0
         while x < b:
-            sum = sum + func(x) + func(x + 2 * h)
-            x = x + 3 * h
+            sum += func(x) + func(x + 2 * h)
+            x += 3 * h
         new = old / 3.0 + h * sum
         new2 = (9 * new - old) / 8.0
         if abs(new2 - old2) < TOL * (1 + abs(old2)): return new2
         old = new       # Trapezoid
         old2 = new2     # Simpson
-        count = count + 1
+        count += 1
         print 'openpoints(%d): Trapezoid=%s, Simpson=%s' % (count, new, new2)
 
 
@@ -280,8 +275,8 @@ def openpoints(func, a, b, TOL=1e-6):           # f(x)=func(x)
 Find 2^n that is equal to or greater than.
 """
 def nextpow2(i):
-    n = 2
-    while n < i: n = n * 2
+    n = 1
+    while n < i: n *= 2
     return n
 
    This is internal function used by fft(), because the FFT routine
@@ -298,9 +293,10 @@ def bitrev(x):
     for i in range(N):
         k, b, a = 0, N>>1, 1
         while b >= a:
-            if b & i: k = k | a
-            if a & i: k = k | b
-            b, a = b>>1, a<<1
+            if b & i: k |= a
+            if a & i: k |= b
+            b >>= 1
+            a <<= 1
         if i < k:               # important not to swap back
             x[i], x[k] = x[k], x[i]
     return x
@@ -330,9 +326,9 @@ as whole, when m = N.
 """
 def fft(x, sign=-1):
     from cmath import pi, exp
-    N, W = len(x), []
-    for i in range(N):          # exp(-j...) is default
-        W.append(exp(sign * 2j * pi * i / N))
+    N = len(x)
+    W = [exp(sign * 2j * pi * i / N)
+          for i in range(N)]          # exp(-j...) is default
     x = bitrev(x)
     m = 2
     while m <= N:
@@ -341,7 +337,7 @@ def fft(x, sign=-1):
                 n = i * N / m
                 a, b = s + i, s + i + m/2
                 x[a], x[b] = x[a] + W[n % N] * x[b], x[a] - W[n % N] * x[b]
-        m = m * 2
+        m *= 2
     return x
 """
 Inverse FFT with normalization by N, so that x == ifft(fft(x)) within
@@ -350,7 +346,7 @@ round-off errors.
 def ifft(X):
     N, x = len(X), fft(X, sign=1)       # e^{j2\pi/N}
     for i in range(N):
-        x[i] = x[i] / float(N)
+        x[i] /= float(N)
     return x
 
 
@@ -362,15 +358,11 @@ e^{j2\pi/N} is made by "sign=-1" or "sign=1" respectively.
 """
 def dft(x, sign=-1):
     from cmath import pi, exp
-    N, W = len(x), []
-    for i in range(N):          # exp(-j...) is default
-        W.append(exp(sign * 2j * pi * i / N))
-    X = []
-    for n in range(N):
-        sum = 0
-        for k in range(N):
-            sum = sum + W[n * k % N] * x[k]
-        X.append(sum)
+    N = len(x)
+    W = [exp(sign * 2j * pi * i / N)
+          for i in range(N)]          # exp(-j...) is default
+    X = [sum(W[n * k % N] * x[k] for k in range(N))
+          for n in range(N)]
     return X
 """
 Inverse DFT with normalization by N, so that x == idft(dft(x)) within
@@ -379,7 +371,7 @@ round-off errors.
 def idft(X):
     N, x = len(X), dft(X, sign=1)       # e^{j2\pi/N}
     for i in range(N):
-        x[i] = x[i] / float(N)
+        x[i] /= float(N)
     return x
 
 
@@ -393,10 +385,9 @@ def conv(x, y):
     P, Q, N = len(x), len(y), len(x)+len(y)-1
     z = []
     for k in range(N):
-        t, lower, upper = 0, max(0, k-(Q-1)), min(P-1, k)
-        for i in range(lower, upper+1):
-            t = t + x[i] * y[k-i]
-        z.append(t)
+        lower, upper = max(0, k-(Q-1)), min(P-1, k)
+        z.append(sum(x[i] * y[k-i]
+                      for i in range(lower, upper+1)))
     return z
 """
 Correlation of 2 causal signals, x(t<0) = y(t<0) = 0, using discrete
@@ -414,16 +405,14 @@ def corr(x, y):
     P, Q, N = len(x), len(y), len(x)+len(y)-1
     z1=[]
     for k in range(Q):
-        t, lower, upper = 0, 0, min(P-1, Q-1-k)
-        for i in range(lower, upper+1):
-            t = t + x[i] * y[i+k]
-        z1.append(t)            # 0, 1, 2, ..., Q-1
+        lower, upper = 0, min(P-1, Q-1-k)
+        z1.append(sum(x[i] * y[i+k]
+                       for i in range(lower, upper+1)))            # 0, 1, 2, ..., Q-1
     z2=[]
     for k in range(1,P):
-        t, lower, upper = 0, k, min(P-1, Q-1+k)
-        for i in range(lower, upper+1):
-            t = t + x[i] * y[i-k]
-        z2.append(t)            # N-1, N-2, ..., N-(P-2), N-(P-1)
+        lower, upper = k, min(P-1, Q-1+k)
+        z2.append(sum(x[i] * y[i-k]
+                       for i in range(lower, upper+1)))            # N-1, N-2, ..., N-(P-2), N-(P-1)
     z2.reverse()
     return z1 + z2
 
@@ -435,10 +424,8 @@ where x[] and y[] have been zero-padded to length N, such that N >=
 P+Q-1 and N = 2^n.
 """
 def fftconv(x, y):
-    N, X, Y, x_y = len(x), fft(x), fft(y), []
-    for i in range(N):
-        x_y.append(X[i] * Y[i])
-    return ifft(x_y)
+    X, Y = fft(x), fft(y)
+    return ifft([a * b for a,b in zip(X,Y)])
 """
 FFT correlation using relation
     Rxy <==> X'Y
@@ -446,10 +433,8 @@ where x[] and y[] have been zero-padded to length N, such that N >=
 P+Q-1 and N = 2^n.
 """
 def fftcorr(x, y):
-    N, X, Y, Rxy = len(x), fft(x), fft(y), []
-    for i in range(N):
-        Rxy.append(X[i].conjugate() * Y[i])
-    return ifft(Rxy)
+    X, Y = len(x), fft(x), fft(y)
+    return ifft([a.conjugate() * b for a,b in zip(X,Y)])
 
 
 """
@@ -457,10 +442,7 @@ vdot(x, y) = <x|y> = \sum_i x_i y_i
 """
 def vdot(x, y):
     if len(x) != len(y): raise ValueError, 'unequal length'
-    sum = 0
-    for a, b in map(None, x, y):
-        sum = sum + a * b
-    return sum
+    return sum(a * b for a, b in zip(x, y))
 
 
 """
@@ -472,10 +454,7 @@ Various vector norms of x[]:
 def vnorm(x, normtype=2):
     from math import sqrt
     if normtype == 1:           # ||x||1
-        sum = 0
-        for a in x:
-            sum = sum + abs(a)
-        return sum
+        return sum(abs(a) for a in x)
     elif normtype == 2:         # ||x||2 is default
         return sqrt(vdot(x, x))
     elif normtype == 'oo':      # ||x||oo
@@ -491,13 +470,9 @@ Calculate mean and standard deviation of data x[]:
 """
 def meanstdv(x):
     from math import sqrt
-    n, mean, std = len(x), 0, 0
-    for a in x:
-        mean = mean + a
-    mean = mean / float(n)
-    for a in x:
-        std = std + (a - mean)**2
-    std = sqrt(std / float(n-1))
+    n = len(x)
+    mean = sum(x) / float(n)
+    std = sqrt(sum((a - mean)**2 for a in x) / float(n-1))
     return mean, std
 
 
@@ -513,7 +488,7 @@ def getv(s=''):
     else:
         f = open(s, 'r')
     x = []
-    for a in f.readlines():
+    for a in f:
         a = a.strip()
         if a != '' and a[0] in '(+-.0123456789':
             x.append(eval(a))
@@ -530,7 +505,7 @@ def getv2(s=''):
     else:
         f = open(s, 'r')
     x, y = [], []
-    for a in f.readlines():
+    for a in f:
         a = a.strip()
         if a != '' and a[0] in '(+-.0123456789':
             b = a.split()
@@ -546,7 +521,7 @@ def printv(x, s=''):
     import sys
     out = ''
     for a in x:
-        out = out + `a` + '\n'
+        out += repr(a) + '\n'
     if s == '':
         sys.stdout.write(out)
     else:
@@ -581,19 +556,19 @@ def linreg(X, Y):
 
     N = len(X)
     Sx = Sy = Sxx = Syy = Sxy = 0.0
-    for x, y in map(None, X, Y):
-        Sx = Sx + x
-        Sy = Sy + y
-        Sxx = Sxx + x*x
-        Syy = Syy + y*y
-        Sxy = Sxy + x*y
+    for x, y in zip(X, Y):
+        Sx += x
+        Sy += y
+        Sxx += x*x
+        Syy += y*y
+        Sxy += x*y
     det = Sxx * N - Sx * Sx
     a, b = (Sxy * N - Sy * Sx)/det, (Sxx * Sy - Sx * Sxy)/det
 
     meanerror = residual = 0.0
-    for x, y in map(None, X, Y):
-        meanerror = meanerror + (y - Sy/N)**2
-        residual = residual + (y - a * x - b)**2
+    for x, y in zip(X, Y):
+        meanerror += (y - Sy/N)**2
+        residual += (y - a * x - b)**2
     RR = 1 - residual/meanerror
     ss = residual / (N-2)
     Var_a, Var_b = ss * N / det, ss * Sxx / det
