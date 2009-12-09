@@ -35,7 +35,8 @@ print remote_object.Introspect()
 }}}
 
 Output:
-{{{Introspection data:
+{{{
+Introspection data:
 
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
 "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
@@ -55,7 +56,8 @@ Output:
 }}}
 
 If you get any of the connection or object names wrong, the exceptions you get are very obscure.  For example, when I add an incorrect trailing slash to the object in the example above (making "/org/freedesktop/DBus/"), the exceptions are:
-{{{8223: arguments to dbus_message_new_method_call() were incorrect, assertion "_dbus_check_is_valid_path (path)" failed in file dbus-message.c line 797.
+{{{
+8223: arguments to dbus_message_new_method_call() were incorrect, assertion "_dbus_check_is_valid_path (path)" failed in file dbus-message.c line 797.
 This is normally a bug in some application using the D-BUS library.
 8223: arguments to dbus_message_set_destination() were incorrect, assertion "message != NULL" failed in file dbus-message.c line 2728.
 This is normally a bug in some application using the D-BUS library.
