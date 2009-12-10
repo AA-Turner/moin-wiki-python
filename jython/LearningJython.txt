@@ -871,7 +871,7 @@ extend the dictionary type or implement a custom dictionary type::
         }
         public PyObject __getitem__(PyObject key)
         {
-            if (super.has_key(key))
+            if (super.__contains__(key))
             {
                 PyObject value = super.__getitem__(key);
                 System.out.println("Found key \"" + key + "\" value: \"" +
@@ -940,7 +940,7 @@ Solution::
         {
             PyString pyname = new PyString(name);
             System.out.println("Finding attr for: \"" + name + "\"");
-            if (localdict.has_key(pyname)) {
+            if (localdict.__contains__(pyname)) {
                 return localdict.__getitem__(pyname);
             }
             else
@@ -995,7 +995,7 @@ Solution::
         {
             System.out.println("Getting item for: \"" + key + "\"");
             PyObject objkey = key;
-            if (super.has_key(objkey))
+            if (super.__contains__(objkey))
             {
                 PyObject value = super.__finditem__(objkey);
                 System.out.println(
