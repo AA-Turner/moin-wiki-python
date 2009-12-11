@@ -165,6 +165,13 @@ Python 3 supports binary literals (e.g. 0b10011000) and has a bin() function. Fo
 	return s
 }}}
 
+or better:
+
+{{{
+#!python
+def bin(a):
+    return str(s) if s<=1 else bin(s>>1) + str(s&1)
+}}}
 
 == Python Integers ==
 
