@@ -88,18 +88,16 @@ def qux(x -> list, y => file):
    * Instead: use `f(*args, **kw)`.
  * Remove `xrange()`. [[[#a|1]]] [[[#d|4]]]
    * Instead: use `range()`.
- * Remove `map()` and `filter()`.  [[[#a|1]]] [[[#d|4]]]
-   * Instead: use list comprehensions.
  * Remove `reduce()`. [[[#a|1]]]
-   * Instead: use a loop.
+   * Instead: use `functools.reduce()`.
  * Remove `callable()`. [[[#a|1]]]
-   * Instead: catch the exception.
+   * Instead: use `hasattr` to check for `__call__` attribute.
  * Remove `buffer()`. [[[#a|1]]] [[[#b|2]]]
    * Instead: use new `bytes` type. 
  * Remove `raw_input()`. [[[#a|1]]]
-   * Instead: use `sys.stdin.readline()`.
+   * Instead: use `input()`.
  * Remove `input()`. [[[#a|1]]]
-   * Instead: use `eval(sys.stdin.readline())`.
+   * Instead: use `eval(input())`.
  * Remove `execfile()` and `reload()`.  [[[#a|1]]]
    * Instead: use `exec()`.
  * Remove `basestring.find()` and `basestring.rfind()`. [[[#w|23]]]
@@ -120,7 +118,7 @@ def qux(x -> list, y => file):
 
 == Open Issues ==
 
- * `L += x` and `L.extend(x)` are equivalent.
+ * `L += x` and `L.extend(x)` are equivalent. ''No, they are not. The former creates a new list without modifying the original list (which other people might have references to). The latter modifies the original list.''
  * Can the parameter order of the `insert` method be changed so the the index parameter is optional and `list.append` may be removed?
  * If only `Exception` subclasses can be `raise`d  [[[#i|9]]], should the `raise` statement be kept?  Could `x(y).raise()` be used instead?
  * Are `repr()` and `str()` both needed? [[[#a|1]]]
