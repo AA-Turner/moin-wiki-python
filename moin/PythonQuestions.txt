@@ -99,7 +99,7 @@ I will be looking myself, and will post what I learn here, but so far Tomcat app
 '''The Following Does Not Work'''
 
 {{{
-import urllib2, base64
+import urllib2
 
 myUrl = 'http://localhost:8080/manager/html'
 username = 'root'
@@ -107,7 +107,7 @@ password = 'r00t4me'
 
 req = urllib2.Request(myUrl)
 
-base64string = base64.encodestring('%s:%s' % (username, password))[:-1]
+base64string = ('%s:%s' % (username, password)).encode('base64')[:-1]
 authheader =  "Basic %s" % base64string
 req.add_header("Authorization", authheader)
 
