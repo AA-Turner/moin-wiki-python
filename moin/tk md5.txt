@@ -4,14 +4,15 @@ Create an MD5 Hash with this little script that comes with a simple TKinter GUI.
 
 = Code =
 
-{{{ #!/usr/bin/bash
+{{{
+#!/usr/bin/bash
 from Tkinter import *
-import md5
+import hashlib
 
 def doitnow():
     salt = insalt.get()
     textstr = text_str.get()
-    hash = md5.new( salt + textstr ).hexdigest()
+    hash = hashlib.md5( salt + textstr ).hexdigest()
     hashtext.delete(0,END)
     hashtext.insert(0,hash)
     return 0
@@ -38,4 +39,5 @@ hashtext.pack(anchor = W)
 button.pack(ancho = E)
 
 
-root.mainloop() }}}
+root.mainloop()
+}}}
