@@ -98,15 +98,15 @@ Because file operations are 8-bit clean, reading data from the original {{{stdin
   $ echo $LANG
   en_CA.utf8
 
-  $ python -c 'import sys; line = sys.stdin.readline(); print str(type(line)), len(line); print line;'
+  $ python -c 'import sys; line = sys.stdin.readline(); print type(line), len(line); print line;'
   [TYPING: абв ENTER]
   <type 'str'> 7
   абв
 
-  $ echo "абв" | python -c 'import sys; line = sys.stdin.readline(); print str(type(line)), len(line); print line;'
+  $ echo "абв" | python -c 'import sys; line = sys.stdin.readline(); print type(line), len(line); print line;'
   <type 'str'> 7
   абв
-  $ echo "абв" | python -c 'import sys; line = sys.stdin.readline(); print str(type(line)), len(line); print line;' | cat
+  $ echo "абв" | python -c 'import sys; line = sys.stdin.readline(); print type(line), len(line); print line;' | cat
   <type 'str'> 7
   абв
 }}}
@@ -114,13 +114,13 @@ Because file operations are 8-bit clean, reading data from the original {{{stdin
 Since programmers need to display {{{unicode}}} strings, the designers of the {{{print}}} statement built the required transformation into it.
  * When Python finds its output attached to a terminal, it sets the {{{sys.stdout.encoding}}} attribute to the terminal's encoding.  The {{{print}}} statement's handler will automatically encode {{{unicode}}} arguments into {{{str}}} output.
 {{{
-    $ python -c 'import sys; print str(sys.stdout.encoding); print u"\u0411\n"'
+    $ python -c 'import sys; print sys.stdout.encoding; print u"\u0411\n"'
     UTF-8
     Б
 }}}
  * When Python does not detect the desired character set of the output, it sets {{{sys.stdout.encoding}}} to None, and {{{print}}} will invoke the "ascii" codec.  
 {{{
-    $ python -c 'import sys; print str(sys.stdout.encoding); print u"\u0411\n"' 2>&1 | cat
+    $ python -c 'import sys; print sys.stdout.encoding; print u"\u0411\n"' 2>&1 | cat
     None
     Traceback (most recent call last):
       File "<string>", line 1, in <module>
@@ -159,7 +159,7 @@ Python file's {{{write}}} and {{{read}}} methods do not invoke codecs internally
 
 Wrapping {{{sys.stdout}}} into an instance of StreamWriter will allow writing {{{unicode}}} data with {{{sys.stdout.write()}}} and {{{print}}}.
 {{{
-  $ python -c 'import sys, codecs, locale; print str(sys.stdout.encoding); \
+  $ python -c 'import sys, codecs, locale; print sys.stdout.encoding; \
     sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout); \
     line = u"\u0411\n"; print type(line), len(line); \
     sys.stdout.write(line); print line'
@@ -168,7 +168,7 @@ Wrapping {{{sys.stdout}}} into an instance of StreamWriter will allow writing {{
   Б
   Б
 
-  $ python -c 'import sys, codecs, locale; print str(sys.stdout.encoding); \
+  $ python -c 'import sys, codecs, locale; print sys.stdout.encoding; \
     sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout); \
     line = u"\u0411\n"; print type(line), len(line); \
     sys.stdout.write(line); print line' | cat
@@ -191,14 +191,14 @@ I (IL) believe reading from {{{stdin}}} does not involve coercion at all because
 {{{print}}} statement encodes {{{unicode}}} strings to {{{str}}} strings.  One can complement this with decoding of {{{str}}} input data into {{{unicode}}} strings in {{{sys.stdin.read/readline}}}.  For this, we will wrap {{{sys.stdin}}} into a StreamReader instance:
 {{{
   $ python -c 'import sys, codecs, locale; \
-    print str(sys.stdin.encoding); \
+    print sys.stdin.encoding; \
     sys.stdin = codecs.getreader(locale.getpreferredencoding())(sys.stdin); \
     line = sys.stdin.readline(); print type(line), len(line)' 2>&1
   UTF-8
   [TYPING: абв ENTER]
   <type 'unicode'> 4
   $ echo "абв" | python -c 'import sys, codecs, locale; \
-    print str(sys.stdin.encoding); \
+    print sys.stdin.encoding; \
     sys.stdin = codecs.getreader(locale.getpreferredencoding())(sys.stdin); \
     line = sys.stdin.readline(); print type(line), len(line)'
   None
