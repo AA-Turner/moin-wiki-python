@@ -22,7 +22,7 @@ class Enumeration(object):
         setattr(self.__class__, name, self)
 
     def __str__(self):
-        return '#%s' % str(self._name)
+        return '#%s' % self._name
 
     def __repr__(self):
         return "%s('%s')" % (self.__class__.__name__, self._name)
@@ -46,7 +46,7 @@ PrimaryColorKind('Rouge')
 PrimaryColorKind('Vert')
 PrimaryColorKind('Bleu')
 
-print str(PrimaryColorKind.Rouge), str(PrimaryColorKind.Vert), str(PrimaryColorKind.Bleu)
+print PrimaryColorKind.Rouge, PrimaryColorKind.Vert, PrimaryColorKind.Bleu
 print PrimaryColorKind.getEnumerationSet()
 
 class ColorKind(PrimaryColorKind):
@@ -54,7 +54,7 @@ class ColorKind(PrimaryColorKind):
 ColorKind('Violet')
 
 
-print str(ColorKind.Rouge), str(ColorKind.Violet)
+print ColorKind.Rouge, ColorKind.Violet
 print ColorKind.getEnumerationSet()
 print repr(ColorKind.Rouge), repr(ColorKind.Violet)
 assert(ColorKind.Rouge is ColorKind('Rouge'))
