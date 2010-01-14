@@ -57,7 +57,7 @@ integers we can do:
 
 {{{
 >>> def numeric_compare(x, y):
->>>    return x-y
+>>>    return x - y
 >>>
 }}}
 
@@ -68,11 +68,11 @@ For numbers in general, but a little more understandably:
 
 {{{
 >>> def numeric_compare(x, y):
->>>    if x>y:
+>>>    if x > y:
 >>>       return 1
->>>    elif x==y:
+>>>    elif x == y:
 >>>       return 0
->>>    else: # x<y
+>>>    else:  #x < y
 >>>       return -1
 >>>
 >>> a = [5, 2, 3, 1, 4]
@@ -88,7 +88,7 @@ anonymous one using {{{lambda}}}, as in:
 
 {{{
 >>> a = [5, 2, 3, 1, 4]
->>> a.sort(lambda x, y: x-y)
+>>> a.sort(lambda x, y: x - y)
 >>> print a
 [1, 2, 3, 4, 5]
 }}}
@@ -97,7 +97,7 @@ Python 2.4 adds three keyword arguments to {{{sort()}}} that
 simplify many common usages: {{{cmp}}}, {{{key}}}, and {{{reverse}}}.  The {{{cmp}}} keyword is for providing a sorting function; the previous examples could be written as:
 {{{
 >>> a.sort(cmp=numeric_compare)
->>> a.sort(cmp=lambda x,y: x-y)
+>>> a.sort(cmp=lambda x, y: x - y)
 }}}
 
 The {{{reverse}}} parameter is a Boolean value; if it's true, the list is sorted into reverse order.
@@ -113,7 +113,7 @@ of the comparison function:
 {{{
 >>> a = [5, 2, 3, 1, 4]
 >>> def reverse_numeric(x, y):
->>>     return y-x
+>>>     return y - x
 >>>
 >>> a.sort(reverse_numeric)
 >>> a
@@ -177,7 +177,7 @@ To reverse sort based on the second item in each tuple, but forward sort based o
 >>> L = [('a', 2), ('d', 4), ('b', 3), ('c', 2)]
 >>> L.sort(); L
 [('a', 2), ('b', 3), ('c', 2), ('d', 4)]
->>> sorted(L,key=operator.itemgetter(1),reverse=True)
+>>> sorted(L, key=operator.itemgetter(1), reverse=True)
 [('d', 4), ('b', 3), ('a', 2), ('c', 2)]
 }}}
 
@@ -246,7 +246,7 @@ as in:
 >>> a = [Spam(1, 4), Spam(9, 3), Spam(4, 6)]
 >>> a.sort()
 >>> for spam in a:
->>>   print spam
+>>>     print spam
 5
 10
 12
@@ -340,8 +340,8 @@ to sort a list:
 
  * Rich comparisons
    * With custom comparisons, it is possible to create
-   insane combinations, such as {{{((x<y) and (x==y))}}}
-   or {{{((x<y) and not (x<=y))}}}.
+   insane combinations, such as {{{((x < y) and (x == y))}}}
+   or {{{((x < y) and not (x <= y))}}}.
    * The most important comparisons are __eq__ (but be
    sure to update __hash__ as well), and __lt__ (which
    is used by the sorting algorithms in practice).
