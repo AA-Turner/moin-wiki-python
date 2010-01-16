@@ -548,7 +548,7 @@ cases. The example below shows the easiest way to acheive this: ::
 	    if len(args) > 0:
 	    # int read(byte[])
 	    # int read(byte[], int, int)
-		return apply(InputStream.read, (self,)+args)
+		return InputStream.read(self, *args)
 	    return 1
 
     io = InfiniteOnes()
@@ -755,8 +755,7 @@ on the DataSource. ::
   >>> params['user'] = None
   >>> params['password'] = None
   >>> params['port'] = 3306
-  >>> db = apply(zxJDBC.connectx, ("org.gjt.mm.mysql.MysqlDataSource",),
-  params)
+  >>> db = zxJDBC.connectx("org.gjt.mm.mysql.MysqlDataSource", **params)
   >>>
 
 Using a JNDI lookup
