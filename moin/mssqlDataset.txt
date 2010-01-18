@@ -5,17 +5,13 @@ import pymssql
 
 class mssqlDatarow(object):
 	def __init__(self,fields,values):
-		self.__fields=dict()
-		for i in range(len(fields)):
-			self.__fields[fields[i].upper()]=values[i]
+		self.__fields={}
+		for f,v in zip(fields, values):
+			self.__fields[f.upper()]=v
 		self.__values=values
 		
 	def getValue(self,fieldName):
-		fieldName=fieldName.upper()
-		if self.__fields.has_key(fieldName): 
-			return self.__fields[fieldName]
-		else: 
-			return None
+		return self.__fields.get(fieldName.upper())
 
 class mssqlDataset(object):
 	def __init__(self,cnt):
