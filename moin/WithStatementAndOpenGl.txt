@@ -77,9 +77,7 @@ from OpenGLContext's indexlineset.py
            dl.start()
            try:
                glEnable( GL_COLOR_MATERIAL )
-               for index in range(len(indices)):
-                   polyline = indices[index]
-                   color = colorIndices[index]
+               for polyline, color in zip(indices, colorIndices):
                    if type(color) == int:
                        glColor3d( *colors[color] )
                        glBegin( GL_LINE_STRIP )
@@ -91,7 +89,7 @@ from OpenGLContext's indexlineset.py
                     else:
                        glBegin( GL_LINE_STRIP )
                        try:
-                           for i,c in map(None, polyline, color):
+                           for i,c in zip(polyline, color):
                                glColor3d( *colors[c] )
                                glVertex3f(*points[i])
                        finally:
@@ -110,9 +108,7 @@ using 'with' statements like this:
            ...
            with dl:
                with GLEnable( GL_COLOR_MATERIAL ):
-                   for index in range(len(indices)):
-                       polyline = indices[index]
-                       color = colorIndices[index]
+                   for polyline, color in zip(indices, colorIndices):
                        if type(color) == int:
                            glColor3d( *colors[color] )
                        with GLGeometry( GL_LINE_STRIP ):
@@ -120,7 +116,7 @@ using 'with' statements like this:
                                glVertex3f(*points[i])
                     else:
                        with GLBegin( GL_LINE_STRIP ):
-                           for i,c in map(None, polyline, color):
+                           for i,c in zip(polyline, color):
                                glColor3d( *colors[c] )
                                glVertex3f(*points[i])
 }}}
