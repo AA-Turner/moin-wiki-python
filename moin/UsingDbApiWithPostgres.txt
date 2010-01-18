@@ -185,8 +185,8 @@ Use the execute function to run sql SELECT queries.
 
   cur.execute ("SELECT * FROM versions");
   rows = cur.fetchall()
-  for i in range (len(rows)):
-      print "Row", i, "value = ", rows[i]
+  for i, row in enumerate(rows):
+      print "Row", i, "value = ", row
 
   Row 0 value =  (datetime.date(2007, 10, 18), '2.4.4', 'stable')
   Row 1 value =  (datetime.date(2007, 4, 18), '2.5.1', 'stable')
@@ -235,8 +235,8 @@ operators, because your code will depends on used database.
 
   cur.execute ("""SELECT * FROM versions WHERE status = 'stable' ORDER BY version DESC;""")
   rows = cur.fetchall()
-  for i in range (len(rows)):
-      print "Row", i, "value = ", rows[i]
+  for i, row in enumerate(rows):
+      print "Row", i, "value = ", row
 
   Row 0 value =  (datetime.date(2007, 4, 18), '2.5.1', 'stable')
   Row 1 value =  (datetime.date(2007, 10, 18), '2.4.4', 'stable')
