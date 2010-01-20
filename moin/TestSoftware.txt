@@ -1,12 +1,28 @@
-#!/usr/bin/env python
+== Software ==
 
-from distutils.core import setup
+ * UnitTest in the standard library (http://docs.python.org/lib/module-unittest.html)
+ * PyUnit at http://pyunit.sourceforge.net
+ * [[http://www.garethrees.org/2001/12/04/python-coverage/|StatementCoverage]]  This module runs your code, then produces a report on how many statements were executed, and which ones were not.  Use it to ensure your unit tests test everything.
+ * DataTest at http://formencode.org/docs/DataTest/README.html
+ * McCabe-like Python Cyclomatic Complexity analysis tools are available at  http://journyx.com/curt/complexity.html.  They're written in Perl, but read and analyze only Python code. Complexity is bad, this will help you simplify code - especially code you didn't write.
+ * [[http://www.python.org/pypi/zope.testing|zope.testing]] provides a powerful test runner that supports test discovery and a wide range of options to control how tests are run and results reported.
 
-setup(name='sitemap_gen',
-      version='1.4',
-      description='Sitemap Generator',
-      license='BSD',
-      author='Google Inc.',
-      author_email='opensource@google.com',
-      url='http://sourceforge.net/projects/goog-sitemapgen/',
-     )
+== Best Practices ==
+
+== Discussion ==
+
+Sprouted out by http://formencode.org/docs/DataTest/TODO.html.
+
+What I need is a layered test system like
+ * test suit
+   * with fast/normal/detailed mode
+   * with known failing tests excluded
+ * test package to group related tests with preset parameters
+ * individual test
+   * with options like log details
+   * with ability to flex parameters, extend options etc.
+ * test utilities
+   * fuzzy difference
+   * different logging/reporting/visualization helpers
+   * with output capture capability
+-- MikeRovner <<DateTime(2004-02-27T19:25:32Z)>>
