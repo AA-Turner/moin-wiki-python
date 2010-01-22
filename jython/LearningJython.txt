@@ -611,15 +611,15 @@ Solution::
         public void set_name(PyObject[] args, String[] kwargs)
         {
             System.out.println("length(args): " +
-                String.valueOf(args.length) +
+                args.length +
                 " length(kwargs): " +
-                String.valueOf(kwargs.length)
+                kwargs.length
                 );
             ArgParser ap = new ArgParser("set_name", args, kwargs,
                 new String[] {"name", "value"});
             String newName = ap.getString(0, "");
             String newValue = ap.getString(1, "<empty>");
-            if (newName.compareTo("") != 0)
+            if (!newName.equals(""))
             {
                 name = newName;
             }
@@ -1718,7 +1718,7 @@ Embedding the Jython interpreter can be as simple as this::
                 try
                 {
                     codeString = terminal.readLine();
-                    if (codeString.compareTo("exit") == 0)
+                    if (codeString.equals("exit"))
                     {
                         System.exit(0);
                         break;
@@ -1834,12 +1834,11 @@ classes that can be loaded to a small set::
 
     // RestrictedClassLoader.java
 
-    import java.util.Vector;
-    import java.util.Enumeration;
+    import java.util.ArrayList;
     import java.lang.ClassNotFoundException;
      
     class RestrictedClassLoader extends ClassLoader {
-        Vector goodnames;
+        ArrayList<String> goodnames;
         public RestrictedClassLoader () {
             goodnames = new Vector();
             goodnames.add("Goodclass1");
@@ -1849,11 +1848,9 @@ classes that can be loaded to a small set::
         }
         
         public Class findClass(String name) throws ClassNotFoundException {
-            Enumeration items = goodnames.elements();
-            while (items.hasMoreElements())
+            for (String item : goodnames)
             {
-                String item = (String)items.nextElement();
-                if (item.compareTo(name) == 0)
+                if (item.equals(name))
                 {
                     return super.findClass(name);
                 }
