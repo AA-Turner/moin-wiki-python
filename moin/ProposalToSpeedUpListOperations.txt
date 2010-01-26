@@ -41,6 +41,8 @@ Increasing the size of PyListObject should negligibly affect the overall memory 
 
 Postponing the release of memory after popping the first element off the list is wasteful, but in the alternative scenario, users would be avoiding pop(0) in the first place and needlessly tying up memory not only for the list pointers, but the list elements themselves.  The patch does limit the number of orphan pointers, and it does reclaim orphans when new elements gets inserted to the front of the list.
 
+The fact that the current proposed patch modifies list_resize, PyList_new, and list_dealloc does suggest an alternative implementation, which would be to make the underlying memory manager more flexible in how you can release and extend memory from the front of the list.
+
 Although memmove() is rarely the largest bottleneck in a Python program, every little speedup counts.
 
 The assertion that current large Python programs today do not tend to pop elements off the top of the list is hard to verify for sure.
