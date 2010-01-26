@@ -8,12 +8,12 @@ The author of the patch discovered the admonition against using pop(0) in the tu
 
 Here are the proposed benefits:
 
-* O(1) is faster than O(N) for some, presumably quite small, value of N.
-* Performance benefits tend to compound.  If you have P processes doing pop(0) in a loop on an N-element list, you are saving P * N memmoves of size kN.
-* The technique required to make O(1) work is simple at its core--advance a pointer forward instead of moving the memory backward.
-* Encouraging the use of pop(0) will lead to leaner Python programs that release memory earlier in the process.
-* While not super common, there do exist programs today that pop from the top, either using pop itself or del, including programs in the standard library
-* The language moratorium provides a good window for performance improvements in general (even if this one does not pass the litmus test for other reasons)
+ * O(1) is faster than O(N) for some, presumably quite small, value of N.
+ * Performance benefits tend to compound.  If you have P processes doing pop(0) in a loop on an N-element list, you are saving P * N memmoves of size kN.
+ * The technique required to make O(1) work is simple at its core--advance a pointer forward instead of moving the memory backward.
+ * Encouraging the use of pop(0) will lead to leaner Python programs that release memory earlier in the process.
+ * While not super common, there do exist programs today that pop from the top, either using pop itself or del, including programs in the standard library
+ * The language moratorium provides a good window for performance improvements in general (even if this one does not pass the litmus test for other reasons)
 
 == Rationale ==
 
@@ -21,15 +21,15 @@ The rationale for improving the speed of lists should be fairly self-evident.
 
 Many objections have been presented:
 
-* The simplicity of the current implementation is important beyond the normal benefits of simplicity, since it is also a reference implementation for other ports of Python.
-* People who got used to O(1) in one version of Python might have unpleasant surprises when they went to other versions.
-* Alternatives to list already exist, such as deque and blist
-* An O(1) solution would increase the size of PyListObject.
-* An O(1) solution would postpone the release of the memory from the orphaned pointers.
-* An O(1) solution would slow down calls to list_resize, PyList_new, and list_dealloc.
-* For small and medium sized lists, memmove()'s penalty is usually drowned out by other operations on the list elements.
-* The use case of popping elements off a large list is not that common (although this might be somewhat driven by the documented slowness)
-* There may be third party code that relies on the current internal implementation
+ * The simplicity of the current implementation is important beyond the normal benefits of simplicity, since it is also a reference implementation for other ports of Python.
+ * People who got used to O(1) in one version of Python might have unpleasant surprises when they went to other versions.
+ * Alternatives to list already exist, such as deque and blist
+ * An O(1) solution would increase the size of PyListObject.
+ * An O(1) solution would postpone the release of the memory from the orphaned pointers.
+ * An O(1) solution would slow down calls to list_resize, PyList_new, and list_dealloc.
+ * For small and medium sized lists, memmove()'s penalty is usually drowned out by other operations on the list elements.
+ * The use case of popping elements off a large list is not that common (although this might be somewhat driven by the documented slowness)
+ * There may be third party code that relies on the current internal implementation
 
 The objection on grounds of simplicity is the hardest to counter, except to say that the proposed patch is fairly small and non-invasive.
 
