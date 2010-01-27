@@ -17,7 +17,7 @@ Here are the proposed benefits:
 
 == Rationale ==
 
-The rationale for improving the speed of lists should be fairly self-evident.
+The rationale for improving the speed of list removes should be fairly self-evident; the merits of the proposal then need to be measured against the tradeoffs required to gain that speed.
 
 Many objections have been presented:
 
@@ -36,9 +36,9 @@ The objection that Python programmers will be "spoiled" by a fast implementation
 
 The alternatives to list, deque and blist, do not replicate all the features of list.  Both come pretty close, though.  Of course, the existence of alternatives to list does not justify keeping list itself crippled, as list is a data structure that many Python programmers naturally pick, without regard to performance, only to find out down the road that they are using list on larger and larger sets of data.
 
-Postponing the release of memory after popping the first element off the list is wasteful, but in the alternative scenario, users would be avoiding pop(0) in the first place and needlessly tying up memory not only for the list pointers, but the list elements themselves.  The patch does limit the number of orphan pointers, and it does reclaim orphans when new elements gets inserted to the front of the list.
+Postponing the release of memory after popping the first element off the list is wasteful, but in the alternative scenario, users would be avoiding pop(0) in the first place and needlessly tying up memory not only for the list pointers, but the list elements themselves (although they could set elements to None).  The patch does limit the number of orphan pointers, and it does reclaim orphans when new elements gets inserted to the front of the list.
 
-The fact that the current proposed patch modifies list_resize, PyList_new, and list_dealloc does suggest an alternative implementation, which would be to make the underlying memory manager more flexible in how you can release and extend memory from the front of the list.
+The changes to PyList_new and list_dealloc are small, and those methods only get called once during the lifetime of a list.  The changes to list_resize would be the most likely to counteract other speedup gains.
 
 Although memmove() is rarely the largest bottleneck in a Python program, every little speedup counts.
 
