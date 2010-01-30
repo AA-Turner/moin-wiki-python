@@ -1564,7 +1564,7 @@ classes::
             System.out.println("Id: " + employee.getEmployeeId());
             PyList deplist = employee.getDependents();
             int count = deplist.__len__();
-            System.out.println("count: " + Integer.toString(count));
+            System.out.println("count: " + count);
             for (int idx = 0; idx < count; idx++) {
                 PyObject obj = deplist.__getitem__(idx);
                 DependentType dep = (DependentType)obj.__tojava__(DependentType.class);
@@ -1575,7 +1575,7 @@ classes::
         private static void printDependent(DependentType dependent) {
             System.out.println("Dep Name: " + dependent.getDependentFirst() + " "
                     + dependent.getDependentLast());
-            System.out.println("Dep Id: " + dependent.getDependentId().toString());
+            System.out.println("Dep Id: " + dependent.getDependentId());
         }
 
         public static void main(String[] args) {
