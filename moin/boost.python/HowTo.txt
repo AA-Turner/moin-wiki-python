@@ -385,11 +385,45 @@ void foo(SWIGExposedClass* x)
 {...}
 }}}
 
-=== multithreading support for my function ===
-The best way to safely unblock Python threads is to write a
+=== Multithreading Support for my function ===
+One approach to safely unblock Python threads is to write a
 thin wrapper around your function which uses Py_BEGIN_ALLOW_THREADS
 and Py_END_ALLOW_THREADS around a call to the real function.
 
+A better approach is to use the a class that releases the GIL in the constructor and re-acquires it in the destructor, using the common C++ idiom "Resource Acquisition Is Initialization" (http://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Resource_Acquisition_Is_Initialization):
+
+{{{
+class ScopedGILRelease
+{
+// C & D -------------------------------------------------------------------------------------------
+public:
+    inline ScopedGILRelease()
+    {
+        m_thread_state = PyEval_SaveThread();
+    }
+
+    inline ~ScopedGILRelease()
+    {
+        PyEval_RestoreThread(m_thread_state);
+        m_thread_state = NULL;
+    }
+
+private:
+    PyThreadState * m_thread_state;
+};
+}}}
+
+This will ensure that the GIL is re-acquired even if an exception occurs. Sample code:
+
+{{{
+
+int foo_wrapper(int x)
+{
+    ScopedGILRelease scoped;
+    return foo(x);
+}
+
+}}}
 === ownership of C++ object ===
 Wrap object with auto_ptr<> storage: {{{
 class_<Myclass, auto_ptr<MyClass> >("MyClass");
