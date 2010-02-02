@@ -390,7 +390,7 @@ One approach to safely unblock Python threads is to write a
 thin wrapper around your function which uses Py_BEGIN_ALLOW_THREADS
 and Py_END_ALLOW_THREADS around a call to the real function.
 
-A better approach is to use the a class that releases the GIL in the constructor and re-acquires it in the destructor, using the common C++ idiom "Resource Acquisition Is Initialization" (http://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Resource_Acquisition_Is_Initialization):
+A better approach is to use a class that releases the GIL in the constructor and re-acquires it in the destructor, using the common C++ idiom "Resource Acquisition Is Initialization" (http://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Resource_Acquisition_Is_Initialization):
 
 {{{
 class ScopedGILRelease
