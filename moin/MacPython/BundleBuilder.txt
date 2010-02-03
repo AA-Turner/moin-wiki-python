@@ -58,16 +58,21 @@ its own copy of the Python.Framework. If that's not to your liking, you can
 build using 'semi-standalone=1' instead. This will make your application
 bundle smaller as it won't include python, but it does require that your
 users already have a working python installed.
+
+"""How to Use BundleBuilder with 64-Bit Python 2.6 on 10.5 and Later"""
  
-'''Standalone bundles built on MacOS X 10.3 using its bundled Python 2.3 framework will not work on previous versions
-of MacOS X.'''
- 
-On MacOS X 10.3,
-Apple has included a full 2.3 Python.Framework for you which will work
-with semi-standalone applications just fine. This makes building
-a standalone application for 10.3 somewhat pointless as the bundles you
-build there are not backwards compatable with previous versions of MacOS X.
-On 10.3, a semi-standalone application will work AND be much smaller.
+
+1. In your setup/makeapplication.py script, don't import or set the argvemulation option--comment it out. Argvemulation is dependent on Carbon libraries that are not supported in 64-bit, and which are removed altogether from Python 3.x.
+2. When you run the setup script, make sure you call python2.6-all as the Python interpreter--this will hit the 64-bit and 32-bit versions. A sample call looks like this:
+
+{{{
+python2.6-all makeapplication.py build
+}}}
+
+And that's it.
+
+Bundlebuilder is not present in Python 3.x, so if you want to use it, you will have to extract bundlebuilder.py from a Python 2.x source tree and modify it as needed. Bundlebuilder is quirky and a less graceful solution than py2app: you have to do some trial and error to get all the packages bundled in your application. However, because py2app's development is very slow at this point and it is not keeping up with changes in Python and OS X, bundlebuilder may be a simpler and useful alternative. 
+
  
 There are other options you can set in the call to buildapp(). See the
 bundlebuilder.py module for the rest of them. In addition, all of them can be set from the command-line instead.
