@@ -441,10 +441,15 @@ p = printer(queue)
 Here is a simple example based on the pypes framework. It should look similar to the Stackless example above. Pypes abstracts away the semantics of tasklets and channels and provides a model for looser coupling. This makes connecting components at runtime easier which is necessary since at the point in which the component is created, it has no idea what other components it might be interacting with. 
 
 {{{#!python
+# load the pypes framework
+from pkg_resources import require
+require('pypes')
+
+import re
+import time
+
 from pypes.pipeline import Dataflow
 from pypes.component import Component
-import time
-import re
 
 class Tail(Component):
     __metatype__ = 'ADAPTER'
@@ -455,18 +460,13 @@ class Tail(Component):
 
     def run(self):
         self.fp.seek(0,2)
-
-        # pypes components should run infinitely and never return
-        while True:
-	    # pull any input data off our 'in' port and disregard it
-            self.recv('in')
+        while True:    
+            self.receive('in')
             line = self.fp.readline()
             if line:
-		# place data on our 'out' port
                 self.send('out', line.strip())
             else:
-		# relinquish control of the CPU
-                self.Yield()
+                self.yield_ctrl()
 
 class Grep(Component):
     __metatype__ = 'TRANSFORMER'
@@ -476,15 +476,11 @@ class Grep(Component):
         self.regex = re.compile(pattern)
 
     def run(self):
-	# pypes components should run infinitely and never return 
         while True:
-	    # for each piece of data on our 'in' port
-            for line in self.recvall('in'):
+            for line in self.receive_all('in'):
                 if self.regex.match(line):
-		    # if match, place data on our 'out' port
                     self.send('out', line)
-	    # relinquish control of the CPU
-            self.Yield()
+            self.yield_ctrl()
 
 class Printer(Component):
     __metatype__ = 'PUBLISHER'
@@ -493,30 +489,20 @@ class Printer(Component):
         Component.__init__(self)
 
     def run(self):
-       # pypes components should run infinitely and never return
         while True:
-	   # for each piece of data on our 'in' port
-            for data in self.recvall('in'):
+            for data in self.receive_all('in'):
                 print data
-	    # relinquish control of the CPU
-            self.Yield()
+            self.yield_ctrl()
 
-# create an instance of each component
-tail    = Tail(open('/var/log/system.log', 'r'))
+tail    = Tail(open('/var/log/syslog', 'r'))
 grep    = Grep('.*pants.*')
 printer = Printer()
 
-# connects tail's 'out' port to grep's 'in' port and 
-# grep's 'out' port to printer's 'in' port
 pipe = Dataflow({
-    tail: {grep:('out','in')},
+    tail: {grep:('out','in')}, 
     grep: {printer:('out', 'in')}
 })
 
-# pypes uses push methodology where data is (typically) generated externally 
-# and fed to the system. In this case 'tail' is actually generating data so we 
-# just need to send a "trigger" of some sort to wake the tail/ADAPTER component.
-# The data we send is not important as the tail component simply disregards it.
 while True:
     pipe.send(None)
     time.sleep(0.1)
