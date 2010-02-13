@@ -78,15 +78,15 @@ class SOAPCurrency(http.HttpServlet):
        # read Post 
        # SOAP provider 
        url = req.getParameter("endpointURL") 
-       System.out.print("endpointURL = " + url + '\n') 
-       if (url == None) or (len(url) == 0): 
+       System.out.println("endpointURL = " + url) 
+       if url == None or len(url) == 0: 
            # use hardcoded SOAP provider 
            url = "http://services.xmethods.net:80/soap" 
        endpointURL = URL(url) 
        country1 = req.getParameter("country1") 
        country2 = req.getParameter("country2") 
-       System.out.print("country1 = " + country1 + '\n') 
-       System.out.print("country2 = " + country2 + '\n') 
+       System.out.println("country1 = " + country1) 
+       System.out.println("country2 = " + country2) 
         
        # Initialize pseudo-constants 
        encodingStyleURI = Constants.NS_URI_SOAP_ENC 
@@ -113,7 +113,7 @@ class SOAPCurrency(http.HttpServlet):
        response = call.invoke(endpointURL, soapAction) 
             
        # Print response 
-       if (response.generatedFault() == 1): 
+       if response.generatedFault() == 1: 
            fault = response.getFault() 
            out.println("SOAP call generated a fault: " + fault.toString()) 
        else: 
@@ -124,7 +124,7 @@ class SOAPCurrency(http.HttpServlet):
         
        out.println("</BODY></HTML>") 
        out.close()   
-       System.out.print("SOAPCurrency.py - end of query \n")         
+       System.out.println("SOAPCurrency.py - end of query ")
           
           
     # Catch - SOAP exception 
