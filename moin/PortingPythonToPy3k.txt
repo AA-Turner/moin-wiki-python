@@ -96,12 +96,14 @@ Python before 2.6 does not have the `as` keyword, so Python 2 and Python 3 have 
 Relative Imports
 ----------------
 
-Python 3 makes a distinction between relative and absolute imports.  In Python 2.5, use `from __future__ import absolute_import` to get the same behavior as Python 3.  To support older versions as well, do::
+Python 3 makes a distinction between relative and absolute imports.  In Python 2.5, use `from __future__ import absolute_import` to get the same behavior as Python 3.  To support older versions as well, only use absolute imports.  Replace a relative import::
 
-    try:
-        from . import xyz
-    except ImportError:
-        import xyz
+    from xyz import abc
+
+with an absolute import::
+
+    from mypackage.xyz import abc
+
 
 Integer Division
 ----------------
