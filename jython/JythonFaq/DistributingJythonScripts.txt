@@ -193,6 +193,9 @@ $ java org.python.util.jython -jar myapp.jar arg1 arg2
 $ java -cp myapp.jar org.python.util.jython -jar myapp.jar arg1 arg2
 $ java -jar myapp.jar -jar myapp.jar arg1 arg2
 }}}
+
+
+'''NOTE:''' Wildcard imports, e.g. {{{from javax.swing import *}}} that may work when invoking using jython directly {{{jython myapp.py}}}, or {{{java -jar jython.jar myapp.py}}} fail when the application is packaged as a single jar file. To avoid this problem, always use explicit imports for Java packages, e.g. {{{from javax.swing import JFrame}}}.
 == A note about webstart ==
 Ok maybe one mention of webstart: check out these postings to the mailing list (all from aug 2007):
 
