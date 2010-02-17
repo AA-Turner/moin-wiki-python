@@ -78,6 +78,17 @@ with this::
     import sys
     sys.stdout.write('hello world\n')
 
+Exceptions
+----------
+
+Python before 2.6 does not have the `as` keyword, so Python 2 and Python 3 have incompatible syntax for accessing the value of an exception.  Compatible code should use the following idiom to save the value of an exception::
+
+    import sys
+    try:
+        open('/path/to/some/file')
+    except IOError:
+        _, e, _ = sys.exc_info()
+
 
 Martin's notes from psycopg2
 ============================
