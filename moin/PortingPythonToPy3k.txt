@@ -93,6 +93,21 @@ Python before 2.6 does not have the `as` keyword, so Python 2 and Python 3 have 
     except IOError:
         _, e, _ = sys.exc_info()
 
+Relative Imports
+----------------
+
+Python 3 makes a distinction between relative and absolute imports.  In Python 2.5, use `from __future__ import absolute_import` to get the same behavior as Python 3.  To support older versions as well, do::
+
+    try:
+        from . import xyz
+    except ImportError:
+        import xyz
+
+Integer Division
+----------------
+
+Make sure to use `from __future__ import division` (introduced in Python 2.2) to get the non-truncating behavior, which is default in Python 3.
+
 
 Martin's notes from psycopg2
 ============================
