@@ -31,6 +31,18 @@ Manual changes (not done by 2to3):
 
 .. _issue4601: http://bugs.python.org/issue4601
 
+Strings and Bytes
+-----------------
+
+Design decisions needs to be taken what exactly must be represented as bytes, and what as strings (Unicode data).  In many cases, this is easy.  However, data sent or received over pipes or sockets are usually in binary mode, so explicit conversions may be necessary.  For example, the Postgres API requires SQL queries to be transmitted in the connection encoding. It is probably easiest to convert the queries to the connection encoding as early as possible.
+
+The standard IO streams (sys.stdin, sys.stdout, sys.stderr), are in text mode by default in Python 3.  Calling `sys.stdout.write(some_binary_data)` will fail.  To write binary data to standard out, you must do the following::
+
+    sys.stdout.flush()
+    sys.stdout.buffer.write(some_binary_data)
+
+The flush() clears out any text (unicode) data that is stored in the TextIOWrapper, and the buffer attribute provides access to the lower-level binary stream.  If you are only writing binary data, you can remove the text layer with `sys.stdout = sys.stdout.detach()` in Python 3.1; in Python 3.0, do `sys.stdout = sys.stdout.buffer`.
+
 
 Maintain Separate Releases for Python 2 and Python 3
 ====================================================
@@ -65,6 +77,7 @@ When using "from __future__ import unicode_literals" in a module, it may also be
      str = unicode
    except NameError:
      pass # Forward compatibility with Py3k
+
 
 Print Statement/Function
 ------------------------
@@ -117,23 +130,12 @@ Make sure to use `from __future__ import division` (introduced in Python 2.2) to
 Martin's notes from psycopg2
 ============================
 
-- bytes vs. strings 1. Design decisions needs to be taken what exactly
-  must be represented as bytes, and what as strings. In many cases, that
-  was easy for psycopg, except for the question how SQL queries are
-  represented. It appears clear that they are plain text, however, the
-  Postgres API requires them to be transmitted in the connection
-  encoding. I still decided to represent them internally in Unicode,
-  but converting them to the connection encoding as early as possible
-  probably would have worked as well.
-
 - the buffer object is gone; I use memoryview in 3.x.
 
 - various tests where in the code of the form
   if version_major ==  and version_minor > 4 (say, or 5)
   This will break for 3.x; you have to write
   if (version_major == 2 and version_minor > 4) or version_major > 2
-
-- Python code 1: I used the 2to3 support in distutils
 
 - Python code 2: setup.py needs to run in both versions. I had to
   replace popen2 with subprocess if available. Also, map() now
