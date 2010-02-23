@@ -167,19 +167,24 @@ We have a source tree with the following files::
 
 Here's where we want the files to end up in a typical Linux Distribution
 
-#   Relative path in source tree          Final full installed path
--   ----------------------------          -------------------------
-1.  mailman/database/schemas/blah.schema  /var/mailman/schemas/blah.schema
-2.  some.tpl                              /var/mailman/templates/some.tpl
-3.  path/to/some.tpl                      /var/mailman/templates/path/to/some.tpl
-4.  mailman/database/mailman.db           /var/mailman/database/mailman.db
-5.  developer-docs/index.txt              /usr/share/doc/mailman/developer-docs/index.txt
-6.  developer-docs/api/toc.txt            /usr/share/doc/mailman/developer-docs/api/toc.txt
-7.  README                                /usr/share/doc/mailman/README
-8.  mailman/etc/my.cnf                    /etc/mailman/my.cnf
-9.  mailman/foo/some/path/bar/my.cfg      /etc/mailman/baz/some/path/bar/my.cfg AND /etc/mailman/hmm/some/path/bar/my.cfg + emit a warning
-10. mailman/foo/some/path/other.cfg       /etc/mailman/some/path/other.cfg
-11. some-new-semantic.txt                 /var/funky/mailman/some-new-semantic.txt
+
+==  ====================================  ===================================================================================================
+##  Relative path in source tree          Final full installed path
+==  ====================================  ===================================================================================================
+1   mailman/database/schemas/blah.schema  /var/mailman/schemas/blah.schema
+2   some.tpl                              /var/mailman/templates/some.tpl
+3   path/to/some.tpl                      /var/mailman/templates/path/to/some.tpl
+4   mailman/database/mailman.db           /var/mailman/database/mailman.db
+5   developer-docs/index.txt              /usr/share/doc/mailman/developer-docs/index.txt
+6   developer-docs/api/toc.txt            /usr/share/doc/mailman/developer-docs/api/toc.txt
+7   README                                /usr/share/doc/mailman/README
+8   mailman/etc/my.cnf                    /etc/mailman/my.cnf
+9   mailman/foo/some/path/bar/my.cfg      /etc/mailman/baz/some/path/bar/my.cfg AND
+                                          /etc/mailman/hmm/some/path/bar/my.cfg + 
+                                          emit a warning
+10  mailman/foo/some/path/other.cfg       /etc/mailman/some/path/other.cfg
+11  some-new-semantic.txt                 /var/funky/mailman/some-new-semantic.txt
+==  ====================================  ===================================================================================================
 
 The numbers in the above placements are referenced below
 
@@ -273,27 +278,24 @@ resource_variables definitions can use {distribution.name}, {distribution.versio
 
 Links
 
-.. _`Filesystem Hierarchy Standard`:: http://www.pathname.com/fhs/
-
-.. _`Rationale from FHS`:: http://www.pathname.com/fhs/pub/fhs-2.3.html#THEFILESYSTEM
-makes a distinction between:
-
-.. _`sysconfig module docs`:: http://docs.python.org/dev/library/sysconfig.html#module-sysconfig
-.. _`sysconfig module`:: http://svn.python.org/view/*checkout*/python/trunk/Lib/sysconfig.py?revision=77921&content-type=text/plain&pathrev=77921
+.. [1] Filesystem Hierarchy Standard http://www.pathname.com/fhs/
+.. [2] Rationale from the FHS which makes the distinctions between parts of the filesystem: http://www.pathname.com/fhs/pub/fhs-2.3.html#THEFILESYSTEM
+.. [3] sysconfig module docs: http://docs.python.org/dev/library/sysconfig.html#module-sysconfig
+.. [4] sysconfig module: http://svn.python.org/view/*checkout*/python/trunk/Lib/sysconfig.py?revision=77921&content-type=text/plain&pathrev=77921
 
 
 What happens?
 ~~~~~~~~~~~~~
 As an example, "mailman/database/schemas/blah.schema":
 
-1. The file "mailman/database/schemas/blah.schema" in the source tree matches "mailman/database/schemas/*" within the "resource_locations" stanza of the setup.cfg, which has right-hand side "{data}/schemas"
+1. The file `mailman/database/schemas/blah.schema` in the source tree matches `mailman/database/schemas/*` within the `resource_locations` stanza of the setup.cfg, which has right-hand side `{data}/schemas`
 2. The "*" in the left-hand-side matches "blah.schema", so the installation path for the file is mapped to "{data}/schemas/blah.schema"
 3. The label "data" is listed in the [resource_variables] stanza as being installed to "/var/{distribution.name}".  This expands out to: "/var/mailman"
 4. The result is that the source file "mailman/database/schemas/blah.schema" is installed within the rpm/deb to "/var/mailman/schemas/blah.schema"
 5. The source code can still open the file via an API using pkgutil.open('mailman', 'database/schemas/blah.schema') and have the underlying system open it from "/var/mailman/schemas/blah.schema".
 
 
-1. The file "mailman/database/schemas/blah.schema" in the source tree matches "mailman/database/schemas/*" within the data clause of the setup.cfg, so it is treated as having the label "data".
+1. The file `mailman/database/schemas/blah.schema` in the source tree matches `mailman/database/schemas/*` within the data clause of the setup.cfg, so it is treated as having the label `{data}`.
 2. The clause specified a prefix path, so the installation path for the file is mapped to "schemas/blah.schema"
 3. The label "data" is listed in the [resource_locations] stanza as being installed to "/var/mailman"
 4. The result is that the source file "mailman/database/schemas/blah.schema" is installed within the rpm/deb to "/var/mailman/schemas/blah.schema"
@@ -325,6 +327,7 @@ pkgutils.open
 Returns a file object for the resource.
 
 ::
+
   pkgutils.open('STRING_NAME_FOR_PACKAGE', 'filename/with/path/relative/to/the/source/package/directory')
   Example:
   pkgutils.open('mailman', 'database/schemas/blah.schema')
@@ -336,9 +339,7 @@ Returns a file object for the resource.
 * pkgutil.open() consults the metadata file to decide where to find the resource. If the metadata file is not found (as in a package before the egg is built), open()  falls back to traversing the given relative path starting from the root of the calling package (using __name__).
 * pkgutil.open() calls from nested packages aren't a problem because, after all, we pass the desired 'module_name' to start from as the first arg.
 
-? Do we still need this?
-Default behavior:  alongside the package files (if the real-installed-locations metadata file does not exist). Or if the package is installed without any resource_locations specified.
-?</>?
+* ? Do we still need this? Default behavior:  alongside the package files (if the real-installed-locations metadata file does not exist). Or if the package is installed without any resource_locations specified. ?</>?
 
 pkgutils.filename
 -----------------
@@ -346,6 +347,7 @@ pkgutils.filename
 Returns a resource's filename with the full path.
 
 ::
+
   pkgutils.filename('STRING_NAME_FOR_PACKAGE', 'filename/with/path/relative/to/the/source/package/directory')
   Example:
   pkgutils.filename('mailman', 'database/schemas/blah.schema')
@@ -357,15 +359,16 @@ pkgutils.add_category
 Adds a new category to the resource variables filename.
 
 ::
+
   pkgutils.add_category('CATEGORY', 'LOCATION')
   Example:
   pkgutils.add_category('lockdir', '{statedir}/lock')
 
 Using the API allows the parser to protect from adding duplicate categories.
 
-====
+----
 Todo
-====
+----
 
 These need to be worked in or discarded somehow
 
@@ -393,7 +396,8 @@ Analagous to gettext: parse the source, figure out the resources
 
 
 How Debian does a .install file
--------------------------------
+===============================
+
 In `packagename.install`::
 
     etc/* etc
@@ -426,15 +430,16 @@ Need to split submodule into its own binary package (essentially converting top-
 
 
 Alternate ways of specifying labels
-----------------------------------
-Noufal's
+-----------------------------------
+Noufal's::
 
     [mailman]
     data = *.txt, README
     data.persistent = sqlite.db
 
 ----------------------
-Tarek's:
+
+Tarek's::
 
     [files]
 
@@ -446,20 +451,21 @@ Tarek's:
     data.persistent = sqlite.db
 
 ----------------------
-Toshio's
+
+Toshio's::
 
     [resources]
     *.jpg = data
 
-Alternative Original Label Idea
-===============================
-*Note* we're currently favouring Label Idea #2
+Alternative Label Idea
+======================
 
 labels for different resource types:  images, manpages, script, config files etc, javascript, schema, sql, data files
 
 (those labels impose some other issues - what would one do to differences in statically servable on a webserver versus gtkbuilder can find it)
 
 pkg_resources already provides software with an API::
+
     pkg_resource.open(label='javascript', name='jquery.js')
 
 Then we have the ability for Linux distros to place the different labels in FHS-compliant (or whatever) locations on the filesystem, mapping each label to a fs path::
@@ -471,14 +477,15 @@ Then we have the ability for Linux distros to place the different labels in FHS-
     pkg_resource.resource_stream('mailman', 'mailman.config', 'schema.cfg', label='config')
 
 analogy with logging:
+
 - with logging: developer sets up streams of data; sysadmin decides what to do with each log stream
 - with packaging: developer sets up streams of data; packaging system decides where to put each one
 
 developer:
 
-  (1) everything's within my local working copy; look within it; want to be able to quickly hack on stuff without having to "install" somewhere, for fast edit/test loop
-  (2) "setup.py sdist" has given us a zipfile, put it on pypi, someone uses buildout on it
-  (3) as (2) but a distribution has moved things to FHS-compliant location
+(1) everything's within my local working copy; look within it; want to be able to quickly hack on stuff without having to "install" somewhere, for fast edit/test loop
+(2) "setup.py sdist" has given us a zipfile, put it on pypi, someone uses buildout on it
+(3) as (2) but a distribution has moved things to FHS-compliant location
 
 
     pkgutil.open(pkgname='mailman.database.schemas', filename='schema.cfg') # <-- Does this work with our examples below?
@@ -491,20 +498,20 @@ developer:
 
 *TODO* can we match things against a range of packages/paths
 
+(1) ./mailman/config/schema.cfg
+(2) .
+(3) /etc/mailman/database/schemas/schema.cfg
 
-    (1): ./mailman/config/schema.cfg
-    (2):
-    (3): /etc/mailman/database/schemas/schema.cfg
+mapping from labels to dirs::
 
-mapping from labels to dirs:
-
-distro_dict = {
-   'config':'/etc',
-   'mandir':'/usr/share/mandir',
-}
+  distro_dict = {
+     'config':'/etc',
+     'mandir':'/usr/share/mandir',
+  }
 
 Another old syntax proposal
 ===========================
+::
 
     [resources]
 
@@ -528,10 +535,4 @@ Another old syntax proposal
         mailman/foo/**/*.cfg foo  # all .cfg files below  mailman/foo/SOME/PATH/TO/FILE/ will get copied to foo/SOME/PATH/TO/FILE/
         mailman/foo/**/*.cfg
         mailman/foo/**/bar/*.cfg baz
-
-
-In some other file, created by packager:
-
-≈
-How this works out in practice:
 }}}
