@@ -114,11 +114,11 @@ Rationale
 Therefore, the pkgutil.open call should only specify a path relative to the python package root (which the package dev thinks about). setup.cfg uses globs to categorize those files into the types above: forward-thinking package devs can write this, or packagers can do it for them.
 
 
-"resource_location" section in setup.cfg
+"resource_variables" section in setup.cfg
 ========================================
 
 The setup.py file has many sections that need to list files.  We plan to
-remove those lists to the setup.cfg.  The resource_location section replaces
+remove those lists to the setup.cfg.  The resource_variables section replaces
 the package_data sections of the script with more richness.
 
 There are three pieces of information that are needed for resource files:
@@ -195,7 +195,7 @@ The setup.cfg file let's the packager mark what categories the files belong
 to.  These are drawn from the types of files that the FHS and GNU coding
 standards define::
 
-  [resource_locations]
+  [resource_variables]
   # glob                     category to place in     placement from above table
 
   mailman/database/schemas/*  = {data}/schemas          # 1
@@ -246,30 +246,29 @@ distribution's system file might look::
   [resource_variables]
   # Configuration directories.  Some of these come straight out of the
   # configure script.  They are for implementing the other variables, not to
-  # be used directly in resource_locations
+  # be used directly in resource_variables
   confdir         = /etc
   datadir         = /usr/share
   libdir          = /usr/lib              # or /usr/lib64 on a multilib system
   statedir        = /var
-  local           = ~/.local/{app.name}   # User resource directory
+  local           = ~/.local/{distribution.name}   # User resource directory
 
   # These are the useful categories that are sometimes referenced at runtime
   # and are referenced from pkgutils.open()
-  config          = {confdir}/{app.name}  # Configuration files
-  data            = {datadir}/{app.name}  # Non-writable data that is independent of architecture (images, many xml/text files)
-  data.arch       = {libdir}/{app.name}   # Non-writable data that is different depending on architecture (some binary data formats)
-  data.persistent = {statedir}/lib/{app.name}    # Data that the app writes and keeps data that can't just be thrown out (databases)
-  data.disposable = {statedir}/cache/{app.name}  # Data that the app writes but can be thrown out and the app will keep working (cache)
-  help            = {datadir}/{app.name}  # Note, these help files are used at runtime
+  config          = {confdir}/{distribution.name}  # Configuration files
+  data            = {datadir}/{distribution.name}  # Non-writable data that is independent of architecture (images, many xml/text files)
+  data.arch       = {libdir}/{distribution.name}   # Non-writable data that is different depending on architecture (some binary data formats)
+  data.persistent = {statedir}/lib/{distribution.name}    # Data that the app writes and keeps data that can't just be thrown out (databases)
+  data.disposable = {statedir}/cache/{distribution.name}  # Data that the app writes but can be thrown out and the app will keep working (cache)
+  help            = {datadir}/{distribution.name}  # Note, these help files are used at runtime
   icon            = {datadir}/pixmaps
 
   # Non runtime files.  These are valid categories for markingfiles for
   # install but they should not be referenced by the app at runtime.
-  doc             = {datadir}/doc/{app.name} # These type of files are only viewed if the user explicitly opens them with another program
+  doc             = {datadir}/doc/{distribution.name} # These type of files are only viewed if the user explicitly opens them with another program
   info            = {datadir}/info           # GNU info documentation files
   man             = {datadir}/man            # Man page location
 
-* ?? Did we want to change {app.name} to {distribution.name} ??
 * ?? Did we want to put {distribution.version} in somewhere ??
 
 *TODO* We need to work on a comprehensive standard set of labels.
@@ -288,7 +287,7 @@ What happens?
 ~~~~~~~~~~~~~
 As an example, "mailman/database/schemas/blah.schema":
 
-1. The file `mailman/database/schemas/blah.schema` in the source tree matches `mailman/database/schemas/*` within the `resource_locations` stanza of the setup.cfg, which has right-hand side `{data}/schemas`
+1. The file `mailman/database/schemas/blah.schema` in the source tree matches `mailman/database/schemas/*` within the `resource_variables` stanza of the setup.cfg, which has right-hand side `{data}/schemas`
 2. The "*" in the left-hand-side matches "blah.schema", so the installation path for the file is mapped to "{data}/schemas/blah.schema"
 3. The label "data" is listed in the [resource_variables] stanza as being installed to "/var/{distribution.name}".  This expands out to: "/var/mailman"
 4. The result is that the source file "mailman/database/schemas/blah.schema" is installed within the rpm/deb to "/var/mailman/schemas/blah.schema"
@@ -297,7 +296,7 @@ As an example, "mailman/database/schemas/blah.schema":
 
 1. The file `mailman/database/schemas/blah.schema` in the source tree matches `mailman/database/schemas/*` within the data clause of the setup.cfg, so it is treated as having the label `{data}`.
 2. The clause specified a prefix path, so the installation path for the file is mapped to "schemas/blah.schema"
-3. The label "data" is listed in the [resource_locations] stanza as being installed to "/var/mailman"
+3. The label "data" is listed in the [resource_variables] stanza as being installed to "/var/mailman"
 4. The result is that the source file "mailman/database/schemas/blah.schema" is installed within the rpm/deb to "/var/mailman/schemas/blah.schema"
 5. The source code can still open the file via an API using pkgutil.open('mailman', 'database/schemas/blah.schema') and have the underlying system open it from "/var/mailman/schemas/blah.schema".
 
@@ -339,7 +338,7 @@ Returns a file object for the resource.
 * pkgutil.open() consults the metadata file to decide where to find the resource. If the metadata file is not found (as in a package before the egg is built), open()  falls back to traversing the given relative path starting from the root of the calling package (using __name__).
 * pkgutil.open() calls from nested packages aren't a problem because, after all, we pass the desired 'module_name' to start from as the first arg.
 
-* ? Do we still need this? Default behavior:  alongside the package files (if the real-installed-locations metadata file does not exist). Or if the package is installed without any resource_locations specified. ?</>?
+* ? Do we still need this? Default behavior:  alongside the package files (if the real-installed-locations metadata file does not exist). Or if the package is installed without any resource_variables specified. ?</>?
 
 pkgutils.filename
 -----------------
