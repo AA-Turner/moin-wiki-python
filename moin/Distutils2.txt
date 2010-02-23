@@ -24,13 +24,13 @@ Problems for packagers
 We want to solve these issues for Linux distribution packages without impacting Windows, OS X, or pure-python (i.e. easy_install/pip/virtualenv) installs.
 Typical issues when creating deb/rpm:
 
-  - PEP 376 : "Changing the .egg-info structure" - * why is this an "issue when creating deb/rpm? This sounds more like part of the solution*
-  - want to lay out files across the filesystem in a FHS-compliant way: *this document reflects a possible PEP to fix this*
-  - get rid of ez_setup.py - * getting rid of setuptools fixes this *
-  - breakages using ez_setup => Some setup.py scripts import ez_setup.  ez_setup requires a specific version of setuptools but doesn't actually need it -- lesser versions work fine. *getting rid of setuptools fixes this*
-  - Requires that are for a specific version (or range) because of bugs (not API change/features) but the distro packages have backported the fixes needed to an earlier version: *this is out of scope for now*
-  - differences between distribution names of packages e.g. "what are the packages of NumPy called?" - *this is out of scope for now *
-  - Egg version (specified in a Require section in setup.py) doesn't match the distro package version https://www.redhat.com/archives/fedora-python-devel-list/2008-June/msg00002.html - *out of scope for Python to solve*
+- PEP 376 : "Changing the .egg-info structure" - *why is this an "issue when creating deb/rpm? This sounds more like part of the solution*
+- want to lay out files across the filesystem in a FHS-compliant way: *this document reflects a possible PEP to fix this*
+- get rid of ez_setup.py - *getting rid of setuptools fixes this*
+- breakages using ez_setup => Some setup.py scripts import ez_setup.  ez_setup requires a specific version of setuptools but doesn't actually need it -- lesser versions work fine. *getting rid of setuptools fixes this*
+- Requires that are for a specific version (or range) because of bugs (not API change/features) but the distro packages have backported the fixes needed to an earlier version: *this is out of scope for now*
+- differences between distribution names of packages e.g. "what are the packages of NumPy called?" - *this is out of scope for now*
+- Egg version (specified in a Require section in setup.py) doesn't match the distro package version https://www.redhat.com/archives/fedora-python-devel-list/2008-June/msg00002.html - *out of scope for Python to solve*
 
 Example problem with current distutils
 ======================================
@@ -122,6 +122,7 @@ remove those lists to the setup.cfg.  The resource_location section replaces
 the package_data sections of the script with more richness.
 
 There are three pieces of information that are needed for resource files:
+
 * Position in the source tree (e.g. 'mailman/database/schemas/schema.cfg', 'mywidget/jquery.js')
 * Position when installed (e.g. '/etc/mailman/database/schemas/schema.cfg', '/usr/share/mywidget-1.1/javascript/jquery.js')
 * Key used when referencing the resource from code (We have a scheme to use
@@ -275,7 +276,7 @@ Links
 .. _`Filesystem Hierarchy Standard`:: http://www.pathname.com/fhs/
 
 .. _`Rationale from FHS`:: http://www.pathname.com/fhs/pub/fhs-2.3.html#THEFILESYSTEM
-makes a distinction between: 
+makes a distinction between:
 
 .. _`sysconfig module docs`:: http://docs.python.org/dev/library/sysconfig.html#module-sysconfig
 .. _`sysconfig module`:: http://svn.python.org/view/*checkout*/python/trunk/Lib/sysconfig.py?revision=77921&content-type=text/plain&pathrev=77921
@@ -328,7 +329,7 @@ Returns a file object for the resource.
   Example:
   pkgutils.open('mailman', 'database/schemas/blah.schema')
   <open file '/usr/share/mailman/schemas/blah.schema', mode 'r' at 0x7f938e325d78>
-  
+
 * First argument is the string name for a python package.
 * Second argument is the directory path relative to the python package's directory.
 * At install (or build) time we create a metadata file that maps from the source tree files to the files in their installed locations on the filesystem.
@@ -437,10 +438,10 @@ Tarek's:
 
     [files]
 
-    data = 
-        mailman/database/schemas/* 
+    data =
+        mailman/database/schemas/*
         *.txt
-        README 
+        README
 
     data.persistent = sqlite.db
 
@@ -488,11 +489,11 @@ developer:
 
 *TODO* Can we make sane defaults?  For instance, can pkgname default to the pkgname or modulename that the call is being made from?
 
-*TODO* can we match things against a range of packages/paths 
+*TODO* can we match things against a range of packages/paths
 
 
     (1): ./mailman/config/schema.cfg
-    (2): 
+    (2):
     (3): /etc/mailman/database/schemas/schema.cfg
 
 mapping from labels to dirs:
@@ -508,29 +509,29 @@ Another old syntax proposal
     [resources]
 
     # data are composed of two elements
-    #  1. the path relative to the package 
+    #  1. the path relative to the package
     #  2. an optional prefix path that will replace the explicit (non-glob) initial path from (1)
-    
+
     data =
         mailman/database/schemas/* schemas/
         **/*.tpl templates/
-        
+
     data.persistent =
         mailman/database/mailman.db database/
-    
+
     doc =
         developer-docs/**/*.txt
         README
-        
+
     config =
-        mailman/etc/* .           # all files in mailman/etc/* copied to 
+        mailman/etc/* .           # all files in mailman/etc/* copied to
         mailman/foo/**/*.cfg foo  # all .cfg files below  mailman/foo/SOME/PATH/TO/FILE/ will get copied to foo/SOME/PATH/TO/FILE/
-        mailman/foo/**/*.cfg 
+        mailman/foo/**/*.cfg
         mailman/foo/**/bar/*.cfg baz
-        
-        
+
+
 In some other file, created by packager:
 
-≈    
+≈
 How this works out in practice:
 }}}
