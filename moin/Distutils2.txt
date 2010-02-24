@@ -91,7 +91,7 @@ Hard to extend the build commands
 Proposed solution for placing files
 -----------------------------------
 
-This solution attempts to make several pieces of building nad installing
+This solution attempts to make several pieces of building and installing
 better.  It merges the many file lists into a single file, simpliies (or
 eliminates) the need for the setup.py, and allows packagers to place resource
 files in locations appropriate to their distribution.
@@ -115,18 +115,15 @@ Therefore, the pkgutil.open call should only specify a path relative to the pyth
 
 
 "resource_variables" section in setup.cfg
-========================================
+=========================================
 
-The setup.py file has many sections that need to list files.  We plan to
-remove those lists to the setup.cfg.  The resource_variables section replaces
-the package_data sections of the script with more richness.
+setup.py has many sections that need to list files.  We move those lists to setup.cfg.  The `[resource_variables]` section replaces the `package_data` argument of the script and adds more power.
 
 There are three pieces of information that are needed for resource files:
 
 * Position in the source tree (e.g. 'mailman/database/schemas/schema.cfg', 'mywidget/jquery.js')
 * Position when installed (e.g. '/etc/mailman/database/schemas/schema.cfg', '/usr/share/mywidget-1.1/javascript/jquery.js')
-* Key used when referencing the resource from code (We have a scheme to use
-  the same key as the installed source tree)
+* Key used when referencing the resource from code. (This key will be simply the position in the original source tree. distutils2 will maintain a mapping that lets this work, even if files were scattered elsewhere during installation.)
 
 Each of these can be thought of as a namespace.
 
@@ -134,7 +131,7 @@ The information that the developer is concerned with:
 * Position in the source tree
 * Key used in referencing it
 
-The information the downstream packager (rpm/deb/sysadmin) cares about are:
+The information the downstream packager (RPM/deb/sysadmin) cares about are:
 * Position when installed
 * Key used in referencing it
 
@@ -191,7 +188,7 @@ The numbers in the above placements are referenced below
 setup.cfg
 ~~~~~~~~~
 
-The setup.cfg file let's the packager mark what categories the files belong
+The setup.cfg file lets the packager mark what categories the files belong
 to.  These are drawn from the types of files that the FHS and GNU coding
 standards define::
 
@@ -210,29 +207,31 @@ standards define::
 The glob definitions are relative paths that match files from the topdir of
 the source tree.
 
-The "category to place in" both categorize what the files are and helps show
-where they will be installed in the filesystem.  This must start with
-a {category}.  This allows operating system vendors  and system administrators
-to define where in the filesystem the files are placed.
+The "category to place in" categorize the files and determine
+where they will be installed in the filesystem.  Each value under this column must start with
+a {category}.  This allows operating system vendors and system administrators
+to determine the final landing place of each file by defining appropriate substitutions for each {category}.
 
 distutils2 provides a default list of {categories} that the developer should
-pick from.  These are listed in the resource_variables section.  A developer
+pick from.  These are listed in the `[resource_variables]` section.  A developer
 can create a new category if they feel that none of the existing categories
-cover it.  The new categories should be proposed for addition to distutils2
+cover it.  The new categories should be proposed for addition to distutils2,
 and packagers are free to define a place on the filesystem where they belong
-via the resource_variables on their system.
+via the resource_variables on their system. If an unknown {category} is encountered during package build, a warning is issued, and the resources will be kept in its source tree location during installation.
 
-Each glob begins at the top of the source tree. This is necessary for two reasons: one source tree could contain multiple packages so we need to specify which one we are refering to and we may want to include files that are not in a package.
+Each glob begins at the top of the source tree. This is necessary for two reasons:
+* One source tree could contain multiple packages, so we need to specify which we are referring to.
+* We may want to include files that are not in a package.
 
 :"*": is a glob character that matches any characters within a file
-:"**": is a recursive glob character that matches any characters within a file
-    and an arbitrarily deep amount of directories.
+:"**": is a recursive glob character that matches any characters within a file or directory name
+    or a tree of directories 0 or more deep.
 
 Every category path must begin with a {category}.  This is generally
-expanded to a directory name but it serves to both let the developer
+expanded to a directory name, but it serves to both let the developer
 categorize the file and the packager install the files to a different
 directory.  The {categories} are replaced by paths defined in
-a resource_variables definition.  A sample of these definitions is found next
+a `[resource_variables]` definition.  A sample of these definitions is found in the next section.
 
 resource_variables
 ~~~~~~~~~~~~~~~~~~
