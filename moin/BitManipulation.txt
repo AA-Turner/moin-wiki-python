@@ -139,12 +139,11 @@ def hex_to_integer(h):
     if h[:2] == "0x":
         h = h[2:]
     for c in h:  # Hex character
-        num = num * 16
+        num *= 16
         if "0" <= c <= "9":
-            num = num + (ord(c) - ord("0"))
+            num += ord(c) - ord("0")
         elif "a" <= c <= "f":
-            num = num + (ord(c) - ord("a"))
-            num = num + 10
+            num += ord(c) - ord("a") + 10
         else:
             raise ValueError(c)
     return num
