@@ -69,11 +69,11 @@ class method(object):
          self.im_self = instance
          self.im_class = cls
 
-    def __call__(self, *args, '''kw):
+    def __call__(self, *args, **kw):
          # XXX : all sanity checks removed for readability
          if self.im_self:
              args = (self.im_self,) + args
-         return self.im_func(*args, '''kw)
+         return self.im_func(*args, **kw)
 
 class function(object):
      def __get__(self, instance, cls):
