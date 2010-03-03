@@ -37,7 +37,7 @@ answer is: attribute lookup rules and the descriptor protocol.
 
 The descriptor protocol specifies that
 during an attribute lookup, if a name resolves to a class attribute ''and''
-this attribute has a '''__get__''' method, then this '''__get__''' method is called.
+this attribute has a `__get__` method, then this `__get__` method is called.
 The argument list to this call includes either:
 
  * the instance and the class itself, or
@@ -49,10 +49,10 @@ mechanism is what provides support for computed attributes.
 
 The '''function''' type implements this descriptor
 protocol. So when a function is an attribute of a class object and you
-access it as an attribute of the class itself, its '''__get__''' method
+access it as an attribute of the class itself, its `__get__` method
 is called with '''None''' and the class as arguments.
 When you access it an an attribute of an instance of the class,
-its '''__get__''' method is called with the instance and the class as arguments.
+its `__get__` method is called with the instance and the class as arguments.
 
 With the instance object (if any) and class object available,
 it's easy to create a method object that wraps the function object.
@@ -76,7 +76,6 @@ class method(object):
          return self.im_func(*args, '''kw)
 
 class function(object):
-     # ...
      def __get__(self, instance, cls):
          return method(self, instance, cls)
 }}}
