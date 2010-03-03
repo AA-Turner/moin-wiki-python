@@ -42,3 +42,7 @@ IPython provides enhanced tracebacks and pdb support. Should check out what this
 
 == Save code history between sessions ==
 An idea by Regev: save the last executed code sections, so that history search will include those too. It's useful if there are lines which are executed many times - for example 'execfile'.
+
+Another suggestion roughly about the same subject, by Per Dalgaard Rasmussen: On exit, ask whether to save the history.
+
+I (Noam) think that we can use the "changed" flag of the text buffer for that - it's pretty standard in applications. We should also add a "recent files" menu. The only difference from standard apps is that we should warn even if the history was saved, and note that although the history was saved all the variables will be lost.
