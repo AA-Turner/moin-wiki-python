@@ -236,7 +236,7 @@ the last element.  If either index is negative, the length of the array is added
 
 
 In Perl, slicing is performed by giving the array a list
-of indicies to be included in the slice. This list can be
+of indices to be included in the slice. This list can be
 any arbitrary list and by using the range operator `...`,
 you can get Python like slicing. If any of the indices in
 the list is out of bounds an `undef` is inserted there.
@@ -579,7 +579,7 @@ for line in open('cookbook.data1'):
 printLoL('read from a file: ', LoL)
 }}}
 
-Unless you expect to be reading huge files, or want feeback as you
+Unless you expect to be reading huge files, or want feedback as you
 read the file, it is easier to slurp the file in in one go.
 
 In Perl, reading from a file-handle, e.g., `<STDIN>`, has a
@@ -625,7 +625,18 @@ printLoL("filled with somefunc:", \@LoL);
 LoL = [0] * 10  # populate the array -- see comment below
 
 for i in range(10):
-  LoL[i] = [ somefunc(i) ]
+  LoL[i] = somefunc(i) # assuming that somefunc(i) returns the list that we want
+
+printLoL('filled with somefunc:', LoL)
+
+}}}
+Or:
+{{{
+
+LoL = []
+
+for i in range(10):
+  LoL.append( somefunc(i) )
 
 printLoL('filled with somefunc:', LoL)
 
@@ -662,7 +673,7 @@ printLoL ("filled with somefunc via temps:", \@LoL);
 
 {{{
 for i in range(10):
-    tmp = [ somefunc(i) ]
+    tmp = somefunc(i)
     LoL[i] = tmp
 
 printLoL('filled with somefunc via temps:', LoL)
@@ -676,7 +687,7 @@ printLoL 'filled with map', \@LoL;
 }}}
 
 {{{
-LoL = map(lambda x: [ somefunc(x) ], range(10))
+LoL = map(lambda x: somefunc(x), range(10))
 printLoL('filled with map', LoL)
 }}}
 
@@ -728,11 +739,16 @@ printLoL('after appending to first element:', LoL)
 
 
 In python, the `+` operator is defined to mean concatenation
-for sequences.  An alternative to the above code is to append each element
+for sequences.  The `+` operator returns a new list object.
+Alternative to the above code that modify the original list object is to append each element
 of the list to `LoL[0]`:
 {{{
 LoL[0].append("wilma")
 LoL[0].append("betty")
+}}}
+Or to extend:
+{{{
+LoL[0].extend(["wilma", "betty"])
 }}}
 
 
@@ -765,7 +781,7 @@ printSep()
 
 {{{
 # upcase the first letter of each word
-# s/(\w)/\u$1/ is equivalent to Python .capitalize()
+# s/(\w)/\u$1/ is almost equivalent to Python .capitalize() [.capitalize() also lowercases the remaining letters]
 
 $LoL[1][1] =~ s{\b(\w)}{\u$1}g;
 print ("element 1, 1 is now $LoL[1][1]\n");
@@ -790,12 +806,12 @@ In the context of names, `title()` will be used as it correctly
 changes "smith-jones" to "Smith-Jones" whereas `capitalize()`
 would produce "Smith-jones".
 
-`str2 = str1.capitalize()` in Python is equivalent to `$str2 = ucfirst($str1)` in Perl.
+`str2 = str1.capitalize()` in Python is equivalent to `$str2 = ucfirst(lc($str1))` in Perl.
 
 Python's `str2 = str1.title()` is equivalent to Perl's:
 {{{
 $str2 = $str1;
-$str2 =~ s{\b(\w)}{\u$1}g;
+$str2 =~ s{\b(\w)(\w*)\b}{\u$1\L$2\E}g;
 }}}
 
 This is because regular expression search and replace operations
@@ -1520,6 +1536,22 @@ case where you ''do'' want a copy.  Larry Wall says that in Perl,
 you almost always do want the copy; I am not sure whether this is true
 in Python.
 
+If you wanted to do the copy, you would just do this (in Python 2.4+):
+{{{
+import sys
+
+def printSep():
+    print '=' * 60
+
+def printLoH(s,loh):
+    print s
+    for h in loh:
+        print "["
+        for key, val in sorted(h.items()):
+            print '  %s => %s' % (key, val)
+        print "]"
+    printSep()
+}}}
 
 
 
@@ -1705,7 +1737,7 @@ def getnextpairset():
   global _getnextpairsetcounter
   if _getnextpairsetcounter == len(_getnextpairsetdata) : return ''
   result = _getnextpairsetdata[_getnextpairsetcounter]
-  _getnextpairsetcounter = _getnextpairsetcounter + 1
+  _getnextpairsetcounter += 1
   return result
 
 def parsepairs(line):
@@ -1717,9 +1749,6 @@ def parsepairs(line):
   return dict
 
 }}}
-
-`getnextpairset`: Note the unwieldiness in python due to the fact
-that it does not have increment operators.
 
 This would be much more elegant as a class, both in python and Perl.
 [add a pointer to classes when we get there]
@@ -1748,7 +1777,7 @@ printLoH ('filled with getnextpairset', \@LoH);
 {{{
 
 LoH = []
-while 1:
+while True:
   fields = getnextpairset()
   if not fields: break
   LoH.append (fields)
