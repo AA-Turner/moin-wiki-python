@@ -13,13 +13,33 @@ May do what you want, but more by accident than design. If you change it to;
 
 Then the DB-API module will make sure your value is correctly escaped and turned into an object appropriate for the database. 
 
-/!\ Drivers differ in the way the parameters are passed to .execute ()
+/!\ Drivers differ in the way the parameters are passed to .execute();
+
+Some examples of parameter passing:
+
   * a list: {{{.execute ("... col = ?", ["value"])}}}
+  * a tuple: {{{.execute ("... col = ?", ("value"))}}}
   * variable arguments: {{{.execute ("... col = ?", "value")}}}
   * a dictionary: {{{.execute ("... col = :arg", {'arg': "value"})}}}
   * keyword args: {{{.execute ("... col = :arg", arg = "value")}}}
 
-/!\ The substitution value in the statement differs as well. See the paramstyle section (under Module Interface) in the [[http://www.python.org/peps/pep-0249.html|DB-API 2.0 specification]]
+/!\ Drivers also differ in the substitution sequence used to denote a parameter. The substitution style can be inspected by reading the {{{paramstyle}}} atribute of the module being used:
+
+{{{
+>>> print module_name.paramstyle
+'qmark'
+}}}
+
+Some examples of usage for each {{{paramstyle}}}:
+
+
+ * format: {{{.execute("... WHERE my_column = %s", (value,)) }}}
+ * pyformat: {{{.execute("... WHERE my_column = %(name)s", {"name": value}) }}}
+ * qmark: {{{.execute("... WHERE my_column = ?", (value,)) }}}
+ * numeric: {{{.execute("... WHERE my_column = :1", (value,)) }}}
+ * named: {{{.execute("... WHERE my_column = :name", {"name": value}) }}}
+
+See the {{{paramstyle}}} section (under Module Interface) in the [[http://www.python.org/peps/pep-0249.html|DB-API 2.0 specification]] for more information.
 
 See also: DbApiCheatSheet (under construction)
 
