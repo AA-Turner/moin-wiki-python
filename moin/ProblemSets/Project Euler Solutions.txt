@@ -75,14 +75,12 @@ http://projecteuler.net/index.php?section=problems&id=3
     def primes(min, max):
         global plist
         if 2 >= min: yield 2
-        i = 3
-        while i <= max:
+        for i in range(3, max, 2):
             for p in plist:
                 if i%p == 0 or p*p > i: break
             if i%p:
                 plist.append(i)
                 if i >= min: yield i
-            i = i+2
         
     def factors(number):
         for prime in primes(2, number):
