@@ -17,6 +17,7 @@ method is faster than another. See the [[#Profiling|profiling]] section for more
 }}}
 
 Also new since this was originally written are packages like
+[[http://cython.org/|Cython]],
 [[http://www.cosc.canterbury.ac.nz/~greg/python/Pyrex/|Pyrex]],
 [[http://psyco.sourceforge.net/|Psyco]],
 [[http://www.scipy.org/Weave|Weave]] and
@@ -106,14 +107,20 @@ From Python 2.3 sort is guaranteed to be stable.
 Python 2.4 adds an optional key parameter which makes the transform a lot easier to use:
 
 {{{#!python numbers=disable
+# E.g. n = 1
+n = 1
 import operator
-sort(nlist, key=operator.itemgetter(n))
+nlist.sort(key=operator.itemgetter(n))
+# use sorted() if you don't want to sort in-place:
+# sortedlist = sorted(nlist, key=operator.itemgetter(n))
 }}}
 
 Note that the original item is never used for sorting, only the returned key - this is equivalent to doing:
 
 {{{#!python numbers=disable
-nlist = [(x[i], i, x) for (i, x) in enumerate(nlist)]
+# E.g. n = 1
+n = 1
+nlist = [(x[n], i, x) for (i, x) in enumerate(nlist)]
 nlist.sort()
 nlist = [val for (key, index, val) in nlist]
 }}}
