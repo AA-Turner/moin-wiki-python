@@ -20,6 +20,26 @@ Make sure the code runs in Python 2.6 and use 2to3
 
 2to3 is a Python program that reads Python 2.x source code and applies a series of fixers to transform it into valid Python 3.x code. The standard library contains a rich set of fixers that will handle almost all code. 2to3 supporting library lib2to3 is, however, a flexible and generic library, so it is possible to write your own fixers for 2to3. lib2to3 could also be adapted to custom applications in which Python code needs to be edited automatically.  For more information about 2to3, see: http://doc.python.org/library/2to3.html
 
+Usage of 2to3 can be integrated into the installation process: 2to3 can be run as a build step in distutils. With distutils, the following fragments are needed in a setup.py::
+
+  try:
+      from distutils.command.build_py import build_py_2to3 as build_py
+  except ImportError:
+      # 2.x
+      from distutils.command.build_py import build_py
+  ...
+  setup(...
+    cmdclass = {'build_py':build_py}
+  )
+
+This will leave intact all source files, and convert them to Python 3 in the build area, if setup.py is run on Python 3. 'setup.py install' will then copy the 3.x version of the code into the target directory. If run on 2.x, nothing will change at all (as 2.x doesn't provide the build_py_2to3 class).
+
+For distribute, this approach can be expressed as::
+
+  setup(...
+    use_2to3=True
+  )
+
 Manual changes (not done by 2to3):
 
 * os.path.walk => os.walk: see issue4601_.
