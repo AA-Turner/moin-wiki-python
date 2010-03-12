@@ -6,64 +6,16 @@ Porting Python Code to 3.0
 
 There are three ways to support Python 3:
 
+* support Python 2 and Python 3 simultaneously from one code base
 * drop support for Python older than 2.6
 * maintain separate releases for Python 2 and Python 3
-* support Python 2 and Python 3 simultaneously from one code base
 
 Each approach has its strengths and weaknesses.
 
 
-Dropping Support for Python Older than 2.6
-==========================================
 
-.. note::
-   I think this section gives bad advise. It is not necessary *at all* to drop support for python older than 2.6
-   when trying to port to 3.x. It is also not strictly necessary to test that the code runs on 2.6 (although it
-   can't hurt to test that). If versions before 2.6 need to be supported simultaneously with 3.x, features
-   new in 2.6 obviously can't be used for porting; in most cases, they aren't necessary, anyway, if 2to3 is used. 
-   -- Martin v. Löwis
-
-   The official advice seems to be to use 2to3 and drop pre-2.6 support.  I agree that it's better to keep
-   support for older versions, but this seems to be discouraged in official communications.  Should we change
-   the order and put the section on simultaneous support first?
-   -- Andrew McNabb
-
-Make sure the code runs in Python 2.6 and use 2to3
-
-2to3 is a Python program that reads Python 2.x source code and applies a series of fixers to transform it into valid Python 3.x code. The standard library contains a rich set of fixers that will handle almost all code. 2to3 supporting library lib2to3 is, however, a flexible and generic library, so it is possible to write your own fixers for 2to3. lib2to3 could also be adapted to custom applications in which Python code needs to be edited automatically.  For more information about 2to3, see: http://doc.python.org/library/2to3.html
-
-Python 2.6 introduces forward-compatibility for many new Python 3 features.  The Python 3 builtins are accessible by doing an import from `future_builtins`.  To use the new print function, use `from __future__ import print_function`, and to make string literals be interpreted as unicode, use `from __future__ import unicode_literals`.  These forward-compatability features, and many others, are described in greater detail in `What's New in Python 2.6`_:
-
-.. _What's New in Python 2.6: http://docs.python.org/whatsnew/2.6.html
-
-Manual changes (not done by 2to3):
-
-* os.path.walk => os.walk: see issue4601_.
-* rfc822 => email
-
-.. _issue4601: http://bugs.python.org/issue4601
-
-Strings and Bytes
------------------
-
-Design decisions needs to be taken what exactly must be represented as bytes, and what as strings (Unicode data).  In many cases, this is easy.  However, data sent or received over pipes or sockets are usually in binary mode, so explicit conversions may be necessary.  For example, the Postgres API requires SQL queries to be transmitted in the connection encoding. It is probably easiest to convert the queries to the connection encoding as early as possible.
-
-The standard IO streams (sys.stdin, sys.stdout, sys.stderr), are in text mode by default in Python 3.  Calling `sys.stdout.write(some_binary_data)` will fail.  To write binary data to standard out, you must do the following::
-
-    sys.stdout.flush()
-    sys.stdout.buffer.write(some_binary_data)
-
-The flush() clears out any text (unicode) data that is stored in the TextIOWrapper, and the buffer attribute provides access to the lower-level binary stream.  If you are only writing binary data, you can remove the text layer with `sys.stdout = sys.stdout.detach()` in Python 3.1; in Python 3.0, do `sys.stdout = sys.stdout.buffer`.
-
-
-Maintain Separate Releases for Python 2 and Python 3
-====================================================
-
-Convert a Python 2 tree to Python 3 with the 2to3 tool: http://doc.python.org/library/2to3.html
-
-
-Support Python 2 and Python 3 Simultaneously
-============================================
+Approach 1: Support Python 2 and Python 3 Simultaneously
+========================================================
 
 .. note::
    If the objective is to support both 2.x and 3.x from a single source, the strategies in this
@@ -144,6 +96,43 @@ Integer Division
 ----------------
 
 Make sure to use `from __future__ import division` (introduced in Python 2.2) to get the non-truncating behavior, which is default in Python 3.
+
+
+Approach 2: Dropping Support for Python Older than 2.6
+======================================================
+
+Make sure the code runs in Python 2.6 and use 2to3
+
+2to3 is a Python program that reads Python 2.x source code and applies a series of fixers to transform it into valid Python 3.x code. The standard library contains a rich set of fixers that will handle almost all code. 2to3 supporting library lib2to3 is, however, a flexible and generic library, so it is possible to write your own fixers for 2to3. lib2to3 could also be adapted to custom applications in which Python code needs to be edited automatically.  For more information about 2to3, see: http://doc.python.org/library/2to3.html
+
+Python 2.6 introduces forward-compatibility for many new Python 3 features.  The Python 3 builtins are accessible by doing an import from `future_builtins`.  To use the new print function, use `from __future__ import print_function`, and to make string literals be interpreted as unicode, use `from __future__ import unicode_literals`.  These forward-compatability features, and many others, are described in greater detail in `What's New in Python 2.6`_:
+
+.. _What's New in Python 2.6: http://docs.python.org/whatsnew/2.6.html
+
+Manual changes (not done by 2to3):
+
+* os.path.walk => os.walk: see issue4601_.
+* rfc822 => email
+
+.. _issue4601: http://bugs.python.org/issue4601
+
+Strings and Bytes
+-----------------
+
+Design decisions needs to be taken what exactly must be represented as bytes, and what as strings (Unicode data).  In many cases, this is easy.  However, data sent or received over pipes or sockets are usually in binary mode, so explicit conversions may be necessary.  For example, the Postgres API requires SQL queries to be transmitted in the connection encoding. It is probably easiest to convert the queries to the connection encoding as early as possible.
+
+The standard IO streams (sys.stdin, sys.stdout, sys.stderr), are in text mode by default in Python 3.  Calling `sys.stdout.write(some_binary_data)` will fail.  To write binary data to standard out, you must do the following::
+
+    sys.stdout.flush()
+    sys.stdout.buffer.write(some_binary_data)
+
+The flush() clears out any text (unicode) data that is stored in the TextIOWrapper, and the buffer attribute provides access to the lower-level binary stream.  If you are only writing binary data, you can remove the text layer with `sys.stdout = sys.stdout.detach()` in Python 3.1; in Python 3.0, do `sys.stdout = sys.stdout.buffer`.
+
+
+Approach 3: Maintain Separate Releases for Python 2 and Python 3
+================================================================
+
+Convert a Python 2 tree to Python 3 with the 2to3 tool: http://doc.python.org/library/2to3.html
 
 
 Martin's notes from psycopg2
