@@ -16,6 +16,13 @@ Each approach has its strengths and weaknesses.
 Dropping Support for Python Older than 2.6
 ==========================================
 
+.. note::
+   I think this section gives bad advise. It is not necessary *at all* to drop support for python older than 2.6
+   when trying to port to 3.x. It is also not strictly necessary to test that the code runs on 2.6 (although it
+   can't hurt to test that). If versions before 2.6 need to be supported simultaneously with 3.x, features
+   new in 2.6 obviously can't be used for porting; in most cases, they aren't necessary, anyway, if 2to3 is used. 
+   -- Martin v. Löwis
+
 Make sure the code runs in Python 2.6 and use 2to3
 
 2to3 is a Python program that reads Python 2.x source code and applies a series of fixers to transform it into valid Python 3.x code. The standard library contains a rich set of fixers that will handle almost all code. 2to3 supporting library lib2to3 is, however, a flexible and generic library, so it is possible to write your own fixers for 2to3. lib2to3 could also be adapted to custom applications in which Python code needs to be edited automatically.  For more information about 2to3, see: http://doc.python.org/library/2to3.html
@@ -52,6 +59,12 @@ Convert a Python 2 tree to Python 3 with the 2to3 tool: http://doc.python.org/li
 
 Support Python 2 and Python 3 Simultaneously
 ============================================
+
+.. note::
+   If the objective is to support both 2.x and 3.x from a single source, the strategies in this
+   section should not be followed. Instead, 2to3 should be used - it is not necessarily just for
+   separate releases, but allows well to support all versions from a single source tree. It also
+   easily supports Python back to 2.3 (and probably earlier). -- Martin v. Löwis
 
 Supporting code that runs in both Python 2.6 and Python 3 is not much more difficult than porting to Python 3 (see above for more details).  However, supporting older versions--like 2.3, 2.4, and 2.5--is much more difficult.  This requires avoiding any syntax that only works in one version or the other, so it often involves resorting to hacks.  These hacks make the code more awkward than it would be in Python 3 or in Python 2, but many people find that this is better than supporting only one version or the other.  When support for Python 2 is eventually dropped, these hacks can be removed.
 
