@@ -1,0 +1,13 @@
+This page describes possible Summer of Code projects related to the Python 3 JIT, developed originally under the name "[[http://code.google.com/p/unladen-swallow/|Unladen Swallow]]".
+
+'''Contact: Collin Winter <collinwinter@google.com>'''
+
+ * Develop a JIT-accelerated regex engine: pick up, extend [[http://code.google.com/p/unladen-swallow/issues/detail?id=13|existing work]] if applicable; make necessary improvements to [[http://hg.python.org/benchmarks|the common benchmark suite]]; make necessary improvements to Python's correctness tests; implement JIT acceleration for 50% of regexes in benchmark suite; zero correctness regressions; zero performance regressions; demonstrate 25% performance improvement in regex benchmarks.
+
+ * Convert JIT output from stack machine to register machine ([[http://www.tecgraf.puc-rio.br/~lhf/ftp/doc/jucs05.pdf|reference]], [[http://www.usenix.org/events/vee05/full_papers/p153-yunhe.pdf|reference]]); demonstrate improvement in generated LLVM IR; demonstrate improvement in performance across relevant benchmarks; make necessary improvements to benchmark suite.
+
+ * Optimize looping constructs; expose Python-level loops to LLVM's loop optimization passes; avoid allocating objects on the heap in the fast path; be able to bail back to the interpreter seamlessly; make necessary improvements to Python's correctness tests; demonstrate performance improvements across relevant benchmarks.
+
+ * Develop tools for exposing JIT data to developers for performance debugging; annotate source code with gathered types; annotate source code with bail sites; enable developers to answer the questions, "how do I make this application faster?", "why did my application slow down?"; integrate with existing tools like cProfile, or develop new tools as appropriate.
+
+ * Develop/extend comprehensive suite of fuzz testing tools for Python; [[http://bitbucket.org/ebo/pyfuzz/overview/|pyfuzz]] for source-level fuzzing; [[http://bitbucket.org/haypo/fusil/wiki/Home|fusil]] for API fuzzing; new fuzzer for bytecode; set up continuous fuzzing infrastructure; build dashboard for fuzzing efforts; fix any bugs uncovered by fuzzing efforts.
