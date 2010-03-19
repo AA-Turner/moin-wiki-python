@@ -1,0 +1,59 @@
+#FORMAT rst
+
+Desired Tracker Features
+========================
+
+Instead of the 'needs test' and 'needs patch' stages, it would
+be better to have a checkbox grid something like this::
+
+                    NA      needs patch     has patch
+        docs       ( )          ( )           ( )
+        tests      ( )          ( )           ( )
+        bugfix     ( )          ( )           ( )
+
+We could then have a 'patch incomplete' stage instead of the 'needs'
+stages, where the checkboxes would make clear what things were missing.
+
+Instead of a multi-selection list for python versions, perhaps we could
+have a list of versions like this::
+
+            confirmed   will apply  committed
+    3.3        ( )         ( )      [      ]
+    3.2        ( )         ( )      [      ]
+    3.1        ( )         ( )      [      ]
+    3.0        ( )         ( )      [      ]
+    2.7        ( )         ( )      [      ]
+         ...
+
+This would allow the tracker to record which versions a bug is present
+in, even if it doesn't get fixed in that version, and also allow us
+to track the progress when more than one version needs to be patched.
+We might perhaps want to add a stage 'committing' when a patch has
+been committed to one branch but not all.  (Note: for feature requests
+'confirmed' would be left blank).  'will apply' would be checked when
+someone determines that the patch, whether it exists or not, should be
+applied to the given branch.  'committed' would be the revision in which
+the patch was committed.  Ideally this would be auto-filled by the change
+management system based on tags in the commit message.
+
+If the above is deemed too complex, then we should at least have a way to
+mark issues as accepted regardless of whether or not they have a complete
+patch.  This is to differentiate between issues that just need work,
+and issues where we haven't even decided that we are going to accept it.
+
+This doesn't need a patch, but is noted here so the idea doesn't get
+lost: it has been suggsted that an additional type of 'refactoring'
+be added.
+
+When an issue is closed stage should be automatically set to
+'committed/rejected'.
+
+There should be a field in which you can enter an issue number of
+an issue of which this issue is a duplicate, and submitting it
+should
+
+    1) merge the nosy list from this issue into the specified issue
+
+    2) set the resolution to duplicate
+
+    3) close the issue (setting stage to committed/rejected per above)
