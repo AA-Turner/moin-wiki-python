@@ -1,0 +1,13 @@
+This page describes a possible Summer of Code project for a testing infrastructure for PyPI.
+
+'''Contact: Tarek Ziadé <tarek@ziade.org>'''
+
+PyPI has recently gained a PubSubHubHub interface we can use to trigger events when a new package is uploaded. 
+
+The student work will consist of creating a series of scripts that know how to start a VM in an environment like EC2, shut down the network so there's no security issues, then perform a series of actions on the package (likely, distutils commands like 'install').
+
+Last, a rollback on the VM is done so its not compromised by the commands, and a report is sent back. The results could contain also a
+list of the files that where modified, using probe tools like SystemTap (under linux). The VMs would be first Linux, and then we
+would add Windows VMs.
+
+Once this system is done, the student can work on a lightweight website using a framework like Pylons, where PyPI users could register so they get the reports by e-mails. The site could also display the reports.
