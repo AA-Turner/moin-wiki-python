@@ -1,19 +1,27 @@
-This page describes possible Summer of Code projects related to the Python 3 JIT, developed originally under the name "[[http://code.google.com/p/unladen-swallow/|Unladen Swallow]]".
+This page describes possible Summer of Code projects related to the Python 3 JIT, developed originally under the name "[[http://code.google.com/p/unladen-swallow/|Unladen Swallow]]". This list is not exhaustive. If you have other ideas for improvements to the JIT compiler, I'd love to discuss them with you.
 
 '''Contact: Collin Winter <collinwinter@google.com>'''
 
- * Develop a JIT-accelerated regex engine: pick up, extend [[http://code.google.com/p/unladen-swallow/issues/detail?id=13|existing work]] if applicable; make necessary improvements to [[http://hg.python.org/benchmarks|the common benchmark suite]]; make necessary improvements to Python's correctness tests; implement JIT acceleration for 50% of regexes in benchmark suite; zero correctness regressions; zero performance regressions; demonstrate 25% performance improvement in regex benchmarks.
+== Faster regular expressions ==
 
- * '''Convert JIT output from stack machine to register machine.''' Currently, the JIT compiler produces code that mimics the CPython bytecode interpreter loop, including the use of an explicit stack. Using the same stack idea made the initial compiler easier to implement, but the stack operations inhibit LLVM's optimization passes and impeded performance ([[http://www.tecgraf.puc-rio.br/~lhf/ftp/doc/jucs05.pdf|reference]], [[http://www.usenix.org/events/vee05/full_papers/p153-yunhe.pdf|reference]]). The student will design and implement changes to the JIT compiler to eliminate this explicit stack and instead use [[http://llvm.org/docs/tutorial/LangImpl7.html|LLVM's ''alloca'' instructions]], which are much easier for LLVM to optimize. This design will need to handle bailing back to the interpreter correctly. The student will demonstrate a performance improvement across relevant benchmarks, and improve the benchmark suite and correctness tests as needed.
-
-
- demonstrate improvement in generated LLVM IR; demonstrate improvement in performance across relevant benchmarks; make necessary improvements to benchmark suite.
-
- * Optimize looping constructs; expose Python-level loops to LLVM's loop optimization passes; avoid allocating objects on the heap in the fast path; be able to bail back to the interpreter seamlessly; make necessary improvements to Python's correctness tests; demonstrate performance improvements across relevant benchmarks.
-
- * Develop tools for exposing JIT data to developers for performance debugging; annotate source code with gathered types; annotate source code with bail sites; enable developers to answer the questions, "how do I make this application faster?", "why did my application slow down?"; integrate with existing tools like cProfile, or develop new tools as appropriate.
-
- * '''Develop a comprehensive suite of [[http://en.wikipedia.org/wiki/Fuzz_testing|fuzz testing]] tools for Python.''' Fuzz testing is an important tool for stressing a compiler. With the addition of a JIT compiler to Python 3, fuzz testing is more important than ever. The student will evaluate the existing Python fuzz testing tools and extend them when needed: [[http://bitbucket.org/ebo/pyfuzz/overview/|pyfuzz]] for source-level fuzzing, [[http://bitbucket.org/haypo/fusil/wiki/Home|fusil]] for API fuzzing. The student will develop a new fuzzer for CPython bytecode to stress-test the bytecode->x86 JIT compiler ([[http://code.google.com/p/unladen-swallow/issues/detail?id=15|reference]]). The student will set up an automated system for continuously fuzzing a given CPython binary, along the lines of [[http://python.org/dev/buildbot/|the current CPython buildbot system]], including some kind of dashboard to display the results. The student will fix any bugs discovered by the fuzzing tools.
+Develop a JIT-accelerated regex engine: pick up, extend [[http://code.google.com/p/unladen-swallow/issues/detail?id=13|existing work]] if applicable; make necessary improvements to [[http://hg.python.org/benchmarks|the common benchmark suite]]; make necessary improvements to Python's correctness tests; implement JIT acceleration for 50% of regexes in benchmark suite; zero correctness regressions; zero performance regressions; demonstrate 25% performance improvement in regex benchmarks.
 
 
-This list is not exhaustive. If you have other ideas for improvements to the JIT compiler, I'd love to discuss them with you.
+== Convert JIT output from stack machine to register machine ==
+
+Currently, the JIT compiler produces code that mimics the CPython bytecode interpreter loop, including the use of an explicit stack. Using the same stack idea made the initial compiler easier to implement, but the stack operations inhibit LLVM's optimization passes and impeded performance ([[http://www.tecgraf.puc-rio.br/~lhf/ftp/doc/jucs05.pdf|reference]], [[http://www.usenix.org/events/vee05/full_papers/p153-yunhe.pdf|reference]]). The student will design and implement changes to the JIT compiler to eliminate this explicit stack and instead use [[http://llvm.org/docs/tutorial/LangImpl7.html|LLVM's ''alloca'' instructions]], which are much easier for LLVM to optimize. This design will need to handle bailing back to the interpreter correctly. The student will demonstrate a performance improvement across relevant benchmarks, and improve the benchmark suite and correctness tests as needed.
+
+
+== Optimize looping constructs ==
+
+Expose Python-level loops to LLVM's loop optimization passes; avoid allocating objects on the heap in the fast path; be able to bail back to the interpreter seamlessly; make necessary improvements to Python's correctness tests; demonstrate performance improvements across relevant benchmarks.
+
+
+== JIT performance tools ==
+
+Develop tools for exposing JIT data to developers for performance debugging; annotate source code with gathered types; annotate source code with bail sites; enable developers to answer the questions, "how do I make this application faster?", "why did my application slow down?"; integrate with existing tools like cProfile, or develop new tools as appropriate.
+
+
+== Develop a comprehensive suite of fuzz testing tools for Python ==
+
+[[http://en.wikipedia.org/wiki/Fuzz_testing|Fuzz testing]] is an important tool for stressing a compiler. With the addition of a JIT compiler to Python 3, fuzz testing is more important than ever. The student will evaluate the existing Python fuzz testing tools and extend them when needed: [[http://bitbucket.org/ebo/pyfuzz/overview/|pyfuzz]] for source-level fuzzing, [[http://bitbucket.org/haypo/fusil/wiki/Home|fusil]] for API fuzzing. The student will develop a new fuzzer for CPython bytecode to stress-test the bytecode->x86 JIT compiler ([[http://code.google.com/p/unladen-swallow/issues/detail?id=15|reference]]). The student will set up an automated system for continuously fuzzing a given CPython binary, along the lines of [[http://python.org/dev/buildbot/|the current CPython buildbot system]], including some kind of dashboard to display the results. The student will fix any bugs discovered by the fuzzing tools.
