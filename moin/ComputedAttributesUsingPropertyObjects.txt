@@ -30,24 +30,11 @@ attribute") ''looks like'' it directly accesses storage, but ''works like'' a
 function. That is, you code a computed attribute without parentheses or
 arguments, but accessing the attribute causes a function to be executed. Example:
 
-
----- /!\ '''Edit conflict - other version:''' ----
   If `color` is a computed attribute of object `wgt`, then in these statements ...
 
   {{{
 save_me = wgt.color
 top_edge_color = (255,) + wgt.color[1:]
-wgt.color = (0,128,128)
-
----- /!\ '''Edit conflict - your version:''' ----
-  If `color` is a computed attribute of object `wgt`, then in these statements ...
-
-  {{{
-save_me = wgt.color
-top_edge_color = (255,) + wgt.color[1:]
-wgt.color = (0,128,128)
-
----- /!\ '''End of edit conflict''' ----
   }}}
 
   . ... evaluating `wgt.color` causes a function to be invoked. The function's
