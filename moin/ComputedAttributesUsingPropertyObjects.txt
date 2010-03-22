@@ -68,7 +68,7 @@ attribute. But now, there's a business need to support colors specified as
 ''#rrggbb'' strings, also. Management decides that a Widget object must store
 the color in its originally specified format (string or tuple), but must always
 report the color as an ''(R,G,B)'' tuple. Moreover, existing programs using the
-attribute name `color` must continue to work, without modification.
+`color` attribute must continue to work, without modification.
 
 These requirements can be handled by turning color into a computed attribute:
 
@@ -119,11 +119,12 @@ wgt.color = "#ff80ff"
 }}}
 
 .... the property object dispatches `set_color` with the argument `"#ff80ff"`,
-causing the value to stored in `color_data`.
+causing the value to be stored in `color_data`.
 
 Some coding details:
 
- * In Python 2.x, a class containing a computed attribute must be based on the type object:
+ * In Python 2.x, a class containing a computed attribute must be based on the type
+'''object''':
 
  {{{
 class Widget(object):     # works
@@ -132,7 +133,7 @@ class Widget:             # does not work
     ...
  }}}
 
- . In Python 3.x, all classes are automatically based on object, so you can code the class statement either way.<<BR>> /* line break is workaround for MoinMoin bug */
+ . In Python 3.x, all classes are automatically based on '''object''', so you can code the class statement either way.<<BR>> /* ??line break is workaround for MoinMoin bug */
 
  * The property object must be assigned to a class attribute. (This assignment gives the computed attribute its name; the property object itself doesn't know the name of the computed attribute that it implements.) The property "performs" as a computed attribute only when it is accessed through an instance of the class. Working at Python's interactive prompt shows this:
 
@@ -143,9 +144,9 @@ class Widget:             # does not work
 (16, 32, 254)
  }}}
 
- * When an attribute reference causes the property object to dispatch the `get_color` function, it passes the Widget instance as the sole argument to this function.
+ * When an attribute reference causes the property object to dispatch `get_color`, the Widget instance is passed as the sole argument to this function.
 
- * When an assignment statement causes the property object to dispatch the `set_color` function, it passes the Widget instance as the first argument to this function, and the value of the right-hand-side of the assignment as the second argument.
+ * When an assignment statement causes the property object to dispatch `set_color`, two arguments are passed to this function: the Widget instance, and the statement's right-hand-side value.
 
 == References ==
 
