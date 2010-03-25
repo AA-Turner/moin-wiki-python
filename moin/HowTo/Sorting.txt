@@ -365,7 +365,8 @@ to sort a list:
 >>> sorted(l, cmp=locale.strcoll, reverse=False)
 ['a', '\xc4\x85', 'z']
    }}}
-
+ * Alternate datastructure for performance with ordered data
+   * If you're needing a sorted list every step of the way as you process each item to be added to the sorted list, then lst.sort(), sorted() and bisect.insort() are all very slow and tend to yield quadratic behavior or worse.  In such a scenario, it's better to use something like a heap, red-black tree or treap (like the included heapq module, or this [[http://stromberg.dnsalias.org/~dstromberg/treap/|treap module]] (shameless plug added by python treap module author).
 
 == See Also ==
 
