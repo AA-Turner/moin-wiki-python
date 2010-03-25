@@ -74,13 +74,11 @@ the color in its originally specified format (string or tuple), but must always
 report the color as an ''(R,G,B)'' tuple. Moreover, existing programs using the
 `color` attribute must continue to work, without modification.
 
-These requirements can be handled by turning color into a computed attribute:
+These requirements can be handled by turning `color` into a computed attribute:
 
- * Rename the attribute that stores the color value, from `color` to
- `color_data`. This frees up the attribute name `color`.
+ * At the instance level, rename the attribute that stores the color value, from `self.color` to `self.color_data`. This frees up the attribute name `color`.
 
- * Assign the attribute name `color` to a property object that can dispatch two
- functions, `get_color` and `set_color`.
+ * At the class level, assign the attribute name `color` to a property object that can dispatch two functions, `get_color` and `set_color`.
 
 The following code implements `get_color` and `set_color` as methods of
 the Widget class. Alternatively (but less object-orientedly), they could be
@@ -104,6 +102,7 @@ class Widget(object):
         self.color_data = arg
 
     # create property object to dispatch 'get' and 'set' methods
+    # NOTE: "color" is a class attribute, not an instance attribute
     color = property(get_color, set_color)
 }}}
 
