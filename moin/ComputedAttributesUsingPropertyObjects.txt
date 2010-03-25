@@ -59,8 +59,11 @@ instance attribute `color`:
 
 {{{
 class Widget(object):
-    def __init__(self, color_arg=None):
-        self.color = color_arg if color_arg else (0,0,0)
+    def __init__(self, arg=None):
+        if arg:
+            self.color = arg
+        else:
+            self.color = (0,0,0)
 }}}
 
 In the past, all Widget colors were specified as ''(R,G,B)'' tuples, so
@@ -85,8 +88,11 @@ implemented as functions outside the class definition.
 
 {{{
 class Widget(object):
-    def __init__(self, color_arg=None):
-        self.color_data = color_arg if color_arg else (0,0,0)
+    def __init__(self, arg=None):
+        if arg:
+            self.color_data = arg
+        else:
+            self.color_data = (0,0,0)
 
     def get_color(self):
         if type(self.color_data) is tuple:
@@ -94,8 +100,8 @@ class Widget(object):
         else:
             return str_to_tuple(self.color_data)
 
-    def set_color(self, color_arg):
-        self.color_data = color_arg
+    def set_color(self, arg):
+        self.color_data = arg
 
     # create property object to dispatch 'get' and 'set' methods
     color = property(get_color, set_color)
