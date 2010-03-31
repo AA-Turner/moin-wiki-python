@@ -1,141 +1,51 @@
 = Sorting Mini-HOW TO =
-'''Original version by Andrew Dalke'''
+'''Original version by Andrew Dalke with a major update by Raymond Hettinger'''
 
 <<TableOfContents>>
 
-Python lists have a built-in {{{sort()}}} method that modifies the list in-place 
+Python lists have a built-in {{{sort()}}} method that modifies the list in-place
 and a {{{sorted()}}} built-in function that builds a new sorted list from an iterable.
 
-There are many ways to use them to sort data and there doesn't appear 
-to be a single, central place in the various manuals describing them, 
+There are many ways to use them to sort data and there doesn't appear
+to be a single, central place in the various manuals describing them,
 so I'll do so here.
 
-== Backward compatibility note ==
 
-Many constructs given in the HOWTO assume Python 2.4.  
-Before that, there was no {{{sorted()}}} builtin and 
-{{{list.sort()}}} took no keyword arguments.
+== Sorting Basics ==
 
-== Sorting basic data types ==
-
-A simple ascending sort is very easy: just call the 
+A simple ascending sort is very easy: just call the
 {{{sorted()}}} function.  It returns a new sorted list:
 
 {{{
->>> print sorted([5, 2, 3, 1, 4])
+>>> sorted([5, 2, 3, 1, 4])
 [1, 2, 3, 4, 5]
 }}}
 
-You can also use the {{{sort()}}} method of a list.  
+You can also use the {{{sort()}}} method of a list.
 It modifies the list in-place (and returns None to avoid confusion).
-Usually it's less convenient than {{{sorted()}}} - but if you don't 
+Usually it's less convenient than {{{sorted()}}} - but if you don't
 need the original list, it's slightly more efficient.
 
 {{{
 >>> a = [5, 2, 3, 1, 4]
 >>> a.sort()
->>> print a
-[1, 2, 3, 4, 5]
-}}}
-
-Sort takes an optional function which can be called for doing the
-comparisons.  The default sort routine is equivalent to using {{{cmp}}}:
-
-{{{
->>> print sorted([5, 2, 3, 1, 4], cmp)
-[1, 2, 3, 4, 5]
-}}}
-
-where {{{cmp()}}} is the built-in function that compares two objects,
-{{{x}}} and {{{y}}}, and returns a negative number, 0 or a positive
-number depending on whether x<y, x==y, or x>y.  During the course of
-the sort the relationships must stay the same for the final list to
-make sense.
-
-If you want, you can define your own function for the comparison.  For
-integers we can do:
-
-{{{
->>> def numeric_compare(x, y):
->>>    return x - y
->>>
-}}}
-
-Note that this does not work for numbers in general, as the comparison
-function must return integers.
-
-For numbers in general, but a little more understandably:
-
-{{{
->>> def numeric_compare(x, y):
->>>    if x > y:
->>>       return 1
->>>    elif x == y:
->>>       return 0
->>>    else:  #x < y
->>>       return -1
->>>
->>> a = [5, 2, 3, 1, 4]
->>> a.sort(numeric_compare)
->>> print a
-[1, 2, 3, 4, 5]
-}}}
-
-By the way, the {{{sort()}}} function won't work if the result of the subtraction is out of range, as in {{{sys.maxint - (-1)}}}.
-
-Or, if you don't want to define a new named function you can create an
-anonymous one using {{{lambda}}}, as in:
-
-{{{
->>> a = [5, 2, 3, 1, 4]
->>> a.sort(lambda x, y: x - y)
->>> print a
-[1, 2, 3, 4, 5]
-}}}
-
-Python 2.4 adds three keyword arguments to {{{sort()}}} that
-simplify many common usages: {{{cmp}}}, {{{key}}}, and {{{reverse}}}.  The {{{cmp}}} keyword is for providing a sorting function; the previous examples could be written as:
-{{{
->>> a.sort(cmp=numeric_compare)
->>> a.sort(cmp=lambda x, y: x - y)
-}}}
-
-The {{{reverse}}} parameter is a Boolean value; if it's true, the list is sorted into reverse order.
-{{{
->>> a = [5, 2, 3, 1, 4]
->>> a.sort(reverse=True)
 >>> a
-[5, 4, 3, 2, 1]
+[1, 2, 3, 4, 5]
 }}}
 
-For Python versions before 2.4, you can reverse the sense
-of the comparison function:
-{{{
->>> a = [5, 2, 3, 1, 4]
->>> def reverse_numeric(x, y):
->>>     return y - x
->>>
->>> a.sort(reverse_numeric)
->>> a
-[5, 4, 3, 2, 1]
-}}}
-
-(a more general implementation could return {{{cmp(y,x)}}} or {{{-cmp(x,y)}}}).
-
-However, it's faster if Python doesn't have to call a function for
-every comparison, so the most efficient solution is to do the forward sort first, then use the {{{reverse()}}} method.
+Another difference is that the {{{sort()}}} method is only defined
+for lists.  In contrast, the {{{sorted()}}} function accepts any iterable.
 
 {{{
->>> a = [5, 2, 3, 1, 4]
->>> a.sort()
->>> a.reverse()
->>> a
-[5, 4, 3, 2, 1]
+>>> sorted({1: 'D', 2: 'B', 3: 'B', 4: 'E', 5: 'A'})
+[1, 2, 3, 4, 5]
 }}}
 
-== Sorting by keys ==
+== Key Functions ==
 
-Python 2.4's {{{key}}} parameter lets you derive a sorting key for each element of the list, and then sort using the key.
+Starting with Python 2.4, both {{{list.sort()}}} and {{{sorted()}}}
+both added a {{{key}}} parameter to specify a function to be called
+on each list element prior to making comparisons.
 
 For example, here's a case-insensitive string comparison:
 {{{
@@ -147,66 +57,113 @@ For example, here's a case-insensitive string comparison:
 
 The value of the {{{key}}} parameter should be a function
 that takes a single argument and returns a key to use for sorting purposes.
+This technique is fast because the key function is called exactly
+once for each input record.
 
-Often there's a built-in that will match your needs, such as {{{str.lower()}}}.  The {{{operator}}} module contains a number of functions useful for this purpose.
-For example, you can sort tuples
-based on their second element
-using {{{operator.itemgetter()}}}:
-
-{{{
->>> import operator
->>> L = [('c', 2), ('d', 1), ('a', 4), ('b', 3)]
->>> map(operator.itemgetter(0), L)
-['c', 'd', 'a', 'b']
->>> map(operator.itemgetter(1), L)
-[2, 1, 4, 3]
->>> sorted(L, key=operator.itemgetter(1))
-[('d', 1), ('c', 2), ('b', 3), ('a', 4)]
-}}}
-
-If the invocation of {{{key}}} returns a tuple, second and subsequent items in the tuple will be treated as sub-keys in the same way that Python generally sorts tuples:
+A common pattern is to sort complex objects using some the object's
+indices as a key.  For example:
 
 {{{
->>> L = [('d', 2), ('a', 4), ('b', 3), ('c', 2)]
->>> sorted(L, key=lambda x:(x[1], x[0]))
-[('c', 2), ('d', 2), ('b', 3), ('a', 4)]
+>>> student_tuples = [
+	('john', 'A', 15),
+	('jane', 'B', 12),
+	('dave', 'B', 10),
+]
+>>> sorted(student_tuples, key=lambda student: student[2])   # sort by age
+[('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
 }}}
 
-To reverse sort based on the second item in each tuple, but forward sort based on the first item when a tie is met, then forward sort first and then reverse sort based on 2nd item:
-{{{
->>> L = [('a', 2), ('d', 4), ('b', 3), ('c', 2)]
->>> L.sort(); L
-[('a', 2), ('b', 3), ('c', 2), ('d', 4)]
->>> sorted(L, key=operator.itemgetter(1), reverse=True)
-[('d', 4), ('b', 3), ('a', 2), ('c', 2)]
-}}}
-
-Versions of Python before 2.4 don't have the convenient
-{{{key}}} parameter of {{{sort()}}}, so you have to write a
-comparison function that embodies the key-generating logic:
+The same technique works for objects with named attributes.  For example:
 
 {{{
->>> a = "This is a test string from Andrew".split()
->>> a.sort(lambda x, y: cmp(x.lower(), y.lower()))
->>> print a
-['a', 'Andrew', 'from', 'is', 'string', 'test', 'This']
+>>> class Student:
+	def __init__(self, name, grade, age):
+		self.name = name
+		self.grade = grade
+		self.age = age
+	def __repr__(self):
+		return repr((self.name, self.grade, self.age))
+
+>>> student_objects = [
+	Student('john', 'A', 15),
+	Student('jane', 'B', 12),
+	Student('dave', 'B', 10),
+]
+>>> sorted(student_objects, key=lambda student: student.age)   # sort by age
+[('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
 }}}
 
-This goes through the overhead of converting a word to lower case
-every time it must be compared, roughly O(n lg n) times.
-Python 2.4's {{{key}}} parameter is called once for each item in the list, which is O(n) and therefore more efficient.
-You can manually perform the same optimization by
-computing the keys once
-and using those values to control the sort order:
+== Accessor Functions ==
+
+The key-function patterns shown above are very common, so Python provides
+convenience functions to make accessor functions easier and
+faster.  The {{{operator}}} module has {{{itemgetter}}}, {{{attrgetter}}},
+and starting in Python 2.5 a {{{methodcaller}}} function.
+
+Using those functions, the above examples become simpler and faster.
 
 {{{
->>> words = "This is a test string from Andrew.".split()
->>> deco = [ (word.lower(), i, word) for i, word in enumerate(words) ]
->>> deco.sort()
->>> new_words = [ word for _, _, word in deco ]
->>> print new_words
-['a', 'Andrew.', 'from', 'is', 'string', 'test', 'This']
+>>> from operator import itemgetter, attrgetter
+>>> sorted(student_tuples, key=itemgetter(2))
+[('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
+>>> sorted(student_objects, key=attrgetter('age'))
+[('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
 }}}
+
+The operator module functions allow multiple levels of sorting.
+For example, to sort by grade then by age:
+
+{{{
+>>> sorted(student_tuples, key=itemgetter(1,2))
+[('john', 'A', 15), ('dave', 'B', 10), ('jane', 'B', 12)]
+>>> sorted(student_objects, key=attrgetter('grade', 'age'))
+[('john', 'A', 15), ('dave', 'B', 10), ('jane', 'B', 12)]
+}}}
+
+== Ascending and Descending ==
+
+Both {{{list.sort()}}} and {{{sorted()}}} accept a {{{reverse}}} parameter
+with a boolean value.  This is using to flag descending sorts.
+For example, to get the student data in reverse age order:
+
+{{{
+>>> sorted(student_tuples, key=itemgetter(2), reverse=True)
+[('john', 'A', 15), ('jane', 'B', 12), ('dave', 'B', 10)]
+>>> sorted(student_objects, key=attrgetter('age'), reverse=True)
+[('john', 'A', 15), ('jane', 'B', 12), ('dave', 'B', 10)]
+}}}
+
+== Sort Stability and Complex Sorts ==
+
+Starting with Python 2.2, sorts are guaranteed to be stable.
+That means that when multiple records have the same key,
+their original order is preserved.
+
+{{{
+>>> data = [('red', 1), ('blue', 1), ('red', 2), ('blue', 2)]
+>>> sorted(data, key=itemgetter(0))
+[('blue', 1), ('blue', 2), ('red', 1), ('red', 2)]
+}}}
+
+Notice how the two records for {{{'blue'}}} retain their original
+order so that {{{('blue', 1)}}} is guaranteed to precede {{{('blue', 2)}}}.
+
+This wonderful property lets you build complex sorts in a series
+of sorting steps.  For example, to sort the student data by
+descending grade and then accending age, do the age sort first
+and then sort again using grade:
+
+{{{
+>>> s = sorted(student_objects, key=attrgetter('age'))
+>>> sorted(s, key=attrgetter('grade'), reverse=True)
+[('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
+}}}
+
+The Timsort algorithm used in Python does multiple sorts efficiently
+because it can take advantage of any ordering already present in
+a dataset.
+
+== Decorate-Sort-Undecorate ==
 
 This idiom is called Decorate-Sort-Undecorate after its three steps:
   * First, the initial list is decorated with new values that control the sort order.
@@ -222,139 +179,81 @@ It is not strictly necessary in all cases to include the index {{{i}}} in the de
 Another name for this idiom is [[http://en.wikipedia.org/wiki/Schwartzian_transform|Schwartzian transform]], after Randal L. Schwartz, who popularized it among Perl programmers.
 
 For large lists and lists where the comparison information
-is expensive to calculate, and Python versions < 2.4, DSU is likely to be the
-fastest way to sort the list.
+is expensive to calculate, and Python versions before 2.4, DSU is likely to be the
+fastest way to sort the list.  For 2.4 and later, key functions provide the same
+functionality.
 
-== Comparing classes ==
+== The Old Way using the __cmp__ parameter ==
 
-The comparison for two basic data types, like ints to ints or string to
-string, is built into Python and makes sense.  There is a default way
-to compare class instances, but the default manner isn't usually very
-useful.  You can define your own comparison with the {{{__cmp__}}} method,
-as in:
+Many constructs given in this HOWTO assume Python 2.4 or later.
+Before that, there was no {{{sorted()}}} builtin and
+{{{list.sort()}}} took no keyword arguments.
+Instead, all of the Py2.x versions supported a
+{{{__cmp__}}} parameter to handle user specified comparison functions.
 
-{{{
->>> class Spam:
->>>     def __init__(self, spam, eggs):
->>>         self.spam = spam
->>>         self.eggs = eggs
->>>     def __cmp__(self, other):
->>>         return cmp(self.spam+self.eggs, other.spam+other.eggs)
->>>     def __str__(self):
->>>         return str(self.spam + self.eggs)
->>>
->>> a = [Spam(1, 4), Spam(9, 3), Spam(4, 6)]
->>> a.sort()
->>> for spam in a:
->>>     print spam
-5
-10
-12
-}}}
+In Py3.0, the {{{__cmp__}}} parameter was removed entirely
+(as part of a larger effort to simplify and unify the language,
+eliminating the conflict between rich comparisons and the
+{{{__cmp__}}} methods).
 
-Sometimes you may want to sort by a specific attribute of a class.  If
-appropriate you should just define the {{{__cmp__}}} method to compare
-those values, but you cannot do this if you want to compare between
-different attributes at different times.
+In Py2.x, sort allowed an optional function which can be called for doing the
+comparisons.  That function should take two arguments to be compared and
+then return a negative value for less-than, return zero if they are equal,
+or return a positive value for greater-than.
 
-Python 2.4 has an {{{operator.attrgetter()}}} function
-that makes this easy:
-{{{
->>> import operator
->>> a = [Spam(1, 4), Spam(9, 3), Spam(4, 6)]
->>> a.sort(key=operator.attrgetter('eggs'))
->>> for spam in a:
->>>   print spam.eggs, spam
-3 12
-4 5
-6 10
-}}}
-
-In Python 2.4 if you don't want to import the operator module you can:
-{{{
->>> a = [Spam(1, 4), Spam(9, 3), Spam(4, 6)]
->>> a.sort(key=lambda obj: obj.eggs)
->>> for spam in a:
->>>   print spam.eggs, spam
-3 12
-4 5
-6 10
-}}}
-
-Again, earlier Python version require you to go
-back to passing a comparison function to sort, as in:
+For integers we can do:
 
 {{{
->>> a = [Spam(1, 4), Spam(9, 3), Spam(4, 6)]
->>> a.sort(lambda x, y: cmp(x.eggs, y.eggs))
->>> for spam in a:
->>>   print spam.eggs, spam
-3 12
-4 5
-6 10
+>>> def numeric_compare(x, y):
+>>>    return x - y
+>>> sorted([5, 2, 4, 1, 3], cmp=numeric_compare)
+[1, 2, 3, 4, 5]
 }}}
 
-If you want to compare two arbitrary attributes (and aren't overly
-concerned about performance) you can even define your own comparison
-function object.  This uses the ability of a class instance to emulate
-a function by defining the {{{__call__}}} method, as in:
+Or you can reverse the order of comparison with:
 
 {{{
->>> class CmpAttr:
->>>     def __init__(self, attr):
->>>         self.attr = attr
->>>     def __call__(self, x, y):
->>>         return cmp(getattr(x, self.attr), getattr(y, self.attr))
->>>
->>> a = [Spam(1, 4), Spam(9, 3), Spam(4,6)]
->>> a.sort(CmpAttr("spam"))  # sort by the "spam" attribute
->>> for spam in a:
->>>    print spam.spam(), spam.eggs(), spam
-1 4 5
-4 6 10
-9 3 12
-
->>> a.sort(CmpAttr("eggs"))   # re-sort by the "eggs" attribute
->>> for spam in a:
->>>    print spam.spam(), spam.eggs(), spam
-9 3 12
-1 4 5
-4 6 10
+>>> def reverse_numeric(x, y):
+        return y - x
+>>> sorted([5, 2, 4, 1, 3], cmp=reverse_numeric)
+[5, 4, 3, 2, 1]
 }}}
 
-Of course, if you want a faster sort you can extract the attributes
-into an intermediate list and sort that list.
+When porting code from Python 2.x to 3.x, the situation can arise
+when you have the user supplying a comparison function and you
+need to convert that to a key function.  The following wrapper
+makes that easy to do:
 
+{{{
+def CmpToKey(mycmp):
+    'Convert a cmp= function into a key= function'
+    class K(object):
+        def __init__(self, obj, *args):
+            self.obj = obj
+        def __lt__(self, other):
+            return mycmp(self.obj, other.obj) < 0
+        def __gt__(self, other):
+            return mycmp(self.obj, other.obj) > 0
+        def __eq__(self, other):
+            return mycmp(self.obj, other.obj) == 0
+        def __le__(self, other):
+            return mycmp(self.obj, other.obj) <= 0
+        def __ge__(self, other):
+            return mycmp(self.obj, other.obj) >= 0
+        def __ne__(self, other):
+            return mycmp(self.obj, other.obj) != 0
+    return K
+}}}
 
-So, there you have it; about a half-dozen different ways to define how
-to sort a list:
+To convert to a key function, just wrap the old comparison function:
 
- 1. sort using the default method
- 1. sort using a comparison function
- 1. reverse sort not using a comparison function
- 1. sort on an intermediate list (two forms)
- 1. sort using class defined __cmp__ method
- 1. sort using a sort function object
+{{{
+>>> sorted([5, 2, 4, 1, 3], key=CmpToKey(reverse_numeric))
+[5, 4, 3, 2, 1]
+}}}
 
-== Topics to be covered ==
+== Other Topics to be Covered ==
 
- * Rich comparisons
-   * With custom comparisons, it is possible to create
-   insane combinations, such as {{{((x < y) and (x == y))}}}
-   or {{{((x < y) and not (x <= y))}}}.
-   * The most important comparisons are __eq__ (but be
-   sure to update __hash__ as well), and __lt__ (which
-   is used by the sorting algorithms in practice).
- * Sorting stability
-   * Python sorts are stable.  Guido has indicated that
-   this is a promise of the language.  Therefore, if
-   x == y, sorted ([x, y]) returns [x, y] but 
-   sorted([y, x]) returns [y, x].
- * The sorted() function
-   * It takes any iterable, and returns a sorted version.
-   If the items in the iterable are not sensibly compared,
-   it will still return a canonical ordering, unless 
-   someone went out of their way to prevent one.
  * Small info about locale aware sorting, eg:
    {{{
 >>> l = [u'\xc4\x85', u'a', u'z']
@@ -367,7 +266,3 @@ to sort a list:
    }}}
  * Alternate datastructure for performance with ordered data
    * If you're needing a sorted list every step of the way as you process each item to be added to the sorted list, then lst.sort(), sorted() and bisect.insort() are all very slow and tend to yield quadratic behavior or worse.  In such a scenario, it's better to use something like a heap, red-black tree or treap (like the included heapq module, or this [[http://stromberg.dnsalias.org/~dstromberg/treap/|treap module]] - shameless plug added by python treap module author).
-
-== See Also ==
-
- * SortingListsOfDictionaries
