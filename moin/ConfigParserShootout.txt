@@ -1,7 +1,7 @@
 <<TableOfContents>>
-There has been some recent debate about
+Some time ago there was a debate about
 [[http://python.org/doc/current/lib/module-ConfigParser.html|ConfigParser]]
-on the Python mailing lists.  For more, see these
+on the Python mailing lists.  But since that initial discussion there hasn't been any strong push to resolve the situation.  For more, see these
 threads:
 
  * [[http://mail.python.org/pipermail/python-dev/2004-October/049167.html|ConfigParser patches]]
@@ -82,12 +82,12 @@ and might reasonably be in a separate module for each format supported.
 
 == INITools ==
 
-[[http://pythonpaste.org/initools/|INITools]] is factored into a parser that conforms to the ConfigParser sense of what an INI file is ({{{initools.iniparser}}}, and a couple implementations based on that.  One of those implementations is {{{initools.configparser}}}, which is compatible with the standard library ConfigParser.
+[[http://pythonpaste.org/initools/|INITools]] is factored into a parser that conforms to the ConfigParser sense of what an INI file is ({{{initools.iniparser}}}), and a couple of implementations based on that.  One of those implementations is {{{initools.configparser}}}, which is compatible with the standard library ConfigParser.
 
 It includes several features that can normally be built on to ConfigParser, but enables these through simple class variables per feature.  These include features like:
 
  * Percent or dollar substitution (dollar substitution is like what zc.buildout uses)
- * Options outside of a section
+ * Options outside of a section (i.e., leading options before any section is defined)
  * A different name for the global section besides DEFAULT
  * Case insensitivity without case folding (i.e., preserves case)
  * Some unicode handling
@@ -96,7 +96,7 @@ It includes several features that can normally be built on to ConfigParser, but 
  * You can turn off the behavior where file not found is ignored
  * There's a method to get the filename and line number where an option was read from
 
-Because it preserves all the information you could write a view on top of this structure, to present any reasonable API -- the ConfigParser API is awkward, but given a few additions it is at least complete.
+Because it preserves all the information from the file you could write a view on top of this structure, to present any reasonable API -- the ConfigParser API is awkward, but given a few additions it is at least a reasonably complete description.
 
 == Skip's Idea ==
 
