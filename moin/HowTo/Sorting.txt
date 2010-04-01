@@ -49,9 +49,7 @@ on each list element prior to making comparisons.
 
 For example, here's a case-insensitive string comparison:
 {{{
->>> a = "This is a test string from Andrew".split()
->>> a.sort(key=str.lower)
->>> a
+>>> sorted("This is a test string from Andrew".split(), key=str.lower)
 ['a', 'Andrew', 'from', 'is', 'string', 'test', 'This']
 }}}
 
@@ -104,8 +102,10 @@ Using those functions, the above examples become simpler and faster.
 
 {{{
 >>> from operator import itemgetter, attrgetter
+
 >>> sorted(student_tuples, key=itemgetter(2))
 [('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
+
 >>> sorted(student_objects, key=attrgetter('age'))
 [('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
 }}}
@@ -116,6 +116,7 @@ For example, to sort by grade then by age:
 {{{
 >>> sorted(student_tuples, key=itemgetter(1,2))
 [('john', 'A', 15), ('dave', 'B', 10), ('jane', 'B', 12)]
+
 >>> sorted(student_objects, key=attrgetter('grade', 'age'))
 [('john', 'A', 15), ('dave', 'B', 10), ('jane', 'B', 12)]
 }}}
@@ -129,6 +130,7 @@ For example, to get the student data in reverse age order:
 {{{
 >>> sorted(student_tuples, key=itemgetter(2), reverse=True)
 [('john', 'A', 15), ('jane', 'B', 12), ('dave', 'B', 10)]
+
 >>> sorted(student_objects, key=attrgetter('age'), reverse=True)
 [('john', 'A', 15), ('jane', 'B', 12), ('dave', 'B', 10)]
 }}}
@@ -183,7 +185,7 @@ is expensive to calculate, and Python versions before 2.4, DSU is likely to be t
 fastest way to sort the list.  For 2.4 and later, key functions provide the same
 functionality.
 
-== The Old Way using the __cmp__ parameter ==
+== The Old Way Using the __cmp__ Parameter ==
 
 Many constructs given in this HOWTO assume Python 2.4 or later.
 Before that, there was no {{{sorted()}}} builtin and
@@ -252,7 +254,7 @@ To convert to a key function, just wrap the old comparison function:
 [5, 4, 3, 2, 1]
 }}}
 
-== Other Topics to be Covered ==
+== Odd and Ends ==
 
  * Small info about locale aware sorting, eg:
    {{{
@@ -264,5 +266,12 @@ To convert to a key function, just wrap the old comparison function:
 >>> sorted(l, cmp=locale.strcoll, reverse=False)
 ['a', '\xc4\x85', 'z']
    }}}
+
  * Alternate datastructure for performance with ordered data
    * If you're needing a sorted list every step of the way as you process each item to be added to the sorted list, then lst.sort(), sorted() and bisect.insort() are all very slow and tend to yield quadratic behavior or worse.  In such a scenario, it's better to use something like a heap, red-black tree or treap (like the included heapq module, or this [[http://stromberg.dnsalias.org/~dstromberg/treap/|treap module]] - shameless plug added by python treap module author).
+
+ * The {{{reverse}}} parameter still maintains sort stability (i.e. records with equal keys retain the original order).  Interestingly, that effect can be simulated without the parameter by using the builtin {{{reversed}}} function twice:
+   {{{
+>>> data = [('red', 1), ('blue', 1), ('red', 2), ('blue', 2)]
+>>> assert sorted(data, reverse=True) == list(reversed(sorted(reversed(data))))
+   }}}
