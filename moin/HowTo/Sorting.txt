@@ -266,7 +266,7 @@ To convert to a key function, just wrap the old comparison function:
 
 == Odd and Ends ==
 
- * Small info about locale aware sorting, eg:
+ * Locale aware sorting:
    {{{
 >>> l = [u'\xc4\x85', u'a', u'z']
 >>> sorted(l, reverse=False)
@@ -277,11 +277,28 @@ To convert to a key function, just wrap the old comparison function:
 ['a', '\xc4\x85', 'z']
    }}}
 
- * Alternate datastructure for performance with ordered data
-   * If you're needing a sorted list every step of the way as you process each item to be added to the sorted list, then list.sort(), sorted() and bisect.insort() are all very slow and tend to yield quadratic behavior or worse.  In such a scenario, it's better to use something like a heap, red-black tree or treap (like the included heapq module, or this [[http://stromberg.dnsalias.org/~dstromberg/treap/|treap module]] - shameless plug added by python treap module author).
-
  * The {{{reverse}}} parameter still maintains sort stability (i.e. records with equal keys retain the original order).  Interestingly, that effect can be simulated without the parameter by using the builtin {{{reversed}}} function twice:
    {{{
 >>> data = [('red', 1), ('blue', 1), ('red', 2), ('blue', 2)]
 >>> assert sorted(data, reverse=True) == list(reversed(sorted(reversed(data))))
    }}}
+
+ * The sort routines are guaranteed to use {{{__lt__}}} when making comparisons between two objects.  So, it is easy to add a standard sort order to a class by defining an {{{__lt__()}}} method:
+   {{{
+>>> Student.__lt__ = lambda self, other: self.age < other.age
+>>> sorted(student_objects)
+[('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
+   }}}
+
+
+ * Key functions need not access data internal to objects being sorted.  A key function can also access external resources.  For instance, if the student grades are stored in a dictionary, they can be used to sort a separate list of student names:
+   {{{
+>>> students = ['dave', 'john', 'jane']
+>>> newgrades = {'john': 'F', 'jane':'A', 'dave': 'C'}
+>>> sorted(students, key=newgrades.__getitem__)
+['jane', 'dave', 'john']
+}}}
+
+ * Alternate datastructure for performance with ordered data
+
+   If you're needing a sorted list every step of the way as you process each item to be added to the sorted list, then list.sort(), sorted() and bisect.insort() are all very slow and tend to yield quadratic behavior or worse.  In such a scenario, it's better to use something like a heap, red-black tree or treap (like the included heapq module, or this [[http://stromberg.dnsalias.org/~dstromberg/treap/|treap module]] - shameless plug added by python treap module author).
