@@ -211,9 +211,7 @@ eliminating the conflict between rich comparisons and the
 In Py2.x, sort allowed an optional function which can be called for doing the
 comparisons.  That function should take two arguments to be compared and
 then return a negative value for less-than, return zero if they are equal,
-or return a positive value for greater-than.
-
-For integers we can do:
+or return a positive value for greater-than.  For example, we can do:
 
 {{{
 >>> def numeric_compare(x, y):
@@ -266,16 +264,7 @@ To convert to a key function, just wrap the old comparison function:
 
 == Odd and Ends ==
 
- * Locale aware sorting:
-   {{{
->>> l = [u'\xc4\x85', u'a', u'z']
->>> sorted(l, reverse=False)
-['a', 'z', '\xc4\x85']
->>> import locale
->>> locale.setlocale(locale.LC_ALL, "pl_PL.UTF-8")
->>> sorted(l, cmp=locale.strcoll, reverse=False)
-['a', '\xc4\x85', 'z']
-   }}}
+ * For locale aware sorting, use {{{locale.strxfrm()}}} for a key function or {{{locale.strcoll()}}} for a comparison function.
 
  * The {{{reverse}}} parameter still maintains sort stability (i.e. records with equal keys retain the original order).  Interestingly, that effect can be simulated without the parameter by using the builtin {{{reversed}}} function twice:
    {{{
