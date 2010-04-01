@@ -21,7 +21,7 @@ A simple ascending sort is very easy: just call the
 [1, 2, 3, 4, 5]
 }}}
 
-You can also use the {{{sort()}}} method of a list.
+You can also use the {{{list.sort()}}} method of a list.
 It modifies the list in-place (and returns None to avoid confusion).
 Usually it's less convenient than {{{sorted()}}} - but if you don't
 need the original list, it's slightly more efficient.
@@ -33,7 +33,7 @@ need the original list, it's slightly more efficient.
 [1, 2, 3, 4, 5]
 }}}
 
-Another difference is that the {{{sort()}}} method is only defined
+Another difference is that the {{{list.sort()}}} method is only defined
 for lists.  In contrast, the {{{sorted()}}} function accepts any iterable.
 
 {{{
@@ -91,11 +91,12 @@ The same technique works for objects with named attributes.  For example:
 [('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
 }}}
 
-== Accessor Functions ==
+== Operator Module Functions ==
 
 The key-function patterns shown above are very common, so Python provides
 convenience functions to make accessor functions easier and
-faster.  The {{{operator}}} module has {{{itemgetter}}}, {{{attrgetter}}},
+faster.  The [[http://docs.python.org/library/operator.html#module-operator|operator module]]
+has {{{itemgetter}}}, {{{attrgetter}}},
 and starting in Python 2.5 a {{{methodcaller}}} function.
 
 Using those functions, the above examples become simpler and faster.
@@ -137,7 +138,8 @@ For example, to get the student data in reverse age order:
 
 == Sort Stability and Complex Sorts ==
 
-Starting with Python 2.2, sorts are guaranteed to be stable.
+Starting with Python 2.2, sorts are guaranteed to be
+[[http://en.wikipedia.org/wiki/Sorting_algorithm#Stability|stable]].
 That means that when multiple records have the same key,
 their original order is preserved.
 
@@ -171,6 +173,14 @@ This idiom is called Decorate-Sort-Undecorate after its three steps:
   * First, the initial list is decorated with new values that control the sort order.
   * Second, the decorated list is sorted.
   * Finally, the decorations are removed, creating a list that contains only the initial values in the new order.
+
+For example, to sort the student data by grade using the DSU approach:
+{{{
+>>> decorated = [(student[1], i, student) for i, student in enumerate(student_tuples)]
+>>> decorated.sort()
+>>> [student for key, i, student in decorated]      # undecorate
+[('john', 'A', 15), ('jane', 'B', 12), ('dave', 'B', 10)]
+}}}
 
 This idiom works because tuples are compared lexicographically; the first items are compared; if they are the same then the second items are compared, and so on.
 
@@ -268,7 +278,7 @@ To convert to a key function, just wrap the old comparison function:
    }}}
 
  * Alternate datastructure for performance with ordered data
-   * If you're needing a sorted list every step of the way as you process each item to be added to the sorted list, then lst.sort(), sorted() and bisect.insort() are all very slow and tend to yield quadratic behavior or worse.  In such a scenario, it's better to use something like a heap, red-black tree or treap (like the included heapq module, or this [[http://stromberg.dnsalias.org/~dstromberg/treap/|treap module]] - shameless plug added by python treap module author).
+   * If you're needing a sorted list every step of the way as you process each item to be added to the sorted list, then list.sort(), sorted() and bisect.insort() are all very slow and tend to yield quadratic behavior or worse.  In such a scenario, it's better to use something like a heap, red-black tree or treap (like the included heapq module, or this [[http://stromberg.dnsalias.org/~dstromberg/treap/|treap module]] - shameless plug added by python treap module author).
 
  * The {{{reverse}}} parameter still maintains sort stability (i.e. records with equal keys retain the original order).  Interestingly, that effect can be simulated without the parameter by using the builtin {{{reversed}}} function twice:
    {{{
