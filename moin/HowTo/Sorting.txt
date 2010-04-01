@@ -176,9 +176,9 @@ This idiom is called Decorate-Sort-Undecorate after its three steps:
 
 For example, to sort the student data by grade using the DSU approach:
 {{{
->>> decorated = [(student[1], i, student) for i, student in enumerate(student_tuples)]
+>>> decorated = [(student.grade, i, student) for i, student in enumerate(student_objects)]
 >>> decorated.sort()
->>> [student for key, i, student in decorated]      # undecorate
+>>> [student for grade, i, student in decorated]               # undecorate
 [('john', 'A', 15), ('jane', 'B', 12), ('dave', 'B', 10)]
 }}}
 
