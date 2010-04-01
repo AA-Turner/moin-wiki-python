@@ -2,6 +2,13 @@ This page describes possible Summer of Code projects related to the Python 3 JIT
 
 '''Contact: Collin Winter <collinwinter@google.com>'''
 
+== Reduce memory usage ==
+
+The JIT compiler currently [[http://www.python.org/dev/peps/pep-3146/#memory-usage|increases the memory usage of CPython 2.6 significantly]]. We believe much of this increase to be waste or symptoms of bugs in LLVM or the JIT's usage of LLVM. The student will develop benchmarks to measure different components of memory usage; track down the various sources of the memory usage increase; develop and implement reductions in memory usage while still maintaining performance/correctness; develop tools and documentation to make future memory usage investigations easier.
+
+[[http://code.google.com/p/unladen-swallow/issues/detail?id=68|Some work]] has already been done in this area, but more is needed. This work is critical to getting the JIT compiler merged into CPython 3.3.
+
+
 == Faster regular expressions ==
 
 Develop a JIT-accelerated regex engine: pick up, extend [[http://code.google.com/p/unladen-swallow/issues/detail?id=13|existing work]] if applicable; make necessary improvements to [[http://hg.python.org/benchmarks|the common benchmark suite]]; make necessary improvements to Python's correctness tests; implement JIT acceleration for 50% of regexes in benchmark suite; zero correctness regressions; zero performance regressions; demonstrate 25% performance improvement in regex benchmarks.
