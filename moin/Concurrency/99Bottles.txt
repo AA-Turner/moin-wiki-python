@@ -339,48 +339,30 @@ stackless.run()}}}
 == circuits ==
 {{{#!python
 import re
+import sys
 
+from circuits import Component
 from circuits.io import File
-from circuits import Event, Component
+from circuits.net.protocols import LP
 
-SEEK_END = 2
-
-LINESEP = re.compile("\r?\n")
-
-def splitLines(s, buffer):
-    lines = LINESEP.split(buffer + s)
-    return lines[:-1], lines[-1]
-
-class Follow(Component):
+class Tail(Component):
 
     def __init__(self, filename):
-        super(Follow, self).__init__()
-        fd = File(filename, "r")
-        fd.seek(0, SEEK_END)
-        fd.register(self)
-
-class LineBuffer(Component):
-
-    def __init__(self):
-        super(LineBuffer, self).__init__()
-        self._data = ""
-
-    def read(self, data):
-        lines, self._data = splitLines(data, self._data)
-        for line in lines:
-            self.push(Event(line), "line", self.channel)
+        super(Tail, self).__init__()
+        f = (File(filename, "r", autoclose=False) + LP()).register(self)
+        f.seek(0, 2)
 
 class Grep(Component):
 
     def __init__(self, pattern):
         super(Grep, self).__init__()
-        self._pattern = pattern
+        self.regex = re.compile(pattern)
 
     def line(self, line):
-        if self._pattern in line:
+        if self.regex.match(line):
             print line
 
-(Follow("/tmp/foo") + LineBuffer() + Grep("pants")).run()
+(Tail(sys.argv[1]) + Grep(sys.argv[2])).run()
 }}}
 
 == pprocess ==
