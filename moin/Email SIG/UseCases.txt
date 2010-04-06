@@ -97,7 +97,10 @@ that 'strings' are python3 unicode strings.
 
  Handling HTTP data::  It should be possible to feed an http stream
  containing headers and content to the parser and get back a valid
- Message object.
+ Message object.  One use case still in use in the field as of 2010-04-05
+ is parsing the 'mutlipart/byteranges' content body returned as the payload
+ of a '206 Partial Content' response (in response to a request with 'Range'
+ header(s).  Zope currently uses 'multifile' to do this parsing.
 
  Netnews:: Netnews articles are almost identical in format to email, but
  have a few additional quirks.  The email package must be able to handle
