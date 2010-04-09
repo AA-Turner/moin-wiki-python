@@ -2,7 +2,7 @@ This page describes a possible Summer of Code project for Distutils2
 
 '''Contact: Tarek Ziadé <tarek@ziade.org>'''
 
-Tasks:
+== GSOC Tasks ==
 
  * XML-RPC client for distutils 2: http://bugs.python.org/issue8190
  * Make it possible to use setup.cfg to describe all the metatadata: http://bugs.python.org/issue8252
@@ -17,3 +17,31 @@ Tasks:
  * move the code from distribute to distutils2 (upload_doc, use_2to3)
  * Implement pkgutil APIs described in PEP 376 : http://bugs.python.org/issue8250  -- work started by people in the community already.
  * add a test command: http://bugs.python.org/issue8324
+
+== Coding task -- Deadline: April 17th ==
+
+Write a small Python application that will do the following:
+
+ * provide a XML-RPC client that knows how to list all releases of a given project at PyPI (no need to implement the whole 
+ XML-RPC spec, but think about this as something we can reuse later during the GSOC, to implement the whole XML-RPC spec)
+
+ * provide a script called "install_distribution.py" that will be used to  download the distribution and install it, 
+ using "python setup.py install"
+
+The CLI can be used like this:
+
+{{{ 
+  $ install_distribution.py Foo
+  Founded versions of Foo:
+        1.1
+        1.2
+  Which version do you want to install (hit enter for None) ? :
+}}}
+
+ or :
+
+{{{
+  $ install_distribution.py Foo 1.1 
+}}}  
+
+The code should be unit-tested, and documented. The goal is not to make you write something you don't know how to write, but to see how you write/organize code to help me select the student. So, I am available online for any question help.
