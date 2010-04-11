@@ -1,0 +1,29 @@
+<<TableOfContents(3)>>
+
+== Abstract ==
+Give users a way to run code from a version control system checkout without building or installing it.
+
+== Rationale ==
+People want to import their modules or run their scripts to try them while developing without reinstalling them constantly or mucking with import paths.
+
+== Requirements/Ideas ==
+Provide a command that makes a code checkout available for import and use without requiring to rebuild or reinstall it when the files change.
+
+The command name could be in the bdist family (bdist_checkout) or be something new like vdist (virtual dist), ddist (development dist), cdist (checkout dist) or something better.
+
+When the code includes C extensions, users will need to run the build_ext command, but they will not have to run cdist again. With pure Python code, there will be no command to run to make the new code available as distribution.
+
+The mechanism for enabling such a checkout distribution would be as simple as adding a .pth file on the user’s site-package directory (overridable with an option).
+
+To stop using a checkout distribution, a command to remove the .pth file has to be provided, perhaps as an option to cdist.
+
+Alternative idea: Implement this feature as “install --develop” and use uninstall to remove the .pth file. --develop would imply --skip-build.
+
+We may take a leaf from Buildutils’ book and use a name that conveys the meaning of “making this distribution available”, i.e. build and pseudo-install at the same time: use, activate, deploy...
+
+== References ==
+ 1. [[http://peak.telecommunity.com/DevCenter/EasyInstall|Setuptools’ develop command]]
+ 2. [[http://pypi.python.org/pypi/buildutils/0.3|Buildutils’ use command]]
+
+== Copyright and License Terms ==
+I, ÉricAraujo, make this document available to anyone for all purposes and intents, including edition and distribution, in the limits allowed by their jurisdictions. (There is no such thing as “placing in the public domain”.)
