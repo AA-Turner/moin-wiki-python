@@ -1,25 +1,27 @@
 <<TableOfContents(3)>>
 
 == Abstract ==
-Give users a way to run code from a version control system checkout without building or installing it.
+Give users a way to run code in development without building or installing it.
 
 == Rationale ==
-People want to import their modules or run their scripts to try them while developing without reinstalling them constantly or mucking with import paths.
+People want to import their modules or run their scripts to try them while developing without reinstalling them constantly or mucking with import paths. The code will most of the time come from a version control system.
+
+This proposal does not talk about VCS integration e.g. to build packages from branches or tags.
 
 == Requirements/Ideas ==
-Provide a command that makes a code checkout available for import and use without requiring to rebuild or reinstall it when the files change.
+Provide a command that makes code in an arbitrary directory available for import and use without requiring to rebuild or reinstall it when the files change.
 
-The command name could be in the bdist family (bdist_checkout) or be something new like vdist (virtual dist), ddist (development dist), cdist (checkout dist) or something better.
+The command name could be in the bdist family (bdist_devel) or be something new like vdist (virtual dist), ddist (development dist) or something better.
 
-When the code includes C extensions, users will need to run the build_ext command, but they will not have to run cdist again. With pure Python code, there will be no command to run to make the new code available as distribution.
+When the code includes C extensions, users will need to run the build_ext command, but they will not have to run bdist_devel again. With pure Python code, there will be no command to run to make the new code available as distribution.
 
 The mechanism for enabling such a checkout distribution would be as simple as adding a .pth file on the user’s site-package directory (overridable with an option).
 
-To stop using a checkout distribution, a command to remove the .pth file has to be provided, perhaps as an option to cdist.
+To stop using a checkout distribution, a command to remove the .pth file has to be provided, perhaps as an option to bdist_devel.
 
-Alternative idea: Implement this feature as “install --develop” and use uninstall to remove the .pth file. --develop would imply --skip-build.
+After writing this down and reading it, it occurs to me that the use case belongs more in the install family than in the bdist. Hence an alternative idea: Implement this feature as “install --develop” and use uninstall to remove the .pth file. --develop would imply --skip-build.
 
-We may take a leaf from Buildutils’ book and use a name that conveys the meaning of “making this distribution available”, i.e. build and pseudo-install at the same time: use, activate, deploy...
+We may take a leaf from Buildutils’ book and use a name that conveys the meaning of “making this distribution available”, i.e. build once and install a file to make it importable: use, activate...
 
 == References ==
  1. [[http://peak.telecommunity.com/DevCenter/EasyInstall|Setuptools’ develop command]]
