@@ -7,9 +7,9 @@ Generally, 'n' is the number of elements currently in the container.  'k' is eit
 The Average Case assumes parameters generated uniformly at random.
 
 Internally, a list is represented as an array; the largest costs come from growing beyond the current allocation size (because everything must move), or from inserting or deleting somewhere near the beginning (because everything after that must move).  If you need to add/remove at both ends, consider using a collections.deque instead.
-||<tablewidth="" tablestyle="">'''Operation''' ||'''Average Case''' ||'''Worst Case''' ||
+||<tablewidth="" tablestyle="">'''Operation''' ||'''Average Case''' ||'''[[http://en.wikipedia.org/wiki/Amortized_analysis|Amortized Worst Case]]''' ||
 ||Copy ||O(n) ||O(n) ||
-||Append[1] ||O(1) ||O(n) ||
+||Append[1] ||O(1) ||O(1) ||
 ||Insert ||O(n) ||O(n) ||
 ||Get Item ||O(1) ||O(1) ||
 ||Set Item ||O(1) ||O(1) ||
@@ -18,7 +18,7 @@ Internally, a list is represented as an array; the largest costs come from growi
 ||Get Slice ||O(k) ||O(k) ||
 ||Del Slice ||O(n) ||O(n) ||
 ||Set Slice ||O(k+n) ||O(k+n) ||
-||Extend ||O(k) ||O(n+k) ||
+||Extend ||O(k) ||O(k) ||
 ||[[http://svn.python.org/projects/python/trunk/Objects/listsort.txt|Sort]] ||O(n log n) ||O(n log n) ||
 ||Multiply ||O(nk) ||O(nk) ||
 ||x in s||O(n)||||
