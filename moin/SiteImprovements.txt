@@ -1,57 +1,58 @@
-This page collects suggestions for improving the PythonWebsite at python.org
+= Site Improvements =
 
-== intro ==
+This page collects suggestions for improving the PythonWebsite at [[http://www.python.org/]].
 
-'''improving''' means enhancing site user's experience to find information faster and easier using the way they've used to. Major things that need improvement are usually obvious for everybody, but they seem Epic (Single Sign On, OpenID, online docs editor). Minor features are on the surface for each of us in particular, but they are not obvious for everyone else (wiki page subscription on edit, boring design).
+== Introduction ==
 
-'''improving''' is a process. Key to make any process effective is to provide a '''feedback''' that should be easy to reach and visible to others (see PHP online manual comments).
+The process of improving the Web site should entail enhancing the user experience so that users may find the information they are looking for faster and easier than the way they are used to. Although major things that need improvement can be obvious to many people, some of these things can seem like tasks of epic proportions, too big for an individual to consider tackling on their own: single sign-on to all the different resources, the introduction of OpenID support, an online reference documentation editor - these are all non-trivial tasks that require knowledge of the existing site architecture and access to the site infrastructure. There are also minor features that matter to each of us in particular, but they are not always obvious for everyone else: automatic subscription to Wiki pages upon editing, various design improvements.
 
-A lot of information causes frustration. That's why ''twitter'' takes over ''blogger''. Too much '''inventory''' in the room makes it hard to navigate and hard to notice needed things. '''cleanup''' should throw unused stuff from standing in the way. It's especially true for wiki, but various python.org pages are accounted as well. Big amount of information reduces ''fun factor''. Separate '''status''' page will help people see what's going on and have more fun by focusing their work and working together.
+But the process of improvement has to solicit feedback in order to capture ideas about areas of improvement, and this channel for feedback should be easy to reach and visible to others. An example of such a channel is the online manual comments that one sees in the documentation for technologies such as PHP, MySQL [[http://dev.mysql.com/doc/refman/5.0/en/multiple-tablespaces.html|(example)]] and PostgreSQL.
 
-== misc ==
+A lot of information causes frustration: that's why people prefer Twitter to Blogger. Too much "inventory" in the room makes it hard to navigate and hard to notice needed things. The process of cleanup should involve throwing unused stuff away, leaving relevant and updated information in place. Naturally, the Wiki has accumulated lots of arguably unused and dated pages, but various python.org pages are affected as well. Too much information reduces the "fun factor": a separate status page will help people see what's going on and let them have more fun by focusing their work and enabling them to work together with others.
+
+== Miscellaneous ==
 
  * Explain how to use .egg package archives.  As a new user, I am unable to find anything, but I do find .egg files in the package index.  
- * Merge '''pydotorg-www''' and '''pydotorg-redesign''' lists into one 
-   http://mail.python.org/pipermail/pydotorg-www/2010-February/000082.html
+ * (./) Merge '''pydotorg-www''' and '''pydotorg-redesign''' lists into one [[http://mail.python.org/pipermail/pydotorg-www/2010-February/000082.html|(message)]]
  * Fix webmaster@python.org response bug (per Issue:7929)
  * Add website repository to http://svn.python.org/view/
  * Badly need bug tracker for python.org website
    * I wonder if roundup is better than some hosted solution -- [[techtonik]] <<DateTime(2010-04-06T14:06:34Z)>>
 
-== www ==
+== Web Site ==
 
- * add an rss feed and/or mailing list for python security advisories
- * add release timer and calendar to [[http://www.python.org/dev/|Core Development]] page
- * '''report bug''' or '''suggest a change''' link leading to corresponding bug tracker (PythonWebsiteCreatingNewTickets wiki link) (issue Issue:8146)
+ * Add an RSS feed and/or mailing list for python security advisories
+ * Add release timer and calendar to [[http://www.python.org/dev/|Core Development]] page
+ * Have a '''report bug''' or '''suggest a change''' link leading to corresponding bug tracker (PythonWebsiteCreatingNewTickets wiki link) (issue Issue:8146)
  * http://www.python.org/download/windows/ should indicate latest supported Python for old versions of Microsoft systems (see issue Issue:8146)
  * http://www.python.org/Jobs.html should be moved to a database with a secure and user-friendly front-end.  (Wikis won't do it for many people we're targeting.)
- * add '''core development/source''' page with a table of
+ * Add '''core development/source''' page with a table of
 
 ||<tablestyle="border: 1px solid #000;"> Python Version || ViewVC || SVN || Snapshot Download || Code Coverage || BuildBots ||
 || 2.7 || http://svn.python.org/view/python/trunk/ || http://svn.python.org/projects/python/trunk || http://svn.python.org/snapshots/ ||  ??? || ??? ||
 
-== wiki content ==
+== Wiki Content ==
+
  * Clean up Community/Python Writers page, above all: remove dead links 
    * How to scan DeadLinks in Python? -- [[techtonik]] <<DateTime(2010-03-16T08:36:41Z)>>
-
- * Upgrade the Python theme to the one used by [[http://wiki.europython.eu/|the EuroPython Wiki site]].
-
- * Update ''oldschool'' page icons to a more hardcore/pop version. (Fixed in an upgraded theme.)
 
  * Shorten URLs - remove /moin/ prefix from http://wiki.python.org/moin/SiteImprovements#Wiki
    * This requires moving Jython wiki from http://wiki.python.org/jython/ to http://wiki.jython.org/ and placing a temporary redirect on the previous places. -- [[techtonik]] <<DateTime(2010-03-16T08:39:34Z)>>
 
- * Remove rarely used links in Wiki menu in the left.
+ * Rationalise the natural language coverage (merging the "new" language pages with the old ones)
 
- * Rationalise the natural language coverage (merging the "new" language pages with the old ones).
+== Wiki Theme ==
 
-== wiki engine ==
+ * Upgrade the Python theme to the one used by [[http://wiki.europython.eu/|the EuroPython Wiki site]]
+ * Remove rarely used links in Wiki menu in the left
  * Render table cells with border '''1px solid #000''' by default
 
+== Wiki Engine ==
+
+Some Wiki problems are likely to be related to bugs in MoinMoin or could be remedied by developing enhancements.
+
  * Search pagination or statistics doesn't work - http://wiki.python.org/moin/SiteImprovements?action=fullsearch&context=180&value=tracker&titlesearch=Titles - displayed 12 results while reporting "Results 1 - 25 of about 37 results out of about 7061 pages."
-
  * Update wiki SystemInfo to latest version
-
  * Enable the OpenID support
 
  * Add autolinking to python tracker, e.g. issue #1024, issue 1024, issue1024, bug 1024 and bug #123
@@ -77,15 +78,17 @@ A lot of information causes frustration. That's why ''twitter'' takes over ''blo
    * I think it all has to be done manually. It would be quite easy for spammers to make accounts, perform edits manually and then automate more spamming. The MoinMoin:TextCha page has plenty of discussion about this, but I agree that it would be nicer to have some kind of workflow in the Wiki itself. -- PaulBoddie <<DateTime(2010-03-15T20:21:55+0100)>>
    * It is easier for them to automate TextCha entry than enter it 10 times manually and in the end have their accounts banned. -- [[techtonik]] <<DateTime(2010-03-16T08:25:16Z)>> 
 
- * Add improved event calendar support such as that provided by [[http://moinmo.in/MacroMarket/EventAggregator|EventAggregator]] or another similar extension.
+ * Add improved event calendar support such as that provided by [[http://moinmo.in/MacroMarket/EventAggregator|EventAggregator]] or another similar extension
 
  * Switch to [[http://trac.edgewall.org/wiki/WikiFormatting|TracWiki syntax]]
    * Why? Trac's syntax, apart from the stuff that's identical to !MoinMoin's syntax, is like the old !MoinMoin syntax, and although it's better than !MediaWiki syntax in various ways (take the [[http://www.mediawiki.org/wiki/Help:Links|link syntax]] and its inconsistencies), switching to it would be like reverting a number of fixes that !MoinMoin applied when its syntax (particularly the [[MoinMoin:LinkPattern|link syntax]]) was changed in 1.6. I don't deny that bits of it can be complicated, but that's not usually the basic stuff. -- PaulBoddie <<DateTime(2010-03-15T16:32:26+0100)>>
    * Using Trac for various Python (and not only Python) I got used to separate [http://links with description using space] - as it is more readable. I can't see where [MoinMoin:LinkPattern link syntax] will conflict with anything. Anyway it is the last point in this list. -- [[techtonik]] <<DateTime(2010-03-15T17:27:00Z)>>
    * I've become accustomed to the newer syntax now, and I think there's probably some reason why they moved away from the older syntax, possibly for extensibility reasons where spaces can appear naturally and confuse the process of isolating arguments. I've not been too impressed by the Wiki capabilities of Trac, but that might have something to do with the visually unimpressive styling of Trac for most installations and the lack of !MoinMoin conveniences, not the syntax as such. -- PaulBoddie <<DateTime(2010-03-15T20:21:55+0100)>>
-   * !MoinMoin is a general purpose wiki like MediaWiki and it may happen that old syntax created problems with porting content between them. However, for software projects, Trac and [[http://code.google.com/p/support/wiki/WikiSyntax|Google Code]] were inspired by the old variant of markup and there is [[http://code.google.com/p/support/issues/list|no single ticket]] to switch to !MediaWiki. I would really like to see reasoning behind the choice in !MoinMoin 1.6, and know if there is a preference to turn on the old markup. -- [[techtonik]] <<DateTime(2010-03-16T08:20:29Z)>>  
+   * !MoinMoin is a general purpose wiki like MediaWiki and it may happen that old syntax created problems with porting content between them. However, for software projects, Trac and [[http://code.google.com/p/support/wiki/WikiSyntax|Google Code]] were inspired by the old variant of markup and there is [[http://code.google.com/p/support/issues/list|no single ticket]] to switch to !MediaWiki. I would really like to see reasoning behind the choice in !MoinMoin 1.6, and know if there is a preference to turn on the old markup. -- [[techtonik]] <<DateTime(2010-03-16T08:20:29Z)>>
+   * A good summary of why the syntax was changed was posted in an IRC conversation on the #moin channel, and I've uploaded it [[SiteImprovements/WikiSyntaxComparison|here]] -- PaulBoddie <<DateTime(2010-04-23T12:36:53+0100)>>
 
-== broken link ==
+== Broken Link ==
+
  * Link for homepage and download on http://pypi.python.org/pypi?%3Aaction=search&term=scapy&submit=search
   * Homepage: http://www.secdev.org/projects/scapy/
   * Download: http://www.secdev.org/projects/scapy/files/scapy-latest.tar.gz
