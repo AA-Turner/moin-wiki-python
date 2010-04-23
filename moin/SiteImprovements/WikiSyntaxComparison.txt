@@ -1,0 +1,17 @@
+= Wiki Syntax Comparison =
+
+Courtesy of MoinMoin:RadomirDopieralski...
+
+|| '''MoinMoin 1.5 and earlier'''   || '''MoinMoin 1.6 and later''' ||
+|| `WikiName`                       || `WikiName` ||
+|| `http://example.com`             || `http://example.com` ||
+|| `["page name"]`                  || `[[page name]]` ||
+|| `[http://example.com link text]` || `[[http://example.com|link text]]` ||
+|| `[:WikiName:link text]`          || `[[WikiName|link text]]` ||
+|| `[:page name:link text]`         || `[[page name|link text]]` ||
+|| `attachment:something.zip`       || `[[attachment:something.zip]]` ||
+|| `image:something.png`            || `{{attachment:something.png}}` ||
+||                                  || `[[page name|link text|additional parameters]]` ||
+||                                  || `{{page name|link text|additional parameters}}` ||
+
+The rationale for the change is that links, apart from those in the `WikiName` and bare URL styles, end up with a uniform syntax, and the embedding of an object in the page is done by modifying the bracketing style. Previously, linking to a page in the same Wiki and using a label instead of the page name involved a relatively arcane syntax; this common case now fits in much better.
