@@ -1,108 +1,64 @@
-This is a summary of FSM implementations in Python right now. Licensing remains unclear.
+<<TableOfContents>>
+
+== Introduction ==
+
+This is a summary of FSM implementations in Python right now. Licensing
+remains unclear.
 
 For general information about finite state machines, see:
 
  * [[WikiPedia:Finite_state_machine|Wikipedia:Finite_state_machine]] -- B) ''excellent!'' B)
  * [[Wiki:FiniteStateMachine|Wiki:FiniteStateMachine]]
 
-<<TableOfContents>>
+== Finite State Machine Editor ==
 
-'''[[http://fsme.sourceforge.net/|Finite State Machine Editor]]'''
+[[http://fsme.sourceforge.net/|FSME]] is a tool where you can draw FSM
+diagrams, and then compile to a Python module (or C++ code.) It also makes
+an XML description of the FSM.
 
-This is a tool where you can draw FSM diagrams, and then compile to a Python module (or C++ code.) It also makes an XML description of the FSM.
+Requires QT for the editor. (Not the compiler, though, which probably reads
+XML.)
 
-Requires QT for the editor. (Not the compiler, though, which probably reads XML.)
-
-* [[http://fsme.sourceforge.net/doc/tutorial.html|tutorial]]
-* [[http://fsme.sourceforge.net/phpwiki/|project wiki]]
-
-
-'''[[http://osteele.com/software/python/fsa/|FSA - Finite State Automation in Python]]'''
-
-This seems to be all about '''making''' FSMs, but I don't see a whole lot on how to ''use'' them!
+ * [[http://fsme.sourceforge.net/doc/tutorial.html|tutorial]]
+ * [[http://fsme.sourceforge.net/phpwiki/|project wiki]]
 
 
-'''[[http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/146262|Noah Spurrier's FSM]]'''
+== FSA - Finite State Automation in Python ==
 
-This is one found on ActiveState; It's purely Python code. You init an FSM, register transitions, and then throw inputs at it. States and inputs must be hashable.
+[[http://osteele.com/software/python/fsa/|FSA]] seems to be all about
+creating finite state machines, but I don't see a whole lot on how to use
+them.
 
-You can also [[http://www.noah.org/python/FSM/|find it on his website.]]
+== Noah Spurrier's FSM ==
+
+http://www.noah.org/python/FSM/
+
+Noah's implementation is pure Python code. You init an FSM, register
+transitions, and then throw inputs at it. States and inputs must be
+hashable.
 
 It's fairly similar to Skip's implementation (below).
 
-'''[[http://www.research.att.com/projects/mohri/fsm/doc4/fsmpy.html|fsmpy module]]'''
+== fsmpy ==
 
-This seems to be a Python wrapper around [[http://www.research.att.com/projects/mohri/fsm/|AT&T's FSM library.]] It's all oriented around "weighted" finite state machines, so I'm not so sure how suitable it is if you just want to use unweighted FSM.
+[[http://www.research.att.com/projects/mohri/fsm/doc4/fsmpy.html|fsmpy module]]
 
+This seems to be a Python wrapper around
+[[http://www.research.att.com/projects/mohri/fsm/|AT&T's FSM library.]] It's
+all oriented around "weighted" finite state machines, so I'm not so sure how
+suitable it is if you just want to use unweighted FSM.
 
-'''[[http://wiki.python.org/moin/PythonDecoratorLibrary/|Decorator based FSM]]'''
+== Decorator-based FSM ==
 
-A decorator based FSM can be found in the Decorator Library on this site. The module simplifies implementaion of FSM's based on UML 2.0 state diagrams.  The FSM is implemented as a class, with methods of the class associated with transitions or with states. The design is not the best for constructing FSMs to parse text being somewhat slower than alternatives.
+A [[http://wiki.python.org/moin/PythonDecoratorLibrary/|decorator-based
+FSM]] is in the Decorator Library on this site.  The module simplifies
+implementation of FSM's based on UML 2.0 state diagrams.  The FSM is
+implemented as a class, with methods of the class associated with
+transitions or with states.  The design is not the best for constructing
+FSMs to parse text being somewhat slower than alternatives.
 
-
-'''SkipMontanaro's FSM'''
+== Skip Montanaro's FSM ==
 
 [[http://www.smontanaro.net/python/fsm.py|fsm.py.]]
 
 Features transition actions.
-
-I've re-interpreted the code, adding formatting lost in e-mail, and PythonStyle-itizing it a bit.
-
-{{{
-#!python
-"""Finite state machine, featuring transition actions."""
-
-FSMError = 'Invalid input to finite state machine'
-
-class FSM:
-
-    """Finite state machine, featuring transition actions.
-
-    The class stores a dictionary of (state, input) keys,
-    and (state, action) values.
-
-    When a (state, input) search is performed:
-    * an exact match is checked first,
-    * (state, None) is checked next.
-
-    The action is of the following form:
-    * function(current_state, input)
-    """
-    
-    def __init__(self):
-        self.states = {}
-        self.state = None
-        self.dbg = None
-
-    def add(self, state, input, newstate, action):
-        """Add a transition to the FSM."""
-        self.states[(state, input)] = (newstate, action)
-
-    def execute(self, input):
-        """Perform a transition and execute action."""
-        si = (self.state, input)
-        sn = (self.state, None)
-        # exact state match?
-        if si in self.states:
-            newstate, action = self.states[si]
-        # no, how about a None (catch-all) match?
-        elif sn in self.states:
-            newstate, action = self.states[sn]
-        if self.dbg != None:
-            self.dbg.write('State: %s / Input: %s /'
-                           'Next State: %s / Action: %s\n' %
-                           (self.state, input, newstate, action))
-        action(self.state, input)
-        self.state = newstate
-
-    def start(self, state):
-        """Define the start state.
-
-        Actually, this just resets the current state.
-        """
-        self.state = state
-
-    def debug(self, out):
-        """Assign a writable file to log transitions."""
-        self.dbg = out
-}}}
