@@ -6,12 +6,20 @@ JythonFaq
 <<TableOfContents>>
 
 ----
-
 == How can I use jython classes from my java application? ==
 
-There are several ways to do that. The best way depends on the needs of your application. One possible way is to compile the python class into a real java class using the jythonc command. This real java can be used and instances can be created from your application.  
+There are several ways to do that. The best way depends on the needs of your application. 
 
-'''Note: It is no longer recommended that jythonc be used -- see http://jython.org/Project/jythonc.html for details and links that describe using Factories to instantiate python classes at runtime for use with java. Also see item 12 on http://wiki.python.org/jython/JythonFaq/ProgrammingJython'''
+=== Using PythonInterpreter in Factories to instantiate python classes ===
+
+ * http://jythonpodcast.hostjava.net/jythonbook/en/1.0/JythonAndJavaIntegration.html#using-jython-within-java-applications
+ * http://etutorials.org/Programming/Python+tutorial/Part+V+Extending+and+Embedding/Chapter+25.+Extending+and+Embedding+Jython/25.2+Embedding+Jython+in+Java/
+
+=== Using jythonc (deprecated) ===
+
+Compile the python class into a real java class using the jythonc command. This real java can be used and instances can be created from your application.  
+
+'''Note: It is no longer recommended that jythonc be used, see ReplaceJythonc'''
 
 Create a python module (say Foo.py) and make a class with the same name as the python module. The class must inherit from a java class or interface. If you don't need a particular java superclass, just use java.lang.Object.
 
