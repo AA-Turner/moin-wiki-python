@@ -4,18 +4,56 @@ This page describes a possible Summer of Code project for Distutils2
 
 == GSOC Tasks ==
 
- * XML-RPC client for distutils 2: http://bugs.python.org/issue8190
- * Make it possible to use setup.cfg to describe all the metatadata: http://bugs.python.org/issue8252
- * Describe the resources files and the Python files using a [resources] section in setup.cfg: http://bugs.python.org/issue8253
+=== PEP 376 support ===
+
+ * Implement pkgutil APIs described in PEP 376 : http://bugs.python.org/issue8250  -- work started by people in the community already. 
+ (focus on speed with benches)
+ * Implement a dependency-graph builder
+ * Add basic PEP 376 support in Distribute  [and Pip is possible]
+
+=== Installer / Uninstaller, PyPI ===
+
+ * Implement Distutils2 APIs described in PEP 376.
+ * Add the uninstall command.
+ * think about a basic installer / uninstaller script. (with deps) -- similar to pip/easy_install
+ * in a pypi subpackage;
+   * Integrate a module similar to setuptools' package_index
+   * PyPI XML-RPC client for distutils 2: http://bugs.python.org/issue8190
+ 
+=== Distutils new commands ===
+
+ * Add a post/pre commit hook for install and uninstall commands: http://bugs.python.org/issue8312
+ see if it can be generic.
+ * enhance the check command (sanity tests)
+ * Move the upload_doc command from distribute 
+ * add an optional call to upload_doc into upload
+ * Add a test command: http://bugs.python.org/issue8324
+
+=== Distutils build tool ===
+
+ * Study 4Suite' configure command
  * Write a configure command: http://bugs.python.org/issue8254
- * Write a tutorial: http://bugs.python.org/issue8255
+ * Make install and build optionnaly use the configure file
+ * Make it possible to use setup.cfg to describe all the metatadata: http://bugs.python.org/issue8252
+ * Describe the resources files and the Python files using a [resources] or [packages] [py_modules] 
+ section in setup.cfg: http://bugs.python.org/issue8253
+ * make setup.py optional (commands would be called trhough a -m call)
+
+=== Py3 support ===
+
+ * Move the use_2to3 command from distribute 
+ * Make sure distutils2 works under Py3 using 2to3
+ 
+=== Tasks for all ===
+
+ * Write a small tutorial in docs/ for each feature you add 
+
+=== Misc ===
+
+ * complete tutorial : http://bugs.python.org/issue8255
  * Promote and evangelize Distutils2–This will consist of helping python project to switch to/adopt Distutils2. 
  We will define a list of targets at the beginning and the student will be in charge of helping them switching to Distutils2 if they want.
- * Add a post/pre commit hook for install and uninstall commands: http://bugs.python.org/issue8312
- * Make sure distutils2 works under Py3
- * Move the code from distribute to distutils2 (upload_doc, use_2to3)
- * Implement pkgutil APIs described in PEP 376 : http://bugs.python.org/issue8250  -- work started by people in the community already.
- * Add a test command: http://bugs.python.org/issue8324
+
 
 == Coding task -- Deadline: April 17th ==
 
