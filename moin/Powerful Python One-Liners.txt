@@ -100,3 +100,8 @@ This script echo "ê"
 {{{
 [another command] | python -c "import sys,re;[sys.stdout.write(re.compile('PATTERN').sub('SUBSTITUTION', line)) for line in sys.stdin]"
 }}}
+
+== Display List of all users on Unix like system ==
+{{{
+[ line[:-1].split(":")[0] for line in open("/etc/passwd").readline() ]
+}}}
