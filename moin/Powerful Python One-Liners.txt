@@ -5,6 +5,8 @@ This is a page that is devoted to short programs that can perform powerful opera
 Thanks for Your Code,
 [[JAM]]
 
+Of course, there is debate on whether one-liners are even ''Pythonic''.
+
 == Contributed Code ==
 
  * [[JAM/Code/PlatformFinder]] - This program tells you what platform you are using.
@@ -26,7 +28,7 @@ Cute, isn't it?
 === Set of all subsets ===
  * Function that returns the set of all subsets of its argument
 {{{
-f = lambda x: [[y for j, y in enumerate(set(x)) if (i >> j & 1)] for i in range(2**len(set(x)))]
+f = lambda x: [[y for j, y in enumerate(set(x)) if (i >> j) & 1] for i in range(2**len(set(x)))]
 }}}
 <<BR>>
 {{{
@@ -34,6 +36,12 @@ f = lambda x: [[y for j, y in enumerate(set(x)) if (i >> j & 1)] for i in range(
 [[], [9], [10], [9, 10], [7], [9, 7], [10, 7], [9, 10, 7], [1], [9, 1], [10, 1], [9, 10, 1], [7, 1], [9, 7, 1], [10, 7, 1], [9, 10, 7, 1]]
 }}}
 -RJW
+
+Alternately (shorter, more functional version):
+{{{
+f = lambda l: reduce(lambda z, x: z + [y + [x] for y in z], l, [[]])
+}}}
+
 === Decode a base64 encoded file ===
 
 {{{
@@ -59,7 +67,7 @@ Clearer is:
 Print every line from an input file but remove the first two fields.
 
 {{{
-python -c "import sys;[sys.stdout.write(' '.join(line.split(' ')[2:])) for line in sys.stdin.read().splitlines(True)]" < input.txt 
+python -c "import sys;[sys.stdout.write(' '.join(line.split(' ')[2:])) for line in sys.stdin]" < input.txt 
 }}}
 
 === Cramming Python into Makefiles ===
@@ -98,10 +106,10 @@ This script echo "ê"
 
 == Apply regular expression to lines from stdin ==
 {{{
-[another command] | python -c "import sys,re;[sys.stdout.write(re.compile('PATTERN').sub('SUBSTITUTION', line)) for line in sys.stdin]"
+[another command] | python -c "import sys,re;[sys.stdout.write(re.sub('PATTERN', 'SUBSTITUTION', line)) for line in sys.stdin]"
 }}}
 
 == Display List of all users on Unix like system ==
 {{{
-print '\n'.join(line[:-1].split(":")[0] for line in open("/etc/passwd").readlines())
+print '\n'.join(line.split(":",1)[0] for line in open("/etc/passwd"))
 }}}
