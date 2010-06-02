@@ -1068,9 +1068,7 @@ And now the imported statedefn.py
 #
 #  See example programs for how this module is intended to be used.
 #
-import exceptions
-
-class StateMachineError(exceptions.Exception):
+class StateMachineError(Exception):
     def __init__(self, args = None):
        self.args = args
 
@@ -1095,14 +1093,12 @@ class StateVar(object):
         '''
         if self.next_state is not self._current_state:
             if hasattr(self._current_state, "leave"):
-                leave = self._current_state.leave
-                leave(owner)
+                self._current_state.leave(owner)
             elif hasattr(self, "leave"):
-                 self.leave(owner)
+                self.leave(owner)
             self._current_state =  self.next_state
             if hasattr(self._current_state, "enter"):
-                enter = self._current_state.enter
-                enter(owner)
+                self._current_state.enter(owner)
             elif hasattr(self, "enter"):
                 self.enter(owner)
 
