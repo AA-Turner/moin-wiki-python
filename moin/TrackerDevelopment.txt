@@ -161,6 +161,8 @@ Initialize your roundup instance:
 
 Provide a password for the 'admin' user when asked for.
 
+'''Note''': you have to provide the full path to your python-dev directory, otherwise the command will fail.
+
 Start your roundup instance:
 
 {{{
@@ -171,6 +173,20 @@ You should now be able to browse http://localhost:9999/python-dev/ and
 get a roundup instance that looks just like http://bugs.python.org, except for some missing new values for fields like Stages and Keywords. It's possible to replace '''initial_data.py'''  with an [[attachment:initial_data_updated.py | updated version]] so that your fields will have values that match those currently present in the Python Tracker.
 
 The IDs for values in a given field might be different from those in the Python Tracker. This should only be a problem if you try to import CSV files from one tracker into the other.
+
+After you created your user, you can use roundup-admin to set developer privileges:
+{{{
+/opt/tracker-roundup/bin/roundup-admin -i <your python-dev directory> init
+Roundup 1.4.10 ready for input.
+Type "help" for help.
+roundup> display user8
+...
+roundup> set user8 roles=Developer
+roundup> commit
+roundup>
+}}}
+
+You can find your user id clicking on "Your Details" in the left sidebar and then looking at the address bar (it should show something similar to http://localhost:9999/python-dev/user8).
 
 == SpamBayes Setup ==
 If you intend to use the !SpamBayes detector to weed out spam from your tracker you will need to install it and start an instance of its {{{core_server}}} application.
