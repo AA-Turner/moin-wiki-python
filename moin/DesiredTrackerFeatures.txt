@@ -45,7 +45,9 @@ mark issues as accepted regardless of whether or not they have a complete
 patch.  This is to differentiate between issues that just need work,
 and issues where we haven't even decided that we are going to accept it.
 
-   * Waiting for the switch to Mercurial before writing code for auto-linking between bugs and changesets and such things may be smart. —merwok
+   * Waiting for the switch to Mercurial before writing code for auto-linking between bugs and changesets (thanks to the interhg extension, shipped with Mercurial) and such things (using a hook to automatically close bugs) may be smart. —merwok
+
+   * Using checkboxes instead of multi-value select elements is a huge usability win.(No references handy, just memory.) —merwok
 
 This doesn't need a patch, but is noted here so the idea doesn't get
 lost: it has been suggested that an additional type of 'refactoring'
@@ -53,15 +55,27 @@ be added.
 
 New Field for Module/Package
 ----------------------------
+*withdrawn*
+
 When I want to find all bugs related to one module or package, I have to use the plain text search, which could give false positives and leave out valid results. For some packages I can use a component, e.g. Distutils, but not for all. I suggest a new field that would allow selecting what module(s)/package(s) a bug apply to. This would provide reliable and discoverable URIs for people who want to monitor particular modules or packages.
 
   This has been suggested and rejected a number of times on python-dev. --RDM
     This information is not useful. Can you list the arguments? -- [[techtonik]] <<DateTime(2010-04-30T09:06:27Z)>>
       No, but it would be great if you would search the archives and post links to the threads here. --RDM
+        I tried with no luck. It would be useful to find the threads for future reference, but your memory is enough for me to withdraw my feature request. –merwok
 
-Open issues: Providing Atom feeds; using OpenSearch; HTML widget to use; renamed modules in 3.x; autonosy and auto-assignee. I can expand if someone asks. —\ `merwok <http://wiki.python.org/moin/ÉricAraujo>`__
+Easier Monitoring
+-----------------
+(merwok)
 
-  Roundup has the capability to do auto-nosy and auto-assign, so you'll definitely need to expand on that one. --RDM
+Provide Atom feeds for saved queries to make keeping up with a particular area or component easier.
+
+Add OpenSearch description file to allow browsers to get search suggestions (completion) and scripts to get search results as easily-parsable feeds (see `Wikipedia’s OpenSearch file <http://fr.wikipedia.org/w/opensearch_desc.php>`__ for an example).
+
+Allow any user to set her/himself as auto-nosy for some criteria.
+
+Allow any user with developer status to set her/himself as auto-assignee for some for some criteria.
+
 
 Misc
 ----
@@ -111,6 +125,6 @@ to someone with tracker privileges to fix.
 Ability to make groups of related issues, i.e. issue7833, issue8870 and issue8871 are independent, but related and will be interesting for developer of any of them. -- [[techtonik]] <<DateTime(2010-06-01T20:19:23Z)>>
 
 Ability to link/track status of issues from external trackers. -- [[techtonik]] <<DateTime(2010-06-01T20:19:23Z)>>
-----
 
+----
 CategoryTracker
