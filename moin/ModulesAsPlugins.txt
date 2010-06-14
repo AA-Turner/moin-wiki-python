@@ -77,5 +77,14 @@ def functions_in_module(module)
 The DocXmlRpcServer page includes code demonstrating the use of these techniques.
 
 = Discussion =
+I got this error when executing find_modules() in a package directory. That is the directory  contained an {{{ __init.py__}}} file:
+{{{
+  File "C:\Python254\lib\site-packages\joedorocak\find_modules.py", line 27, in find_modules
+    s.add(module)
+NameError: global name 's' is not defined
+}}}
+It looks to me like s needs to be initialized (some place near "modules = set()"). I'm not sure what the protocol is here, so I'm just going to leave this comment in the discussion.
 
-  (none yet!)
+All the best,
+
+JoeDorocak
