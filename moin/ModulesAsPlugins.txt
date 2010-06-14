@@ -85,6 +85,29 @@ NameError: global name 's' is not defined
 }}}
 It looks to me like s needs to be initialized (some place near "modules = set()"). I'm not sure what the protocol is here, so I'm just going to leave this comment in the discussion.
 
+Here's what seems to work for me. I got rid of 's' altogether.
+
+{{{
+def find_modules(path="."):
+    """Return names of modules in a directory.
+
+    Returns module names in a list. Filenames that end in ".py" or
+    ".pyc" are considered to be modules. The extension is not included
+    in the returned list.
+    """
+    modules = set()
+    for filename in os.listdir(path):
+        module = None
+        if filename.endswith(".py"):
+            module = filename[:-3]
+        elif filename.endswith(".pyc"):
+            module = filename[:-4]
+        if module is not None:
+            modules.add(module)
+    return list(modules)
+
+}}}
+
 All the best,
 
 JoeDorocak
