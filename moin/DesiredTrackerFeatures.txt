@@ -77,12 +77,22 @@ Allow any user to set her/himself as auto-nosy for some criteria.
 Allow any user with developer status to set her/himself as auto-assignee for some for some criteria.
 
 
+Files
+-----
+(merwok)
+
+Warn the user if they send an inappropriate file (zipfile, .exe, Microsoft office formats).
+
+Attach files to emails sent to nosy if they have a sane mime type and size (possibly with a user option).
+
+
 Misc
 ----
 When an issue is closed stage should be automatically set to
 'committed/rejected'.
 
     * confusing, 'fixed' issue is neither 'committed' nor 'rejected' at all times -- anatoly techtonik
+    * related: we don’t have to use confusing sourceforge fields forever, so at least having two values for committed and rejected would be sensible. —merwok
 
 There should be a field in which you can enter an issue number of
 an issue of which this issue is a duplicate, and submitting it
@@ -117,6 +127,8 @@ areas" to the users, but it will probably be hard to keep it in sync
 with maintainers.rst.
 
 Emails can contain useful links like "remove me from nosy" and also link directly to the message using an anchor (i.e. .../issue1234#msg12345).
+
+  Removing someone from nosy via a link, IOW modifying state with a GET request, is a proved bad idea. Ok for a link that would open a page with a form that sends a POST request to remove oneself from nosy. —merwok
 
 Assignment should be open to anyone with an account.  Assignment suggests
 responsibility. Many issues may be worth fixing, but not interesting enough
