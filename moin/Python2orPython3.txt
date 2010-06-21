@@ -48,11 +48,15 @@ Above all, it is recommended that you focus on writing ''good'' code so that 2.x
 
 == I want to use Python 3, but there's this tiny library I want to use that's Python 2.x only. Do I really have to revert to using Python 2 or give up on using that library? ==
 
-Depending on how significant a feature is tied to the third party library, dropping the feature may be a viable option. If the library is genuinely trivial, it may also be possible to roll your own. Be very, very careful with the latter idea though - tasks that appear trivial at first glance may turn out to have lots of tricky corner cases to deal with. Reinventing the wheel in this fashion can mean having to discover all those fun errors yourself, and your project will likely be the worse for it.
+Well, you have a few options:
 
-Anyway, you don't have to use Python 2.x. You could also make the Python 3.x vs 2.x situation better by porting an existing library and making future users happy. Porting isn't always easy, but it's usually easier than writing your own thing from scratch. Existing project members will usually appreciate the help, especially as porting often finds bugs in the original software, improving the quality of both the original and the 3.x port.
+ * Port the library to 3.x. ("Porting" means that you make the library work on 3.x.)
+ * If that turns out to be really hard, and all your other dependencies do exist in 2.x, consider starting off in 2.x. As has already been explained in other places, good 2.x code will typically make switching painless as soon as every dependency has been successfully ported.
+ * Decide if the feature is really that important. Maybe you could drop it?
 
-How you're supposed to do porting is explained in PEP 3000: http://www.python.org/dev/peps/pep-3000/#id9. The basic idea is to take the 2.x version of the library and use the automated 2to3 converter to create a Python 3 compatible version and check that all the unit tests still pass. If tests fail, modify the original 2.x sources and try again. This approach makes it feasible to support 2.x and 3.x in parallel from a single 2.x code base. This is much easier than trying to maintain separate 2.x and 3.x branches in parallel (just ask the core Python developers about that one - they've been stuck with doing that for a couple of years now!).
+The ideal situation is that you try to port the library to 3.x. Oftentimes you'll find someone is already working on this. Even when that's not the case, existing project members will usually appreciate the help, especially as porting often finds bugs in the original software, improving the quality of both the original and the 3.x port. Porting isn't always easy, but it's usually easier than writing your own thing from scratch.
+
+How you're supposed to do porting is explained in [[http://www.python.org/dev/peps/pep-3000/#id9|PEP 3000]]. The basic idea is to take the 2.x version of the library and use the automated 2to3 converter to create a Python 3 compatible version and check that all the unit tests still pass. If tests fail, modify the original 2.x sources and try again. This approach makes it feasible to support 2.x and 3.x in parallel from a single 2.x code base. This is much easier than trying to maintain separate 2.x and 3.x branches in parallel (just ask the core Python developers about that one - they've been stuck with doing that for a couple of years now!).
 
 The porting situation is more complicated if there are C extension modules involved, but even then it is still likely to be easier than writing an equivalent package from scratch.
 
@@ -61,6 +65,8 @@ There are also some more in depth guides right here on the wiki: PortingPythonTo
 == I decided to write something in 3.x but now someone wants to use it who only has 2.x. What do I do? ==
 
 In addition to the 2to3 tool which allows 3.x code to be generated from 2.x source code, there's also the 3to2 tool, which aims to convert 3.x code back to 2.x code. In theory, this should work even better than going the other direction, since 3.x doesn't have as many nasty corner cases for the converter to handle (getting rid of as many of those as possible was one of the main reasons for breaking backward compatibility after all!). However, code which makes heavy use of 3.x only features (such as function annotations or extended tuple unpacking) is unlikely to be converted successfully.
+
+It's probably also fair to say that 3to2 is the road less traveled compared to 2to3, so you might come across a few rough edges here and there. However, if you want to write 3.x code, it's definitely an idea worth exploring.
 
 == Other resources that may help make the choice between Python 2 and Python 3 ==
 
