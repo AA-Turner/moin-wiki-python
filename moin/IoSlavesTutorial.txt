@@ -30,7 +30,7 @@ the IOSlave and separate out the details of the initialisation.
 Various classes and namespaces are required in order to communicate with the KIOSlave
 framework. These are drawn from the `qt`, `kio` and `kdecore` modules:
 
-{{{
+{{{#!python numbers=disable
 from qt import QByteArray
 from kio import KIO
 from kdecore import KURL
@@ -39,14 +39,14 @@ from kdecore import KURL
 The `os` and `time` modules provide functions which are relevant to the operation of
 the IOSlave; the `sys` and `traceback` modules are useful for debugging the IOSlave:
 
-{{{
+{{{#!python numbers=disable
 import os, sys, traceback, time
 }}}
 
 The `ADFSlib` module is imported. This provides the functionality required to read disk
 images:
 
-{{{
+{{{#!python numbers=disable
 import ADFSlib
 }}}
 
@@ -65,7 +65,7 @@ Note that the name of the class is also declared in the ''details.py'' file so
 that the library which launches the Python interpreter knows which class to
 instantiate.
 
-{{{
+{{{#!python numbers=disable
 class SlaveClass(KIO.SlaveBase):
 
     """SlaveClass(KIO.SlaveBase)
@@ -78,7 +78,7 @@ An initialisation method, or constructor, is written which calls the base class
 and initialises some useful attributes, or instance variables. Note that the name
 of the IOSlave is passed to the base class's `__init__` method:
 
-{{{
+{{{#!python numbers=disable
     def __init__(self, pool, app):
     
         # We must call the initialisation method of the base class.
@@ -96,7 +96,7 @@ We create a method to parse any URLs passed to the IOSlave and return a path
 into a disk image. This initially extracts the path from the `KURL` object
 passed as an argument and converts it to a unicode string:
 
-{{{
+{{{#!python numbers=disable
     def parse_url(self, url):
     
         file_path = unicode(url.path())
@@ -106,7 +106,7 @@ The presence of a colon character is determined. If one is present then it
 will simply be discarded along with any preceding text; the remaining text
 is assumed to be a path to a local file.
 
-{{{
+{{{#!python numbers=disable
         at = file_path.find(u":")
         
         if at != -1:
@@ -122,7 +122,7 @@ one given.
 
 If the disk image has been cached then return the path within the image:
 
-{{{
+{{{#!python numbers=disable
         if self.disc_image and file_path.find(self.disc_image) == 0:
         
             # Return the path within the image.
@@ -134,7 +134,7 @@ comparing the path with the local filesystem. Since a valid path will
 contain at least one slash character then we can immediately discard
 any paths which do not contain one, returning `None` to the caller:
 
-{{{
+{{{#!python numbers=disable
         elements = file_path.split(u"/")
         
         if len(elements) < 2:
@@ -152,7 +152,7 @@ Finally, if all the path elements are added to the root directory, and
 the object referred to is itself a directory, then the URL is treated
 as invalid; it should have referred to a file.
 
-{{{
+{{{#!python numbers=disable
         path_elements, elements = elements[:1], elements[1:]
         
         while elements != []:
@@ -179,7 +179,7 @@ constructed path. The characters following this path correspond to the
 path within the image file. We record the path to the image and construct
 the path within the image:
 
-{{{
+{{{#!python numbers=disable
         self.disc_image = path
         
         image_path = u"/".join(elements)
@@ -189,7 +189,7 @@ If not already open, it is necessary to open the image file, returning `None`
 if the file cannot be found. (Its presence was detected earlier but it is
 better to catch any exceptions.)
 
-{{{
+{{{#!python numbers=disable
         try:
         
             adf = open(self.disc_image, "rb")
@@ -205,7 +205,7 @@ internal structure. However, if a problem is found with the image, then an
 exception will be raised. We tidy up and return `None` to signal failure
 in such a case, but otherwise return the path within the image:
 
-{{{
+{{{#!python numbers=disable
         try:
         
             self.adfsdisc = ADFSlib.ADFSdisc(adf)
@@ -228,7 +228,7 @@ to the client. The first thing this method does is check the URL supplied
 using the previously defined `parse_url` method, reporting an error if the
 URL is unusable:
 
-{{{
+{{{#!python numbers=disable
     def get(self, url):
     
         path = self.parse_url(url)
@@ -245,7 +245,7 @@ necessary to attempt to find this file. This is achieved by the use of
 the as yet undeclared `find_file_within_image` method which will return
 `None` if a suitable file cannot be found:
 
-{{{
+{{{#!python numbers=disable
         adfs_object = self.find_file_within_image(path)
         
         if not adfs_object:
@@ -263,7 +263,7 @@ tuple which contains the name, the file data and some other metadata.
 If the second element in the tuple is a list then the object found is a
 directory:
 
-{{{
+{{{#!python numbers=disable
         if type(adfs_object[1]) == type([]):
         
             self.error(KIO.ERR_IS_DIRECTORY, path)
@@ -275,7 +275,7 @@ we are only interested in the file data. Using the base class's `data` method,
 which we can access through the current instance, we send a `QByteArray` to the
 client:
 
-{{{
+{{{#!python numbers=disable
         self.data(QByteArray(adfs_object[1]))
 }}}
 
@@ -283,7 +283,7 @@ The end of the data string is indicated by an empty `QByteArray` before we
 indicate completion of the operation by calling the base class's `finished`
 method:
 
-{{{
+{{{#!python numbers=disable
         self.data(QByteArray())
         
         self.finished()
@@ -307,7 +307,7 @@ client to the path contained within the URL if the `parse_url` fails to
 handle it. This allows the user to use URL autocompletion on ordinary
 filesystems while searching for images to read.
 
-{{{
+{{{#!python numbers=disable
     def stat(self, url):
     
         path = self.parse_url(url)
@@ -325,7 +325,7 @@ filesystems while searching for images to read.
 As before, nonexistent objects within the image cause errors to be
 reported:
 
-{{{
+{{{#!python numbers=disable
         adfs_object = self.find_file_within_image(path)
         
         if not adfs_object:
@@ -339,7 +339,7 @@ form of a list. This would indicate that a directory has been found which
 we must deal with appropriately. However, for ordinary files we simply
 generate a suitable description of the file to return to the client:
 
-{{{
+{{{#!python numbers=disable
         if type(adfs_object[1]) != type([]):
         
             entry = self.build_entry(adfs_object)
@@ -350,7 +350,7 @@ contains a reference to a directory. If, on the other hand, the path is
 either empty or does not end in a manner expected for a directory then
 it is useful to redirect the client to an appropriate URL:
 
-{{{
+{{{#!python numbers=disable
         elif path != u"" and path[-1] != u"/":
         
             # Directory referenced, but URL does not end in a slash.
@@ -364,7 +364,7 @@ it is useful to redirect the client to an appropriate URL:
 If the URL referred to a directory then a description can be returned to
 the client in a suitable form:
 
-{{{
+{{{#!python numbers=disable
         else:
         
             entry = self.build_entry(adfs_object)
@@ -377,7 +377,7 @@ performed by the following operation to the `statEntry` method, and is
 followed by a `finished` call to indicate that there are no more
 entries to process:
 
-{{{
+{{{#!python numbers=disable
         if entry != []:
         
             self.statEntry(entry)
@@ -413,7 +413,8 @@ original URL is extracted and the client redirected to this location.
 Note that the `url` argument is a `kdecore.KURL` object.
 
 
-{{{    def listDir(self, url):
+{{{#!python numbers=disable
+    def listDir(self, url):
     
         path = self.parse_url(url)
         
@@ -430,7 +431,7 @@ Having established that the path refers to a valid disk image, we try
 to find the specified object within the image, returning an error if
 nothing suitable is found:
 
-{{{
+{{{#!python numbers=disable
         adfs_object = self.find_file_within_image(path)
         
         if not adfs_object:
@@ -443,7 +444,7 @@ If the path does not end in a slash then redirect the client to a
 URL which does. This ensures that either a directory will be
 retrieved or an error will be returned to the client:
 
-{{{
+{{{#!python numbers=disable
         elif path != u"" and path[-1] != u"/":
         
             url.setPath(unicode(url.path()) + u"/")
@@ -455,7 +456,7 @@ retrieved or an error will be returned to the client:
 If a file is referenced then an error is returned to the client because
 we can only list the contents of a directory:
 
-{{{
+{{{#!python numbers=disable
         elif type(adfs_object[1]) != type([]):
         
             self.error(KIO.ERR_IS_FILE, path)
@@ -467,7 +468,7 @@ from the support module. For each of these files, we must construct
 an entry which is understandable to the KIOSlave infrastructure in
 a manner similar to that used in the method for the `stat` operation.
 
-{{{
+{{{#!python numbers=disable
         # Obtain a list of files.
         files = adfs_object[1]
         
@@ -508,7 +509,7 @@ a manner similar to that used in the method for the `stat` operation.
 Although not entirely necessary, we implement a `dispatchLoop` method
 which simply calls the corresponding method of the base class:
 
-{{{
+{{{#!python numbers=disable
     def dispatchLoop(self):
     
         KIO.SlaveBase.dispatchLoop(self)
@@ -530,7 +531,7 @@ basic details of each file or directory in the disk image is derived
 from information contained within and stored within standard
 `KIO.UDSAtom` instances.
 
-{{{
+{{{#!python numbers=disable
     def build_entry(self, obj):
     
         entry = []
@@ -541,7 +542,7 @@ determine the nature of the information returned. For files
 we do not provide a predetermined MIME type, leaving the client
 to determine this from data retrieved from the disk image.
 
-{{{
+{{{#!python numbers=disable
         if type(obj[1]) != type([]):
         
             # [name, data, load, exec, length]
@@ -554,8 +555,10 @@ to describe their original attributes. The following code provides
 details of these files which are not actually present in the disk
 image, but are generated automatically by this IOSlave:
 
-{{{
-            if self.adfsdisc.disc_type.find("adE") == -1 and \\
+{{{#!python numbers=disable
+        "Continued..."
+
+            if self.adfsdisc.disc_type.find("adE") == -1 and \
                 obj[0][-4:] == ".inf":
             
                 # For .inf files, use a MIME type of text/plain.
@@ -577,7 +580,7 @@ image, but are generated automatically by this IOSlave:
 Having determined the MIME type we now declare all the relevant
 attributes of the object and return these to the caller:
 
-{{{
+{{{#!python numbers=disable
         atom = KIO.UDSAtom()
         atom.m_uds = KIO.UDS_NAME
         atom.m_str = name
@@ -639,7 +642,7 @@ paths and filenames within the disk image to and from canonical
 URL style paths. These are only of interest to those familiar with
 ADFS style paths.
 
-{{{
+{{{#!python numbers=disable
     def encode_name_from_object(self, obj):
     
         name = obj[0]
@@ -681,7 +684,7 @@ are a few special cases which are worth mentioning.
 In this method, the `path` argument contains the path component of
 the URL supplied by the client in the standard form used in URLs.
 
-{{{
+{{{#!python numbers=disable
     def find_file_within_image(self, path, objs = None):
 }}}
 
@@ -693,7 +696,7 @@ recursive calls to this method will supply suitable values for this
 argument but, for now, a reasonable value needs to be substituted
 for `None`; this is a structure containing the entire filesystem:
 
-{{{
+{{{#!python numbers=disable
         if objs is None:
         
             objs = self.adfsdisc.files
@@ -705,7 +708,7 @@ case a slash character is given as the name of the object, and the
 list of objects supplied is given as the contents of the root
 directory:
 
-{{{
+{{{#!python numbers=disable
         if path == u"":
         
             # Special case for root directory.
@@ -716,7 +719,7 @@ For non-trivial paths, we split the path string into elements corresponding
 to the names of files and directories expected as we descend into the
 filesystem's hierarchy of objects, then we remove any empty elements:
 
-{{{
+{{{#!python numbers=disable
         elements = path.split(u"/")
         
         elements = filter(lambda x: x != u"", elements)
@@ -725,7 +728,7 @@ filesystem's hierarchy of objects, then we remove any empty elements:
 For each object found in the current directory, we examine each object
 and compare its name to the next path element expected.
 
-{{{
+{{{#!python numbers=disable
         for this_obj in objs:
         
             if type(this_obj[1]) != type([]):
@@ -736,7 +739,7 @@ and compare its name to the next path element expected.
 If a file is found in the filesystem, we translate its name so that
 we can compare it with the next path element expected:
 
-{{{
+{{{#!python numbers=disable
                 obj_name = self.encode_name_from_object(this_obj)
                 
                 if obj_name == elements[0]:
@@ -749,7 +752,7 @@ is the final one in the list, and return the corresponding object if
 this is the case. If this is not the case then the URL is likely to
 be invalid:
 
-{{{
+{{{#!python numbers=disable
                     if len(elements) == 1:
                     
                         # This is the last path element; we have found the
@@ -768,21 +771,23 @@ disk images, it is possible that the path is referring to a ''.inf''
 file; we check for this possibility, applying the same check on the
 remaining path elements as before:
 
-{{{
-                elif self.adfsdisc.disc_type.find("adE") == -1 and \\
+{{{#!python numbers=disable
+                elif self.adfsdisc.disc_type.find("adE") == -1 and \
                      elements[0] == obj_name + u".inf":
 }}}
 
 If successfully matched, a ''.inf'' file is created and returned,
 otherwise a `None` value is returned to indicate failure:
 
-{{{
+{{{#!python numbers=disable
+            "Continued..."
+
                     if len(elements) == 1:
                     
-                        file_data = "%s\t%X\t%X\t%X\n" % \\
+                        file_data = "%s\t%X\t%X\t%X\n" % \
                             tuple(this_obj[:1] + this_obj[2:])
                         
-                        new_obj = \\
+                        new_obj = \
                         (
                             this_obj[0] + ".inf", file_data,
                             0, 0, len(file_data)
@@ -804,7 +809,7 @@ otherwise a `None` value is returned to indicate failure:
 As for files, the names of directories found in the filesystem are
 translated for comparison with the next path element expected:
 
-{{{
+{{{#!python numbers=disable
                 obj_name = self.encode_name_from_object(this_obj)
                 
                 if obj_name == elements[0]:
@@ -816,7 +821,7 @@ Unlike files, directories can occur at any point in the descent into
 the filesystem. Therefore, we either return the object corresponding
 to the last path element or descend into the directory found:
 
-{{{
+{{{#!python numbers=disable
                     if len(elements) == 1:
                     
                         # This is the last path element; we have found the
@@ -835,7 +840,7 @@ to the last path element or descend into the directory found:
 At this point, no matching objects were found, therefore we return `None`
 to indicate failure:
 
-{{{
+{{{#!python numbers=disable
         return None
 }}}
 ----
