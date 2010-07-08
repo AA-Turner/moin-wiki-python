@@ -355,8 +355,8 @@ foo = Foo()
 
 def addto(instance):
     def decorator(f):
-        import new
-        f = new.instancemethod(f, instance, instance.__class__)
+        import types
+        f = types.MethodType(f, instance, instance.__class__)
         setattr(instance, f.func_name, f)
         return f
     return decorator
