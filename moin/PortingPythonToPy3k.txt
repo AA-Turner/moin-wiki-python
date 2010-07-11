@@ -18,6 +18,10 @@ Approach 1: Maintain a Python 2 base and use 2to3 to generate Python 3 code
 
 Make sure the code runs in Python 2.6 and use 2to3
 
+This approach does *not* require that support for versions before 2.6 needs to be dropped.
+Even the need to test with 2.6 is not strict - one could just as well use this approach on
+code that has never been tested with 2.6, and is only known to work on 2.5.
+
 2to3 is a Python program that reads Python 2.x source code and applies a series of fixers to transform it into valid Python 3.x code. The standard library contains a rich set of fixers that will handle almost all code. 2to3 supporting library lib2to3 is, however, a flexible and generic library, so it is possible to write your own fixers for 2to3. lib2to3 could also be adapted to custom applications in which Python code needs to be edited automatically.  For more information about 2to3, see: http://doc.python.org/library/2to3.html
 
 Usage of 2to3 can be integrated into the installation process: 2to3 can be run as a build step in distutils. With distutils, the following fragments are needed in a setup.py::
