@@ -2,21 +2,21 @@
 
 This is a short tutorial to embed your Qt application in PyQt . It assumes knowledge of bash, Python, Qt+PyQt and sip.
 
-== Problem ==
+== Hybrid Application? ==
 
-One day I discovered that I need to use PyQt scripts
-in a Qt application. It assumes that I want to use C++ calls of my core application, create new classes/objects with python/pyqt and connect signal/slots beetween two parts of the application (Qt and PyQt)
+One day I discovered that it can be really great to use PyQt scripts
+in a Qt application. It assumes that such Hybrid application can have two "branches" - c++ code and python code working together, exchange signals between two these branches, of course possibility to create new objects with python/pyqt and connect signal/slots beetween two parts of the application (Qt and PyQt), well between Qt objects and PyQt objects.
+Well, even more, with Python you can create new classes in runtime, and ... this is almost magic, these new clases/objects will work together with C++(Qt) part of application.
 
-First problem is event loop. Python and Qt application have their own event loop, and I have not
-found way to use only Qt event loop yet. So we need to use Python event loop (It means that we use PyQt event loop). So I changed my Qt application with next way: 
+First challenge is event loop. Python and Qt application have their own event loop, and I have not
+found way to use only Qt event loop yet. So we need to use Python (PyQt) event loop. It means next change in application: 
 
  * Removed main.cpp
  * Created main.py with same functionality
 
-My application doesn't have critical code in qt main.cpp so it was easy.
-The modification doens't create speed problem because all code is C++ still.
+Usually Qt application does not have any critical code in main.cpp so it can not be complicated to make same code with Python. Also the modification does not reflect performance because all code is C++ still.
 
-Now application compiles into shared library.
+The application code compiles into shared library.
 Let's try it with Qt example (examples/application)
 
 === application.h ===
@@ -292,4 +292,4 @@ The example (tarball ) is located at [[http://yshurik.kiev.ua/PyQtScripting.tar.
 [[http://yshurik.kiev.ua/PyQtScripting.zip]], 4k
 
 You may also make corrections to this page.
-If you have questions or comments, send them to me at yshurik@uael.com.ua.
+If you have questions or comments, send them to me at yshurik@me.com.
