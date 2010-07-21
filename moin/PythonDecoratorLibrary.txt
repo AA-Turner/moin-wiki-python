@@ -200,7 +200,8 @@ class memoized(object):
       try:
          return self.cache[args]
       except KeyError:
-         self.cache[args] = value = self.func(*args)
+         value = self.func(*args)
+         self.cache[args] = value
          return value
       except TypeError:
          # uncachable -- for instance, passing a list as an argument.
@@ -209,6 +210,9 @@ class memoized(object):
    def __repr__(self):
       """Return the function's docstring."""
       return self.func.__doc__
+  def __get__(self, obj, objtype):
+      """Support instance methods."""
+      return functools.partial(self.__call__, obj)
 
 @memoized
 def fibonacci(n):
