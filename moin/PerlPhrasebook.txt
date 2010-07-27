@@ -67,10 +67,7 @@ $s = 'a string';
 s = 'a string'
 }}}
 
-Note that string variables in Perl are specified with a dollar sign; in Python you just specify the name of the variable.
-
-Larry Wall points out:
-    This is rather oversimplifying what is going on in both Perl and Python.  The `$` in Perl indicates a scalar variable, which may hold a string, a number, or a reference.  There's no such thing as a string variable in Python, where variables may ''only'' hold references.
+The `$` in Perl indicates a scalar variable, which may hold a string, a number, or a reference.  There's no such thing as a string variable in Python, where variables may ''only'' hold references.
 
     You can program in a Pythonesque subset of Perl by restricting yourself to scalar variables and references.  The main difference is that Perl doesn't do implicit  dereferencing like Python does.
 
@@ -1198,7 +1195,7 @@ associate the key with this list.
 
 {{{
 my %HoL;
-for my $group (qw/simpsons jetsons flintstones/) {
+foreach my $group (qw/simpsons jetsons flintstones/) {
     $HoL{$group} = [get_family $group];
 }
 
@@ -1233,6 +1230,13 @@ map {$HoL{$_} = [ get_family $_ ]} qw/simpsons jetsons flintstones/;
 }}}
 
 
+Note that in Perl you can always replace `foreach` with `for`, which is shorter; but explicitly writing `foreach` is clearer, so you don't confuse it with the other kind of `for`.
+
+The Perl section could also have been written like this (each of the control statements, `if`, `unless`, `while`, `until`, `foreach`, etc., can be written as a "modifier" at the end of a statement):
+{{{
+my %HoL;
+$HoL{$_} = [get_family $_] foreach (qw/simpsons jetsons flintstones/);
+}}}
 
 
 
@@ -1245,7 +1249,7 @@ variable (where it could be modified, for example).
 
 {{{
 my %HoL;
-for my $group (qw/simpsons jetsons flintstones/) {
+foreach my $group (qw/simpsons jetsons flintstones/) {
     my @members = get_family $group;
     $HoL{$group} = [@members];
 }
@@ -1279,16 +1283,23 @@ printSep();
 }}}
 
 {{{
+HoL['flintstones'].extend(['wilma', 'betty'])
+print " ".join(HoL['flintstones'])
+printSep()
+}}}
+
+Note: There is a big difference between the above two examples, which create a new list, leaving the original list object unchanged; and the following two examples, which modify the original list.
+
+{{{
 HoL['flintstones'] += ['wilma', 'betty']
 print " ".join(HoL['flintstones'])
 printSep()
 }}}
 
-
-Tom Christiansen says: while it's not a great efficiency, it works to
-say
 {{{
 $HoL{'flintstones'} = [ @{ $HoL{'flintstones'} }, "wilma", "betty" ];
+print "@{$HoL{flintstones}}\n");
+printSep();
 }}}
 
 
@@ -1370,7 +1381,7 @@ family2: member2-1 member2-2...
 
 
 {{{
-for my $family ( sort keys %HoL ) {
+foreach my $family ( sort keys %HoL ) {
     print "$family: @{ $HoL{$family} }\n";
 }
 printSep();
@@ -1401,7 +1412,7 @@ printSep();
 {{{
 for surname in sorted(HoL.keys()):
     print 'surname: ',
-    for (i, member) in enumerate(HoL[surname]):
+    for i, member in enumerate(HoL[surname]):
         print '%d = %s' % (i, member),
     print
 printSep()
@@ -1454,7 +1465,7 @@ for surname, members in k:
 
 {{{
 
-for my $family ( sort { @{$HoL{$b}} <=> @{$HoL{$a}} } keys %HoL ) {
+foreach my $family ( sort { @{$HoL{$b}} <=> @{$HoL{$a}} } keys %HoL ) {
     print "$family: @{[ sort @{ $HoL{$family}} ]}\n";
 }
 
@@ -1469,6 +1480,12 @@ for surname, members in families:
     print "%s: %s" % (family, ", ".join(members))
 }}}
 
+Do it more like the Perl version:
+{{{
+
+for surname, members in sorted(HoL.items(), key=lambda x: len(x[1])):
+   print "%s: %s" % (family, ", ".join(sorted(members)))
+}}}
 
 
 
@@ -1493,10 +1510,10 @@ sub printLoH
 {
   my ($s, $loh) = @_;
   print "$s\n";
-  for my $h (@$loh)
+  foreach my $h (@$loh)
   {
     print "[\n";
-    for my $k (sort keys %$h)
+    foreach my $k (sort keys %$h)
     {
       print "  $k => $h->{$k}\n";
     }
@@ -1767,7 +1784,7 @@ dictionary is of the form `{"lead" : "fred", "daughter" : "pebbles"}`.
 # calling a function  that returns a key,value list, like
 
 my @LoH;
-while ( %fields = getnextpairset() ) {
+while ( my %fields = getnextpairset() ) {
    push @LoH, { %fields };
 }
 printLoH ('filled with getnextpairset', \@LoH);
