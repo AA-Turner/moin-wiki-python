@@ -83,7 +83,7 @@ $s5 = qq/a string with '" both kinds of quotes/;
 $s6 = "another string with '\" both kinds of quotes";
 $s7 = 'a stri\ng that au\tomatically escapes backslashes';
 
-for my $i ($s1, $s2, $s3, $s4, $s5, $s6, $s7)
+foreach my $i ($s1, $s2, $s3, $s4, $s5, $s6, $s7)
 {
   print "$i\n";
 }
@@ -115,6 +115,9 @@ Python has the {{{r}}} prefix ({{{r"some string"}}} or {{{r'some string'}}} or {
 escaped -- highly useful for regular expressions. Perl has very elaborate (and very useful) quoting mechanisms; see the operators {{{q}}}, {{{qq}}}, {{{qw}}}, {{{qx}}}, etc. in the PerlManual.
 
 Quoting is definitely one of the areas where Perl excels.
+
+
+Note that in Perl you can always replace `foreach` with `for`, which is shorter; but explicitly writing `foreach` is clearer, so you don't confuse it with the other kind of `for`.
 
 
 ==== Interpolation ====
@@ -411,7 +414,7 @@ sub printLoL
 {
   my ($s, $lol) = @_;
   print "$s\n";
-  for my $l (@$lol) {
+  foreach my $l (@$lol) {
     print "@{$l}\n";
   }
   printSep();
@@ -420,7 +423,7 @@ sub printLoL
 # which is longhand for:
 sub printLoL {
   print "$_[0]\n";
-  print "@$_\n" for @{$_[1]};
+  print "@$_\n" foreach @{$_[1]};
   printSep();
 }
 
@@ -610,7 +613,7 @@ Thanks to Adam Krolnik for help with the Perl syntax here.
 
 
 {{{
-for my $i ( 0 .. 9 ) {
+foreach my $i ( 0 .. 9 ) {
     $LoL[$i] = [ somefunc $i ];
 }
 printLoL("filled with somefunc:", \@LoL);
@@ -660,7 +663,7 @@ In python:
 
 
 {{{
-for my $i (0..9) {
+foreach my $i (0..9) {
     @tmp = somefunc $i;
     $LoL[$i] = [ @tmp ];
 }
@@ -821,7 +824,7 @@ modify the string in place (Perl strings are mutable).
 ==== Print a list of lists using references ====
 
 {{{
-for my $aref ( @LoL ) {
+foreach my $aref ( @LoL ) {
     print "\t [ @$aref ],\n";
 }
 printSep();
@@ -841,7 +844,7 @@ printSep()
 
 
 {{{
-for my $i ( 0 .. $#LoL ) {
+foreach my $i ( 0 .. $#LoL ) {
     print "\t [ @{$LoL[$i]} ],\n";
 }
 printSep();
@@ -883,8 +886,8 @@ Note: Perl uses a closed interval, while Python uses a closed-open interval. You
 
 
 {{{
-for my $i ( 0 .. $#LoL ) {
-    for my $j ( 0 .. $#{$LoL[$i]} ) {
+foreach my $i ( 0 .. $#LoL ) {
+    foreach my $j ( 0 .. $#{$LoL[$i]} ) {
         print "elt $i $j is $LoL[$i][$j]\n";
     }
 }
@@ -985,9 +988,7 @@ fixed.
 
 Associative arrays are containers that hold pairs of elements.  The
 first element of a pair is the ''key'', the second is the
-''value''.  In Python, the key may be of almost any type [(link to
-explanation of why lists can't be keys)]; I am not what the
-limitations are in Perl.
+''value''.  In Python, the key may be of any type which is ''hashable'' (mutable data structures, like lists, sets, dictionaries, are no hashable). In Perl, the keys of a hash are converted into strings, which means if you try to use a reference as a key, it will get converted to some string representation, and you will not be able to use it as a reference anymore.
 
 Associative arrays are sometimes called maps, dictionaries (Python,
 Smalltalk), or hashes (Perl).
@@ -1002,10 +1003,10 @@ sub printSep { print "=" x 60, "\n" }
 sub printHoL {
   my ($s, $hol) = @_;
   print "$s\n";
-  for my $k (sort keys (%$hol))
+  foreach my $k (sort keys (%$hol))
   {
     my ($v) = $hol->{$k};
-    print "$k: @$v\n")
+    print "$k: @$v\n";
   }
   printSep();
 }
@@ -1047,6 +1048,29 @@ hol.items()` converts a dictionary to a list of (key, value) pairs, eg:
 `[('flintstones', ['fred', 'barney']), ('jetsons', ['george', 'jane', 'elroy']), ('simpsons', ['homer', 'marge', 'bart'])]`
 This list is then sorted (sorting is in-place in python) and then the
 pairs in the list are unpacked and used.
+
+
+If you didn't care for the results to be sorted (which is often true), you would simply do this:
+
+{{{
+sub printHoL {
+  my ($s, $hol) = @_;
+  print "$s\n";
+  while (my ($k, $v) = each (%$hol))
+  {
+    print "$k: @$v\n")
+  }
+  printSep();
+}
+}}}
+
+{{{
+def printHoL(s, hol):
+    print s
+    for key, value in hol.items():
+        print key, ':', " ".join(value)
+    printSep()
+}}}
 
 
 === Declaration of a hash of lists ===
@@ -1229,8 +1253,6 @@ my %Hol;
 map {$HoL{$_} = [ get_family $_ ]} qw/simpsons jetsons flintstones/;
 }}}
 
-
-Note that in Perl you can always replace `foreach` with `for`, which is shorter; but explicitly writing `foreach` is clearer, so you don't confuse it with the other kind of `for`.
 
 The Perl section could also have been written like this (each of the control statements, `if`, `unless`, `while`, `until`, `foreach`, etc., can be written as a "modifier" at the end of a statement):
 {{{
