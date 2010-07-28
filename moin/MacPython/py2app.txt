@@ -1,16 +1,31 @@
-  * http://undefined.org/python/py2app.html
+py2app is a Python setuptools command which will allow you to make standalone application bundles and plugins from Python scripts. py2app is similar in purpose and design to py2exe for Windows.
 
-This may be more current (believe the above is incompatible w/ current setuptools):
+== Installation ==
 
-   * http://svn.pythonmac.org/py2app/py2app/trunk/
+(py2app version 0.5 2010-07-28 Ronald Oussuroren)
 
-== 2010-07 ==
+"easy_install-X.Y -U py2app" should install the software, where X.Y is your favorite version of Python.
 
-=== Problems ===
+There is one new feature in this release: experimental support for python 3.   This basicly means that I managed to build a single application as a standalone application bundle, without much testing.   Alias builds and plugin bundles almost certainly don't work (the first because alias builds use the Carbon module which isn't available in python 3, the latter because I had to rewrite the C code in the application bundles and probably have to do the same for plugin bundles).
+
+== Link Collection ==
+
+Current repository:
+
+   * source http://svn.pythonmac.org/py2app/py2app/trunk/
+   * documentation http://svn.pythonmac.org/py2app/py2app/trunk/doc/index.html
+
+Original version:
+
+  * source http://undefined.org/python (points to repository)
+  * documentation http://undefined.org/python/py2app.html (might be old)
+
+=== Problems before 0.5 ===
 
  * for 64-bit systems, the pypi package (0.4.2) failed.
    even with macholib, altgraph and modulegraph gathered from all around.
- * here is some workaround http://hg.hardcoded.net/py2app, 
+ * here
+ is some workaround http://hg.hardcoded.net/py2app, 
    that i have not tested, as macholib is missing
 
 === current state ===
