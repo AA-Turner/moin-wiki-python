@@ -2,10 +2,12 @@ This page discuss the way to separate the metadata in a static PKG-INFO like fil
 
 
  * use the distutils.dist.DistutilsMetadata as a basis to think about a read/write API [[http://bugs.python.org/file12746/get_metadata.diff| an example]]
+    - implemented in distutils2.metadata.DistributionMetadata
 
- * think about the dynamic metadata issue (can we provide something for that ?) 
+ * think about the dynamic metadata issue (can we provide something for that ?)
 
  * write a best practice guide for people to separate their metadata in a separate file, and use it in their setup.py
+    - progress about that tracked in http://bugs.python.org/issue8252
 
 
 == TresSeaver's notes ==
@@ -14,9 +16,12 @@ Matthias Klose and I worked on this a bit.  We settled on the
 idea of reusing the 'setup.cfg' file, by relaxing the "one section
 per command" rule to allow spelling more arbitrary metadata.
 
+I commented to reflect work happening in distutils2 –ÉA (Éric Araujo)
+
 In particular, we proposed the following changes:
 
  * Document use of extra sections, not directly connected to a command.
+   - work in progress (ÉA)
 
  * Allow expansion of values using '${key:value}' semantics from
  other sections.
@@ -41,6 +46,8 @@ In particular, we proposed the following changes:
   * Alternative:  add one or more new sections, not based on a command,
   which captures the extra stuff.
 
+  See http://hg.python.org/distutils2/file/tip/docs/design/wiki.rst —ÉA
+
  * Add a distutils command which generates ConfigParser section text
  (on 'sys.stdout') based on values passed to 'setup()'.  This command
  would provide a migration path for existing distributions, who would
@@ -51,9 +58,9 @@ In particular, we proposed the following changes:
  would be:
 
    try:
-       from setuptools import setup 
+       from setuptools import setup
    except ImportError:
-       from distutils import setup 
+       from distutils import setup
    setup()  # use the data in setup.cfg
 
 
