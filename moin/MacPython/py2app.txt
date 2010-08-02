@@ -62,9 +62,30 @@ is missing. There is only ::
 
   main-fat3	main-intel	main-universal
 
-linking main-fat3 to main-i386 makes the build succeed, but the app crashes
+linking main-fat3 to main-i386 ::
 
-I did not try main-intel or universal yet.
+  cd /Library/Python/2.6/site-packages/py2app-0.5-py2.6.egg/py2app/apptemplate/prebuilt
+  ln -s main-fat3 main-i386
+
+makes the build succeed, when using sudo ::
+
+  sudo python setup-mac.py py2app
+
+but the app crashes ::
+
+  mine.app/Contents/MacOS/mine
+
+  Traceback (most recent call last):
+  File "MySQLdb/__init__.pyc", line 19, in <module>
+  File "_mysql.pyc", line 18, in <module>
+  File "_mysql.pyc", line 15, in __load
+  ImportError: '/usr/lib/python2.6/lib-dynload/_mysql.so' not found
+
+_so is in the app, but not in the system (i like to keep things local)
+
+copying _mysql.so into /usr/lib/python2.6/lib-dynload, cured this.
+
+Then it works.
 
 == Development ==
 
