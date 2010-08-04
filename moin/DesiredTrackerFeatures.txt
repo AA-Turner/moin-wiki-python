@@ -132,6 +132,30 @@ Attach files to emails sent to nosy if they have a sane mime type and size (poss
 
 Misc
 ----
+The "Your Issues" page is confusing (see `#299 <http://psf.upfronthosting.co.za/roundup/meta/issue299>`__ and  `#329 <http://psf.upfronthosting.co.za/roundup/meta/issue329>`__).
+This is how it could be changed::
+
+  Old menu:                       New menu:
+  #  Issues                       #  Issues
+    * Create New                    * Create New
+    * Show Open                     * Search
+    * Show Easy                     * Show Issue |_____|
+    * Show Unassigned
+    * Show Needing Review         #  Issue queries
+    * Show Having Patch             * Created by you
+    * Search                        * Assigned to you
+    * Show Issue |_____|            * Your name in nosy
+                                    * Easy
+  # Hello, your.name                * Needing Review
+    * Your Issues
+    * Your Details                #  Hello, your.name
+    * Logout                        * Your Details
+                                    * Logout
+
+The 'Assigned to you' could be visible to developers only. The unassigned query is useless IMHO because there's plenty of unassigned issues. Same for "Having patch" (Needing review also overlaps with this).
+
+----
+
 When an issue is closed stage should be automatically set to
 'committed/rejected'.
 
