@@ -4,28 +4,28 @@ The {{{cmd}}} module makes it easy to make command line interfaces in your progr
 
 {{{cmd}}}, on the other hand, makes it so you can embed a command line within your program.
 
-In these days of graphical user interfaces, a command line interpreter can seems antique. I agree that GUI are often more friendly (and in fact I'm happy to have something other than "ed" to create this document). But a command line interface can have several advantages:
+In these days of graphical user interfaces, a command line interpreter seems antique. I agree that GUIs are often more friendly (and in fact I'm happy to have something other than "ed" to create this document). But a command line interface can have several advantages:
 
  * '''portability''' almost any computer is able to drive a text terminal, so a command line interface can really run everywhere.
  * '''resources''' the CPU and memory cost of a command line interface is far lighter than a GUI library.
  * '''speed''' for advanced users, it's often faster to type a command than to dive into menus and windows.
  * '''development''' It is far faster to create a text oriented interface.
- * '''driving''' you can easily drive a text oriented program with the popen command. That mean that the whole application can be tested automatically.
-And even if you plan to create a GUI software, it's often good to start with a text interface. This will allow you to focus on the applicative logic independently of the interface. This is often a good way to create modular software.
+ * '''driving''' you can easily drive a text oriented program with the popen command. That means that the whole application can be tested automatically.
+And even if you plan to create GUI software, it's often good to start with a text interface. This will allow you to focus on the applicative logic independently of the interface. This is often a good way to create modular software.
 
 = cmd module basics =
-The module define only one class: the {{{Cmd}}} class. Creating a command line interpreter is done by sub-classing the {{{cmd.Cmd}}} class.
+The module defines only one class: the {{{Cmd}}} class. Creating a command line interpreter is done by sub-classing the {{{cmd.Cmd}}} class.
 
 == Creating a command ==
-The main goal of an interpreter is to respond to commands. A command is the first part of a text line entered at the interpreter prompt. This part is defined as the longer string of characters contained in the {{{identchars}}} member. By default {{{identchars}}} contain non accented letters, digits and the underscore symbol. The end of the line is the command parameters.
+The main goal of an interpreter is to respond to commands. A command is the first part of a line of text entered at the interpreter prompt. This part is defined as the longest string of characters contained in the {{{identchars}}} member. By default {{{identchars}}} contains non accented letters, digits and the underscore symbol. The end of the line is the command parameters.
 
 Commands handling is really easy: if you want to define the command spam, you only have to define the {{{do_spam}}} method in your derived class.
 
 === parameters ===
-The {{{do_xxx}}} method should only take one extra parameter. This parameter correspond to the part of the string entered by the user after the command name. The {{{do_xxx}}} job is to parse this string and to find the command parameters values. Python provide many helpful tools to parse this string but this is quite out of the scope of his how-to.
+The {{{do_xxx}}} method should only take one extra parameter. This parameter corresponds to the part of the string entered by the user after the command name. The job of {{{do_xxx}}} is to parse this string and to find the command parameters values. Python provides many helpful tools to parse this string but this is quite out of the scope of his how-to.
 
 === errors ===
-The interpreter use the following format to signal errors:
+The interpreter uses the following format to signal errors:
 
 {{{
 *** <error description>: <additional parameters>
@@ -33,10 +33,10 @@ The interpreter use the following format to signal errors:
 It's generally a good idea to use the same format for application errors.
 
 === return value ===
-In the most common case: commands shouldn't return a value. The exception is when you want to exit the interpreter loop: any command that return a true value stop the interpreter.
+In the most common case: commands shouldn't return a value. The exception is when you want to exit the interpreter loop: any command that returns a true value stops the interpreter.
 
 === sample ===
-The following function define a command which take two numerical arguments and print the result of the addition.
+The following function defines a command which takes two numerical arguments and prints the result of the addition.
 
 {{{
 def do_add(self,s):
@@ -60,7 +60,7 @@ Now if you run the interpreter, you will have:
 9
 }}}
 == Help ==
-Help support is another strength of the cmd module. You can provide documentation for the xxx command by defining the {{{help_xxx}}} method. For the add command, you could for sample define:
+Help support is another strength of the cmd module. You can provide documentation for the xxx command by defining the {{{help_xxx}}} method. For the add command, you could for example define:
 
 {{{
 def help_add(self):
@@ -79,25 +79,25 @@ def help_introduction(self):
     print 'introduction'
     print 'a good place for a tutorial'
 }}}
-The interpreter understand the ? character as a shortcut for the help command.
+The interpreter understands the ? character as a shortcut for the help command.
 
 == Completion ==
-Completion is a very interesting feature: when the user press the TAB key, the interpreter will try to complete the command or propose several alternatives. Completion will be available only if the computer support the readline module. You can also disable completion by passing the None value to the completekey attribute of the Cmd class constructor.
+Completion is a very interesting feature: when the user presses the TAB key, the interpreter will try to complete the command or propose several alternatives. Completion will be available only if the computer supports the readline module. You can also disable completion by passing the None value to the completekey attribute of the Cmd class constructor.
 
-The interpreter is able to process completion for commands names, but for commands arguments you will have to help it. For the command xxx, this is done by defining a {{{complete_xxx}}} method. For sample, if you have defined a color command, completion method for this command could be:
+The interpreter is able to process completion for commands names, but for commands arguments you will have to help it. For the command xxx, this is done by defining a {{{complete_xxx}}} method. For example, if you have defined a color command, the completion method for this command could be:
 
 {{{
 _AVAILABLE_COLORS = ('blue', 'green', 'yellow', 'red', 'black')
 def complete_color(self, text, line, begidx, endidx):
     return [i for i in _AVAILABLE_COLORS if i.startswith(text)]
 }}}
-The {{{complete_xxx}}} method take four arguments:
+The {{{complete_xxx}}} method takes four arguments:
 
  * '''text''' is the string we are matching against, all returned matches must begin with it
  * '''line''' is is the current input line
  * '''begidx''' is the beginning index in the line of the text being matched
  * '''endidx''' is the end index in the line of the text being matched
-And should return a list (possibly empty) of strings representing the possible completions. The arguments begidx and endidx are useful when completion depend of the position of the argument.
+And should return a list (possibly empty) of strings representing the possible completions. The arguments begidx and endidx are useful when completion depends on the position of the argument.
 
 == Starting the interpreter ==
 Once you have defined your own interpreter class, the only thing to do is to create an instance and to call the mainloop method:
@@ -109,17 +109,17 @@ interpreter.mainloop()
 In python 2.1 and 2.2 (and possibly some older releases too as well as future releases?) mainloop() has been renamed to cmdloop()
 
 = Interface customization =
-The cmd module provide several hooks to change the behavior of the interpreter. You should notice that your users won't necessary thanks you to deviate from the standard behavior.
+The cmd module provides several hooks to change the behavior of the interpreter. You should note that your users won't necessary thank you should you deviate from the standard behavior.
 
 == Empty lines ==
-By default when an empty line is entered, the last command is repeated. You can change this behavior by overriding the {{{emptyline}}} method. For sample to disable the repetition of the last command:
+By default when an empty line is entered, the last command is repeated. You can change this behavior by overriding the {{{emptyline}}} method. For example to disable the repetition of the last command:
 
 {{{
 def emptyline(self):
     pass
 }}}
 == Help summary ==
-When the help command is called without arguments, it print a summary of all the documentation topics:
+When the help command is called without arguments, it prints a summary of all the documentation topics:
 
 {{{
 (Cmd) help
@@ -134,28 +134,28 @@ Undocumented commands:
 line help
 (Cmd)
 }}}
-This summary is separated in three parts:
+This summary is separated into three parts:
 
- * '''documented commands''' are commands which have a {{{help_xxx}}} methods
- * '''miscellaneous help topics''' contain the {{{help_xxx}}} methods without {{{do_xxx}}} method
- * '''undocumented commands''' contain the {{{do_xxx}}} method without {{{help_xxx}}} method
-You can customize this screen, with several data members:
+ * '''documented commands''' are commands which have {{{help_xxx}}} methods
+ * '''miscellaneous help topics''' contain the {{{help_xxx}}} methods without {{{do_xxx}}} methods
+ * '''undocumented commands''' contain the {{{do_xxx}}} methods without {{{help_xxx}}} methods
+You can customize this screen with several data members:
 
  * {{{self.ruler}}} define the character used to underline section titles
  * {{{self.doc_header }}} define the title of the ''documented commands'' section
- * {{{self.misc_header }}} define the title of the ''miscalleanous help topics'' section
+ * {{{self.misc_header }}} define the title of the ''miscelleanous help topics'' section
  * {{{self.undoc_header }}} define the title of the ''undocumented commands'' section
 == Introduction message ==
-At the startup, the interpreter print the {{{self.intro}}} string. This string can be overridden via an optional argument to the {{{cmdloop()}}} method.
+At startup, the interpreter print the {{{self.intro}}} string. This string can be overridden via an optional argument to the {{{cmdloop()}}} method.
 
 = Advanced material =
 == Defaults handling ==
  * The {{{default}}} method can be overridden for handling commands for which there is no {{{do_xxx}}} method
  * The {{{completedefault}}} method may be overridden to intercept completion for commands that have no {{{complete_xxx}}} methods.
-Theses methods have the same parameters than the {{{do_xxx}}} and {{{complete_xxx}}} methods.
+Theses methods have the same parameters as the {{{do_xxx}}} and {{{complete_xxx}}} methods.
 
 == Nested interpreters ==
-If your program become complex, or if your data structure is hierarchical, it can be interesting to define nested interpreters (calling an interpreter inside an other interpreter). In that case, I like having prompt like:
+If your program becomes complex, or if your data structure is hierarchical, it can be interesting to define nested interpreters (calling an interpreter inside an other interpreter). In that case, I like having a prompt like:
 
 {{{
 (Cmd) test
@@ -173,7 +173,7 @@ def do_test(self, s):
 Note that it can be a better practice to do this in the constructor of the nested interpreter.
 
 == Modal interaction ==
-Sometime, it can be useful to have more directive interaction sessions with the users. The Cmd class allow you to use the {{{print}}} and {{{raw_input}}} functions without problems.
+Sometimes, it can be useful to have a more directive interaction sessions with the users. The Cmd class allows you to use the {{{print}}} and {{{raw_input}}} functions without problem.
 
 {{{
 def do_hello(self, s):
@@ -184,7 +184,7 @@ def do_hello(self, s):
 ''FIXME: How to change completion behavior of raw_input?''
 
 == The interpreter loop ==
-At the start of the interpreter loop the preloop method is called. At the end of the loop this is the postloop method. This methods take no arguments and shouldn't return any value. The following show how to make the interpreter more polite:
+At the start of the interpreter loop the preloop method is called. At the end of the loop the postloop method is called. These methods take no arguments and return no values. The following shows how to make the interpreter more polite:
 
 {{{
 class polite_cmd(cmd.Cmd,object):
@@ -196,12 +196,12 @@ class polite_cmd(cmd.Cmd,object):
         super(polite_cmd,self).postloop()
 }}}
 == Command processing ==
-When a command line is processed, several methods are called
+When a command line is processed, several methods are called:
 
- * {{{precmd}}} method is called with the a string corresponding to the line entered at the interpreter prompt as argument and should return a string which will be used as parameter by the onecmd method.
- * {{{onecmd}}} take the return value of precmd and return a boolean value (True will stop the interpreter). This is this method which do the real works: extracting the command, finding the corresponding do_xxx method and calling it.
- * {{{postcmd}}} this method take two parameters: the return value of the onecmd method and the string returned by precmd and should return a true value to exit the interpreter loop.
-The precmd and postcmd methods do nothing by default and was only intended as hook for derived class. In fact with  the Python 2.2 super method, they are useless because anything can be done by overriding the onecmd method. So you should probably avoid to use this two hooks.
+ * {{{precmd}}} method is called with the string corresponding to the line entered at the interpreter prompt as its argument, and returns a string which will be used as the parameter to the onecmd method.
+ * {{{onecmd}}} takes the return value of precmd and returns a boolean value (True will stop the interpreter). This is this method which does the real work: extracting the command, finding the corresponding do_xxx method and calling it.
+ * {{{postcmd}}} this method takes two parameters: the return value of the onecmd method and the string returned by precmd, and should return a true value to exit the interpreter loop.
+The precmd and postcmd methods do nothing by default and are only intended as hooks for derived classes. In fact with the Python 2.2 super method, they are useless because anything can be done by overriding the onecmd method, so you should probably avoid to use these two hooks.
 
 {{{
 class dollar_cmd(cmd.Cmd, object):
@@ -215,7 +215,8 @@ class dollar_cmd(cmd.Cmd, object):
             r = raw_input('really exit ?(y/n):')=='y'
         return r
 }}}
-But, if you want to simulate an interpreter entry you should call this three methods in the good order. For sample if you want to print the help message at startup:
+
+However, if you want to simulate an interpreter entry, you should call these three methods in the proper order. For example if you want to print the help message at startup:
 
 {{{
 interpreter = MyCmdInterpreter()
@@ -225,10 +226,10 @@ r = interpreter.postcmd(r, l)
 if not r:
     interpreter.mainloop()
 }}}
-This will prevent you from troubles if you want later to inherit for a class which would have modified the hooks.
+This will prevent problems if you later want a class to inherit one which has modified the hooks.
 
 == Creating components ==
-One other strength of the cmd module is that it handle multiple inheritance. That mean that you can create helper class intended to provide additional features.
+One other strength of the cmd module is that it handles multiple inheritance. That means that you can create helper classes intended to provide additional features.
 
 === Shell access ===
 {{{
@@ -248,7 +249,7 @@ Thu Sep 9 08:57:14 CEST 2002
 Makefile Setup.config config.c install-sh makesetup Setup
 Setup.local config.c.in libpython2.2.a python.o
 }}}
-By the way the cmd module understand the ! character as a shortcut for the shell command.
+By the way, the cmd module understands the ! character as a shortcut for the shell command.
 
 === Exit ===
 {{{
@@ -269,10 +270,10 @@ class exit_cmd(cmd.Cmd,object):
     do_EOF = do_exit
     help_EOF= help_exit
 }}}
-This class provide the exit command to abort the interpreter. You can protect exit by overriding the can_exit method.
+This class provides the exit command to abort the interpreter. You can protect exit by overriding the can_exit method.
 
-=== Gluing all together ===
-Now with a class that inherit both from {{{exit_cmd}}} and {{{shell_cmd}}} you will be able to define an interpreter that understand the shell and exit commands.
+=== Glueing all together ===
+Now with a class that inherits both from {{{exit_cmd}}} and {{{shell_cmd}}} you will be able to define an interpreter that understands the shell and exit commands.
 
 = References =
 [[http://www.python.org/doc/current/lib/Cmd-objects.html|cmd module reference]]
