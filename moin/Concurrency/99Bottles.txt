@@ -158,6 +158,53 @@ g = greenlet.greenlet(grep(".*pants.*", p))
 follow("/var/log/system.log", g)
 }}}
 
+
+== Gevent ==
+[[http://www.gevent.org | Gevent]] builds user-level threads on top of greenlets.
+
+{{{#!python
+import re
+import gevent
+from gevent.queue import Queue
+
+def follow(fname, dest):
+    # setup
+    f = file(fname)
+    f.seek(0,2) # go to the end
+    # do stuff
+    while True:
+        l = f.readline()
+        if not l: # no data
+            gevent.sleep(.1)
+        else:
+            dest.put(l)
+
+def grep(pattern, source, dest):
+    # setup
+    regex = re.compile(pattern)
+
+    def do_stuff():
+        while True:
+            l = source.get()
+            if regex.match(l):
+                dest.put(l)
+
+    return do_stuff
+
+def printer(source):
+    while True:
+        line = source.get()
+        print line.strip()
+
+source_queue = Queue()
+filtered_queue = Queue()
+
+p = gevent.spawn(printer, filtered_queue)
+g = gevent.spawn(grep(".*pants.*", source_queue, filtered_queue))
+follow("/var/log/system.log", source_queue)
+}}}
+
+
 == Kamaelia ==
 {{{#!python
 import time
