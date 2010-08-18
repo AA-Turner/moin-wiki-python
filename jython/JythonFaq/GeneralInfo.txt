@@ -30,7 +30,7 @@ JPython 1.1 was released on 28-Jan-2000. Since then, there have been no further 
 
 Yes. Jython is an implementation of the Python language for the Java platform. Jython 2.5 implements the same language as CPython 2.5, and nearly all of the Core Python standard library modules. (CPython is the C implementation of the Python language.) Jython 2.5 uses the same regression test suite as CPython, with some minor modifications.
 
-There are a number of differences. First, Jython programs cannot use CPython extension modules written in C. These modules usually have files with the extension .so, .pyd or .dll. If you want to use such a module, you should look for an equivalent written in pure Python or Java. Although it is technically feasible to support such extensions - IronPython does so - there are no plans to do so in Jython.
+There are a number of differences. First, Jython programs cannot currently use CPython extension modules written in C. These modules usually have files with the extension .so, .pyd or .dll. If you want to use such a module, you should look for an equivalent written in pure Python or Java. However, it is technically feasible to support such extensions, as demonstrated by IronPython. For the next release of Jython, we plan to support the C Python Extension API.
 
 There are a number of other differences between the two implementations that are unlikely to go away. These range from the trivial - Jython's code objects currently do not have a co_code attribute because it is not possible to directly access Java bytecode from a class, without loading the file; to the significant - Jython uses Java's true garbage collection rather than Python's reference counting scheme.
 
