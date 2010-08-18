@@ -1538,29 +1538,29 @@ class LoginCheck:
     """
     This class checks whether a user
     has logged in properly via 
-    the global "CheckFunction". If so,
+    the global "check_function". If so,
     the requested routine is called.
     Otherwise, an alternative page is
-    displayed via the gloabl "altFunction"
+    displayed via the global "alt_function"
     """
     def __init__(self, f):
         self._f = f
         
     def __call__(self, *args):
-        Status = checkFunction()
+        Status = check_function()
         if Status==1:
             return self._f(*args)
         else:
-            return altFunction()
+            return alt_function()
 
-def checkFunction():
+def check_function():
     return test
 
-def altFunction():
+def alt_function():
     return 'Sorry - this is the forced behaviour'
 
 @LoginCheck
-def DisplayMembersPage():
+def display_members_page():
     print 'This is the members page'
 
 
@@ -1585,3 +1585,5 @@ DisplayMembersPage()
 == Events rising and handling ==
 
 Please see the code and examples here: http://pypi.python.org/pypi/Decovent
+----
+CategoryDocumentation CategoryDocumentation
