@@ -45,37 +45,38 @@ These are all things related to doing python 2 -> python 3 ports:
     * [[PortingDjangoTo3k|Django]]
     * [[http://mercurial.selenic.com/wiki/Py3kPort|Mercurial]]
     * [[http://web.archiveorange.com/archive/v/mvjb4khRLlhPNkSzNuNt|Bazaar]]
-  * The main issues appear to be:
-    * Integer division coerces to a float for non-integral values
-      * Use int(x/y) instead of x/y when dividing integers
-    * Exceptions are a bit different
-      * string exceptions are gone
-      * {{{
-        try:
-          print(1/0)
-        except:
-          dummy, as_value, dummy = sys.exc_info()
-        }}}
-    * str -> bytes, unicode -> str
-      * This one's a mess
-      * This is a bit of an argument for moving to 3.x, and then using 3to2 - because it distinguishes between bytes and unicode better
-    * print function instead of statement
-      * Use file_.write() instead of print
-      * print(var1, var2) happens to work in Python 2, though it doesn't respect some of python 3's options.
-        * This will probably surprise someone someday - it's no obvious that it's still the print statement in 2.x
-    * Some things that returned lists, now return iterators.  Some things that returned iterators, are gone (or rather, renamed to what formerly returned a list).  Example workaround:
-      {{{
+
+= The main issues appear to be: =
+  * Integer division coerces to a float for non-integral values
+    * Use int(x/y) instead of x/y when dividing integers
+  * Exceptions are a bit different
+    * string exceptions are gone
+    * {{{
       try:
-        iter = d.iteritems()
-      except AttributeError:
-        iter = d.items()
+        print(1/0)
+      except:
+        dummy, as_value, dummy = sys.exc_info()
       }}}
-    * dict_.has_key(x) vs x in dict_
-      {{{
-      try:
-        dict_[x]
-      except exceptions.AttributeError:
-        # not in
-      else:
-        # in
-      }}}
+  * str -> bytes, unicode -> str
+    * This one's a mess
+    * This is a bit of an argument for moving to 3.x, and then using 3to2 - because it distinguishes between bytes and unicode better
+  * print function instead of statement
+    * Use file_.write() instead of print
+    * print(var1, var2) happens to work in Python 2, though it doesn't respect some of python 3's options.
+      * This will probably surprise someone someday - it's no obvious that it's still the print statement in 2.x
+  * Some things that returned lists, now return iterators.  Some things that returned iterators, are gone (or rather, renamed to what formerly returned a list).  Example workaround:
+    {{{
+    try:
+      iter = d.iteritems()
+    except AttributeError:
+      iter = d.items()
+    }}}
+  * dict_.has_key(x) vs x in dict_
+    {{{
+    try:
+      dict_[x]
+    except exceptions.AttributeError:
+      # not in
+    else:
+      # in
+    }}}
