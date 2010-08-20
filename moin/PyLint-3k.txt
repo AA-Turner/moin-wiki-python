@@ -4,9 +4,12 @@
 We're really just getting started.
 
 == Goals and high level overview of tasks ==
-The idea is to eliminate Python 2.4 compatibility because that will simplify some of the code, and to expand compatibility to 3.0 and 3.1.
-  * This will require converting 3 Python 2-compatible packages to a common subset of Python 2 and Python 3.  We may or may not be able to do this using 2to3; 2to3 may or
-    may not prove too exuberant about moving to a nice, python 3-only syntax in some areas.
+The idea is to add support for Python 3.0 and 3.1, while eliminating Python 2.4 compatibility because that will simplify some of the code.
+  * This will require one of the following methods:
+    * Converting the three Python 2-compatible packages to a common subset of Python 2 and Python 3
+      * We may or may not be able to do this using 2to3; 2to3 may or may not prove too exuberant about moving to a nice, python 3-only syntax in some areas.
+    * Creating creating modules that abstract the differences between Python 2 and Python 3 and depending on them instead.
+  * Those three packages are:
     1. logilab-common
       * This one is probably the place to start, because it appears to contain the test harness we need, and the owners of the code believe it will
         be the easiest part
