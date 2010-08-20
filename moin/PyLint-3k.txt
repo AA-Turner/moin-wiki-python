@@ -54,10 +54,11 @@ These are all things related to doing python 2 -> python 3 ports:
         try:
           print(1/0)
         except:
-          e = ...
+          dummy, as_value, dummy = sys.exc_info()
         }}}
     * str -> bytes, unicode -> str
       * This one's a mess
+      * This is a bit of an argument for moving to 3.x, and then using 3to2 - because it distinguishes between bytes and unicode better
     * print function instead of statement
       * Use file_.write() instead of print
       * print(var1, var2) happens to work in Python 2, though it doesn't respect some of python 3's options
