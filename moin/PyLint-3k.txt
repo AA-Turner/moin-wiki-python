@@ -5,7 +5,12 @@ We're really just getting started.
 
 == Goals and high level overview of tasks ==
 The idea is to eliminate Python 2.4 compatibility because that will simplify some of the code, and to expand compatibility to 3.0 and 3.1.
-  * This will require moving logilab common, logilab astng and pylint itself to python 3 using 2to3
+  * This will require converting 3 packages to python 3 using 2to3:
+    1. logilab common
+      * This one is probably the place to start, because it appears to contain the test harness we need, and the owners of the code believe it will
+        be the easiest part
+    1. logilab astng
+    1. pylint itself
   * There appear to be test suites for each of these, which can be invoked using the pytest command, which in turn appears to be part of logilab-common itself
   * The owners of the code would like to keep the changes compatible with Python 2.5.x, which of course is a bit more involved than targeting 2.6 and up.
     
