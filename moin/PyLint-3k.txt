@@ -26,7 +26,7 @@ The idea is to add support for Python 3.0 and 3.1, while eliminating Python 2.4 
     than targeting 2.6 and up.
     
 == Resources ==
-These are all things related to doing python 2 -> python 3 ports
+These are all things related to doing python 2 -> python 3 ports:
   * 2to3
     * [[http://docs.python.org/library/2to3.html|2to3 documentation]]
     * Python Wiki on [[2to3]]
@@ -39,3 +39,9 @@ These are all things related to doing python 2 -> python 3 ports
     * [[PortingDjangoTo3k|Django]]
     * [[http://mercurial.selenic.com/wiki/Py3kPort|Mercurial]]
     * [[http://web.archiveorange.com/archive/v/mvjb4khRLlhPNkSzNuNt|Bazaar]]
+  * The main issues appear to be:
+    * Integer division coerces to a float for non-integral values
+    * Exceptions are a bit different
+    * unicode -> str, str -> bytes
+    * print function instead of statement
+    * Some things that returned lists, now return iterators.  Some things that returned iterators, are gone (or rather, renamed to what formerly returned a list)
