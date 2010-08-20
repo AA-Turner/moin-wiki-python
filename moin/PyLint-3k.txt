@@ -41,7 +41,24 @@ These are all things related to doing python 2 -> python 3 ports:
     * [[http://web.archiveorange.com/archive/v/mvjb4khRLlhPNkSzNuNt|Bazaar]]
   * The main issues appear to be:
     * Integer division coerces to a float for non-integral values
+      * Use int(x/y) instead of x/y
     * Exceptions are a bit different
-    * unicode -> str, str -> bytes
+      * string exceptions are gone
+      * {{{
+        try:
+          print(1/0)
+        except:
+          e = ...
+        }}}
+    * str -> bytes, unicode -> str
+      * This one's a mess
     * print function instead of statement
-    * Some things that returned lists, now return iterators.  Some things that returned iterators, are gone (or rather, renamed to what formerly returned a list)
+      * Use file_.write() instead of print
+      * print(var1, var2) happens to work in Python 2, though it doesn't respect some of python 3's options
+    * Some things that returned lists, now return iterators.  Some things that returned iterators, are gone (or rather, renamed to what formerly returned a list).  Example workaround:
+      {{{
+      try:
+        iter = d.iteritems()
+      except AttributeError:
+        iter = d.items()
+      }}}
