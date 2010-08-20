@@ -1,4 +1,4 @@
-= This page describes efforts to port pylint to Python 3.x =
+= This page describes efforts to port PyLint to Python 3.x =
 
 == Status of the port ==
   * We're really just getting started.
@@ -9,7 +9,7 @@ The idea is to add support for Python 3.0 and 3.1, while eliminating Python 2.4 
   * This will require one of the following methods:
     * Converting the three Python 2-compatible packages to a common subset of Python 2 and Python 3
       * We may or may not be able to do this using 2to3; 2to3 may or may not prove too exuberant about moving to a nice, python 3-only syntax in some areas.
-    * Creating creating modules that abstract the differences between Python 2 and Python 3 and depending on them instead.
+    * Creating modules that abstract the differences between Python 2 and 3 and depending on them instead.
   * About the three packages
     * Those three packages are:
       1. logilab-common
@@ -18,7 +18,7 @@ The idea is to add support for Python 3.0 and 3.1, while eliminating Python 2.4 
         * 29274 lines of code initially
       1. logilab-astng
         * 18928 lines of code initially
-      1. pylint itself
+      1. PyLint itself
          * 28415 lines of code initially
     * There appear to be test suites for each of these, which can be invoked using the pytest command - pytest appears to be part of logilab-common, which suggests a bit of
       mutual dependency to work around.
@@ -29,10 +29,10 @@ The idea is to add support for Python 3.0 and 3.1, while eliminating Python 2.4 
       1. Maintain two parallel versions
       1. Port to 3.x.  Automatically, fully derive your 2.x code from the new 3.x code.
     * The owners of the code prefer methods #1 and #2 over #3 above; we've not yet discussed method 4.
-    * Note that Mercurial, the SCM system used by pylint, supports changesets - this could take most of the labor out of method 3
+    * Note that Mercurial, the SCM system used by Py<int, supports changesets - this could take most of the labor out of method 3
     
 == Resources ==
-These are all things related to doing python 2 -> python 3 ports:
+These are all things related to doing Python 2 to 3 ports:
   * 2to3
     * [[http://docs.python.org/library/2to3.html|2to3 documentation]]
     * Python Wiki on [[2to3]]
