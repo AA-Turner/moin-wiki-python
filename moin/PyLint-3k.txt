@@ -22,6 +22,8 @@ The idea is to add support for Python 3.0 and 3.1, while eliminating Python 2.4 
          * 28415 lines of code initially
     * There appear to be test suites for each of these, which can be invoked using the pytest command - pytest appears to be part of logilab-common, which suggests a bit of
       mutual dependency to work around.
+
+---- /!\ '''Edit conflict - other version:''' ----
   * Dealing with a python 2 to python 3 port:
     * The four main ways:
       1. Automatically, fully derive your 3.x code from 2.x
@@ -30,6 +32,18 @@ The idea is to add support for Python 3.0 and 3.1, while eliminating Python 2.4 
       1. Port to 3.x.  Automatically, fully derive your 2.x code from the new 3.x code.
     * The owners of the code prefer methods #1 and #2 over #3 above; we've not yet discussed method 4.
     * Note that Mercurial, the SCM system used by pylint, supports changesets - this could take most of the labor out of method 3
+
+---- /!\ '''Edit conflict - your version:''' ----
+  * Dealing with a python 2 to python 3 port:
+    * The four main ways:
+      1. Automatically, fully derive your 3.x code from 2.x
+      1. Make code run unmodified on 2.x and 3.x
+      1. Maintain two parallel versions
+      1. Port to 3.x.  Automatically, fully derive your 2.x code from the new 3.x code.
+    * The owners of the code prefer methods #1 and #2 over #3 above; we've not yet discussed method 4.
+    * Note that Mercurial, the SCM system used by pylint, supports changesets - this could take most of the labor out of method 3
+
+---- /!\ '''End of edit conflict''' ----
     
 == Resources ==
 These are all things related to doing python 2 -> python 3 ports:
@@ -47,7 +61,7 @@ These are all things related to doing python 2 -> python 3 ports:
     * [[http://web.archiveorange.com/archive/v/mvjb4khRLlhPNkSzNuNt|Bazaar]]
   * The main issues appear to be:
     * Integer division coerces to a float for non-integral values
-      * Use int(x/y) instead of x/y
+      * Use int(x/y) instead of x/y when dividing integers
     * Exceptions are a bit different
       * string exceptions are gone
       * {{{
