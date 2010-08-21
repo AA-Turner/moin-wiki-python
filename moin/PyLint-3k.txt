@@ -52,13 +52,13 @@ These are all things related to doing Python 2 to 3 ports:
     * [[http://groups.google.com/group/sqlalchemy/browse_thread/thread/055f78bc78801c13|SQLAlchemy]]
       * Includes a "sa2to3" script that allows you to do things like the following to get unified code, in a limited sense, for python2 and python3:
         {{{
-except Exception, e:
-  # Py3K
-  #raise exc.DBAPIError.instance(None, None, e) from e
-  # Py2K
-  import sys
-  raise exc.DBAPIError.instance(None, None, e), None, sys.exc_info()[2]
-  # end Py2K
+      except Exception, e:
+        # Py3K
+        #raise exc.DBAPIError.instance(None, None, e) from e
+        # Py2K
+        import sys
+        raise exc.DBAPIError.instance(None, None, e), None, sys.exc_info()[2]
+        # end Py2K
 }}}
 
 
@@ -69,10 +69,10 @@ except Exception, e:
   * Exceptions are a bit different
     * string exceptions are gone
     * {{{
-try:
-  print(1/0)
-except:
-  dummy, as_value, dummy = sys.exc_info()
+      try:
+        print(1/0)
+      except:
+        dummy, as_value, dummy = sys.exc_info()
 }}}
   * str -> bytes, unicode -> str
     * This one's a mess
@@ -83,17 +83,17 @@ except:
       * This will probably surprise someone someday - it's no obvious that it's still the print statement in 2.x
   * Some things that returned lists, now return iterators.  Some things that returned iterators, are gone (or rather, renamed to what formerly returned a list).  Example workaround:
 {{{
-try:
-  iter = d.iteritems()
-except AttributeError:
-  iter = d.items()
+    try:
+      iter = d.iteritems()
+    except AttributeError:
+      iter = d.items()
 }}}
   * dict_.has_key(x) vs x in dict_
 {{{
-try:
-  dict_[x]
-except exceptions.AttributeError:
-  # not in
-else:
-  # in
+    try:
+      dict_[x]
+    except exceptions.AttributeError:
+      # not in
+    else:
+      # in
 }}}
