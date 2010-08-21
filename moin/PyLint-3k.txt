@@ -25,12 +25,13 @@ The idea is to add support for Python 3.0 and 3.1, while eliminating Python 2.4 
     * There appear to be test suites for each of these, which can be invoked using the pytest command - pytest appears to be part of logilab-common, which suggests a bit of
       mutual dependency to work around.
   * Dealing with a python 2 to python 3 port:
-    * The four main ways:
+    * The five ways Dan's encountered so far:
       1. Automatically, fully derive your 3.x code from 2.x
       1. Make code run unmodified on 2.x and 3.x
       1. Maintain two parallel versions
       1. Port to 3.x mostly automatically using 2to3, then manually fix what's left that needs to be changed.  Then automatically, fully derive the 2.x code from the new 3.x code.
-    * The owners of the code prefer methods #1 and #2 over #3 above; we've not yet discussed method 4.
+      1. Use 2to3 via SQLAlchemy's sa2to3 wrapper to preprocess things for python2 or python3.
+    * The owners of the code prefer methods #1 and #2 over #3 above; we've not yet discussed methods 4 or 5.
     * Note that Mercurial, the SCM system used by Py<int, supports changesets - this could take most of the labor out of method 3
     
 == Resources ==
@@ -49,6 +50,18 @@ These are all things related to doing Python 2 to 3 ports:
     * [[http://mercurial.selenic.com/wiki/Py3kPort|Mercurial]]
     * [[http://web.archiveorange.com/archive/v/mvjb4khRLlhPNkSzNuNt|Bazaar]]
     * [[http://groups.google.com/group/sqlalchemy/browse_thread/thread/055f78bc78801c13|SQLAlchemy]]
+      * Includes a "sa2to3" script that allows you to do things like the following to get unified code, in a limited sense, for python2 and python3:
+        {{{
+        except Exception, e:
+          # Py3K
+          #raise exc.DBAPIError.instance(None, None, e) from e
+          # Py2K
+          import sys
+          raise exc.DBAPIError.instance(None, None, e), None, sys.exc_info()[2]
+          # end Py2K
+        }}}
+
+
 
 == The main issues appear to be: ==
   * Integer division coerces to a float for non-integral values
