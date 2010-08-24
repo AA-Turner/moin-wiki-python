@@ -4,25 +4,25 @@ These examples assume version 2.4 or above of Python.
 You should be able to run them simply by copying/pasting the code into a file and running Python. Or by inserting this line (#!/usr/bin/env python) at the beginning of your file (Unix/Linux), making the file executable (chmod u+x filename.py) and running it (./filename.py).
 
     ------ 1 line: Output
-{{{#!python
+{{{#!python numbers=disable
 print 'Hello, world!'
 }}}
 
     ------ 2 lines: Input, assignment
-{{{#!python
+{{{#!python numbers=disable
 name = raw_input('What is your name?\n')
 print 'Hi, ' + name + '.'
 }}}
 
     ------ 3 lines: For loop, built-in enumerate function
-{{{#!python
+{{{#!python numbers=disable
 my_list = ['john', 'pat', 'gary', 'michael']
 for i, name in enumerate(my_list):
     print "iteration %i is %s" % (i, name)
 }}}
 
     ------ 4 lines: Fibonacci, tuple assignment
-{{{#!python
+{{{#!python numbers=disable
 parents, babies = (1, 1)
 while babies < 100:
     print 'This generation has %d babies' % babies
@@ -30,7 +30,7 @@ while babies < 100:
 }}}
 
     ------ 5 lines: Functions
-{{{#!python
+{{{#!python numbers=disable
 def greet(name):
     print 'hello', name
 greet('Jack')
@@ -39,7 +39,7 @@ greet('Bob')
 }}}
 
     ------ 6 lines: Import, regular expressions
-{{{#!python
+{{{#!python numbers=disable
 import re
 for test_string in ['555-1212', 'ILL-EGAL']:
     if re.match(r'^\d{3}-\d{4}$', test_string):
@@ -49,7 +49,7 @@ for test_string in ['555-1212', 'ILL-EGAL']:
 }}}
 
     ------ 7 lines: Dictionaries, generator expressions
-{{{#!python
+{{{#!python numbers=disable
 prices = {'apple': 0.40, 'banana': 0.50}
 my_purchase = {
     'apple': 1,
@@ -61,7 +61,7 @@ print 'I owe the grocer $%.2f' % grocery_bill
 
 
     ------ 8 lines: Command line arguments, exception handling
-{{{#!python
+{{{#!python numbers=disable
 #!/usr/bin/env python
 # This program adds up integers in the command line
 import sys
@@ -74,7 +74,7 @@ except ValueError:
 
 
     ------ 9 lines: Opening files
-{{{#!python
+{{{#!python numbers=disable
 # indent your Python code to put into an email
 import glob
 # glob supports Unix style pathname extensions
@@ -87,7 +87,7 @@ for fn in sorted(python_files):
 }}}
 
     ------ 10 lines: Time, conditionals
-{{{#!python
+{{{#!python numbers=disable
 import time
 now = time.localtime()
 hour = now.tm_hour
@@ -101,7 +101,7 @@ else: print 'sleeping'
 }}}
 
     ------ 11 lines: Triple-quoted strings, while loop
-{{{#!python
+{{{#!python numbers=disable
 REFRAIN = '''
 %d bottles of beer on the wall,
 %d bottles of beer,
@@ -116,7 +116,7 @@ while bottles_of_beer > 1:
 }}}
 
    ------ 12 lines: Classes
-{{{#!python
+{{{#!python numbers=disable
 class BankAccount(object):
     def __init__(self, initial_balance=0):
         self.balance = initial_balance
@@ -132,7 +132,7 @@ print my_account.balance
 }}}
 
     ------ 13 lines: Unit testing with unittest
-{{{#!python
+{{{#!python numbers=disable
 import unittest
 def median(pool):
     copy = sorted(pool)
@@ -150,7 +150,7 @@ if __name__ == '__main__':
 
 
     ------ 14 lines: Doctest-based testing
-{{{#!python
+{{{#!python numbers=disable
 def median(pool):
     '''Statistical median to demonstrate doctest.
     >>> median([2, 9, 9, 7, 9, 2, 4, 5, 8])
@@ -168,7 +168,7 @@ if __name__ == '__main__':
 }}}
 
     ------ 15 lines: itertools
-{{{#!python
+{{{#!python numbers=disable
 import itertools
 lines = '''
 This is the
@@ -187,7 +187,7 @@ for has_chars, frags in itertools.groupby(lines, bool):
 }}}
 
     ------ 16 lines: csv module, tuple unpacking, cmp() built-in
-{{{#!python
+{{{#!python numbers=disable
 import csv
 
 # write stocks data as comma-separated values
@@ -206,7 +206,7 @@ for ticker, name, price, change, pct in stocks:
     print '%s is %s (%s%%)' % (name, status, pct)
 }}}
     ------ 18 lines: 8-Queens Problem (recursion)
-{{{#!python
+{{{#!python numbers=disable
 BOARD_SIZE = 8
 
 def under_attack(col, queens):
@@ -228,7 +228,7 @@ for answer in solve(BOARD_SIZE): print answer
 }}}
 
     ------ 20 lines: Prime numbers sieve w/fancy generators
-{{{#!python
+{{{#!python numbers=disable
 import itertools
 
 def iter_primes():
@@ -252,7 +252,7 @@ for p in iter_primes():
 }}}
 
     ------ 21 lines: XML/HTML parsing (using Python 2.5 or third-party library)
-{{{#!python
+{{{#!python numbers=disable
 dinner_recipe = '''<html><body><table>
 <tr><th>amt</th><th>unit</th><th>item</th></tr>
 <tr><td>24</td><td>slices</td><td>baguette</td></tr>
@@ -277,7 +277,7 @@ for ingredient in tree.getiterator('tr'):
 }}}
 
     ------ 28 lines: 8-Queens Problem (define your own exceptions)
-{{{#!python
+{{{#!python numbers=disable
 BOARD_SIZE = 8
 
 class BailOut(Exception):
@@ -310,7 +310,7 @@ print "\n".join(". "*q + "Q " + ". "*(BOARD_SIZE-q-1) for q in queens)
 }}}
 
     ------ 33 lines: "Guess the Number" Game from http://inventwithpython.com
-{{{#!python
+{{{#!python numbers=disable
 import random
 
 guessesTaken = 0
