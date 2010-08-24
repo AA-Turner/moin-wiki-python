@@ -1,28 +1,23 @@
-## page was renamed from Distutils/Proposals/VersionControlledSourceDistributions
 <<TableOfContents(3)>>
 
 == Abstract ==
-Give users a way to run code in development without building or installing it.
+Give Python developers using distutils2 a way to import modules and packages from a source tree without building or installing it.
 
 == Rationale ==
-People want to import their modules or run their scripts to try them while developing without reinstalling them constantly or mucking with import paths. The code will most of the time come from a version control system.
+People want to import their modules to try them while developing without reinstalling them constantly or mucking with import paths. The code will most of the time come from a version-controlled directory or an unpacked archive.
 
-This proposal does not talk about VCS integration e.g. to build packages from branches or tags.
+This proposal does not talk about VCS integration (for example building distributions from branches or tags).
 
-== Requirements/Ideas ==
+== Detailed Plan ==
 Provide a command that makes code in an arbitrary directory available for import and use without requiring to rebuild or reinstall it when the files change.
 
-The command name could be in the bdist family (bdist_devel) or be something new like vdist (virtual dist), ddist (development dist) or something better.
+The mechanism for enabling such a devel installation would be as simple as adding a .pth file on the user’s site-package directory (overridable with an option).
 
-When the code includes C extensions, users will need to run the build_ext command, but they will not have to run bdist_devel again. With pure Python code, there will be no command to run to make the new code available as distribution.
+Since this is a type of installation, the feature should be implemented as an option to the install command. More specifically, since data, headers or scripts are not handled, an option to the install_lib command. This option would imply --skip-build.
 
-The mechanism for enabling such a checkout distribution would be as simple as adding a .pth file on the user’s site-package directory (overridable with an option).
+When the code includes C extensions, users will need to run build_ext --inplace, but they will not have to run install_lib --link-only again. With pure Python code, there will be no command to run to make the new code available as distribution.
 
-To stop using a checkout distribution, a command to remove the .pth file has to be provided, perhaps as an option to bdist_devel.
-
-After writing this down and reading it, it occurs to me that the use case belongs more in the install family than in the bdist. Hence an alternative idea: Implement this feature as “install --develop” and use uninstall to remove the .pth file. --develop would imply --skip-build.
-
-We may take a leaf from Buildutils’ book and use a name that conveys the meaning of “making this distribution available”, i.e. build once and install a file to make it importable: use, activate...
+An option to the uninstall command would be used to remove the .pth file.
 
 == References ==
  1. [[http://peak.telecommunity.com/DevCenter/EasyInstall|Setuptools’ develop command]]
