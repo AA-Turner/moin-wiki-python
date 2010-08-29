@@ -22,11 +22,15 @@ If you want to suggest an alternative mechanism which uses ConfigParser, please 
 
 I'd rather avoid using config files (for logging) entirely in almost every project I work on.  If logging has its own configuration files, that's a smell.  If I need configfiles for my project, I'll choose the format I need, and expose the necessary settings to the user coherently, including logging settings. That it has its own configuration file to me is a smell, it suggests configuring in code is too hard, and too necessary.  -- JoshuaRodman 
 
+It's not a smell - it's not necessary to use, but allows for easier configuration in some scenarios. You can certainly put other settings in the same file, or have separate files for other settings. I don't know of any convention that limits the number of onfiguration files in an application to zero or one. -- VinaySajip
+
 == API uses camelCase (goes against PEP8 recommendation and most of the stdlib) ==
 
 There's no objection on my part to changing the library to use PEP8 naming while retaining camelCase aliases for backward compatibility. Comments on this below here, please: -- VinaySajip
 
 I'd greatly appreciate this. -- Joshua Rodman
+
+It's a low priority right now, unless there's an initiative to ensure the rest of the stdlib is made to conform to PEP8.
 
 == Rather slow considering the large number of function calls performed internally to check which handler to use ==
 
@@ -42,17 +46,23 @@ LogRecords need to be pickleable to be sent across the wire. You can add arbitra
 
 I don't really know what this offers, but I usually prefer to simply add attributes to the python objects if I need to decorate them.  Perhaps unconventional, but it feels pythonic to me. -- JoshuaRodman
 
+Yes, but you don't normally have access to a LogRecord when logging an event, so you can't simply add attributes to it. -- VinaySajip
+
 == Difficult to add general context to log messages (e.g., add the request URL to all logging messages during the request) ==
 
 There's information on this very topic at [[http://docs.python.org/library/logging.html#adding-contextual-information-to-your-logging-output|Adding contextual information to your logging output]]. Can you provide more details on how the mechanism provided fails to meet your needs? -- VinaySajip
 
 I'd prefer some log-invocation magic for the common cases, like the function name I'm in as a token to be expanded. -- JoshuaRodman
 
+The funtion name is already available without magic, have you checked the documentation? -- VinaySajip
+
 == By default it does nothing; basicConfig makes it do something but makes it hard to tweak logging. ==
 
 How would you want to tweak logging in a way which basicConfig doesn't make easy? Suggest improvements which can be made to basicConfig, I'm receptive. Remember to consider backward compatibility. -- VinaySajip
 
 A logger with no handlers should default to sending to stderr or something like this. Perhaps it already has a handler.  Perhaps there is a default handler set by default.  I shouldn't have to configure anything for the simplest case of a script.  Further, this means that I can test modules independently from my larger project and get a sane behavior. -- JoshuaRodman
+
+Don't agree with your suggestions - a third party library which uses logging should not spew logging output by default which may not be wanted by a developer/user of an application which uses it. For the simplest case of a script, just use logging.info() etc. and it invokes basicConfig() under the covers. Have you checked the documentation? -- VinaySajip
 
 == filters are an abstract class instead of callables ==
 
@@ -96,6 +106,7 @@ And, "incredibly slow" is pretty emotive. Care to back that up with some hard da
 
 It is too complicated.  More defaulting is needed, and simpler construction.  I should be able to get a logger talking to a rolling logfile in a single line, and that line should not be overly verbose.  Sure, it might not be what I'll eventually want, but I need it to start working right away, so I can continue to figure out what I need. -- JoshuaRodman
 
+Write your own utility function in a utility library of your own to make this happen. Not everybody thinks the same way, so it's better if people write their own simple-to-use (for them) wrappers on top of the existing functionality. Once written, you can import from your utility package into other applications you write. -- VinaySajip
 
 == The appropriate roles for args and kwargs in loggerAdapter are ambiguous. ==
 
