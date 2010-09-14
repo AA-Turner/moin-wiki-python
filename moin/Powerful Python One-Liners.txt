@@ -109,6 +109,11 @@ This script echo "ê"
 [another command] | python -c "import sys,re;[sys.stdout.write(re.sub('PATTERN', 'SUBSTITUTION', line)) for line in sys.stdin]"
 }}}
 
+== Modify lines from stdin using map ==
+{{{
+python -c "import sys; tmp = lambda x: sys.stdout.write(x.split()[0]+'\t'+str(int(x.split()[1])+1)+'\n'); map(tmp, sys.stdin);"
+}}}
+
 == Display List of all users on Unix like system ==
 {{{
 print '\n'.join(line.split(":",1)[0] for line in open("/etc/passwd"))
