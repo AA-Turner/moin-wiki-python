@@ -323,6 +323,25 @@ e.g. as follows:
 
 Which is more readable?  "Ai posteri l'ardua sentenza..."!-)
 
+A more compact, if much less readable, solution (through the use of recursion and an unfortunate number of lambda functions - in the spirit of functional programming):
+
+{{{
+    # A couple of maps help paste the results from combos (below) and the recursion together nicely
+    def group(x, n):
+        if n[0] == len(x): return [[x]]
+        return sum(list(map(lambda y: list(map(lambda z: [y[0]] + z, group(y[1], n[1:]))), combos(n[0], x))),[])
+
+    # Enumerates all combinations, where each combination is paired with the remainder of the list
+    # This is used to simplify the recursive step in the main function (as opposed to using itertools' combinations function)
+    def combos (n, x, cur = 0):
+        if n == 0: return [[[],x]]
+        ret = []
+        for i in range(cur, len(x)):
+            ret += list(map(lambda y: [[x[i]]+y[0], y[1]], combos(n-1, x[:i]+x[i+1:], i)))
+        return ret
+}}}
+
+This solution was tested on IDLE 3.1, apologies to anyone for whom it doesn't work (the only potential issue I can see would be with map).
 
 = Problem 28: Sorting a list of lists according to length of sublists =
 {{{
@@ -416,7 +435,7 @@ def phi(m):
     >>> phi(10)
     4
     """
-    
+
     if m == 1:
         return 1
     else:
@@ -464,9 +483,9 @@ def primeGenerator(limit=1000):
                 _primes.append(candidate)
                 yield candidate
                 break
-            
+
         delta ^= 6          # gen sequence ... 2, 4, 2, 4, 2, 4, 2 ...
-        candidate += delta  
+        candidate += delta
 
 def prime_factors(n):
     """find factors of n using trial division by primes.
@@ -479,14 +498,14 @@ def prime_factors(n):
 
     for p in primeGenerator(n):
         if p*p > n: break
-        
+
         while n % p == 0:
             n /= p
             factors.append(p)
 
     if n != 1:
         factors.append(n)
-            
+
     return factors
 }}}
 
@@ -500,11 +519,11 @@ Uses the function prime_factors() defined in problem P35.
 def prime_factors_mult(n):
     """return list [ [p_0,k_0], [p_1,k_1], ... ], where there are 'k_i'
     occurances of 'p_i' in the prime factorization of n.
-    
+
     >>> prime_factors_mult(315)
     [[3, 2], [5, 1], [7, 1]]
     """
-    
+
     from itertools import groupby
 
     result = []
@@ -535,7 +554,7 @@ def totient(n):
     from operator import mult
 
     if n == 1: return 1
-    
+
     return reduce(mult, [(p-1) * p**(m-1) for p,m in prime_factors_mult(n)])
 }}}
 
@@ -549,12 +568,12 @@ def P38(printtimes=True):
 
     For doctests, set 'printtimes=False' or the doctest will likely fail,
     because the executions time will be different.
-    
+
     >>> P38(printtimes=False)
     list of functions from fastest to slowest:
-       totient 
-           phi 
-    """	
+       totient
+           phi
+    """
     from timeit import Timer
 
     result = {}
@@ -577,7 +596,7 @@ Uses primeGenerator() from problem 35.
 
 {{{
 def primelist(lower=0,upper=1000):
-    """return list of primes greater than 'lower' and less than 
+    """return list of primes greater than 'lower' and less than
     or equal to 'upper'
 
     >>> primelist(10,30)
@@ -628,7 +647,7 @@ Given a range of integers by its lower and upper limit, print a list of all even
 def goldbach_list(lower,upper):
     """Print goldberg composition for all even numbers greater than
     'lower' and less than or equal to 'upper'.
-    
+
     >>> goldbach_list(9,20)
     10 = 3 + 7
     12 = 5 + 7
@@ -706,7 +725,7 @@ def table(expr):
     format = "%-5s %-5s %-5s"
     print  format % ('A','B',expr)
 
-    # convert the expression to uppercase and 
+    # convert the expression to uppercase and
     # compile it for later 'eval' call
     expr = compile(expr.upper(),'<expression>','eval')
 
@@ -730,14 +749,14 @@ def table( expr ):
     >>> table('A and not B')
       A     B   A and not B
     True  True  False
-    True  False True 
+    True  False True
     False True  False
     False False False
 
     >>> table('not(A imp B)')
       A     B   not(A imp B)
     True  True  False
-    True  False True 
+    True  False True
     False True  False
     False False False
     """
@@ -745,7 +764,7 @@ def table( expr ):
     # convert infix expression to prefix (function call) form
     def toPrefix( expr ):
         from re import finditer
-    
+
         # Pop and operator of the operators stack and one or two operands of the
         # operand stack, and assembled into a call to the appropriate function.
         # The function call is pushed onto the operand stack
@@ -767,14 +786,14 @@ def table( expr ):
                  }
 
         # operand and operator stacks
-        operands  = []  
+        operands  = []
         operators = []
 
         # Regular expression for parsing the infix expression.  It has three
         # parenthesized groups, which are returned in a tuple by the groups()
         # method of a match object (mo).  The tuple is unpacked into
         # corresponding variables in the for-statement.
-        # 
+        #
         #         paren |    logical operators (curop)    |ident
         regex = r"([()])|(not|and|nand|or|nor|xor|equ|imp)|(\w+)"
 
@@ -792,9 +811,9 @@ def table( expr ):
             elif paren == ')':
                 while operators[-1] != '(':
                     reduce( operators, operands )
-                    
+
                 _ = operators.pop()
-        
+
             else:
                 # while the operator being parsed (curop) has a lower
                 # precedence than the one on the top of the operator stack,
@@ -849,29 +868,29 @@ def table(expr):
 
     >>> table('A and (B or C) equ A and B or A and C')
     A     B     C     A and (B or C) equ A and B or A and C
-    True  True  True  True 
-    True  True  False True 
-    True  False True  True 
-    True  False False True 
-    False True  True  True 
-    False True  False True 
-    False False True  True 
-    False False False True 
-    
+    True  True  True  True
+    True  True  False True
+    True  False True  True
+    True  False False True
+    False True  True  True
+    False True  False True
+    False False True  True
+    False False False True
+
     >>> table('(not A or B) equ (A imp C)')
     A     B     C     (not A or B) equ (A imp C)
-    True  True  True  True 
+    True  True  True  True
     True  True  False False
     True  False True  False
-    True  False False True 
-    False True  True  True 
-    False True  False True 
-    False False True  True 
-    False False False True 
+    True  False False True
+    False True  True  True
+    False True  False True
+    False False True  True
+    False False False True
 
     >>> table('A and B and C')
     A     B     C     A and B and C
-    True  True  True  True 
+    True  True  True  True
     True  True  False False
     True  False True  False
     True  False False False
@@ -882,7 +901,7 @@ def table(expr):
 
     >>> table('not not A')
     A     not not A
-    True  True 
+    True  True
     False False
     '''
     from tokenize import generate_tokens
@@ -896,12 +915,12 @@ def table(expr):
         # tokenize returns a tuple. element[1] is the text of the token
         # tokenize returns '' as the final token
         tokens = [t[1] for t in generate_tokens(readline)][:-1]
-        
+
         return imp_expr(tokens)
-    
+
     def imp_expr(tokens):
         '''imp_expr := or_expr [ 'imp' or_expr ]*'''
-        
+
         value = or_expr(tokens)
         while tokens and tokens[0] == 'imp':
             _ = tokens.pop(0)
@@ -911,7 +930,7 @@ def table(expr):
 
     def or_expr(tokens):
         '''or_expr := xor_expr [ ('or'|'nor') xor_expr ]*'''
-        
+
         value = xor_expr(tokens)
         while tokens and tokens[0] in ('or','nor'):
             op = tokens.pop(0)
@@ -923,7 +942,7 @@ def table(expr):
 
     def xor_expr(tokens):
         '''xor_expr := and_expr [ ('xor'|'equ') and_expr ]*'''
-        
+
         value = and_expr(tokens)
         while tokens and tokens[0] in ('xor','equ'):
             op = tokens.pop(0)
@@ -935,7 +954,7 @@ def table(expr):
 
     def and_expr(tokens):
         '''and_expr := not_expr [ ('and'|'nand') not_expr ]*'''
-        
+
         value = not_expr(tokens)
         while tokens and tokens[0] in ('and','nand'):
             op = tokens.pop(0)
@@ -948,22 +967,22 @@ def table(expr):
     def not_expr(tokens):
         '''not_expr := [ 'not' ] atom'''
         invert = False
-        
+
         while tokens and tokens[0] == 'not':
             _ = tokens.pop(0)
             invert = not invert
-            
+
         value = atom(tokens)
         if invert:
             value = not value
-            
+
         return value
 
     def atom(tokens):
         '''atom := '(' imp_expr ')'
                 |  variable
         '''
-        
+
         if tokens and tokens[0] == '(':
             _ = tokens.pop(0)
             value = imp_expr(tokens)
@@ -978,7 +997,7 @@ def table(expr):
         '''generate all possible combinations of values for the
         variables in "varlist", updating the values in "variable"
         '''
-        
+
         if varlist == []:
             yield []
         else:
@@ -1002,7 +1021,7 @@ def table(expr):
 
     # format has a '%(varname)-5s' field for each variable and result
     format = " ".join("%%(%s)-5s" % v for v in varlist + ["result"])
-    
+
     print format % variable
 
     for _ in combos(variable,varlist):
@@ -1045,7 +1064,7 @@ def gray(width):
     >>> gray(3)
     ['000', '001', '011', '010', '110', '111', '101', '100']
     """
-    
+
     return [binaryString(n ^ (n>>1),width) for n in range(2**width)]
 
 
@@ -1058,7 +1077,7 @@ if __name__ == "__main__":
 
 {{{
 def huffman(freqtable):
-    """Return a dictionary mapping keys to huffman codes 
+    """Return a dictionary mapping keys to huffman codes
     for a frequency table mapping keys to frequencies.
 
     >>> freqtable = dict(a=45, b=13, c=12, d=16, e=9, f=5)
@@ -1077,7 +1096,7 @@ def huffman(freqtable):
     # combined frequencies of the letters in the list.
     heap = [ ( freq, [ ltr ] ) for ltr,freq in freqtable.iteritems() ]
     heapify(heap)
-    
+
     # Reduce the heap to a single item by combining the two items
     # with the lowest frequencies.
     while len(heap) > 1:
@@ -1093,7 +1112,7 @@ def huffman(freqtable):
 
     for k,v in code.iteritems():
         code[k] = ''.join(code[k])
-        
+
     return code
 
 if __name__ == "__main__":
