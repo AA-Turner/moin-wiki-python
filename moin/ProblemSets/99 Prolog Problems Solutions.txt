@@ -639,12 +639,12 @@ def goldbach(n):
     return primes[lo], primes[hi]
 }}}
 
-Using only functions defined in previous problems, we could also implement this as the following (though this returns all of the possible pairs...to remedy this, if it's a problem, simply return the first element of the list):
+Using only functions defined in previous problems, we could also implement this as the following:
 
 {{{
 def goldbach (x):
     if x % 2 == 1: return None
-    return list(filter(lambda y: sum(y) == x, combination(2, primes(1,x))))
+    return list(filter(lambda y: sum(y) == x, combination(2, dupli(primes(1,x)))))[0]
 }}}
 
 = Problem 41: Print list of Goldbach compositions =
