@@ -1067,6 +1067,14 @@ if __name__ == "__main__":
     doctest.testmod(verbose=True)
 }}}
 
+A much briefer, recursive solution (employing the mirror, concatenate, prepend '0' and '1' technique found of the [[http://en.wikipedia.org/wiki/Gray_code#Constructing_an_n-bit_Gray_code|Wikipedia]] page):
+
+{{{
+def gray (n):
+    if n == 0: return ['']
+    return list(map(lambda x: '0'+x, my_gray(n-1)))+list(map(lambda y: '1'+y, my_gray(n-1)[::-1]))
+}}}
+
 = Problem 50: Generate Huffman codes =
 
 {{{
