@@ -124,3 +124,18 @@ These are all things related to doing Python 2 to 3 ports:
   /usr/local/cpython-2.5/bin/python2.5 bin/pytest
       }}}
   * Don't worry (yet) about the mxDateTime stuff failing.  There doesn't appear to be a py3k port of mxDateTime, and I'm told we shouldn't need it (right away?)
+== Notes on logilab-common ==
+ *  The ''logilab.common.compat'' module is the main interface for
+handling with different Python versions. This is also to be used for
+astng / pylint. Until now, it could be avoided to use sa2to3.
+    Some of the work for making logilab-common Py3k compatible is going
+on. With the current work, and after running 2to3, one can use Pytest or
+at least:
+       {{{
+  python test/unittest_something.py
+       }}}
+   Pytest and testlib.py do not always work as they should, but
+nevertheless can be used for running the astng/pylint tests.
+== Notes on Astng ==
+  * We will have to implement 5-6 extra node classes with their methods;
+and some 'visit_<node_name>' methods for the visitors in Astng.
