@@ -2,16 +2,18 @@
 
 Courtesy of MoinMoin:RadomirDopieralski...
 
-|| '''MoinMoin 1.5 and earlier'''   || '''MoinMoin 1.6 and later''' ||
-|| `WikiName`                       || `WikiName` ||
-|| `http://example.com`             || `http://example.com` ||
-|| `["page name"]`                  || `[[page name]]` ||
-|| `[http://example.com link text]` || `[[http://example.com|link text]]` ||
-|| `[:WikiName:link text]`          || `[[WikiName|link text]]` ||
-|| `[:page name:link text]`         || `[[page name|link text]]` ||
-|| `attachment:something.zip`       || `[[attachment:something.zip]]` ||
-|| `image:something.png`            || `{{attachment:something.png}}` ||
-||                                  || `[[page name|link text|additional parameters]]` ||
-||                                  || `{{page name|link text|additional parameters}}` ||
+|| '''MoinMoin 1.5 and earlier'''   || '''MoinMoin 1.6 and later'''            || '''Google Code'''                || '''Trac''' ||
+|| `WikiName`                       || `WikiName`                              || `WikiName`                       || `WikiName` || 
+|| `http://example.com`             || `http://example.com`                    || `http://example.com`             || `http://example.com` ||
+|| `["page name"]`                  || `[[page name]]`                         || -no requests to add-             || -no need-   ||
+|| `[http://example.com link text]` || `[[http://example.com|link text]]`      || `[http://example.com link text]` || `[http://example.com link text]` ||
+|| `[:WikiName:link text]`          || `[[WikiName|link text]]`                || `[WikiName link text]`           || `[wiki:WikiName link text]` ||
+|| `[:page name:link text]`         || `[[page name|link text]]`               || -no need-                        || -no need-  ||
+|| `attachment:something.zip`       || `[[attachment:something.zip]]`          || -no attachments-                 || -full URL- ||
+|| `image:something.png`            || `{{attachment:something.png}}`          || -URL ending in .gif, .png, .jpg- || `[[Image(something.png)]]` ||
+||                                  || `[[page name|link text|additional parameters]]` || || ||
+||                                  || `{{page name|link text|additional parameters}}` || || ||
 
 The rationale for the change is that links, apart from those in the `WikiName` and bare URL styles, end up with a uniform syntax, and the embedding of an object in the page is done by modifying the bracketing style. Previously, linking to a page in the same Wiki and using a label instead of the page name involved a relatively arcane syntax; this common case now fits in much better.
+
+The drawback of 1.6 syntax is that you need to type more and press Shift key more than necessary. Links become less readable, because of excessive decoration and lack of whitespace between logical parts. Another big problem with this syntax is that there is no pipe symbol on Russian keyboard layout, and even if don't need to switch layouts to copy/paste a link - you definitely need to switch it twice for the pipe to comment it. -- [[techtonik]] <<DateTime(2010-09-30T13:09:49Z)>>
