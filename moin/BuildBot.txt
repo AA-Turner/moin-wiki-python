@@ -37,8 +37,10 @@ Once all this is done, create a new user "buildbot" if it doesn't exist (your pa
 {{{
  % su - buildbot
  % mkdir buildarea
- % buildbot create-slave `pwd`/buildarea dinsdale.python.org:9020 slavename slavepasswd
+ % buildslave create-slave `pwd`/buildarea dinsdale.python.org:9020 slavename slavepasswd
 }}}
+
+If you have an older version of buildbot installed, the command will be "buildbot" instead of "buildslave".  If this is the case, you should upgrade to a newer version of buildbot.  If you can't find either, you should check to see that /usr/local/bin (the default installed location) is on your path.
 
 You'll need to get someone to create the slavename/slavepasswd on dinsdale.python.org before doing this. Talk to someone like Martin von Löwis, Anthony or Neal Norwitz to do this.
 
@@ -47,7 +49,7 @@ Then edit buildarea/info/admin and buildarea/info/host to set them appropriately
 Finally, start buildbot (still under the 'buildbot' user) with:
 
 {{{
- % buildbot start ~/buildarea
+ % buildslave start ~/buildarea
 }}}
 
 Once the buildbot is running, don't forget to monitor the [[http://www.python.org/dev/buildbot/|build results]] and solve any setup issues causing test failures.
