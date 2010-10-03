@@ -4,9 +4,9 @@
 
 == Introduction ==
 
-This page descibes the socket module for jython 2.2, which for the first time has support for [[http://en.wikipedia.org/wiki/Non-blocking_I/O|asynchronous or non-blocking operations]]. Hopefully, this new support should make possible the use of event-based server frameworks on jython. Examples of cpython event-based frameworks are [[http://twistedmatrix.com/|Twisted]], [[http://www.zope.org/|Zope]] and [[http://www.amk.ca/python/code/medusa.html|Medusa]]. It is considered by some that Asynchronous IO is the only way to address [[http://www.kegel.com/c10k.html|The C10K problem]]
+This page descibes the socket module for jython 2.5, which now has support for [[http://en.wikipedia.org/wiki/Non-blocking_I/O|asynchronous or non-blocking operations]]. This support makes possible the use of event-based server frameworks on jython. Examples of cpython event-based frameworks are [[http://twistedmatrix.com/|Twisted]], [[http://www.zope.org/|Zope]] and [[http://www.amk.ca/python/code/medusa.html|Medusa]]. It is considered by some that Asynchronous IO is the only way to address [[http://www.kegel.com/c10k.html|The C10K problem]]
 
-The socket module is pretty much feature complete. It is written to use java.nio apis as much as possible, i.e. all reads and writes are carried out through the sockets java.nio.channel based interface. However, there are some circumstances, specifically timeout operations, where the java.net.socket interfaces have to be used.
+The socket module is pretty much feature complete. It is written to use java.nio apis as much as possible, i.e. all reads and writes are carried out through the sockets java.nio.channel based interface. However, there are some circumstances, specifically timeout operations, where the java.net.socket interfaces must be used.
 
 The socket module is quite stable; a [[http://bugs.jython.org/issue?%40search_text=&title=&%40columns=title&id=&%40columns=id&creation=&creator=&activity=&%40columns=activity&%40sort=activity&actor=&nosy=&type=&components=&versions=&severity=&dependencies=&assignee=amak&keywords=&priority=&%40group=priority&status=&%40columns=status&resolution=&%40pagesize=50&%40startwith=0&%40action=search|number of bugs in the functionality have been found and fixed]]. 
 
@@ -16,19 +16,19 @@ There are necessarily some differences between the behaviour of the cpython and 
 
 Non-blocking support
   * JVM version with [[http://java.sun.com/j2se/1.4.2/docs/guide/nio/|java.nio]] support, i.e. >= version 1.4
-  * Any jython version >= 2.2
+  * Any jython version >= 2.5
 
 SSL support
   * JVM version: any version on which jython runs.
-  * Any jython version >= 2.2
+  * Any jython version >= 2.5
 
 == Cpython compatibility ==
 
-The new socket module has been written to comply as closely as possible with the cpython 2.4 API for non-blocking sockets, therefore you should use the cpython socket documentation as your reference when writing code.
+The new socket module has been written to comply as closely as possible with the cpython 2.5 API for non-blocking sockets, therefore you should use the cpython socket documentation as your reference when writing code.
 
-http://www.python.org/doc/2.4/lib/module-socket.html
+http://www.python.org/doc/2.5/lib/module-socket.html
 
-If the new jython module exhibits behaviour that differs from that described in the cpython documentation, then that should be considered a bug and reported as such.
+If the jython module exhibits behaviour that differs from that described in the cpython documentation, then that should be considered a bug and reported as such, except for certain unavoidable differences, desribed below.
 
 == SSL Support ==
 
@@ -51,13 +51,13 @@ If you have serious SSL or crypto requirements, then I '''strongly''' recommend 
 
 By default, the cpython socket library does not carry out certificate checking, which means that it will accept expired certificates, etc. This is acceptable when the validity of the remote certificate is not important, such as in testing.
 
-In Java, by default, certificate checking is '''enabled'''. This means that the jython ssl routines '''will''' verify the validity of the remote certificate, and refuse to form the connection if it is not valid. If this is a problem for you, then you can get around it as described here.
+In Java, by default, certificate checking is '''enabled'''. This means that the jython ssl routines '''will''' verify the validity of the remote certificate, and refuse to form the connection if it is not valid. If this is a problem for you, then you can get around it as described here. I have also written a blog post about this: [[http://jython.xhaus.com/installing-an-all-trusting-security-provider-on-java-and-jython/|Installing an all trusting security provider on java and jython]]
 
 ==== By configuring your JVM ====
 
 If you are using self-generated certificates for testing, then you can import those certificates into the JVM running your jython scripts, and the certificate will then be recognised. See this article from Sun on [[http://java.sun.com/j2ee/1.4/docs/tutorial/doc/Security6.html|how to install certificates on a JVM]].
 
-==== BY installing your own Security Provider ====
+==== By installing your own Security Provider ====
 
 The following technique has been adapted from the ZXTM Knowledge''''''Hub article [[http://knowledgehub.zeus.com/articles/2006/01/03/using_the_control_api_with_java|Using the Control API with Java]].
 
@@ -194,7 +194,7 @@ linger_enabled, linger_time = struct.unpack('ii', linger_status)
 
 === Socket shutdown ===
 
-On sockets, the '''shutdown''' method is closely related to the '''close''' method, in that it terminates network communication on the socket. However, there are differences, because '''close''' relates to the file descriptor connected to the socket, whereas the '''shutdown''' method relates to the socket itself. But java doesn't have file descriptors, and doesn't have the shutdown method for sockets in general; only TCP client sockets have shutdown methods; for TCP server sockets and UDP sockets, the method to shutdown a socket is the '''close''' method. For a detailed discussion of these issues, see this blog post: [[http://jython.xhaus.com/?p=65|Socket shutdown versus socket close on cpython, jython and java]]. On jython, the socket method is implemented as follows, for each type of socket
+On sockets, the '''shutdown''' method is closely related to the '''close''' method, in that it terminates network communication on the socket. However, there are differences, because '''close''' relates to the file descriptor connected to the socket, whereas the '''shutdown''' method relates to the socket itself. But java doesn't have file descriptors, and doesn't have the shutdown method for sockets in general; only TCP client sockets have shutdown methods; for TCP server sockets and UDP sockets, the method to shutdown a socket is the '''close''' method. For a detailed discussion of these issues, see this blog post: [[http://jython.xhaus.com/socket-shutdown-versus-socket-close-on-cpython-jython-and-java/|Socket shutdown versus socket close on cpython, jython and java]]. On jython, the socket method is implemented as follows, for each type of socket
 
    1. '''TCP Client sockets'''. When '''shutdown''' is called on TCP client sockets, the '''how''' parameter determines how the read and write streams of the socket are treated. This is standard cpython behaviour, and follows the cpython documentation.
    1. '''TCP Server sockets'''. When '''shutdown''' is called on TCP server sockets, the effect should be to close the listening socket, and discard all incoming connections in the listen queue. However, in java there is no '''shutdown''' method for server sockets (see [[http://java.sun.com/j2se/1.5/docs/api/java/net/ServerSocket.html|ServerSocket]] and [[http://java.sun.com/j2se/1.5/docs/api/java/nio/channels/ServerSocketChannel.html|ServerSocketChannel]]), there is only a '''close''' method. So in jython, the '''shutdown''' method on TCP server sockets is a no-op, i.e. it '''does nothing'''. If you want to stop accepting incoming requests, then you should call the '''close()''' method on the socket.
@@ -219,6 +219,51 @@ This means that you may get differing exception signatures when using zero timeo
    1. Cpython: socket operations with zero timeouts that fail will raise socket.error exceptions. This is equivalent to a -1 return from the C socket.recv call, with errno set to EAGAIN, meaning "The socket is marked non-blocking and the receive operation would block, or a receive timeout had been set and the timeout expired before data was received."
    1. Jython: socket operations with zero timeouts that fail will generate socket.timeout exceptions.
 
+=== Deferred socket creation on jython ===
+
+Java has different objects for Client (java.net.Socket+java.nio.channels.SocketChannel) and Server (java.net.ServerSocket+java.nio.channels.ServerSocketChannel) sockets. Jython cannot know whether to create a client or server socket until some client or server specific behaviour is observed. For clients, this is a '''connect()''' call, and for servers, this is a '''listen()''' call. 
+
+When a '''connect()''' call is made, jython then knows that this is a client socket, and to create a java.net.Socket+java.nio.channels.SocketChannel to implement the socket. 
+
+Similarly, when a '''listen()''' call is made, jython then knows that this is a server socket, and to create a java.net.ServerSocket+java.nio.channels.ServerSocketChannel to implement the socket. 
+
+Any attempt to get information about a socket before either a connect() or listen() call is made, i.e. before the implementation socket is created, may fail, although attempts are made to return already set configuration values, if possible.
+
+For example, consider the following code
+
+{{{
+>>> import socket
+>>> s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+>>> s.bind( ("localhost", 8888) )
+>>> print s.getsockname()
+(u'127.0.0.1', 8888)
+>>> s.listen(5)
+>>> print s.getsockname()
+(u'127.0.0.1', 8888)
+}}}
+
+The value for port number, 8888, that is returned after the bind() call, is '''not''' the port number retrieved from the underlying socket itself, because the socket does not yet exist. Instead, you are being returned the requested configuration value, the value you passed in. Only after the listen() call does the socket exist, so only then is the port number retrieved from the actual underlying socket.
+
+This may seem a trivial concern, since the correct port is always returned. But there is one situation where it does make a difference. If you request a port number of '''0''', then that is a request to the operating system to pick an '''ephemeral''' port number for you, one that is guaranteed to be free. Consider this code
+
+{{{
+>>> import socket
+>>> s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+{{{
+>>> import socket
+>>> s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+>>> s.bind( ("localhost", 0) )
+>>> print s.getsockname()
+(u'127.0.0.1', 0)
+>>> s.listen(5)
+>>> print s.getsockname()
+(u'127.0.0.1', 3357)
+}}}
+
+In this scenario, if you relied on the port number returned after the bind call but before the listen call, e.g. handing it to clients, then your clients would fail, because 0 is an invalid port number.
+
+Similarly, the actual underlying implementation socket for client sockets does not exist until you have called one of the '''connect()''' methods.
+
 == Known issues and workarounds ==
 
 === Null address returned from UDP socket.recvfrom() in timeout mode ===
@@ -240,41 +285,3 @@ This bug has been reported to Sun, but is not yet public on the Java bug databas
 
    1. Until the java bug is fixed, only use sockets in either blocking or non-blocking mode; the problem will not occur in this case.
    1. If you need timeouts, then until the java bug is fixed, you should probably create your own DatagramSockets, directly through the java.net APIs.
-
-=== Multiple use of select.select result in an Exception on Windows ===
-
-This bug is reported on the jython bug tracker: [[http://bugs.jython.org/issue1291|select() crashes with IOException]].
-
-==== Description ====
-
-When the '''select.select()''' function is repeatedly called, on Microsoft Windows, the call eventually fails with the following exception.
-
-{{{
-Exception in thread "main" java.io.IOException: Unable to establish loopback connection
-        at sun.nio.ch.PipeImpl$Initializer.run(PipeImpl.java:106)
-        at java.security.AccessController.doPrivileged(Native Method)
-        at sun.nio.ch.PipeImpl.<init>(PipeImpl.java:122)
-        at sun.nio.ch.SelectorProviderImpl.openPipe(SelectorProviderImpl.java:27)
-        at java.nio.channels.Pipe.open(Pipe.java:133)
-        at sun.nio.ch.WindowsSelectorImpl.<init>(WindowsSelectorImpl.java:106)
-        at sun.nio.ch.WindowsSelectorProvider.openSelector(WindowsSelectorProvider.java:26)
-        at java.nio.channels.Selector.open(Selector.java:209)
-        at server$handler.process(server.java:42)
-        at server.main(server.java:91)
-Caused by: java.net.BindException: Address already in use: connect
-        at sun.nio.ch.Net.connect(Native Method)
-        at sun.nio.ch.SocketChannelImpl.connect(SocketChannelImpl.java:464)
-        at java.nio.channels.SocketChannel.open(SocketChannel.java:146)
-        at sun.nio.ch.PipeImpl$Initializer.run(PipeImpl.java:78)
-        ... 9 more
-}}}
-
-This issue is casued by a bug in the underlying java socket libraries, and is described in detail in the jython bug tracker, along with java source code to reproduce the problem: [[http://bugs.jython.org/issue1291|select() crashes with IOException]]
-
-==== Workaround ====
-
-The  best workaround in this case is to use '''select.poll()''' objects instead of the '''select.select()''' function.
-
-By necessity, the jython '''select.select()''' function creates and destroys a [[http://java.sun.com/j2se/1.5.0/docs/api/java/nio/channels/Selector.html|java.nio.channels.Selector]] object every single time the function is called. Selector objects are not designed to be continually created and destroyed in this way; doing so consumes too many system resources on Windows, leading to the crash described above.
-
-If that workaround is not possible, due to your code design, then running on a platform other than Microsoft Windows is currently the only other workaround available.
