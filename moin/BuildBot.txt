@@ -1,21 +1,6 @@
 This page contains general information about the Python BuildBot setup and issues. 
-||<tablestyle="border:0;background-color:#eeeeee;text-align:center;width:100%"> [[http://www.python.org/dev/buildbot/all/|Here are the current BuildBot results.]] ||
 
-There are several unstable tests and other issues.  These are not problems with BuildBot, but rather are problems with Python and/or the environment it is built/run in.
-
-||<tablestyle="border:1"> '''Platform'''      || '''Version''' || '''Issue''' ||
-|| Mac OS X 10.3 || 2.[45]  || getaddrinfo configure check fails sometimes ||
-|| cygwin        || 2.5     || test_bsddb3 crashes interpreter (old version of BSD DB?), test_curses is skipped, test_logging, test_socketserver fail ||
-|| OpenBSD (x86) || 2.4     || test_compare fails sometimes probably due to missing backport of fixes to test for negative address handling ||
-|| Ubuntu (hppa) || 2.5     || test_fork1, test_wait[34] fail (crash) sometimes on hppa ||
-|| Tru64 (alpha) || 2.[45]  || test_signal fails (hangs) sometimes.  The minimal set I was able to use to reproduce:  test_thread test_audioop test_tcl test_ctypes test_runpy test_zipfile test_decimal test_fork1 test_signal ||
-|| S/390         || 2.[45]  || test_socket_ssl fails due to not being able to connect to gmail.org:995 (I don't think this is true any longer) ||
-|| All           || 2.[45]  || Berkeley DB 3.2 is killed when running test_bsddb3, test_bsddb fails ||
-|| All           || 2.[45]  || test_socket{,ssl,_server} fail if another test instance is running ||
-
-Here's a list of currently unexplained test failures:
-
-   * None?
+'''[[http://www.python.org/dev/buildbot/all/|Here are the current BuildBot results]]'''. For command-line querying of buidbot status (instead of the aforementioned Web page), you can use the [[http://code.google.com/p/bbreport/|bbreport]] tool.
 
 We need to add more platforms (and compilers!) to the BuildBot farm.  If you have one of these machines you are willing to run BuildBot on, please contact python-dev@python.org:
 
@@ -59,10 +44,10 @@ Once the buildbot is running, don't forget to monitor the [[http://www.python.or
 In order for the buildbot to operate properly, it needs access to various TCP ports on the internet.  Below is a list of known ports and hosts.
 
 || '''Port'''  || '''Host''' || '''Description''' ||
-|| 80    || python.org || test_urllibnet ||
-|| 995   || gmail.org  || test_socket_ssl ||
-|| 50007 || localhost  || test_socket ||
-|| 50008 || (listen)   || test_socket ||
+|| 80    || python.org || (several tests) ||
+|| 119   || news.gmane.org || test_nntplib ||
+|| 443   || (various)  || test_ssl ||
+|| 465   || smtp.gmail.com  || test_smtpnet ||
 || 9020  || python.org || Buildbot connection ||
-|| 9020  || localhost  || test_logging will try up to 9120 ||
-|| 54322 || localhost  || test_asynchat ||
+
+Many tests will also create local TCP sockets and connect to them (usually through "localhost" or "127.0.0.1"), so make sure this capability hasn't been disabled.
