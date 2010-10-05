@@ -41,9 +41,11 @@ Once the buildbot is running, don't forget to monitor the [[http://www.python.or
 
 == Required ports ==
 
-In order for the buildbot to operate properly, it needs access to various TCP ports on the internet.  Below is a list of known ports and hosts.
+In order for the buildbot to operate properly, it needs access to various TCP ports on the internet.  Below is a list of known ports and hosts; this list is not exhaustive and may evolve as new tests get written.
 
 || '''Port'''  || '''Host''' || '''Description''' ||
+|| 20, 21 || ftp.kernel.org, ftp.mirror.nl || test_urllib2net ||
+|| 53    || your DNS server || test_socket (and others implicitly) ||
 || 80    || python.org || (several tests) ||
 || 119   || news.gmane.org || test_nntplib ||
 || 443   || (various)  || test_ssl ||
