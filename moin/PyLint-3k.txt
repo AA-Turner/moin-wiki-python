@@ -14,17 +14,17 @@ The idea is to add support for Python 3.0 and 3.1, while eliminating Python 2.4 
     * Creating modules that abstract the differences between Python 2 and 3 and depending on them instead.
   * About the three packages
     * Those three packages are:
-      1. logilab-common
+      1. logilab-common (DONE)
         * This one is probably the place to start, because it appears to contain the test harness we need.
         * The owners of the code believe this will be the easiest part
         * 29274 lines of code initially
       1. logilab-astng
         * 18928 lines of code initially
-        * A lot of this can be removed, with the planned cessation of CPython 2.4 support
+        * 2-3 modules can be removed, with the planned cessation of CPython 2.4 support
       1. PyLint itself
          * 28415 lines of code initially
     * There appear to be test suites for each of these, which can be invoked using the pytest command - pytest appears to be part of logilab-common, which suggests a bit of
-      mutual dependency to work around.
+      mutual dependency to work around. (SOLVED)
   * Dealing with a python 2 to python 3 port:
     * The five ways Dan's encountered so far:
       1. Automatically, fully derive your 3.x code from 2.x
@@ -33,7 +33,8 @@ The idea is to add support for Python 3.0 and 3.1, while eliminating Python 2.4 
       1. Port to 3.x mostly automatically using 2to3, then manually fix what's left that needs to be changed.  Then automatically, fully derive the 2.x code from the new 3.x code.
       1. Use 2to3 via SQLAlchemy's sa2to3 wrapper to preprocess things for python2 or python3.
     * The owners of the code prefer methods #1 and #2 over #3 above; we've not yet discussed methods 4 or 5.
-    * Note that Mercurial, the SCM system used by Py<int, supports changesets - this could take most of the labor out of method 3
+    * for now, #1 worked out quite well using logilab.common.compat
+    * Note that Mercurial, the SCM system used by Pylint, supports changesets - this could take most of the labor out of method 3
     
 == Resources ==
 These are all things related to doing Python 2 to 3 ports:
@@ -128,13 +129,13 @@ These are all things related to doing Python 2 to 3 ports:
  *  The ''logilab.common.compat'' module is the main interface for
 handling with different Python versions. This is also to be used for
 astng / pylint. Until now, it could be avoided to use sa2to3.
-    Most of the work for making logilab-common Py3k compatible is done. With the current work, and after running 2to3, one can use Pytest or
-at least:
+    Most of the work for making logilab-common Py3k compatible is done. With the current work, and after running 2to3, one can use Pytest or::
        {{{
   python test/unittest_something.py
        }}}
-   Pytest and testlib.py do not always work as they should, but
+   Not all Pytest options work, but
 nevertheless can be used for running the astng/pylint tests.
 == Notes on Astng ==
   * We will have to implement 5-6 extra node classes with their methods;
 and some 'visit_<node_name>' methods for the visitors in Astng.
+  * use the logilab.astng.utils.TreeTester to investigate code snippets
