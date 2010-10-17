@@ -5,9 +5,11 @@ Some types of bugs can be difficult to debug from within Python.  Some include:
 
 In these cases, C level debugging with {{{gdb}}} can be helpful (it may be the only way to find out what is going on in some cases).  To gather the information, the following steps need to be performed:
  1. get a Python interpreter with debugging symbols
- 2. install Python specific GDB macros
+ 2. install Python specific GDB macros (*)
  3. run the program under GDB / attach to already running process.
  4. obtain backtrace.
+
+(*) If you have {{{gdb}}} 7 it includes the ability to debug Python without the need for python gdb macros.  See [[https://fedoraproject.org/wiki/Features/EasierPythonDebugging]] and [[http://bugs.python.org/issue8032]] for instructions.
 
 Even if the information obtained doesn't make sense to you, it may be able to help someone else track down the problem.  If you are trying to track down an intermittent problem, perform steps 1 and 2 right away and the last steps when the problem occurs.
 
