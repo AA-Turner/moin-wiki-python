@@ -1,141 +1,22 @@
-This document describes not only installing distributions from the PyPI, but also getting your own distributions listed (and uploaded, if you like) there.
+<html>
+<head>
+</head>
+<body>
+<!-- <img src="/images/header.gif">-->
+<!--
+<a href="https://afdev-demo2.ast.lmco.com/af-data-package"><img src="/images/datapackage.gif"></a> <br>
+<a href="https://afdev-demo2.ast.lmco.com/af-lab-config"><img src="/images/lab-config.gif"></a>  <br>
+<a href="https://afdev-demo2.ast.lmco.com/procedure-editor"><img src="/images/procedure-editor.gif"></a>  <br>
+<a href="https://afdev-demo2.ast.lmco.com/procedure-executer"><img src="/images/procedure-executor.gif"></a>  <br>
+<a href="https://afdev-demo2.ast.lmco.com/flags"><img src="/images/trace-den.gif"></a>  <br>
+<a href="https://afdev-demo2.ast.lmco.com/scheduler"><img src="/images/schedule.gif"></a>  <br>
+<a href="https://afdev-demo2.ast.lmco.com/trace/home.seam"><img src="/images/trace.gif"></a>  <br>
+-->
 
-= Installing Distributions from the Package Index (Start Here) =
+<form name="myform" method="post">
+Data Package: <input type="button" name="action" value="DataPackage" /><br />
 
-To install distributions from the [[http://pypi.python.org/pypi|Package Index (PyPI)]] (aka, the "Cheeseshop") into your Python, you have several choices of tools for installation:
+</form>
 
-== Distutils Installation ==
-
-Download and extract the distribution and then from the command prompt type:
-
-    $ python setup.py install
-
-If you have more than one Python interpreter installed on your system, then
-the Python that the distribution is installed into will be the same one that
-you run the 'setup.py install' command with.
-
-This will install the library files (packages and modules) into the
-'site-packages' directory of the Python interpreter used to run the
-install command, and the application scripts into the 'bin' directory of
-the Python interpreter.
-
-Take note that Distutils will not install any dependencies! If a distribution
-requries that packages be available for import that are part of another 
-distribution, then you need to determine what those distributions are and
-manually install each distribution one by one.
-
-Commonly you will see in the install instructions for a Python distribution:
-
-    $ sudo python setup.py install
-    
-Be very careful when running this command with 'sudo'! The packages and 
-scripts installed will be placed in a operating system specific location,
-and it's possible that this will break your operating system. Furthermore,
-the distutils installation does not have an uninstall command, so if you
-do break your system, it may not be easy to restore it back to working
-condition!
-
-There are two ways to avoid having to install as the root user:
-
- 1. Per-user site-packages
-
-    If using Python 2.6 or greater, a [[http://docs.python.org/whatsnew/2.6.html#pep-370-per-user-site-packages-directory|per-user 'site-packages' directory]] is available.
-    This will only work with distributions that only supply
-    modules and packages though. You can not use this technique to install
-    distributions that also supply command-line scripts. This may also 
-    interfere with applications supplied by your operating system, but this
-    interference is limited to only the user account which was used to
-    install these packages with. Other user accounts (including the root user)
-    should be left untouched.
-
- 2. VirtualEnv
-
-    The [[http://pypi.python.org/pypi/virtualenv|VirtualEnv]] tool allows you
-    to clone your system Python, so that you
-    have a complete, isolated copy of Python available for installing into.
-    Typically you will install the 'virtualenv' distribution as root, but it
-    is possible to extract the virtualenv.py module from the 'virtualenv'
-    distribution and also create virtual environments without having to use
-    the root account at all.
-
-== Easy Installation ==
-
-EasyInstall (easy_install) gives you a quick and painless way to install packages remotely by connecting to the Package Index or even other websites via HTTP. It is somewhat analogous to the CPAN and PEAR tools for Perl and PHP, respectively.
-
-Please see [[http://peak.telecommunity.com/DevCenter/EasyInstall|EasyInstall]] for more information.
-
-== Buildout Installation ==
-
-Buildout is a configuration-driven build tool designed for automating application installation. It has a number of recipes that allow you to declare the working set(s) of packages required for a Python application, and automatically install them.
-
-Please see [[http://pypi.python.org/pypi/zc.buildout|Buildout]] for more information.
-
-= What the Package Index Stores =
-
-The Python Package Index stores [[http://docs.python.org/dist/meta-data.html|information about packages of Python software]]. Each package has a name and a number of release versions. The list of release versions will increase as newer versions of the package are submitted to the Package Index.
-
-= Submitting Packages to the Package Index =
-
-If you have some [[http://www.fsf.org/about/what-is-free-software|free software]] or [[http://www.opensource.org/|open source]] modules that you've polished up and would like to contribute, we'd love to have them included in the PyPI! First, if you haven't done so, you will want to get your project organized. You might follow the guidelines at ProjectFileAndDirectoryLayout. After that, you'll want to read the Python documentation regarding creating distributions: [[http://docs.python.org/distutils/index.html]].
-
-There is also an example project http://pypi.python.org/pypi/an_example_pypi_project
-
-== Your Options ==
-
-There are two types of information that may be submitted to the Package Index:
-
- 1. package meta-data (name, version, description, etc), and
-
- 2. package source and binary distribution files.
-
-== Package Meta-Data ==
-
-You may submit package meta-data either by:
-
- 1. writing a [[http://docs.python.org/dist/setup-script.html|setup.py file]] and using "python setup.py register" (see [[http://docs.python.org/dist/package-index.html|docs]]),
-
- 2. creating a PKG-INFO file (typically generated from a setup.py file) and uploading it, or
-
- 3. using the [[http://pypi.python.org/pypi?%3Aaction=submit_form|web form]] and manually entering the information.
-
-The Package Index assumes that the PKG-INFO file is either ASCII or UTF-8.
-
-=== Selecting Classifiers ===
-
-View the complete [[http://pypi.python.org/pypi?%3Aaction=list_classifiers|list of classifiers]] you may choose from.
-
-See the [[http://docs.python.org/dist/meta-data.html|meta-data docs]] for details about how to include them in your setup.py file.
-
-PyPI will attempt to parse the "long_description" from your meta-data as ReStructuredText. If this fails, it will be presented to users as plain text (all whitespace and formatting retained).
-
-=== Missing Classifier? ===
-
-Is a classifier you need missing from the [[http://pypi.python.org/pypi?%3Aaction=list_classifiers|classifiers list]]?
-
-Python frameworks with plugins or packages that target the framework can get their own category. The category should only be added ''after'' such packages exist.
-
-Complementary packages can link to each other from their descriptions, they do not need a category to link them together; only when packages are provided by different people does a category need to be created.
-
-To ask for a category email catalog-sig@python.org.
-
-== Package Distribution Files ==
-
-Note that submitting a package distribution file automatically submits the package's meta-data. You may submit package distribution files either by:
-
- 1. appending the "upload" command to a setup.py [[http://docs.python.org/dist/source-dist.html|source dist]] or [[http://docs.python.org/dist/built-dist.html|built dist]] command, eg "python setup.py sdist upload", or
-
- 2. logging into the Package Index and using the package management interface to manually upload files.
-
-The "upload" command has a number of options, including being able to sign the upload using GPG. See "python setup.py upload --help" for more information.
-
-== Exposing Multiple Releases ==
-
-When a new release of a package is submitted to the Package Index, all previous releases of that package are ''hidden'' from the display. This means that listings and searches will no longer find those releases.
-
-You may use the package admin interface to ''un-hide'' releases. This may be useful if you have both a ''stable'' and a ''development'' release active at the same time. These will be hidden again on the next submission of meta-data.
-
-= Cheesecake scores =
-
-Cheesecake is a project that tries to help Python developers via testing and scoring their packages based on some empirical factors, like, for example, whether a package can be installed using standard "python setup.py install" interface. To learn more about it, visit its [[http://pycheesecake.org/|homepage]].
-
-PyPI packages are no longer automatically scored.
+</body>
+</html>
