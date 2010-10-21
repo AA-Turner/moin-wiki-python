@@ -1,0 +1,26 @@
+= PyQt 4.6+ =
+
+PyQt-4.6 and greater have a new API called API2 that is the default when run on Python-3.x.  The major difference is that QString does not exist in API2; the library uses the native Python3 str type instead.
+
+One method of porting is to replace all occurrences of QString with ordinary python strings.
+
+If you want code that is the same for Python 2.x and Python 3.x there's a few options to try.  You can continue using QString if you use the following code:
+{{{
+try:
+    from PyQt4.QtCore import QString
+except ImportError:
+    # we are using Python3 so QString is not defined                                                                                                                                                                                        
+    QString = type("")
+}}}
+
+You can also set your code to use API2 even when running on python2 and then port all of your code to API2.
+{{{
+import sip
+sip.setapi('QString', 2)
+
+from PyQt4 import QtCore
+
+# Now QtCore.QString is no longer available -- use python2's unicode type instead
+}}}
+
+From the [[http://www.riverbankcomputing.co.uk/static/Docs/PyQt4/pyqt4ref.html#selecting-incompatible-apis|pyqt4 reference manual]]
