@@ -86,10 +86,8 @@ for feed in feeds:
 
 {{{
 #!python
-decorated = [(entry["date_parsed"], entry) for entry in entries]
-decorated.sort()
-decorated.reverse() # for most recent entries first
-sorted = [entry for (date,entry) in decorated]
+sorted_entries = sorted(entries, key=lambda entry: entry["date_parsed"])
+sorted_entries = sorted_entries.reverse() # for most recent entries first
 }}}
 
 Congratulations! You've aggregated a bunch of changes!
