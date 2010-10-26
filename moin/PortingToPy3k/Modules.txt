@@ -1,0 +1,22 @@
+{{{
+#!rst
+
+Need to keep some data on what python modules have been ported to python3, which one haven't, upstream (vs in Linux distribution or private branches) status.
+
+I'm starting a table here but I don't anticipate that it the information will live here forever.
+
+============= =========== ============ ============================================= =====
+Python Module Py3 Distros Py3 Upstream Build                                         Other
+============= =========== ============ ============================================= =====
+Beaker        Fed14                    2to3 --write --nobackups . ; python3 setup.py
+bpython       Fed14       0.9.6.2      python3 setup.py
+pycairo [1]_  Fed15       1.8.10       python3 ./waf                                 `pycairo capsules API patch`_
+swig [2]_     Fed11       1.3.37                                                     `swig capsules API patch`_
+============= =========== ============ ============================================= =====
+
+.. [1] pycairo is for py3, py2cairo is for py2; download: http://cairographics.org/pycairo/
+.. [2] Not on pypi: http://www.swig.org/
+.. _`pycairo capsules API patch`: http://pkgs.fedoraproject.org/gitweb/?p=python3-cairo.git;a=blob;f=0001-use-PyCapsule-API-instead-of-the-deprecated-PyCObjec.patch;h=67a1b47d1df57eeec899de1c63597b66ec171349;hb=HEAD
+.. _`swig capsules API patch`: http://pkgs.fedoraproject.org/gitweb/?p=swig.git;a=blob;f=swig200-rh623854.patch;h=5665252bbc95cde5facaf9a9624a0a685721ca6e;hb=HEAD
+
+}}}
