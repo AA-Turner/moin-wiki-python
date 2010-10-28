@@ -1,0 +1,115 @@
+## page was renamed from ViImproved
+= Vi Improved =
+
+VI Improved (Vim) is an improved version of the editor "vi", one of the standard text editors on UNIX systems. It has all the features you'll ever need from an editor, and probably three times that many more that you'll never use ;-) The newer versions also include a 'vimdiff' mode that you can use to diff and merge file(s). Oh, I didn't mention it's also scriptable in Python, and there's a graphical version: GVIM. Get it from http://www.vim.org/.
+
+Vim is also available in your favourite OS. Since version 6.0 it has folding. Folding makes your life easy when you have some long files.
+
+You can download many scripts from http://www.vim.org/ and learn new tips from the site http://vim.wikia.com/wiki/Main_Page
+
+Vim 7.0 (released mid-2006) includes the Intellisense-like omni-completion for several languages. Here is the latest version of [[http://www.vim.org/scripts/script.php?script_id=1542|pythoncomplete]].
+
+== Configuring Vim ==
+
+You can automatically enable syntax coloring and automatic indentation for Python code by adding the following lines to your ~/.vimrc file:
+
+{{{
+autocmd BufRead,BufNewFile *.py syntax on
+autocmd BufRead,BufNewFile *.py set ai
+autocmd BufRead *.py set smartindent cinwords=if,elif,else,for,while,with,try,except,finally,def,class
+}}}
+
+The following sections correspond to the guidelines from the HowToEditPythonCode page.
+
+=== Indentation ===
+
+A useful addition to Python source files is this comment:
+
+{{{
+# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
+}}}
+
+This may need the modeline option enabled in your `~/.vimrc` file:
+
+{{{
+set modeline
+}}}
+
+(In some versions of Ubuntu, for example, the modeline option has apparently been disabled for security reasons.)
+
+The above `# vim: ...` text, when embedded in a source file, tells Vim that when the file is loaded, tabs are always expanded to spaces and that the width of each tab is four characters. Type the following in command mode to achieve the same effect:
+
+{{{
+:set tabstop=4 expandtab shiftwidth=4 softtabstop=4
+}}}
+
+Or:
+
+{{{
+:set ts=4 et sw=4 sts=4
+}}}
+
+If you want to do this automatically for all files identified as Python add this:
+
+{{{
+au FileType python setl autoindent tabstop=4 expandtab shiftwidth=4 softtabstop=4
+}}}
+
+=== Syntax Highlighting ===
+
+You may be lucky enough to have syntax highlighting already switched on in your version of Vim. If not, edit a `vimrc` file (either `/etc/vimrc` or `.vimrc` in your home directory) and add the following:
+
+{{{
+syntax on
+}}}
+
+If you use a dark background, this command may help adjust the colours:
+
+{{{
+set background=dark
+}}}
+
+=== Alternative ===
+
+Some find that the methods described above does not work. An alternative method is adding...
+
+{{{
+set autoindent
+set tabstop=4
+set expandtab
+set shiftwidth=4
+filetype indent on 
+}}}
+
+...to your `~/.vimrc` file. The first rule sets automatic tab indentation. The second rule sets tab stops to four characters wide. The third converts tabs to white space. `set shiftwidth` sets the width for autoindents. Finally, the last rule allows auto-indenting depending on file type. With this method, tab settings do not need to be set in your python file and the `# vim: ...` line in the template below is not needed.
+
+=== A Simple Template ===
+
+You could copy the following simple template and save it to a file somewhere. Then, when you need to make a new source file, just copy it to the intended location with a name of your choice.
+
+{{{#!python numbers=disable
+#!/usr/bin/env python
+
+"""
+Python source code - replace this with a description of the code and write the code below this text.
+"""
+
+# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
+}}}
+
+This contains useful UNIX-related information on the first line, and a docstring which can be used to describe what your program or module is about. As noted above, to work this requires modeline support to be enabled.
+
+=== Scripting Vim with Python ===
+
+There is a presentation given by Sean Reifschneider about scripting Vim with Python: [[http://www.tummy.com/Community/Presentations/|Vim and Python: Two Great Tastes that Taste Great Together]]
+If you want to access the visual selection from Vim in Python read http://www.tummy.com/journals/entries/jafo_20070301_035949
+
+=== Links ===
+
+ * Some hints about configuring Vim: [[http://www.vex.net/~x/python_and_vim.html|Notes on using Vim with Python]]
+ * [[http://www.sontek.net/post/Python-with-a-modular-IDE-(Vim).aspx|Python with a modular IDE (Vim)]], June 24, 2009 23:48 by  John Anderson (sontek)
+ * [[http://blog.dispatched.ch/2009/05/24/vim-as-python-ide/|VIM as Python IDE]], 2009-05-24, Alain M. Lafon
+ * [[http://dancingpenguinsoflight.com/2009/02/python-and-vim-make-your-own-ide/|Python and vim: Make your own IDE]], February 16, 2009 14:28, Samuel Huckins
+ 
+----
+CategoryEditors
