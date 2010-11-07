@@ -5,6 +5,9 @@ Currently there is a huge switch-case statement in the interpreter of {{{PyByteC
 
 === Background ===
 
+At this time there are two classes that extend the base abstract {{{PyCode}}} class, {{{PyTableCode}}} and {{{PyBytecode}}}, along with some helper classes ({{{PyBaseCode}}}). You will also want to look at {{{PyFrame}}}, for frame support; and {{{ThreadState}}}. (Speaking of {{{ThreadState}}}, I believe there was a discussion [[http://blog.crazybob.org/2006/07/hard-core-java-threadlocal.html| here]] of how to implement dynamic scoping in Java, this is best done with {{{java.lang.ThreadLocal}}}. But don't follow what we've done with {{{ThreadState}}}, because it mixes too many ideas together that we will fix, see [[http://bugs.jython.org/issue1327 | this report]].)
+
+
 {{{PyTableCode}}} allows us to associate code objects with methods, which minimizes the permgen overhead in contrast to wrapping with classes. (This might have changed in the recent support in Java 6 for anonymous classloaders, however.) This association is through an index, which is then switched to the correct method. Table switches like this basically don't inline, so that's a real performance limitation. {{{PyTableCode}}} objects are loaded by a custom classloader and are compiled from {{{CodeCompiler}}}. You will definitely want to look at {{{CodeCompiler}}} and eventually the {{{ScopesCompiler}}}. We wrap the ASM bytecode library with our own API; most of that is in {{{org.python.compiler.Code}}}.
 
 
