@@ -2,9 +2,16 @@ SSL stands for '''Secure Sockets Layer''' and is designed to create secure conne
 
 === SSL libraries availability and limitations ===
  * Python 2.5 (the version AppEngine is running)
-SSL support is available from http://pypi.python.org/pypi/ssl Unfortunately, no binaries are available for Windows, and that's a major showstopper when using Python 2.5.
+SSL support is available from http://pypi.python.org/pypi/ssl Unfortunately, there are no binaries for Windows, and that's a major showstopper when using Python 2.5.
 
  * Python 2.6
-SSL module from http://pypi.python.org/pypi/ssl is bundled with installer. But it has some bugs (unfortunately, Python bug tracker doesn't allow to query these reliably)
+SSL module from http://pypi.python.org/pypi/ssl is bundled with installer. It has a serious security issue that allows successful MITM attack using valid certificate from an other site - http://bugs.python.org/issue1589  Basically, the module validates that certificate is correct and correctly signed by root certificate, but it does not check that it actually belong to the connected site, i.e. that site name match the one specified in certificate.
 
-=== Validating server certificate ===
+=== Validating server identity ===
+Client need to connect to server over SSL, fetch its certificate and check that the certificate indeed belongs to this server (server name).
+
+{{{
+
+}}}
+
+=== Get updated list of root certificates ==
