@@ -8,10 +8,35 @@ SSL support is available from http://pypi.python.org/pypi/ssl Unfortunately, the
 SSL module from http://pypi.python.org/pypi/ssl is bundled with installer. It has a serious security issue that allows successful MITM attack using valid certificate from an other site - http://bugs.python.org/issue1589  Basically, the module validates that certificate is correct and correctly signed by root certificate, but it does not check that certificate actually belongs to the connected site, i.e. that site name matches the name specified in certificate.
 
 === Validating server identity ===
-Client need to connect to server over SSL, fetch its certificate and check that the certificate indeed belongs to this server (server name).
+Client need to connect to server over SSL, fetch its certificate, check that the certificate is valid (signed properly) and belongs to this server (server name).
+
+Let's illustrate '''ssl''' vulnerability in Python 2.x versions. The following snippet should fail - it replaces HOST "www.google.com" to connect to with its IP address. If you try to use this IP in Chrome like https://74.125.232.50 - it will show an error, but '''ssl''' library will not.
 
 {{{
+import socket
+import ssl
 
+HOST = "www.google.com"
+PORT = 443
+
+# replace HOST name with IP, this should fail connection attempt,
+# but it doesn't in Python 2.x
+HOST = socket.getaddrinfo(HOST, PORT)[0][4][0]
+print(HOST)
+
+# create socket and connect to server
+# server address is specified later in connect() method
+sock = socket.socket()
+sock.connect((HOST, PORT))
+
+# wrap socket to add SSL support
+sock = ssl.wrap_socket(sock,
+  # flag that certificate from the other side of connection is required
+  # and should be validated when wrapping 
+  cert_reqs=ssl.CERT_REQUIRED,
+  # file with root certificates
+  ca_certs="cacerts.txt"
+)
 }}}
 
 === Get updated list of root certificates ===
