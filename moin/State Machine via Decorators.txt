@@ -144,20 +144,23 @@ class _StateVariable(object):
          t = "'%s' has no attribute '%s' in state %s" % (self.name(), func.__name__, crnt.__name__)
          raise NotImplementedError(t)
 
+      # function with wrapping attribute means we've recursed all the way back
+      #   to the context class and need to call the func as a default.
+      if  hasattr(funky, "wrapping") and (funky.wrapping == self.sTable.inst_state_name):
+         def funcA(*args, **kwargs):
+            return func(contxt, *args, **kwargs)
+         funky = funcA
+
       def wrappd2( self, *args, **kwargs):
          # wrap in try - except in event that funky() does something funky
          try:         
             self.__class__ = stCls
             retn = funky( *args, **kwargs)
-#            retn = funky(self, *args, **kwargs)
          finally:
             self.__class__ = cc  
          return retn
 
-      # function with wrapping attribute means we've recursed all the way back
-      #   to the context class and need to call the func as a default.
-      return wrappd2 if not (hasattr(funky, "wrapping") and 
-                            (funky.wrapping==self.sTable.inst_state_name)) else func
+      return wrappd2
 
 # -----------------------------------------------------------------------------
 class TransitionTable(object):
@@ -334,3 +337,143 @@ FRIDAY
 SATURDAY
 sunday
 }}}
+
+=== Miss Grant's Controller ===
+
+The specification for this controller comes from Martin Fowler.  This example uses wxPython as well as the state machine module.  
+{{{
+#!/bin/env/python
+
+import wx
+import DecoratorStateMachine as dsm
+class MyFrame(wx.Frame, dsm.ContextBase):
+
+   xtable = dsm.TransitionTable('pstate')
+   dtable = dsm.TransitionTable('dstate')
+
+   def __init__(self):
+      self.xtable.initialize(self)
+      self.dtable.initialize(self)
+
+      wx.Frame.__init__(self, None, -1, "My Frame", size=(350,250))
+      family = wx.SWISS
+      style = wx.NORMAL
+      weight = wx.BOLD
+      font = wx.Font(12,family,style,weight, False, "Verdana")
+      self.SetFont(font)
+
+      panel = wx.Panel(self, -1)
+
+      button = wx.Button(panel, -1, "Door", pos=(50,20), size=(110,35))
+      self.Bind(wx.EVT_BUTTON, self.onToggleDoor, button)
+      self.btnDoor = button
+      self.doorOpen = False
+
+      button = wx.Button(panel, -1, "Light", pos=(170,20), size=(110,35))
+      self.Bind(wx.EVT_BUTTON, self.onLightOn, button)
+      self.btnLight = button
+
+      button = wx.Button(panel, -1, "Drawer", pos=(50,60), size=(110,35))
+      self.Bind(wx.EVT_BUTTON, self.onOpenDrawer, button)
+      self.btnDrawer = button
+
+      button = wx.Button(panel, -1, "Panel", pos=(170,60), size=(110,35))
+      self.Bind(wx.EVT_BUTTON, self.onClosePanel, button)
+      button.Disable()
+      self.btnPanel = button
+
+      self.textArea = wx.StaticText(panel, -1, "Locked", pos=(50,100), size=(100,35))
+
+      # onEnter called here would invoke MyFrame.onEnter (below)
+      # call the current state's onEnter method indirectly through onInit()
+      self.onInit()	
+
+   def onEnter(self):
+      print "Shouldn't get here. Should call one of the state's onEnter functions instead."
+
+   @dsm.transitionevent(dtable)
+   def onToggleDoor(self, event):
+      pass
+
+   @dsm.event(dtable)
+   def onInit(self):
+      self.onEnter()		# calls onEnter for current dtable/dstate state
+
+   @dsm.transition(xtable)
+   def onOpenDoor(self):
+      pass
+   @dsm.transition(xtable)
+   def onCloseDoor(self):
+      pass
+   @dsm.transition(xtable)
+   def onLightOn(self, event):
+      pass
+   @dsm.transition(xtable)
+   def onOpenDrawer(self, event):
+      pass
+   @dsm.transition(xtable)
+   def onClosePanel(self, event):
+      pass
+
+class DoorOpen(MyFrame):
+   def onEnter(self):
+      print self.dstate.name()
+      self.btnDoor.SetLabel("Close Door")
+          
+   def onToggleDoor(self, event):
+      self.onCloseDoor()
+
+class DoorClosed(MyFrame):
+   def onEnter(self):
+      print self.dstate.name()
+      self.btnDoor.SetLabel("Open Door")
+          
+   def onToggleDoor(self, event):
+      self.onOpenDoor()
+
+MyFrame.dtable.nextStates(DoorOpen, (DoorClosed,))
+MyFrame.dtable.nextStates(DoorClosed, (DoorOpen,))
+MyFrame.dtable.initialstate = DoorOpen
+
+"""
+The following classes are states for the controller.
+"""
+class Idle(MyFrame):
+   """this is an initial state"""
+   def onEnter(self):
+      print self.pstate.name()
+
+class Unlocked(Idle):
+   def onEnter(self):
+      print self.pstate.name()
+      self.btnPanel.Enable()
+      self.btnDoor.Disable()
+      self.textArea.SetLabel("Unlocked")
+
+   def onLeave(self):
+      self.textArea.SetLabel("Locked")
+      self.btnPanel.Disable()
+      self.btnDoor.Enable()
+
+class Active(Idle):
+   pass
+class LightOn(Idle):
+   pass
+class DrawerOpen(Idle):
+   pass
+
+MyFrame.xtable.nextStates(Idle, (Idle, Active, Idle, Idle, Idle))
+MyFrame.xtable.nextStates(Active, (Idle, Active, LightOn, DrawerOpen, None))
+MyFrame.xtable.nextStates(LightOn, (Idle, None,  None, Unlocked, None ))
+MyFrame.xtable.nextStates(DrawerOpen, (Idle, None, Unlocked, None, None))
+MyFrame.xtable.nextStates(Unlocked, (Idle, None, None, None, Idle))
+MyFrame.xtable.initialstate = Idle
+
+
+if __name__=='__main__':
+   app = wx.PySimpleApp()
+   frame = MyFrame()
+   frame.Show(True)
+   app.MainLoop()
+}}}
+There are actually two states in the context. One is for the state of the door, opened or closed.  The other is for the main controller.  The DoorOpen and DoorClosed states simply translate the onToggleDoor event to invoke either onCloseDoor or onOpenDoor.
