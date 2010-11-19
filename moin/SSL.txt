@@ -1,11 +1,12 @@
 SSL stands for '''Secure Sockets Layer''' and is designed to create secure connection between client and server. Secure means that connection is encrypted and therefore protected from eavesdropping. It also allows to validate server identity.
 
-=== SSL libraries availability and limitations ===
- * Python 2.5 (the version AppEngine is running)
-SSL support is available from external '''ssl''' module http://pypi.python.org/pypi/ssl Unfortunately, there are no binaries for Windows, and that's a major showstopper when using Python 2.5.
+=== SSL support status ===
+ * '''ssl''' module (internal for Python 2.6+, external for Python 2.5 - http://pypi.python.org/pypi/ssl). Unfortunately, there are no external binaries for Python 2.5 on Windows (and that makes AppEngine uploads insecure).
+  '''ssl''' doesn't validate server identity and hence vulnerable to MITM attack by default (read below).
 
- * Python 2.6
-'''ssl''' module from http://pypi.python.org/pypi/ssl is a part of standard library (version is unknown, though). It has a serious security issue that allows successful MITM attack using valid certificate from other site - http://bugs.python.org/issue1589  Basically, the module validates that certificate is correct and correctly signed by root certificate, but it does not check that certificate actually belongs to the connected site, i.e. that site name matches the name specified in certificate.
+ * '''pyOpenSSL''', external module for Python 2.3+, doesn't validate server identity, vulnerable to MITM attack by default.
+
+There is a serious security issue with '''ssl''' and '''pyOpenSSL''' libraries that provide SSL support. They may require valid certificate from server, but do not check it actually belongs to this server. This allows successful Man-in-the-middle attack using valid certificate from other site - http://bugs.python.org/issue1589  Libraries validate that certificate is correct and correctly signed by root certificate, but it does not check that site name matches the name specified in certificate.
 
 === Validating server identity with ssl module ===
 Client need to connect to server over SSL, fetch its certificate, check that the certificate is valid (signed properly) and belongs to this server (server name).
