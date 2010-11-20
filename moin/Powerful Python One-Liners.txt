@@ -118,3 +118,8 @@ python -c "import sys; tmp = lambda x: sys.stdout.write(x.split()[0]+'\t'+str(in
 {{{
 print '\n'.join(line.split(":",1)[0] for line in open("/etc/passwd"))
 }}}
+
+== Compress CSS file ==
+{{{
+python -c 'import re,sys;print re.sub("\s*([{};,:])\s*", "\\1", re.sub("/\*.*?\*/", "", re.sub("\s+", " ", sys.stdin.read())))'
+}}}
