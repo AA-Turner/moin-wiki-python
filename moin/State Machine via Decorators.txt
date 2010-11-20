@@ -57,7 +57,7 @@ class _StateVariable(object):
                psudoClassName = "%s_%s"%(cc.__name__, crnt_state.__name__)
                stCls = type( psudoClassName, tuple(nmro), {})
                context.__class__ = stCls
-               getattr(context, methName)()		# call the onEnter or onLeave method here
+               getattr(context, methName)()	# call the onEnter or onLeave method here
                context.__class__ = cc
 
          callInState('onLeave', self.__current_state)
@@ -141,7 +141,8 @@ class _StateVariable(object):
          
       contxt.__class__ = cc   # revert...
       if funky is None:
-         t = "'%s' has no attribute '%s' in state %s" % (self.name(), func.__name__, crnt.__name__)
+         t = "'%s' has no attribute '%s' in state %s" % (self.name(), 
+                     func.__name__, crnt.__name__)
          raise NotImplementedError(t)
 
       # function with wrapping attribute means we've recursed all the way back
@@ -317,14 +318,11 @@ StateContext.ttable.nextStates(StateC, (StateA,))
 StateContext.ttable.initialstate = StateA
 
 if __name__=='__main__':
+   days=("Monday","Tuesday","Wednesday","Thursday",
+      "Friday","Saturday","Sunday")
    ctxt = StateContext()
-   ctxt.writeName("Monday")
-   ctxt.writeName("Tuesday")
-   ctxt.writeName("Wednesday")
-   ctxt.writeName("Thursday")
-   ctxt.writeName("Friday")
-   ctxt.writeName("Saturday")
-   ctxt.writeName("Sunday")
+   for day in days:
+      ctxt.writeName(day)
    x = raw_input("done>")
 }}}
 Output
@@ -355,7 +353,7 @@ class MyFrame(wx.Frame, dsm.ContextBase):
       self.xtable.initialize(self)
       self.dtable.initialize(self)
 
-      wx.Frame.__init__(self, None, -1, "My Frame", size=(350,250))
+      wx.Frame.__init__(self, None, -1, "My Frame", size=(410,250))
       family = wx.SWISS
       style = wx.NORMAL
       weight = wx.BOLD
@@ -364,23 +362,11 @@ class MyFrame(wx.Frame, dsm.ContextBase):
 
       panel = wx.Panel(self, -1)
 
-      button = wx.Button(panel, -1, "Door", pos=(50,20), size=(110,35))
-      self.Bind(wx.EVT_BUTTON, self.onToggleDoor, button)
-      self.btnDoor = button
-      self.doorOpen = False
-
-      button = wx.Button(panel, -1, "Light", pos=(170,20), size=(110,35))
-      self.Bind(wx.EVT_BUTTON, self.onLightOn, button)
-      self.btnLight = button
-
-      button = wx.Button(panel, -1, "Drawer", pos=(50,60), size=(110,35))
-      self.Bind(wx.EVT_BUTTON, self.onOpenDrawer, button)
-      self.btnDrawer = button
-
-      button = wx.Button(panel, -1, "Panel", pos=(170,60), size=(110,35))
-      self.Bind(wx.EVT_BUTTON, self.onClosePanel, button)
-      button.Disable()
-      self.btnPanel = button
+      self.btnDoor = self.makeButton(panel,  "Door", (50,20), self.onToggleDoor)
+      self.btnLight = self.makeButton(panel, "Light", (180,20), self.onLightOn )
+      self.btnDrawer = self.makeButton(panel, "Drawer", (50,60), self.onOpenDrawer)
+      self.btnPanel = self.makeButton(panel, "Panel", (180,60), self.onClosePanel)
+      self.btnPanel.Disable()
 
       self.textArea = wx.StaticText(panel, -1, "Locked", pos=(50,100), size=(100,35))
 
@@ -389,45 +375,47 @@ class MyFrame(wx.Frame, dsm.ContextBase):
       self.onInit()	
 
    def onEnter(self):
-      print "Shouldn't get here. Should call one of the state's onEnter functions instead."
+      print "Shouldn't get here. Should call some state's onEnter functions instead."
 
    @dsm.transitionevent(dtable)
-   def onToggleDoor(self, event):
-      pass
+   def onToggleDoor(self, event): pass
 
    @dsm.event(dtable)
    def onInit(self):
       self.onEnter()		# calls onEnter for current dtable/dstate state
 
    @dsm.transition(xtable)
-   def onOpenDoor(self):
-      pass
+   def onOpenDoor(self): pass
+
    @dsm.transition(xtable)
-   def onCloseDoor(self):
-      pass
+   def onCloseDoor(self): pass
+
    @dsm.transition(xtable)
-   def onLightOn(self, event):
-      pass
+   def onLightOn(self, event): pass
+
    @dsm.transition(xtable)
-   def onOpenDrawer(self, event):
-      pass
+   def onOpenDrawer(self, event): pass
+
    @dsm.transition(xtable)
-   def onClosePanel(self, event):
-      pass
+   def onClosePanel(self, event): pass
+
+   def makeButton( self, panel, label, positn, handler ):
+      button = wx.Button(panel, -1, label, pos=positn, size=(120,35))
+      self.Bind(wx.EVT_BUTTON, handler, button)
+      return button
 
 class DoorOpen(MyFrame):
+   doorLabel = "Close Door"
    def onEnter(self):
       print self.dstate.name()
-      self.btnDoor.SetLabel("Close Door")
-          
+      self.btnDoor.SetLabel( self.doorLabel )
+      
    def onToggleDoor(self, event):
       self.onCloseDoor()
 
-class DoorClosed(MyFrame):
-   def onEnter(self):
-      print self.dstate.name()
-      self.btnDoor.SetLabel("Open Door")
-          
+class DoorClosed(DoorOpen):
+   doorLabel = "Open Door"
+
    def onToggleDoor(self, event):
       self.onOpenDoor()
 
@@ -435,9 +423,6 @@ MyFrame.dtable.nextStates(DoorOpen, (DoorClosed,))
 MyFrame.dtable.nextStates(DoorClosed, (DoorOpen,))
 MyFrame.dtable.initialstate = DoorOpen
 
-"""
-The following classes are states for the controller.
-"""
 class Idle(MyFrame):
    """this is an initial state"""
    def onEnter(self):
@@ -449,7 +434,6 @@ class Unlocked(Idle):
       self.btnPanel.Enable()
       self.btnDoor.Disable()
       self.textArea.SetLabel("Unlocked")
-
    def onLeave(self):
       self.textArea.SetLabel("Locked")
       self.btnPanel.Disable()
@@ -469,11 +453,25 @@ MyFrame.xtable.nextStates(DrawerOpen, (Idle, None, Unlocked, None, None))
 MyFrame.xtable.nextStates(Unlocked, (Idle, None, None, None, Idle))
 MyFrame.xtable.initialstate = Idle
 
-
 if __name__=='__main__':
    app = wx.PySimpleApp()
    frame = MyFrame()
    frame.Show(True)
    app.MainLoop()
 }}}
+
+Explanation
+
 There are actually two states in the context. One is for the state of the door, opened or closed.  The other is for the main controller.  The DoorOpen and DoorClosed states simply translate the onToggleDoor event to invoke either onCloseDoor or onOpenDoor.
+
+The @transition decorator indicates the method can cause a state transition. The method body will be invoked if one is provided. The parameter on the decorator is the state table that governs the transition. When leaving a state, the state's onLeave method is called, if one is defined. When entering a state the state's onEnter method is called.
+
+The @event decorator indicates the method is state dependent.  The parameter on the decorator is used to determine which state variable (via the transition table) in 
+the context (there may be multiple) contains the state whose method is to be invoked.
+
+The @transitionevent decorator is a combination of the above two. A state dependent method
+is invoked, and it may cause a transition to a new state.  The transition happens after the 
+event method is invoked.
+
+Since states are subclasses of the context, or subclasses of other states, rules governing method or attribute resolution apply. For instance DoorClosed is a subclass of DoorOpened, so when 'onEnter' of the DoorClosed state is called, it uses the one for DoorOpened. Since DoorClosed has defined a different value for doorLabel, the correct label is set on the 
+door button.  
