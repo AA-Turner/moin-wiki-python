@@ -123,3 +123,31 @@ print '\n'.join(line.split(":",1)[0] for line in open("/etc/passwd"))
 {{{
 python -c 'import re,sys;print re.sub("\s*([{};,:])\s*", "\\1", re.sub("/\*.*?\*/", "", re.sub("\s+", " ", sys.stdin.read())))'
 }}}
+
+== Decode string written in Hex ==
+{{{
+python -c "print ''.join(chr(int(''.join(i), 16)) for i in zip(*[iter('474e552773204e6f7420556e6978')]*2))"
+}}}
+
+== Retrieve content text from HTTP data ==
+{{{
+python -c "import sys; print sys.stdin.read().replace('\r','').split('\n\n',2)[1]";
+}}}
+
+== Prints file extension ==
+{{{
+print '~/python/one-liners.py'.split('.')[-1]
+}}}
+
+== Escapes content from stdin ==
+
+it can be used to convert string to url safe string   
+
+{{{
+python -c "import urllib, sys print urllib.quote_plus(sys.stdin.read())";
+}}}
+
+== Reverse lines in stdin ==
+{{{
+python -c "import sys;print '\n'.join(reversed(sys.stdin.read().split('\n')))"
+}}}
