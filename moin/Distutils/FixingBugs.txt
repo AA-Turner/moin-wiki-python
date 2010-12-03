@@ -1,0 +1,52 @@
+## page was renamed from Distutils/Fixing Bugs
+= How to fix bugs in Distutils =
+
+To implement new features without breaking third-party tools that rely on undocumented internals, distutils has been forked under the name distutils2 and developed outside of Python’s standard library, until it is complete enough to be merged back.
+
+While the fork lasts, bugs need to be fixed both in distutils (Python py3k, 3.1 and 2.7) and distutils2 (one branch only, but compatible with 2.4 up to 2.7).  This page documents the workflow to follow for fixing bugs.
+
+
+== Find a bug ==
+
+Reports are filed in Python’s tracker, under two keywords: [[http://bugs.python.org/issue?@columns=title,id,activity,status&@sort=activity&@group=priority&@filter=components,status&@pagesize=150&@startwith=0&status=1&components=3&@dispname=distutils|distutils]] and [[http://bugs.python.org/issue?@columns=title,id,activity,status&@sort=activity&@group=priority&@filter=components,status&@pagesize=50&@startwith=0&status=1&components=25&@dispname=distutils2|distutils2]].  They will soon be all listed under distutils2 to make things easier.
+
+
+== Set up distutils2 ==
+
+1) Install [[http://mercurial.selenic.com/|Mercurial]].
+
+2) Get distutils2: hg clone http://bitbucket.org/tarek/distutils2
+
+3) Optional:  install [[http://www.python.org/download/releases/|older Pythons]] for testing.
+
+4) Install unittest2 (pip install unittest2, hg clone http://hg.python.org/unittest2 + unittest2.pth file, wget + python setup.py install, whatever way you prefer)
+
+
+== Fix the bug ==
+
+Ideally, the first step is to write a test that fails, thus demonstrating the bug, and then change the code to make the test pass.
+
+Usual guidelines apply:
+
+* http://www.python.org/dev/workflow/
+* http://www.python.org/dev/faq/#how-to-test-a-patch
+* http://www.python.org/dev/patches/ (minus the parted related to Subversion)
+
+
+== Share the fix ==
+
+Use one of those two possible ways:
+
+a) Produce a diff with “hg diff -r <your last revision> -r <main repo last revision> > fix-something.diff”.  Attach it to the bug report.
+
+b) If you have one clean changeset, you can post a link to a public repository on the bug report.
+
+
+== Iterate ==
+
+Reply to feedback about the changes, update your patch, ping the maintainers (bug tracker user names tarek and eric.araujo) as needed.
+
+
+== Profit ==
+
+Tarek or Éric will make sure the test suite passes with all supported version, push to the main repository, and backport to distutils.
