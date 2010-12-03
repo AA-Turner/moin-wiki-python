@@ -16,7 +16,7 @@
 
 == Cons ==
 
- * Requires bloated Oracle client installation on any machine that the app will run on
+ * Usually requires bloated Oracle client installation on any machine that the app will run on
  * Frequently the subject of migration discussions (to alternatives), usually for reasons of cost
 
 ----
@@ -64,6 +64,23 @@ mxODBC is compatible with the Oracle ODBC drivers on Windows and Unix, such as t
 Actively maintained Open Source project.
 
 Precompiled binaries are available for Windows.  Red``Hat Enterprise Linux, Centos, and Fedora have precompiled RPMs available in their Extras repositories.
+
+=== OJDBC and JayDeBeApi ===
+
+  URL:: http://pypi.python.org/pypi/JayDeBeApi
+  licence:: LGPL
+  platforms:: Any (requires Java)
+  Python versions:: Tested on CPython 2.6.6 and Jython 2.5.2
+  Oracle versions:: Any supported by Oracle's JDBC drivers (currently 8.1.7 to 11.2.0.2.0)
+  Last release:: 0.1 (2010-08-16)
+
+No InstantClient required. Download an Oracle JDBC driver (the filename will be something like ojdbc6.jar) from the [[http://www.oracle.com/technetwork/database/features/jdbc/index-091264.html|Oracle website]], and set the classpath to include the driver. Note that if not running under Jython, JPype is required. Use code like the following:
+
+{{{#!python
+environ['JAVA_HOME'] = '/usr/lib/jvm/java-6-openjdk/jre'
+jpype.startJVM(jpype.getDefaultJVMPath(), '-Djava.class.path=ojdbc6.jar')
+conn = jaydebeapi.connect('oracle.jdbc.driver.OracleDriver', 'jdbc:oracle:thin:user/pass@server:1521:dbname')
+}}}
 
 ----
 
