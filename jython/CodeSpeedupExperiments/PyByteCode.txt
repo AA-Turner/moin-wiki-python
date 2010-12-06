@@ -22,3 +22,21 @@ The {{{pycimport}}} module (Lib/pycimport.py) allows for you to import Python by
 
 
 Lastly, you can use the {{{compileall}}} module to compile ahead-of-time (henceforth AOT) Python code, either in CPython or Jython, to pyc or py$class representations respectively. This module is used by distutils, as seen in setup.py package setup scripts.
+
+=== Results ===
+The switch-case {{{PyBytecode}}} was converted to enum in a new file {{{PyBytecodeEnum}}}<<FootNote(http://bitbucket.org/shashank/jython-experiments/)>>.
+
+To compare the performance of the new code with the previous code, I used the pystone benchmarks. To make sure that the JVM could jit the code, it was run using the server flag like so (in the {{{dist/bin}}} folder:
+{{{
+./jython -J-server
+}}}
+
+The results are below:
+
+{{attachment:with_enum_vs_without.png}}
+
+ base:: plain jython run
+
+ with enum:: the modified version using the python byte code containing the enums
+
+ without enum:: version using the python byte code
