@@ -234,6 +234,13 @@ or
 	    for another in combination(K-1, L[i+1:]):
 		yield thisone + another
 }}}
+in Python 2.6+:
+{{{
+    import itertools
+    def combination(K, L):
+	return itertools.combinations(L, K)
+}}}
+
 
 = Problem 27: Group the elements of a set into disjoint subsets =
 A natural recursive approach requires "temporarily modifying" certain things
@@ -339,9 +346,11 @@ This solution was tested on IDLE 3.1, apologies to anyone for whom it doesn't wo
 
 = Problem 28: Sorting a list of lists according to length of sublists =
 {{{
+# Part A
     def lsort(L):
         return sorted(L, key=len)
 
+# Part B
     from collections import defaultdict
 
     def lfsort(L):
@@ -385,6 +394,13 @@ prime is of interest because we've checked all primes <= sqrt(N).
             elif N%p == 0: return False
 }}}
 
+or (from http://www.noulakaz.net/weblog/2007/03/18/a-regular-expression-to-check-for-prime-numbers/)
+{{{
+    import re
+    def is_prime(N):
+        return not re.match(r'^1?$|^(11+?)\1+$', '1' * n)
+}}}
+
 = Problem 32: Calculate the Greatest Common Divisor (GCD) using Euclid's algorithm =
 
 {{{
@@ -398,7 +414,7 @@ def gcd(a,b):
     """
 
     while b != 0:
-        (a, b) = (b, a%b)
+        a, b = b, a%b
     return a
 }}}
 
@@ -647,7 +663,7 @@ Given a range of integers by its lower and upper limit, print a list of all even
 
 {{{
 def goldbach_list(lower,upper):
-    """Print goldberg composition for all even numbers greater than
+    """Print goldbach composition for all even numbers greater than
     'lower' and less than or equal to 'upper'.
 
     >>> goldbach_list(9,20)
@@ -659,7 +675,7 @@ def goldbach_list(lower,upper):
     20 = 3 + 17
     """
 
-    # Goldbach conjection applies to even numbers > 2
+    # Goldbach conjecture applies to even numbers > 2
     if lower&1:
         lower += 1
     if lower < 4:
@@ -676,7 +692,7 @@ Part 2: print Goldbach compositions in which both primes are greater than a thre
 
 {{{
 def goldbach_list(lower,upper,threshold=0):
-    """Print goldberg composition for all even numbers greater than
+    """Print goldbach composition for all even numbers greater than
     'lower' and less than or equal to 'upper'.
 
     >>> goldbach_list(1,2000,50)
@@ -721,7 +737,7 @@ def table(expr):
     def NOR(a,b): return not (a or b)
     def XOR(a,b): return a ^ b
     def EQU(a,b): return not (a ^ b)
-    def IMP(a,b): return b if a else True
+    def IMP(a,b): return not a or b
 
     # print a nice header
     format = "%-5s %-5s %-5s"
@@ -820,7 +836,7 @@ def table( expr ):
                 # while the operator being parsed (curop) has a lower
                 # precedence than the one on the top of the operator stack,
                 # reduce the higher priority operator.  Then push the curop
-                # onto the opperator stack
+                # onto the operator stack
                 while operators != [] and prec[ curop ] <= prec[ operators[-1] ]:
                     reduce( operators, operands )
 
@@ -840,7 +856,7 @@ def table( expr ):
     def EQU(a,b): return not XOR(a,b)
     def OR(a,b): return a or b
     def NOR(a,b): return not OR(a,b)
-    def IMP(a,b): return b if a else True
+    def IMP(a,b): return not a or b
 
     stmnt = compile(toPrefix(expr),'<string>','eval')
 
@@ -1080,7 +1096,7 @@ A much briefer, recursive solution (employing the mirror, concatenate, prepend '
 {{{
 def gray (n):
     if n == 0: return ['']
-    return list(map(lambda x: '0'+x, gray(n-1)))+list(map(lambda y: '1'+y, gray(n-1)[::-1]))
+    return ['0'+x for x in gray(n-1)]+['1'+y for y in gray(n-1)[::-1]]
 }}}
 
 = Problem 50: Generate Huffman codes =
@@ -1121,7 +1137,7 @@ def huffman(freqtable):
         heappush(heap, ( freq0+freq1, letters0+letters1))
 
     for k,v in code.iteritems():
-        code[k] = ''.join(code[k])
+        code[k] = ''.join(v)
 
     return code
 
