@@ -5,7 +5,7 @@
 
  * When do I use for loops?
 
-For loops are traditionally used when you have a piece of code which you want to repeat ''n'' number of times. As an alternative, ''while'' exists, however, while is used when a condition is to be met, or if you want a piece of code to repeat forever, for example -
+''For'' loops are traditionally used when you have a piece of code which you want to repeat ''n'' number of times. As an alternative, ''while'' exists, however, while is used when a condition is to be met, or if you want a piece of code to repeat forever, for example -
 
 ''For loop from 0 to 2, therefore running 3 times.''
 {{{#!python numbers=disable
@@ -20,11 +20,11 @@ while True:
     x += 1
 }}}
 
-As you can see, they serve different purposes. The for loop runs for a fixed amount - in this case, 3, while the while loop theoretically runs forever. You could use a for loop with an huge number, but what's the point of doing that when you have a construct that already exists? As the old saying goes, "why try to reinvent the wheel?".
+As you can see, they serve different purposes. The ''for'' loop runs for a fixed amount - in this case, 3, while the ''while'' loop theoretically runs forever. You could use a ''for'' loop with an huge number in order to gain the same effect as a ''while'' loop, but what's the point of doing that when you have a construct that already exists? As the old saying goes, "why try to reinvent the wheel?".
 
  * How do they work?
 
-If you've done any programming before, there's no doubt you've come across a for loop or an equivalent to it. In Python, they work a little differently. Basically, any object with an iterable method can be used in a for loop in Python. Even strings, despite not having an iterable method - but we'll not get on to that here. You can define your own iterables by creating an object with next() and __iter__() methods. This means that you'll rarely be dealing with raw numbers when it comes to for loops in Python - great for just about anyone!
+If you've done any programming before, there's no doubt you've come across a ''for'' loop or an equivalent to it. In Python, they work a little differently. Basically, any object with an iterable method can be used in a ''for'' loop in Python. Even strings, despite not having an iterable method - but we'll not get on to that here. Having an iterable method basically means that the data can be presented in list form, where there's multiple values in an orderly fashion. You can define your own iterables by creating an object with next() and __iter__() methods. This means that you'll rarely be dealing with raw numbers when it comes to for loops in Python - great for just about anyone!
 
  * Nested loops
 
@@ -38,7 +38,7 @@ Like the ''while'' loop, the ''for'' loop can be made to exit before the given o
 
  * range vs xrange
 
-The range() function creates a list containing numbers defined by the input. The xrange() function creates a number generator. You will often see that xrange() is used much more frequently than range. This is for one reason only - resource usage. The range() function generates a list of numbers all at once, where as xrange() generates them as needed. This means that less memory is used, and should the for loop exit early, there's no need to waste time creating the unused numbers. This effect is tiny, as you can see in the examples below.
+The ''[[http://docs.python.org/library/functions.html#range|range]]'' function creates a list containing numbers defined by the input. The ''[[http://docs.python.org/library/functions.html#xrange|xrange]]'' function creates a number generator. You will often see that ''xrange'' is used much more frequently than range. This is for one reason only - resource usage. The ''range'' function generates a list of numbers all at once, where as ''xrange'' generates them as needed. This means that less memory is used, and should the ''for'' loop exit early, there's no need to waste time creating the unused numbers. This effect is tiny in smaller lists, but increases rapidly in larger lists as you can see in the examples below.
 
 == Examples ==
 
@@ -107,7 +107,7 @@ for x in range(10000000):
         break
     pass
 
-stop=time.clock()
+stop = time.clock()
 print stop-start
 
 start = time.clock()
@@ -116,7 +116,30 @@ for x in xrange(10000000):
         break
     pass
 
-stop=time.clock()
+stop = time.clock()
 print stop-start
 }}} 
-(For reference, this returned a sampled time of 0.524843830962 for the range loop and a time of 0.133692928435 for the xrange loop on a test computer running Windows 7 64 bit with Python 2.7 64 bit)
+''(For reference, this returned a sampled time of 0.524843830962 for the range loop and a time of 0.133692928435 for the xrange loop on a test computer running Windows 7 64 bit with Python 2.7 64 bit - quite a difference)''
+
+{{{#!python numbers=disable
+import time
+
+start = time.clock()
+for x in range(1000):
+    if x==997:
+        break
+    pass
+stop = time.clock()
+
+print stop-start
+
+start = time.clock()
+for x in xrange(1000):
+    if x==997:
+        break
+    pass
+stop = time.clock()
+
+print stop-start
+}}}
+''(For reference, this returned a sampled time of 0.00052699086855 for the range loop and a time of 0.000464132512211 for the xrange loop on a test computer running Windows 7 64 bit with Python 2.7 64 bit - a rather minute difference)''
