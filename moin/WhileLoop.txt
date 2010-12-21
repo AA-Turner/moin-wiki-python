@@ -1,0 +1,22 @@
+ = While loops =
+ == Usage in Python ==
+
+ * When do I use them?
+
+''While'' loops, like the ForLoop, are used for repeating sections of code - but unlike a ''for'' loop, the ''while'' loop will not run ''n'' times, but until a defined condition is met. As the ''for'' loop in Python is so powerful, ''while'' is rarely used, except in cases where a user's input is required, for example -
+
+{{{#!python numbers=disable
+n=raw_input('Please enter\'hello\':')
+while n.strip()!='hello':
+    n=raw_input('Please enter\'hello\':')
+}}}
+
+However, the problem with the above code is that it's wasteful. In fact, what you will see a lot of in Python is the following -
+
+{{{#!python numbers=disable
+while True:
+    n=raw_input('Please enter\'hello\':')
+    if n.strip()=='hello':
+        break
+}}}
+As you can see, this compacts the whole thing into a piece of code managed entirely by the ''while'' loop. Having ''True'' as a condition ensures that the code runs until it's broken by n.strip() equalling 'hello'. Another version you may see of this type of loop uses ''1'' instead of ''True'' - this is exactly the same, though in Python 2.*, using while ''1'' is minutely faster, due to the ability to resign ''True'' to a different value.
