@@ -891,7 +891,7 @@ def table(expr):
         while tokens and tokens[0] == 'imp':
             _ = tokens.pop(0)
             right = or_expr(tokens)
-            value = right if value else True
+            value = not value or right
         return value
 
     def or_expr(tokens):
