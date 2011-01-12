@@ -57,90 +57,6 @@ assert double.__doc__ == 'Doubles a number'
 print double(155)
 }}}
 
-== Creating decorator with optional arguments ==
-
-{{{
-#!python
-import functools, inspect
-
-def decorator(func):
-    """ Allow to use decorator either with arguments or not. """
-
-    def isFuncArg(*args, **kw):
-        return len(args) == 1 and len(kw) == 0 and (
-            inspect.isfunction(args[0]) or isinstance(args[0], type))
-
-    if isinstance(func, type):
-        def class_wrapper(*args, **kw):
-            if isFuncArg(*args, **kw):
-                return func()(*args, **kw) # create class before usage
-            return func(*args, **kw)
-        class_wrapper.__name__ = func.__name__
-        class_wrapper.__module__ = func.__module__
-        return class_wrapper
-
-    @functools.wraps(func)
-    def func_wrapper(*args, **kw):
-        if isFuncArg(*args, **kw):
-            return func(*args, **kw)
-
-        def functor(userFunc):
-            return func(userFunc, *args, **kw)
-
-        return functor
-
-    return func_wrapper
-}}}
-
-Example with function:
-
-{{{
-#!python
-@decorator
-def apply(func, *args, **kw):
-    return func(*args, **kw)
-}}}
-
-# Example with class:
-
-{{{
-#!python
-@decorator
-class apply:
-    def __init__(self, *args, **kw):
-        self.args = args
-        self.kw   = kw
-
-    def __call__(self, func):
-        return func(*self.args, **self.kw)
-}}}
-
-Usage in both cases:
-
-{{{
-#!python
-@apply
-def test():
-    return 'test'
-
-assert test == 'test'
-
-@apply(2, 3)
-def test(a, b):
-    return a + b
-
-assert test == 5
-}}}
-
-Note: There is only one drawback: wrapper checks its arguments for single function or class. To avoid wrong behavior you can use keyword arguments instead of positional, e.g.:
-
-{{{
-#!python
-@decorator
-def my_property(getter, *, setter = None, deleter = None, doc = None):
-    return property(getter, setter, deleter, doc)
-}}}
-
 == Property Definition ==
 
 These decorators provide a readable way to define properties:
@@ -384,6 +300,90 @@ add1 = add(1)
 
 print add1(2)
 
+}}}
+
+== Creating decorator with optional arguments ==
+
+{{{
+#!python
+import functools, inspect
+
+def decorator(func):
+    """ Allow to use decorator either with arguments or not. """
+
+    def isFuncArg(*args, **kw):
+        return len(args) == 1 and len(kw) == 0 and (
+            inspect.isfunction(args[0]) or isinstance(args[0], type))
+
+    if isinstance(func, type):
+        def class_wrapper(*args, **kw):
+            if isFuncArg(*args, **kw):
+                return func()(*args, **kw) # create class before usage
+            return func(*args, **kw)
+        class_wrapper.__name__ = func.__name__
+        class_wrapper.__module__ = func.__module__
+        return class_wrapper
+
+    @functools.wraps(func)
+    def func_wrapper(*args, **kw):
+        if isFuncArg(*args, **kw):
+            return func(*args, **kw)
+
+        def functor(userFunc):
+            return func(userFunc, *args, **kw)
+
+        return functor
+
+    return func_wrapper
+}}}
+
+Example with function:
+
+{{{
+#!python
+@decorator
+def apply(func, *args, **kw):
+    return func(*args, **kw)
+}}}
+
+# Example with class:
+
+{{{
+#!python
+@decorator
+class apply:
+    def __init__(self, *args, **kw):
+        self.args = args
+        self.kw   = kw
+
+    def __call__(self, func):
+        return func(*self.args, **self.kw)
+}}}
+
+Usage in both cases:
+
+{{{
+#!python
+@apply
+def test():
+    return 'test'
+
+assert test == 'test'
+
+@apply(2, 3)
+def test(a, b):
+    return a + b
+
+assert test == 5
+}}}
+
+Note: There is only one drawback: wrapper checks its arguments for single function or class. To avoid wrong behavior you can use keyword arguments instead of positional, e.g.:
+
+{{{
+#!python
+@decorator
+def my_property(getter, *, setter = None, deleter = None, doc = None):
+    return property(getter, setter, deleter, doc)
 }}}
 
 == Controllable DIY debug ==
