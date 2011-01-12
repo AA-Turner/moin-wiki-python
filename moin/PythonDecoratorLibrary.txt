@@ -337,19 +337,15 @@ def decorator(func):
     return func_wrapper
 }}}
 
-Example with function:
+Example:
 
 {{{
 #!python
+
 @decorator
 def apply(func, *args, **kw):
     return func(*args, **kw)
-}}}
 
-# Example with class:
-
-{{{
-#!python
 @decorator
 class apply:
     def __init__(self, *args, **kw):
@@ -358,12 +354,10 @@ class apply:
 
     def __call__(self, func):
         return func(*self.args, **self.kw)
-}}}
 
-Usage in both cases:
-
-{{{
-#!python
+# 
+# Usage in both cases:
+#
 @apply
 def test():
     return 'test'
