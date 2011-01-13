@@ -114,7 +114,7 @@ This script echo "ê"
 python -c "import sys; tmp = lambda x: sys.stdout.write(x.split()[0]+'\t'+str(int(x.split()[1])+1)+'\n'); map(tmp, sys.stdin);"
 }}}
 
-== Display List of all users on Unix like system ==
+== Display List of all users on Unix-like systems ==
 {{{
 print '\n'.join(line.split(":",1)[0] for line in open("/etc/passwd"))
 }}}
@@ -141,13 +141,13 @@ print '~/python/one-liners.py'.split('.')[-1]
 
 == Escapes content from stdin ==
 
-it can be used to convert string to url safe string   
+This can be used to convert string to url safe string   
 
 {{{
-python -c "import urllib, sys print urllib.quote_plus(sys.stdin.read())";
+python -c "import urllib, sys ; print urllib.quote_plus(sys.stdin.read())";
 }}}
 
 == Reverse lines in stdin ==
 {{{
-python -c "import sys;print '\n'.join(reversed(sys.stdin.read().split('\n')))"
+python -c "import sys; print '\n'.join(reversed(sys.stdin.read().split('\n')))"
 }}}
