@@ -206,19 +206,51 @@ Ok maybe one mention of webstart: check out these postings to the mailing list (
 == "What's a really easy way to distribute my app as a single jar?" ==
 Start with a fresh working directory. Paste the following code into the file {{{Main.java}}}, changing ENTRYPOINT to be whichever .py starts your program:
 {{{#!java
-import org.python.core.PyException;
-import org.python.util.PythonInterpreter;
-import org.python.core.PySystemState;
 import java.io.FileInputStream;
+import java.lang.System;
+
+import org.python.core.Py;
+import org.python.core.PyException;
+import org.python.core.PyFile;
+import org.python.core.PySystemState;
+import org.python.util.JLineConsole;
+import org.python.util.InteractiveConsole;
+import org.python.util.InteractiveInterpreter;
 
 public class Main {
-    public static void main(String[] args) throws PyException {
-		java.util.Properties p = new java.util.Properties();
-		p.setProperty("python.path", "Lib/");
+    private static InteractiveConsole newInterpreter(boolean interactiveStdin) {
+        if (!interactiveStdin) {
+            return new InteractiveConsole();
+        }
 
-        PySystemState.initialize(null, p);
-        PythonInterpreter interp = new PythonInterpreter();
-		interp.exec("import pysrc.ENTRYPOINT");
+        String interpClass = PySystemState.registry.getProperty(
+		"python.console", "");
+        if (interpClass.length() > 0) {
+            try {
+                return (InteractiveConsole)Class.forName(
+			interpClass).newInstance();
+            } catch (Throwable t) {
+                // fall through
+            }
+        }
+        return new JLineConsole();
+    }
+
+    public static void main(String[] args) throws PyException {
+        java.util.Properties p = System.getProperties();
+
+        PySystemState.initialize();
+        PySystemState systemState = Py.getSystemState();
+        // Decide if stdin is interactive
+        boolean interactive = ((PyFile)Py.defaultSystemState.stdin).isatty();
+        if (!interactive) {
+            systemState.ps1 = systemState.ps2 = Py.EmptyString;
+        }
+
+        // Now create an interpreter
+        InteractiveConsole interp = newInterpreter(interactive);
+        systemState.__setattr__("_jy_interpreter", Py.java2py(interp));
+        interp.exec("import entrypoint");
     }
 }
 }}}
@@ -234,7 +266,9 @@ $ touch pysrc/__init__.py
 $ javac ../Main.java -d .
 $ jar -cfe output.jar Main *
 }}}
-'''NOTE''': Please email charlieATcharliedyson.net if this does or does not work for you, I've only just come up with it as I wanted a single jar that could be executed without any arguments.
+'''NOTE''': Please email charlieATcharliedyson.net if this does or does not work for you, I've only just come up with it as I wanted a single jar that could be executed without any arguments.  The Main.java code above was hacked to support
+readline (if possible) by msdemleiATari uni-heidelberg.de, so if that bugs
+you, don't bother Charlie, ask Markus.
 
 == Resources and acknowledgements ==
 Finally, as in all things [[http://en.wiktionary.org/wiki/your_mileage_may_vary|YMMV]]. If you have different experences or just think I'm crazy then don't just sit there and complain, contribute to the wiki!
