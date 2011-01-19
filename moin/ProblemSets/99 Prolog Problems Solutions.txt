@@ -34,7 +34,7 @@ as the argument name tries to imply, it only works for a list of lists, not a ge
         return list(aux(nestedList))
 }}}
 
-This problem is also a good example of "recursion elimination": explicitly maintain a LIFO stack of what sublists are being expanded so as to avoid actual recursion.  The rec-elim approach is usually faster and avoids issues with recursion depth limits.  Here's a version that works when it's OK to dismantle the input argument -- for variety, I have it build the result into another list by calls to .append, instead of using yield in an auxliary generator and calling list() on it.
+This problem is also a good example of "recursion elimination": explicitly maintain a LIFO stack of what sublists are being expanded so as to avoid actual recursion.  The rec-elim approach is usually faster and avoids issues with recursion depth limits.  Here's a version that works when it's OK to dismantle the input argument -- for variety, I have it build the result into another list by calls to .append, instead of using yield in an auxiliary generator and calling list() on it.
 {{{
     def flatten(nestedList):
         result = []
@@ -286,7 +286,7 @@ and the "resource allocation is initialization" (RAII) idiom it enables...:
     #
     def _g(L, rls, grps):
         if sum(rls) == 0:
-            yield list(list(grp) for grp in grps)
+            yield [list(grp) for grp in grps]
             return
         with popping(L) as item:
             for i, (rl, grp) in enumerate(itertools.izip(rls, grps)):
@@ -307,7 +307,7 @@ e.g. as follows:
     #
     def _g(L, rls, grps):
         if sum(rls) == 0:
-            yield list(list(grp) for grp in grps)
+            yield [list(grp) for grp in grps]
             return
         item = L.pop()
         for i, (rl, grp) in enumerate(itertools.izip(rls, grps)):
@@ -327,22 +327,19 @@ Which is more readable?  "Ai posteri l'ardua sentenza..."!-)
 A more compact, if much less readable, solution (through the use of recursion and an unfortunate number of lambda functions - in the spirit of functional programming):
 
 {{{
-    # A couple of maps help paste the results from combos (below) and the recursion together nicely
+    # A list comprehension helps paste the results from combos (below) and the recursion together nicely
     def group(x, n):
         if n[0] == len(x): return [[x]]
-        return sum(list(map(lambda y: list(map(lambda z: [y[0]] + z, group(y[1], n[1:]))), combos(n[0], x))),[])
+        return [[y[0]] + z for y in combos(n[0], x) for z in group(y[1], n[1:])]
 
     # Enumerates all combinations, where each combination is paired with the remainder of the list
     # This is used to simplify the recursive step in the main function (as opposed to using itertools' combinations function)
     def combos (n, x, cur = 0):
         if n == 0: return [[[],x]]
-        ret = []
-        for i in range(cur, len(x)):
-            ret += list(map(lambda y: [[x[i]]+y[0], y[1]], combos(n-1, x[:i]+x[i+1:], i)))
-        return ret
+        return [[[x[i]]+y[0], y[1]] for i in range(cur, len(x)) for y in combos(n-1, x[:i]+x[i+1:], i)]
 }}}
 
-This solution was tested on IDLE 3.1, apologies to anyone for whom it doesn't work (the only potential issue I can see would be with map).
+This solution was tested on IDLE 3.1, apologies to anyone for whom it doesn't work.
 
 = Problem 28: Sorting a list of lists according to length of sublists =
 {{{
@@ -481,7 +478,7 @@ Uses the function prime_factors() defined in problem P35.
 {{{
 def prime_factors_mult(n):
     """return list [ [p_0,k_0], [p_1,k_1], ... ], where there are 'k_i'
-    occurances of 'p_i' in the prime factorization of n.
+    occurrences of 'p_i' in the prime factorization of n.
 
     >>> prime_factors_mult(315)
     [[3, 2], [5, 1], [7, 1]]
@@ -602,7 +599,7 @@ Using only functions defined in previous problems, we could also implement this 
 {{{
 def goldbach (x):
     if x % 2 == 1: return None
-    return list(filter(lambda y: sum(y) == x, combination(2, dupli(primes(1,x)))))[0]
+    return next(y for y in combination(2, dupli(primes(1,x))) if sum(y) == x)
 }}}
 
 = Problem 41: Print list of Goldbach compositions =
