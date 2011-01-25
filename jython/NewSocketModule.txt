@@ -284,3 +284,69 @@ This bug has been reported to Sun, but is not yet public on the Java bug databas
 
    1. Until the java bug is fixed, only use sockets in either blocking or non-blocking mode; the problem will not occur in this case.
    1. If you need timeouts, then until the java bug is fixed, you should probably create your own DatagramSockets, directly through the java.net APIs.
+
+=== IPV6 address support ===
+
+==== Description ====
+
+On some versions of the JVM, there are problems with bind'ing and connect'ing sockets using IPV6 addresses, even though the OS platform ostensibly supports IPV6. See this bug on the Java bug database: [[http://bugs.sun.com/view_bug.do?bug_id=6230761|NIO channels with IPv6 on Windows]]
+
+The mechanism for retrieving IP address is the '''getaddrinfo()''' function, which you pass parameters to specify the kind of addresses you're interested in. The function returns a 5-tuple, the last element of which is a tuple of (ip-address, port), which you then use to bind or connect your socket. For example
+
+{{{
+>>> import socket
+>>> socket.getaddrinfo("localhost", 80, socket.AF_INET, socket.SOCK_STREAM)[0][4]
+('127.0.0.1', 80)
+}}}
+
+If you want to retrieve IPV4 addresses only, you pass the '''family''' parameter '''AF_INET''', as in the example above.
+
+If you want to retrieve IPV6 addresses only, you pass the '''family''' parameter '''AF_INET6''', like this.
+
+{{{
+>>> import socket
+>>> socket.getaddrinfo("localhost", 80, socket.AF_INET6, socket.SOCK_STREAM)[0][4]
+('0:0:0:0:0:0:0:1', 80)
+}}}
+
+If you don't care whether you receive IPV4 or IPV6 addresses, specify the '''family''' parameter as '''AF_UNSPEC''', and you will be returned a mix of addresses, if your system supports IPV6, like this
+{{{
+>>> import socket
+>>> for a in socket.getaddrinfo("localhost", 80, socket.AF_UNSPEC, socket.SOCK_STREAM)
+...     print a[4]
+...
+('127.0.0.1', 80)
+('0:0:0:0:0:0:0:1', 80)
+}}}
+
+The problem comes because of incomplete IPV6 support in the JVM, particularly on older JVMs, such as the bug mentioned above. So, on some systems, if you try to use IPV6 addresses, you will get a '''java.net.SocketException'''.
+
+This is problematic in jython, because there are multiple modules, such as telnetlib, httplib, smtplib, etc, that use the socket library to retrieve addresses, '''but which use the AF_UNSPEC parameter to getaddrinfo()'''. This means that those modules may be returned IPV6 addresses, which they will try to '''bind''' or '''connect''', and possibly fail, for the reasons discussed above. Which would mean you get failures from those modules.
+
+So to prevent those failures, we've put a workaround in place.
+
+==== Workaround ====
+
+The workaround is a jython-specific function which instructs the '''getaddrinfo()''' function to '''only''' return IPV4 addresses. Although this function is in the socket module, it affects all modules that use the '''getaddrinfo()''' function.
+
+It is used like this
+
+{{{
+>>> import socket
+>>> socket._use_ipv4_addresses_only(True)
+>>> for a in socket.getaddrinfo("localhost", 80, socket.AF_UNSPEC, socket.SOCK_STREAM)
+...     print a[4]
+...
+('127.0.0.1', 80)
+}}}
+
+Note that this function should be called before any other modules attempt to use the socket module, like so
+
+{{{
+import httplib
+import socket
+socket._use_ipv4_addresses_only(True)
+py_dot_org = httplib.HTTPConnection('www.python.org')
+}}}
+
+To restore normal behaviour of the '''AF_UNSPEC''' family, pass a '''False''' value to '''socket._use_ipv4_addresses_only()'''
