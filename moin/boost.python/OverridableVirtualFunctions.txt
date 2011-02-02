@@ -84,7 +84,7 @@ struct baz {
 
 struct baz_callback : baz {
     baz_callback(PyObject *p) : self(p) {}
-    int pure(int x) { call_method<int>(self, "pure", x); }
+    int pure(int x) { return call_method<int>(self, "pure", x); }
     PyObject *self;
 };
 
@@ -117,4 +117,3 @@ AttributeError: pure
 }}}
 == Private Non-Pure Virtual Functions ==
 This is one area where some minor intrusiveness on the wrapped library is required. Once it has been overridden, the only way to call the base class implementation of a private virtual function is to make the derived class a friend of the base class. You didn't hear it from me, but most C++ implementations will allow you to change the declaration of the base class in this limited way without breaking binary compatibility (though it will certainly break the [[http://cs.calvin.edu/c++/C++Standard-Nov97/basic.html#basic.def.odr|ODR]]).
-
