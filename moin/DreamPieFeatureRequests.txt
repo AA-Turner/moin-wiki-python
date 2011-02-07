@@ -27,6 +27,8 @@ def factorial(n):
 
 I'd want DreamPie to autocomplete both the `whatever` thing and the use of `factorial` inside the definition. Probably hard, I know.
 
+
+
 As you said, this is really hard and complicated. I don't see this happening. Sorry! Noam
 
 == Magic commands ==
@@ -98,21 +100,21 @@ I agree it's a nice feature sometimes, but you know that saying that it's easy t
 == Allow cycling through history without ctrl modifier ==
 Currently DreamPie requires the 'ctrl' key along with up or down arrows to cycle through history. Perhaps this could be done with arrow keys alone like this:
 
-When up arrow pressed: 
+When up arrow pressed:
     if we're at the first line in the editing window:
          show the previous item in history
     else:
          move cursor up one line
- 
+
 and when down arrow pressed:
     if we're at the last line in the editing window:
           show the next item in history
     else:
          move cursor down one line
 
-We should retain the current 'ctrl'-based scheme, too. When the editing window contains several lines, the user can use 'ctrl+arrow' to immediately move to next or previous history item without having to first scroll through all those lines.  
+We should retain the current 'ctrl'-based scheme, too. When the editing window contains several lines, the user can use 'ctrl+arrow' to immediately move to next or previous history item without having to first scroll through all those lines.
 
-In my view using arrows alone will make the navigation more fluid. Also most new users will already know it because that's how all popular shells (of any kind) implement this feature. 
+In my view using arrows alone will make the navigation more fluid. Also most new users will already know it because that's how all popular shells (of any kind) implement this feature.
 -- Gurry
 
 Thanks for the suggestion! However, I don't think it will work well with multi-line sections. Say you press 'up' and you get a multi-line section. Pressing 'down' will go to the next line, instead of giving you back the last section. I think that up and down should always cancel one another. So I still think that using ctrl is the best solution.
@@ -150,3 +152,11 @@ shortcut to show the docstring of an object, like ? in IPython
 
 == Line Numbers!
 --Ilia Zaslavsky
+
+== Automatic code per python version ==
+In the preferences under the shell tab you are able to set code that automatically executes when an instance of the shell is fired up.
+
+I have different versions of python installed and would like to customize scripts for each version.
+
+A use case is code like "print()" which would fail on Python 2.7-
+--benjamin
