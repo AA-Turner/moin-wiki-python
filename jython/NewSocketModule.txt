@@ -350,3 +350,76 @@ py_dot_org = httplib.HTTPConnection('www.python.org')
 }}}
 
 To restore normal behaviour of the '''AF_UNSPEC''' family, pass a '''False''' value to '''socket._use_ipv4_addresses_only()'''
+
+=== Internationalized Domain Name support ===
+
+[[http://en.wikipedia.org/wiki/Internationalized_domain_name|Internationalized Domain Names for Applications]] (IDNA) is a mechanism whereby characters from outside the [[http://en.wikipedia.org/wiki/ASCII|US-ASCII character set]] may be used in domain names. IDNA is specified in [[http://tools.ietf.org/html/rfc3490|RFC 3490]].
+
+Before IDNA, it was not possible to include non-ASCII characters in domain names, e.g. accented characters such as á, é, í, ó, ú, etc, or characters from non-Roman alphabets, such Japanese, Chinese, Korean, Hebrew, Arabic, etc. In May 2010, based on widespread support for IDNA, ICANN permitted the [[http://blog.icann.org/2010/05/idn-cctlds/|first non-ASCII TLDs to be made available]].
+
+Therefore, in order to access the entire internet, including non-ASCII domain names, IDNA support is required.
+
+==== Description ====
+
+When you pass a non-ASCII hostname to the cpython or jython socket module, it attempts to automatically map that name to its IDNA equivalent. This applies to all functions that take hostnames, e.g. getaddrinfo(), bind(), connect(), etc, as in these examples from cpython
+
+{{{
+Python 2.5.4 (r254:67916, Dec 23 2008, 15:10:54) [MSC v.1310 32 bit (Intel)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import socket
+>>> socket.getaddrinfo(u"alán.com", 80)
+[(2, 0, 0, '', ('207.234.185.84', 80))]
+>>>}}}
+
+The problem is that [[http://bugs.jython.org/issue1153|jython's IDNA support is currently broken]]. This means that any attempt to use socket module functions to access domain names that contain non-ASCII characters will break.
+
+{{{
+Jython 2.5.0 (Release_2_5_0:6476, Jun 16 2009, 13:33:26)
+[Java HotSpot(TM) Client VM (Sun Microsystems Inc.)] on java1.5.0_18
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import socket
+>>> socket.getaddrinfo(u"alán.com", 80)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "C:\jython250\Lib\socket.py", line 593, in getaddrinfo
+    raise _map_exception(jlx)
+socket.gaierror: (20001, 'getaddrinfo failed')
+>>>
+}}}
+
+==== Workaround 1 for Java 6 JVMs ====
+
+There is builtin [[http://java.sun.com/developer/technicalArticles/javase/i18n_enhance/#idn|IDNA support in Java 6]]. This support has been used in the jython socket module, but '''only when jython is run on a Java 6 JVM'''. This support was first made available in jython 2.5.2rc4. See this example from the latest jython
+
+{{{
+Jython 2.5.2rc3 (trunk, Feb 1 2011, 21:42:10)
+[Java HotSpot(TM) Client VM (Sun Microsystems Inc.)] on java1.6.0_13
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import socket
+>>> socket.getaddrinfo(u"alán.com", 80)
+[(2, None, 0, 'xhaus.com', ('207.234.185.84', 80))]
+>>>
+}}}
+
+This IDNA support '''will not work on Java 5 JVMs''': You must use a Java 6 JVM for it to work.
+
+==== Workaround 1 for Java 5 JVMs ====
+
+If you are unable to upgrade the JVM on which you run jython to Java 6, then there is another potential workaround.
+
+There is a [[http://www.gnu.org/software/libidn/|GNU library for IDNA support]], which includes [[http://www.gnu.org/software/libidn/javadoc/|Java support for IDNA]].
+
+If you want to have IDNA support in jython on Java 5, then you download the GNU library, put libidn.jar on your classpath, and use it as follows
+
+{{{
+>>> import gnu.inet.encoding.IDNA
+>>> domain = u"alán.com"
+>>> idna_domain = gnu.inet.encoding.IDNA.toASCII(domain)
+>>> idna_domain
+u'xn--aln-fla.com'
+>>> import socket
+>>> socket.getaddrinfo(idna_domain, 80)
+[(2, None, 0, 'xhaus.com', ('207.234.185.84', 80))]
+}}}
+
+This same technique will also work on socket-dependent modules, such as httplib, urllib/2, ftplib, telnetlib, SocketServer, etc.
