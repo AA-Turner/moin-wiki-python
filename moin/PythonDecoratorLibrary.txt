@@ -1720,13 +1720,26 @@ from Queue import Queue
 from threading import Thread
         
 class asynchronous(object):
+    class NotYetDoneException(Exception):
+        def __init__(self, message):
+            self.message = message
+
     class Result(object):
-        def __init__(self, queue):
+        def __init__(self, queue, thread):
             self.queue = queue
+            self.thread = thread
+			
+        def is_done(self):
+            return not self.thread.is_alive()
             
-        def end(self):
-            self.queue.join()
-            return self.queue.get()
+        def get_result(self):
+            if not self.is_done():
+                raise  asynchronous.NotYetNoneException("the call has not yet completed it's task")
+        
+            if not hasattr(self, "result"):
+                self.result = self.queue.get()
+                
+            return self.result
     
     def __init__(self, func):    
         self.func = func
@@ -1740,27 +1753,31 @@ class asynchronous(object):
         
     def start(self, *args, **kwargs):
         self.queue = Queue()
-        thrd = Thread(target = self.threaded, args = args, kwargs = kwargs);
-        thrd.start();
+        thread = Thread(target = self.threaded, args = args, kwargs = kwargs);
+        thread.start();
         
-        return asynchronous.Result(self.queue)
+        return asynchronous.Result(self.queue, thread)
+
 #
 # Sample use:
 #
 
+import time
+
 @asynchronous
 def long_process(num):
-    import time
     time.sleep(10)
     
     return num * num
 
 result = long_process.start(12)
 
-for i in range(10):
+for i in range(20):
     print i
-
-print "result {0}".format(result.end())
+    if result.is_done():
+        print "result {0}".format(result.get_result())
+    
+    time.sleep(1)
 }}}
 
 ----
