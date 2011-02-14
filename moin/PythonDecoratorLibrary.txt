@@ -1712,5 +1712,56 @@ Foo().x = 20
 assert Foo().x == 20
 }}}
 
+== Singleton ==
+
+{{{
+#!python
+from Queue import Queue
+from threading import Thread
+        
+class asynchronous(object):
+    class Result(object):
+        def __init__(self, queue):
+            self.queue = queue
+            
+        def end(self):
+            self.queue.join()
+            return self.queue.get()
+    
+    def __init__(self, func):    
+        self.func = func
+        def threaded(*args, **kwargs):
+            self.queue.put(self.func(*args, **kwargs))
+        
+        self.threaded = threaded
+        
+    def __call__(self, *args, **kwargs):
+        return self.func(*args, **kwargs)
+        
+    def start(self, *args, **kwargs):
+        self.queue = Queue()
+        thrd = Thread(target = self.threaded, args = args, kwargs = kwargs);
+        thrd.start();
+        
+        return asynchronous.Result(self.queue)
+#
+# Sample use:
+#
+
+@asynchronous
+def long_process(num):
+    import time
+    time.sleep(10)
+    
+    return num * num
+
+result = long_process.start(12)
+
+for i in range(10):
+    print i
+
+print "result {0}".format(result.end())
+}}}
+
 ----
 CategoryDocumentation CategoryDocumentation
