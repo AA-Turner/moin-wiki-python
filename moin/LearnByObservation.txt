@@ -59,3 +59,25 @@ HI
 >>> print a
 None
 }}}
+
+=== staticmethod vs. classmethod ===
+
+{{{
+#!python
+>>> class C:
+...     a=1
+...     @staticmethod
+...     def temp():
+...             print C.a
+... 
+>>> C.temp()
+1
+>>> class C:
+...     a=1
+...     @classmethod
+...     def temp(cls):
+...             print cls.a
+... 
+>>> C.temp()
+1
+}}}
