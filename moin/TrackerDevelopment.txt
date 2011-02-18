@@ -27,20 +27,22 @@ For python-dev, we use a slightly modified version of Roundup which has
 some features that are not yet in the core Roundup. To keep track of
 the changes, we keep a vendor branch of roundup.
 
-Check out [[http://svn.python.org/view/tracker/roundup-src|/tracker/roundup-src]] from the python subversion
+Check out [[http://svn.python.org/view/tracker|/tracker]] from the python subversion
 repository as documented on http://python.org/dev/tools/. For
 example, here's how to do read-only (if you don't have commit privileges) and read/write (if you have them) checkouts:
 
 {{{
-  svn co http://svn.python.org/projects/tracker/roundup-src
-  svn co svn+ssh://pythondev@svn.python.org/tracker/roundup-src
+  svn co http://svn.python.org/projects/tracker
+  svn co svn+ssh://pythondev@svn.python.org/tracker
 }}}
 
-Install this roundup somewhere by running setup.py
+The tracker directory contains the roundup source and the instances (e.g. python-dev, jython, meta tracker).
+
+cd in the tracker/roundup-src dir and install Roundup using setup.py (note: you might need privileges to run this command):
 
 {{{
   cd roundup-src
-  python setup.py install --prefix /opt/tracker-roundup/
+  sudo python setup.py install --prefix /opt/tracker-roundup/
 }}}
 
 == Install and configure PostgreSQL ==
