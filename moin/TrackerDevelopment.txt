@@ -60,7 +60,7 @@ development environment behave exactly like the environment the real
 tracker runs in.
 
 Details on how to install PostgreSQL is outside the scope of this Wiki
-Page (''sudo apt-get install postgresql'' should be enough). 
+Page ({{{sudo apt-get install postgresql}}} should be enough). 
 Both version 7.4 and 8.1 of PostgreSQL has been tested without
 any known problems. It has been reported that 8.2 and 8.3 work well.
 
@@ -115,7 +115,21 @@ postgres=# alter user roundup with createdb;
 
 == Installing psycopg or psycopg2 ==
 
-You need to install psycopg or psycopg2. Download it from http://www.initd.org, as pre-packaged versions have been reported to cause problems.
+You need to install psycopg or psycopg2.
+Download it from http://www.initd.org, as pre-packaged versions have been reported
+to cause problems (note: this warning has been here for a while and might be obsolete).
+
+If you downloaded the latest .tar.gz extract it and install it:
+{{{
+tar xzf psycopg2-2.3.2.tar.gz
+cd psycopg2-2.3.2/
+python setup.py build
+sudo python setup.py install
+}}}
+If during the ''python setup.py build'' you get:
+ * "fatal error: Python.h: No such file or directory", you need to {{{sudo apt-get install python-dev}}};
+ * "fatal error: libpq-fe.h: No such file or directory", you need to {{{sudo apt-get install libpq-dev}}};
+If you are having other problems or installing a different version check psycopg2-2.3.2/INSTALL.
 
 == Checkout spambayes_integration ==
 
