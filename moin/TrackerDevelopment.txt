@@ -60,7 +60,8 @@ development environment behave exactly like the environment the real
 tracker runs in.
 
 Details on how to install PostgreSQL is outside the scope of this Wiki
-Page. Both version 7.4 and 8.1 of PostgreSQL has been tested without
+Page (''sudo apt-get install postgresql'' should be enough). 
+Both version 7.4 and 8.1 of PostgreSQL has been tested without
 any known problems. It has been reported that 8.2 and 8.3 work well.
 
 Access configuration of postgresql can be tricky. You need to make
@@ -71,11 +72,25 @@ as the postgresql user you've configured in roundup's configuration.
 For a development environment with no demands on security, the easiest
 way to configure this is probably to allow all users to connect as any
 database user as long as the request originates from the local
-host. This can be accomplished by the following lines in pg_hba.conf:
+host. This can be accomplished editing pg_hba.conf (usually found in
+/etc/postgresql/8.x/main/ -- you might need privileges). The end of the
+file should look like this (the three changed lines are preceded by ##):
 
 {{{
-local   all         all                                             trust
-host    all         all         127.0.0.1         255.255.255.255   trust
+# Database administrative login by UNIX sockets
+##local   all         postgres                          ident
+local   all         postgres                          trust
+
+# TYPE  DATABASE    USER        CIDR-ADDRESS          METHOD
+
+# "local" is for Unix domain socket connections only
+##local   all         all                               ident
+local   all         all                               trust
+# IPv4 local connections:
+##host    all         all         127.0.0.1/32          md5
+host    all         all         127.0.0.1/32          trust
+# IPv6 local connections:
+host    all         all         ::1/128               md5
 }}}
 
 '''PLEASE NOTE''': This is not a secure configuration on a multi-user
@@ -83,14 +98,17 @@ machine.
 
 After the change in pg_hba.conf, reload your postgreSQL database to
 make sure it knows about your new access
-configuration. Something similar to ''/etc/init.d/postgresql reload''
+configuration. Something similar to 
+{{{
+sudo /etc/init.d/postgresql reload
+}}}
 should do the trick on Unix-like platforms.
 
 Create a database user that is allowed to create databases. This user
 will be used when roundup connects to the database.
 
 {{{
-# psql -U postgres
+$ psql -U postgres
 postgres=# create user roundup;
 postgres=# alter user roundup with createdb;
 }}}
