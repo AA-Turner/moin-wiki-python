@@ -74,7 +74,7 @@ way to configure this is probably to allow all users to connect as any
 database user as long as the request originates from the local
 host. This can be accomplished editing pg_hba.conf (usually found in
 /etc/postgresql/8.x/main/ -- you might need privileges). The end of the
-file should look like this (the three changed lines are preceded by ##):
+file should look like this (the four changed lines are preceded by ##):
 
 {{{
 # Database administrative login by UNIX sockets
@@ -90,7 +90,8 @@ local   all         all                               trust
 ##host    all         all         127.0.0.1/32          md5
 host    all         all         127.0.0.1/32          trust
 # IPv6 local connections:
-host    all         all         ::1/128               md5
+##host    all         all         ::1/128               md5
+host    all         all         ::1/128               trust
 }}}
 
 '''PLEASE NOTE''': This is not a secure configuration on a multi-user
@@ -206,6 +207,14 @@ Initialize your roundup instance:
 Provide a password for the 'admin' user when asked for.
 
 '''Note''': you have to provide the full path to your python-dev directory, otherwise the command will fail.
+
+If you are getting the error:
+ * "{{{roundup.hyperdb.DatabaseError: FATAL:  password authentication failed for user "roundup"}}}" check again pg_hba.conf;
+ * "{{{roundup.configuration.OptionUnsetError: MAIL_DOMAIN is not set and has no default}}}" set the option in python-dev/config.ini, [mail] section, domain;
+
+'''Note''': it is possible to set the [mail] domain to "NO DEFAULT" to make the {{{init}}} work.
+However Roundup needs a mail server to send mails so you'll need to configure at the least the admin mail later on.
+It might be possible to have Roundup work with no mails at all, but the right configuration is still unknown (feel free to experiment with it!).
 
 Start your roundup instance:
 
