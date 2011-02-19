@@ -222,12 +222,19 @@ Start your roundup instance:
 /opt/tracker-roundup/bin/roundup-server -p 9999 python-dev=<your python-dev directory>
 }}}
 
+You will have to use this command every time you (re)start roundup, so it's easier to create an alias for it with:
+{{{
+alias start-roundup='/opt/tracker-roundup/bin/roundup-server -p 9999 python-dev=<your python-dev directory>'
+}}}
+and add it to your {{{.bashrc}}}.
+
 You should now be able to browse http://localhost:9999/python-dev/ and
 get a roundup instance that looks just like http://bugs.python.org, except for some missing new values for fields like Stages and Keywords. It's possible to replace '''initial_data.py'''  with an [[attachment:initial_data_updated.py | updated version]] so that your fields will have values that match those currently present in the Python Tracker.
 
 The IDs for values in a given field might be different from those in the Python Tracker. This should only be a problem if you try to import CSV files from one tracker into the other.
 
-After you created your user, you can use roundup-admin to set developer privileges:
+Create an user from User->register in the left sidebar.
+You can then use roundup-admin to set developer privileges for it:
 {{{
 /opt/tracker-roundup/bin/roundup-admin -i <your python-dev directory>
 Roundup 1.4.10 ready for input.
