@@ -164,6 +164,7 @@ class_<Map>("Map")
         # Mess arount with elements of args.
     }}}
 
+==== Method 1 (old way) ====
 You can make one with the
 library's implementation details.  Be warned that these interfaces may
 change, but hopefully we'll have an "official" interface for what you
@@ -197,6 +198,34 @@ class_<foo>("foo")
     .def("bar",bar);
 }}}
 because function_object is a function, not a class.
+
+==== Method 2 (new way) ====
+There's a poorly documented function called '''raw_function''' in boost::python that makes defining
+the functions with arbitrary arguments much easier.  Another advantage of this method is that this is
+not using any functionality from the '''details''' namespace, so this should be more stable.
+
+This is our goal:
+{{{
+def function(*args, **kwargs):
+	# do stuff here
+}}}
+
+To accomplish this from C++, we must wrap our functionality into a function with the following signature:
+{{{
+using namespace boost::python;
+
+object bar(tuple args, dict kwargs)
+{
+	// do stuff here
+}
+}}}
+Then we can use '''raw_function''' to add it to our class:
+{{{
+class_<foo>("foo")
+    .def("bar", raw_function(bar, 1) );
+}}}
+
+'''raw_function''' takes two parameters - the function pointer and the minimum number of arguments.
 
 === getter and setter methods as a property ===
 Suppose you have class "C" with methods "getA" and "setA" and 
