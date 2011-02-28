@@ -291,7 +291,9 @@ This bug has been reported to Sun, but is not yet public on the Java bug databas
 
 On some versions of the JVM, there are problems with bind'ing and connect'ing sockets using IPV6 addresses, even though the OS platform ostensibly supports IPV6. See this bug on the Java bug database: [[http://bugs.sun.com/view_bug.do?bug_id=6230761|NIO channels with IPv6 on Windows]]
 
-The mechanism for retrieving IP address is the '''getaddrinfo()''' function, which you pass parameters to specify the kind of addresses you're interested in. The function returns a 5-tuple, the last element of which is a tuple of (ip-address, port), which you then use to bind or connect your socket. For example
+There have also been reports of [[http://bugs.jython.org/issue1711|IPV6 problems with java.nio on Windows 7 64 bit]], so these instructions also apply to that platform, since the jython socket module uses java.nio extensively.
+
+The most appropriate mechanism for retrieving IP addresses is the '''getaddrinfo()''' function, to which you pass parameters to specify the kind of addresses you're interested in. The function returns a 5-tuple, the last element of which is a tuple of (ip-address, port), which you then use to bind or connect your socket. For example
 
 {{{
 >>> import socket
@@ -319,7 +321,7 @@ If you don't care whether you receive IPV4 or IPV6 addresses, specify the '''fam
 ('0:0:0:0:0:0:0:1', 80)
 }}}
 
-The problem comes because of incomplete IPV6 support in the JVM, particularly on older JVMs, such as the bug mentioned above. So, on some systems, if you try to use IPV6 addresses, you will get a '''java.net.SocketException'''.
+A problem arises because of incomplete IPV6 support in the JVM, particularly on older JVMs, such as the bugs mentioned above. So, on some systems, if you try to use IPV6 addresses, you will get a '''java.net.!SocketException'''.
 
 This is problematic in jython, because there are multiple modules, such as telnetlib, httplib, smtplib, etc, that use the socket library to retrieve addresses, '''but which use the AF_UNSPEC parameter to getaddrinfo()'''. This means that those modules may be returned IPV6 addresses, which they will try to '''bind''' or '''connect''', and possibly fail, for the reasons discussed above. Which would mean you get failures from those modules.
 
@@ -350,6 +352,8 @@ py_dot_org = httplib.HTTPConnection('www.python.org')
 }}}
 
 To restore normal behaviour of the '''AF_UNSPEC''' family, pass a '''False''' value to '''socket._use_ipv4_addresses_only()'''
+
+'''NB''': This workaround '''only''' affects the '''getaddrinfo()''' function. If you pass traditional (hostname, port) tuples containing IPV6 addresses to socket functions, e.g. ("::1", 80), you will '''not''' be able to avail of this workaround.
 
 === Internationalized Domain Name support ===
 
