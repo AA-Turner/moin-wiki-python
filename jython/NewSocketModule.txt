@@ -291,7 +291,7 @@ This bug has been reported to Sun, but is not yet public on the Java bug databas
 
 On some versions of the JVM, there are problems with bind'ing and connect'ing sockets using IPV6 addresses, even though the OS platform ostensibly supports IPV6. See this bug on the Java bug database: [[http://bugs.sun.com/view_bug.do?bug_id=6230761|NIO channels with IPv6 on Windows]]
 
-There have also been reports of [[http://bugs.jython.org/issue1711|IPV6 problems with java.nio on Windows 7 64 bit]], so these instructions also apply to that platform, since the jython socket module uses java.nio extensively.
+There have also been reports of [[http://bugs.jython.org/issue1711|IPV6 problems with java.nio on Windows 7 64 bit]], so these instructions also apply to that platform, since the jython socket module uses java.nio extensively. Further information: the reporter of that bug has found that the problem appears on JDK 1.6, and '''goes away when he uses a release of JDK 1.7''', which is still in pre-release.
 
 The most appropriate mechanism for retrieving IP addresses is the '''getaddrinfo()''' function, to which you pass parameters to specify the kind of addresses you're interested in. The function returns a 5-tuple, the last element of which is a tuple of (ip-address, port), which you then use to bind or connect your socket. For example
 
