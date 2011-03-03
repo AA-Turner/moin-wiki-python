@@ -1,0 +1,16 @@
+= Mercurial setup =
+
+Mercurial services (hg.python.org) are currently hosted on dinsdale.python.org. Everything is under user `hg`'s home directory in `/data/hg`.
+
+Mercurial itself uses a recent stable build, with a couple of patches.  The Mercurial tree is in `~hg/mercurial`. The patches are in named branch `local`, which is branched off branch `stable`. This source tree is installed in `~hg/lib/python`, using `make install-home`.
+
+Scripts are in `~hg/bin`, which is itself versioned using Mercurial:
+
+ * `genauth` regenerates the `.ssh/authorized_keys` file using the current committers' public keys
+ * `hg-ssh` is used as a shell for remote logins of user `hg`, in order to restrict them to a few safe commands
+ * `gcrepos` detects "stale" repositories in a directory ("stale" meaning having received no new changesets since their creation), so as to enable garbage-collecting of unused server-side clones; this still needs wrapping in a cronjob
+ * `hg` itself is the Mercurial executable installed by `make install-home`
+
+
+----
+CategoryPythonWebsite
