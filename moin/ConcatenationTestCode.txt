@@ -184,3 +184,89 @@ gc.enable()
 }}}
 
 -- Paddy3118 2009-01-01 09:48:00
+
+
+Thanks for this. I've run a modified version of above examples on Windows for Python 2.7.1 and Python 3.2. And strangely '''Python 3.2 is 2x slower'''.
+{{{
+Z:\Code\Python>"c:\Program Files\Python3.2\python.exe" string_concatenation.py
+Loops 100
+concatenate1 duration: 0.0s
+Size: 173285
+concatenate2 duration: 0.015000104904174805s
+Size: 173285
+concatenate3 duration: 0.0s
+Size: 173285
+
+Loops 1000
+concatenate1 duration: 10.375s
+Size: 17482535
+concatenate2 duration: 10.17199993133545s
+Size: 17482535
+concatenate3 duration: 0.06200003623962402s
+Size: 17482535
+
+Z:\Code\Python>"c:\Program Files\Python2.7.1\python.exe" string_concatenation.py
+Loops 100
+concatenate1 duration: 0.0160000324249s
+Size: 173285
+concatenate2 duration: 0.0s
+Size: 173285
+concatenate3 duration: 0.0s
+Size: 173285
+
+Loops 1000
+concatenate1 duration: 5.17199993134s
+Size: 17482535
+concatenate2 duration: 5.07800006866s
+Size: 17482535
+concatenate3 duration: 0.0320000648499s
+Size: 17482535
+}}}
+
+{{{#!python
+from time import time
+s = 'qwertyuiopasdfghjklzxcvbnm123456789'
+LOOPS = 10
+
+def timeit(f, *args):
+    def new_f(*args):
+        t = time()
+        result = f(*args)
+        print('{0} duration: {1}s'.format(f.__name__,time()-t))
+        print('Size: {result}'.format(result=result))
+    return new_f
+
+@timeit
+def concatenate1(s, loops):
+    """slow and memory consuming"""
+    r = s
+    for x in range(loops):
+        r += x*s
+    return len(r)
+
+@timeit
+def concatenate2(s, loops):
+    """faster using join in loop"""
+    r = s
+    for x in range(loops):
+        r = "".join((r, x*s))
+    return len(r)
+
+@timeit
+def concatenate3(s, loops):
+    """much faster using list"""
+    r = [s]
+    for x in range(loops):
+        r.append(x*s)
+    r = "".join(r)
+    return len(r)
+
+if __name__ == '__main__':
+    for loops in (100, 1000):
+        print("\nLoops {}".format(loops))
+        concatenate1(s, loops)
+        concatenate2(s, loops)
+        concatenate3(s, loops)
+}}}
+
+-- llakomy 2011-03-10 12:03:00
