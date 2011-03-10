@@ -1,0 +1,65 @@
+## Replace the ... text below with a title and a summary of the problem.
+## Feel free to remove any remaining comments once you're done!
+
+= Asking for Help: ... =
+
+system: ubuntu connected to a serial port connected datalogger
+
+python program
+------------------------------------------------------------------------------
+#! /usr/bin/env python
+import serial
+import time
+ser = serial.Serial('/dev/ttyS0',9600, bytesize=8, timeout=9)
+ser.open()		
+if ser.isOpen():					
+    ser.write( b'\x1b' )  #this is the binary format for chr(27) esc
+    #time.sleep(1)
+    response = ser.read(ser.inWaiting())
+    data = ser.readlines()
+#data = data.split()
+f = open('../../../minicom/python.txt', 'a')
+s = str(data)
+f.write(s)
+f.close()
+data.Sstrip("\n\r")
+print data
+ser.close()
+print "port closed"
+-----------------------------------------------------------------------------
+
+sample of the data received
+'10-3-11\t15:28\t23,8\t14,4\t0\r\n', '10-3-11\t15:35\t12,0\t13,5\t8\r\n', '10-3-11\t15:45\t12,0\t14,0\t1\r\n', '10-3-11\t15:46\t12,0\t14,0\t0\r\n', '10-3-11\t15:55\t12,0\t13,5\t11\r\n', '10-3-11\t16:4\t12,0\t13,5\t0\r\n', '10-3-11\t16:5\t23,8\t14,4\t0\r\n', '10-3-11\t16:5\t12,0\t13,5\t2\r\n', '10-3-11\t16:6\t12,0\t13,5\t0\r\n']
+
+data should look like this example
+10-3-11	14:31	21,9	4,2	0
+10-3-11	14:33	11,7	13,5	11
+10-3-11	14:39	11,7	13,5	0
+10-3-11	14:39	24,8	14,4	0
+10-3-11	14:39	8,5	18,9	0
+10-3-11	14:44	11,7	13,5	10
+10-3-11	14:54	12,0	13,0	5
+10-3-11	15:4	12,0	13,5	10
+10-3-11	15:8	12,0	13,5	0
+10-3-11	15:9	23,8	14,4	0
+10-3-11	15:14	12,0	13,5	5
+10-3-11	15:16	12,0	13,5	0
+10-3-11	15:17	23,8	14,4	0
+10-3-11	15:18	11,7	18,9	0
+
+is there anyone with a similar problem
+fspr
+
+## Insert your problem description here. You may provide code samples using syntax like this:
+## {{{#!python
+## ...
+## }}}
+
+## Leave the note below so that editors can follow the instructions...
+
+{{{#!wiki note
+When ''answering'' questions, add the CategoryAskingForHelpAnswered category when saving the page. This will move the link to this page from the questions section to the answers section on the [[Asking for Help]] page.
+}}}
+
+----
+CategoryAskingForHelp
