@@ -6,6 +6,7 @@
  * Tarek Ziadé (distutils2)
  * Thomas Wouters
  * Martin v. Löwis
+ * Allison Randal (Ubuntu)
 
 = Agenda =
 
@@ -17,6 +18,9 @@
  * [[#Numpy| Numpy]]
  * [[#Namespace packages| Namespace package]]
  * [[#Licensing issue| Licensing issue]]
+
+=== Day 2 ===
+ * [[#Bento & distutils2 discussion|Bento & distutils2 discussion]]
 
 === Pending ===
  * multiple versions (cont)
@@ -182,3 +186,18 @@ Paul Hildebrandt asked about meeting with Matthias Klose and Van about licensing
 
 === Action ===
  * Toshio sent email to Tom Callaway to see if Tom thought the licensing could cause issues.  If so, that could be enough for Paul to get it brought to the right people's attention to remove the possibly problematic clause.
+
+== Day 2 ==
+
+=== Bento & distutils2 discussion ===
+ * David showed Toshio, Barry, and Tarek how Bento works
+   * Takes ideas from autotools for what configuration is available, has declarative config file (similar to distutils2) for simple things, and has good support for extending in a simple manner.
+ * Discussion of distutils2 extension points and how bento could be integrated in as an alternative builder.
+ * distutils2 Command class is still in need of work or perhaps replacement.
+ * Command class has received some work to:
+  * Take out old code, etc and use stdlib modules instead (arg parsing => stdlib, for instance).
+  * Have hooks to use different compilers and compiler flags depending on what we're building/building for
+  * Want more hooks
+ * What is the API provided for hooks?
+  * hook that is called after metadata is read => (Distribution object, cfg file metadata)
+  * hook that is called pre and post every distutils2 Command <= (Distribution object, Command object)
