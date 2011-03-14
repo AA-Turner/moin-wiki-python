@@ -21,6 +21,7 @@
 
 === Day 2 ===
  * [[#Bento & distutils2 discussion|Bento & distutils2 discussion]]
+ * [[#Byte/unicode issueson python3|Byte/unicode issues on python3]]
 
 === Pending ===
  * multiple versions (cont)
@@ -204,3 +205,19 @@ Paul Hildebrandt asked about meeting with Matthias Klose and Van about licensing
 
 ==== Action ====
  * David and Tarek will continue talking about the Command class.  Working on what the command class needs to look like to support numpy, scipy, bento in a reasonable manner.
+
+=== Byte/unicode issues on python3 ===
+==== Surrogate escape ====
+
+===== Problem =====
+We now have surrogateescape being used to deal with undecodable bytes on system interfaces (for instance, os.listdir, os.environ).  Strings that are decoded using this throw a traceback when printed output to files (or otherwise leaving python's control) unless we explicitly change the errors method to use surrogateescape (to reencode the data properly).  The question is how is this better than the python2 byte str which would sometimes traceback when implicitly being converted to unicode.
+
+===== Rationale =====
+Talked to Martin and came up with the idea that as long as the surrogateescaped string remains within python or output to the same sort of system interfaces as it was created with (os.environ, open and other filesystem interfaces) there are no tracebacks, things simply work.  Programmers are going to have to deal with undecodable bytes when they transfer it to a different type of interface (outputing into a file, printing to the terminal) anyway, so a traceback is appropriate at that point.
+
+The best practice for programmers needs to evolve.  Programmers will need to convert between surrogateescaped strings and strings escaped in a unicode compatible manner (xmlescaped byte value, etc).  The two options that seem immediately present are to convert immediately upon getting the values (then the programmers can check that their code uses system interfaces) and if they have those, then they can transform the strings at that time.  If they think that they are going to use those strings in other system interfaces (like grabbing the filename in os.listdir, then opening that file and reading its contents) they'll need to keep the surrogateescaped filename around somehow so it will be more appropriate for them to either stay with the surrogateescape format or store two versions of the filename.
+
+==== Import of non_ascii module names ====
+
+==== Action ====
+ * Talk about whether we have common concerns about non_ascii module names
