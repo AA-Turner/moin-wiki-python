@@ -1,4 +1,4 @@
-The Moin''''''Moin installation is on dinsdale, and is a stock Debian package.
+The !MoinMoin installation is on dinsdale, and is a stock Debian package.
 
 There are 4 instances:
 
@@ -7,14 +7,15 @@ There are 4 instances:
  * pycon.py
  * psf.py
 
-Their configuration files are in /data/moin/instances/ ; there's also a farmconfig.py
-containing global settings.
+Their configuration files are in `/data/moin/instances/`; there's also a `farmconfig.py` containing global settings.
 
 After changing any of the configuration files, you should restart Apache
 for the changes to take effect: `apache2ctl graceful`.
 This should not cause any visible downtime to endusers.
 
-Moin''''''Moin uses WSGI, which is configured to restart after 1000
+The configuration files are kept in a mercurial repository, so please commit your changes with `hg commit -u yourname` if you change anything.
+
+!MoinMoin uses WSGI, which is configured to restart after 1000
 requests, so any such change will propagate eventually
 (typically after about 1h).
 
