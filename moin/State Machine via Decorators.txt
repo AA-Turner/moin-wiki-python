@@ -1,6 +1,12 @@
 == State Machine Decorator Module ==
+<<TableOfContents(3)>>
+
+=== Overview ===
+This module provides a set of decorators that are useful for implementing state machines of the type described by UML 2.0 state charts. The overhead of these decorators may be too high for them to be useful in parsing applications.
+
 The code for the state machine decorator module is given below.  Examples are given following the code.
 
+=== License ===
 {{{
 Copyright (C) 2010, 2011 Rodney Drenth
 All rights reserved.
@@ -29,6 +35,7 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 }}}
+=== Python Code ===
 {{{
 #!/bin/env/python
 
@@ -148,7 +155,7 @@ class _StateVariable(object):
 
       nmro = [crnt]
       lhead = itertools.takewhile( lambda x: x != svCtxt, crnt.__mro__)
-#      nmro.extend(lhead)
+
       if svCtxt in cc.__mro__:
          ltail = itertools.dropwhile( lambda x: x!= svCtxt, cc.__mro__)
       else:
@@ -235,7 +242,6 @@ class TransitionTable(object):
          j = "Expected %s Got %s."%(len(self.eventList), len(nslList))
          raise RuntimeError("Wrong number of states in transition list.\n%s"%j)
       subState.nextStates = dict(zip(self.eventList, nslList))
-#      self.nextStates[subState = dict(zip....)
 
 
 # -----------------------------------------------------------------------------
@@ -313,6 +319,7 @@ def transitionevent( state_table):
 
 == Examples of Use ==
 === Simple Example ===
+The example has three states, which rotate to the next state whenever the writeName method is called. In StateA, the text is printed out in lower case. In  states StateB and StateC the text is printed out in upper case.
 {{{
 #!/bin/env/python
 
@@ -352,7 +359,7 @@ if __name__=='__main__':
       ctxt.writeName(day)
    x = raw_input("done>")
 }}}
-Output
+==== Output ====
 {{{
 monday
 TUESDAY
@@ -487,9 +494,9 @@ if __name__=='__main__':
    app.MainLoop()
 }}}
 
-Explanation
+==== Explanation ====
 
-There are actually two states in the context. One is for the state of the door, opened or closed.  The other is for the main controller.  The DoorOpen and DoorClosed states simply translate the onToggleDoor event to invoke either onCloseDoor or onOpenDoor.
+There are actually two states in the context. One is for the state of the door, opened or closed.  The other is for the main controller.  The !DoorOpen and !DoorClosed states simply translate the onToggleDoor event to invoke either onCloseDoor or onOpenDoor.
 
 The @transition decorator indicates the method can cause a state transition. The method body will be invoked if one is provided. The parameter on the decorator is the state table that governs the transition. When leaving a state, the state's onLeave method is called, if one is defined. When entering a state the state's onEnter method is called.
 
@@ -500,7 +507,7 @@ The @transitionevent decorator is a combination of the above two. A state depend
 is invoked, and it may cause a transition to a new state.  The transition happens after the 
 event method is invoked.
 
-Since states are subclasses of the context, or subclasses of other states, rules governing method or attribute resolution apply. For instance DoorClosed is a subclass of DoorOpened, so when 'onEnter' of the DoorClosed state is called, it uses the one for DoorOpened. Since DoorClosed has defined a different value for doorLabel, the correct label is set on the 
+Since states are subclasses of the context, or subclasses of other states, rules governing method or attribute resolution apply. For instance !DoorClosed is a subclass of !DoorOpened, so when 'onEnter' of the !DoorClosed state is called, it uses the one for !DoorOpened. Since !DoorClosed has defined a different value for doorLabel, the correct label is set on the 
 door button.  
 
 === Alternative Miss Grant's Controller Example ===
@@ -535,7 +542,7 @@ class MyFrame(wx.Frame, dsm.ContextBase):
       self.onInit()	
 
    def onEnter(self):
-      print "Shouldn't get here. Should call one of the state's onEnter functions instead."
+      print "Shouldn't get here. Should call some state's onEnter function instead."
 
    @dsm.transition(dtable)
    def onToggleDoor(self, event): pass
@@ -633,12 +640,12 @@ if __name__=='__main__':
    app.MainLoop()
 }}}
 
-Explanation:
+==== Explanation ====
 
 There are also two state tables in this example.  The difference being that the
-DoorClosed state acts as the context for the second set of states.  The onEnter
-method of the DoorClosed state re-initializes the second state to Active.  In the
-DoorClosed state, the onLightOn, onOpenDrawer, and onClosePanel can cause transitions
+!DoorClosed state acts as the context for the second set of states.  The onEnter
+method of the !DoorClosed state re-initializes the second state to Active.  In the
+!DoorClosed state, the onLightOn, onOpenDrawer, and onClosePanel can cause transitions
 on the second state varible. These methods are events on the first state 
-variable(dstate), and when in the DoorOpen state, the events do not get invoked 
+variable(dstate), and when in the !DoorOpen state, the events do not get invoked 
 for the xtable related state.
