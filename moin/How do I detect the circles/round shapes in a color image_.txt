@@ -1,0 +1,72 @@
+## page was renamed from Asking for Help/How do
+Hello everybody!
+
+I just installed the python-opencv package on Ubuntu 10.10 and I was wondering how I can use it to detect the circles/round figures in an RGB image.
+I am not an expert in images and I do not know what terms like HSV and 8-bit image mean(I know these two now, of course).
+
+I tried this code, which I adapted from a website, and it doesn't work:
+{{{#!python
+
+import cv
+	
+def main():
+	
+	storage = cv.CreateMemStorage(0)
+	
+	im = cv.LoadImageM("Proba1.jpg")
+	size = (640, 480)
+	hsv_im = cv.CreateImage(size, cv.IPL_DEPTH_8U, 3)
+	thresholded = cv.CreateImage(size, cv.IPL_DEPTH_8U, 1)
+	thresholded2 = cv.CreateImage(size, cv.IPL_DEPTH_8U, 1)
+	 
+	hsv_min = cv.Scalar(0, 50, 170, 0)
+	hsv_max = cv.Scalar(10, 180, 256, 0)
+	hsv_min2 = cv.Scalar(170, 50, 170, 0)
+	hsv_max2 = cv.Scalar(256, 180, 256, 0)
+	
+	cv.CvtColor(im, hsv_im, cv.CV_BGR2HSV)
+	cv.InRangeS(im, hsv_min, hsv_max, thresholded)
+	cv.InRangeS(im, hsv_min2, hsv_max2, thresholded2)
+	cv.cvOr(thresholded, thresholded2, thresholded)
+	# pre-smoothing improves Hough detector
+	cv.Smooth(im, im, cv.CV_GAUSSIAN, 9, 9)
+	
+	
+	circles = cv.HoughCircles(im, im, cv.CV_HOUGH_GRADIENT, 2, thresholded.height/4, 100, 40, 20, 200)
+	
+	
+if __name__ == '__main__':
+	main()
+
+}}}
+
+The error I get is: OpenCV Error: Sizes of input arguments do not match () in cvCvtColor, file /build/buildd/opencv-2.1.0/src/cv/cvcolor.cpp, line 2208OpenCV Error: Sizes of input arguments do not match () in cvCvtColor, file /build/buildd/opencv-2.1.0/src/cv/cvcolor.cpp, line 2208
+
+I really do NOT understand the whole code above(not the error, the code) since there is no good documentation about opencv and python available.
+I also tried installing pyopencv but it didn't work.
+
+I would be very glad if someone could show me a code sample that takes a .jpg image, makes it 8-bit(because this is another error it gives me) and detects the circles in it. It would also be nice if you could tell me a good opencv tutorial for python.
+
+Thanks for your time and interest and sorry for my grammar.
+
+Calin
+## Replace the ... text below with a title and a summary of the problem.
+## Feel free to remove any remaining comments once you're done!
+
+= Asking for Help: ... =
+
+...
+
+## Insert your problem description here. You may provide code samples using syntax like this:
+## {{{#!python
+## ...
+## }}}
+
+## Leave the note below so that editors can follow the instructions...
+
+{{{#!wiki note
+When ''answering'' questions, add the CategoryAskingForHelpAnswered category when saving the page. This will move the link to this page from the questions section to the answers section on the [[Asking for Help]] page.
+}}}
+
+----
+CategoryAskingForHelp
