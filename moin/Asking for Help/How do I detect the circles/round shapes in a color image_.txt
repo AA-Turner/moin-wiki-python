@@ -65,9 +65,34 @@ Calin
 
 ## Leave the note below so that editors can follow the instructions...
 
+A good place to start is the documentation for OpenCV for python.   In particular, the cookbook page(
+http://opencv.willowgarage.com/documentation/python/cookbook.html) will be of help. The documentation for
+the the module was produced by sphinx and leaves much to be desired. 
+
+For you're problem, I'd start by replacing the line
+{{{
+	size = (640, 480)
+}}}
+with
+{{{
+        size = cv.GetSize(im)
+}}}
+That will cause the cv.CreateImage() calls to create image objects sized with the same dimensions as your input
+image, whatever it may be. If you really want to have a 640x480 sized image as a result, you could use the cv.Resize()
+call.
+
+The cv.CvtColor() call changes the color model that's used for storing the data from RGB to HSV.  This is required in
+order to properly detect changes in hue, brightness, and saturation levels. Since you're looking for circles, you likely need to detect changes in hue(color), or at least look for specific hues.
+
+The cv.HoughCircles() call is what actually finds the circles.  Its a rather lengthy computation which results finally
+in a list of circles. There are some parameters in the call that might need to be adjusted in order for it to do a good
+job of detection. But alas I did not find documentation for this function on the site I mentioned above.
+
+
 {{{#!wiki note
 When ''answering'' questions, add the CategoryAskingForHelpAnswered category when saving the page. This will move the link to this page from the questions section to the answers section on the [[Asking for Help]] page.
 }}}
 
 ----
 CategoryAskingForHelp
+CategoryAskingForHelpAnswered
