@@ -6,7 +6,7 @@ Porting Python Code to 3.0
 
 There are three ways to support Python 3:
 
-1) maintain a Python 2 base and use 2to3 to generate Python 3 code
+1) maintain a Python 2 base and use 2to3_ to generate Python 3 code
 2) make code run unmodified in both Python 2 and Python 3
 3) maintain separate releases for Python 2 and Python 3
 
@@ -16,15 +16,15 @@ Each approach has its strengths and weaknesses.
 Approach 1: Maintain a Python 2 base and use 2to3 to generate Python 3 code
 ===========================================================================
 
-Make sure the code runs in Python 2.6 and use 2to3
+Make sure the code runs in Python 2.6 and use 2to3_
 
 This approach does *not* require that support for versions before 2.6 needs to be dropped.
 Even the need to test with 2.6 is not strict - one could just as well use this approach on
 code that has never been tested with 2.6, and is only known to work on 2.5.
 
-2to3 is a Python program that reads Python 2.x source code and applies a series of fixers to transform it into valid Python 3.x code. The standard library contains a rich set of fixers that will handle almost all code. 2to3 supporting library lib2to3 is, however, a flexible and generic library, so it is possible to write your own fixers for 2to3. lib2to3 could also be adapted to custom applications in which Python code needs to be edited automatically.  For more information about 2to3, see: http://doc.python.org/library/2to3.html
+2to3_ is a Python program that reads Python 2.x source code and applies a series of fixers to transform it into valid Python 3.x code. The standard library contains a rich set of fixers that will handle almost all code. 2to3_ supporting library *lib2to3* is, however, a flexible and generic library, so it is possible to write your own fixers for 2to3_. *lib2to3* could also be adapted to custom applications in which Python code needs to be edited automatically.  For more information about 2to3_, see: http://doc.python.org/library/2to3.html
 
-Usage of 2to3 can be integrated into the installation process: 2to3 can be run as a build step in distutils. With distutils, the following fragments are needed in a setup.py::
+Usage of 2to3_ can be integrated into the installation process: 2to3_ can be run as a build step in distutils. With distutils, the following fragments are needed in a setup.py::
 
   try:
       from distutils.command.build_py import build_py_2to3 as build_py
@@ -44,7 +44,7 @@ For distribute, this approach can be expressed as::
     use_2to3=True
   )
 
-Manual changes (not done by 2to3):
+Manual changes (not done by 2to3_):
 
 * os.path.walk => os.walk: see issue4601_.
 * rfc822 => email
@@ -79,7 +79,7 @@ Approach 2: Make code run unmodified in both Python 2 and Python 3
 
 Supporting code that runs in both Python 2.6 and Python 3 is not much more difficult than porting to Python 3 (see above for more details).  However, supporting older versions--like 2.3, 2.4, and 2.5--is much more difficult.  This requires avoiding any syntax that only works in one version or the other, so it often involves resorting to hacks.  These hacks make the code more awkward than it would be in Python 3 or in Python 2, but many people find that this is better than supporting only one version or the other.  When support for Python 2 is eventually dropped, these hacks can be removed.
 
-Python 2.6 introduces forward-compatibility for many new Python 3 features.  The Python 3 builtins are accessible by doing an import from `future_builtins`.  To use the new print function, use `from __future__ import print_function`, and to make string literals be interpreted as unicode, use `from __future__ import unicode_literals`.  These forward-compatability features, and many others, are described in greater detail in `What's New in Python 2.6`_:
+Python 2.6 introduces forward-compatibility for many new Python 3 features.  The Python 3 builtins are accessible by doing an import from `future_builtins`.  To use the new print function, use `from __future__ import print_function`, and to make string literals be interpreted as unicode, use `from __future__ import unicode_literals`.  These forward-compatibility features, and many others, are described in greater detail in `What's New in Python 2.6`_:
 
 .. _What's New in Python 2.6: http://docs.python.org/whatsnew/2.6.html
 
@@ -95,7 +95,7 @@ Six is a library which has helpers to simplify writing codebases that support bo
 Strings and Unicode
 -------------------
 
-As of Python 2.6 the 2.x line includes a "bytes = str" alias in the builtins. Along with the bytes literal syntax, this allows binary data stored in a str instance to be clearly flagged so that it will use the correct type when the code is run in 3.x (either directly or via the 2to3 conversion tool). The reason it is done this way rather than backporting the 3.x bytes type is that most 2.x APIs that expect immutable binary data expect it as an 8-bit str instance - trying to pass in a backported 3.x bytes type wouldn't have the desired effect. To support versions earlier than 2.6, it is possible to define the alias at the top of the module::
+As of Python 2.6 the 2.x line includes a "bytes = str" alias in the builtins. Along with the bytes literal syntax, this allows binary data stored in a str instance to be clearly flagged so that it will use the correct type when the code is run in 3.x (either directly or via the 2to3_ conversion tool). The reason it is done this way rather than backporting the 3.x bytes type is that most 2.x APIs that expect immutable binary data expect it as an 8-bit str instance - trying to pass in a backported 3.x bytes type wouldn't have the desired effect. To support versions earlier than 2.6, it is possible to define the alias at the top of the module::
 
    try:
      bytes # Forward compatibility with Py3k
@@ -162,7 +162,7 @@ Make sure to use `from __future__ import division` (introduced in Python 2.2) to
 Approach 3: Maintain Separate Releases for Python 2 and Python 3
 ================================================================
 
-Convert a Python 2 tree to Python 3 with the 2to3 tool: http://doc.python.org/library/2to3.html
+Convert a Python 2 tree to Python 3 with the 2to3_ tool: http://doc.python.org/library/2to3.html
 
 
 Martin's notes from psycopg2
@@ -181,7 +181,7 @@ Martin's notes from psycopg2
   so on.
 
 - Python code 3: the test suite doesn't get installed, and hence
-  not auto-converted with 2to3 support. I explicitly added a 2to3
+  not auto-converted with 2to3_ support. I explicitly added a 2to3_
   conversion into the test runner, which copies the py3 version of
   the test into a separate directory.
 
