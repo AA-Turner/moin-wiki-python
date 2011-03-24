@@ -1,7 +1,7 @@
 = HOWTO de programación de sockets =
 '''Versión original de Gordon !McMillan'''
 
-Traducción del [[http://www.amk.ca/python/howto/sockets/|"Socket Programming HOWTO"]]
+Traducción del [[http://docs.python.org/howto/sockets.html|"Socket Programming HOWTO"]]
 
 <<TableOfContents>>
 
@@ -97,7 +97,7 @@ Bien, ahora tiene un socket servidor, escuchando en el puerto 80. Ahora entra en
 }}}
 
 
-Realmente, hay tres modos en los que este bucle puede trabajar - creando un hilo para manejar {{{clientsocket}}}, o reestructurar esta aplicación para usar sockets no bloqueantes, y ''multiplexar'' entre el socket servidor y uno de los clientsockets activos usando {{{select()}}}. Lo verá más adelante. La cuestión que es importante entender ahora es ésta: esto es \emph{todo} lo que hace un socket servidor. No envía ningún dato. No recibe ningún dato. Simplemente produce un {{{clientsocket}}}. Un socket cliente se crea en respuesta a ''otro'' socket cliente que invoca {{{connect()}}} al host y puerto al que está vinculado el socket servidor.  Tan pronto como se crea el socket cliente, se vuelve a escuchar en espera de nuevas conexiones.  Los dos clientes son libres de hablar - usan un puerto temporal que se reciclará cuando la conversación termine.
+Realmente, hay tres modos en los que este bucle puede trabajar - creando un hilo para manejar {{{clientsocket}}}, o reestructurar esta aplicación para usar sockets no bloqueantes, y ''multiplexar'' entre el socket servidor y uno de los clientsockets activos usando {{{select()}}}. Lo verá más adelante. La cuestión que es importante entender ahora es ésta: esto es {todo} lo que hace un socket servidor. No envía ningún dato. No recibe ningún dato. Simplemente produce un {{{clientsocket}}}. Un socket cliente se crea en respuesta a ''otro'' socket cliente que invoca {{{connect()}}} al host y puerto al que está vinculado el socket servidor.  Tan pronto como se crea el socket cliente, se vuelve a escuchar en espera de nuevas conexiones.  Los dos clientes son libres de hablar - usan un puerto temporal que se reciclará cuando la conversación termine.
 
 
 === IPC ===
