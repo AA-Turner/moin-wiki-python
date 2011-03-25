@@ -1,0 +1,7 @@
+[[http://www.pip-installer.org/|Pip]] is a popular installer and uninstaller of Python packages. Currently, pip depends on the third-party packaging extensions in [[http://peak.telecommunity.com/DevCenter/setuptools|setuptools]], or the [[http://packages.python.org/distribute/|distribute]] fork. The future of Python packaging is [[http://distutils2.notmyidea.org/|distutils2]] ("packaging" in the Python 3.3+ standard library), and pip should gain support for using distutils2/packaging as an alternative to setuptools/distribute (though setuptools/distribute support needs to be maintained as well for some time to come).
+
+Possible areas of work for a proposal here:
+
+ * Adding support for installing distutils2-style projects (with setup.cfg and possibly no setup.py, [[http://www.python.org/dev/peps/pep-0345/|PEP 345]] metadata), by using the appropriate distutils2 APIs.
+ * Adding support for introspecting and uninstalling [[http://www.python.org/dev/peps/pep-0376/|PEP 376]]-style installed distributions, again using distutils2 APIs wherever possible.
+ * Charting areas of overlap between pip and distutils2 and modifying pip to optionally prefer distutils2 APIs, if available, for areas of functional overlap (e.g. finding candidate distributions for installation).
