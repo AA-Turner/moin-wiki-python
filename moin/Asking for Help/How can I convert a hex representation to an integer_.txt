@@ -1,0 +1,56 @@
+## page was renamed from How can I convert a hex representation to an integer?
+##language:en
+== Converting a Hex representation to an Integer ==
+I'm running into some trouble when trying to convert a series of hex representations into an integer... I'm sure there is a builtin to do this (wouldn't make sense not to have one) but I can't find it for the life of me.
+
+This is a dump of my interpreter session:
+{{{
+#!python
+>>> file=open("C:/test.m4a")
+>>> contents=file.read()
+>>> contents.find('user')
+592
+>>> contents[592:600]
+'user\x00\xcc\x15\xa4'
+}}}
+and I need to convert the values following user ('\x00\xcc\x15\xa4') into an integer value... what am I doing wrong here?
+
+['anon']: try
+{{{
+#!python
+>>> 0x00cc15a4
+13374884
+
+}}}
+
+
+
+[[lwickjr]]: you use 
+
+{{{
+#!python
+>>> print int('0a', 16)
+10
+>>>
+}}}
+
+...but these aren`t hex values. Try ord() on each character, and see if that gives you the results you need.
+
+
+YerMat:
+
+See module [[http://docs.python.org/lib/module-struct.html|struct]] !
+
+{{{
+#!python
+>>> import struct
+>>> struct.unpack('I', '\x00\xcc\x15\xa4')
+(2752891904L,)
+>>> struct.unpack('i', '\x00\xcc\x15\xa4')
+(-1542075392,)
+>>>
+}}}
+
+== See Also ==
+
+ * BitManipulation has a bunch on working with hex
