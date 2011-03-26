@@ -1,9 +1,25 @@
 ## Replace the ... text below with a title and a summary of the problem.
 ## Feel free to remove any remaining comments once you're done!
 
-= Asking for Help: ... =
+= Asking for Help: Defining rules for adding two different data types =
 
 I'm a beginner with Python and am trying to create a Complex number class. The problem I am having is as follows, if z is a complex number (or other special type) how can I find 1+z? I am able to handle z+1, but it would be much nicer to have the operation be commutative. Whenever I attempt to compute 1+z I receive a TypeError.
+
+----
+
+You do know that Python has a complex number type? For example:
+
+{{{#!python numbers=disable
+1 + 1j
+# gives (1+1j) - a complex number
+}}}
+
+However, you could certainly define your own for educational purposes. It sounds like you support addition where a complex number instance is on the left hand side of an addition operation, but not on the right hand side. What happens when Python tries to perform an addition operation is this:
+
+ 1. Python looks for a `__add__` method on the left hand side operand. If this isn't found or if it returns `NotImplemented` (the method doesn't want to add the right hand side operand to itself), then...
+ 1. Python looks for a `__radd__` method on the right hand side operand. If this isn't found or doesn't want to use the left hand side operand, then you get a `TypeError`.
+
+So perhaps your class needs to define the `__radd__` method. -- PaulBoddie <<DateTime(2011-03-27T00:04:42+0100)>>
 
 ## Insert your problem description here. You may provide code samples using syntax like this:
 ## {{{#!python
@@ -17,4 +33,4 @@ When ''answering'' questions, add the CategoryAskingForHelpAnswered category whe
 }}}
 
 ----
-CategoryAskingForHelp CategoryAskingForHelp
+CategoryAskingForHelp CategoryAskingForHelp CategoryAskingForHelpAnswered
