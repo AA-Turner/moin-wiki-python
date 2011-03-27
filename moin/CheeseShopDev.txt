@@ -19,6 +19,15 @@ The Package Index has an XML-RPC interface which may be used by any 3rd-party ap
  . Discussions on Catalog SIG http://mail.python.org/mailman/listinfo/catalog-sig
  . API that is used by easy_install http://peak.telecommunity.com/DevCenter/EasyInstall#package-index-api
 
+== PyPI architecture and endpoints ==
+
+PyPI is a WSGI application that can be executed standalone using `python pypi.wsgi` command if all requirements are met. `pypi.wsgi` contains usual WSGI wrapper code and delegates request processing to `WebUI.run()` method from `webui.py`. This method just opens DB and handles exceptions, actual request processing is done in `WebUI.inner_run()`. This method analyzes URL endpoint and executes appropriate handler. As of 2011-03, the rules to match endpoints to handlers are the following:
+
+|| /simple          || WebUI.run_simple() || dump all package names on single html page ||
+|| /simple/(.+)/    || WebUI.run_simple() || dump all links for a package in html list  ||
+|| /serversig/(.+)/ || .run_simple_sign() || save as above, but signed by server        ||
+...
+
 == TO-DO list ==
  * [[http://www.python.org/peps/pep-0345.html|PEP for metadata 1.2]] -- not finished and needs more catalog-sig discussion)
  * documented procedures for "taking over" entries should the original owner of the entry go away (and any required system support)
