@@ -39,3 +39,39 @@ When ''answering'' questions, add the CategoryAskingForHelpAnswered category whe
 
 ----
 CategoryAskingForHelp
+
+= AskingForHelpAnswered This patch seems to work for me. I will also post to the bugs list.
+--- threading27.py	Mon Apr 05 20:23:34 2010
++++ threadingmod27.py	Tue Mar 29 10:16:59 2011
+@@ -439,6 +439,7 @@
+         self.__stopped = False
+         self.__block = Condition(Lock())
+         self.__initialized = True
++        self.isSelfInLimbo = True
+         # sys.stderr is not stored in the class like
+         # sys.exc_info since it can be changed between instances
+         self.__stderr = _sys.stderr
+@@ -484,7 +485,9 @@
+         finally:
+             # Avoid a refcycle if the thread is running a function with
+             # an argument that has a member that points to the thread.
+-            del self.__target, self.__args, self.__kwargs
++            if not self.isSelfInLimbo:
++                self.isSelfInLimbo = True
++                del self.__target, self.__args, self.__kwargs
+ 
+     def __bootstrap(self):
+         # Wrapper around the real bootstrap code that ignores
+@@ -515,7 +518,10 @@
+             self.__started.set()
+             with _active_limbo_lock:
+                 _active[self.__ident] = self
+-                del _limbo[self]
++                if self in _limbo:
++                    del _limbo[self]
++                else:
++                    self.isSelfInLimbo = False
+             if __debug__:
+                 self._note("%s.__bootstrap(): thread started", self)
+ 
+
