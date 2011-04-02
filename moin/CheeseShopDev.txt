@@ -17,13 +17,17 @@ CheeseShop page has all information not directly related to PyPI development.
 
 == PyPI architecture and endpoints ==
 
-PyPI is a WSGI application that can be executed standalone using `python pypi.wsgi` command if all requirements are met. `pypi.wsgi` contains usual WSGI wrapper code and delegates request processing to `WebUI.run()` method from `webui.py`. This method just opens DB and handles exceptions, actual request processing is done in `WebUI.inner_run()`. This method analyzes URL endpoint and executes appropriate handler. As of 2011-03, the rules to match endpoints to handlers are the following:
+PyPI is a WSGI application that can be executed standalone using `python pypi.wsgi` command if all requirements are met. `pypi.wsgi` contains usual WSGI wrapper code and delegates request processing to `WebUI.run()` method from `webui.py`. This method just opens DB and handles exceptions, actual request processing is done in `WebUI.inner_run()`. This method analyzes URL endpoint and executes appropriate handler. As of 2011-04, the rules to match endpoints to handlers are the following:
 
 || /simple          || WebUI.run_simple() || dump all package names on single html page ||
 || /simple/(.+)/    || WebUI.run_simple() || dump all links for a package in html list  ||
 || /serversig/(.+)/ || .run_simple_sign() || save as above, but signed by server        ||
 || /mirrors         || .mirrors()         || display static page with a list of mirrors ||
+|| /daytime         || .daytime()         || display current server time                ||
 ...
+
+XML-RPC requests are detected by CONTENT_TYPE=`text/xml` variable in CGI environment and processed by `rpc.RequestHandler().__call__()`. List of XML-RPC "endpoints" is available on PyPiXmlRpc page.
+
 
 == TO-DO list ==
  * [[http://www.python.org/peps/pep-0345.html|PEP for metadata 1.2]] -- not finished and needs more catalog-sig discussion)
