@@ -43,4 +43,20 @@ Docs are written using reStructuredText markup and auto-generated using Sphinx.
 
 == Hosting ==
 
-Most sprinters will be working remotely, feel free to meetup in small groups and update details here. 
+Most sprinters will be working remotely, feel free to meetup in small groups and update details here.
+
+== Sprint Report Day 1 (April 2, 2011) == 
+
+Today was pretty productive as we managed to get the docs building without errors or warnings using the cpython method of building the docs. 
+
+Major Changes:
+
+ * Disabled use of the Sphinx autodoc plugin (automodule, autoclass, etc)
+   * Seems we cannot use the autodoc plugin without some changes to how we build cpython docs. We mainly need sphinx python3 support so features like automodule works.
+ * Docs have been split up between 3 directories:
+   * enduser
+   * developer
+   * packager 
+ * changed the labels within Doc/packaging/ to use _packaging as a prefix.
+   * this was to make it clear we are referencing packaging and not distutils
+   * example (.. _metadata -> .. _packaging-metadata)
