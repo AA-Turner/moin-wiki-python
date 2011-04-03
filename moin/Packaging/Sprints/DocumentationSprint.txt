@@ -62,4 +62,13 @@ Today was pretty productive as we managed to get the docs building without error
    * packager 
  * changed the labels within Doc/packaging/ to use _packaging as a prefix.
    * this was to make it clear we are referencing packaging and not distutils
-   * example: .. _metadata => .. _packaging-metadata
+   * label names must be unique in the entire documentation source
+   {{{
+   .. _metadata becomes .. _packaging-metadata
+   }}}
+ * added the index directive at the top of all docs under Doc/packaging/packaging/
+   * prevents duplicate objects, distutils and packaging conflict when generating the index.
+   {{{ 
+   .. index:: module: packaging
+   }}}
+   
