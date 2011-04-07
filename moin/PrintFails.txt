@@ -1,3 +1,5 @@
+== Issue ==
+
 If you try to print a unicode string to console and get a message like this one:
 {{{
 >>> print u"\u03A9"
@@ -92,7 +94,6 @@ There is no standard way to query UNIX console for find out what characters it s
 
 If you got any other value you won't be able to print all unicode characters. As soon as you try to print a unprintable character you will get {{{UnicodeEncodeError}}}. To fix this situation you need to set the environment variable LANG to one of supported by your system unicode locales. To get the full list of locales use command "locale -a", look for locales that end with string ".utf-8". If you have set LANG variable but now instead of {{{UnicodeEncodeError}}} you see garbage on your screen you need to set up your terminal to use font unicode font. Consult terminal manual on how to do it. 
 
-
 == print, write and Unicode in pre-3.0 Python ==
 
 Because file operations are 8-bit clean, reading data from the original {{{stdin}}} will return {{{str}}}'s containing data in the input character set.  Writing these {{{str}}}'s to {{{stdout}}} without any codecs will result in the output identical to the input.
@@ -181,8 +182,7 @@ Wrapping {{{sys.stdout}}} into an instance of StreamWriter will allow writing {{
 
 The {{{write}}} call executes {{{StreamWriter.write}}} which in turn invokes codec-specific {{{encode}}} and passes the result to the underlying file.  It appears that the {{{print}}} statement will not fail due to the argument type coercion when {{{sys.stdout}}} is wrapped.  My (IL's) understanding of {{{print}}}'s implementation above agrees with that.
 
-
-===== read and Unicode in pre-3.0 Python =====
+== read and Unicode in pre-3.0 Python ==
 
 I (IL) believe reading from {{{stdin}}} does not involve coercion at all because the existing ways to read from {{{stdin}}} such as {{{"for line in sys.stdin"}}} do not convey the expected type of the returned value to the {{{stdin}}} handler.  A function that would complement the {{{print}}} statement might look like this:
 {{{
