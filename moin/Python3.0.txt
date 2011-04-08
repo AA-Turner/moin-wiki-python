@@ -1,4 +1,10 @@
+---- /!\ '''Edit conflict - other version:''' ----
 This page lists features that ''Guido van Rossum himself'' has mentioned as goals for Python 3.0.  Parts of this page have been consolidated into PEP 3000 [[#e|[5]]]
+
+---- /!\ '''Edit conflict - your version:''' ----
+This page lists features that ''Guido van Rossum himself'' has mentioned as goals for Python 3.0.  Parts of this page have been consolidated into PEP 3000 [[#e|[5]]]
+
+---- /!\ '''End of edit conflict''' ----
 
 == Status ==
 
@@ -15,36 +21,36 @@ Unfortunately there does not appear to be a well-maintained single point of entr
 
 == Core Language Changes ==
 
- * Remove distinction between `int` and `long` types. [[[#d|4]]]  
- * Make true division the default behavior. [[[#d|4]]]
- * Make all strings unicode [[[#d|4]]], and have a separate `bytes` [[[#b|2]]] type. [[[#m|13]]]
- * Make the `exec` statement a function again. [[[#a|1]]]
- * Remove old-style classes. [[[#d|4]]]
- * Replace the `print` statement with a function or functions. (e.g. `write(x, y, z), writeline(x, y, z)`) [[[#a|1]]] [[[#u|21]]]
- * Make `as` a real keyword. [[[#g|7]]]
- * Add an attribute to exceptions for storing the traceback. [[[#v|22]]]
- * Remove `raise Exception, 'message'` syntax in favor of `raise Exception('message')`. [[[#k|11]]] [[[#t|20]]]
- * Require that the first statement of a suite be on its own line. [[[#a|1]]]
- * Make `True` and `False` keywords. [[[#f|6]]]
-   * Reason: make assignment to them impossible. 
- * Raise an exception when making comparisons (other than equality and inequality) between two incongruent types. [[[#x|24]]]
+ * Remove distinction between `int` and `long` types. [[#d|[4]]]
+ * Make true division the default behavior. [[#d|[4]]]
+ * Make all strings unicode [[#d|[4]]], and have a separate `bytes` [[#b|[2]]] type. [[#m|[13]]]
+ * Make the `exec` statement a function again. [[#a|[1]]]
+ * Remove old-style classes. [[#d|[4]]]
+ * Replace the `print` statement with a function or functions. (e.g. `write(x, y, z), writeline(x, y, z)`) [[#a|[1]]] [[#u|[21]]]
+ * Make `as` a real keyword. [[#g|[7]]]
+ * Add an attribute to exceptions for storing the traceback. [[#v|[22]]]
+ * Remove `raise Exception, 'message'` syntax in favor of `raise Exception('message')`. [[#k|[11]]] [[#t|[20]]]
+ * Require that the first statement of a suite be on its own line. [[#a|[1]]]
+ * Make `True` and `False` keywords. [[#f|[6]]]
+   * Reason: make assignment to them impossible.
+ * Raise an exception when making comparisons (other than equality and inequality) between two incongruent types. [[#x|[24]]]
    * Reason: such comparisons do not make sense and are especially confusing to new users of Python.
- * Require that all exceptions inherit a common base class. [[[#i|9]]]
+ * Require that all exceptions inherit a common base class. [[#i|[9]]]
    * Reason: forces the use of classes as objects raised by exceptions and simplifies the implementation.
- * Make the traceback a standard attribute of Exception instances [[[#r|18]]]
+ * Make the traceback a standard attribute of Exception instances [[#r|[18]]]
    * Reason: inconvenient to pass the (type, value, traceback) triple that currently represents an exception around.
- * Remove {{{`x`}}}. [[[#a|1]]]
+ * Remove {{{`x`}}}. [[#a|[1]]]
    * Instead: use `repr(x)`.
    * Reason: backticks are hard to read in many fonts and can be mangled by typesetting software.
  * Remove the `<>` operator.
    * Instead: use `!=`.
- * Remove support for string exceptions. [[[#a|1]]]
+ * Remove support for string exceptions. [[#a|[1]]]
    * Instead: use a class.
  * Add a mechanism so that multiple exceptions can be caught using `except E1, E2, E3:`.  For instance: {{{
 #!python
 except E1, E2, E3 as err:  # Store error variable
    ...
-}}} (Added by GvR, suggested by Bram Cohen.) 
+}}} (Added by GvR, suggested by Bram Cohen.)
 
   ''JimD's suggested syntax: {{{#!python
 except (E1, E2, E3), e:
@@ -55,7 +61,7 @@ except E1, e:
 }}} The `except` code would then basically do the equivalent of `if issubclass(arg1, Exception) or isinstance(arg1, Exception): ... else if len(arg1): ...` (excepting, obviously, that this is implemented at a lower level in the C core). --JimD''
 
  * Perhaps have optional declarations for static typing.
-   * GvR suggested the syntax [[[#q|17]]]: (but NOT for static typing - for declaring type information that would be checked at runtime, not compile time) {{{
+   * GvR suggested the syntax [[#q|[17]]]: (but NOT for static typing - for declaring type information that would be checked at runtime, not compile time) {{{
 #!python
 def bar(low: int, high: int) -> float:
     ...
@@ -64,43 +70,43 @@ def bar(low: int, high: int) -> float:
 #!python
 def baz(x as list, y as strict file):
     # x must only (be adapted to) implement part of the list interface
-    # y must (be adapted to) implement the whole file interface 
+    # y must (be adapted to) implement the whole file interface
 }}}
 
    * Another proposal: Use -> and => as type conversion operators (lax and strict, respectively). {{{
 #!python
 def qux(x -> list, y => file):
     # x must only (be adapted to) implement part of the list interface
-    # y must (be adapted to) implement the whole file interface 
+    # y must (be adapted to) implement the whole file interface
 }}}
 
 == Built-In Changes ==
 
  * Have `range()`, `zip()`, `dict.keys()`, `dict.items()`, and `dict.values()` return iterators.
- * Move `compile()`, `intern()` and `id()` to the `sys` module. [[[#a|1]]]
+ * Move `compile()`, `intern()` and `id()` to the `sys` module. [[#a|[1]]]
  * Change `max()` and `min()` to consume iterators.
- * Remove `coerce()` as it is obsolete. [[[#a|1]]]
+ * Remove `coerce()` as it is obsolete. [[#a|[1]]]
  * Introduce `trunc()`, which would call the `__trunc__()` method on its argument.
-   * Reason: used for objects like `float`s where calling `__int__()` has data loss but an integral representation is still desired. [[[#y|25]]]
+   * Reason: used for objects like `float`s where calling `__int__()` has data loss but an integral representation is still desired. [[#y|[25]]]
  * Remove `dict.iteritems()`, `dict.iterkeys()`, and `dict.itervalues()`.
    * Instead: use `dict.items()`, `dict.keys()`, and `dict.values()` respectively.
- * Remove `apply()`. [[[#a|1]]]
+ * Remove `apply()`. [[#a|[1]]]
    * Instead: use `f(*args, **kw)`.
- * Remove `xrange()`. [[[#a|1]]] [[[#d|4]]]
+ * Remove `xrange()`. [[#a|[1]]] [[#d|[4]]]
    * Instead: use `range()`.
- * Remove `reduce()`. [[[#a|1]]]
+ * Remove `reduce()`. [[#a|[1]]]
    * Instead: use `functools.reduce()`.
- * Remove `callable()`. [[[#a|1]]]
+ * Remove `callable()`. [[#a|[1]]]
    * Instead: use `hasattr` to check for `__call__` attribute.
- * Remove `buffer()`. [[[#a|1]]] [[[#b|2]]]
-   * Instead: use new `bytes` type. 
- * Remove `raw_input()`. [[[#a|1]]]
+ * Remove `buffer()`. [[#a|[1]]] [[#b|[2]]]
+   * Instead: use new `bytes` type.
+ * Remove `raw_input()`. [[#a|[1]]]
    * Instead: use `input()`.
- * Remove `input()`. [[[#a|1]]]
+ * Remove `input()`. [[#a|[1]]]
    * Instead: use `eval(input())`.
- * Remove `execfile()` and `reload()`.  [[[#a|1]]]
+ * Remove `execfile()` and `reload()`.  [[#a|[1]]]
    * Instead: use `exec()`.
- * Remove `basestring.find()` and `basestring.rfind()`. [[[#w|23]]]
+ * Remove `basestring.find()` and `basestring.rfind()`. [[#w|[23]]]
    * Instead: use `basestring.index()` and `basestring.rindex()` in a `try/except` block.
 
 
@@ -108,8 +114,8 @@ def qux(x -> list, y => file):
 
  * Remove `types` module.
    * Instead: use the types in `__builtins__`.
- * Remove other deprecated modules. [[[#c|3]]]
- * Remove `sys.exc_type`. [[[#a|1]]]
+ * Remove other deprecated modules. [[#c|[3]]]
+ * Remove `sys.exc_type`. [[#a|[1]]]
    * Instead: use `sys.exc_info`.
    * Reason: it is not thread safe.
  * Reorganize standard library to have more package structure.
@@ -120,19 +126,19 @@ def qux(x -> list, y => file):
 
  * `L += x` and `L.extend(x)` are equivalent. ''No, they are not. The former creates a new list without modifying the original list (which other people might have references to). The latter modifies the original list.''
  * Can the parameter order of the `insert` method be changed so the the index parameter is optional and `list.append` may be removed?
- * If only `Exception` subclasses can be `raise`d  [[[#i|9]]], should the `raise` statement be kept?  Could `x(y).raise()` be used instead?
- * Are `repr()` and `str()` both needed? [[[#a|1]]]
- * Should `globals()`, `locals()` and `vars()` be removed? [[[#a|1]]]
+ * If only `Exception` subclasses can be `raise`d  [[#i|[9]]], should the `raise` statement be kept?  Could `x(y).raise()` be used instead?
+ * Are `repr()` and `str()` both needed? [[#a|[1]]]
+ * Should `globals()`, `locals()` and `vars()` be removed? [[#a|[1]]]
  * Should there be a keyword for allowing the shadowing of built-ins?
  * Should injecting into another module's global namespace be prevented?
- * If line continuations (`\`) are removed from the language [[[#a|1]]], what should be done about the instances where statements do not allow parentheses?  Furthermore, the Python style guide [[[#k|11]]] recommends their usage in some cases.
- * Should `__cmp__` (and possibly `cmp()`) be removed? [[[#h|8]]]
+ * If line continuations (`\`) are removed from the language [[#a|[1]]], what should be done about the instances where statements do not allow parentheses?  Furthermore, the Python style guide [[#k|[11]]] recommends their usage in some cases.
+ * Should `__cmp__` (and possibly `cmp()`) be removed? [[#h|[8]]]
    * Reason: [[TOOWTDI]] and rich comparisons are another way.
  * Should list comprehensions be equivalent to passing a generator expression to `list()`?
    * Reason: they are essentially the same and it would remove edge-case differences between them.
- * With a new string substitution scheme [[[#n|14]]], will old-style (`%(var)s`) substitutions be removed?
+ * With a new string substitution scheme [[#n|[14]]], will old-style (`%(var)s`) substitutions be removed?
  * There are things in the `string` module that I think belong there, for example `string.letters` and `string.digits`.  I don't think that all the string manipulations that we might include with the standard libraries need to be in the core interpreter (any more than I would condone putting the regular expression engine into the core). -- JimD
- * Should a `with` (or `using`) statement be added? [[[#j|10]]] [[[#s|19]]] {{{
+ * Should a `with` (or `using`) statement be added? [[#j|[10]]] [[#s|[19]]] {{{
 #!python
 with self:
     .foo = [1, 2, 3]
