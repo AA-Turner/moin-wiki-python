@@ -208,6 +208,7 @@ Start with a fresh working directory. Paste the following code into the file {{{
 {{{#!java
 import java.io.FileInputStream;
 import java.lang.System;
+import java.util.Properties;
 
 import org.python.core.Py;
 import org.python.core.PyException;
@@ -224,11 +225,11 @@ public class Main {
         }
 
         String interpClass = PySystemState.registry.getProperty(
-		"python.console", "");
+        "python.console", "");
         if (interpClass.length() > 0) {
             try {
                 return (InteractiveConsole)Class.forName(
-			interpClass).newInstance();
+            interpClass).newInstance();
             } catch (Throwable t) {
                 // fall through
             }
@@ -237,9 +238,10 @@ public class Main {
     }
 
     public static void main(String[] args) throws PyException {
-        java.util.Properties p = System.getProperties();
+        PySystemState.initialize(
+       	    PySystemState.getBaseProperties(), 
+            new Properties(), args);
 
-        PySystemState.initialize();
         PySystemState systemState = Py.getSystemState();
         // Decide if stdin is interactive
         boolean interactive = ((PyFile)Py.defaultSystemState.stdin).isatty();
@@ -250,9 +252,11 @@ public class Main {
         // Now create an interpreter
         InteractiveConsole interp = newInterpreter(interactive);
         systemState.__setattr__("_jy_interpreter", Py.java2py(interp));
-        interp.exec("import entrypoint");
+        interp.exec("try: import entrypoint\nexcept SystemExit: pass");
     }
 }
+
+// vi:et:sta:sw=4
 }}}
 Then, in the working directory, execute the following commands
 {{{
