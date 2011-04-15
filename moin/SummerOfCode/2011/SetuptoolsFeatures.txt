@@ -1,0 +1,44 @@
+= Abstract =
+Distutils2 is the new, improved version of the Python Distribution Utilities, a library used to package, distribute, build and install Python projects. It will be as a substitute of current setuptools, but it’s still in its early stage. This project is supposed to fill the gap for setuptools users that want to move to packaging in two aspects: 1) add the ‘develop’ command for Distutils2; 2) perfect the extensions project; 3) add the automatic script creation function.
+
+= Milestones =
+The following is just a very preliminary plan about what ‘product’ or improvement should be realized at what time. And the specific time and milestones maybe adjusted in future development if necessary after careful communication with mentor.
+
+'''My week-by-week work plan:'''
+
+May 25-May 27: have a good communication with mentor to understand the project better and know the preparation work
+May 28-May 31: get all preparation work done
+
+''(Under normal circumstances, people use the distutils to build a distribution of a project by rebuilding or reinstalling the project every time he made a change to it during development. So it’s a very important feature that setuptools offers to users, especially developers using version control system to manage code, which allows users to deploy their projects for use in a common directory or staging area, but without copying any files. However, Distutils2 doesn’t support this important command currently. Thus the job with the highest priority is to add the ‘develop’ command and fix the bug http://bugs.python.org/issue8668)''
+
+June 1-June 20: begin to code and fulfill the ‘develop’ command
+ *June 1~June 7: fulfill the function to create the .pth file and use PEP376 new apis to read metadata from .dist-info to create wrapper scripts
+ *June 8~June 14: fulfill other parameters of the ‘develop’ command as in setuptools
+ *June 15~June 20: create the patch, then fix the bug.
+
+''(extensions is a simple plugin system inspired from setuptools entry points and it allows an application to define or use plugins. This feature offers to user great convenience to develop big systems composed of different components. So the second job is to help perfect the extensions project if necessary.)''
+
+June 21~July11: check whether the extensions project can perform perfectly as setuptools entry points does in real projects and do some necessary integration work
+ *June 21~June 27: read documents and source code of setuptools to get to know the principle of its entry points; checkout the extensions project from bitbucket and read corresponding documents and source code
+ *June 28~July 4: try to construct different test cases(real project is preferred) to check whether the extensions project can ‘produce’ correct output as expected and has fulfilled all the functions of setuptools entry points
+ *July 5~July 11: report bugs and fix them if necessary; what’s more enhance extensions project if it lacks some functions or it does not do job well as setuptools entry points
+
+''(Packaging and installing script can be a bit awkward with the distutils, and there is no easy way to have a script’s filename match local conventions on both Windows and POSIX platforms. Setuptools fixes these problems by defining ‘entry points’ in setup script. An opensource or free software always faces such kind of platform problems. As a outstanding packaging tool and perfect substitution of setuptools, it’s important to add this function for Distutils2. Thus, the third job is to add automatic script creation function for Distutils2 and fix the bugs –issue870479: http://bugs.python.org/issue870479 , issue976869: http://bugs.python.org/issue976869 )''
+
+July 12- Aug 15: add the automatic script creation function
+ *July 12~July 19: study the background and discussing details of bug issue870479 and test the patch already submitted by others
+ *July 20~July 26: study the background and discussing details of bug issue976869 and review the patch
+ *July 27~Aug 2: read documents and source code of setuptools automatic script creation function 
+ *Aug 3~Aug 9: add automatic script creation function for Disutils2 
+ *Aug 10~Aug 15: create the patch and fix these two bugs: issue870479, issue976869
+
+= Start of Program (May 24) =
+ 1.Create a project on bitbucket
+ 2.Create a page on python wiki
+ 3.Configure development environment: python, revision control, email, skype, irc, etc.
+ 4.Get familiar with Python’s bug tracker
+ 5.Read PEP376 and PEP345 details
+ 6.Look into ‘develop’ command in setuptools
+ 7.Look into setuptools entry points
+ 8.Look into setuptools automatic script creation
+ 9.Make preliminary plan and list it on python wiki page
