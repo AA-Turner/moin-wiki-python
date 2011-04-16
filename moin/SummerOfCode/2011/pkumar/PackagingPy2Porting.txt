@@ -14,7 +14,10 @@ This is a project[1] for the porting of 'Packaging' over to lesser versions of p
 3. It is known that python3.3 is going to be released and similar other python3.x releases have yet to be done. Since 'Packaging' is compatible with python3.x, it would certainly be less painful to port 'Packaging' for the lesser versions of python i.e. python3.2 to python2.4, rather than porting distutils2 to python3.x with each new release of python3.x. 
            
 4. The tutorial provided will help in the further development of the project.
-           
+   
+   > That’s a good point in your application: tooling, documentation and blog posts should be helpful to other projects doing 3to2 conversions.
+
+>> Thanks.         
 
 '''[Project Details]'''
          
@@ -22,21 +25,40 @@ This is a project[1] for the porting of 'Packaging' over to lesser versions of p
     * Applying 3to2 to 'Packaging' for all the versions of python2.
     * fixing 'type' issues corresponding to bytes and string.
     * fixing import errors wherever required.
-    * Few basic modifications in the code to make it compatible with other versions of python.
-            
-2. Adding a few tests for the newly made changes.
-          
+    * Few basic modifications in the code to make it compatible with other versions of python.       
+
+   > Precisely?
+
+>> Some functionalities in python2 works differently compared to python3 i.e. we may need to write slight different codes for the same result, say 'tokenize' in this case.        
+
+2. Adding and rewriting a few tests for the newly made changes.
+   
+    > Why is there a special line for tests? Are they handled differently than the rest of the code? 
+>> At certain instances, tests written for python3 may not work for python2 i.e. the returned value may differ. In those cases, we would have to manually rewrite codes for different test behaviors. 
+
+    > Also, what about docs? 
+
+>> Documentations would be updated simultaneously with the progress of the work.  
+
 3. Ensure that build and installation process goes well for all the versions of python i.e. 2.4 - 3.2 which includes porting files like setup.py, setup.cfg, Makefile, etc to make it compatible with other versions of python.
           
+    > How? You’re not supposed to have everything figured out before GSoC starts, but you have to have a general idea. 
+
+>> Currently 'import build_py_2to3 as build_py' is taking care of build and installation process for different versions of distutils2. But that won't be adequate for the backport. For this project, I'm not sure if we can modify 'build_py' file in distutils for 'build_py_3to2', so that it can work other way round. If we can't, in that case there should be a piece of script which will run 3to2 on all files of 'packaging' and then copy them to a temporary directory or may be directly build it.  
+
 4. Write a tutorial on the porting work of 'Packaging' to support further development of the project.
 
 '''[Milestones]'''
 
 Initial preparations includes the following:
     * Installation of all the versions of python i.e. python 2.4 to python 3.2.
+    >> Done
     * Creating a repo for the project.
+    >> Done
     * Creating a wiki page for the documentation of the porting work.
+    >> Done
     * Going through the work already done on 'Packaging'.
+    >> Working on it.
 
 ''Start of Program (May 24)''
 
@@ -75,3 +97,20 @@ Before Final Evaluation [July 13 - August 15]
     2. A detailed documentation on the porting of 'Packaging'.
 
 [1] https://bitbucket.org/pkumar/packaging_cpython
+
+
+    > I find your timeline unsatisfying. It’s rather vague, and your approach of ad-hoc fixing of modules does not look sustainable. What we want is a robust, repeatable way of making releases out of the stdlib. Your list of deliverables is incomplete: first, it’s vague (“'Packaging' compatible with 2.4-3.2” should be “sdists of distutils2 for each supported version”), second, it shows that the approach you have chosen is “convert once, document, hope it’s easy too the next time”, which is not the approach I would have taken.
+
+    > In my opinion, this project is more about 3to2 than packaging. Its deliverable should be a command-line script which copies packaging from a directory, runs 3to2 with a set of fixers and runs sdist commands. The main milestones should involve reading about other projects using 3to2, how to solve difficult bytes/string issues, and writing custom fixers for that. The goal is that we can use that script in six months and a year and three years, with new fixers or minor adjustments to the code, but not just “run 3to2 + fix all the problems”.
+
+    > What do you think? 
+
+>> Thanks for the suggestion. It would certainly be a very bad idea to convert 'packaging' now and keep changing again and again with every new modification. Just manual fixes would not be suited in this case. There should be a automated system which should govern all the porting process. It should check the specified version of python, port it accordingly and build/install the 'packaging' for the certain version of python. So, let's say for python 2.6 it would be:
+
+python setup.py build
+
+// run 3to2
+// apply the custom fixers for specified version (python 2.6, here)
+// build 
+
+In my milestones I divided the work on different modules but I didn't specified 'How' the work is going to progress. That's a fault on my part I guess.    
