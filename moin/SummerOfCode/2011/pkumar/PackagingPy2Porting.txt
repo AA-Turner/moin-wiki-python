@@ -23,7 +23,17 @@ Thanks.
          
 1. Make 'Packaging' compatible with python3.2 to python2.4 which includes following steps. 
     * Applying 3to2 to 'Packaging' for all the versions of python2.
+
+    What about 3.1, which does not have all the features that packaging uses in 3.3?
+
+ There would be set of fixers which will be taking care for different incompatibility issues for python 3.1. Also, these set of fixers will be handling all these kinds of feature issues occurring in python 3.x itself.      
+
     * fixing 'type' issues corresponding to bytes and string.
+    
+    How? Manual fixes, librefactor fixers, magic comments used with a special fixer, runtime checks (which can be broken by 3to2)?
+
+ Manual fixing won't be adequate in this case. Considering that there'll be several further modifications in the codes and whole porting process should be automated, there would be certain scripts which will be taking care of these kinds of type issues. 
+
     * fixing import errors wherever required.
     * Few basic modifications in the code to make it compatible with other versions of python.       
 
