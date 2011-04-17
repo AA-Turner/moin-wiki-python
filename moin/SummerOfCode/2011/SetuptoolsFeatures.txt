@@ -13,21 +13,22 @@ The following is just a very preliminary plan about what ‘product’ or improv
 
 '''May 28-May 31: get all preparation work done'''
 
-''(Under normal circumstances, people use the distutils to build a distribution of a project by rebuilding or reinstalling the project every time he made a change to it during development. So it’s a very important feature that setuptools offers to users, especially developers using version control system to manage code, which allows users to deploy their projects for use in a common directory or staging area, but without copying any files. However, Distutils2 doesn’t support this important command currently. Thus the job with the highest priority is to add the ‘develop’ command and fix the bug http://bugs.python.org/issue8668)''
+''(Under normal circumstances, people use the distutils to build a distribution of a project by rebuilding or reinstalling the project if he want to know whether the changes he has made work or not during development. So it’s a very important feature that setuptools offers to users, especially developers using version control system to manage code, which allows users to make the code apear as installed to Python and other code can import it, but without copying any files. However, Distutils2 doesn’t support this important command currently. Thus the job with the highest priority is to add the ‘develop’ command and fix the bug http://bugs.python.org/issue8668)''
 
 '''June 1-June 20: begin to code and fulfill the ‘develop’ command'''
- *June 1~June 7: fulfill the function to create the .pth file and use PEP376 new apis to read metadata from .dist-info to create wrapper scripts
- *June 8~June 14: fulfill other parameters of the ‘develop’ command as in setuptools
- *June 15~June 20: create the patch, then fix the bug.
+ *June 1~June 7: fulfill the function to create the .pth file and function to create wrapper scripts
+ *June 8~June 10: fulfill the function to generate .dist-info dirs in place
+ *June 11~June 15: fulfill all parameters of the ‘develop’ command as in setuptools
+ *June 16~June 20: write tests to all newly added and modified functions
 
-''(Packaging and installing script can be a bit awkward with the distutils, and there is no easy way to have a script’s filename match local conventions on both Windows and POSIX platforms. Setuptools fixes these problems by defining ‘entry points’ in setup script. An opensource or free software always faces such kind of platform problems. As a outstanding packaging tool and perfect substitution of setuptools, it’s important to add this function for Distutils2.Thus, the second job is to add automatic script creation function for Distutils2 and fix the bugs –issue870479: http://bugs.python.org/issue870479 ,issue976869: http://bugs.python.org/issue976869 )''
+''(There is no easy way to have an executable script’s filename match local conventions on both Windows and POSIX platforms. Setuptools fixes it by defining ‘console_scripts’ or 'gui_scripts' entry points in setup script, which can automatically generating scripts for you with the correct extension, e.g. .exe for windows. It will take great convience to users who want to make his work run on different platforms, thus, the second job is to add automatic script creation function for Distutils2 and fix the bugs –issue870479: http://bugs.python.org/issue870479 ,issue976869: http://bugs.python.org/issue976869 )''
 
-'''June 21- July 11: add the automatic script creation function'''
- *June 21~June 25: study the background and discussing details of bug issue870479 and test the patch already submitted by others
- *June 26~June 30: study the background and discussing details of bug issue976869 and review the patch
- *July 1~July 4: read documents and source code of setuptools automatic script creation function
- *July 5~July 10: add automatic script creation function for Disutils2
- *July 11: create the patch and fix these two bugs: issue870479, issue976869
+'''June 21- July 11: add the automatic script creation functionality'''
+ *June 21~June 22: study the background and discussing details of bug issue870479 and review the patch already submitted by others
+ *June 23~June 24: study the background and discussing details of bug issue976869 and review the patch submitted
+ *June 25~June 30: read documents and source code of setuptools automatic script creation
+ *July 1~July 7: write functions to realize automatic script creation for Disutils2
+ *July 8~July 11: write tests to changes
 
 ''(extensions is a simple plugin system inspired from setuptools entry points and it allows an application to define or use plugins. This feature offers to user great convenience to develop big systems composed of different components. So the third job is to help perfect the extensions project if necessary.)''
 
@@ -36,14 +37,13 @@ The following is just a very preliminary plan about what ‘product’ or improv
  *July 16~July 22: checkout the extensions project from bitbucket and read corresponding documents and source code
  *July 23~July 29: try to construct different test cases(real project is preferred) to check whether the extensions project can ‘produce’ correct output  as expected and has fulfilled all the functions of setuptools entry points; report the bugs and fix them if necessary
  *July 30~Aug 4: enhance extensions project if it lacks some functions or it does not do job well as setuptools entry points
- *Aug 5~Aug 11: strength the documents
- *Aug 12~Aug 15: report all these work to Distutils2 administrator
+ *Aug 5~Aug 8: write tests for newly added or modified functions
+ *Aug 9~Aug 15: strength early documents and write new documents for new changes
 
 = Start of Program (May 24) =
 
  *Create a project on bitbucket
  *Create a page on python wiki
- *Configure development environment: python, revision control, email, skype, irc, etc.
  *Get familiar with Python’s bug tracker
  *Read PEP376 and PEP345 details
  *Look into ‘develop’ command in setuptools
@@ -54,10 +54,8 @@ The following is just a very preliminary plan about what ‘product’ or improv
 = Midterm Evaluation (July 12) =
 
 Before midterm evaluation, ‘develop’ command and the automatic script creation function should be fulfilled and corresponding bugs fixed. Thus the proposed deliverables can be:
- *.pth file can be created on site-packages
  *Wrapper scripts can be created
- *all parameters in setuptools should be supported, e.g. --multiversion, --install-dir, and so on
- *‘develop’ command patch should be submitted
+ *most parameters in setuptools should be supported
  *Fix bug issue8668
  *Fix bug issue870479
  *Fix bug issue976869
