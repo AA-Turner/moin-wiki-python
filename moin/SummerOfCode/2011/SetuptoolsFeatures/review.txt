@@ -137,3 +137,30 @@ with the developpers of the import system; it’s another topic entirely.
 
 I hope this long message is helpful.  To reply to it, please amend your proposal on the
 wiki (I will get automatically notified) or reply to specific items on the GSoC site.
+
+
+= Second Review =
+
+ May 25-May 27: have a good communication with mentor to understand the project better and know the preparation work
+
+Looks like we’ve already started on that :–)
+
+The first paragraph describing the develop command still says that people run distutils to test changes, which is still not true, but the rest of the paragraph is good, as it says that the feature is to make the code appear as installed (including making egg-info/dist-info metadata available to the system, which you did not explicitly say).
+
+ June 1-June 20: begin to code and fulfill the ‘develop’ command
+
+Regarding the timeline, I would encourage you to write tests before code.  You’ll probably take as much or more time to write tests than code, and writing tests beforehand helps you covering all cases and figuring out the API of the code.  It may appear a strange method, but it turns out that it’s really helpful and working.  Of course, this being Python, sometimes you just write the code in ten minutes before the tests because it’s too easy :)
+
+I wrote this in the first review:
+ With the advent of “python -m” as a way to run modules as scripts, I think that the part about generating wrapper scripts is not essential, and I’d suggest that it waits for after you’ve completed the feature about script generation, which should let you learn a lot about scripts. It’s only a suggestion, other people in our group more familiar with setuptools may have a different opinion.
+
+What is your opinion?
+
+ There is no easy way to have an executable script’s filename match local conventions on both Windows and POSIX platforms. Setuptools fixes it by defining ‘console_scripts’ or 'gui_scripts' entry points in setup script,
+
+I had forgotten gui_scripts, very good catch!
+
+ June 21~June 22: study the background and discussing details of bug issue870479 and review the patch already submitted by others
+ June 23~June 24: study the background and discussing details of bug issue976869 and review the patch submitted
+
+I will create a new bug to track your new work and close the older ones as duplicates (the discussions will still be there to read), it will be easier to use than half a dozen of duplicate bugs.
