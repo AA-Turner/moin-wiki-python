@@ -204,7 +204,7 @@ Ok maybe one mention of webstart: check out these postings to the mailing list (
  * and David Huebel recommends http://seanmcgrath.blogspot.com/JythonWebAppTutorial.html the first part looks pretty good.
 
 == "What's a really easy way to distribute my app as a single jar?" ==
-Start with a fresh working directory. Paste the following code into the file {{{Main.java}}}, changing ENTRYPOINT to be whichever .py starts your program:
+Start with a fresh working directory. Paste the following code into the file {{{Main.java}}}:
 {{{#!java
 import java.io.FileInputStream;
 import java.lang.System;
@@ -252,11 +252,9 @@ public class Main {
         // Now create an interpreter
         InteractiveConsole interp = newInterpreter(interactive);
         systemState.__setattr__("_jy_interpreter", Py.java2py(interp));
-        interp.exec("try: import entrypoint\nexcept SystemExit: pass");
+        interp.exec("try:\n import entrypoint\n entrypoint.main()\nexcept SystemExit: pass");
     }
 }
-
-// vi:et:sta:sw=4
 }}}
 Then, in the working directory, execute the following commands
 {{{
@@ -264,12 +262,21 @@ $ mkdir Package
 $ cd Package
 $ cp -r JYTHONROOT/Lib .
 $ unzip JYTHONROOT/jython.jar
-$ mkdir pysrc
-$ ln -s MYPYTHONSOURCES pysrc/
-$ touch pysrc/__init__.py
+$ # add your modules to Lib
 $ javac ../Main.java -d .
+$ cp ../entrypoint.py .
 $ jar -cfe output.jar Main *
 }}}
+
+The entrypoint.py mentioned above must be provided by you.  It is a python
+script with a parameterless function main(), e.g.,
+
+{{{
+from my_prog import main
+}}}
+
+With all this, `java -jar output.jar` should run your code.
+
 '''NOTE''': Please email charlieATcharliedyson.net if this does or does not work for you, I've only just come up with it as I wanted a single jar that could be executed without any arguments.  The Main.java code above was hacked to support
 readline (if possible) by msdemleiATari uni-heidelberg.de, so if that bugs
 you, don't bother Charlie, ask Markus.
