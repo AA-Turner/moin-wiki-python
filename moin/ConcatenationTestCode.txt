@@ -270,3 +270,8 @@ if __name__ == '__main__':
 }}}
 
 -- llakomy 2011-03-10 12:03:00
+
+
+Not surprising at all. Every character in the original string and all generated strings is 2-4x the size in Python 3 compared to Python 2 (depending on whether you compiled Python 3 for UTF-16 or UTF-32). Most of the work is copying characters around, so your results would be expected. You might try running the same test with your 's' variable and the "" used with join defined as bytes literals (b'qwertyuiopasdfghjklzxcvbnm123456789' and b"".join(...) respectively).
+
+-- Josh <<DateTime(2011-04-20T16:07:00Z)>>
