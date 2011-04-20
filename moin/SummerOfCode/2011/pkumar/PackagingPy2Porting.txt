@@ -3,7 +3,7 @@
 
 '''[Introduction]'''
 
-This is a project[1] for the porting of 'Packaging' over to lesser versions of python i.e. python 2.4 to python 3.2. In nutshell, the project will result in a successful release of a standalone backport of "Packaging" for python2.4 to python3.2 along with a detailed tutorial on the porting of 'Packaging'.
+This is a project[1] for the porting of 'Packaging' over to lesser versions of python i.e. python 2.4 to python 3.2. In nutshell, the project will result in a successful release of a standalone backport of "Packaging" for python2.4 to python3.2 along with a detailed tutorial on the porting of 'Packaging'. 
        
 '''[Benefits to the Python community]'''
            
@@ -15,116 +15,73 @@ This is a project[1] for the porting of 'Packaging' over to lesser versions of p
            
 4. The tutorial provided will help in the further development of the project.
    
-    That’s a good point in your application: tooling, documentation and blog posts should be helpful to other projects doing 3to2 conversions.
-
-Thanks.         
-
 '''[Project Details]'''
          
 1. Make 'Packaging' compatible with python3.2 to python2.4 which includes following steps. 
 
 * Applying 3to2 to 'Packaging' for all the versions of python2.
 
-    What about 3.1, which does not have all the features that packaging uses in 3.3?
-
-There would be set of fixers which will be taking care for different incompatibility issues for python 3.1. Also, these set of fixers will be handling all these kinds of feature issues occurring in python 3.x itself.      
-
-* fixing 'type' issues corresponding to bytes and string.
+* fixing 'type' issues corresponding to bytes and string using custom fixers.
     
-    How? Manual fixes, librefactor fixers, magic comments used with a special fixer, runtime checks (which can be broken by 3to2)?
-
-Manual fixing won't be adequate in this case. Considering that there'll be several further modifications in the codes and whole porting process should be automated, there would be certain scripts which will be taking care of these kinds of type issues. 
-
-* Few basic modifications in the code to make it compatible with other versions of python.       
-
->> Precisely?
-
-Some functionalities in python2 works differently compared to python3 i.e. we may need to write slight different codes for the same result, say 'tokenize' in this case.        
+* Develop magic comment system for version specific features in all the specified versions of python.          
 
 2. Adding and rewriting a few tests for the newly made changes.
    
-    Why is there a special line for tests? Are they handled differently than the rest of the code? 
-
-At certain instances, tests written for python3 may not work for python2 i.e. the returned value may differ. In those cases, we would have to manually rewrite codes for different test behaviors. 
-
-    Also, what about docs? 
-
-Documentations would be updated simultaneously with the progress of the work.  
-
 3. Ensure that build and installation process goes well for all the versions of python i.e. 2.4 - 3.2 which includes porting files like setup.py, setup.cfg, Makefile, etc to make it compatible with other versions of python.
           
-    How? You’re not supposed to have everything figured out before GSoC starts, but you have to have a general idea. 
-
-Currently 'import build_py_2to3 as build_py' is taking care of build and installation process for different versions of distutils2. But that won't be adequate for the backport. For this project, I'm not sure if we can modify 'build_py' file in distutils for 'build_py_3to2', so that it can work other way round. If we can't, in that case there should be a piece of script which will run 3to2 on all files of 'packaging' and then copy them to a temporary directory or may be directly build it.  
-
 4. Write a tutorial on the porting work of 'Packaging' to support further development of the project.
 
 '''[Milestones]'''
 
 Initial preparations includes the following:
     * Installation of all the versions of python i.e. python 2.4 to python 3.2.
-    >> Done
     * Creating a repo for the project.
-    >> Done
     * Creating a wiki page for the documentation of the porting work.
-    >> Done
     * Going through the work already done on 'Packaging'.
-    >> Working on it.
+    * Going through the projects using 3to2 and their methods of solving bytes and string issues using 3to2.
 
 ''Start of Program (May 24)''
 
 Before Midterm Evaluation [May 24 - July 12]
 
-    1. [May 24 - May 29]   Porting 'Packaging' to all the versions of python 3.x at first.                                 
+    1. [May 24 - May 29]   Porting 'Packaging' to all the versions of python 3.x at first whih includes:
+       * Develop magic comment system for the special features used by 'packaging' in python 3.3.
+       * Writing custom fixers if required.                                 
     2. [May 30 - June 6]   Testing and finalizing the porting work on python 3.x.
-    3. [June 7 - June 14]  Porting 'command' module to python2.4 - python2.7.
-    4  [June 15 - June 21] Testing and finalizing porting of 'command' module
-    5. [June 22 - June 28] Porting 'compiler' module to python2.4 - python2.7.
-    6. [June 29 - July 6]  Testing and finalizing porting of 'compiler' module.
-    7. [July 7 - July 11]  Porting 'index' module to python2.4 - python2.7.
+    3. [June 7 - June 14]  Writing custom fixers for bytes and string issues.
+    4  [June 15 - June 21] Ensure the proper implementation of the newly created fixer on all the 2.x versions of python and fix the potential issues, if any.
+    5. [June 22 - June 28] Developing magic comment system for python 2.7
+    6. [June 29 - July 6]  Testing and finalizing the porting for python 2.7 which includes:
+       * Running tests on all the modules of python 2.7. 
+       * Writing custom fixers  for python 2.7, if required.
+       * Fixing version specific issues, if any.
+    7. [July 7 - July 11] Developing magic comment system for python 2.6
 
 ''Midterm Evaluation (July 12)''
 
 '''[Deliverables]'''
 
-    1. 'Packaging' ported for all the versions of python 3.x
-    2. Completion of following modules for python 2.4 to python 3.2:
-           * command
-           * compiler
+    1. sdists of 'Packaging' for all the versions of python3.
+    2. Custom fixers for bytes and string issues for all the versions of python.
+    3. sdists of packaging for python 2.7.
     3. Documentation on the porting work till date.   
 
 Before Final Evaluation [July 13 - August 15]
       
-    8.  [July 13 - July 22]  Testing and finalizing porting of 'index' module.
-    9.  [July 23 - July 30]  Ensure the installation and working of 'Packaging' in all the given versions of python i.e. python2.4 to python3.2.
-    10. [July 31 - August 7] Editing and completion of documentation on the porting work of 'Packaging'.
-    11. [August 8 - August 15] Testing and wrap up.
+    8.  [July 13 - July 22]  Testing and finalizing the porting for python 2.6
+    9.  [July 23 - July 30]  Developing magic comment system for python2.5 and python 2.4.
+    10. [July 31 - August 7] Testing and finalizing the porting for python 2.5 and python 2.4.
+    11. [August 8 - August 15] Work for the final week of the project includes:
+        * Ensuring the installation and working of 'Packaging' in all the given versions of python i.e. python2.4 to python3.2.
+        * Testing and fixing any left over issues.
+        * Wrap up.
 
 ''Final Evaluation (Aug 16)''
 
 '''[Deliverables]'''
 
-    1. 'Packaging' compatible with python2.4 to python3.2.
-    2. A automated system of 'packaging' to govern the porting process for different specified versions of python.
+    1. sdists of 'Packaging' for each supported version.
+    2. A script running 3to2 with custom fixers for each support Python version.
     3. A detailed documentation on the porting of 'Packaging'.
 
 [1] https://bitbucket.org/pkumar/packaging_cpython
-
-
-    I find your timeline unsatisfying. It’s rather vague, and your approach of ad-hoc fixing of modules does not look sustainable. What we want is a robust, repeatable way of making releases out of the stdlib. Your list of deliverables is incomplete: first, it’s vague (“'Packaging' compatible with 2.4-3.2” should be “sdists of distutils2 for each supported version”), second, it shows that the approach you have chosen is “convert once, document, hope it’s easy too the next time”, which is not the approach I would have taken.
-
-    In my opinion, this project is more about 3to2 than packaging. Its deliverable should be a command-line script which copies packaging from a directory, runs 3to2 with a set of fixers and runs sdist commands. The main milestones should involve reading about other projects using 3to2, how to solve difficult bytes/string issues, and writing custom fixers for that. The goal is that we can use that script in six months and a year and three years, with new fixers or minor adjustments to the code, but not just “run 3to2 + fix all the problems”.
-
-    What do you think? 
-
-Thanks for the suggestion. It would certainly be a very bad idea to convert 'packaging' now and keep changing again and again with every new modification. Just manual fixes would not be suited in this case. There should be a automated system which should govern all the porting process. It should check the specified version of python, port it accordingly and build/install the 'packaging' for the certain version of python. So, let's say for python 2.6 it would be:
-
-python setup.py build
-
->> run 3to2
-
->> apply the custom fixers for specified version (python 2.6, here)
-
->>build 
-
-In my milestones I divided the work on different modules but I didn't specify 'How' the work is going to progress. That's a fault on my part I guess. As per your suggestion, I'm currently going through the projects using 3to2 and their implementation of 3to2.      
