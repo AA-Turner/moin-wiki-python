@@ -147,14 +147,20 @@ Looks like we’ve already started on that :–)
 
 The first paragraph describing the develop command still says that people run distutils to test changes, which is still not true, but the rest of the paragraph is good, as it says that the feature is to make the code appear as installed (including making egg-info/dist-info metadata available to the system, which you did not explicitly say).
 
+→ This is still true.
+
  June 1-June 20: begin to code and fulfill the ‘develop’ command
 
 Regarding the timeline, I would encourage you to write tests before code.  You’ll probably take as much or more time to write tests than code, and writing tests beforehand helps you covering all cases and figuring out the API of the code.  It may appear a strange method, but it turns out that it’s really helpful and working.  Of course, this being Python, sometimes you just write the code in ten minutes before the tests because it’s too easy :–)
+
+→ Xu edited his proposal to take that recommendation into account.
 
 I wrote this in the first review:
  With the advent of “python -m” as a way to run modules as scripts, I think that the part about generating wrapper scripts is not essential, and I’d suggest that it waits for after you’ve completed the feature about script generation, which should let you learn a lot about scripts. It’s only a suggestion, other people in our group more familiar with setuptools may have a different opinion.
 
 What is your opinion?
+
+→ Reply by private email: I think you are right, future work on script generation will make me more clear about the wrapper scripts functionality, so I removed this task from my application and adjusted the timeline.
 
  There is no easy way to have an executable script’s filename match local conventions on both Windows and POSIX platforms. Setuptools fixes it by defining ‘console_scripts’ or 'gui_scripts' entry points in setup script,
 
