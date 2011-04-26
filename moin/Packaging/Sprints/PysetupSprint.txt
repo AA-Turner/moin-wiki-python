@@ -1,12 +1,12 @@
 = Pysetup Sprint 2011-04-28 to 2011-05-01 =
 
-Join members from the 'Pip' team as we work on completing the pysetup script and review the packaging(distutils2) API! 
+Join members from the 'Pip' team as we work on completing the pysetup script and review the packaging(distutils2) API!
 
 See the sprint goals for details.
 
 == Schedule ==
 
-Start at 9:00am EST on 2011-04-28. 
+Start at 9:00am EST on 2011-04-28.
 
 == Participants ==
 
@@ -53,9 +53,9 @@ hg clone https://bitbucket.org/tarek/cpython
 {{{
 hg clone https://bitbucket.org/tarek/cpython
 cd cpython
-./configure
-make
-./python Lib/test/regrtest.py test_packaging 
+./configure --with-pydebug
+make -s
+./python -m test test_packaging
 }}}
 
 === How to build the docs ===
@@ -64,7 +64,7 @@ It seems there is a dependency on svn, make sure have it installed before runnin
 
 {{{
 hg clone https://bitbucket.org/tarek/cpython
-cd cpython/Doc/
+cd cpython/Doc
 make html
 }}}
 
