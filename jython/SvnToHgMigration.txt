@@ -3,7 +3,7 @@
 Svn to Hg Migration
 ===================
 
-The main (currently test) Jython repo is hosted at:
+The main Jython repo is hosted at:
 
 http://hg.python.org/jython
 
@@ -15,9 +15,9 @@ You should read the CPython devguide, we'll for the most part follow their mercu
 
 http://docs.python.org/devguide/
 
-We'll eventually have a bitbucket mirror setup at http://bitbucket.org/jython to ease forks (and pull requests).
+We have a bitbucket mirror setup at http://bitbucket.org/jython to ease forks (and pull requests).
 
-Pending: We'll probably want to grant all Jython committers access to the bitbucket account so they can publish personal repos (and branches) under this account. That way we can keep feature branches out of the main repo but still easily follow all committers' work.
+TODO: We'll probably want to grant all Jython committers access to the bitbucket account so they can publish personal repos (and branches) under this account. That way we can keep feature branches out of the main repo but still easily follow all committers' work.
 
 Where'd my feature branch go?
 =============================
@@ -71,7 +71,10 @@ Issues
 
 Svn to Hg Map
 =============
-TODO: Include the final mapping file here
+
+attachment:jython-svnmap.txt contains a mapping of original svn revision (and its original subversion branch name) to its hg revision.
+
+This data can also be gathered from the hg repo itself, the original subversion revision and location information is contained the Mercurial extras field (hg log --template {extras})
 
 Migration Details
 =================
@@ -95,9 +98,9 @@ After the conversion is complete a couple other things are done:
 TODO
 ====
 
-1. More testing/feedback/ssh keys from committers
-2. Go live
-3. Ask bitbucket for a mirror
+*1. More testing/feedback/ssh keys from committers
+*2. Go live
+*3. Ask bitbucket for a mirror
 4. Modify pom.xml scm location
 5. Fix the buildbot repo location (buildbot currently broken anyway)
 6. build.xml may need some fixes (references many svn things likely for release management)
