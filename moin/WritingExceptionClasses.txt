@@ -47,7 +47,7 @@ Using Python 2.3:
 class LocalNamesSyntaxError(Exception):
     def __init__(self, msg):
         self.msg=msg
-        super(LocalNamesSyntaxError, self)('Local Names v1.1 Syntax Error: %s' % msg)
+        super(LocalNamesSyntaxError, self).__init__('Local Names v1.1 Syntax Error: %s' % msg)
 }}}
 
 {{{
@@ -70,3 +70,5 @@ super() only works for new-style classes. Exception is still an old-style class:
 Thanks a lot, I was having hardtime figureing this out, as exactly the same construct worked in other places. -- HariDara
 
 It might become a 2.4 vs 2.5 thing though, as 2.5 should allow new-style classes.
+
+Don't forget the method name after {{{super}}}; it doesn't magically assume {{{__init__}}}. (fixed above) -kcarnold
