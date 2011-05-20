@@ -14,48 +14,29 @@ Task: execution which produce raw data and "output". eg build, install, unittest
 
 ==== Environment part ====
 
- The environment part of the project is responsible for creating an abstraction for the execution part . It
-handles delivery of distributions (and its dependencies), to the execution part
-( to run tests on them). It handles all the protocols required to communicate
-to the PyPI repository and also to the different architecture used in the
-project. It subscribes to uploaded packages from PyPI for testing them (testing
-done by the execution part). It is also responisible for setting up the
-environment required for testing and to deliver the packages to the execution
-part for testing them .
+ The environment part of the project is responsible for creating an abstraction for the execution part . It handles delivery of distributions (and its dependencies), to the execution part( to run tests on them). It handles all the protocols required to communicate to the PyPI repository and also to the different architecture used in the project. It subscribes to uploaded packages from PyPI for testing them (testing done by the execution part). It is also responisible for setting up the environment required for testing and to deliver the packages to the execution part for testing them .
 
 ===== Architecture =====
- * Master – Slave architecture where the master dispatches jobs to the slave and
-the slave executes them.
- * The communication between master and slave happen through an API called
-command API
- * The slave communicates with the vm , sends the distributions require for testing
-and receive raw data (after installing the distributions and conducting tests)
-using another API called raw data API
- * Tests are run on VMs and each VM is handled by a slave
+ * Master – Slave architecture where the master dispatches jobs to the slave and the slave executes them.
+ * The communication between master and slave happen through an API called command API
+ * The slave communicates with the vm , sends the distributions require for testing and receive raw data (after installing the distributions and conducting tests) using another API called raw data API
+ * Tests are run on VMs and each VM is handled by a slave 
 
 ===== Raw Data API =====
- * The task is to build a raw data API for the communication between the VM and
-slave.
+ * The task is to build a raw data API for the communication between the VM and slave.
  * The raw data API handles sending the data into the corresponding VMs.
- * The raw data API also handles the raw data (after the execution part has finished)
-on VM to be sent to the slave
+ * The raw data API also handles the raw data (after the execution part has finished)on VM to be sent to the slave
 
 ===== Command API =====
- * The task is to build a command API to communicate between the Master and the
-Slave .
- * The command API handles the task requests issued by the Master to and
-assigns them to the slave.
- * Task requests can involve different configurations to be made on a VM,
-what distributions to be tested,etc.
+ * The task is to build a command API to communicate between the Master and the Slave .
+ * The command API handles the task requests issued by the Master to and assigns them to the slave.
+ * Task requests can involve different configurations to be made on a VM, what distributions to be tested,etc.
 
 ===== Slave =====
 The slave performs the following tasks
- * Initialises an isolated VM and configures the VM using the configuration
-provided by the API call to it.
- * It should be able to communicate with PyPI repository and get the
-distributions to be tested.
- * Gets the distribution to be tested from the repository , computes
-dependencies and also gets the dependencies from the repository.
+ * Initialises an isolated VM and configures the VM using the configuration provided by the API call to it.
+ * It should be able to communicate with PyPI repository and get the distributions to be tested.
+ * Gets the distribution to be tested from the repository , computes dependencies and also gets the dependencies from the repository.
  * Passes all the packages to the VM.
  * Receive the raw data from the VM.
 
