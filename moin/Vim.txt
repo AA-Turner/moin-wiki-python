@@ -14,9 +14,8 @@ Vim 7.0 (released mid-2006) includes the Intellisense-like omni-completion for s
 You can automatically enable syntax coloring and automatic indentation for Python code by adding the following lines to your ~/.vimrc file:
 
 {{{
-autocmd BufRead,BufNewFile *.py syntax on
-autocmd BufRead,BufNewFile *.py set ai
-autocmd BufRead *.py set smartindent cinwords=if,elif,else,for,while,with,try,except,finally,def,class
+syntax on
+filetype indent plugin on
 }}}
 
 The following sections correspond to the guidelines from the HowToEditPythonCode page.
@@ -26,7 +25,7 @@ The following sections correspond to the guidelines from the HowToEditPythonCode
 A useful addition to Python source files is this comment:
 
 {{{
-# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
+# vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 }}}
 
 This may need the modeline option enabled in your `~/.vimrc` file:
@@ -35,35 +34,35 @@ This may need the modeline option enabled in your `~/.vimrc` file:
 set modeline
 }}}
 
-(In some versions of Ubuntu, for example, the modeline option has apparently been disabled for security reasons.)
+(In Debian and Ubuntu, for example, the modeline option has been disabled for security reasons.)
 
 The above `# vim: ...` text, when embedded in a source file, tells Vim that when the file is loaded, tabs are always expanded to spaces and that the width of each tab is four characters. Type the following in command mode to achieve the same effect:
 
 {{{
-:set tabstop=4 expandtab shiftwidth=4 softtabstop=4
+:set tabstop=8 expandtab shiftwidth=4 softtabstop=4
 }}}
 
 Or:
 
 {{{
-:set ts=4 et sw=4 sts=4
+:set ts=8 et sw=4 sts=4
 }}}
 
 If you want to do this automatically for all files identified as Python add this:
 
 {{{
-au FileType python setl autoindent tabstop=4 expandtab shiftwidth=4 softtabstop=4
+au FileType python setlocal tabstop=8 expandtab shiftwidth=4 softtabstop=4
 }}}
 
 === Syntax Highlighting ===
 
-You may be lucky enough to have syntax highlighting already switched on in your version of Vim. If not, edit a `vimrc` file (either `/etc/vimrc` or `.vimrc` in your home directory) and add the following:
+You may be lucky enough to have syntax highlighting already switched on in your version of Vim. If not, edit a `vimrc` file (either `/etc/vimrc` or, preferably,`.vimrc` in your home directory) and add the following:
 
 {{{
 syntax on
 }}}
 
-If you use a dark background, this command may help adjust the colours:
+If you use a dark background, this command may help adjust the default colours for better contrast:
 
 {{{
 set background=dark
@@ -71,17 +70,17 @@ set background=dark
 
 === Alternative ===
 
-Some find that the methods described above does not work. An alternative method is adding...
+Some find that the methods described above do not work. An alternative method is adding...
 
 {{{
-set autoindent
-set tabstop=4
+set tabstop=8
 set expandtab
+set softtabstop=4
 set shiftwidth=4
-filetype indent on 
+filetype indent on
 }}}
 
-...to your `~/.vimrc` file. The first rule sets automatic tab indentation. The second rule sets tab stops to four characters wide. The third converts tabs to white space. `set shiftwidth` sets the width for autoindents. Finally, the last rule allows auto-indenting depending on file type. With this method, tab settings do not need to be set in your python file and the `# vim: ...` line in the template below is not needed.
+...to your `~/.vimrc` file. The first rule sets tab stops to [[http://docs.python.org/reference/lexical_analysis.html#indentation|eight characters wide]]. The second converts tabs to white space.   The third makes the Tab key indent by four spaces.  `set shiftwidth` sets the width for autoindents. Finally, the last rule allows auto-indenting depending on file type. With this method, tab settings do not need to be set in your python file and the `# vim: ...` line in the template below is not needed.
 
 === A Simple Template ===
 
@@ -94,7 +93,7 @@ You could copy the following simple template and save it to a file somewhere. Th
 Python source code - replace this with a description of the code and write the code below this text.
 """
 
-# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
+# vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 }}}
 
 This contains useful UNIX-related information on the first line, and a docstring which can be used to describe what your program or module is about. As noted above, to work this requires modeline support to be enabled.
@@ -110,6 +109,6 @@ If you want to access the visual selection from Vim in Python read http://www.tu
  * [[http://www.sontek.net/python-with-a-modular-ide-vim|Python with a modular IDE (Vim)]], June 24, 2009 23:48 by  John Anderson (sontek)
  * [[http://blog.dispatched.ch/2009/05/24/vim-as-python-ide/|VIM as Python IDE]], 2009-05-24, Alain M. Lafon
  * [[http://dancingpenguinsoflight.com/2009/02/python-and-vim-make-your-own-ide/|Python and vim: Make your own IDE]], February 16, 2009 14:28, Samuel Huckins
- 
+
 ----
 CategoryEditors
