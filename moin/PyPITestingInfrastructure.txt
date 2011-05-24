@@ -104,6 +104,46 @@ copy content of proposal <here>
 
 === existing solutions ===
 
+==== Master Slave Architecture ====
+
+What we need:
+
+ * A real time feed 
+ * Master to send jobs to the slave
+ * an API to communicate between master and slave
+
+Existing solutions (just the master slave architecture):
+
+===== Buildbot =====
+       Buildbot is a CI to help automatic builds and report build reports.  A brief notes on the architecture:
+          * master polls in the VCS to detect changes. 
+          * There is a scheduler module within the master which maintains a queuing system to queue the build requests.
+          * Build Requests are managed by builder(master) which commands the slave when and how a build should go on.
+          * Uses TCP connection, which remains open for many hours ( should be avoided)
+
+===== Bitten =====
+       Bitten is a Python CI for automatic builds, collecting various metrics
+         * Master initiates build by sending a reqest to slave
+         * Usually the request is done by writing a configuration file ( in this case in XML format)
+         * Simple peer to peer communication protocol to exchange information
+         * No SSL or authentication for slave registration 
+         
+
+===== Condor =====
+       Condor is a research project aimed at utilizing idle cpu cycles by distributed computing.
+         * Usually a job is submitted to condor(master) with some specifications
+         * Condor looks for a likely machine(slave) to the job on the machine's idle. 
+         * Has the ability to preempt the job and shift it to another machine.
+    
+===== Jenkins ===== 
+        Yet to fill in. 
+
+
+==== Proposed Architecture ====
+
+
+
+
 ==== Task Manager ====
 
 What we need:
