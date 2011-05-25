@@ -37,6 +37,7 @@ This section describes projects where a Python interpreter itself has been embed
 
  * PyXPComExt has the full Python interpreter embedded.  [[http://pyxpcomext.mozdev.org/|PyXPCOMExt]] is the interpreter as a XULRunner extension; [[http://developer.mozilla.org/en/PyDOM|PyDOM]] is a library that will almost certainly be needed, that allows you to manipulate the browser's DOM model using Python. The API is (almost) identical to that of !JavaScript. Effectively, where browsers have built-in support for `lang="javascript"`, PyXPComExt adds `<script lang="python"> .... </script>` to Firefox.
  * !AppCelerator's [[http://www.appcelerator.com/appcelerator-platform/titanium-architecture/|Titanium]] provides support for `<script type="text/python"> ... </script>`, using IronPython and Silverlight.
+ * [[http://www.google.com/url?sa=D&q=https://github.com/Nitrogenycs/firebreath-x|Firebreath]] is an NPAPI plugin that extends access to the full features of DOM programming out to other programming languages, including python.
  
 == Python Wrappers around Web "Libraries" and Browser Technology ==
 
@@ -49,6 +50,7 @@ This section describes projects where you can (or have to) create your own web b
  * !WebKit with the Objective-C bindings (MacOS X users only).  [[http://webkit.org|Webkit]] itself has Objective-C bindings, on MacOS X.  MacOS X's Objective-C technology comes with automatic bindings to all major programming languages, including Python (using pyobjc).  Consequently, you can directly manipulate the DOM model from Python.  However, unlike the use of MSHTML, and unlike XULrunner and the patched version of !WebKit, the Objective-C !WebKit bindings are limited to ''just'' the DOM model, and are limited to strict accordance with the W3C standards (rather than the de-facto standards defined by real-world !JavaScript usage).  So, for example, `XMLHttpRequest` is not included in the Objective-C bindings (whereas it is in XULRunner); and the `embed` element takes width and height strictly as integers, rather than accepting `100px` and stripping off `px`.
  * [[http://wiki.laptop.org/go/HulaHop|HulaHop]] provides Python access to DOM model manipulation - via XUL/Gecko Interfaces.  !HulaHop is part of the OLPC Sugar Project, but is available stand-alone.  It depends on python-xpcom (part of XULRunner).
  * PyWin32 comtypes can be used (with care!) to create an MSHTML IWebBrowser2 ActiveX window and thus provide access to the full DOM features of the MSHTML (Trident) engine.  PyjamasDesktop uses this technique to create the [[http://pyjamas.svn.sourceforge.net/viewvc/pyjamas/trunk/pyjd/mshtml.py|mshtml.py]] port.  Note that creation and use of `XMLHttpRequest` is also shown in PyjamasDesktop's `mshtml.py`.
+ * python-wxWebKit is beginning to provide Python access to DOM model manipulation - via python bindings that are auto-generated using SWIG.  The goal of the project is to provide full access to the entire DOM model, and this goal is, as of May 2011, approximately 25% completed.
 
 == Python Wrappers around Web Browser "Test Suite" Libraries ==
 
