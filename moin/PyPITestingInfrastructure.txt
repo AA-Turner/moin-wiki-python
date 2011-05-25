@@ -166,13 +166,92 @@ Additional things to take into account:
 
 Existing solutions:
 
- * Pony-build (integrated)
- * Apycot/narval (integrated)
- * Buildbot (integrated)
- * PythonTasks (separated)
+===== Concepts =====
 
+ * Communication between tasks: Output of some tasks (raw data) can be used by other tasks as input.
+ * Dependencies may follow two modes:
+    * Direct dependencies: Task A depends on B, so B must be executed before A.
+    * Output dependencies: A dependency need D input (or raw data), B produces D data during execution. Task order is the same : B -> A, but it's more modular. For example, B and C can produce D data, but B and C don't work on the same platform.
+ * Resources Control is a way to stop a task if it reach a resource limit (CPU time, memory quantity).
+ * Fine Configuration presents in BuildBot, when you configure a task you can configure how to catch failure and warnings : http://buildbot.net/buildbot/docs/latest/Common-Parameters.html#Common-Parameters.
 
-==== report your finding <here> ====
+===== Pony-build =====
+Pony-build is the continuous integration tools used last year for PYTI. Characteristics:
+ * No dependencies between tasks, task-manager take a list of task to be executed task by task.
+ * Task manager stop on fail of one task, cannot mark a task as skipped and don't mark dependencies as skipped.
+ * No communication between tasks.
+ * No tests.
+ * No documentation.
+ * Part of pony-build, but seems easy to extract.
+
+====== Score ======
+ * No dependencies (0/4).
+ * Stop on fail (1/3).
+ * No communication (0/1)
+ * No tests (0/2).
+ * No documentation (0/2).
+ * Part of pony-build, easy to extract (2/3).
+ * Slighty used (1/4).
+
+Total: 4
+
+===== Apycot/narval =====
+Narval is a task-manager library written by logilab and is used by apycot, a continuous integration tool written by logilab. Characteristics:
+ * Seems complex.
+ * Some part of the API seems not adapted, a POO approach seems better than the existing one.
+ * Tasks are associated in a recipe module.
+
+====== Score ======
+ * Dependencies: direct and output mode supported (4/4).
+ * Fine configuration of what doing if a step failed or emits warnings (3/3).
+ * Communications (1/1).
+ * No tests (0/2).
+ * No specific documentation (0/2).
+ * Part of narval, hard to extract (2/3).
+ * Slighty used (1/3).
+
+Total: 11
+
+===== Buildbot =====
+Buildbot is the reference of continuous integration tool in python world. Characteristics:
+ * In buildbot vocabulary, steps are what we called tasks.
+ * Fine configuration of what doing if a step failed or emits warnings.
+ * Steps seems registered into two different places (master and slave).
+ * All buildbot system seems really dependent on twisted.
+ * Part of buildbot, intermediate quantity of work to extract it.
+
+====== Score ======
+
+ * No dependencies between tasks, scheduler take a list of builder identifier (0/4).
+ * Fine configuration of what doing on fail, warning (3/3).
+ * No communication between tasks (0/1).
+ * Unittests (2/2).
+ * Good documentation (2/2).
+ * Part of buildbot (1/3).
+ * Very used (3/3).
+ * Dependencies on twisted (-1).
+
+Total: 10
+
+===== PythonTasks =====
+PythonTasks is one of boris's project, it's still in beta and no doc is written for the moment. Characteristics:
+ * Dependencies is either direct dependencies (task A depends on B) or output dependencies (task A need D input, B produces D, B must be executed before A). For the output dependencies mode, some code must be written as it will not be part (for the moment) of PythonTasks.
+ * Tasks can communicate between them, all of them receive the same Communication object which registered all the output of tasks.
+ * When a task fail, all others tasks, which depends on it, are marked as skipped before it failed (if B depends on A; A failed, B is marked as skipped before A has failed) and so recursively. Works the same way when a task has skipped.
+ * Unittest and code coverage.
+ * No documentation.
+
+====== Score ======
+
+ * Dependencies (direct or output) but requires works for output dependencies mode (3/4).
+ * Stop on fail, mark dependencies as skipped, but no fine configuration of tasks (like buildbot) (2/3).
+ * Communication between tasks (1/1).
+ * Unittests (2/2).
+ * No documentation (0/2).
+ * Separated package (3/3).
+ * Not used (0/3).
+
+Total: 11
 
 === weekly meeting report ===
 
