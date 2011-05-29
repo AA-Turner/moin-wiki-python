@@ -254,6 +254,30 @@ PythonTasks is one of boris's project, it's still in beta and no doc is written 
 
 Total: 11
 
+==== Dependent part ====
+
+===== Setup API =====
+
+ * We can send an archive consisting of distributions + dependencies along with a configuration file by means of an FTP or SFTP connection.
+ * Packages can be uploaded in a static folder (/tmp probably) . (or) We can specify the folder in the config file ( preferred solution :1st one) 
+ * At the end of uploading, slave launch a command trough ssh in order to start the execution part (or) a server is launch on vm when the vm's os start and slave send a message to this server.
+
+===== Raw Data API =====
+
+ * Reports are sent once all tasks are finished ( to keep the implementation simple) (or) send raw data for each task's end.( Preferred solution : 1st one )
+ * For the format , we both agreed on jsonrpc (http://groups.google.com/group/json-rpc/web/json-rpc-2-0).
+ * A jsonrpc request is sent from the vm to a method in the slave with two parameters : id of the task, a dictionary with all raw data + all additional info(time, memory).
+ * Raw data can be the following: 
+         Solution 1 :
+               stdout and stderr 
+         Solution 2 :
+               parsed form of stdout. Would result in less data
+         Preferred solution ( solution 2) 
+
+
+
+
+
 === weekly meeting report ===
 
 
