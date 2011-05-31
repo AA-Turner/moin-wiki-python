@@ -4,11 +4,11 @@ Generators are very useful and can help simplify your code and improve its perfo
 
 The simplification of code is a result of generator function and generator expression support provided by Python.
 
-To illustrate this, we will compare different implementations that implement a function, "firstn", that represents the first ''n'' non-negative integers, where ''n'' is a really big number, and assume (for the sake of the examples in this section) that each integer take up a lot of space, say 10 megabytes each. 
+To illustrate this, we will compare different implementations that implement a function, "firstn", that represents the first ''n'' non-negative integers, where ''n'' is a really big number, and assume (for the sake of the examples in this section) that each integer take up a lot of space, say 10 megabytes each.
 
 Note: Please note that in real life, integers do not take up that much space, unless they are really, really, really, big integers. For instance you can represent a 309 digit number with 128 bytes (add some overhead, it will still be less than 150 bytes).
 
-First, let us consider the simple example of building a list and returning it. 
+First, let us consider the simple example of building a list and returning it.
 
 {{{
 #!python
@@ -23,7 +23,7 @@ def firstn(n):
 sum_of_first_n = sum(firstn(1000000))
 }}}
 
-The code is quite simple and straightforward, but its builds the full list in memory. This is clearly not acceptable in our case, because we cannot afford to keep all ''n'' "10 megabyte" integers in memory. 
+The code is quite simple and straightforward, but its builds the full list in memory. This is clearly not acceptable in our case, because we cannot afford to keep all ''n'' "10 megabyte" integers in memory.
 
 So, we resort to the generator pattern. The following implements generator as an iterable object.
 
@@ -34,10 +34,10 @@ class firstn(object):
     def __init__(self, n):
         self.n = n
         self.num, self.nums = 0, []
-    
+
     def __iter__(self):
         return self
-    
+
     def next(self):
         if self.num < self.n:
             cur, self.num = self.num, self.num+1
@@ -70,7 +70,9 @@ sum_of_first_n = sum(firstn(1000000))
 
 Note that the expression of the number generation logic is clear and natural. It is very similar to the implementation that built a list in memory, but has the memory usage characteristic of the iterator implementation.
 
-Generator expressions provide an additional shortcut to build generators out of expressions similar to that of list comprehensions. 
+''Note: the above code is perfectly acceptable for expository purposes, but remember that in Python 2 '''firstn()''' is equivalent to the built-in '''xrange()''' function, and in Python 3 '''range()''' is a generator. The built-ins will always be much faster. SH''
+
+Generator expressions provide an additional shortcut to build generators out of expressions similar to that of list comprehensions.
 
 In fact, we can turn a list comprehension into a generator expression by replacing the square brackets ("[ ]") with parentheses. Alternately, we can think of list comprehensions as generator expressions wrapped in a list constructor.
 
@@ -96,11 +98,11 @@ Keep in mind that generators are a special type of iterator, and that containers
 
 The performance improvement from the use of generators is the result of the lazy (on demand) generation of values, which translates to lower memory usage. Furthermore, we do not need to wait until all the elements have been generated before we start to use them. This is similar to the benefits provided by iterators, but the generator makes building iterators easy.
 
-This can be illustrated by comparing the `range` and `xrange` built-ins of Python 2.x. 
+This can be illustrated by comparing the `range` and `xrange` built-ins of Python 2.x.
 
 Both `range` and `xrange` represent a range of numbers, and have the same function signature, but `range` returns a `list` while `xrange` returns a generator (at least in concept; the implementation may differ).
 
-Say, we had to compute the sum of the first ''n'', say 1,000,000, non-negative numbers. 
+Say, we had to compute the sum of the first ''n'', say 1,000,000, non-negative numbers.
 
 {{{
 #!python
@@ -161,17 +163,17 @@ Generators  can be composed.  Here we create a generator on the squares of conse
 
 {{{
 #!python
-#square is a generator 
+#square is a generator
 square = (i*i for i in irange(1000000))
 #add the squares
 for i in square:
    sum = sum +i
 }}}
 
-Here, we compose a square generator with the takewhile generator, to generate 
+Here, we compose a square generator with the takewhile generator, to generate
 squares less than 100
 
-{{{ 
+{{{
 #!python
 #add squares less than 100
 square = (i*i for i in count())
@@ -239,7 +241,7 @@ eggs = [x*2 for x in [1, 2, 3, 4, 5]]
 
 For the above example, a generator comprehension or list comprehension is sufficient unless you need to apply that in many places.
 
-Also, a generator function will be cleaner and more clear, if the generated expressions are more complex, involve multiple steps, or depend on additional temporary state. 
+Also, a generator function will be cleaner and more clear, if the generated expressions are more complex, involve multiple steps, or depend on additional temporary state.
 
 Consider the following example:
 
@@ -253,6 +255,6 @@ def unique(iterable, key=lambda x: x):
             seen.add(ekey)
 }}}
 
-Here, the temporary keys collector, ''seen'', is a temporary storage that will just be more clutter in the location where this generator will be used. 
+Here, the temporary keys collector, ''seen'', is a temporary storage that will just be more clutter in the location where this generator will be used.
 
-Even if we were to use this only once, it is worth writing a function (for the sake of clarity; remember that Python allows nested functions). 
+Even if we were to use this only once, it is worth writing a function (for the sake of clarity; remember that Python allows nested functions).
