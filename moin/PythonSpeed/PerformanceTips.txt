@@ -357,6 +357,17 @@ You might think that this avoids having to look up the key twice.
 It actually doesn't (even in python 3.0), but at least the double 
 lookup is performed in C.
 
+Another option is to use the [[http://docs.python.org/py3k/library/collections.html#collections.defaultdict|defaultdict]] class:
+
+{{{#!python numbers=disable
+from collections import defaultdict
+
+wdict = defaultdict(int)
+
+for word in words:
+    wdict[word] += 1
+}}}
+
 == Import Statement Overhead ==
 
 {{{import}}} statements can be executed just about anywhere. It's often
