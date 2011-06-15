@@ -11,6 +11,14 @@
 
 Now that does not change the contents of the array (commenting out a particular line in the file).  I know you can easily make a loop counter, an d add i=i+1, but isn't there a better way?
 
+== Answer==
+Try using the enumerate builtin.
+{{{
+ lines=list(open("/etc/fstab","r").readlines())
+ for index,line in enumerate(lines):
+    if line.split()[1]=="/": 
+       lines[index] ="# "+line
+}}}
 ## Leave the note below so that editors can follow the instructions...
 
 {{{#!wiki note
@@ -19,3 +27,4 @@ When ''answering'' questions, add the CategoryAskingForHelpAnswered category whe
 
 ----
 CategoryAskingForHelp
+CategoryAskingForHelpAnswered
