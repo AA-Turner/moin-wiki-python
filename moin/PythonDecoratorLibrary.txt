@@ -1854,5 +1854,65 @@ if __name__ == '__main__':
         print ex.message
 }}}
 
+== Class method decorator using instance ==
+
+When decorating a class method, the decorator receives an function not yet bound to an instance.
+
+The decorator can't to do anything on the instance invocating it, 
+unless it actually is a descriptor.
+
+
+{{{
+#!python
+from functools import wraps
+
+def decorate(f):
+    '''
+    Class method decorator specific to the instance.
+
+    It uses a descriptor to delay the definition of the 
+    method wrapper.
+    '''
+    class descript(object):
+        def __init__(self, f):
+            self.f = f
+        
+        def __get__(self, instance, klass):
+            if instance is None:
+                # Class method was requested
+                return self.make_unbound(klass)
+            return self.make_bound(instance)
+        
+        def make_unbound(self, klass):
+            @wraps(self.f)
+            def wrapper(*args, **kwargs):
+                '''This documentation will vanish :)'''
+                raise TypeError(
+                    'unbound method %s() must be called with %s instance '
+                    'as first argument (got nothing instead)'
+                    %
+                    (self.f.__name__, klass.__name__)
+                )
+            return wrapper
+        
+        def make_bound(self, instance):
+            @wraps(self.f)
+            def wrapper(*args, **kwargs):
+                '''This documentation will disapear :)'''
+                print "Called the decorated method %r of %r"%(self.f.__name__, instance)
+                return self.f(instance, *args, **kwargs)
+            # This instance does not need the descriptor anymore,
+            # let it find the wrapper directly next time:
+            setattr(instance, self.f.__name__, wrapper)
+            return wrapper
+
+    return descript(f)
+
+}}}
+
+This implementation replaces the descriptor by the actual decorated function a.s.a.p. to avoid overhead, but you could keep it to do even more (counting calls, etc...)
+
+
+
 ----
 CategoryDocumentation 
