@@ -2,6 +2,14 @@
 
  * Silver Spring, Maryland USA 21-Jun-2011 2000UTC
 
+Attendees:
+ * Erik Bray
+ * Jason Coombs
+ * Michael Droettboom
+ * Eric Smith
+ * Barry Warsaw
+ * Steve Waterbury
+
 = Tasks =
 
  * review Martin's branch {{{hg clone http://hg.python.org/features/pep-382}}}
@@ -15,6 +23,7 @@
    * {{{.pth}}} files that contain path names: do they set {{{__path__}}} correctly?
    * is {{{package.__path__}}} set correctly? must contain one {{{*}}}, at the beginning
    * test that {{{load_module_with_path()}}} (pep 302 loader) gets called correctly
+   * test AttributeError when that's missing
  * is {{{importlib}}} is covered?
  * pull down 3rd party pep 302 loader and see if/how it's broken
  * refactor import.c to yank out anything that can be written as a 302 loader?
@@ -27,6 +36,7 @@
  * stylistic cleansing of import.c
    * tests against 0 vs. NULL
    * mispellings
+   * should LBYL on AttributeError in {{{find_path}}
 
 = PEP Questions =
 
