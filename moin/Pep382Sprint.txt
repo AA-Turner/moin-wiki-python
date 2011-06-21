@@ -10,6 +10,7 @@
  * do we have sufficient test coverage?
    * top-level non-trivial __init__.py
    * various reload scenarios
+   * both {{{__init__.py}}} and {{{.pth}}} file exists
  * is {{{importlib}}} is covered?
  * pull down 3rd party pep 302 loader and see if/how it's broken
  * refactor import.c to yank out anything that can be written as a 302 loader?
@@ -19,3 +20,8 @@
  * attempt a merge of mvl's branch to trunk
  * figure out build problems on windows (jaraco)
  * test_imp gives one failure on fedora (make sure imp module has been updated)
+
+= PEP Questions =
+
+ * Clarify what happens when a directory contains both an {{{__init__.py}}} and a {{{.pth}}} file
+ * PEP should clarify what the impact of the PEP is on existing namespace packages (i.e. those with magic {{{__init__.py}}} files
