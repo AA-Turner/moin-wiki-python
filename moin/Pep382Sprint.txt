@@ -35,7 +35,7 @@ Bitbucket clone: https://bitbucket.org/embray/pep-382-sprint
    * does this really make our lives easier?
  * attempt a merge of mvl's branch to trunk
  * figure out build problems on windows (jaraco)
- * test_imp gives one failure on fedora (make sure imp module has been updated)
+ * test_imp gives one failure on fedora (make sure imp module has been updated) - '''fixed'''
  * stylistic cleansing of import.c
    * tests against 0 vs. NULL
    * mispellings
@@ -49,4 +49,20 @@ Bitbucket clone: https://bitbucket.org/embray/pep-382-sprint
  * Impact of PEP on setuptools/packaging/distutils*
  * Use case for extending existing .pth file syntax (minus {{{import}}} support)?  I.e why are non-* lines in the .pth files added to __path__?  And should these really be called {{{.pth}}} files?  At least clarify the PEP!
 
-= 
+=  Action Items =
+
+"It's all so freaking big we can never make any progress on it" - ES
+
+Finish off PEP 302:
+ * Jason to create bitbucket clone for import.c refactoring
+ * Eric to experiment zipping the stdlib and delete the Lib dir by sys.path hacking, does Python still work?
+ * Isolate a path loader to match zip importer perhaps refactored from importlib
+ * Add this loader to the front of path_hooks and see if stdlib can be imported
+ * Rip out the stuff out of import.c that's not associated with calling path_hooks
+ * Benchmarking, is the Python version good enough?  If so, who needs C?
+ * If not, make a C version of the loader
+
+In parallel:
+ * Complete the PEP 382 tests identified above
+ * Clarify open PEP 382 questions
+ * Rewrite zipimport in Python?
