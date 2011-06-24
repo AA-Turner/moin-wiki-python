@@ -1,0 +1,76 @@
+= Some use cases of the 'develop' command =
+
+The 'develop' command is used to pseudo-install a project source without copying any files, which is a useful feature of setuptools and will be implemented for packaging. 
+
+However, different people may have different purposes and will use 'develop' in a very different way, so even though we argued a lot in the mailing list but have not yet reach an extensive consensus on how the future 'develop' of packaging should behave. 
+
+Thus this page is created just to collect different use cases being talked about in our fellowship list, which will be taken as an important idea base to implement an elegant solution that work for all at the most extent. 
+
+Note: These use cases is not complete and people can help me enhance it.
+
+
+== Use Case 1(from Eric): ==
+
+'''Story Description:'''
+One has clones of a spamproject and hamlib in different directories, and spamproject depends on hamlib.  
+
+'''What he wants:'''
+
+ * make hamlib visible to the Python used to run, e.g. the test suite of spamproject without installing hamlib
+
+ * hamlib should be just importable from spamproject; any other invocation of Python would not find hamlib
+
+== Use Case 2(from Carl): ==
+
+'''Story Description:'''
+One has a foobar project in which a 'foobar' directory is the one his setup.{py,cfg} actually supposed to install, but he also has additional Python packages alongside 'foobar', e.g. a 'tests' directory.
+
+'''What he wants:'''
+
+ * 'tests' should not be importalbe, because it's not what he really wants
+
+== Use Case 3(from Tarek): ==
+
+'''Story Description:'''
+One wants to install something inplace with 'develop' command.
+
+'''What he wants:'''
+ * does not need to run sudo to install, which means 'develop' will not touch the site-packages at all
+
+== Use Case 4(from Tarek): ==
+
+'''Story Description:'''
+
+One has a foobar project and he is in its project source tree, then he runs 'develop' in it. In addition, the virtualenv has not yet installed and he doesn't want to install it at that time.
+
+'''What he wants:'''
+ * foobar seems installed for him
+ * foobar should not be shared with the whole system, or with everyone
+
+== Use Case 5(from Carl): ==
+
+'''Story Description:'''
+One has a private VPS that hosts a number of Mercurial repositories. In addition, he has some custom plugins and hooks that need to run for all users of the server. These plugins and hooks are frequently updated.
+
+'''What he wants:'''
+ * don't have to bump version numbers and make releases all the time
+
+== Use Case 6(from Doug): ==
+
+'''Story Description:'''
+There is a python development team and his application cann't work in a virtualenv for a variety of reasons.
+
+'''What he wants:'''
+ * install into the global site-packages in 'development mode'
+
+== Use Case 7(from Doug): ==
+
+'''Story Description:'''
+One is working on a foobar project and he has opened a python intepreter(we call it INTPT-A).
+
+'''What he wants:'''
+ * all applications using INTPT-A can see foobar, without having to use an environment variable
+ * don't need to manually edit any files to configure the path for INTPT-A
+ * any application using INTPT-A doesn't need to be run from its particular directory on the filesystem in order to see the changes or his package
+ * all entry points, including console scripts, are registered correctly with INTPT-A
+ * can edit files in his project and re-run the intepreter to have the changes picked up, without having to redo the 'python setup.py develop' or 'pysetup develop' step
