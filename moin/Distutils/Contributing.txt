@@ -6,11 +6,11 @@ understanding of Mercurial: clone, update, diff, commit, merge.
 
 All bugs and new features should have a report opened on http://bugs.python.org/
 to let developers coordinate (i.e. not duplicate work) and review patches before
-they are integrated.  The field named Component must be set to Distutils2 and
-Version to 3.3.
+they are integrated.  The field named Component should be set to [[http://bugs.python.org/issue?@columns=title,id,activity,status&@sort=activity&@group=priority&@filter=components,status&@pagesize=50&@startwith=0&status=1&components=25&@dispname=distutils2|Distutils2]], to let the maintainers be automatically notified of the report, and Version to 3.3.  Some bugs only use the [[http://bugs.python.org/issue?@columns=title,id,activity,status&@sort=activity&@group=priority&@filter=components,status&@pagesize=150&@startwith=0&status=1&components=3&@dispname=distutils|Distutils]] component.
 
-This page was written with the help of an old version of the devguide,
-thanks to its authors.  See also http://mercurial.aragost.com/kick-start/en/tasks/
+distutils1 should be considered a maintenance branch of distutils2; even for bugs originally reported against distutils1, patches should be developed against distutils2, unless the bug is reproducible with distutils1 only or targets code removed in distutils2.  There are more tests and more useful support code in distutils2, so it’s easier to work on tests for distutils2 and let its developers will take care of the backport to distutils1.
+
+This page was written with the help of an old version of the [[http://docs.python.org/devguide/|Python developers’ guide]], thanks to its authors.  See also http://mercurial.aragost.com/kick-start/en/tasks/
 for another tutorial describing the same workflow, with pictures but without
 packaging-specific parts, and the Mercurial wiki: http://mercurial.selenic.com/wiki/NamedBranches
 
@@ -59,9 +59,9 @@ diff to apply.
 You can work on your feature or bug and commit as needed.  The code lives in
 Lib/packaging and its documentation in Doc/packaging, Doc/install and
 Doc/library/packaging.*  Some bugs also require editing modules like site or
-sysconfig, or their documentation.
+sysconfig, or their documentation.  Ideally, the first step is to write a test that fails, thus demonstrating the bug, and then change the code to make the test pass.
 
-The CPython Developers Guide contains good advice that applies to distutils2
+The [[http://docs.python.org/devguide/|Python developers’ guide]] contains good advice that applies to distutils2
 too.  For example, it tells you about the {{{make patchcheck}}} command, to run
 from the root of a clone, to perform some checks for common mistakes.
 
@@ -134,7 +134,7 @@ Let’s try this one.
 
 == Mercurial-Roundup integration ==
 
-On each bug page, there is a field called “Remote hg repo”; add the HTTP URI of
+On each bug page, there is a [[http://docs.python.org/devguide/triaging#mercurial-repository|field]] called “Remote hg repo”; add the HTTP URI of
 your clone on Bitbucket, with the branch name after a {{{#}}} sign, like
 {{{http://bitbucket.org/<username>/cpython#mywork}}}.  After this, simply pushing
 the “Create Patch” button will generate a diff between the default branch of the
@@ -146,7 +146,7 @@ public clone, and “Create Patch” again.
 Don’t be worried about the review: Even experimented core developers have their
 patches sent back to them for changes.  Getting a review is a sign that your
 work is noticed and that progress is made towards including it in the official
-repository.
+repository.  Reply to feedback about the changes, update your patch, ping the maintainers (automatically subscribed to distutils and distutils2 bugs) as needed.
 
 
 == The end ==
