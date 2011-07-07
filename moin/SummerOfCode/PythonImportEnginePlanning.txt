@@ -1,3 +1,94 @@
-''Page for design and implementation details for the Import Engine GSoC 2011 project.'''
+''Page for design and implementation details for the Import Engine GSoC 2011 project.''
 <<BR>>
 Main proposal located at: [[http://www.google-melange.com/gsoc/proposal/review/google/gsoc2011/gslodkowicz/1#|GSoC Melange]]
+
+PEP: XXX
+Title: Python Import Engine
+Version: $Revision$
+Last-Modified: $Date$
+Author: Nick Coghlan <ncoghlan@gmail.com>, Greg Slodkowicz <jergosh@gmail.com>
+Status: Draft
+Type: Standards Track
+Content-Type: text/x-rst
+Created: 4-Jul-2011
+Post-History: XXX
+
+
+Abstract
+========
+
+This PEP proposes incorporating an 'import engine' which would encapsulate all state related to importing modules into a single object.  Currently the bulk of importing work is done by means of module finders and loaders, and their interfaces would have to be updated for them to work with import engine objects.  In that sense, this PEP constitutes an revision of finder and loader interfaces described in PEP 302[1]_.
+
+
+Rationale
+=========
+
+- original implementation included  
+- allows maintaining separate 
+- existing state
+Historically, any modification to the import functionality required re-implementing __import__() entirely. PEP 302 provides a major improvement by introducing separation between imports of different types of modules.
+
+This introduced additional process-global state stored in the sys module. This, along with original import-related state, comprises:
+* sys.modules
+* sys.path
+* sys.path_hooks
+* sys.meta_path
+* sys.path_importer_cache
+* the import lock (imp.lock_held()/acquire_lock()/release_lock())
+
+Isolating this state into a self-contained object would allow subclassing to add additional features (e.g. module import notifications). The engine would also be  subclassed to use the import engine API to interact with the existing process global state.
+
+Proposal
+========
+
+We propose to introduce an ImportEngine class to encapsulate import functionality. This includes the __import__ function which can be bootstrapped into Python to be executed when the import statement is encountered in the code and also load_module(), equivalent to imp.load_module() and importlib.load_module.
+
+Since the new style finders and loader should also have the option to modify the global import state, we introduce a GlobalImportState module with interface identical to ImportEngine but taking advantage of the global state. This could be implemented using properties.
+
+
+
+Design and Implementation
+=========================
+
+The proposed extension would comprise the following objects:
+
+ImportEngine
+    __import__
+    load_module
+    from_engine()
+    
+GlobalImportEngine
+
+Global variables:
+engine.sysengine - instance of GlobalImportEngine
+
+Necessary changes to finders/loaders:
+find_module()
+load module()
+# Code example
+
+References
+==========
+
+.. [1] PEP 302, PEP Purpose and Guidelines, Warsaw, Hylton
+   (http://www.python.org/dev/peps/pep-0302)
+
+.. [2] Importlib documentation, Cannon
+   (http://docs.python.org/dev/library/importlib)
+
+
+Copyright
+=========
+
+This document has been placed in the public domain.
+
+
+
+..
+   Local Variables:
+   mode: indented-text
+   indent-tabs-mode: nil
+   sentence-end-double-space: t
+   fill-column: 70
+   coding: utf-8
+   End:Abstract
