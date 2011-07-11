@@ -44,6 +44,14 @@ def unescape(s):
     return s
 }}}
 
+or alternatively (before [[http://bugs.python.org/issue2927|issue2927]]):
+
+{{{
+>>> from HTMLParser import HTMLParser
+>>> HTMLParser.unescape.__func__(HTMLParser, 'ss&copy;')
+u'ss\xa9'
+}}}
+
 Note that this will undo exactly what {{{cgi.escape()}}} does; it's easy to extend this to undo what
 the {{{html_escape()}}} function above does.  Note the comment that converting the {{{&amp;}}} must be last;
 this avoids getting strings like {{{"&amp;lt;"}}} wrong.
