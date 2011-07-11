@@ -12,11 +12,27 @@ Note: These use cases are not complete and people can help me enhance.
 == Use Case 1 (from Carl) ==
 
 '''Story Description:'''
-One has a foobar project in which a 'foobar' directory is the one his setup.{py,cfg} actually supposed to install, but he also has additional Python packages alongside 'foobar', e.g. a 'tests' directory.
+Carl has a foobar project which contains a 'foobar' directory that is referenced in his setup.{py,cfg} as the a package to be installed.  He also has additional Python packages alongside 'foobar' (e.g. a 'tests' directory), which he does not want installed.
 
-'''What he wants:'''
+{{{
+.
+|-- foobar
+|   |-- __init__.py
+|   |-- bar.py
+|   `-- foo.py
+|-- setup.cfg
+`-- tests
+    |-- __init__.py
+    |-- test_bar.py
+    `-- test_foo.py
+}}}
 
- * 'tests' should not be importable, because it's not what he really wants
+'''Type:'''
+Feature request
+
+'''Requirements:'''
+
+ * The 'tests' directory, or any directory not referenced in the setup.{cfg,py} for install, should not be importable, because it could have an unintended collision with other installed packages.
 
 == Use Case 2 (from Tarek) ==
 
