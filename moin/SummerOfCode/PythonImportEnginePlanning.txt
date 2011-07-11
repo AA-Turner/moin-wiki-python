@@ -28,12 +28,12 @@ Post-History: XXX
 Abstract
 ========
 
-This PEP proposes incorporating an 'import engine' class which would encapsulate all state related to importing modules into a single object.  Currently the bulk of importing work is done by means of module finders and loaders, and their interfaces would have to be updated for them to work with import engine objects.   In that sense, this PEP constitutes an revision of finder and loader interfaces described in PEP 302 [1]_.
+This PEP proposes incorporating an 'import engine' class which would encapsulate all state related to importing modules into a single object and provide an alternative to the built-in implementation of the import statement, which is syntactic sugar for the ``__import__()`` method.  Currently the bulk of importing work is done by means of module finders and loaders, and their interfaces would require a simple change in order to work both the builtin import functionality and importing via import engine objects.  In that sense, this PEP constitutes a revision of finder and loader interfaces described in PEP 302 [1]_.
 
 Rationale
 =========
 
-Historically, any modification to the import functionality required re-implementing __import__() entirely.  PEP 302 provides a major improvement by introducing separation between imports of different types of modules.  As a result, additional process-global state is stored in the sys module.  This, along with earlier import-related global state, comprises:
+Historically, any modification to the import functionality required re-implementing ``__import__()`` entirely.  PEP 302 provides a major improvement by introducing separation between imports of different types of modules.  As a result, additional process-global state is stored in the sys module.  This, along with earlier import-related global state, comprises:
 
 * sys.modules
 * sys.path
@@ -47,7 +47,7 @@ Isolating this state would allow multiple import states to be conveniently store
 Proposal
 ========
 
-We propose introducing an ImportEngine class to encapsulate import functionality. This includes the ``__import__()`` function which can be bootstrapped into Python to be executed when the import statement is encountered in the code and also ``import_module()``, equivalent to ``importlib.import_module()`` [3]_.
+We propose introducing an ImportEngine class to encapsulate import functionality. This includes the ``__import__()`` function which can be used to as an alternative to the built-in ``__import__()`` when desired and also ``import_module()``, equivalent to ``importlib.import_module()`` [3]_.
 
 Since the new style finders and loaders should also have the option to modify the global import state, we introduce a ``GlobalImportState`` class with an interface identical to ``ImportEngine`` but taking advantage of the global state. This can be easily implemented using class properties.
 
@@ -103,16 +103,14 @@ An implementation based on Brett Cannon's importlib has been developed by Greg S
 Open Issues
 ~~~~~~~~~~~
 
-The existing importlib implementation depends on several functions from ``imp``, Python's builtin implementation of __import__ located in *Python/import.c*. These functions are unaware of ImportEngine and place the newly imported module in ``sys.modules``.  Naturally, this is a problem from the ImportEngine point of view.  The offending methods are:
+The existing importlib implementation depends on several functions from ``imp``, Python's builtin implementation of ``__import__`` located in *Python/import.c*. These functions are unaware of ImportEngine and place the newly imported module in ``sys.modules``.  Naturally, this is a problem from the ImportEngine point of view.  The offending methods are:
 
 * imp.init_builtin()
 * imp.load_dynamic()
 
-Ideally, these methods would be re-implemented to be aware of ImportEngine, but seeing as they provide low-level dynamic library loading, it would likely be difficult to do so in pure Python. Another option would be to equip these methods with extra parameters, either passing an ImportEngine instance directly or a modules dictionary in which to put the module. Such selective intervention into ``imp`` would be hard to justify.
+However, since there can be only a single instance of each builtin/dynamic module per process, they are essentially process-global regardless of the way they are imported. Currently, the simplest solution for supporting them in ImportEngine seems to have new style loaders call the existing imp methods and then copy appropriate references from ``sys.modules`` into the state inside the import engine.
 
 Similarly, ``imp.NullImporter`` implements a ``load_module`` method which is incompatible with 'new style' loaders. Since the ``NullImporter`` class does next to nothing (i. e. always returns None), it has been reimplemented in Python. The only way this could cause problems would be explicitly checking if a module's importer is an imp.NullImporter (which occurs only in some unittests).
-
-These problems would disappear if import engines were to be fully integrated into Python, i. e. on the level of import.c as opposed to only importlib.
 
 References
 ==========
