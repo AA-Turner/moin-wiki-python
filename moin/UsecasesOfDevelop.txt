@@ -8,6 +8,10 @@ Thus this page is created just to collect different use cases being talked about
 
 Note: These use cases are not complete and people can help me enhance. Question should be addressed in [[http://bugs.python.org/issue8668|Issue 8668]].
 
+The develop command writes three pieces of information to the filesystem:
+ 1. It calls upon the build action(s) to build the package within the package's root directory.
+ 1. It calls the [build|install]_distinfo action to write the .dist-info metadata inside the build directory. (see also [[http://bugs.python.org/issue12279|Issue 12279]])
+ 1. It adds the build directory's path to a .pth file.
 
 == Use Case 1 (from Carl) ==
 
@@ -37,13 +41,14 @@ Feature request
 == Use Case 2 (from Tarek) ==
 
 '''Story Description:'''
-Tarek wants to install a project in-place with 'develop' command. Because he does not have root access to the system, therefore lacks write access to the global site-packages directory.
+Tarek wants to install a project in-place with 'develop' command. Because he does not have root access to the system, therefore lacks write access to the global site-packages directory. He would also like the package to be installed for no one but himself.
 
 '''Type:'''
 Unknown
 
 '''Requirements:'''
- * The develop command cannot assume it has write access to the site-packages directory. Usage of the sudo command to install the development information is not a valid solution.
+ * The develop command cannot assume it has write access to the site-packages directory. Usage of the sudo command to install the development information is not a valid solution in this case.
+ * The 
 
 == Use Case 3 (from Tarek) ==
 
