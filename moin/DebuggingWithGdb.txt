@@ -25,6 +25,8 @@ A set of GDB macros are distributed with Python that aid in debugging the Python
 
 Note that the new GDB commands this file adds will only work correctly if debugging symbols are available.
 
+Also, with gcc 4.5.2 on Ubuntu (at least) the macros fail because the '''call_function''' routine appears to be between '''PyEval_EvalFrameEx''' and '''PyEval_EvalCodeEx''' so the macro fails with '''No symbol "co" in current context.'''.  Recompiling python with '''make "CFLAGS=-g -fno-inline -fno-strict-aliasing"''' solves this problem.
+
 = Attaching GDB To Python =
 
 There are two ways to attach {{{gdb}}} to a Python process:
