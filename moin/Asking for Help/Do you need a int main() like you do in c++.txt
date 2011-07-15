@@ -1,2 +1,67 @@
-Describe Asking for Help/Do you need a int main() like you do in c++ here.
+== Do you need a int main() like you do in c++ here? ==
+
 '''I am a Newbie to python and need to know if there is a int main that is the body of the program.'''
+
+There's no requirement to have a `main` function in Python, but there is the concept of a main module. But let us first consider what happens when you run a Python file.
+
+Consider a Python file called `program.py`. If we run this file, the content of the file is executed. So you may have some functions and classes and perhaps some normal statements as follows:
+
+{{{#!python numbers=disable
+class C:
+    def method(self, arg):
+        ...
+
+def func(x, y, z):
+    ...
+
+answer = func(1, 2, 3)
+print "Answer is", answer
+}}}
+
+Here, the class `C` gets created, as does `method` inside the class, and the function `func` gets created. At this point, no code inside `method` or `func` is run, but these things are now defined in the module. Then, the statements at the end are run, and the first one does call `func`. Finally, a `print` statement is executed.
+
+Now, if this file were to import other modules, the content of those modules would be executed in the same way. So if we add the following to `program.py`...
+
+{{{#!python numbers=disable
+import mymodule
+}}}
+
+...then that module, perhaps defined in `mymodule.py`, would be loaded and run in the same way. Let's say that the module is written as follows:
+
+{{{#!python numbers=disable
+def modfunc(a, b):
+    ...
+
+print test_the_function(123, 456)
+}}}
+
+Even if you import `mymodule`, with the code as it is, the `modfunc` function will be defined, but then the `print` statement will be run and you'll get something printed out, even though that probably isn't what you want.
+
+So what people do in Python is this:
+
+{{{#!python numbers=disable
+def modfunc(a, b):
+    ...
+
+if __name__ == "__main__":
+    print test_the_function(123, 456)
+}}}
+
+When `mymodule` is imported, the code is run as before, but when we get to the `if` statement, Python looks to see what name the module has. Since the module is imported, we know it by the name used when importing it, so `__name__` is `mymodule`. Thus, the `print` statement is never reached.
+
+However, we might want to be able to run `mymodule.py` directly. If we do that, the code is run as before, but at the `if` statement when Python looks for the module name, since the code was not imported but actually run directly, the value of `__name__` will be `__main__`. Thus, the `print` statement will be reached and you'll be able to test the code.
+
+So in summary, by testing the `__name__` in a Python file, you can find out whether the file is the one being run directly because it will have the value `__main__`. Otherwise, it will have another value. Some people tend to write code like the following to emulate a `main` function:
+
+{{{#!python numbers=disable
+def main():
+    ...
+
+if __name__ == "__main__":
+    main()
+}}}
+
+But there's really no requirement to have such a function: it's just a convention.
+
+----
+CategoryAskingForHelp CategoryAskingForHelpAnswered
