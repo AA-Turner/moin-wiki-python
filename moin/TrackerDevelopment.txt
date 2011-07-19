@@ -330,6 +330,39 @@ Subscribe to and ask your question on the tracker-discuss mailing list. See http
 
 Since the Python Tracker is a slightly modified version of [[http://www.roundup-tracker.org |Roundup]], both Roundup's [[http://www.roundup-tracker.org/docs.html |Documentation]] and [[http://issues.roundup-tracker.org/ |issue tracker]] contain relevant information about how the Python Tracker works and problems one might find working with its code.
 
+== Using roundup-admin ==
+
+To start roundup-admin interactively use:
+{{{
+/opt/tracker-roundup/bin/roundup-admin -i <your python-dev directory>
+}}}
+
+To get the list of users, issues, msgs, files, etc:
+{{{
+roundup> list user
+}}}
+
+To see info about a specific user, issue, msg, file, etc:
+{{{
+roundup> display userXXX
+}}}
+
+To change the role of an user:
+{{{
+roundup> set userXXX roles=User,Developer
+roundup> commit
+}}}
+Users have limited privileges and can edit just some of the fields in the issue page.  Developers can edit all the fields and remove msgs and files.  Coordinators can also mark/unmark messages as spam and change some of the settings of other users (e.g. if they submitted the contributor agreement).
+
+To add back a message deleted accidentally:
+{{{
+roundup> set issueXXX messages=+YYY
+roundup> commit
+}}}
+The message will be added back in the right position.
+(This should be equivalent to b.p.o/issueXXX?@action=edit&@add@messages=YYY, but this doesn't seem to work.)
+
+
 == The Meta Tracker ==
 
 A [[http://psf.upfronthosting.co.za/roundup/meta/ |Meta Tracker]] is available for  handling bugs and features requests for the [[http://bugs.python.org/ |Python Tracker]].
