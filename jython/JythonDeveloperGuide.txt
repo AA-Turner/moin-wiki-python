@@ -12,6 +12,28 @@ This is an introduction to developing Jython, just to get someone started. It do
   * Attach patches to issues in the [[http://bugs.jython.org/|Jython bug tracker]].
     * Also, you can upload them to http://codereview.appspot.com (the Jython repository is already registered).
 
+== Subversion ==
+
+Although development has moved to a Mercurial repository, at the time of this writing (July 2011), you still need [[http://subversion.apache.org | Subversion]] installed. This is because the Mercurial repository named above
+continues to reference a part of the CPython source at {{{ https://svn.python.org }}} as a "sub-repository".
+
+The following advice is based on experience using Mercurial 1.9, [[http://sliksvn.com| Slik Subversion]] and Windows 7 (AMDx64). Other tools and operating systems exist. An installation
+that gives you the command 'svn' on your path is sufficient.
+
+If you do not have Subversion installed (and on the PATH) the Mercurial {{{hg clone}}} command will terminate with the message: {{{
+abort: The system cannot find the file specified
+}}}
+at the point where it attempts to read the sub-repository, specified in the files {{{ .hgsub }}} and {{{ .hgsubstate }}}.
+
+A second requirement is that Subversion should accept the SSL certificate from the site svn.python.org. If you have
+not used Subversion already to access the site, you may find that the {{{ hg clone }}} command hangs at the point where it attempts to read the sub-repository. A simple solution is to visit the site once from the command line as follows: {{{
+svn info https://svn.python.org/projects/python/branches/release26-maint/Lib/
+}}}
+Subversion will issue a warning about the certificate, and you will be able to "accept permanently" the site's certificate. The Mercurial clone operation should not now hang.
+
+If you see the sub-directory {{{ CPythonLib }}} created in your local repository, then the call to Subversion by Mercurial was a success. (It can take a few minutes to complete.)
+
+
 == Ant ==
 
   * [[http://ant.apache.org/|Ant]] is a Java-based tool used to build Jython from source.
@@ -35,7 +57,7 @@ Now you're ready to run tests...
 See TestingJython for some more details.
 
 == Directory layout ==
-Note the following describes the current trunk/jython. If you are working from an older tag, src doesn't exist and src/com and src/org are moved up a level. 
+Note the following describes the current trunk/jython. If you are working from an older tag, src doesn't exist and src/com and src/org are moved up a level.
 
   * `src/org`      : top level package for python
   * `src/com`      : zxJDBC related sources
@@ -74,7 +96,7 @@ Note the following describes the current trunk/jython. If you are working from a
 == Tasks ==
 
   * PerformanceEnhancements : Ideas on how to speedup Jython
-  * CodebaseCleanup : Tasks/general guidelines on keeping the codebase clean 
+  * CodebaseCleanup : Tasks/general guidelines on keeping the codebase clean
 
 === Porting external projects to Jython ===
 
