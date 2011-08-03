@@ -25,7 +25,9 @@ To understand it more clearly, look at:
 
 == Solutions ==
 
-A [[http://daveagp.wordpress.com/2010/10/26/what-a-character/|solution]] which does not require changing the source code is to set the environment variable "PYTHONIOENCODING" to "utf_8."
+Set the environment variable "PYTHONIOENCODING" appropriately for the capabilities of your output console and preference for error handling. This does not require changing your source code, however other users of your code will need to set this correctly if their consoles have similar limitations. See [[http://docs.python.org/py3k/using/cmdline.html?highlight=pythonioencoding#PYTHONIOENCODING|PYTHONIOENCODING in the python docs]].
+
+"PYTHONIOENCODING=utf_8" can be used where [[http://daveagp.wordpress.com/2010/10/26/what-a-character/|output is destined for web platforms]] and utf-8 is the actual intended encoding of the rendered markup (i.e. where you're piping stdout to another process, not reading on the console). For human-readable output on the console, instead set "PYTHONIOENCODING" to "<code page>:<error handler>" where <code page> is your console's code page, e.g. "cp850:backslashreplace". Error handlers other than "backslashreplace" can be used; see [[http://docs.python.org/py3k/using/cmdline.html?highlight=pythonioencoding#PYTHONIOENCODING|the docs]]. 
 
 Another solution is to use IDLE.  IDLE can print all unicode characters.
 
@@ -78,9 +80,11 @@ def console_mode():
 
 === Windows ===
 
-By default, the console in Microsoft Windows only displays 256 characters (cp437, of [http://en.wikipedia.org/wiki/Code_page_437 "Code page 437,"] the original IBM-PC 1981 extended ASCII character set.)
+By default, the console in Microsoft Windows only displays 256 characters (cp437, of [[http://en.wikipedia.org/wiki/Code_page_437 | "Code page 437"]], the original IBM-PC 1981 extended ASCII character set.)
 
-If you try to print unprintable character you will get {{{UnicodeEncodeError}}}.
+If you try to print an unprintable character you will get {{{UnicodeEncodeError}}}.
+
+Setting the PYTHONIOENCODING environment variable as described above can be used to suppress the error messages. Setting to "utf-8" is not recommended as this produces an inaccurate, garbled representation of the output to the console. For best results, use your console's correct default codepage and a suitable error handler other than "strict".
 
 === Various UNIX consoles ===
 
