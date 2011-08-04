@@ -1026,6 +1026,52 @@ deco1(deco2(deco3(
  * - Guido does not want to blur the distinction between statements and expressions.
  * 0 The name would be temporarily bound to the unwrapped function, which changes semantics for some types of wrappers, such as generics and properties.
 
+=== N: Another Proposal (supplied by Anonymous) ===
+{{{
+   # using Guidos example
+   # there may even be some leading character to identify them even more easily
+   # (preferred by me would be a single dot in front of the first one, chaining
+   #  subsequent ops-to-be-applied by a | pipe suggesting applying in sequence.)
+class C(object):
+
+        # decorators have to go before the (function) definition, indented
+        # this actually enforces separation from any preceding code by blank lines
+        # (which is good imho)
+        staticmethod
+        funcattrs(grammar="'\n' (' '*) dotted_name [ '(' [arglist] ')' ] "
+                        + "['\n' \1 dotted_name [ '(' [arglist] ')' ] ]*"
+                        + "['\n' [docstring] ]",
+                  status="experimental",
+                  author="htr@aon")
+        """This method blah, blah.
+
+        It supports the following arguments:
+        - longArgumentOne -- a string giving …
+        - longArgumentTwo -- a number giving …
+
+        blah, blah.
+
+        """
+    def longMethodNameForEffect(longArgumentOne=None,
+                                longArgumentTwo=42):
+        raise NotYetImplemented
+}}}
+
+* - needs slightly more elaborate tracking of indentation level
+
+* - there might arise a need to comment blank lines in function
+ *  (how about requiring two blank lines ahead of decorators?)
+  * then again, that's not far from introducing another keyword
+ *  or just use the ".first_dec \n |snd_dec \n |trd_dec" syntax
+
+* 0 makes whitespace even more significant (but eh, that's python)
+
+* + easy to parse, integrating well into the language
+
+* + everything easily located at a sensible place
+
+* - [please add drawbacks here]
+
 
 
 == Decorator Syntax Breakdown ==
