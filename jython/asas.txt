@@ -1,0 +1,75 @@
+## page was copied from InstallationInstructions
+#format rst
+
+.. |stable.installer.jar| replace:: jython_installer-2.5.2.jar
+
+.. _stable.download: http://sourceforge.net/projects/jython/files/jython/2.5.2/jython_installer-2.5.2.jar/download
+
+============
+Installation
+============
+
+.. contents:: 
+
+----------------------
+Jython 2.5.2 and 2.2.x
+----------------------
+
+Basic Install
+=============
+
+Jython 2.5.2 and 2.2.1 are distributed as executable jar file installers.  After
+`downloading <DownloadInstructions>`__ it, either double click the
+|stable.installer.jar| or run java with the -jar option
+
+.. parsed-literal::
+
+    java -jar |stable.installer.jar|
+
+This will start the regular GUI installer on most systems, or a
+console installer on headless systems.  To force the installer to
+work in headless mode invoke the installer as:
+
+.. parsed-literal::
+
+  java -jar |stable.installer.jar| --console
+
+The installer will then walk through a similar set of steps in
+graphical or console mode: showing the license, selecting an install
+directory and JVM and actually copying Jython to the filesystem.
+After this completes, Jython is installed in the directory you
+selected.  Executing a script in the install directory, ``jython`` on Unix-like systems or ``jython.bat`` on Windows, will start up the Jython
+console, which can be used to dynamically explore Jython and the Java
+runtime, or to run Jython scripts.
+
+Standalone mode
+===============
+
+The standalone option does no caching and so avoids the startup overhead (most likely at the cost of some speed in calling Java classes, but I have not profiled it)
+
+You can try it out by running the installer:
+
+.. parsed-literal::
+
+    $ java -jar |stable.installer.jar|
+
+then when you come to the "Installation type" page, select "Standalone".
+
+The installation will generate a ``jython.jar`` with the Python standard library (``/Lib``) files included, which can be run as: ::
+
+    $ java -jar jython.jar
+
+Of course you can run scripts just by calling them as you might expect: ::
+
+    $ java -jar jython.jar script.py
+
+Or, add this file to the classpath of your application.
+
+Installation options
+====================
+
+You can get a list of installer options (to install Jython unattended, for example) by running:
+
+.. parsed-literal::
+
+	$ java -jar |stable.installer.jar| --help
