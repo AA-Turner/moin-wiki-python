@@ -1,0 +1,633 @@
+## page was copied from SwingExamples
+#format wiki
+#language en
+#pragma section-numbers off
+
+= Swing Examples in Jython =
+
+DocumentationAndEducation
+
+<<TableOfContents>>
+
+----
+
+Using Java Swing with Jython is a lot of fun and makes it really easy to develop a nice UI in much less code then a similar Java app. All of the examples below work with Jython 2.2 and a 1.5 (or greater) JVM is strongly recommended.
+
+Many of these have been tested and will work using jdk/jre <1.5. If you are using an older JVM will need to change the code from ''frame.add'' to ''frame.contentPane.add'' 
+
+Below there are several examples that cover various swing components. Some time in the past I found a Jython script on the Georgia Tech web site that showed off a number of components, being that the web is constantly changing I have provided a copy of the SwingSampler with the permission of the professor who believes he is the author.
+
+In March 2007, Anton Vredegoor asked the Jython mailing list for help converting [[http://leepoint.net/notes-java/examples/components/editor/nutpad.html|Java Simple Editor]] and Jeff Emanuel provided complete conversion to Jython. Here is the JythonNutpad that was posted.
+
+The Jython Mailing list is a great source of help. If you have questions or problems the mailing list is a good place to look for help but there is no substitute for RTFM or Google searches before hand. 
+
+== Simple Swing examples ==
+
+These are fairly simple examples but show components.
+
+=== Hello, World! ===
+
+These are some ways of creating a simple frame with the title 'Hello, World!' on it.
+
+{{{#!python
+
+from javax.swing import JFrame
+JFrame('Hello, World!', defaultCloseOperation=JFrame.EXIT_ON_CLOSE, size=(300, 300), locationRelativeTo=None).setVisible(True)}}}
+
+{{{#!python
+
+from javax.swing import JFrame
+f = JFrame('Hello, World!', defaultCloseOperation=JFrame.EXIT_ON_CLOSE, size=(300, 300), locationRelativeTo=None)
+f.setVisible(True)}}}
+
+The above examples can also be done "Java-style", i.e. a bit more verbose as shown below:
+
+{{{#!python
+
+from javax.swing import JFrame
+f = JFrame('Hello, World!')
+f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+f.setSize(300, 300)
+f.setLocationRelativeTo(None)
+f.setVisible(True)}}}
+
+And yet another way of doing it is shown below:
+
+{{{#!python
+
+from javax.swing import JFrame
+f = JFrame('Hello, World!')
+f.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
+f.size = (300, 300)
+f.locationRelativeTo = None
+f.visible = True}}}
+
+
+=== JButton and Button events ===
+Just a simple example.
+ 
+{{{#!python
+"""
+A simple example that shows button event handling
+
+Greg Moore
+Sept 2007
+"""
+
+from javax.swing import *
+from java.awt import BorderLayout
+
+class Example:
+  def setText(self,event):
+      self.label.text = 'Button clicked.'
+
+  def __init__(self):
+    frame = JFrame("Jython Example JButton")
+    frame.setSize(100, 100)
+    frame.setLayout(BorderLayout())
+    self.label = JLabel('Hello from Jython')
+    frame.add(self.label, BorderLayout.NORTH)
+    button = JButton('Click Me',actionPerformed=self.setText)
+    frame.add(button, BorderLayout.SOUTH)
+    frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+    frame.setVisible(True)
+
+if __name__ == '__main__':
+	Example()
+}}}
+
+=== JTextField ===
+
+{{{#!python
+"""
+Swing JTextField example in Jython.
+
+Creates 2 text fields and clicking the button copies text in one textfield
+to the other. 
+
+Greg Moore
+Sept 2007
+"""
+
+from javax.swing import *
+from java.lang import *
+
+class Example:
+
+  def copyText(self,event):
+      self.textfield2.text = self.textfield1.text
+
+  def __init__(self):
+	# These lines setup the basic frame, size.
+	# the setDefaultCloseOperation is required to completely exit the app
+	# when you click the close button
+    frame = JFrame("Jython JText Field Example")
+    frame.setSize(200, 150)
+    frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+
+    # Create Panel and add swing components and show it.
+    pnl = JPanel()
+    frame.add(pnl)
+    self.textfield1 = JTextField('Type something here',15)
+    pnl.add(self.textfield1)
+    self.textfield2 = JTextField('and click Copy', 15)
+    pnl.add(self.textfield2)
+    copyButton = JButton('Copy',actionPerformed=self.copyText)
+    pnl.add(copyButton)
+    frame.pack()
+    frame.setVisible(True)
+
+if __name__ == '__main__':
+  #start things off.
+  Example()
+}}}
+
+=== JRadioButton ===
+
+
+{{{#!python
+"""
+Swing JRadioButton example in Jython.
+
+Creates radio buttons and event handler
+
+Greg Moore
+Sept 2007
+"""
+
+# Using import * is bad form but since this is just a example I'll take the
+# easy way out instead of specifing each package.
+from javax.swing import *
+from java.awt import *
+
+
+class RadioButtonExample:
+  def radioBtnbCheck(self,event):
+    # Process the events and update the label
+    statusText = ""
+    if self.radioBtn1.isSelected():
+      statusText = "Radio Button 1 is selected "
+    if self.radioBtn2.isSelected():
+      statusText = statusText + "Radio Button 2 is selected "
+    self.rbStatusLabel.text = statusText
+
+  def __init__(self):
+	# These lines setup the basic frame, size and layout
+	# the setDefaultCloseOperation is required to completely exit the app
+	# when you click the close button
+    frame = JFrame("Jython Example JRadioButton")
+    frame.setSize(400, 150)
+    frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+    frame.setLayout(BorderLayout())
+
+    # create 2 panels the top one containing radio buttons and the bottom one
+    # has the label and button. add them to the frame and show it.
+    rbPanel = JPanel()
+    frame.add(rbPanel,BorderLayout.NORTH)
+    self.radioBtn1 = JRadioButton('Radio Button 1')
+    self.radioBtn2 = JRadioButton('Radio Button 2')
+    rbPanel.add(self.radioBtn1)
+    rbPanel.add(self.radioBtn2)
+    rbBtnGroup = ButtonGroup()
+    rbBtnGroup.add(self.radioBtn1)
+    rbBtnGroup.add(self.radioBtn2)
+
+    panel = JPanel()
+    panel.setLayout(BorderLayout())
+    frame.add(panel,BorderLayout.SOUTH)
+    button = JButton('Check',actionPerformed=self.radioBtnbCheck)
+    panel.add(button,BorderLayout.WEST)
+    self.rbStatusLabel =JLabel()
+    panel.add(self.rbStatusLabel,BorderLayout.EAST)
+    frame.pack()
+    frame.setVisible(True)
+
+if __name__ == '__main__':
+  #start things off.
+  RadioButtonExample()
+}}}
+
+=== JCheckBox ===
+
+{{{#!python
+"""
+Swing JCheckBox example in Jython.
+
+Creates a couple checkboxes and and event handler
+
+Greg Moore
+Sept 2007
+"""
+
+# Using import * is bad form but since this is just a example I'll take the
+# easy way out instead of specifing each package.
+from javax.swing import *
+from java.awt import *
+
+class CheckBoxExample:
+
+  def cbEvents(self,event):
+  	# Process the events and update the label
+    cbStatusMsg=""
+    if self.chkbox1.isSelected():
+      cbStatusMsg = "checkbox1 is selected "
+    if self.chkbox2.isSelected():
+      cbStatusMsg = cbStatusMsg + "checkbox2 is selected"
+    self.cbStatusLabel.text = cbStatusMsg
+
+  def __init__(self):
+	# These lines setup the basic frame, size and layout
+	# the setDefaultCloseOperation is required to completely exit the app
+	# when you click the close button
+	frame = JFrame("Jython JCheckBox Example")
+	frame.setLayout(BorderLayout())
+	frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+	
+	# this could be done with only one JPanel or use different layout
+	# create a panel for the checkboxes
+	cbPanel = JPanel()
+	frame.add(cbPanel,BorderLayout.NORTH)
+	self.chkbox1 = JCheckBox('checkbox 1')
+	self.chkbox2 = JCheckBox('checkbox 2')
+	cbPanel.add(self.chkbox1)
+	cbPanel.add(self.chkbox2)
+
+	# create a second panel with the button and label
+	panel = JPanel()
+	panel.setLayout(BorderLayout())
+	frame.add(panel,BorderLayout.SOUTH)
+	button = JButton('check',actionPerformed=self.cbEvents)
+	panel.add(button,BorderLayout.SOUTH)
+	self.cbStatusLabel =JLabel('select one and click button')
+	panel.add(self.cbStatusLabel,BorderLayout.CENTER)
+
+	# now that the panels have been added to the frame show our creation
+	frame.pack()
+	frame.setVisible(True)
+
+if __name__ == '__main__':
+  #start things off.
+  CheckBoxExample()
+}}}
+
+=== JList ===
+
+ Also see http://www.jython.org/applets/list.html
+
+{{{#!python
+"""
+Swing JList example in Jython.
+
+Creates a simple list of cities and then updates a JLabel based on the
+the city selected.
+
+Greg Moore
+Sept 2007
+"""
+
+# Using import * is bad form but since this is just a example I'll take the
+# easy way out instead of specifing each package.
+from javax.swing import *
+from java.awt import *
+
+class JListExample:
+
+  def listSelect(self,event):
+  	# Process the events from the list box and update the label
+    selected = self.list.selectedIndex
+    if selected >= 0:
+      cityName = self.data[selected]
+      self.label.text = cityName
+
+  def __init__(self):
+
+	# These lines setup the basic frame, size and layout
+	# the setDefaultCloseOperation is required to completely exit the app
+	# when you click the close button
+    frame = JFrame("Jython JList Example")
+    frame.setSize(200, 225)
+    frame.setLayout(BorderLayout())
+    frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+
+    # set up the list and the contents of the list
+    # the python typle get converted to a Java vector
+    self.data = ('Portland','San Francisco','Madrid','Venice','Starnberg','New York','Paris','London')
+    self.list = JList(self.data)
+    spane = JScrollPane()
+    spane.setPreferredSize(Dimension(100,125))
+    spane.getViewport().setView((self.list))
+
+	# a panel is a bit over kill but this is a demo. :)
+    panel = JPanel()
+    panel.add(spane)
+    frame.add(panel,BorderLayout.CENTER)
+
+	# create the button, and city label and the show our work
+	# with Jython only one line is needed create a button and attach an
+	# event handler.
+    btn = JButton('Select',actionPerformed=self.listSelect)
+    frame.add(btn,BorderLayout.SOUTH)
+    self.label = JLabel(' Select City and click select')
+    frame.add(self.label,BorderLayout.NORTH)
+    frame.pack()
+    frame.setVisible(True)
+
+
+if __name__ == '__main__':
+	#start things off.
+	JListExample()
+
+}}}
+
+=== JComboBox ===
+'' under construction''
+
+Here are a couple of combo box examples. one requires a button click and the other is more dynamic ComboboxExample. 
+{{{#!python
+"""
+Swing JComboBox example in Jython.
+
+Creates a simple comboBox of cities and then updates a JLabel based on the
+the city selected after button click.
+
+Greg Moore
+Sept 2007
+
+"""
+
+from javax.swing import *
+from java.awt import *
+
+class JComboBoxExample:
+
+  def cbSelect(self,event):
+    selected = self.cb.selectedIndex
+    if selected >= 0:
+      data = self.data[selected]
+      self.label.text = data + " selected"
+
+  def __init__(self):
+    frame = JFrame("Jython JComboBox Example")
+    frame.setSize(200, 250)
+    frame.setLayout(BorderLayout())
+
+    self.data = ('Portland','San Francisco','Madrid','Venice','Starnberg','New York','Paris','London')
+    self.cb = JComboBox(self.data)
+
+    pnl = JPanel()
+    pnl.add(self.cb)
+
+    frame.add(pnl,BorderLayout.NORTH)
+
+    btn = JButton('click me',actionPerformed=self.cbSelect)
+    frame.add(btn,BorderLayout.SOUTH)
+    self.label = JLabel('Select a city then click button')
+    frame.add(self.label,BorderLayout.CENTER)
+    frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+    frame.setVisible(True)
+
+if __name__ == '__main__':
+	JComboBoxExample()
+
+}}}
+
+=== JTree ===
+
+This example is a bit long so here is the JtreeExample
+
+=== JTable ===
+
+I think this is the most amazing example. This creates a small table that has editable cells, cursor movement and resizeable. The is at least 75% shorter then a comparable java version. Time is money, and here is proof the jython can save you money and make you more productive.
+
+
+{{{#!python
+"""
+
+Swing JTable example in Jython.
+
+Creates a simple table.
+
+Greg Moore
+Sept 2007
+
+
+"""
+
+from javax.swing import *
+from java.awt import *
+from javax.swing.table import DefaultTableModel
+
+class Example:
+
+  def __init__(self):
+    frame = JFrame("Jython JTable Example")
+    frame.setSize(400, 150)
+    frame.setLayout(BorderLayout())
+
+    self.tableData = [
+      ['numbers', '67890' ,'This'],
+      ['mo numbers', '2598790', 'is'],
+      ['got Math', '2598774', 'a'],
+      ['got Numbers', '1234567', 'Column'],
+      ['got pi','3.1415926', 'Apple'],
+       ]
+    colNames = ('Col Labels','Go','Here')
+    dataModel = DefaultTableModel(self.tableData, colNames)
+    self.table = JTable(dataModel)
+
+    scrollPane = JScrollPane()
+    scrollPane.setPreferredSize(Dimension(300,100))
+    scrollPane.getViewport().setView((self.table))
+
+    panel = JPanel()
+    panel.add(scrollPane)
+
+    frame.add(panel, BorderLayout.CENTER)
+    frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+    frame.setVisible(True)
+
+if __name__ == '__main__':
+	Example()
+
+}}}
+
+=== JTabbedPane ===
+
+This create a simple JTabbed''''''Pane example. Here is another TabbedExample.
+
+{{{#!python
+"""
+
+Swing JTabbedPane example in Jython.
+
+Greg Moore
+Sept 2007
+
+"""
+
+from javax.swing import *
+from java.awt import *
+
+class Example:
+
+  def __init__(self):
+    frame = JFrame("Jython JTabbedPane Example")
+    frame.setSize(400, 300)
+    frame.setLayout(BorderLayout())
+
+    tabPane = JTabbedPane(JTabbedPane.TOP)
+
+    label = JLabel("<html><br>This is a tab1</html>")
+    panel1 = JPanel()
+    panel1.add(label)
+    tabPane.addTab("tab1", panel1)
+
+    label2 = JLabel("This is a tab2")
+
+    panel2 = JPanel()
+    panel2.add(label2)
+    tabPane.addTab("tab2", panel2)
+
+    frame.add(tabPane)
+    frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+    frame.setVisible(True)
+
+if __name__ == '__main__':
+	Example()
+}}}
+
+=== JSplitPane ===
+
+This just creates a simple split pane. nothing fancy. :)
+
+{{{#!python
+"""
+Swing JSplitPane example in Jython.
+
+Greg Moore
+Sept 2007
+
+"""
+
+from javax.swing import *
+from java.awt import *
+class Example:
+
+  def __init__(self):
+    frame = JFrame("Jython JTable Example")
+    frame.setSize(400, 300)
+    frame.setLayout(BorderLayout())
+
+    splitPane = JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+
+    label1 = JLabel("This is a panel1")
+    panel1 = JPanel()
+    panel1.add(label1)
+    splitPane.setLeftComponent(panel1);
+
+    label2 = JLabel("This is a panel2")
+
+    panel2 = JPanel()
+    panel2.add(label2)
+    splitPane.setRightComponent(panel2);
+    splitPane.setDividerLocation(150);
+
+    frame.add(splitPane)
+    frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+    frame.setVisible(True)
+
+if __name__ == '__main__':
+    Example()
+
+}}}
+
+=== JDesktopPane and JInternalFrame Demo ===
+{{{#!python
+from javax.swing import JFrame, JDesktopPane, JInternalFrame, JMenuBar, JMenu, JMenuItem, JScrollPane
+
+class DesktopPaneAndInternalFrameDemo(JFrame):
+    """
+
+    A demonstration of JDesktopPane() and JInternalFrame()
+    By: astigmatik, Sept 2007
+
+    """
+    def __init__(self):
+        """
+        The JFrame.__init__ lines below don't have to be written in multiple lines.
+        This is just for readability.
+        """
+        JFrame.__init__(self,
+                        'JDesktopPane and JInternalFrame Demo',
+                        size=(500, 500),
+                        defaultCloseOperation=JFrame.EXIT_ON_CLOSE)
+
+        self.internalFrameCounter = 0
+        self.createDesktop()
+        self.createMenus()
+
+    def createDesktop(self):
+        self.desktop = JDesktopPane()
+        """
+        Normally, it's not allowed to do a "self.object = value" inside the class
+        if the self.object has not been instantiated. However, in this case, since we are
+        calling self.createDesktopPane() on __init__(), then it is ok.
+        """
+
+        self.contentPane.add(JScrollPane(self.desktop)) # This is the same as self.getContentPane().add(...)
+
+    def createMenus(self):
+
+        menu = JMenu('File')
+        menu.add(JMenuItem('Create new JInternalFrame', actionPerformed=self.createInternalFrame))
+
+        menubar = JMenuBar()
+        menubar.add(menu)
+
+        self.setJMenuBar(menubar)
+
+    def createInternalFrame(self, event):
+        """
+        event has to be supplied whenever there is an event generated, viz. from a menu being clicked,
+        mouse button being clicked, or keypresses, etc.
+        """
+        self.internalFrameCounter += 1
+
+        iframeName = 'JInternalFrame %s' % self.internalFrameCounter
+        iframe     = JInternalFrame(iframeName, 1, 1, 1, 1, size=(400, 400), visible=1)
+        """
+        The 1's refer to boolean resizable, closable, maximizable, and iconifiable.
+        Jython's True and False are 1 and 0 respectively. So all the 1's above can be replaced with True.
+        """
+
+        self.desktop.add(iframe)
+        iframe.setSelected(1)
+        iframe.moveToFront()
+
+
+if __name__ == '__main__':
+    demo = DesktopPaneAndInternalFrameDemo()
+    demo.setLocation(30, 30)
+    demo.show()
+}}}
+
+=== Decorator to add a function to SwingUtilities.invokeLater donated by Alex Grönholm ===
+{{{#!python
+from java.lang import Runnable
+from javax.swing import SwingUtilities
+ 
+class RunnableWrapper(Runnable):
+    def __init__(self, func, *args, **kwargs):
+        self.func = func
+        self.args = args
+        self.kwargs = kwargs
+ 
+    def run(self):
+        self.func(*self.args, **self.kwargs)
+ 
+def runswing(func):
+    """Schedules the given function for execution in the Event Dispatch Thread."""
+    def wrapper(*args, **kwargs):
+        SwingUtilities.invokeLater(RunnableWrapper(func, *args, **kwargs))
+    return wrapper
+}}}
