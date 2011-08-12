@@ -1,3 +1,5 @@
+#acl AdminGroup:read,write,delete,revert,admin Known:read,write All:read
+
 <<TableOfContents>>
 
 This page is devoted to various tips and tricks that help improve the
@@ -11,8 +13,8 @@ it.
 
 {{{#!wiki tip
 
-You should always test these tips with your application and the
-version of Python you intend to use and not just blindly accept that one
+You should always test these tips with your application and the specific version of the Python
+[[PythonImplementations|implementation]] you intend to use and not just blindly accept that one
 method is faster than another. See the [[#Profiling|profiling]] section for more details.
 }}}
 
@@ -728,24 +730,18 @@ hotspots in my code, profile and trace. In later examples I also use the
 
 (!) See the separate [[PythonSpeed/Profiling|profiling]] document for alternatives to the approaches given below.
 
-=== Profile Module ===
+=== Profiling ===
 
-The
-[[http://www.python.org/doc/current/lib/module-profile.html|profile module]]
-is included as a standard module in the Python distribution. Using
-it to profile the execution of a set of functions is quite easy. Suppose
-your main function is called {{{main}}}, takes no arguments and you want to
-execute it under the control of the profile module. In its simplest form you
-just execute
+There are a number of [[http://docs.python.org/library/profile.html|profiling modules]] included in the Python distribution. Using one of these to profile the execution of a set of functions is quite easy. Suppose your main function is called `main`, takes no arguments and you want to execute it under the control of the `profile` module. In its simplest form you just execute
 
 {{{#!python numbers=disable
 import profile
 profile.run('main()')
 }}}
 
-When {{{main()}}} returns, the profile module will print a table of function
-calls and execution times. The output can be tweaked using the Stats
-class included with the module. In Python 2.4 profile will allow the
+When `main()` returns, the `profile` module will print a table of function
+calls and execution times. The output can be tweaked using the `Stats`
+class included with the module. From Python 2.4 `profile` has permitted the
 time consumed by Python builtins and functions in extension modules to be
 profiled as well.
 
@@ -753,16 +749,9 @@ A slightly longer description of profiling using the `profile` and `pstats` modu
 
 http://web.archive.org/web/20060506162444/http://wingware.com/doc/howtos/performance-profiling-python-code 
 
-=== Hotshot Module ===
+=== The cProfile and Hotshot Modules ===
 
-New in Python 2.2, the
-[[http://www.python.org/doc/current/lib/module-hotshot.html|hotshot package]] is intended
-as a replacement for the profile module. The underlying module is
-written in C, so using hotshot should result in a much smaller
-performance hit, and thus a more accurate idea of how your application
-is performing. There is also a {{{hotshotmain.py}}} program in the
-distributions {{{Tools/scripts}}} directory which makes it easy to run your
-program under hotshot control from the command line.
+Since Python 2.2, the [[http://www.python.org/doc/current/lib/module-hotshot.html|hotshot package]] has been available as a replacement for the `profile` module, although the `cProfile` module is now recommended in preference to `hotshot`. The underlying module is written in C, so using `hotshot` (or `cProfile`) should result in a much smaller performance hit, and thus a more accurate idea of how your application is performing. There is also a `hotshotmain.py` program in the distribution's `Tools/scripts` directory which makes it easy to run your program under `hotshot` control from the command line.
 
 
 === Trace Module ===
@@ -787,7 +776,7 @@ In Python 2.4 it's even easier to run. Just execute {{{python -m trace}}}.
 There's no separate documentation, but you can execute "pydoc trace" to
 view the inline documentation.
 
-=== Visualizing Profiling Result ===
+=== Visualizing Profiling Results ===
 
 [[http://www.vrplumber.com/programming/runsnakerun/|RunSnakeRun]] is a GUI tool by Mike Fletcher which visualizes profile dumps from cProfile using square maps. Function/method calls may be sorted according to various criteria, and source code may be displayed alongside the visualization and call statistics.
 
