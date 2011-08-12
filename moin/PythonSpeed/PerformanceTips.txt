@@ -195,6 +195,56 @@ machine a lot longer to figure out how to concatenate two strings.
 (Don't forget that Python does all method lookup at runtime.)
 
 
+== Loops ==
+
+Python supports a couple of looping constructs. The {{{for}}} statement is
+most commonly used. It loops over the elements of a sequence, assigning each
+to the loop variable. If the body of your loop is simple, the interpreter
+overhead of the {{{for}}} loop itself can be a substantial amount of the
+overhead. This is where the
+[[http://www.python.org/doc/lib/built-in-funcs.html|map]] function is handy.
+You can think of {{{map}}} as a {{{for}}} moved into C code. The only
+restriction is that the "loop body" of {{{map}}} must be a function call. Besides the syntactic benefit of list comprehensions, they are often as fast or faster than equivalent use of {{{map}}}.
+
+Here's a straightforward example. Instead of looping over a list of
+words and converting them to upper case:
+
+{{{#!python numbers=disable
+newlist = []
+for word in oldlist:
+    newlist.append(word.upper())
+}}}
+
+you can use {{{map}}} to push the loop from the interpreter into compiled C
+code:
+
+{{{#!python numbers=disable
+newlist = map(str.upper, oldlist)
+}}}
+
+List comprehensions were added to Python in version 2.0 as well. They
+provide a syntactically more compact and more efficient way of writing the above for loop:
+
+{{{#!python numbers=disable
+newlist = [s.upper() for s in oldlist]
+}}}
+
+Generator expressions were added to Python in version 2.4. They function
+more-or-less like list comprehensions or {{{map}}} but avoid the overhead of
+generating the entire list at once. Instead, they return a generator object
+which can be iterated over bit-by-bit:
+
+{{{#!python numbers=disable
+newlist = (s.upper() for s in oldlist)
+}}}
+
+Which method is appropriate will depend on what version of Python you're
+using and the characteristics of the data you are manipulating.
+
+Guido van Rossum wrote a much more detailed (and succinct) examination of [[http://www.python.org/doc/essays/list2str.html|loop optimization]] that is
+definitely worth reading.
+
+
 == Avoiding dots... ==
 
 Suppose you can't use {{{map}}} or a list comprehension? You may be stuck
@@ -702,6 +752,18 @@ profiled as well.
 A slightly longer description of profiling using the `profile` and `pstats` modules can be found here (archived version):
 
 http://web.archive.org/web/20060506162444/http://wingware.com/doc/howtos/performance-profiling-python-code 
+
+=== Hotshot Module ===
+
+New in Python 2.2, the
+[[http://www.python.org/doc/current/lib/module-hotshot.html|hotshot package]] is intended
+as a replacement for the profile module. The underlying module is
+written in C, so using hotshot should result in a much smaller
+performance hit, and thus a more accurate idea of how your application
+is performing. There is also a {{{hotshotmain.py}}} program in the
+distributions {{{Tools/scripts}}} directory which makes it easy to run your
+program under hotshot control from the command line.
+
 
 === Trace Module ===
 
