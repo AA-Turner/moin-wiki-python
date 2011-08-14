@@ -91,6 +91,15 @@ def htmlentitydecode(s):
             lambda m: unichr(name2codepoint[m.group(1)]), s)
 }}}
 
+== Builtin HTML/XML escaping via ASCII encoding ==
+A very easy way to transform non-ASCII characters like German umlauts or letters with accents into their HTML equivalents is simply encoding them from unicode to ASCII and use the {{{xmlcharrefreplace}}} encoding error handling:
+{{{
+>>> a = u"äöüßáà"
+>>> a.encode('ascii', 'xmlcharrefreplace')
+'&#228;&#246;&#252;&#223;&#225;&#224;'
+}}}
+Note, that this does only transform ''non''-ASCII characters and therefore leaves {{{<}}}, {{{>}}}, {{{?}}} as they are. However, you can combine this technique with the {{{cgi.escape}}}.
+
 == See Also ==
 
 XML entities are different from, if related to, HTML entities.
