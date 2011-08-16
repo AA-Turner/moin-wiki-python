@@ -11,7 +11,17 @@ last updated: Aug 6, 2009
 
 === Using Maven ===
 
-The easiest way to distribute a standalone jar is by using the '''maven jython compilation plugin''' at http://mavenjython.sourceforge.net/compile/ . It is based on the description below. [[http://mavenjython.sourceforge.net/compile/demo/|The demo]] illustrates how to use this plugin, and how to call python/jython code.
+The easiest way to distribute a standalone jar is by using the '''[[http://mavenjython.sourceforge.net/compile/|jython compilation maven plugin]]'''. It allows you to deploy a standalone project that includes jython with libraries. 
+
+For demonstration of this plugin, see the [[http:/mavenjython.sourceforge.net/compile/demo/|demo project]] and its [[https://sourceforge.net/p/mavenjython/code/ci/HEAD/tree/jython-compile-maven-plugin-test/|source code]]. It shows how to 
+
+  * '''launch a python console''' -- look at [[https://sourceforge.net/p/mavenjython/code/ci/HEAD/tree/jython-compile-maven-plugin-test/src/main/java/net/sf/mavenjython/|AbstractInitJython and InitJython]] on how to launch a python/jython console, how to execute python code snippets, and how to run a python script.
+
+  * '''include python libraries''' -- the plugin also downloads and bundles python libraries (using easy_install) in the package phase, and adds them to the jar. The resulting jar can have all the libraries of the project, all pom dependencies and all the python libraries requested. The demo project shows this with the "nose" python library (see the pom file).
+
+For testing python / jython code, the [[http:/mavenjython.sourceforge.net/test/|python test maven plugin]] allows you to run your python tests alongside the normal junit tests. The [[http:/mavenjython.sourceforge.net/test/demo/|demo project]] (look at the source at [[https://sourceforge.net/p/mavenjython/code/ci/HEAD/tree/python-test-maven-plugin-test/|source code]]) shows the use of standard python unit tests (with nose) and BDD (behaviour testing) with the lettuce-clone freshen.
+
+The sourceforge umbrella project is http://mavenjython.sourceforge.net/ 
 
 === Manually ===
 
