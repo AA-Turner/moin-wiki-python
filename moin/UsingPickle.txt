@@ -57,7 +57,9 @@ You might also check out http://trustedpickle.sourceforge.net/ if you want to ge
 
 Generally you can pickle any object if you can pickle every attribute of that object.  Classes, functions, and methods cannot be pickled -- if you pickle an object, the object's class is not pickled, just a string that identifies what class it belongs to.  This works fine for most pickles (but note the discussion about long-term storage of pickles).
 
-You ''cannot'' pickle open file objects, network connections, or database connections.  When you think about it, it makes sense -- pickle cannot will the connection for file object to exist when you unpickle your object, and the process of creating that connection goes beyond what pickle can automatically do for you.  If you really want to pickle something that has an attribute that is causing problems, look at the pickle documentation for {{{__getstate__}}}, {{{__setstate__}}}, and {{{__getinitargs__}}} -- using these you can exclude problematic attributes.
+With pickle protocol v1, you ''cannot'' pickle open file objects, network connections, or database connections.  When you think about it, it makes sense -- pickle cannot will the connection for file object to exist when you unpickle your object, and the process of creating that connection goes beyond what pickle can automatically do for you.  If you really want to pickle something that has an attribute that is causing problems, look at the pickle documentation for {{{__getstate__}}}, {{{__setstate__}}}, and {{{__getinitargs__}}} -- using these you can exclude problematic attributes.
+
+With pickle protocol v2, you are able to pickle open file objects. This will change in a future version of Python. See [[http://bugs.python.org/issue10180|this bug report]] for more information.
 
 == Contributors ==
 
