@@ -22,12 +22,6 @@ repository:
 {{{
 $ mkdir cpython && cd cpython
 $ hg clone http://hg.cpython.org/cpython#default py3k
-}}}
-
-To start working on a feature, clone your local repository:
-{{{
-$ hg clone py3k add-magic
-$ cd add-magic
 $ ./configure --with-pydebug && make -s
 }}}
 
@@ -48,26 +42,42 @@ you make in your branch; {{{hg diff -r default}}} will always show you the resul
 of the changes in your branch compared to the default branch, in other words
 your local work compared to the main repository.
 
-Having this name makes it easy to work on various things, merge regularly with
-upstream, generate diffs, fix mistakes, ports some changes upstream directly,
-etc.  You can make mistakes and fix them; in the end, you will get one clean
-diff to apply.
+Having this name makes it easy to work on various things (one branch per patch),
+merge regularly with upstream, generate diffs, fix mistakes, ports some changes
+upstream directly, etc.  You can make mistakes and fix them; in the end, you will
+get one clean diff to apply.
 
+If you have many named branches to work on many bugs in parallel, you can push all
+of them to the same repository to let other people see your changes and let the bug
+tracker create a patch (more on that later).
+
+A variation of this workflow uses multiple clones.  I tend to work on more
+than one bug at a time, and often have uncommitted changes in his repo, so
+switching between named branches in the same clone would not work.  (I also fear
+that {{{make}}} could think that all files are new and recompile everything
+needlessly.)  So to start working on a patch, I first make a copy of my local
+clone ({{{hg clone py3k add-magic}}}) and then create a branch for easy patch
+tracking as described above.
 
 == Hacking ==
 
-You can work on your feature or bug and commit as needed.  The code lives in
+You can work on your feature or bug and commit as needed.  The distutils2 code lives in
 Lib/packaging and its documentation in Doc/packaging, Doc/install and
 Doc/library/packaging.*  Some bugs also require editing modules like site or
-sysconfig, or their documentation.  Ideally, the first step is to write a test that fails, thus demonstrating the bug, and then change the code to make the test pass.
+sysconfig, or their documentation.  Ideally, the first step is to write a test
+that fails, thus demonstrating the bug, and then change the code to make the test pass.
 
-The [[http://docs.python.org/devguide/|Python developers’ guide]] contains good advice that applies to distutils2
-too.  For example, it tells you about the {{{make patchcheck}}} command, to run
-from the root of a clone, to perform some checks for common mistakes.
+The [[http://docs.python.org/devguide/|Python developers’ guide]] contains good
+advice that applies to distutils2 too.  For example, it tells you about the
+{{{make patchcheck}}} command ({{{./python Tools/scripts/patchcheck.py}}} on Windows),
+to run from the root of a clone, to perform some checks for common mistakes.
 
 For distutils2, each bug fix should have a test, and each new feature should
 have good tests and documentation.  Don’t hesitate to ask for assistance or
-advice on the bug report or on the mailing list.
+advice on the bug report or on mailing lists:
+
+ * [[http://groups.google.com/group/the-fellowship-of-the-packaging/|distutils2 development list]]
+ * [[http://mail.python.org/mailman/listinfo/core-mentorship|Python mentors]]
 
 
 == Staying in sync ==
@@ -76,21 +86,19 @@ To make sure that your branch does not get out of sync, which means that the
 final diff could not be applied, remember to pull and merge new changesets
 regularly:
 {{{
-$ cd cpython
-$ hg pull -u -R py3k
-$ hg pull -R add-magic
-$ hg pull -R fix-scripts-record
+$ cd cpython/py3k
+$ hg pull
 }}}
 
-The first pull command will get new changesets from the repository it was cloned
-from, on hg.python.org; the following pull will only transfer changesets
-locally, saving you bandwidth and time.  This is why I made you create a base
-clone, {{{py3k}}}, and then a clone for each feature or bug.  Pulling in all
-clones is easily automated with a shell function.
+(If you use many clones like I do, you would run {{{hg pull}}} in the add-magic
+clone after that; it will not download again from hg.python.org but look for the
+changesets in the py3k clone, saving you bandwidth and time.  To avoid changing
+directory all the time, you can give a path as argument to the hg command:
+{{{hg pull -R ../add-magic}}}, or write a shell function to automate pulling in all
+clones.)
 
 The next step is the merge itself::
 {{{
-$ cd add-magic
 $ hg branch
 mywork
 $ hg merge default
@@ -112,20 +120,24 @@ a server-side clone; select “default” in the dropdown menu labeled “fork a
 submitting, otherwise you will get the Python 2.7 branch, which you don’t need.
 Then you can push the changesets from your named branch:
 {{{
-$ cd cpython/add-magic
-$ hg push --new-branch ssh://hg@bitbucket.org/<username>/cpython
+$ cd cpython/py3k
+$ hg branch
+mywork
+$ hg push . --new-branch ssh://hg@bitbucket.org/<username>/cpython
 }}}
 
 Protip: To make Mercurial remember the URI of the repo to use for push, edit the
-file located at add-magic/.hg/hgrc to make it look like this::
+file located at py3k/.hg/hgrc to make it look like this::
 {{{
 [paths]
-default = ../py3k
-default-push = ssh://hg@bitbucket.org/<username>/cpython
+default = http://hg.python.org/cpython#default
+default-push = ssh://hg@bitbucket.org/yourname/cpython
 }}}
 
 Now {{{hg push}}} without arguments will push new changesets to your Bitbucket
-clone.
+clone, and {{{hg pull}}} will still pull from the official repo.
+
+(If you’re using a separate clone, the default pull path would be {{{../py3k}}}.)
 
 After you’ve pushed, another developer can clone your repo to work with you on
 your branch, or you can automatically add a patch to the Python bug tracker.
@@ -134,9 +146,10 @@ Let’s try this one.
 
 == Mercurial-Roundup integration ==
 
-On each bug page, there is a [[http://docs.python.org/devguide/triaging#mercurial-repository|field]] called “Remote hg repo”; add the HTTP URI of
+On each bug page, there is a [[http://docs.python.org/devguide/triaging#mercurial-repository|field]]
+called “Remote hg repo”; add the HTTP URI of
 your clone on Bitbucket, with the branch name after a {{{#}}} sign, like
-{{{http://bitbucket.org/<username>/cpython#mywork}}}.  After this, simply pushing
+{{{http://bitbucket.org/yourname/cpython#mywork}}}.  After this, simply pushing
 the “Create Patch” button will generate a diff between the default branch of the
 official repo and the head of your named branch.  Anyone with a Roundup account
 can now follow the link labeled “review” to see the patch and make comments.
@@ -152,8 +165,9 @@ repository.  Reply to feedback about the changes, update your patch, ping the ma
 == The end ==
 
 When your patch is in a good shape, a Python core developer can take the patch,
-apply it in the default branch of a cpython clone and push it.  You can now
-delete your local clone to save some space.
+apply it in the default branch of a cpython clone and push it.  You can now use
+{{{hg commit --close-branch}}} to hide your branch.  If you were using a second
+clone, you can delete it to save some disk space.
 
 If the issue was about a bug also present in old-school distutils, you can adapt
 your fix from Lib/packaging to Lib/distutils and propose this patch.  It’s okay
