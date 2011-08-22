@@ -1,10 +1,13 @@
+SummerOfCode/2011/PEP393
+
+
 = PEP 393 — Flexible String Representation =
 
 This document serves as the documentation for the initial implementation of [[http://www.python.org/dev/peps/pep-0393/|PEP 393]] during the Google Summer of Code 2011.  The project's repository is hosted on [[https://bitbucket.org/t0rsten/pep-393|bitbucket in the pep-393 branch]].
 
-PEP 393 proposes to change Python's unicode string representation so that strings use a flexible character size and require only minimum necessary space to store.  Strings containing only Latin-1 code points will use 1-byte wide characters, strings which contain code points with values less than 65536 will require 2-byte characters and all other ones 4-byte characters.  Please see the [[http://www.python.org/dev/peps/pep-0393/|PEP document]] for details on the rationale and the proposed approach.
+PEP 393 proposes to change Python's unicode string representation so that strings use a flexible character size and require only minimum necessary space to store.  Strings containing only Latin-1 code points will use 1-byte wide characters, strings which contain code points with values less than 65536 will require 2-byte characters and all other ones 4-byte characters.
 
-The [[http://mail.python.org/pipermail/python-dev/2011-January/thread.html#107641|announcement email on python-dev]] also gives some more context information.
+Please see the [[http://www.python.org/dev/peps/pep-0393/|PEP document]] for details on the rationale and the proposed approach.  The [[http://mail.python.org/pipermail/python-dev/2011-January/thread.html#107641|announcement email on python-dev]] also gives some more context information.
 
 
 == Implemented Features ==
@@ -17,14 +20,14 @@ PEP 393 supports two string representations, the legacy Py_UNICODE representatio
 
 The interpreter startup has been profiled and the most called functions for the interpreter start have been ported to the new unicode representation.  Currently there are still about 3000 old representations being created for a startup and 200 old strings are created while about 62000 strings in the new representation are being created.
 
-Currently all unit tests besides test_packaging (which is also broken in the default branch) pass with the patch.
+Currently all unit tests besides test_packaging (which is also broken in the default branch) pass with the applied patch.
 
 
 == Changed Paradigms ==
 
-Besides the changes which are already outlined in PEP 393, such as conversion to the old representation through !PyUnicode_AsUnicodeSize(), the following paradigm changes take place when working with the new flexible string representation instead of Py_UNICODE buffers:
+Besides the changes which are already outlined in PEP 393, such as conversion to the old representation through !PyUnicode_!AsUnicodeSize(), the following paradigm changes take place when working with the new flexible string representation instead of Py_UNICODE buffers:
 
- 1. To access a string it is not possible to access a string directly via C's vector operator.  Instead use the !PyUnicode_READ() macro or one of the !PyUnicode_1BYTE_DATA(), !PyUnicode_2BYTE_DATA(), or !PyUnicode_4BYTE_DATA() macros.  Use !PyUnicode_KIND() to check for the string kind and !PyUnicode_DATA() to access the data buffer.
+ 1. To access a string, it is not possible to access a string directly via C's vector operator.  Instead use the !PyUnicode_READ() macro or one of the !PyUnicode_1BYTE_DATA(), !PyUnicode_2BYTE_DATA(), or !PyUnicode_4BYTE_DATA() macros.  Use !PyUnicode_KIND() to check for the string kind and !PyUnicode_DATA() to access the data buffer.
 
  2. Functions which are passed strings should call !PyUnicode_FAST_READY() to ensure the canonical representation is initialized.
 
@@ -131,7 +134,7 @@ Some optimizations were removed during the implementation of PEP 393 and some ch
 
  * Python 3.3 with PEP 393 is not link compatible with 3.2 anymore as the mangling of the unicode symbols is changed. The unicode struct changed anyways, so this is probably a feature to detect incompatibilities.
 
- * _!PyUnicode_New() and !PyUnicode_FromUnicode(NULL, size) are the only ways to directly allocate a wstr representation for old functions and to generate strings which support resizes.
+ * _!PyUnicode_New() and !PyUnicode_!FromUnicode(NULL, size) are the only ways to directly allocate a wstr representation for old functions and to generate strings which support resizes.
 
  * !PyObject * !PyUnicode_EncodeUTF8(const Py_UNICODE *s, size, char *errors) is deprecated to generate a UTF-8 representation with a custom error handler as it requires the legacy representation.  Use !PyObject* !PyUnicode_!AsEncodedString(!PyObject *unicode, "utf-8", char *errors) instead.
 
@@ -160,7 +163,9 @@ $3 = 263
 $4 = 62321
 }}}
 
-The exists a small set of micro benchmarks to test the behaviour of the implementation in a separate [[https://bitbucket.org/t0rsten/pep-393-bench|bitbucket repository]].
+This shows that for a plain interpreter startup there are still 3244 Py_UNICODE representations being created.  62321 strings are created using the new representation and 263 using the old representation.
+
+Additionally, there exists a set of micro benchmarks to test the behaviour of the implementation in a separate [[https://bitbucket.org/t0rsten/pep-393-bench|bitbucket repository]].
 
 Runníng the measurement script via {{{./measure.py}}} produces the following output of measurements.  The most impressive one is the join benchmarks which demonstrates CPU and memory reduction at the same time.
 
