@@ -2,6 +2,22 @@ You can access JSON information about packages by using the URL format
 
   http://pypi.python.org/pypi/package_name/json
 
+You can use this to automatically generate a link to the latest release of your package with (assuming use of jQuery):
+
+{{{
+<span id="release_info" class="note">Download:
+  <a href="http://pypi.python.org/pypi/roundup">latest</a></span>
+<script type="text/javascript">
+ $.getJSON('http://pypi.python.org/pypi/roundup/json?callback=?', function(data) {
+     h = 'Download: ' + data.info.version;
+     for (var i=0, url; url=data.urls[i]; ++i) {
+       h += '<br><a href="' + url.url + '">' + url.filename + '</a>';
+     }
+     $('#release_info').html(h);
+ });
+</script>
+}}}
+
 [[http://sphinx.pocoo.org/|Sphinx]] has support for putting an up-to-date Download link in your website using that JSON with one simple directive, for example (for the "roundup" package):
 {{{
 .. pypi-release:: Roundup
