@@ -65,7 +65,8 @@ These are notes so we can remember how to dump / restore the packages database:
   createdb packages
   pg_restore -O -d packages -Fc packages-20060706.dump
 }}}
-Ask RichardJones if you need a database dump.
+
+Ask RichardJones if you need a database dump. Note that dumps should not be imported into an existing database that has had the pkdump_schema.sql DDL script run against it. The pg_dump file will create all of the database tables, columns, indexes, foreign keys, etc. that are required.
 
 PageTemplates are obtained from:
 
