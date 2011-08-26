@@ -131,7 +131,7 @@ nlist = [val for (key, index, val) in nlist]
 == String Concatenation ==
 
 {{{#!wiki note
-The accuracy of this section is disputed with respect to later versions of Python. Python 2.5 string concatenation is fairly fast.
+The accuracy of this section is disputed with respect to later versions of Python. In CPython 2.5, string concatenation is fairly fast, although this may not apply likewise to other Python implementations.
 See ConcatenationTestCode for a discussion.
 }}}
 
@@ -237,7 +237,7 @@ generating the entire list at once. Instead, they return a generator object
 which can be iterated over bit-by-bit:
 
 {{{#!python numbers=disable
-newlist = (s.upper() for s in oldlist)
+iterator = (s.upper() for s in oldlist)
 }}}
 
 Which method is appropriate will depend on what version of Python you're
