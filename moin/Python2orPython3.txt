@@ -4,11 +4,11 @@
 
 == What are the differences? ==
 
-''Short version: Python 2.x is the status quo, Python 3.x is the shiny new thing.''
+''Short version: Python 2.x is the status quo, Python 3.x is the present and future of the language''
 
 At the time of writing (July 4, 2010), the final 2.7 release is out, with a statement of extended support for this end-of-life release. The 2.x branch will see no new major releases after that. 3.x is under active development and has already seen stable releases, such as the recent 3.2. This means that all recent standard library improvements, for example, are only available in Python 3.x.
 
-Python 3 is the future of the language. Guido van Rossum (the original creator of the Python language) decided to clean up Python 2.x properly, with less regard for backwards compatibility than is the case for new releases in the 2.x range. The most drastic improvement is the better unicode support (with all text strings being unicode by default) as well as saner bytes/unicode separation.
+Guido van Rossum (the original creator of the Python language) decided to clean up Python 2.x properly, with less regard for backwards compatibility than is the case for new releases in the 2.x range. The most drastic improvement is the better unicode support (with all text strings being unicode by default) as well as saner bytes/unicode separation.
 
 Besides, several aspects of the core language (such as print and exec being statements, integers using floor division) have been adjusted to be easier for newcomers to learn and to be more consistent with the rest of the language, and old cruft has been removed (for example, all classes are now new-style, `range()` returns a memory efficient iterable, not a list as in 2.x).
 
@@ -57,13 +57,14 @@ Also, language evolution is not limited to core syntactic or semantic changes. I
 
 That said, well-written 2.x code can be a lot like 3.x code. That can mean a lot of things, including using new-style classes, not using ancient deprecated arcane incantations of print, using lazy iterators where available... A practical example: good 2.x code will typically use xrange instead of range; xrange was the starting point for the Python 3.x' range implementation (although range is even better in Python 3, since it can handle values larger than sys.maxint).
 
-Above all, it is recommended that you focus on writing ''good'' code so that 2.x vs 3.x becomes less of an issue. That includes writing full unit test suites, and getting Unicode right (Python 3.x is significantly less forgiving than 2.x about Unicode versus bytes issues: this is generally considered to be a good thing; it just makes porting some software packages fairly annoying).
+Above all, it is recommended that you focus on writing ''good'' code so that 2.x vs 3.x becomes less of an issue. That includes writing full unit test suites, and getting Unicode right (Python 3.x is significantly less forgiving than 2.x about Unicode versus bytes issues: this is considered to be a good thing; it just makes porting some software packages fairly annoying).
 
 == I want to use Python 3, but there's this tiny library I want to use that's Python 2.x only. Do I really have to revert to using Python 2 or give up on using that library? ==
 
 Well, assuming you can't find an alternative package that already supports Python 3, you still have a few options to consider:
 
  * Port the library to 3.x. ("Porting" means that you make the library work on 3.x.)
+ * It is possible that the library isn't really needed and you can use another one.
  * If that turns out to be really hard, and all your other dependencies do exist in 2.x, consider starting off in 2.x. As has already been explained in other places, good 2.x code will typically make switching painless as soon as every dependency has been successfully ported.
  * Decide if the feature is really that important. Maybe you could drop it?
 
