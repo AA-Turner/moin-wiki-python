@@ -1,0 +1,71 @@
+import types
+
+def debug(k):
+
+    class debugged:
+
+        lastmethod = "Λ"
+        
+        def __init__(self, *args, **kwargs):
+            self.wrapped = k(*args, **kwargs)
+            
+        def __getattr__(self, attrname):
+            
+            if \
+               not attrname.startswith("_") and \
+               isinstance(getattr(self.wrapped, attrname), types.MethodType):
+                self.lastmethod = attrname
+                            
+            return getattr(self.wrapped, attrname)
+
+        def __repr__(self):
+            return self.lastmethod.rjust(3)+" "+ \
+                   str(self.cursor).rjust(3)+" "+ \
+                   ":- " + \
+                   self.line
+
+    return debugged
+
+@debug
+class editor:
+    cursor = -1
+    line = ""
+
+    def i(self, c):
+        self.line = self.line[:self.cursor+1] + c + self.line[self.cursor+1:]
+        self.cursor+=1
+
+    def iw(self, w):
+        self.line = self.line[:self.cursor+1] + w+" " + self.line[self.cursor+1:]
+        self.cursor+=len(w)+1
+
+    def h(self, n=1):
+        if len(self.line) > 0:
+            cpos = self.cursor - n
+            self.cursor = cpos if cpos >= 0 else 0
+
+    def l(self, n=1):
+        if len(self.line) > 0:
+            cpos = self.cursor + n
+            self.cursor = cpos if cpos <= len(self.line)-1 else len(self.line)-1
+
+    def x(self):
+        if len(self.line) > 0:
+            self.line = self.line[:self.cursor]+self.line[self.cursor+1:]
+            if self.cursor == len(self.line): self.cursor -= 1
+
+    def dw(self):
+        if len(self.line) > 0:
+            
+            # senza questa if, se il cursore è inizialmente su uno spazio non si elimina niente
+            # (non entra nel while)
+            if self.line[self.cursor] == " ": self.x()
+
+            current = self.cursor
+            
+            while len(self.line) > 0 and self.line[self.cursor] != " " and self.cursor >= current:
+                self.x()
+
+    def __repr__(self):
+        return self.line
+        #return self.line + "\n" + " "*self.cursor + "^"
