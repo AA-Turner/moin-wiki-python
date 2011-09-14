@@ -156,3 +156,17 @@ python -c "import sys; print '\n'.join(reversed(sys.stdin.read().split('\n')))"
 {{{
 python -c "import sys; sys.stdout.write(''.join(sys.stdin.readlines()[:10]))" < /path/to/your/file
 }}}
+
+== Sony's Open Source Script for performing python one liners using unix-like pipes ==
+They call it "The Pyed Piper" or pyp.  It imports common modules and has it's own preset variable that help with splitting/joining. You use pipes to pass information forward instead of nested parentheses, and then use your normal python string and list methods.  Here is an example from the homepage:
+
+Here, we take a linux long listing, capture every other of the 5th through the 10th lines, keep username and file name fields, replace "hello" with "goodbye", capitalize the first letter of every word, and then add the text "is splendid" to the end: 
+{{{
+ls -l | pyp "pp[5:11:2] | whitespace[2], w[-1] | p.replace('hello','goodbye') | p.title(),'is splendid'"
+}}}
+and the explanation:
+
+This uses pyp's built-in string and list variables (p  and pp), as well as the variable whitespace  and it's shortcut w, which both represent a list based on splitting each line on whitespace (whitespace = w = p.split()).
+The other functions and selection techniques are all standard python. Notice the pipes ("|") are inside the pyp command. 
+
+http://code.google.com/p/pyp/
