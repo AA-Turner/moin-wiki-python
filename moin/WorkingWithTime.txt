@@ -84,12 +84,18 @@ http://pypi.python.org/pypi/iso8601/ provides a standalone ISO8601 parser.
 
 == Parsing ISO 8601 with python-dateutil ==
 
-Although this isn't advertised as ISO8601 support, [[http://labix.org/python-dateutil|python-dateutil]] seems to deal with the format correctly (for example, it has time zone support).
+Although this isn't advertised as ISO8601 support, [[http://labix.org/python-dateutil|python-dateutil]] seems to deal with the format correctly (for example, it has time zone support). This appears to be broken in python-dateutil 2.0.
 
 {{{
 import dateutil.parser
 dateutil.parser.parse('2008-08-09T18:39:22Z')
 }}}
+
+== Parsing RFC 3339 with the rfc3339 module ==
+
+[[https://tools.ietf.org/html/rfc3339|RFC 3339]] is the standard datetime format for most internet and web standards. It is a stricter ISO8601 profile, restricted to datetimes of second resolution or more precise. It requires explicit timezones as offsets from UTC.
+
+[[https://github.com/tonyg/python-rfc3339|python-rfc3339]] ([[http://www.lshift.net/blog/2010/05/20/rfc3339-simple-canonical-date-parsing-and-formatting-for-python|announcement]]) is an RFC 3339 parser. It also implements fixed-offset timezones and a formatter. It lacks support for leap seconds, as does the standard library's datetime module.
 
 == ISO8601 and Python in general ==
 
