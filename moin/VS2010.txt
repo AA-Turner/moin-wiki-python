@@ -40,9 +40,72 @@ Tools\buildbot\external-common.bat
 }}}
 
 * Correct the dependencies for VS 2010:
-# modify tcl-8.5.2.1/generic/tclPosixStr.c - remove lines 347 - 407 - 795 - 855
-# modify tcl-8.5.2.1/win/makefile.vc - remove -debug:full
-# modify tk-8.5.2.0/win/makefile.vc - remove -debug:full
+
+{{{
+diff -r 97fbe6d3b5aa -r 87ac4519efd8 tcl-8.5.2.1/generic/tclPosixStr.c
+--- a/tcl-8.5.2.1/generic/tclPosixStr.c	Tue Oct 18 17:03:03 2011 +0200
++++ b/tcl-8.5.2.1/generic/tclPosixStr.c	Tue Oct 18 17:09:41 2011 +0200
+@@ -344,7 +344,7 @@
+     case EPERM: return "EPERM";
+ #endif
+ #if defined(EPFNOSUPPORT) && (!defined(ENOLCK) || (ENOLCK != EPFNOSUPPORT))
+-    case EPFNOSUPPORT: return "EPFNOSUPPORT";
++
+ #endif
+ #ifdef EPIPE
+     case EPIPE: return "EPIPE";
+@@ -404,7 +404,7 @@
+     case ESHUTDOWN: return "ESHUTDOWN";
+ #endif
+ #ifdef ESOCKTNOSUPPORT
+-    case ESOCKTNOSUPPORT: return "ESOCKTNOSUPPORT";
++
+ #endif
+ #ifdef ESPIPE
+     case ESPIPE: return "ESPIPE";
+@@ -792,7 +792,7 @@
+     case EPERM: return "not owner";
+ #endif
+ #if defined(EPFNOSUPPORT) && (!defined(ENOLCK) || (ENOLCK != EPFNOSUPPORT))
+-    case EPFNOSUPPORT: return "protocol family not supported";
++
+ #endif
+ #ifdef EPIPE
+     case EPIPE: return "broken pipe";
+@@ -852,7 +852,7 @@
+     case ESHUTDOWN: return "can't send afer socket shutdown";
+ #endif
+ #ifdef ESOCKTNOSUPPORT
+-    case ESOCKTNOSUPPORT: return "socket type not supported";
++
+ #endif
+ #ifdef ESPIPE
+     case ESPIPE: return "invalid seek";
+diff -r 97fbe6d3b5aa -r 87ac4519efd8 tcl-8.5.2.1/win/makefile.vc
+--- a/tcl-8.5.2.1/win/makefile.vc	Tue Oct 18 17:03:03 2011 +0200
++++ b/tcl-8.5.2.1/win/makefile.vc	Tue Oct 18 17:09:41 2011 +0200
+@@ -448,7 +448,7 @@
+ #---------------------------------------------------------------------
+ 
+ !if $(DEBUG)
+-ldebug	= -debug:full -debugtype:cv
++ldebug	= -debugtype:cv
+ !else
+ ldebug	= -release -opt:ref -opt:icf,3
+ !endif
+diff -r 97fbe6d3b5aa -r 87ac4519efd8 tk-8.5.2.0/win/makefile.vc
+--- a/tk-8.5.2.0/win/makefile.vc	Tue Oct 18 17:03:03 2011 +0200
++++ b/tk-8.5.2.0/win/makefile.vc	Tue Oct 18 17:09:41 2011 +0200
+@@ -472,7 +472,7 @@
+ #---------------------------------------------------------------------
+ 
+ !if $(DEBUG)
+-ldebug	= -debug:full -debugtype:cv
++ldebug	= -debugtype:cv
+ !else
+ ldebug	= -release -opt:ref -opt:icf,3
+ !endif
+}}}
 
 * Compile the dependencies:
 {{{
@@ -54,37 +117,67 @@ Tools\buildbot\external.bat
 $ set PATH=%PATH%;C:\cygwin\bin    # pour perl
 $ cd openssl-1.0.0d
 $ perl Configure enable-camellia --openssldir=D:/NotBackedUp/support/openssl-1.0.0d VC-WIN32
-$ ms\do_ms.bat # eventuellement .\ms\do_nasm.bat avec http://nasm.sf.net
+$ ms\do_ms.bat # possibly .\ms\do_nasm.bat avec http://nasm.sf.net
 $ nmake -f ms\nt.mak
 $ nmake -f ms\ntdll.mak
-$ nmake -f ms\ntdll.mak test
-$ nmake -f ms\ntdll.mak install
 
-
-see PCbuild\build_ssl.py pour passage en 64 bits
+## $ nmake -f ms\ntdll.mak test
+### see PCbuild\build_ssl.py for 64 bits
 }}}
 
 == Compile Python ==
 
 {{{
-TODO: automatisation
+TODO: automation
 vcbuild /useenv pcbuild.sln /rebuild "Release|Win32"
 }}}
 
 
-* Modify Python-2.7.2\PCbuild\_bsddb.vcxproj for each source line, from:
-{{{
-    <ClCompile Include="crypto\aes_method.c" />
-}}}
-to
-{{{
-    <ClCompile Include="$(bsddbDir)\..\crypto\aes_method.c" />
-}}}
+* Modify Python 2.7.2 so that it will compile with Visual Studio 2010:
 
-* Modify Python-2.7.2\PCbuild\_ssl.vcxproj and Python-2.7.2\PCbuild\_hashlib.vcxproj - remove each PreBuildEvent section
-
-* Modify Python-2.7.2/PCbuild/bdist_wininst.vcproj
 {{{
+# HG changeset patch
+# User Sebastien Sable <SSable@slb.com>
+# Date 1318950940 -7200
+# Node ID 0e7993d51350e9fcef371ef2926698948016aab3
+# Parent  87ac4519efd82d2d807983c7013744c96c55dfa8
+Python 2.7.2 with Visual Studio 2010
+
+diff -r 87ac4519efd8 -r 0e7993d51350 Python-2.7.2/Lib/distutils/command/build_ext.py
+--- a/Python-2.7.2/Lib/distutils/command/build_ext.py	Tue Oct 18 17:09:41 2011 +0200
++++ b/Python-2.7.2/Lib/distutils/command/build_ext.py	Tue Oct 18 17:15:40 2011 +0200
+@@ -193,7 +193,7 @@
+             # Append the source distribution include and library directories,
+             # this allows distutils on windows to work in the source tree
+             self.include_dirs.append(os.path.join(sys.exec_prefix, 'PC'))
+-            if MSVC_VERSION == 9:
++            if MSVC_VERSION in (9, 10):
+                 # Use the .lib files for the correct architecture
+                 if self.plat_name == 'win32':
+                     suffix = ''
+diff -r 87ac4519efd8 -r 0e7993d51350 Python-2.7.2/Lib/distutils/msvc9compiler.py
+--- a/Python-2.7.2/Lib/distutils/msvc9compiler.py	Tue Oct 18 17:09:41 2011 +0200
++++ b/Python-2.7.2/Lib/distutils/msvc9compiler.py	Tue Oct 18 17:15:40 2011 +0200
+@@ -240,7 +240,7 @@
+             log.debug("Unable to find productdir in registry")
+ 
+     if not productdir or not os.path.isdir(productdir):
+-        toolskey = "VS%0.f0COMNTOOLS" % version
++        toolskey = "VS100COMNTOOLS"
+         toolsdir = os.environ.get(toolskey, None)
+ 
+         if toolsdir and os.path.isdir(toolsdir):
+@@ -645,6 +645,7 @@
+             # (currently at http://msdn2.microsoft.com/en-us/library/ms235591(VS.80).aspx)
+             # Ask the linker to generate the manifest in the temp dir, so
+             # we can embed it later.
++            ld_args.append('/MANIFEST')
+             temp_manifest = os.path.join(
+                     build_temp,
+                     os.path.basename(output_filename) + ".manifest")
+diff -r 87ac4519efd8 -r 0e7993d51350 Python-2.7.2/PCbuild/bdist_wininst.vcproj
+--- a/Python-2.7.2/PCbuild/bdist_wininst.vcproj	Tue Oct 18 17:09:41 2011 +0200
++++ b/Python-2.7.2/PCbuild/bdist_wininst.vcproj	Tue Oct 18 17:15:40 2011 +0200
 @@ -75,11 +75,11 @@
  			<Tool
  				Name="VCLinkerTool"
@@ -113,9 +206,206 @@ to
  				SubSystem="2"
  				RandomizedBaseAddress="1"
  				DataExecutionPrevention="0"
+diff -r 87ac4519efd8 -r 0e7993d51350 Python-2.7.2/Tools/msi/msi.py
+--- a/Python-2.7.2/Tools/msi/msi.py	Tue Oct 18 17:09:41 2011 +0200
++++ b/Python-2.7.2/Tools/msi/msi.py	Tue Oct 18 17:15:40 2011 +0200
+@@ -28,7 +28,7 @@
+ # path to PCbuild directory
+ PCBUILD="PCbuild"
+ # msvcrt version
+-MSVCR = "90"
++MSVCR = "100"
+ # Name of certificate in default store to sign MSI with
+ certname = None
+ # Make a zip file containing the PDB files for this build?
+@@ -179,8 +179,16 @@
+ # Determine the target architecture
+ dll_path = os.path.join(srcdir, PCBUILD, dll_file)
+ msilib.set_arch_from_file(dll_path)
+-if msilib.pe_type(dll_path) != msilib.pe_type("msisupport.dll"):
+-    raise SystemError, "msisupport.dll for incorrect architecture"
++have_msisupport = os.path.exists("msisupport.dll")
++if have_msisupport:
++    try:
++        if msilib.pe_type(dll_path) != msilib.pe_type("msisupport.dll"):
++            raise SystemError("msisupport.dll for incorrect architecture")
++    except:
++        print("WARNING: Architecture check for msisupport.dll failed.")
++else:
++    print("WARNING: msisupport.dll not found. Architecture check for msisupport.dll skipped.")
++
+ if msilib.Win64:
+     upgrade_code = upgrade_code_64
+     # Bump the last digit of the code by one, so that 32-bit and 64-bit
+@@ -852,18 +860,18 @@
+                         "Python test suite (Lib/test/)", 11,
+                         parent = default_feature, attributes=2|8)
+ 
+-def extract_msvcr90():
++def extract_msvcr100():
+     # Find the redistributable files
+     if msilib.Win64:
+         arch = "amd64"
+     else:
+         arch = "x86"
+-    dir = os.path.join(os.environ['VS90COMNTOOLS'], r"..\..\VC\redist\%s\Microsoft.VC90.CRT" % arch)
++    dir = os.path.join(os.environ['VS100COMNTOOLS'], r"..\..\VC\redist\%s\Microsoft.VC100.CRT" % arch)
+ 
+-    result = []
++    result = [None,]
+     installer = msilib.MakeInstaller()
+-    # omit msvcm90 and msvcp90, as they aren't really needed
+-    files = ["Microsoft.VC90.CRT.manifest", "msvcr90.dll"]
++    # omit msvcm100 and msvcp100, as they aren't really needed
++    files = ["msvcr100.dll",]
+     for f in files:
+         path = os.path.join(dir, f)
+         kw = {'src':path}
+@@ -881,9 +889,9 @@
+     for name, pat, file in (("bzip2","bzip2-*", "LICENSE"),
+                       ("Berkeley DB", "db-*", "LICENSE"),
+                       ("openssl", "openssl-*", "LICENSE"),
+-                      ("Tcl", "tcl8*", "license.terms"),
+-                      ("Tk", "tk8*", "license.terms"),
+-                      ("Tix", "tix-*", "license.terms")):
++                      ("Tcl", "tcl-8*", "license.terms"),
++                      ("Tk", "tk-8*", "license.terms"),):
++                      # ("Tix", "tix-*", "license.terms")):
+         out.write("\nThis copy of Python includes a copy of %s, which is licensed under the following terms:\n\n" % name)
+         dirs = glob.glob(srcdir+"/../"+pat)
+         if not dirs:
+@@ -939,20 +947,20 @@
+                     language=installer.FileVersion(pydllsrc, 1))
+     DLLs = PyDirectory(db, cab, root, srcdir + "/" + PCBUILD, "DLLs", "DLLS|DLLs")
+ 
+-    # msvcr90.dll: Need to place the DLL and the manifest into the root directory,
++    # msvcr100.dll: Need to place the DLL and the manifest into the root directory,
+     # plus another copy of the manifest in the DLLs directory, with the manifest
+     # pointing to the root directory
+-    root.start_component("msvcr90", feature=private_crt)
++    root.start_component("msvcr100", feature=private_crt)
+     # Results are ID,keyword pairs
+-    manifest, crtdll = extract_msvcr90()
+-    root.add_file(manifest[0], **manifest[1])
++    manifest, crtdll = extract_msvcr100()
++    # root.add_file(manifest[0], **manifest[1])
+     root.add_file(crtdll[0], **crtdll[1])
+     # Copy the manifest
+     # Actually, don't do that anymore - no DLL in DLLs should have a manifest
+-    # dependency on msvcr90.dll anymore, so this should not be necessary
++    # dependency on msvcr100.dll anymore, so this should not be necessary
+     #manifest_dlls = manifest[0]+".root"
+     #open(manifest_dlls, "w").write(open(manifest[1]['src']).read().replace("msvcr","../msvcr"))
+-    #DLLs.start_component("msvcr90_dlls", feature=private_crt)
++    #DLLs.start_component("msvcr100_dlls", feature=private_crt)
+     #DLLs.add_file(manifest[0], src=os.path.abspath(manifest_dlls))
+ 
+     # Now start the main component for the DLLs directory;
+@@ -1325,9 +1333,9 @@
+ # Merge CRT into MSI file. This requires the database to be closed.
+ mod_dir = os.path.join(os.environ["ProgramFiles"], "Common Files", "Merge Modules")
+ if msilib.Win64:
+-    modules = ["Microsoft_VC90_CRT_x86_x64.msm", "policy_9_0_Microsoft_VC90_CRT_x86_x64.msm"]
++    modules = ["Microsoft_VC100_CRT_x86_x64.msm", "policy_10_0_Microsoft_VC100_CRT_x86_x64.msm"]
+ else:
+-    modules = ["Microsoft_VC90_CRT_x86.msm","policy_9_0_Microsoft_VC90_CRT_x86.msm"]
++    modules = ["Microsoft_VC100_CRT_x86.msm",] ###"policy_10_0_Microsoft_VC100_CRT_x86.msm"]
+ 
+ for i, n in enumerate(modules):
+     modules[i] = os.path.join(mod_dir, n)
+diff -r 87ac4519efd8 -r 0e7993d51350 Python-2.7.2/Tools/msi/msilib.py
+--- a/Python-2.7.2/Tools/msi/msilib.py	Tue Oct 18 17:09:41 2011 +0200
++++ b/Python-2.7.2/Tools/msi/msilib.py	Tue Oct 18 17:15:40 2011 +0200
+@@ -5,7 +5,7 @@
+ import win32com.client
+ import pythoncom, pywintypes
+ from win32com.client import constants
+-import re, string, os, sets, glob, subprocess, sys, _winreg, struct
++import re, string, os, sets, glob, subprocess, sys, _winreg, struct, _msi
+ 
+ try:
+     basestring
+@@ -350,7 +350,7 @@
+ class CAB:
+     def __init__(self, name):
+         self.name = name
+-        self.file = open(name+".txt", "wt")
++        self.files = []
+         self.filenames = sets.Set()
+         self.index = 0
+ 
+@@ -369,51 +369,18 @@
+         if not logical:
+             logical = self.gen_id(dir, file)
+         self.index += 1
+-        if full.find(" ")!=-1:
+-            print >>self.file, '"%s" %s' % (full, logical)
+-        else:
+-            print >>self.file, '%s %s' % (full, logical)
++        self.files.append((full, logical))
+         return self.index, logical
+ 
+     def commit(self, db):
+-        self.file.close()
+         try:
+             os.unlink(self.name+".cab")
+         except OSError:
+             pass
+-        for k, v in [(r"Software\Microsoft\VisualStudio\7.1\Setup\VS", "VS7CommonBinDir"),
+-                     (r"Software\Microsoft\VisualStudio\8.0\Setup\VS", "VS7CommonBinDir"),
+-                     (r"Software\Microsoft\VisualStudio\9.0\Setup\VS", "VS7CommonBinDir"),
+-                     (r"Software\Microsoft\Win32SDK\Directories", "Install Dir"),
+-                    ]:
+-            try:
+-                key = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, k)
+-                dir = _winreg.QueryValueEx(key, v)[0]
+-                _winreg.CloseKey(key)
+-            except (WindowsError, IndexError):
+-                continue
+-            cabarc = os.path.join(dir, r"Bin", "cabarc.exe")
+-            if not os.path.exists(cabarc):
+-                continue
+-            break
+-        else:
+-            print "WARNING: cabarc.exe not found in registry"
+-            cabarc = "cabarc.exe"
+-        cmd = r'"%s" -m lzx:21 n %s.cab @%s.txt' % (cabarc, self.name, self.name)
+-        p = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE,
+-                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+-        for line in p.stdout:
+-            if line.startswith("  -- adding "):
+-                sys.stdout.write(".")
+-            else:
+-                sys.stdout.write(line)
+-            sys.stdout.flush()
+-        if not os.path.exists(self.name+".cab"):
+-            raise IOError, "cabarc failed"
++        _msi.FCICreate(self.name+".cab", self.files)
+         add_data(db, "Media",
+                 [(1, self.index, None, "#"+self.name, None, None)])
+         add_stream(db, self.name, self.name+".cab")
+-        os.unlink(self.name+".txt")
+         os.unlink(self.name+".cab")
+         db.Commit()
+ 
 }}}
 
 * Open Python-2.7.2\PCbuild\pcbuild.sln with Visual Studio (automatic conversion)
+
+* Close the project
+
+* Modify Python-2.7.2\PCbuild\_bsddb.vcxproj for each source line, from:
+{{{
+    <ClCompile Include="crypto\aes_method.c" />
+}}}
+to
+{{{
+    <ClCompile Include="$(bsddbDir)\..\crypto\aes_method.c" />
+}}}
+
+* Modify Python-2.7.2\PCbuild\_ssl.vcxproj and Python-2.7.2\PCbuild\_hashlib.vcxproj - remove each PreBuildEvent section
+
+* Open Python-2.7.2\PCbuild\pcbuild.sln with Visual Studio
 
 * Change to Release
 
@@ -126,8 +416,6 @@ to
 * change value of opensslDir, from "$(externalsDir)\openssl-0.9.8d" to "$(externalsDir)\openssl-1.0.0d"
 
 * Change properties in project tkinter > Linker > Input > Additional Dependencies > edit: remove $(tcltkLib) and add $(tcltkDir)\lib\tcl85g.lib then $(tcltkDir)\lib\tk85g.lib
-
-* Build _bsddb, bz2, _tkinter, _ssl, _sqlite3, _hashlib
 
 * Build solution
 
