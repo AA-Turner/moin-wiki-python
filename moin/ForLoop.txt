@@ -61,26 +61,33 @@ for x in xrange(3):
 for x in xrange(3):
     print x
 else:
-    print 'Final x=%d' % (x)
+    print 'Final x = %d' % (x)
 }}}
 
 ''Strings as an iterable''
 {{{#!python numbers=disable
-string="Hello World"
+string = "Hello World"
 for x in string:
     print x
 }}}
 
 ''Lists as an iterable''
 {{{#!python numbers=disable
-collection=['hey',5,'d']
+collection = ['hey',5,'d']
 for x in collection:
     print x
 }}}
 
+''Lists of lists''
+{{{#!python numbers=disable
+list_of_lists = [ [1, 2, 3], [4, 5, 6], [7, 8, 9]]
+for list in list_of_lists:
+    for x in list:
+        print x
+}}}
 ''Creating your own iterable''
 {{{#!python numbers=disable
-class iterable:
+class Iterable(object):
 
     def __init__(self,values):
         self.values = values
@@ -105,24 +112,21 @@ import time
 
 start = time.clock()
 for x in range(10000000):
-    if x==958857:
-        break
     pass
-
 stop = time.clock()
-print stop-start
+
+print stop - start
 
 start = time.clock()
 for x in xrange(10000000):
-    if x==958857:
-        break
     pass
-
 stop = time.clock()
+
 print stop-start
 }}} 
-''(For reference, this returned a sampled time of 0.524843830962 for the range loop and a time of 0.133692928435 for the xrange loop on a test computer running Windows 7 64 bit with Python 2.7 64 bit - quite a difference)''
 
+
+''Time on small ranges''
 {{{#!python numbers=disable
 import time
 
@@ -131,8 +135,6 @@ import time
 start = time.clock()
 
 for x in range(1000):
-    if x==997:
-        break
     pass
 stop = time.clock()
 
@@ -140,11 +142,19 @@ print stop-start
 
 start = time.clock()
 for x in xrange(1000):
-    if x==997:
-        break
     pass
 stop = time.clock()
 
 print stop-start
 }}}
-''(For reference, this returned a sampled time of 0.00052699086855 for the range loop and a time of 0.000464132512211 for the xrange loop on a test computer running Windows 7 64 bit with Python 2.7 64 bit - a rather minute difference)''
+
+''Your own range generator using yield''
+{{{#!python numbers=disable
+def my_range(start, end, step):
+    while start<=end:
+        yield start
+        start += step
+
+for x in my_range(1,10,0.5):
+    print x
+}}}
