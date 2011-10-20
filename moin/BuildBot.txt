@@ -54,3 +54,39 @@ In order for the buildbot to operate properly, it needs access to various TCP po
 || 9020  || python.org || Buildbot connection ||
 
 Many tests will also create local TCP sockets and connect to them (usually through "localhost" or "127.0.0.1"), so make sure this capability hasn't been disabled.
+
+
+The following is a summary of a discussion that happened on python-dev regarding Buildbot security.  No consensus came about, but the information is still helpful as a point of reference. 
+
+Build Slaves and Security
+-------------------------
+
+Here are some important points of which you should be aware when
+running a build slave [1]_:
+
+1. Anyone setting up a build slave should take care to invoke the build
+   in an environment where an out-of-control build slave, potentially
+   executing arbitrarily horrible and/or malicious code, should not
+   damage anything.  Builders should always be isolated from valuable
+   resources, although the specific mechanism of isolation may differ.
+   A virtual machine is a good default, but may not be sufficient;
+   other tools for cutting of the builder from the outside world would
+   be chroot jails, solaris zones, etc.
+2. Code runs differently as privileged vs. unprivileged users.
+   Therefore builders should be set up in both configurations, running
+   the full test suite, to ensure that all code runs as expected in
+   both configurations.  Some tests, as the start of `this thread 
+   <http://mail.python.org/pipermail/python-dev/2011-October/113935.html>`_
+   indicates, must have some special logic to make sure they do or do
+   not run, or run differently, in privileged vs. unprivileged
+   configurations, but generally speaking most things should work in
+   both places.
+3. Access to root may provide access to slightly surprising resources,
+   even within a VM (such as the ability to send spoofed IP packets,
+   change the MAC address of even virtual ethernet cards, etc), and
+   administrators should be aware that this is the case when
+   configuring the host environment for a run-as-root builder.  You
+   don't want to end up with a compromised test VM that can snoop on
+   your network.
+
+.. [1] See the related `python-dev thread <http://mail.python.org/pipermail/python-dev/2011-October/113935.html>`_.
