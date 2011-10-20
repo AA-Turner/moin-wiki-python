@@ -1,0 +1,32 @@
+## Replace the ... text below with a title and a summary of the problem.
+## Feel free to remove any remaining comments once you're done!
+
+= Asking for Help: ... =
+
+...
+
+## Insert your problem description here. You may provide code samples using syntax like this:
+## {{{#!python
+## ...
+## }}}
+I was trying to use ctypes to get Windows clipboard contents and the value that gets returned is a ctypes.c_char_p string.  When I print it the string looks like b'contents_of_clipboard'.  I am not sure why this happens or how to get rid of it.  anyone know.  The code that I pilfered from the net to do this is below
+{{{#!python
+import ctypes, sys
+
+def winGetClipboard():
+	ctypes.windll.user32.OpenClipboard(0)
+	pcontents = ctypes.windll.user32.GetClipboardData(1) # 1 is CF_TEXT
+	data = ctypes.c_char_p(pcontents).value
+	ctypes.windll.user32.CloseClipboard()
+	return data
+}}}
+
+If I had Hello World on the clipboard the returned output would be''' b'Hello World' '''
+## Leave the note below so that editors can follow the instructions...
+
+{{{#!wiki note
+When ''answering'' questions, add the CategoryAskingForHelpAnswered category when saving the page. This will move the link to this page from the questions section to the answers section on the [[Asking for Help]] page.
+}}}
+
+----
+CategoryAskingForHelp
