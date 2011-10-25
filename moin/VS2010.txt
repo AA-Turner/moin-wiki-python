@@ -24,14 +24,18 @@ List of issues related to Visual Studio 2010:
 {{{
 set VS100COMNTOOLS="C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\Tools\"
 
+For 32 bits:
 "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\Tools\vsvars32.bat"
-
 SET PATH=%PATH%;C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin
-## Check: it is necessary to have svn in the PATH
+
+For 64 bits:
+"C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" amd64
+SET PATH=%PATH%;C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64
 }}}
 
-== Compile additional libraries ==
+'''It is necessary to have svn in the PATH'''
 
+== Compile additional libraries ==
 
 * Download the dependencies:
 {{{
@@ -109,16 +113,30 @@ diff -r 97fbe6d3b5aa -r 87ac4519efd8 tk-8.5.2.0/win/makefile.vc
 
 * Compile the dependencies:
 {{{
-Tools\buildbot\external.bat
+For 32 bits:
+$ Tools\buildbot\external.bat
+
+For 64 bits:
+$ Tools\buildbot\external-amd64.bat
 }}}
 
-* Get openssl 1.0.0d
+* Get openssl 1.0.0e
 {{{
 $ set PATH=%PATH%;C:\cygwin\bin    # pour perl
-$ cd openssl-1.0.0d
-$ perl Configure enable-camellia --openssldir=D:/NotBackedUp/support/openssl-1.0.0d VC-WIN32
-$ ms\do_ms.bat # possibly .\ms\do_nasm.bat avec http://nasm.sf.net
+$ cd openssl-1.0.0e
+
+For 32 bits:
+$ perl Configure enable-camellia --openssldir=D:/NotBackedUp/support/openssl-1.0.0e/ VC-WIN32
+$ ms\do_ms.bat # possibly .\ms\do_nasm.bat with http://nasm.sf.net
 $ nmake -f ms\nt.mak
+$ nmake -f ms\ntdll.mak
+
+
+For 64 bits:
+$ perl Configure --openssldir=D:/NotBackedUp/support/openssl-1.0.0e/ enable-camellia disable-idea VC-WIN64A
+$ ms\do_win64a.bat
+$ nmake -f ms\nt.mak
+## Error => copy tmp32x86_64cpuid.asm to tmp32\x86_64cpuid.asm
 $ nmake -f ms\ntdll.mak
 
 ## $ nmake -f ms\ntdll.mak test
