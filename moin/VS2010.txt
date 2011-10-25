@@ -146,12 +146,6 @@ nmake -f ms\ntdll.mak
 
 == Compile Python ==
 
-{{{
-TODO: automation
-vcbuild /useenv pcbuild.sln /rebuild "Release|Win32"
-}}}
-
-
 * Modify Python 2.7.2 so that it will compile with Visual Studio 2010:
 
 {{{
@@ -318,7 +312,7 @@ diff -r 87ac4519efd8 -r 0e7993d51350 Python-2.7.2/Tools/msi/msi.py
  mod_dir = os.path.join(os.environ["ProgramFiles"], "Common Files", "Merge Modules")
  if msilib.Win64:
 -    modules = ["Microsoft_VC90_CRT_x86_x64.msm", "policy_9_0_Microsoft_VC90_CRT_x86_x64.msm"]
-+    modules = ["Microsoft_VC100_CRT_x86_x64.msm",]
++    modules = ["Microsoft_VC100_CRT_x64.msm",]
  else:
 -    modules = ["Microsoft_VC90_CRT_x86.msm","policy_9_0_Microsoft_VC90_CRT_x86.msm"]
 +    modules = ["Microsoft_VC100_CRT_x86.msm",]
@@ -402,6 +396,32 @@ diff -r 87ac4519efd8 -r 0e7993d51350 Python-2.7.2/Tools/msi/msilib.py
  
 }}}
 
+For 64 bits - apply additional patch:
+{{{
+diff -r 85c73eff95c1 Python-2.7.2/Tools/msi/msi.py
+--- a/Python-2.7.2/Tools/msi/msi.py	Tue Oct 25 16:29:23 2011 +0200
++++ b/Python-2.7.2/Tools/msi/msi.py	Tue Oct 25 17:41:17 2011 +0200
+@@ -26,7 +26,7 @@
+ # Is Tcl available at all?
+ have_tcl = True
+ # path to PCbuild directory
+-PCBUILD="PCbuild"
++PCBUILD="PCbuild\\amd64"
+ # msvcrt version
+ MSVCR = "100"
+ # Name of certificate in default store to sign MSI with
+@@ -863,7 +863,7 @@
+ def extract_msvcr100():
+     # Find the redistributable files
+     if msilib.Win64:
+-        arch = "amd64"
++        arch = "x64"
+     else:
+         arch = "x86"
+     dir = os.path.join(os.environ['VS100COMNTOOLS'], r"..\..\VC\redist\%s\Microsoft.VC100.CRT" % arch)
+}}}
+
+
 * Open Python-2.7.2\PCbuild\pcbuild.sln with Visual Studio (automatic conversion)
 
 * Close the project
@@ -419,25 +439,48 @@ to
 
 * Open Python-2.7.2\PCbuild\pcbuild.sln with Visual Studio
 
-* Change to Release
+* Change to Release (for 64 bits: "Release | x64")
 
 * Choose in menu "View" => "Property Manager"
 
-* open project _bsddb > Release | Win32 > pyd > pyproject > User macros
+* open project _bsddb > "Release | Win32" > pyd > pyproject > User macros (for 64 bits: "Release | x64")
 
 * change value of opensslDir, from "$(externalsDir)\openssl-0.9.8d" to "$(externalsDir)\openssl-1.0.0d"
 
-* Change properties in project tkinter > Linker > Input > Additional Dependencies > edit: remove $(tcltkLib) and add $(tcltkDir)\lib\tcl85g.lib then $(tcltkDir)\lib\tk85g.lib
+* Change properties in project tkinter > Linker > Input > Additional Dependencies > edit:
+
+For 32 bits:
+remove $(tcltkLib) and add $(tcltkDir)\lib\tcl85g.lib;$(tcltkDir)\lib\tk85g.lib;
+
+For 64 bits:
+remove $(tcltk64Lib) and add $(tcltk64Dir)\lib\tcl85g.lib;$(tcltk64Dir)\lib\tk85g.lib;
 
 * Build solution
+{{{
+Use either the UI or following commands:
+
+For 32 bits:
+vcbuild /useenv pcbuild.sln /rebuild "Release|Win32"
+
+For 64 bits:
+vcbuild /useenv pcbuild.sln /rebuild "Release|x64"
+}}}
+
 
 * copy Python-2.7.2/PC/pyconfig.h to Python-2.7.2/pyconfig.h (necessary otherwise distutils complains that it can't find the file when compiling packages)
 
 * Test python:
 {{{
-cd PCbuild; rt.bat
+cd PCbuild;
+
+For 32 bits:
+rt.bat -q -uall -rwW
+
+For 64 bits:
+rt.bat -q -x64 -uall -rw
 }}}
 
+Note: currently the tests will lock on test_asyncore: may be related to [[issue 10469|http://bugs.python.org/issue10469]].
 
 == Create installer ==
 
@@ -505,19 +548,33 @@ diff -r a04f335e70f3 -r a9f6361140d1 pywin32-216/setup.py
 
 * compile
 {{{
+For 32 bits:
 ..\Python-2.7.2\PCbuild\python.exe setup.py build
 ..\Python-2.7.2\PCbuild\python.exe setup.py install
+
+For 64 bits:
+..\Python-2.7.2\PCbuild\amd64\python.exe setup.py build
+..\Python-2.7.2\PCbuild\amd64\python.exe setup.py install
 }}}
 
 * Build extras and Python doc
 {{{
 cd Python-2.7.2\PC
+
+For 64 bits - modify icons.mak:
+@@ -1,5 +1,5 @@
+ python_icon.exe:	py.res empty.obj
+-	link /out:python_icon.exe /machine:x86 /subsystem:windows py.res empty.obj
++	link /out:python_icon.exe /machine:x64 /subsystem:windows py.res empty.obj
+
 nmake icons.mak
 
-### with cygwin
 cd Python-2.7.2/Doc
-./make.bat checkout
-./make.bat htmlhelp
+SET HTMLHELP=hhc
+SET PYTHON=..\PCbuild\amd64\python
+make.bat checkout
+make.bat htmlhelp
+SET PYTHON=
 }}}
 
 * build MSI package
@@ -527,5 +584,9 @@ cd Python-2.7.2\Tools\msi
 
 * Create package:
 {{{
+For 32 bits:
 ..\..\PCbuild\python.exe msi.py
+
+For 64 bits:
+..\..\PCbuild\amd64\python.exe msi.py
 }}}
