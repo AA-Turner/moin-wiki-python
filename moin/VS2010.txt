@@ -2,8 +2,6 @@
 
 {{{#!wiki caution
 This is a draft related to [[issue 13210|http://bugs.python.org/issue13210]].
-
-It only concerns 32 bits builds for the moment.
 }}}
 
 == Issues ==
@@ -22,15 +20,11 @@ List of issues related to Visual Studio 2010:
 * Define compilation environment:
 
 {{{
-set VS100COMNTOOLS="C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\Tools\"
-
 For 32 bits:
 "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\Tools\vsvars32.bat"
-SET PATH=%PATH%;C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin
 
 For 64 bits:
 "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" amd64
-SET PATH=%PATH%;C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64
 }}}
 
 '''It is necessary to have svn in the PATH'''
@@ -129,7 +123,7 @@ set PATH=%PATH%;C:\Perl\bin
 cd openssl-1.0.0e
 
 For 32 bits:
-perl Configure enable-camellia --openssldir=D:/NotBackedUp/support/openssl-1.0.0e/ VC-WIN32
+perl Configure --openssldir=D:\NotBackedUp\support\openssl-1.0.0e\ enable-camellia disable-idea VC-WIN32
 ms\do_ms.bat # possibly .\ms\do_nasm.bat with http://nasm.sf.net
 nmake -f ms\nt.mak
 nmake -f ms\ntdll.mak
@@ -588,5 +582,66 @@ For 32 bits:
 ..\..\PCbuild\python.exe msi.py
 
 For 64 bits:
+
+Merging Microsoft.VC100.CRT in the package will fail for the moment, so you need to apply the following patch to msi.py:
+
+diff -r 85c73eff95c1 Python-2.7.2/Tools/msi/msi.py
+--- a/Python-2.7.2/Tools/msi/msi.py	Tue Oct 25 16:29:23 2011 +0200
++++ b/Python-2.7.2/Tools/msi/msi.py	Tue Oct 25 17:41:17 2011 +0200
+@@ -1342,29 +1342,29 @@
+ 
+ def merge(msi, feature, rootdir, modules):
+     cab_and_filecount = []
+-    # Step 1: Merge databases, extract cabfiles
+-    m = msilib.MakeMerge2()
+-    m.OpenLog("merge.log")
+-    m.OpenDatabase(msi)
+-    for module in modules:
+-        print module
+-        m.OpenModule(module,0)
+-        m.Merge(feature, rootdir)
+-        print "Errors:"
+-        for e in m.Errors:
+-            print e.Type, e.ModuleTable, e.DatabaseTable
+-            print "   Modkeys:",
+-            for s in e.ModuleKeys: print s,
+-            print
+-            print "   DBKeys:",
+-            for s in e.DatabaseKeys: print s,
+-            print
+-        cabname = tempfile.mktemp(suffix=".cab")
+-        m.ExtractCAB(cabname)
+-        cab_and_filecount.append((cabname, len(m.ModuleFiles)))
+-        m.CloseModule()
+-    m.CloseDatabase(True)
+-    m.CloseLog()
++    # # Step 1: Merge databases, extract cabfiles
++    # m = msilib.MakeMerge2()
++    # m.OpenLog("merge.log")
++    # m.OpenDatabase(msi)
++    # for module in modules:
++    #     print module
++    #     m.OpenModule(module,0)
++    #     m.Merge(feature, rootdir)
++    #     print "Errors:"
++    #     for e in m.Errors:
++    #         print e.Type, e.ModuleTable, e.DatabaseTable
++    #         print "   Modkeys:",
++    #         for s in e.ModuleKeys: print s,
++    #         print
++    #         print "   DBKeys:",
++    #         for s in e.DatabaseKeys: print s,
++    #         print
++    #     cabname = tempfile.mktemp(suffix=".cab")
++    #     m.ExtractCAB(cabname)
++    #     cab_and_filecount.append((cabname, len(m.ModuleFiles)))
++    #     m.CloseModule()
++    # m.CloseDatabase(True)
++    # m.CloseLog()
+ 
+     # Step 2: Add CAB files
+     i = msilib.MakeInstaller()
+
+Then call:
 ..\..\PCbuild\amd64\python.exe msi.py
 }}}
