@@ -28,11 +28,13 @@ Firstly, if you're deploying to an environment you don't control, that may impos
 
 Secondly, if you want to use a specific third party package or utility that doesn't yet have a released version that is compatible with Python 3, and porting that package is a non-trivial task, you may choose to use Python 2 in order to retain access to that package.
 
-Popular modules that don't yet support Python 3 include Twisted (for networking and a bunch of other stuff), gevent (like Twisted but different), Django and Pylons (for building websites), PyGTK<<FootNote(PyGobject is the recommended library for GTK+ programming and it has Python 3 support, but some GNOME specific libraries are yet to be ported.)>> and PySide (for making GUIs), py2exe (for packaging your application for Windows users), PIL (for processing images)...
+Popular modules that don't yet support Python 3 include Twisted (for networking and a bunch of other stuff), gevent (like Twisted but different), Django and Pylons (for building websites), py2exe (for packaging your application for Windows users), and PIL (for processing images).
 
 Most of these libraries have people working on 3.x support and it's mostly a work in progress in various stages of completion. For some libraries, it's more of a priority than others: Twisted, for example, is mostly focused on production servers, where supporting older versions of Python is important, let alone supporting a new version that includes major changes to the language. (Twisted is a prime example of a major package where porting to 3.x is far from trivial.)
 
-Of course, many packages have already been ported to 3.x. For example, people who want GUI functionality could use PyQt, PyGobject or Tkinter (shipped with the standard library). And for number crunching, numpy supports Python 3 since [[http://projects.scipy.org/numpy/browser/trunk/doc/release/1.5.0-notes.rst|version 1.5]]. If you want to use Python 3.x, but you're afraid to because of a dependency, it's probably worthwhile doing some research first: again, this is a work in progress and this wiki page might be outdated.
+For creating GUI applications Python 3 already comes with Tkinter, and has been supported by PyQt4 almost from the day Python 3 was released; PySide added Python 3 support in 2011. GTK+ GUIs can be created with PyGObject which supports Python 3 and is the successor to PyGtk.
+
+Many other major packages have been ported to Python 3 including numpy [[http://projects.scipy.org/numpy/browser/trunk/doc/release/1.5.0-notes.rst|version 1.5]] for number crunching. If you want to use Python 3.x, but you're afraid to because of a dependency, it's probably worthwhile doing some research first: again, this is a work in progress and this wiki page might be outdated.
 
 Even if the [[http://docs.python.org/py3k/|official python documentation]] and the [[http://docs.python.org/py3k/tutorial/|tutorial]] have been updated for Python 3, there is still a lot of documentation (including examples) on the web and in reference books that still use Python 2. This can require some adjustment to make things work with Python 3 instead.
 
