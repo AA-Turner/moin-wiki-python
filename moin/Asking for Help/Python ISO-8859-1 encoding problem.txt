@@ -10,6 +10,7 @@ I'm facing a huge encoding problem in Python when dealing with ISO-8859-1 / Lati
 When using os.listdir to get the contents of a folder I'm getting the strings encoded in ISO-8859-1 (ex: ''Ol\xe1 Mundo''), however in the Python interpreter the same string is encoded to a different charset:
 
 In : 'Olá Mundo'.decode('latin-1')
+
 Out: u'Ol\xa0 Mundo'
 
 How can I force Python to decode the string to the same format. I've seen that os.listdir is returning the strings correctly encoded but the interpreter is not ('á' character corresponds to '\xe1' in ISO-8859-1, not to '\xa0'):
@@ -20,12 +21,29 @@ This is happening
 
 Any thoughts on how to overcome ?
 
-Regards,
+----
 
-## Insert your problem description here. You may provide code samples using syntax like this:
-## {{{#!python
-## ...
-## }}}
+Some questions:
+
+ * Is your interactive session using the same locale as the code which uses `os.listdir`?
+ * Have you tried using `os.listdir` in the interactive session and capturing the filename directly? For example:
+ {{{#!python numbers=disable
+filenames = os.listdir(folder)
+print filenames                     # to see which one you want
+filenames[INDEX].decode('latin-1')  # substitute the position of the interesting file for INDEX
+ }}}
+
+In my console, doing `'Olá Mundo'.decode('latin-1')` gives `u'Ol\xe1 Mundo'`, but then my locale looks like this:
+
+{{{#!python numbers=disable
+>>> from locale import *
+>>> setlocale(LC_ALL, "")
+'en_US.ISO-8859-15'
+>>> getlocale(LC_ALL)
+('en_US', 'ISO8859-15')
+}}}
+
+The `latin-1` encoding is virtually the same as this one. Maybe you should see which locale you're using. -- PaulBoddie <<DateTime(2011-11-13T18:16:11+0100)>>
 
 ## Leave the note below so that editors can follow the instructions...
 
