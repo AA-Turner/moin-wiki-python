@@ -296,6 +296,7 @@ class cached_property(object):
 Call a function which returns True/False to indicate success or failure. On failure, wait, and try the function again. On repeated failures, wait longer between each successive attempt. If the decorator runs out of attempts, then it gives up and returns False, but you could just as easily raise some exception.
 
 {{{
+#!python
 import time
 
 # Retry decorator with exponential backoff
@@ -1106,6 +1107,7 @@ The code in the imported statedefn file gets a bit hairy, but
 you may not need to delve into it for your application.
 
 {{{
+#!python
 # State Machine example Program
 
 from statedefn import *
@@ -1258,6 +1260,7 @@ main()
 }}}
 And now the imported statedefn.py
 {{{
+#!python
 #
 # Support for State Machines.  ref - Design Patterns by GoF
 #  Many of the methods in these classes get called behind the scenes. 
@@ -1469,6 +1472,7 @@ There are operational differences between:
 This example demonstrates the operational differences between the three using a skit taken from Episode 22: Bruces.
 
 {{{
+#!python
 from sys import stdout,stderr
 from pdb import set_trace as bp
 
@@ -1630,6 +1634,7 @@ ThirdBruce.talk("She's a good Sheila, Bruce and not at all stuck up.")
 Allows you to test unimplemented code in a development environment by specifying a default argument as an argument to the decorator (or you can leave it off to specify None to be returned.
 
 {{{
+#!python
 # Annotation wrapper annotation method
 def unimplemented(defaultval):
     if(type(defaultval) == type(unimplemented)):
@@ -1647,6 +1652,7 @@ def unimplemented(defaultval):
 == Redirects stdout printing to python standard logging. ==
 
 {{{
+#!python
 class LogPrinter:
     """LogPrinter class which serves to emulates a file object and logs
        whatever it gets sent to a Logger object at the INFO level."""
@@ -1680,7 +1686,7 @@ def logprintinfo(func):
 This example prevents users from getting access to places where they are not authorised to go
 
 {{{
-
+#!python
 
 class LoginCheck:
     """
@@ -1717,7 +1723,7 @@ def display_members_page():
 Example:
 
 {{{
-
+#!python
 
 test = 0
 DisplayMembersPage()
