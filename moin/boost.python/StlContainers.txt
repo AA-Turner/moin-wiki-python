@@ -58,7 +58,7 @@ We have __len__ right away:{{{
 template<class T>
 struct std_item
 {
-    typedef T::value_type V;
+    typedef typename T::value_type V;
     static V& get(T const& x, int i)
     {
         if( i<0 ) i+=x.size();
@@ -108,8 +108,8 @@ And the same approach for '''map'''.
 template<class T>
 struct map_item
 {
-    typedef T::key_type K;
-    typedef T::mapped_type V;
+    typedef typename T::key_type K;
+    typedef typename T::mapped_type V;
     static V& get(T const& x, K const& i)
     {
         if( x.find(i) != x.end() ) return x[i];
@@ -125,7 +125,7 @@ struct map_item
         else KeyError();
     }
 };
-void KeyError() { PyErr_; }
+void KeyError() { PyErr_SetString(PyExc_KeyError, "Key not found"); }
 }}}
 And in our case:
 {{{
@@ -196,16 +196,16 @@ Some ice on top:
 static int std_item::index(T const& x, V const& v)
 {
         int i=0;
-        for(T::const_iterator it=x.begin; it!=x.end(); ++it,++i)
+        for(typename T::const_iterator it=x.begin; it!=x.end(); ++it,++i)
           if( *it == v ) return i;
         return -1;
 }
 }}}
 {{{
-static int map_item::index(T const& x,  const& k)
+static int map_item::index(T const& x, K const& k)
 {
         int i=0;
-        for(T::const_iterator it=x.begin; it!=x.end(); ++it,++i)
+        for(typename T::const_iterator it=x.begin; it!=x.end(); ++it,++i)
           if( it->first == k ) return i;
         return -1;
 }
