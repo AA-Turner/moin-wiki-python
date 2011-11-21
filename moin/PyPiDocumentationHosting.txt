@@ -1,13 +1,30 @@
-## page was renamed from PyPiHostingDocumentation
-You can now host documentation at
+You can have HTML documentation for your projects hosted for free by PyPI.  It will be displayed at a URI like this:
 
-    http://packages.python.org/package_name
+    http://packages.python.org/<project_name>
+
+= What PyPI accepts =
+
+The documentation must comply with this rules:
+
+ * Only static files are supported.
+ * There must be a top-level file named "index.html".
+ * All the files should be packed into a zip file.
+
+= How to upload =
+
+If your project uses setuptools, you can send your documentation to PyPI directly from your terminal:
+
+    python setup.py upload_docs
+
+By default, the directory "build/docs" will be zipped up and sent.  Pass --upload-dir on the command line or in the setup.cfg file to adapt it.
+
+Distutils2 also provides this command:
+
+    pysetup run upload_docs
+
+The upload-dir option has the same default value.
 
 
-To upload documentation:
+= How to manually upload =
 
- * Prepare a .zip file that is unpacked into this URL.
- * Only static pages are supported.
- * The zip file must have a top-level "index.html".
-
-Then log into PyPI, select the package you wish to upload the docs for from the "Your Packages" list and use the form at the bottom of the package editing page to upload the ZIP file.
+If you can’t or don’t want to use a command, you can zip the directory, log into PyPI usig a Web browser, select the project from the “Your Packages list” and use the form at the bottom of the edit page to upload the zip file.
