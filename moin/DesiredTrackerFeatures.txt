@@ -139,29 +139,6 @@ Attach files to emails sent to nosy if they have a sane mime type and size (poss
 
 Misc
 ----
-**DONE** in r83896. The "Your Issues" query is confusing (see `#299 <http://psf.upfronthosting.co.za/roundup/meta/issue299>`__ and  `#329 <http://psf.upfronthosting.co.za/roundup/meta/issue329>`__).
-This is how it could be changed::
-
-  Old menu:                       New menu:
-  #  Issues                       #  Issues
-    * Create New                    * Create New
-    * Show Open                     * Search
-    * Show Easy                     * Show Issue |_____|
-    * Show Unassigned
-    * Show Needing Review         #  Summaries
-    * Show Having Patch             * Created by you
-    * Search                        * Followed by you
-    * Show Issue |_____|            * Assigned to you
-                                    * With patch
-  # Hello, your.name                * Easy
-    * Your Issues
-    * Your Details                #  Hello, your.name
-    * Logout                        * Your Details
-                                    * Logout
-
-The 'Assigned to you' could be visible to developers only. The unassigned query is useless IMHO because there's plenty of unassigned issues. The "Needs review" is often omitted, so the "Needing Review" query is not so useful too.
-
-----
 
 When an issue is closed stage should be automatically set to
 'committed/rejected'.
@@ -189,14 +166,6 @@ When a user adds a file there should be a note among the messages
 This would avoid confusion if the user says "This patch ..." and
 there are several files attached.
 
-The tracker should be in some way integrated with maintainers.rst.
-It should be possible to map at least some of the "Components" in the
-tracker with the "Interest areas" (e.g. "Unicode", "Windows") in maintainers.rst
-and/or provide a way to consult the file while adding/editing an issue.
-Another option is to add fields like "maintainer of" or "interest
-areas" to the users, but it will probably be hard to keep it in sync
-with maintainers.rst.
-
 Emails can contain useful links like "remove me from nosy" and also link directly to the message using an anchor (i.e. .../issue1234#msg12345).
 
   Removing someone from nosy via a link, IOW modifying state with a GET request, is a proved bad idea. Ok for a link that would open a page with a form that sends a POST request to remove oneself from nosy. —merwok
@@ -206,12 +175,6 @@ responsibility. Many issues may be worth fixing, but not interesting enough
 to someone with tracker privileges to fix.
 
   There might be an 'assigned to' field open to everyone is working or wants to work on the issue and a 'reviewer/committer' field for a core developer that can review and commit the patch once it's ready.
-
-Jquery could be used to enhance the nosy list in the following ways:
- 1. hide the (list) link;
- 2. move the cursor at the end of the list once the user clicks on it;
- 3. read the name that the user is typing and use ajax to list possible matches under the nosy list field, showing username, realname, and possibly modules set on maintainers.rst;
- 4. add the name  at the end of the nosy list when the user clicks on one of the suggestions;
 
 Mails for "unimportant" changes (e.g. nosy changes, files/msgs removed) could be avoided. These changes could still be included in the next message or when enough unimportant changes are collected, making sure that it's clear who changed what. The only problem is that if there's no "next message" the change will pass unnoticed. This is a problem especially for messages that gets removed accidentally. See `#279 <http://psf.upfronthosting.co.za/roundup/meta/issue279>`__.
 
