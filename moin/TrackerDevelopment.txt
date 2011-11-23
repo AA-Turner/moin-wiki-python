@@ -62,7 +62,7 @@ tracker runs in.
 Details on how to install PostgreSQL is outside the scope of this Wiki
 Page ({{{sudo apt-get install postgresql}}} should be enough). 
 Both version 7.4 and 8.1 of PostgreSQL has been tested without
-any known problems. It has been reported that 8.2 and 8.3 work well.
+any known problems. It has been reported that 8.2, 8.3, 8.4, and 9.1 work well.
 
 Access configuration of postgresql can be tricky. You need to make
 sure that the user you're running roundup as (your unix/windows user)
@@ -113,6 +113,28 @@ $ psql -U postgres
 postgres=# create user roundup;
 postgres=# alter user roundup with createdb;
 }}}
+
+=== Upgrading PostgreSQL from 8.4 to 9.1 ===
+
+If you have a tracker instance running on PostgreSQL 8.4 and you want to update it to 9.1, follow these steps:
+
+1. Install postgresql-9.1;
+
+2. Remove the new default cluster using {{{sudo pg_dropcluster --stop 9.1 main}}};
+
+3. Update the old clusted with {{{sudo pg_upgradecluster 8.4 main}}};
+
+4. If you get the error:
+{{{
+The PostgreSQL server failed to start. Please check the log output:
+FATAL:  could not create shared memory segment: Invalid argument
+DETAIL:  Failed system call was shmget(key=5432001, size=34922496, 03600).
+HINT:  This error usually means that PostgreSQL's request for a shared memory segment exceeded your kernel's SHMMAX parameter.  You can either reduce the request size or reconfigure the kernel with larger SHMMAX.  To reduce the request size (currently 34922496 bytes), reduce PostgreSQL's shared memory usage, perhaps by reducing shared_buffers or max_connections.
+        If the request size is already small, it's possible that it is less than your kernel's SHMMIN parameter, in which case raising the request size or reconfiguring SHMMIN is called for.
+}}}
+check the value of shmmax with {{{sysctl -a | grep -i shm}}} and update it with {{{sudo sysctl kernel.shmmax=34922496}}}
+
+5. If everything works with 9.1 you can then remove 8.4;
 
 == Installing psycopg or psycopg2 ==
 
