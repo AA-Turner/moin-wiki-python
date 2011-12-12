@@ -165,7 +165,7 @@ You can get a checkout of {{{spambayes_integration}}} with:
   svn co http://svn.python.org/projects/tracker/instances/spambayes_integration
 }}}
 
-If you do intend to use it, you will need to also [[#SpamBayesSetup | install SpamBayes proper and configure it appropriately]]. Otherwise, a [[#SpamBayesdummyconfiguration |dummy configuration]] should work.
+If you do intend to use it, you will need to also [[#SpamBayesSetup | install SpamBayes proper and configure it appropriately]]. Otherwise, a [[#SpamBayes_dummy_configuration |dummy configuration]] should work.
 
 == Checkout the python-dev instance ==
 
@@ -338,6 +338,33 @@ Incomplete/Missing !SpamBayes setup:: In your detectors/config.ini file set {{{s
 {{{
     spambayes_uri = "http://localhost:9999/nobodyhere"
 }}}
+
+Another workaround is to:
+
+1. disable the {{{sb_is_spam}}} function in extensions/spambayes.py adding a {{{return False}}}:
+  {{{
+def sb_is_spam(obj):
+    return False  # <- add this
+    cutoff_score = float(obj._db.config.detectors['SPAMBAYES_SPAM_CUTOFF'])
+   }}}
+2. disable the {{{may_view_spam.__call__}}} method in schema.py adding a {{{return True}}}:
+  {{{
+     def __call__(self, db, userid, itemid):
+         return True  # <- add this
+         cutoff_score = float(db.config.detectors['SPAMBAYES_SPAM_CUTOFF'])
+  }}}
+3. disable the {{{is_spam}}} function in detectors/sendmail.py adding a {{{return False}}}:
+  {{{
+def is_spam(db, msgid):
+    """Return true if message has a spambayes score above
+    db.config.detectors['SPAMBAYES_SPAM_CUTOFF']. Also return true if
+    msgid is None, which happens when there are no messages (i.e., a
+    property-only change)"""
+    return False  # <- add this
+    if not msgid:
+  }}}
+
+'''Note:''' this is just a workaround, and these changes will be visible with {{{svn diff}}}, so pay attention to not commit them accidentally.  A better fix would be to add a config option to enable/disable spambayes.
 
 Check [[http://mail.python.org/pipermail/tracker-discuss/2008-February/001549.html |other available workarounds]].
 
