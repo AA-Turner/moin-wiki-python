@@ -214,12 +214,27 @@ If you need to do development on the '''busybody''' or '''tellteam''' detectors,
 copy detectors/config.ini.template into detectors/config.ini, and
 adjust the e-mail addresses accordingly. <<Anchor(ciavc)>> The '''CIA.vc''' detector sends emails about issue changes and is on by default. Disable it by adding a {{{return}}} to its init() function (detectors/cia.py):
 
-
-{{{#!python
+{{{
  def init(db):
      return # <--
      db.issue.react('create', sendcia)
      db.issue.react('set', sendcia)
+}}}
+
+You can do the same with {{{detectors/rietveldreactor.py}}} if you don't need to use it:
+
+{{{
+ def init(db):
+     return # <--
+     db.user.react('create', create_django_user)
+     db.issue.react('set', update_issue_cc)
+
+}}}
+
+Disabling the rietveld reactor also solves this error that you might get during the init:
+{{{
+psycopg2.ProgrammingError: relation "auth_user" does not exist
+LINE 1: insert into auth_user(id, username, email, password, first_n...
 }}}
 
 Initialize your roundup instance:
