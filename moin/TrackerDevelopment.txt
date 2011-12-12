@@ -212,7 +212,22 @@ most settings should be OK.
 
 If you need to do development on the '''busybody''' or '''tellteam''' detectors,
 copy detectors/config.ini.template into detectors/config.ini, and
-adjust the e-mail addresses accordingly. <<Anchor(ciavc)>> The '''CIA.vc''' detector sends emails about issue changes and is on by default. Disable it by adding a {{{return}}} to its init() function (detectors/cia.py):
+adjust the e-mail addresses accordingly.
+
+If you don't want to configure roundup to send emails, you can set
+{{{
+debug = debugmail.txt
+}}}
+at the end of the {{{[mail]}}} section.  The mail will just be saved on the file you specify.
+
+If you want to see the tracebacks in the browser instead of having them sent by email,
+at the end of the {{{[web]}}} section set
+{{{
+debug = on
+}}}
+
+<<Anchor(ciavc)>> The '''CIA.vc''' detector sends emails about issue changes
+and is on by default. Disable it by adding a {{{return}}} to its init() function (detectors/cia.py):
 
 {{{
  def init(db):
