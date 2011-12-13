@@ -73,7 +73,7 @@ For a development environment with no demands on security, the easiest
 way to configure this is probably to allow all users to connect as any
 database user as long as the request originates from the local
 host. This can be accomplished editing pg_hba.conf (usually found in
-/etc/postgresql/8.x/main/ -- you might need privileges). The end of the
+/etc/postgresql/8.x/main/ in Linux or /Library/PostgreSQL/9.x/data/ in Mac OS X -- you might need privileges to edit it). The end of the
 file should look like this (the four changed lines are preceded by ##):
 
 {{{
@@ -104,6 +104,12 @@ configuration. Something similar to
 sudo /etc/init.d/postgresql reload
 }}}
 should do the trick on Unix-like platforms.
+
+On Mac OS X, do {{{sudo su - postgres}}}. Then use pg_ctl to restart the server:
+
+{{{
+/Library/PostgreSQL/9.x/bin/pg_ctl restart -D /Library/PostgreSQL/9.x/data
+}}}
 
 Create a database user that is allowed to create databases. This user
 will be used when roundup connects to the database.
@@ -153,6 +159,42 @@ If during the ''python setup.py build'' you get:
  * "fatal error: Python.h: No such file or directory", you need to {{{sudo apt-get install python-dev}}};
  * "fatal error: libpq-fe.h: No such file or directory", you need to {{{sudo apt-get install libpq-dev}}};
 If you are having other problems or installing a different version check psycopg2-2.3.2/INSTALL.
+
+== Installing BeautifulSoup ==
+
+To install BeautifulSoup in Linux, you can use package manager, for example:
+{{{
+sudo apt-get install python-beautifulsoup
+}}}
+In case it doesn't work, you can download the latest .tar.gz from http://www.crummy.com/software/BeautifulSoup/#Download, extract and install it 
+{{{
+tar xvzf BeautifulSoup-3.2.0.tar.gz
+cd BeautifulSoup-3.2.0/
+sudo python setup.py install
+}}}
+
+== Installing M2Crypto ==
+
+M2Crypto has 2 dependancies: OpenSSL and Swig.
+To install OpenSSL, download the latest .tar.gz from http://www.openssl.org/source/, extract and install it:
+{{{
+tar xvzf openssl-1.0.0e.tar.gz
+cd openssl-1.0.0e/
+./config
+make
+make install
+}}}
+To install Swig, download the latest .tar.gz from http://www.swig.org/download.html, extract and install it:
+{{{
+tar xvzf swig-2.0.4.tar.gz
+cd swig-2.0.4/
+./configure
+make
+make install
+}}}
+Note: sometimes {{{./configure}}} fails because Swig needs PCRE configure, in that case you should download the latest .tar.gz from ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/ and extract it into the extracted folder {{{swig-2.0.4}}}, then run {{{Tools/pcre-build.sh}}} and start again with {{{./configure}}}.
+
+Finally, download the latest .egg from http://chandlerproject.org/Projects/MeTooCrypto#Downloads then do {{{easy_install M2Crypto....egg}}} to install M2Crypto.
 
 == Checkout spambayes_integration ==
 
@@ -280,7 +322,11 @@ You will have to use this command every time you (re)start roundup, so it's easi
 {{{
 alias start-roundup='/opt/tracker-roundup/bin/roundup-server -p 9999 python-dev=<your python-dev directory>'
 }}}
-and add it to your {{{.bashrc}}}.
+It might be a good idea to create another alias for roundup admin too:
+{{{
+alias admin-roundup='/opt/tracker-roundup/bin/roundup-admin -i <your python-dev directory>'
+}}}
+then add them to your {{{.bashrc}}} (or {{{~/.profile}}} in Mac OS X)
 
 You should now be able to browse http://localhost:9999/python-dev/ and
 get a roundup instance that looks just like http://bugs.python.org, except for some missing new values for fields like Stages and Keywords. It's possible to replace '''initial_data.py'''  with an [[attachment:initial_data_updated.py | updated version]] so that your fields will have values that match those currently present in the Python Tracker.
