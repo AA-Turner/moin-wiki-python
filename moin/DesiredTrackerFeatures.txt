@@ -23,6 +23,12 @@ Instead of radio boxes we could have three drop-down inputs like::
         code   [____________[▼]
 
 With "not needed", "needed", "provided", "committed" as possible values.
+
+    This is probably unnecessary and adds too much clutter to the interface.
+    It would also take 6 clicks to open the 3 dropdowns and select "provided".
+    Moving the stage from "patch review" to "commit review" should be enough
+    to indicate that the patch is complete and has docs/tests/code.
+
 The stages could be something like "discussing" (when no patch has been provided yet), "in progress" (when there is some patch), "committed" (when all the patches have been committed). The stage field could also be removed altogether and replaced by these 3 fields; the additional details can be provided by the 'status' and 'resolution' fields.
 
 In the meanwhile the stages could be changed to "needs unit test", "needs patch", "needs review", "resolved".
@@ -58,6 +64,13 @@ mark issues as accepted regardless of whether or not they have a complete
 patch.  This is to differentiate between issues that just need work,
 and issues where we haven't even decided that we are going to accept it.
 
+    The above is too complex and probably unnecessary. Recording the version
+    is useful, but the roundup/hg script + the highlight on the message 
+    should already be enough.  Differentiate between issues that need work
+    and ones where we have to decide might be useful sometimes, but it's
+    not so common, so it might not be worth adding another field.
+    
+
 Another alternative is using drop-downs, e.g.::
 
         3.1  [____________[▼]
@@ -66,7 +79,14 @@ Another alternative is using drop-downs, e.g.::
 
 With values like 'unaffected', 'affected', 'committed', 'to be ported'.
 
-   * Using checkboxes instead of multi-value select elements is a huge usability win.(No references handy, just memory.) —merwok
+   Dropdowns require too many clicks, and this is probably unnecessary too.
+
+   Using checkboxes instead of multi-value select elements is a huge usability win.(No references handy, just memory.) —merwok
+
+      Checkboxes are better from an usability point of view but might make the interface more cluttered.
+      Hiding somehow the values that are not selected might make the situation better, but previous experiments with this
+      weren't too successful.  Using a lower opacity for unchecked fields and restore it on hover might work.    
+      For some experiments with checkboxes see http://psf.upfronthosting.co.za/roundup/meta/issue384
 
       Checkboxes could be used for versions, like::
 
@@ -104,8 +124,9 @@ Provide Atom feeds for saved queries to make keeping up with a particular area o
 Add OpenSearch support to allow browsers to get search suggestions (completion) and scripts to get search results as easily-parsable feeds (see `Wikipedia’s OpenSearch file <http://fr.wikipedia.org/w/opensearch_desc.php>`__ for an example). It means adding one simple XML file, and returning search results as Atom feeds with some OpenSearch elements.
 
 Allow any user to set her/himself as auto-nosy for some criteria.
-
 Allow any user with developer status to set her/himself as auto-assignee for some for some criteria.
+   For the record, these can be done by "Coordinators" from the "component" page.
+   Making the form editable by any user is not an option, so this would require a separate page if it's implemented.
 
 Add a stats page that shows stats and graphs similar to the ones included in the weekly summary reports.
 
@@ -117,6 +138,7 @@ Files
 Warn the user if they send an inappropriate file (zipfile, .exe, Microsoft office formats).
 
 Attach files to emails sent to nosy if they have a sane mime type and size (possibly with a user option).
+   This can be already enabled in Roundup, but the sanity check should probably be implemented separately.
 
 
 Misc
