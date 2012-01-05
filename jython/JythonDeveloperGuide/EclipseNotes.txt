@@ -2,6 +2,7 @@
 
 These notes are based on configuring Eclipse 3.7 on Windows 7 in order to work as a Jython developer. There were lots of little pitfalls.
 
+<<TableOfContents>>
 
 == Setting up to Develop ==
 
@@ -30,12 +31,12 @@ It should be possible to direct Eclipse to the on-line Jython repository at hg.p
  1. From the '''File >> New >> Project...''' dialogue choose '''Mercurial >> Clone Existing Mercurial Repository'''.
  1. In the Mercurial wizard, choose the '''Local...''' button and navigate to the '''''mirror repository'''''
  1. Choose '''Checkout as a project in the workspace'''.
- 1. Choose a new directory name in your Eclipse workspace (parent directory), but it doesn't seem to matter what this is as you will end up a project called "jython-trunk".
+ 1. You can take the default directory name in your Eclipse workspace (parent directory), as you will end up with a project called "jython-trunk".
  1. Leave '''Last revision''' blank.
  1. Press '''Next>'''. The clone happens quite quickly.
  1. At the next dialogue you may choose the "branch". These instructions assume you are developing on the default (tip).
  1. The next operation is equivalent to an {{{hg update}}} instruction and will populate the project with files from the repository. It may take a few minutes to execute.
- 1. The wizard will prompt you to import a project "jython-trunk". Accept this.
+ 1. The wizard will prompt you to import a project called "jython-trunk". Accept this.
 You should now have a project called "jython-trunk" open in your Eclipse workspace. Do not worry that the IDE reports errors. The following steps will put that right, although it gets worse before it gets better.
 
 
@@ -49,7 +50,7 @@ dist\bin\jython
 You will see Jython cache indexes of all the JAR files it can find, then you'll get the prompt {{{>>>}}}. Try a few well chosen Python commands to prove it works. The command to make it stop is {{{exit()}}}.
 
 
-=== Fix-up class path in IDE ===
+=== Fix-up the class path in the IDE ===
 
 In its present state, the IDE build path (checked out by {{{hg}}} to file {{{.classpath}}}) is not quite right.
 
@@ -58,6 +59,8 @@ In its present state, the IDE build path (checked out by {{{hg}}} to file {{{.cl
   * {{{build/exposed}}} to the '''Libraries''' tab using '''Add Class Folder...'''
  1. On the '''Order and Export''' tab of the same dialogue, find {{{build/exposed}}} and move it to the top.
  1. Close it with OK.
+ 1. Open '''Window >>> Preferences >>> Java >>> Build Path >>> Classpath Variables >>> New...''' and define the name ANT_HOME to be a '''Folder...''', then navigate to the Eclipse plug-ins directory and the org.apache.ant folder. (For me, ANT_HOME is exactly "{{{C:/eclipse/plugins/org.apache.ant_1.8.2.v20110505-1300}}}".)
+ 1. OK your way out, but decline to do a full rebuild, if asked.
 
 
 === Controlling compilation in the IDE ===
@@ -65,14 +68,15 @@ In its present state, the IDE build path (checked out by {{{hg}}} to file {{{.cl
 The Eclipse IDE will decide to recompile Java source whenever it thinks something has changed. This is frequent (and often useful) but we must make sure it matches what the custom build ({{{build.xml}}}) file would have done. The build file specifies a Java 1.5 compiler and runs a stage called "exposing".
 
 If you are not already using Java 1.5 compliance globally:
- 1. Open '''Window >>> Preferences >>> Java >>> Installed JREs''' and check that you have a 1.5 standard JDK available to Eclipse. If not, find and add one with '''Search...'''.
+ 1. Open '''Window >>> Preferences >>> Java >>> Installed JREs''' and check that you have a 1.5 standard JDK available to Eclipse. If not, find and add one with '''Search...'''. (You do not need to make it the default.)
  1. Open '''Project >>> Properties >>> Java Compiler''' and click '''Enable project specific settings''' and below it in the drop-down select 1.5.
  1. A bit of advice appears in the dialogue about making sure you use a J2SE-1.5 JRE. Click the link taking you to the Java Build Path dialogue.
  1. Select the JRE System Library and press '''Edit...'''. Use that dialogue to choose a 1.5 standard environment.
 
 Configure the IDE build process to use key parts of build.xml as follows:
- 1. Open '''Project >>> Properties >>> Builders''' and click '''New...''' then choose Ant builder.
- 1. On the '''Main''' tab, call the configuration something like "Jython exposer" and use '''Browse workspace''' to select the {{{build.xml}}} file.
+ 1. Open '''Project >>> Properties >>> Builders''' and click '''New...''' then choose '''Ant Builder'''.
+ 1. Call the configuration something like "Jython exposer".
+ 1. On the '''Main''' tab, use '''Browse Workspace''' to select the {{{build.xml}}} file.
  1. On the '''Refresh''' tab select '''Refresh Resources'''. (Optional: the IDE seems to know when to refresh.)
  1. On the '''Targets''' tab, in the '''After a "Clean"''' section, remove the default target so the builder is not set to run for this build kind.
  1. On the '''Targets''' tab, leave the '''Manual build''' section using the default target (which is a full developer build).
@@ -84,20 +88,39 @@ You can play with those settings later in the same dialogue using '''Edit...'''.
 
 === A first run ===
 
-Unless you have '''Project >>> Build automatically''' turned off, the incremental builder of the Eclipse IDE will have been beavering away in the background, and may even have succeeded in building Jython, or it may have reached a confusing state.
+Unless you have '''Project >>> Build automatically''' turned off, the incremental builder of the Eclipse IDE will have been beavering away in the background, and may even have succeeded in building Jython, or it may have reached a confusing state. Invoke menu '''Project >>> Clean...'''. This will provoke a complete rebuild (if '''Build automatically''' is on). If necessary, invoke '''Project >>> Build'''.
 
-Invoke menu '''Project >>> Clean...'''. This will provoke a complete rebuild (if '''Build automatically''' is on). If necessary, invoke '''Project >>> Build'''.
+Open '''Project >>> Properties >>> Run/Debug Settings >>> New... >>> Java Application''' and call the launch configuration "Jython Interactive". If the IDE hasn't already found it, on the '''Main''' tab use '''Search...''' to select the class {{{org.python.util.jython}}}. In '''VM arguments''' enter the following:{{{
+-Dpython.home=dist
+-Djline.terminal=jline.UnsupportedTerminal
+}}}
+OK your way out of the dialogues.
 
-After this, navigate to the Jython main program at {{{src/org/python/util/jython.java}}} and run this as a Java Application. You should find you have a working interactive Jython interpreter running in the console.
+From the Run menu choose '''Run configurations... >>> Jython Interactive >>> Run'''. Jython should run and produce a lot of messages about cacheing JAR files. Then it gives you an interactive prompt. You should find you have a (semi-)working interactive Jython interpreter running in the console window of the IDE. It will do simple one-liners, but unfortunately interprets /r/n as two lines. (Unsolved problem.)
+
+You can build additional run configurations by copying, and supply them with application arguments, for example to run scripts. JUnit tests also work in the environment of this poroject.
+
 
 
 == Things that go wrong ==
 
 Here are the symptoms of and solutions for a number of things I did wrong. The instructions above are designed to allow you to avoid them, but you may encounter them as things change, and particularly if you set out to fix bugs in an earlier version (different tip) from the default.
 
+=== No project created ===
+
+Sometimes the Mercurial wizard seems to import the project but it does not appear in the IDE Navigator. This seems to happen when Windows Explorer is open in the newly-created project folder, preventing a rename. Try again, and this time don't peek.
+
+
 === JYTHON_HOME Defined ===
 
 If you have an environment variable {{{JYTHON_HOME}}} set, the script at {{{dist\bin\jython.bat}}} will use it to locate the installation, which may be your operational installation, not the one you just built.
+
+
+=== IDE Console problems ===
+
+You run org.python.util.jython as a Java Application, and maybe it produces the normal messages about cacheing JAR files. It gives you an interactive prompt, but promptly exits as if it had received an end of file from the console.
+
+The JLine console input library Jython uses does not interact properly with the IDE Console window by default. In the run configuration ('''Project >>> Properties >>> Run/Debug Settings''' and the Launch configuration you used, define the VM argument {{{-Djline.terminal=jline.UnsupportedTerminal}}}. This isn't perfect, it seems to receive two lines per line of input, but is the best setting I've found.
 
 
 === Missing packages and objects ===
