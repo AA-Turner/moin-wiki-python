@@ -1,6 +1,6 @@
 = Creating an Eclipse Project for Jython Development =
 
-These notes are based on configuring Eclipse 3.7 in order to work as a Jython developer. There were lots of little pitfalls.
+These notes are based on configuring Eclipse 3.7 on Windows 7 in order to work as a Jython developer. There were lots of little pitfalls.
 
 
 == Setting up to Develop ==
@@ -73,7 +73,7 @@ If you are not already using Java 1.5 compliance globally:
 Configure the IDE build process to use key parts of build.xml as follows:
  1. Open '''Project >>> Properties >>> Builders''' and click '''New...''' then choose Ant builder.
  1. On the '''Main''' tab, call the configuration something like "Jython exposer" and use '''Browse workspace''' to select the {{{build.xml}}} file.
- 1. On the '''Refresh''' tab select '''Refresh Resources'''
+ 1. On the '''Refresh''' tab select '''Refresh Resources'''. (Optional: the IDE seems to know when to refresh.)
  1. On the '''Targets''' tab, in the '''After a "Clean"''' section, remove the default target so the builder is not set to run for this build kind.
  1. On the '''Targets''' tab, leave the '''Manual build''' section using the default target (which is a full developer build).
  1. On the '''Targets''' tab, in the '''Auto Build''' section, remove the default target and add "expose".
@@ -84,7 +84,7 @@ You can play with those settings later in the same dialogue using '''Edit...'''.
 
 === A first run ===
 
-Unless you have '''Project >>> Build automatically''' turned off, the incremental builder of the Eclipse IDE will have been beavering away in the background, and may even have succeeded in building Jython. 
+Unless you have '''Project >>> Build automatically''' turned off, the incremental builder of the Eclipse IDE will have been beavering away in the background, and may even have succeeded in building Jython, or it may have reached a confusing state.
 
 Invoke menu '''Project >>> Clean...'''. This will provoke a complete rebuild (if '''Build automatically''' is on). If necessary, invoke '''Project >>> Build'''.
 
