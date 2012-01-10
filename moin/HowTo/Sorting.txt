@@ -273,14 +273,6 @@ In Python 2.7, the ''cmp_to_key()'' tool was added to the ''functools'' module.
 >>> assert sorted(data, reverse=True) == list(reversed(sorted(reversed(data))))
    }}}
 
- * The sort routines are guaranteed to use {{{__lt__}}} when making comparisons between two objects.  So, it is easy to add a standard sort order to a class by defining an {{{__lt__()}}} method:
-   {{{
->>> Student.__lt__ = lambda self, other: self.age < other.age
->>> sorted(student_objects)
-[('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
-   }}}
-
-
  * Key functions need not access data internal to objects being sorted.  A key function can also access external resources.  For instance, if the student grades are stored in a dictionary, they can be used to sort a separate list of student names:
    {{{
 >>> students = ['dave', 'john', 'jane']
