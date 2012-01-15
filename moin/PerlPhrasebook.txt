@@ -149,9 +149,8 @@ powerful than Python's `%` operator.  Remember that in Perl
 variables are interpolated within double-quoted strings, but not
 single-quoted strings.
 
-Perl has a function `sprintf` that behaves similarly to
-Python's `%` operator; the above lines could have been
-written:
+Perl has a function `sprintf` that uses the % conversion á la C; 
+so the above lines could have been written:
 {{{
 $name    = "Fred";
 $header1 = sprintf "Dear %s,", $name;
@@ -204,7 +203,7 @@ substitution mode as an alternative to {{{"%(var)s" % locals()}}}, but was rejec
 {{{
 $s1 = "new string";        # change to new string
 $s2 =~ s/\n/[newline]/g;   # substitute newlines with the text "[newline]"
-substr $s2, 0, 3, 'X';     # replace the first 3 chars with an X
+$s2 = substr $s2, 0, 3,''; # extract the first 3 chars: "A s"
 
 print "$s1\n$s2\n";
 }}}
@@ -213,7 +212,7 @@ print "$s1\n$s2\n";
 s1 = "new string"          # change to new string
                            # substitute newlines with the text "[newline]"
 s2 = s2.replace("\n", "[newline]")
-s2 = 'X' + s2[3:]
+s2 = s2[:3]
 
 print s1
 print s2
