@@ -251,7 +251,14 @@ the list is out of bounds an `undef` is inserted there.
 @slice = @array[0,9,1] # returns ('zero', undef, 'one')
 }}}
 
-Note: Perl range operator uses a closed interval.
+Note: Perl range operator uses a closed interval. To get the range to the end of the array, 
+the last index must be used as
+
+{{{
+@a=(1,2,3,4,5);
+$#a;           # last index, 4, because the firs index is 0 as in Python.
+@a[ 2..$#a ]   # as Python's a[2:]
+}}}
 
 
 == Importing ==
