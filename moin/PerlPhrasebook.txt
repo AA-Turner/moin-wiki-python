@@ -263,6 +263,8 @@ $#a;           # last index, 4, because the firs index is 0 as in Python.
 
 == Importing ==
 
+
+---- /!\ '''Edit conflict - other version:''' ----
 In Perl a module is simply a package with a package name. ( see: perldoc -f package ).
 The symbols exported by the module depends on the module itself. The module may export symbols - mostly functions - by default, 
 on request or none of them. In the latter case the module usually a class or has special access, like File::Spec.
@@ -274,6 +276,21 @@ use Module;  # imports module. It module exports symbols by default, those appea
 use Module qw(symbol1 symbol2 symbol3); # preferred
 or
 use Module "symbol1";
+
+---- /!\ '''Edit conflict - your version:''' ----
+In Perl a module is simply a package with a package name. ( see: perldoc -f package ).
+The symbols exported by the module depends on the module itself. The module may export symbols - mostly functions - by default, 
+on request or none of them. In the latter case the module usually a class or has special access, like File::Spec.
+In Perl the module interfaces may vary - see the doc of the particular module.
+
+{{{
+use Module;  # imports module. It module exports symbols by default, those appeare in the package namespace.
+
+use Module qw(symbol1 symbol2 symbol3); # preferred
+or
+use Module "symbol1";
+
+---- /!\ '''End of edit conflict''' ----
 }}}
 
 {{{
