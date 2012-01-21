@@ -138,7 +138,8 @@ DETAIL:  Failed system call was shmget(key=5432001, size=34922496, 03600).
 HINT:  This error usually means that PostgreSQL's request for a shared memory segment exceeded your kernel's SHMMAX parameter.  You can either reduce the request size or reconfigure the kernel with larger SHMMAX.  To reduce the request size (currently 34922496 bytes), reduce PostgreSQL's shared memory usage, perhaps by reducing shared_buffers or max_connections.
         If the request size is already small, it's possible that it is less than your kernel's SHMMIN parameter, in which case raising the request size or reconfiguring SHMMIN is called for.
 }}}
-check the value of shmmax with {{{sysctl -a | grep -i shm}}} and update it with {{{sudo sysctl kernel.shmmax=34922496}}}
+you check the value of shmmax with {{{sysctl -a | grep -i shm}}}.
+You can change the value permanently adding {{{kernel.shmmax = 34922496}}} in {{{/etc/sysctl.d/30-postgresql-shm.conf}}} and running {{{sudo sysctl -p}}} to apply the changes, or temporarily with {{{sudo sysctl kernel.shmmax=34922496}}}.
 
 5. If everything works with 9.1 you can then remove 8.4;
 
