@@ -14,25 +14,25 @@ name = raw_input('What is your name?\n')
 print 'Hi, %s.' % (name)
 }}}
 
-    ------ 3 lines: For loop, built-in enumerate function
+    ------ 3 lines: For loop, built-in enumerate function, new style formatting
 {{{#!python numbers=disable
 my_list = ['john', 'pat', 'gary', 'michael']
 for i, name in enumerate(my_list):
-    print "iteration %i is %s" % (i, name)
+    print "iteration {iteration} is {name}" % (iteration=i, name=name)
 }}}
 
     ------ 4 lines: Fibonacci, tuple assignment
 {{{#!python numbers=disable
 parents, babies = (1, 1)
 while babies < 100:
-    print 'This generation has %d babies' % babies
+    print 'This generation has {x} babies'.format(x=babies)
     parents, babies = (babies, parents + babies)
 }}}
 
     ------ 5 lines: Functions
 {{{#!python numbers=disable
 def greet(name):
-    print 'hello', name
+    print 'Hello {}'.format(name)
 greet('Jack')
 greet('Jill')
 greet('Bob')
@@ -67,7 +67,7 @@ print 'I owe the grocer $%.2f' % grocery_bill
 import sys
 try:
     total = sum(int(arg) for arg in sys.argv[1:])
-    print 'sum =', total
+    print 'sum = {}'.format(total)
 except ValueError:
     print 'Please supply integer arguments'
 }}}
@@ -79,25 +79,36 @@ except ValueError:
 import glob
 # glob supports Unix style pathname extensions
 python_files = glob.glob('*.py')
-for fn in sorted(python_files):
-    print '    ------', fn
-    for line in open(fn):
-        print '    ' + line.rstrip()
+for file_name in sorted(python_files):
+    print '    ------{}'.format(file_name)
+    
+    with open(file_name) as f:
+        for line in f:
+            print '    ' + line.rstrip()
+
     print
 }}}
 
-    ------ 10 lines: Time, conditionals
+    ------ 10 lines: Time, conditionals, from..import, for..else
 {{{#!python numbers=disable
-import time
-now = time.localtime()
-hour = now.tm_hour
-if hour < 8: print 'sleeping'
-elif hour < 9: print 'commuting'
-elif hour < 17: print 'working'
-elif hour < 18: print 'commuting'
-elif hour < 20: print 'eating'
-elif hour < 22: print 'resting'
-else: print 'sleeping'
+from time import localtime
+
+activities = { 8 : 'Sleeping',
+              9 : 'Commuting',
+              17 : 'Working',
+              18 : 'Commuting',
+              20 : 'Eating',
+              22 : 'Resting' }
+
+time_now = localtime()
+hour = time_now.tm_hour
+
+for activity_time in sorted(activities.keys()):
+    if hour < activity_time:
+        print activities[activity_time]
+        break
+else:
+    print 'Unknown, AFK or sleeping!'
 }}}
 
     ------ 11 lines: Triple-quoted strings, while loop
@@ -169,7 +180,7 @@ if __name__ == '__main__':
 
     ------ 15 lines: itertools
 {{{#!python numbers=disable
-import itertools
+from itertools import groupby
 lines = '''
 This is the
 first paragraph.
@@ -178,7 +189,7 @@ This is the second.
 '''.splitlines()
 # Use itertools.groupby and bool to return groups of
 # consecutive lines that either have content or don't.
-for has_chars, frags in itertools.groupby(lines, bool):
+for has_chars, frags in groupby(lines, bool):
     if has_chars:
         print ' '.join(frags)
 # PRINTS:
@@ -211,20 +222,26 @@ BOARD_SIZE = 8
 
 def under_attack(col, queens):
     left = right = col
+
     for r, c in reversed(queens):
-        left, right = left-1, right+1
+        left, right = left - 1, right + 1
+
         if c in (left, col, right):
             return True
     return False
 
 def solve(n):
-    if n == 0: return [[]]
-    smaller_solutions = solve(n-1)
+    if n == 0: 
+        return [[]]
+
+    smaller_solutions = solve(n - 1)
+
     return [solution+[(n,i+1)]
-        for i in range(BOARD_SIZE)
+        for i in xrange(BOARD_SIZE)
             for solution in smaller_solutions
                 if not under_attack(i+1, solution)]
-for answer in solve(BOARD_SIZE): print answer
+for answer in solve(BOARD_SIZE): 
+    print answer
 }}}
 
     ------ 20 lines: Prime numbers sieve w/fancy generators
@@ -309,24 +326,22 @@ print "\n".join(". "*q + "Q " + ". "*(BOARD_SIZE-q-1) for q in queens)
 
 }}}
 
-    ------ 33 lines: "Guess the Number" Game from http://inventwithpython.com
+    ------ 33 lines: "Guess the Number" Game (edited) from http://inventwithpython.com
 {{{#!python numbers=disable
 import random
 
-guessesTaken = 0
+guesses_made = 0
 
-print 'Hello! What is your name?'
-myName = raw_input()
+name = raw_input('Hello! What is your name?\n')
 
 number = random.randint(1, 20)
-print 'Well, ' + myName + ', I am thinking of a number between 1 and 20.'
+print 'Well, {name}, I am thinking of a number between 1 and 20.'.format(name=name)
 
-while guessesTaken < 6:
-    print 'Take a guess.'
-    guess = input()
-    #fyi: input() is for numbers.  raw_input() is for strings.
+while guesses_made < 6:
+    
+    guess = int(raw_input('Take a guess: '))
 
-    guessesTaken = guessesTaken + 1
+    guesses_made += 1
 
     if guess < number:
         print 'Your guess is too low.'
@@ -338,11 +353,9 @@ while guessesTaken < 6:
         break
 
 if guess == number:
-    guessesTaken = str(guessesTaken)
-    print 'Good job, ' + myName + '! You guessed my number in ' + guessesTaken + ' guesses!'
-
-if guess != number:
-    print 'Nope. The number I was thinking of was ' + str(number)
+    print 'Good job, {name}! You guessed my number in {guesses} guesses!'.format(name=name, guesses=guesses_made)
+else:
+    print 'Nope. The number I was thinking of was {number}.format(number=number)
 
 }}}
 
