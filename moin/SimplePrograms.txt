@@ -1,7 +1,7 @@
 Here are some example simple programs.  Please feel free to contribute, but see notice at bottom, please.
 
 These examples assume version 2.6 or above of Python.
-You should be able to run them simply by copying/pasting the code into a file and running Python. Or by inserting this line (#!/usr/bin/env python) at the beginning of your file (Unix/Linux), making the file executable (chmod u+x filename.py) and running it (./filename.py).
+You should be able to run them simply by copying/pasting the code into a file (named for example test.py) and running python test.py.
 
     ------ 1 line: Output
 {{{#!python numbers=disable
@@ -81,7 +81,7 @@ import glob
 python_files = glob.glob('*.py')
 for file_name in sorted(python_files):
     print '    ------{}'.format(file_name)
-    
+
     with open(file_name) as f:
         for line in f:
             print '    ' + line.rstrip()
@@ -231,7 +231,7 @@ def under_attack(col, queens):
     return False
 
 def solve(n):
-    if n == 0: 
+    if n == 0:
         return [[]]
 
     smaller_solutions = solve(n - 1)
@@ -240,7 +240,7 @@ def solve(n):
         for i in xrange(BOARD_SIZE)
             for solution in smaller_solutions
                 if not under_attack(i+1, solution)]
-for answer in solve(BOARD_SIZE): 
+for answer in solve(BOARD_SIZE):
     print answer
 }}}
 
@@ -338,7 +338,7 @@ number = random.randint(1, 20)
 print 'Well, {name}, I am thinking of a number between 1 and 20.'.format(name=name)
 
 while guesses_made < 6:
-    
+
     guess = int(raw_input('Take a guess: '))
 
     guesses_made += 1
