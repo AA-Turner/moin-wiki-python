@@ -1,1 +1,62 @@
-Describe GeneratedDerivedClasses here.
+= Generating the *Derived classes =
+
+These are notes on the use of {{{gderived.py}}}, a tool you need when implementing new types in Jython.
+
+<<TableOfContents>>
+
+== Background ==
+
+{{{gderived.py}}} and {{{gexposed.py}}} are a pair of Python scripts written support the wrapping of classes
+written in Java as Python classes. They are in the {{{src/templates folder}}} and they have to be run
+with that as the current directory.
+
+The function of {{{gderived.py}}} is to read the source of the Java class and create a another Java
+source file in the same package, that extends the original, with highly-stylised content
+according to a brief specification.
+
+{{{gexposed.py}}} has been superseded by the exposer 
+({{{org.python.expose.generate.Exposer}}}) and the corresponding Ant task, but {{{gderived.py}}} remains
+actively-used in the creation of Jython.
+{{{gexposed.py}}} is also active code, but only because {{{gderived.py}}} imports it. However, if you use the
+new exposer, even if you prohibit subclassing with {{{@ExposedType(isBaseType=false)}}},
+it will generate a reference to the sort of class {{{gderived.py}}} creates.
+
+The modern exposer is described in the article PythonTypesInJava.
+
+At the time of starting these notes, there is no authoritative user-guide to
+{{{gderived.py}}} and what it achieves. These notes stem from use  of the tool and a certain amount of
+reverse-engineering. Please improve on them by correcting misunderstandings and omissions.
+
+The work was done on a Windows 7 system, using Python 2.7 (without trying later versions,
+because of the vintage of the code). The choice of OS shows sometimes in the direction of slashes in pathnames, 
+but that shouldn't confuse anyone.
+
+Although the motivation was to add a serious Python type ({{{bytearray}}}) to Jython, illustrations
+will be drawn from a facetiously-named type ({{{piranha}}}), with a Java implementation in
+{{{src/org/python/ethel/the/frog/Piranha.java}}}.
+
+== gderived.py as a Command ==
+
+The most transparent form of the command is:{{{
+python gderived.py <derived-spec> <output-file>
+}}}
+When using {{{gderived.py}}} in that way one is working with three user files:
+
+'''<derived-spec>''', the specification for the contents of the derived Java class.
+By convention, this has the extension
+{{{.derived}}}, and the Python name of the type being defined.
+The files for Jython types are in the src/templates
+folder along with the scripts, but anywhere seems to work with this form of the command, so we'll
+use {{{src/org/python/ethel/the/frog/piranha.derived}}} (note lower case type name {{{piranha}}}).
+
+'''<output-file>''', the file in which the generated class will be written.
+This has to be in the Jython source tree under
+{{{src/org/python}}}. If your code is not there, {{{gderived.py}}} seems to run correctly, but will get the
+Java package statement wrong. You can supply any filename you like, but the class it writes will be
+named by adding "{{{Derived}}}" to the name of the input class.
+For our example the output file is {{{src/org/python/ethel/the/frog/PiranhaDerived.java}}}.
+
+And last but not least, '''the class file that implements your type'''. The input file is identified from
+the directory of the output file and the class name given in the text of <derived-spec> (see below).
+This therefore also has to be in the Jython source tree under {{{src/org/python}}}.
+For our example the input file is {{{src/org/python/ethel/the/frog/Piranha.java}}}.
