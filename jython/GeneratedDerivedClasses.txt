@@ -115,8 +115,77 @@ entries in {{{src/templates/mappings}}}. It is essentially this form, with the -
 == Examples of Use ==
 === Minimal Case ===
 ==== Input Piranha.java ====
+Here is an example of a type defined in Java for access as a built-in in Jython. For information on the annotations and structure see PythonTypesInJava.
+{{{#!java
+package org.python.ethel.the.frog;
+
+import org.python.core.PyObject;
+import org.python.core.PyString;
+import org.python.core.PyType;
+import org.python.expose.ExposedMethod;
+import org.python.expose.ExposedNew;
+import org.python.expose.ExposedType;
+
+@ExposedType(name="piranha")
+public class Piranha extends PyObject {
+
+    public static final PyType TYPE = PyType.fromClass(Piranha.class);
+    
+    public Piranha() { this(TYPE); }
+    
+    public Piranha(PyType subType) { super(subType); }
+    
+    @ExposedNew
+    final void newPiranha(PyObject[] args, String[] keywords) {}
+    
+    @ExposedMethod(names={"theOperation", "theOtherOperation"})
+    public int operation(int payment) { return payment*2; }
+}
+}}}
+
 ==== Specification piranha.derived ====
+{{{
+base_class: Piranha
+}}}
 ==== Output PiranhaDerived.java ====
+The command {{{
+python gderived.py ..\org\python\ethel\the\frog\piranha.derived  ..\org\python\ethel\the\frog\PiranhaDerived.java
+}}}
+issued with current directory {{{src/templates}}} produces
+{{{#!java
+/* Generated file, do not modify.  See jython/src/templates/gderived.py. */
+package org.python.ethel.the.frog;
+
+import java.io.Serializable;
+import org.python.core.*;
+
+public class PiranhaDerived extends Piranha implements Slotted {
+
+    public PyObject getSlot(int index) {
+        return slots[index];
+    }
+
+    public void setSlot(int index,PyObject value) {
+        slots[index]=value;
+    }
+
+    private PyObject[]slots;
+
+    public String toString() {
+        PyType self_type=getType();
+        PyObject impl=self_type.lookup("__repr__");
+        if (impl!=null) {
+            PyObject res=impl.__get__(this,self_type).__call__();
+            if (!(res instanceof PyString))
+                throw Py.TypeError("__repr__ returned non-string (type "+res.getType().fastGetName()+")");
+            return((PyString)res).toString();
+        }
+        return super.toString();
+    }
+
+}
+}}}
+
 
 === Additional Features ===
 ==== Input Piranha.java ====
