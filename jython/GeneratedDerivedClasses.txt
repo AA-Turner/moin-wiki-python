@@ -12,16 +12,14 @@ with that as the current directory.
 
 The function of {{{gderived.py}}} is to read the source of the Java class and create a another Java
 source file in the same package, that extends the original, with highly-stylised content
-according to a brief specification.
+according to a brief specification. This code is connected with subclassing.
 
 {{{gexposed.py}}} has been superseded by the exposer 
 ({{{org.python.expose.generate.Exposer}}}) and the corresponding Ant task, but {{{gderived.py}}} remains
-actively-used in the creation of Jython.
+actively used in the creation of Jython.
 {{{gexposed.py}}} is also active code, but only because {{{gderived.py}}} imports it. However, if you use the
 new exposer, even if you prohibit subclassing with {{{@ExposedType(isBaseType=false)}}},
-it will generate a reference to the sort of class {{{gderived.py}}} creates.
-
-The modern exposer is described in the article PythonTypesInJava.
+it will generate a reference to the sort of class {{{gderived.py}}} creates. The modern exposer is described in the article PythonTypesInJava.
 
 At the time of starting these notes, there is no authoritative user-guide to
 {{{gderived.py}}} and what it achieves. These notes stem from use  of the tool and a certain amount of
@@ -37,8 +35,10 @@ will be drawn from a facetiously-named type ({{{piranha}}}), with a Java impleme
 
 == gderived.py as a Command ==
 
+=== The 2-argument Forms ===
+
 The most transparent form of the command is:{{{
-python gderived.py <derived-spec> <output-file>
+python [--lazy] gderived.py <derived-spec> <output-file>
 }}}
 When using {{{gderived.py}}} in that way one is working with three user files:
 
@@ -60,3 +60,26 @@ And last but not least, '''the class file that implements your type'''. The inpu
 the directory of the output file and the class name given in the text of <derived-spec> (see below).
 This therefore also has to be in the Jython source tree under {{{src/org/python}}}.
 For our example the input file is {{{src/org/python/ethel/the/frog/Piranha.java}}}.
+
+The '''--lazy''' option causes {{{gderived.py}}} only to generate the output file if the input file is newer.
+
+=== The 1-argument and 0-argument Forms ===
+
+A second form of the command is:{{{
+python gderived.py [--lazy] [<derived-spec>]
+}}}
+When using {{{gderived.py}}} in that way one is working with the same three user files as above,
+and a configuration file {{{src/templates/mappings}}}. The entries in that file look like this:{{{
+int.derived:org.python.core.PyIntegerDerived
+object.derived:org.python.core.PyObjectDerived
+random.derived:org.python.modules.random.PyRandomDerived
+ast_Assert.derived:org.python.antlr.ast.AssertDerived
+}}}
+In effect, this file allows {{{gderived.py}}} to look up the second argument given the first,
+although this second argument is now given in dotted notation.
+In this form, the specification file {{{<name>.derived}}} has to be in {{{src/templates}}}
+and the input and output classes will be found relative to {{{src}}}.
+
+Finally, the <derived-spec> argument is optional. In the zero-argument form, {{{gderived.py}}} will process all of the
+entries in {{{src/templates/mappings}}}. It is essentially this form, with the --lazy option, that implements the
+{{{template}}} Ant target in {{{build.xml}}}.
