@@ -86,6 +86,23 @@ env.SharedLibrary (target='uvector', source='uvector.cc', SHLIBPREFIX='', LIBS=[
 
  * Make sure you keep {{{"Use Managed Extension" == No}}} if you are using Visual Studio.NET.
 
+== Using CMake ==
+
+Save the file as CMakeLists.txt, {{{cd}}} into the directory, and run {{{cmake .}}} followed by {{{make}}}:
+{{{
+cmake_minimum_required(VERSION 2.6)
+
+SET(ENV{BOOST_ROOT} "/path/to/my/boost")
+
+#substitute your version number
+find_package(Boost 1.48 EXACT REQUIRED COMPONENTS python)
+
+INCLUDE_DIRECTORIES("${Boost_INCLUDE_DIRS}" "/path/to/my/python/include")
+
+ADD_LIBRARY(MyLibrary SHARED MyLibraryInterface.cpp)
+TARGET_LINK_LIBRARIES(MyLibrary ${Boost_LIBRARIES})
+}}}
+On Linux, this will make a libMyLibrary.so library in the same directory.
 
 = Tips and tricks =
 
