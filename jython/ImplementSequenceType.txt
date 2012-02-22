@@ -19,7 +19,7 @@ The range of things that can appear in Python as the "index" of a sequence type 
 [0, 1, 2, 3, 4, 5, 6, 'e', 8, 9, 'd', 11, 12, 'c', 14, 15, 'b', 17, 18, 'a']
 }}}
 
-If you were the implementer of {{{list}}}, your implementation of {{{__delitem__(self,key)}}} would have to support not only a simple integer key, but a slice representing 2:7:3. Similarly, {{{__getitem__}}} must synthesise a return list picked according to the slice, {{{__setitem__}}} must be able to assign these elements from a sequence, and all this while observing the rules of extended slicing.
+If you were the implementer of {{{list}}}, your implementation of {{{__delitem__(self,key)}}} would have to support not only a simple integer key, but a slice representing 2:7:3. Similarly, {{{__getitem__}}} must synthesise a return list picked according to the slice, and {{{__setitem__}}} must be able to assign these elements from a sequence. All this while observing the rules of extended slicing.
  
 Jython provides a useful abstract class {{{org.python.core.SequenceIndexDelegate}}} that recognises whether the key was a simple integer or a slice, deals with illegal types and range checks, and in the case of a slice, converts it into indexes you can use safely in a {{{for}}} loop where you do the actual operation. To connect these goodies into your implementation, create a concrete inner class extending {{{SequenceIndexDelegate}}} by overriding the required 8 methods with call-back methods into your own implementation: {{{#!java
     public abstract int len();
@@ -32,7 +32,7 @@ Jython provides a useful abstract class {{{org.python.core.SequenceIndexDelegate
     public abstract String getTypeName();
 }}}
 
-Your implementations of the standard API, such as {{{__setitem__}}}, can delegate almost immediately to corresponding methods of this inner class, with all their arguments uninspected. The inner class will then call back appropriate methods to handle the actual work. There's still plenty for your code to deal with, but you can do it knowing the arguments are of well-defined type and have safe values.
+Your implementations of the standard API, such as {{{__setitem__}}}, can delegate almost immediately to corresponding methods of this inner class, with all their arguments uninspected. The inner class will then call the right methods from these 8 to handle the actual work. There's still plenty for your code to deal with, but you can do it knowing the arguments are of well-defined type and have safe values.
 
 == Base class PySequence ==
 
@@ -56,7 +56,7 @@ Jython provides further help in the form of {{{org.python.core.PySequence}}}, wi
     };
 }}}
 
-The methods (((pyset}}} and {{{setSlice}}} referenced here are amongst 7 that extensions implementing sequence types are expected to override:
+The methods {{{pyset}}} and {{{setSlice}}} referenced here are amongst 7 methods that extensions implementing sequence types are expected to override:
 {{{#!java
     // These methods must be defined for any sequence
     protected abstract PyObject pyget(int index);
@@ -80,7 +80,7 @@ The methods (((pyset}}} and {{{setSlice}}} referenced here are amongst 7 that ex
                                          getType().fastGetName()));
     }
 }}}
-You can see that those methods that only mutable sequences support are proveded with implementations that will throw an appropriate error if not overriden.
+You can see that read-access methods are abstract, but methods that change content are provided with implementations that will throw an error if not overriden. These are ready for use by immutable sequence types.
 
 {{{PySequence}}} also provides actual implementations for methods {{{__setitem__}}} in terms of the delegate:
 {{{#!java
@@ -112,13 +112,13 @@ b=list(range(20))
 b[30:-15:-3] = "abcde"
 }}}
 it will invoke something like {{{
-b.list___setitem__(new PySlice(30,-15,-3), new PyString("abcde"))
+b.list___setitem__(new PySlice(30,-25,-3), new PyString("abcde"))
 }}}
 The sequence of method calls will then be like:{{{
-b.list___setitem__(PySlice(30,-15,-3), PyString("abcde")) ->
-b.seq___setitem__(PySlice(30,-15,-3), PyString("abcde")) ->
-b.delegator.checkIdxAndSetItem(PySlice(30,-15,-3), PyString("abcde")) ->
-b.delegator.checkIdxAndSetSlice(PySlice(30,-15,-3), PyString("abcde")) ->
+b.list___setitem__(PySlice(30,-25,-3), PyString("abcde")) ->
+b.seq___setitem__(PySlice(30,-25,-3), PyString("abcde")) ->
+b.delegator.checkIdxAndSetItem(PySlice(30,-25,-3), PyString("abcde")) ->
+b.delegator.checkIdxAndSetSlice(PySlice(30,-25,-3), PyString("abcde")) ->
 b.delegator.setSlice(19, -1, -3, PyString("abcde")) ->
 b.setslice(19, -1, -3, PyString("abcde"))
 }}}
@@ -126,4 +126,18 @@ Notice that the slice, ostensibly a bad fit for a length 20 sequence, was transf
 	for (int i=19; i>-1; i+=-3)
 		b.myList.get(i);
 }}}
-which is both the correct meaning for the slice and runs no risk of access out of bounds.
+which is both the correct meaning for the slice and runs no risk of access out of bounds. In this example the {{{step}}} of the slice was negative, and so the loop counts down. The final value of the loop is not used for access.
+
+The case {{{step==1}}} means a contiguous slice {{{[start:stop]}}}. Implementations usually deal with this as a special case either because it has different semantics (e.g. in {{{__setitem__}}} or {{{__delitem___}}}), or because contiguous elements can be processed with an efficient block operation. A helper function {{{PySequence.sliceLength(start, stop, step)}}} exists to make the processing loop easier to get right. A typical idiom is:{{{#!java
+    if (step == 1) {
+        // Do something efficient with block start...stop-1
+    } else {
+        int n = sliceLength(start, stop, step);
+        for (int i = start, j = 0; j < n; i += step, j++) {
+            // Perform jth operation with element i
+        }
+    }
+}}}
+
+
+  
