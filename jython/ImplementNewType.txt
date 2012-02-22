@@ -1,0 +1,24 @@
+Information that might be useful while implementing or maintaining a type  - some notes for the Jython Wiki, based on things I discovered while trying to implement {{{bytearray}}}.
+
+= Types in General =
+== A Hook for Bootstrapping ==
+
+{{{_builtin_.java}}} is used to load types and functions into the globals table of the interpreter. There must be a statement in the body of {{{org.python.core._builtin_.fillWithBuiltins()}}} that names the type.
+
+== Deriving and Exposing ==
+
+A Jython type is defined by a Java class, say {{{Piranha.java}}}. The code you write in that class has to be transformed in two ways: the source of a second class will be created from it called {{{PiranhaDerived.java}}} (see GeneratedDerivedClasses); and the compiled version of your class, {{{Piranha.class}}} will be transformed by the type exposer utility (see PythonTypesInJava).
+
+== Naming Exposed Methods ==
+
+A typical Jython type contains a dozen or more methods that will be exposed as methods in Python - there is a rich array of standard library methods like {{{remove}}}, {{{__add__}}} and {{{__hash__}}}, depending on what the type does. Each Python method is exposed under its standard name, but (by convention) the name of Java method that implements it is formed from the Python name of the type, an underscore and the exposed method name. So {{{remove}}} is implemented by {{{piranha_remove}}}, and {{{__add__}}} is implemented by {{{piranha___add__}}}. (That was 3 underscores and 2 underscores.) It is usually not necessary to give the exposed name of the method in the {{{@ExposedMethod}}} annotation, because the exposer understands this convention. (It takes the Python name of the type from the {{{@ExposedType}}} annotation on the class.)
+
+The exposed implementation methods should be {{{final}}} and are usually {{{synchronized}}}.
+
+== Documentation Strings ==
+
+The documentation string ({{{__doc__}}}) for each type and method could be given as a string literal argument to the {{{@ExposedMethod}}} annotation, but for Python language types there is a cleverer way. The {{{@ExposedMethod}}} annotations of such types refer to a constant string defined in {{{BuiltinDocs.Java}}}. By convention, the documentation string has a name formed from the Python name of the type, an underscore, the exposed method name, and "{{{_doc}}}". So {{{list.remove}}} is documented by {{{list_remove_doc}}}, and {{{list.__add__}}} is documented by {{{list___add___doc}}}. (That was 3 underscores each time.) A script {{{Misc/make_pydocs.py}}} is used to generate {{{BuiltinDocs.Java}}} running from a working CPython implementation of the correct vintage. The script contains an easily identified table of the types and built-in function objects for which it is to do this. Thus, to make all the documentation strings for Jython 2.6, one updates the table with any missing types and functions, and runs it under (say) CPython 2.6.6 (the latest at the time of writing).
+
+== Java API Methods ==
+
+Each exposed method has a twin in the Java API for the class. (Typically only the Java API has Javadoc comments.) This twin is named the same as the method as Python sees it, and delegates to the exposed method. Thus {{{__add__}}} simply calls {{{piranha___add__}}}.
