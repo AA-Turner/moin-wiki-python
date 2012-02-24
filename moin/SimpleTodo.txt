@@ -45,37 +45,6 @@ solves this by doing short copies "in line".
 Using this macro gave a 20% speed improvement to some string functions.
 Are there other uses of memcpy() in CPython that would also benefit?
 
-== Update Demo/ and Tools/ directories ==
-
-PEP 356 says "Check the various bits of code in Demo/ all still work, update or remove the ones that don't."
-
-Directories to check: {{{
-cgi
-classes
-comparisons
-embed
-imputil
-md5test
-metaclasses
-newmetaclasses
-parser
-pdist
-pysvr
-rpc
-scripts
-sockets
-threads
-tix
-tix/bitmaps
-tix/samples
-tkinter
-tkinter/guido
-tkinter/matt
-xml
-}}}
-
-QUESTION: Should it just be made sure that the demos and examples are working or should they be updated to use the newest applicable Python features (e.g. the new any/all functions)?
-
 == Create tests for sequences over 2GB ==
 
 It would be great if someone could try to put together some tests for bigmem machines.  The tests should be broken up by those that require 2+ GB of memory, those that take 4+, etc.  Many people won't have boxes with that much memory.  Ultimately, the tests should be incorporated into the test suite with a special designation similar to -u all.  I'm thinking -G # where # is the size of RAM in GB.
