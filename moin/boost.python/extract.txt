@@ -1,6 +1,9 @@
 extractor interface which can be used to extract C++ types from Python
 objects.
 
+From the [[http://www.boost.org/doc/libs/1_48_0/libs/python/doc/v2/extract.html|extract boost.python reference documentation]]:
+"Exposes a mechanism for extracting C++ object values from generalized Python objects. Note that extract<...> can also be used to "downcast" an object to some specific !ObjectWrapper. Because invoking a mutable python type with an argument of the same type (e.g. list([1,2]) typically makes a copy of the argument object, this may be the only way to access the !ObjectWrapper's interface on the original object."
+
 We have discussed two main use cases for extractions
 
 1. In user code which needs to retrieve C++ objects from their
@@ -61,3 +64,20 @@ void A::listOperation(list& l) {
 }}}
 2. In the implementation of sequence from_python converters (e.g. Python
 tuple/list -> std::vector)
+
+As cited from the Boost.Python reference documentation (see above) you can use extract<> to apply the convenient boost::python::object & derived types interface to modify an existing (mutable) object (or !PyObject*), without making a copy:
+{{{
+namespace bp = boost::python;
+
+// bp::object x;
+dict d = bp::extract<bp::dict>(x.attr("__dict__"));
+d["whatever"] = 3;          // modifies x.__dict__ !
+
+
+// PyObject* pyobj;
+PyObject* __dict__ = PyObject_GetAttrString(pyobj, const_cast<char*>("__dict__"));
+// (see also http://article.gmane.org/gmane.comp.python.c%2B%2B/15664)
+bp::dict dictobj = bp::extract<bp::dict>(__dict__);
+dictobj["whatever"] = 3;          // modifies pyobj __dict___!
+}}}
+(see also [[http://www.boost.org/doc/libs/1_48_0/libs/python/doc/tutorial/doc/html/python/object.html#python.extracting_c___objects|Boost.Python tutorial: Extracting C++ objects]])
