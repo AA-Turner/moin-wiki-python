@@ -385,28 +385,24 @@ stackless.run()}}}
 
 == circuits ==
 {{{#!python
-import re
 import sys
 
-from circuits import Component
 from circuits.io import File
+from circuits import Component
 from circuits.net.protocols import LP
 
 class Tail(Component):
 
-    def __init__(self, filename):
-        super(Tail, self).__init__()
-        f = (File(filename, "r", autoclose=False) + LP()).register(self)
-        f.seek(0, 2)
+    def init(self, filename):
+        (File(filename, "r", autoclose=False) + LP()).register(self).seek(0, 2)
 
 class Grep(Component):
 
-    def __init__(self, pattern):
-        super(Grep, self).__init__()
-        self.regex = re.compile(pattern)
+    def init(self, pattern):
+        self.pattern = pattern
 
     def line(self, line):
-        if self.regex.match(line):
+        if self.pattern in line:
             print line
 
 (Tail(sys.argv[1]) + Grep(sys.argv[2])).run()
