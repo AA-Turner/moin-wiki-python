@@ -95,14 +95,40 @@ First create a test haskell library (Test.hs):
 module Test where
  
 import Foreign.C.Types
+import Foreign.C.String
  
-hsfun :: CInt -> IO CInt
-hsfun x = do
-    putStrLn "Hello World"
+add :: Num a => a -> a -> a
+add x y = x + y
+
+
+f1 :: CInt -> IO CInt
+f1 x = do
     return (42 + x)
  
+f2 :: CFloat -> IO CFloat
+f2 x = do
+    return (10.0 + x)
+
+f3 :: CFloat -> IO CFloat
+f3 x = do
+    return (add 10.0 x)
+    
+f4 :: CString -> IO CString
+f4 s = do
+    w <- peekCString s
+    newCString (w  ++ " world!")
+
 foreign export ccall
-    hsfun :: CInt -> IO CInt
+    f1 :: CInt -> IO CInt
+
+foreign export ccall
+    f2 :: CFloat -> IO CFloat
+
+foreign export ccall
+    f3 :: CFloat -> IO CFloat
+
+foreign export ccall
+    f4 :: CString -> IO CString
 
 }}}
 
@@ -157,16 +183,38 @@ You can now easily access the shared library using ctypes (test.py)::
 {{{
 
 from ctypes import *
-lib = cdll.LoadLibrary("./Test.so")
-lib.hsfun(5)
+
+lib = cdll.LoadLibrary('./Test.so')
+
+from ctypes import *
+
+lib = cdll.LoadLibrary('./Test.so')
+
+funcs = {
+#    name   restype    argtypes    input  expected value
+    'f1':   (c_int,    [c_int],    (10,   52)),
+    'f2':   (c_float,  [c_float],  (10.0, 20.0)),
+    'f3':   (c_float,  [c_float],  (11.0, 21.0)),
+    'f4':   (c_char_p, [c_char_p], ("hello", "hello world!")),
+}
+
+for func in funcs:
+    f = getattr(lib, func)
+    f.restype, f.argtypes, test = funcs[func]
+    input, expected = test
+    assert f(input) == expected
+    print '{0}({1}) == {2}'.format(func, input, expected) 
+    
 
 }}}
 
 you should get:
 
 {{{
-Hello World
-47
+f1(10) == 52
+f2(10.0) == 20.0
+f3(11.0) == 21.0
+f4(hello) == hello world!
 }}}
 
 Enjoy!
@@ -250,44 +298,4 @@ compile everything by running this batch file (build.bat):
 REM test making haskell dll
 ghc -c mylib.hs -fglasgow-exts
 ghc -c dllMain.c
-dlltool -A -z mylib.def mylib_stub.o --export-all-symbols
-ghc --mk-dll -o mylib.dll mylib.o mylib_stub.o dllMain.o -optdll-def -optdll mylib.def 
-
-REM cleanup
-rm mylib.o
-rm mylib_stub.o
-rm dllMain.o
-rm mylib.hi
-rm mylib_stub.c
-rm mylib_stub.h
-}}}
-
-and then having installed ctypes, run the following python script (test_mylib.py) to test it:
-
-{{{
-from ctypes import *
-
-lib = windll.mylib
-
-api = {
-    
-#   func name     restype    argtypes
-    'adder'     : (c_int,    [c_int, c_int]),
-    'subtractor': (c_float,  [c_float, c_float]),
-    'factorial' : (c_int,    [c_int]),
-    'hello'     : (c_char_p, [c_char_p]),
-    'mystring'  : (c_char_p, []),
-}
-        
-
-for func in api:
-    f = getattr(lib, func)
-    f.restype, f.argtypes  = api[func]
-    globals()[func] = f
-    
-print adder(1,2)
-print subtractor(10.5, 2.5)
-print factorial(10)
-print hello('hello')
-print mystring()
-}}}
+d
