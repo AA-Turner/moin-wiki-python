@@ -186,10 +186,6 @@ from ctypes import *
 
 lib = cdll.LoadLibrary('./Test.so')
 
-from ctypes import *
-
-lib = cdll.LoadLibrary('./Test.so')
-
 funcs = {
 #    name   restype    argtypes    input  expected value
     'f1':   (c_int,    [c_int],    (10,   52)),
@@ -219,11 +215,12 @@ f4(hello) == hello world!
 
 Enjoy!
 
+
 Contributers: AliaKhouri
 
 === On Windows ===
 
-(Note this is a dated technique and should be updated to the newer hierarchical libraries in Haskell)
+Note: this technique may be dated.
 
 First a test haskell program (mylib.hs):
 
@@ -298,4 +295,44 @@ compile everything by running this batch file (build.bat):
 REM test making haskell dll
 ghc -c mylib.hs -fglasgow-exts
 ghc -c dllMain.c
-d
+dlltool -A -z mylib.def mylib_stub.o --export-all-symbols
+ghc --mk-dll -o mylib.dll mylib.o mylib_stub.o dllMain.o -optdll-def -optdll mylib.def
+
+REM cleanup
+rm mylib.o
+rm mylib_stub.o
+rm dllMain.o
+rm mylib.hi
+rm mylib_stub.c
+rm mylib_stub.h
+}}}
+
+and then having installed ctypes, run the following python script (test_mylib.py) to test it:
+
+{{{
+from ctypes import *
+
+lib = windll.mylib
+
+api = {
+    
+# func name restype argtypes
+    'adder' : (c_int, [c_int, c_int]),
+    'subtractor': (c_float, [c_float, c_float]),
+    'factorial' : (c_int, [c_int]),
+    'hello' : (c_char_p, [c_char_p]),
+    'mystring' : (c_char_p, []),
+}
+        
+
+for func in api:
+    f = getattr(lib, func)
+    f.restype, f.argtypes = api[func]
+    globals()[func] = f
+    
+print adder(1,2)
+print subtractor(10.5, 2.5)
+print factorial(10)
+print hello('hello')
+print mystring()
+}}}
