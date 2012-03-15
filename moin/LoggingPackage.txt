@@ -18,6 +18,8 @@ This page should cover pros and cons of current stdlib logging package.
 
   The docs are now rearranged into reference API, tutorials (basic and advanced) and cookbook, so this complaint is not really valid. Earlier it was all in one page, so the complaint was more justified. -- VinaySajip
 
+    I agree that it became much better structurized than before, but the amount of text that an average user needs to read to completely understand how logging works didn't change. Neither part gives  '''a summary about current problems with logging''' like the one about libraries below. For that part you really need to read everything, but the chances to find this are low. -- techtonik
+
 == Config files are a little bit hard to comprehend ==
 
 An alternate configuration mechanism is provided by the [[http://www.zope.org/Members/fdrake/zconfig/|ZConfig]] package ([[http://pypi.python.org/pypi/ZConfig/|PyPI]]).  (Note ZConfig is not a small package to pull in.)
@@ -48,13 +50,21 @@ There is no official confirmation, but users report [[http://yuba.stanford.edu/v
 
   Unfortunately that Stanford post doesn't give any indication of how they used logging calls or how they configured it, so their bare statement does not really give any useful information about logging performance. -- VinaySajip
 
+    If you doubt that Stanford was right by calling logging to be slow then perhaps [[http://stackoverflow.com/questions/522730/how-can-i-strip-python-logging-calls-without-commenting-them-out|stackoverflow page]] will be more convincing. In short - for iner-loop-like scenarios (the 90% code) hotshot indicated logging was one of the biggest bottlenecks. --techtonik
+
+    Why not to include a performance related chapter into logging docs with a measurement instructions? That will be extremely handy for http://speed.python.org  -- techtonik
+
 Vinay argues that 'logging can be too slow in some specialised scenarios', and asks people to provide more objective metrics than "lot of function calls". Although we don't speak about specialized scenarios, it would be nice if at least these function calls were counted. There are (very simple) timing test results below.
 
 == Is a pain in the arse for working with libraries ==
 
-Libraries should not output any logging information by default unless explicitly asked to do so. That's why they should not try to configure logging. But on the first call to any log() function logging configures itself automatically. This is only documented in thread safety note for logging.log() function and in logging.basicConfig() (one of the examples why '''Docs are not complete''' speculation is not corrent - the docs are there, they are just hard to find). So, if any used library uses logging, you '''have to configure root logger'''. So, instead of providing an unobtrisive way to debug library behavior, logging just makes library usage harder. -- techtonik
+Libraries should not output any logging information by default unless explicitly asked to do so. That's why they should not try to configure logging. But on the first call to any log() function logging configures itself automatically. This is only documented in thread safety note for logging.log() function and in logging.basicConfig() (one of the examples why '''Docs are not complete''' speculation is not corrent - the docs are there, they are just hard to find). So, if any used library uses logging, you '''have to configure root logger''' in your application even if it uses other logging means. -- techtonik
 
   An application developer who uses libraries needs to configure logging in order to debug library behaviour. The alternative would be for libraries to output potentially copious debug logging information and needing to be explicitly silenced. -- VinaySajip
+
+    Ok, I removed the rant about logging being too obtrusive to debugging libraries. I don't want to debug these 3rd party libraries. Do I have an option to skip logging configuration in application? I don't even know if those libs are using logging at all. -- techtonik
+
+    A second question - I am currently debugging Spyder IDE. IDE is a just a set of widgets initiated by a central window, but these are also used independently. How can I setup widget logging to be silent if used standalone and don't affect logging configuration of Spyder if used from the IDE? -- techtonik
 
 ----
 
