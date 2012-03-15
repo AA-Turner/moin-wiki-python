@@ -8,9 +8,7 @@ CheeseShop page has all information not directly related to PyPI development.
 
 = Developing the Package Index =
 
- . The PyPI code resides in Subversion repository with anonymous and developer's access
-   . https://svn.python.org/packages/ (trunk,features,branches)
-   . svn+ssh://svn.python.org/data/repos/packages/trunk/pypi
+ . The PyPI code hosting is currently undergoing migration
  . Bug and patch tracker http://sourceforge.net/tracker/?group_id=66150&atid=513503
  . Discussions on Catalog SIG http://mail.python.org/mailman/listinfo/catalog-sig
  . API that is used by easy_install http://peak.telecommunity.com/DevCenter/EasyInstall#package-index-api
@@ -28,13 +26,15 @@ PyPI is a WSGI application that can be executed standalone using `python pypi.ws
 
 XML-RPC requests are detected by CONTENT_TYPE=`text/xml` variable in CGI environment and processed by `rpc.RequestHandler().__call__()`. List of XML-RPC "endpoints" is available on PyPiXmlRpc page.
 
+== Testing Your Stuff Against PyPI ==
+
+If you need to test stuff against PyPI (registration, uploading, API activities) then please use the alternative server "testpypi.python.org".
+
 
 == TO-DO list ==
- * Attempt to load the package's README in the absence of a long_description.
  * A dump of download counts.
  * A big structured dump of all package meta-data.
  * A link from package to RTFD.
- * OpenID OAuth operations.
  * [[http://www.python.org/peps/pep-0345.html|PEP for metadata 1.2]] -- not finished and needs more catalog-sig discussion)
  * documented procedures for "taking over" entries should the original owner of the entry go away (and any required system support)
  * tooltips for field labels
