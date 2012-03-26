@@ -1,10 +1,19 @@
-''[note: I cobbled this page's name together from an internet dictionary. As such, it's probably wrong, grammatically or otherwise. If your Italian is better than mine, please rename the page (including backlinks, of course).]''
+''[note: Ho raccolto  il nome di questa pagina da un dizionario su  internet . Come tale [,questa pagina,]può contenere degli errori, di grammatica o di altro genere. Se  tu conosci L' Italiano meglio di me, ti prego di rinominare questa pagina (anche a ritroso,se del caso).]''
 
-= Blocco dei processi =
+Titolerei questo programmino  = Blocco dei processi =
+tengo a precisare una cosa: Al fine di poter usare le lettere accentate che nell' orignale del linguaggio inglese non sono riconosciute, e quindi nemmeno nei commenti all'interno del codice, e se lo facessi senza la giusta indicazione il parser segnalerebbe un errore, devo scrivere  subito dopo la prima riga, che a tutti è nota e cioè #! /usr/bin/python , questa indicazione: '''# -*- coding: utf-8 -*- '''. In tal modo posso tranquillamente usare nei commenti le lettere accentate che si usano nel linguaggio classico Italiano.
+Aggiungo ancora un messaggio per l'autore di questa pagina ''' mi congratulo  per la sua conoscenza dell'Italiano ''' e vorrei prendere contatto con lui per dialogare su python e tutto quanto concerne questo fantastico linguaggio di programmazione. Può scrivermi qui  vonkes@gmail.com se vuole.
+Non entro nel merito del programma che segue ma mi permetterò ,eventualmente, di migliorare quei commenti che, forse, possono risultare poco chiari. Spero di non suscitare i risentimenti dell'autore. 
+
+''' Da questo punto in avanti  è tutta opera dell'autore '''
 
 Inizio questa pagina facendo una domanda. Come si può fermare un processo dall'interno di un altro?
 
+
 {{{
+
+#! /usr/bin/python           
+# -*- coding: utf-8 -*-     #   vedi la intestazione di A.CHESSA
 #!python
 import threading
 import time
@@ -21,7 +30,7 @@ class Worker(threading.Thread):
   def run(self):
     self.stopFlag = 0
     while not self.stopFlag:
-      event = self.eventChannel.waitEvent() # blocking call
+      event = self.eventChannel.waitEvent()  # blocking call  chiamata del blocco
       self.eventHandler.dispatchEvent(event)
 
 
@@ -38,7 +47,7 @@ Il problema è che {{{EventChannel.waitEvent()}}} è una operazione di blocco.  
 
 == Suggerimenti ==
 
- * Utilizzare il metodo {{{shutdown()}}} spinge alcuni innocui eventi  nelll'evento channel
+ * Utilizzando il metodo {{{shutdown()}}} si spingono alcuni innocui eventi  nell'evento channel
 
 {{{
   def shutdown(self):
@@ -47,25 +56,34 @@ Il problema è che {{{EventChannel.waitEvent()}}} è una operazione di blocco.  
 }}}
 
 
- * oppure usa una Queue di dati passati. Manipolare errori con il manipolatore ( e.g. stampa poi alla console),mantiene vivo il processo                                                                                                                                                                                           
+ * oppure usando  Queue passiamo dei dati . Manipolare gli errori con il manipolatore ( e.g. stampa [print] poi alla console), mantiene vivo il processo                                                                                                                                                                                           
 
 {{{
 #!python
+# -*- coding: utf-8 -*-     #   vedi la intestazione di A.CHESSA
 import Queue, threading, traceback
 
 class StopMarker:
-    """This is used as an individual stopper item."""
+    """This is used as an individual stopper item.
+        Uso questo [StopMarker] come un bloccatore individuale
+    """
     
 class Worker(threading.Thread):
     """Get items from a queue and call the handler with the item.
     Errors in the handler are printed to stderr, the thread
-    continues to run.
+    continues to run. 
+        Prende gli articoli da queue e chiama il gestore degli errori con detto articolo.
+        Gli Errori vengono poi stampati nel stderr dal gestore, il processo continua.  
     An individual stop marker is used, so you can pass everyting
     as item (including None).
+    Un singolo marcatore stop è usato ,così pote passere qualunque cosa come articolo
+    (incluso None).
     """
     
     def __init__(self, handler):
-        """Initialize Thread object and worker."""
+        """Initialize Thread object and worker.
+            Inizializzo l'oggetto e il worker [il lavoratore] 
+        """
         threading.Thread.__init__(self)
         self.running = 1
         self.handler = handler
@@ -74,7 +92,10 @@ class Worker(threading.Thread):
     
     def run(self):
         """Worker loop. Errors in the handler are printed to
-        stderr and the thread continues with the next item."""
+        stderr and the thread continues with the next item.
+            Worke cicla. Gli errori sono stampati dal gestore nel stderr 
+        ed il processo continua con l'articolo successivo.
+       """
         while self.running:
             try:
                 item = self.queue.get()
@@ -87,12 +108,18 @@ class Worker(threading.Thread):
     
     def stop(self):
         """Stop the worker thread and wait until it terminates.
-        (Waits until last item is processed)"""
-        self.queue.put(self.stopper)    #stopper item, then...
-        self.join()                     #wait until the thread has shutdown
+        (Waits until last item is processed)
+           Ferma il compito del lavoratore e aspetta finchè lui ha terminato
+        (aspetta fino a che l'ultimo articolo viene processato
+        """
+        self.queue.put(self.stopper)    #stopper  item, then...  ferma l'articolo,........  
+        self.join()                     #wait until the thread has shutdown aspetta finchè il compito è
+                                           #completato
 
     def put(self, item):
-        """Put an item in the queue to be processed by the handler."""
+        """Put an item in the queue to be processed by the handler.
+            Spinge un articolo nella coda e poi lo fa processare dal gestore
+        """
         self.queue.put(item)
 
 if __name__ == '__main__':
@@ -106,9 +133,10 @@ if __name__ == '__main__':
     w.stop()
 }}}
 
+
 = Chiamata ad una Funzione "C" che blocca tutti i processi =
 
-Ho un modulo in "c" che pone delle interrogazioni al D.B. Queste interrogazioni pongono ad off il server SQLper essere processato.Posso  usare delle mie funzioni di interrogazione dentro i processi per avere un lavoro come questo {{{time.sleep()}}},blocco il corrente processo finchè lui termina ma permette agli altri processi di continuare le operazioni. Non ho visto questi inidirizzamenti in qualsiasi libro che possiedo.
+Ho un modulo in "c" che pone delle interrogazioni al D.B. Queste interrogazioni pongono ad off il server SQLper essere processato.Posso  usare delle mie funzioni di interrogazione dentro i processi per avere un lavoro come questo {{{time.sleep()}}},blocco il corrente processo finchè lui termina ma permette agli altri processi di continuare le operazioni. Non ho visto questi indirizzamenti in nessuno dei libri che possiedo.
 
 = Risorse =
 
