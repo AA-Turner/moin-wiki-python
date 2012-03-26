@@ -58,8 +58,19 @@ Many tests will also create local TCP sockets and connect to them (usually throu
 
 The following is a summary of a discussion that happened on python-dev regarding Buildbot security.  No consensus came about, but the information is still helpful as a point of reference. 
 
-Build Slaves and Security
--------------------------
+== Required Resources ==
+
+Based on [2]_, the recommended resource allocations for a Python buildbot are at least:
+
+* 2 CPUs
+* 512 MB RAM
+* 30 GB free disk space
+
+Note: the bigmem tests won't run in this configuration, since they require substantially more memory. However, these resources should be sufficient to ensure Python compiles correctly on the platform and can run the rest of test suite.
+
+.. [2]: http://mail.python.org/pipermail/python-dev/2012-March/117978.html
+
+== Build Slaves and Security ==
 
 Here are some important points of which you should be aware when
 running a build slave [1]_:
