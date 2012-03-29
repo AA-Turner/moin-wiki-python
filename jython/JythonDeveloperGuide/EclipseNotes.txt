@@ -15,9 +15,8 @@ These notes are based on configuring Eclipse 3.7 on Windows 7 in order to work a
 Command-line versions of
  * Ant
  * Mercurial
- * Subversion
 These notes assume the tools are on your path wherever needed.
- * A version 1.5 JDK
+ * A version 1.6 JDK
 
 
 === Clone the Jython Repository ===
@@ -55,8 +54,11 @@ You will see Jython cache indexes of all the JAR files it can find, then you'll 
 
 In its present state, the IDE build path (checked out by {{{hg}}} to file {{{.classpath}}}) is not quite right.
 
- 1. Open '''Project >> Properties >> Java Build Path''' and add the following
-  * {{{extlibs/asm-util-3.1.jar}}} to the '''Libraries''' tab using '''Add JARs...'''
+ 1. Open '''Project >> Properties >> Java Build Path''' and from the '''Libraries''' tab remove the following:
+  * {{{extlibs/asm-3.1.jar}}} using '''Remove'''
+  * {{{extlibs/asm-commons-3.1.jar}}} using '''Remove'''
+  * {{{extlibs/guava-r07.jar}}} using '''Remove'''
+ 1. On the '''Libraries''' tab of the same dialogue, add:
   * {{{build/exposed}}} to the '''Libraries''' tab using '''Add Class Folder...'''
  1. On the '''Order and Export''' tab of the same dialogue, find {{{build/exposed}}} and move it to the top.
  1. Close it with OK.
@@ -66,13 +68,13 @@ In its present state, the IDE build path (checked out by {{{hg}}} to file {{{.cl
 
 === Controlling compilation in the IDE ===
 
-The Eclipse IDE will decide to recompile Java source whenever it thinks something has changed. This is frequent (and often useful) but we must make sure it matches what the custom build ({{{build.xml}}}) file would have done. The build file specifies a Java 1.5 compiler and runs a stage called "exposing".
+The Eclipse IDE will decide to recompile Java source whenever it thinks something has changed. This is frequent (and often useful) but we must make sure it matches what the custom build ({{{build.xml}}}) file would have done. The build file specifies a Java 1.6 compiler and runs a stage called "exposing".
 
-If you are not already using Java 1.5 compliance globally:
- 1. Open '''Window >> Preferences >> Java >> Installed JREs''' and check that you have a 1.5 standard JDK available to Eclipse. If not, find and add one with '''Search...'''. (You do not need to make it the default.)
- 1. Open '''Project >> Properties >> Java Compiler''' and click '''Enable project specific settings''' and below it in the drop-down select 1.5.
- 1. A bit of advice appears in the dialogue about making sure you use a J2SE-1.5 JRE. Click the link taking you to the Java Build Path dialogue.
- 1. Select the JRE System Library and press '''Edit...'''. Use that dialogue to choose a 1.5 standard environment.
+If you are not already using Java 1.6 compliance globally:
+ 1. Open '''Window >> Preferences >> Java >> Installed JREs''' and check that you have a 1.6 standard JDK available to Eclipse. If not, find and add one with '''Search...'''. (You do not need to make it the default.)
+ 1. Open '''Project >> Properties >> Java Compiler''' and click '''Enable project specific settings''' and below it in the drop-down select 1.6.
+ 1. A bit of advice appears in the dialogue about making sure you use a J2SE-1.6 JRE. Click the link taking you to the Java Build Path dialogue.
+ 1. Select the JRE System Library and press '''Edit...'''. Use that dialogue to choose a 1.6 standard environment.
 
 Configure the IDE build process to use key parts of build.xml as follows:
  1. Open '''Project >> Properties >> Builders''' and click '''New...''' then choose '''Ant Builder'''.
