@@ -1,0 +1,123 @@
+## page was renamed from SimplePrograms = Semplici Programmi versione Italiana
+Inserire una descrizione per SimplePrograms = Semplici Programmi versione Italiana.
+
+Questa pagina dovrebbe aiutare i neofiti italiani,mediante la propria lingua madre, ad imparare  il linguaggio di programmazione '''Python'''. Zio google nella sua infinita bontà,quando effettua una traduzione oltre a tradurre l'inglese, traduce anche il codice dei programmi. Se ciò può aiutare noi Italiani a comprendere meglio ciò che deve fare il programma, e mi riferisco in particolare  modo ai commenti, ci mette in crisi perché la traduzione anche delle istruzioni python rendono ineseguibile il programma stesso. Se poi si utilizza un altro browse che non fa la traduzione istantanea, per chi ha problemi con l'inglese, ha l'onere di tradursi i commenti.
+Quindi, mi permetto di tradurre in lingua italiana la pagina wiki SimplePrograms. Qualcuno   potrà ossservare che ho tentato di modificarla, non lo nego, volevo attuare il mio intento di aiutare  i miei connazionali, ma poi mi sono reso conto che avrei fatto un torto a tutti quelli che non conosco l'italiano. Ho quindi rimesso le cose a posto per cui ora esistono due pagine il cui conrenuto è pressoché simile ma del tutto identiche nel codice salvo i commenti.Quest'ultimi
+sono rimasti nella versione originale in inglese. Ma se un italiano consulterà quella pagina e cioè [SimplePrograms] usando Zio google la troverà tradotta in Italianio. Se invece consulterà la pagina SempliciProgrammi versione Italiana con altri browse diversi da Zio goole la leggerà tutta in un Italiano chiaro e semplice. <p>
+Bene ora bando alle chiacchere e cominciamo :
+
+
+Ecco alcuni semplici programmi esempio. Non esitate a contribuire, ma, per favore, attenetevi a quanto detto dall'autore a  fondo pagina .
+
+Per Questi esempi ho supposto che  si stia usando la versione v 2.6 o successive di Python. Posso assicurare che  funzionano,basta semplicemente fare copia / incolla del codice in un file (chiamato per esempio  test.py ) e poi mandare in esecuzione con  python test.py.
+
+    ------ 1 linea: Codice
+{{{#!python numbers=enable
+print 'Ciao, MONDO!'
+     ---->> uscita sullo schermo    Ciao, MONDO!
+}}}
+
+    ------ 2 linee: Input e assegnazione
+{{{#!python numbers=enable
+name = raw_input('Ciao, come ti chiami?\n')
+print 'Mi chiamo , %s.' % name
+    ---->> uscita sullo schermo    MI chiamo  [ tuo nome ]
+}}}
+
+
+------ 3 linee: Ciclo For , Funzione interna enumerate , nuovo stile di formattazione
+{{{#!python numbers=enable
+amici = ['gianni', 'patrizia', 'sergio', 'michele']
+for i, nome in enumerate(amici):
+    print "all'indice  {indice} corrisponde il nome {nome}".format(indice=i, nome=nome)
+}}}
+
+    ------ 4 linee: Fibonacci, assegnazione di una tuple 
+{{{#!python numbers=enable
+genitori, bambini = (1, 1)
+while bambini < 100:
+    print 'Questa generazione ha  {0} bambini'.format(bambini)
+    genitori, bambini = (bambini, genitori + bambini)
+}}}
+
+    ------ 5 lines: Functions
+{{{#!python numbers=disable
+def greet(name):
+    print 'Hello', name
+greet('Jack')
+greet('Jill')
+greet('Bob')
+}}}
+
+    ------ 6 lines: Import, regular expressions
+{{{#!python numbers=disable
+import re
+for test_string in ['555-1212', 'ILL-EGAL']:
+    if re.match(r'^\d{3}-\d{4}$', test_string):
+        print test_string, 'is a valid US local phone number'
+    else:
+        print test_string, 'rejected'
+}}}
+
+    ------ 7 lines: Dictionaries, generator expressions
+{{{#!python numbers=disable
+prices = {'apple': 0.40, 'banana': 0.50}
+my_purchase = {
+    'apple': 1,
+    'banana': 6}
+grocery_bill = sum(prices[fruit] * my_purchase[fruit]
+                   for fruit in my_purchase)
+print 'I owe the grocer $%.2f' % grocery_bill
+}}}
+
+
+    ------ 8 lines: Command line arguments, exception handling
+{{{#!python numbers=disable
+#!/usr/bin/env python
+# This program adds up integers in the command line
+import sys
+try:
+    total = sum(int(arg) for arg in sys.argv[1:])
+    print 'sum =', total
+except ValueError:
+    print 'Please supply integer arguments'
+}}}
+
+
+    ------ 9 lines: Opening files
+{{{#!python numbers=disable
+# indent your Python code to put into an email
+import glob
+# glob supports Unix style pathname extensions
+python_files = glob.glob('*.py')
+for file_name in sorted(python_files):
+    print '    ------' + file_name
+
+    with open(file_name) as f:
+        for line in f:
+            print '    ' + line.rstrip()
+
+    print
+}}}
+
+    ------ 10 lines: Time, conditionals, from..import, for..else
+{{{#!python numbers=disable
+from time import localtime
+
+activities = {8: 'Sleeping',
+              9: 'Commuting',
+              17: 'Working',
+              18: 'Commuting',
+              20: 'Eating',
+              22: 'Resting' }
+
+time_now = localtime()
+hour = time_now.tm_hour
+
+for activity_time in sorted(activities.keys()):
+    if hour < activity_time:
+        print activities[activity_time]
+        break
+else:
+    print 'Unknown, AFK or sleeping!'
+}}}
