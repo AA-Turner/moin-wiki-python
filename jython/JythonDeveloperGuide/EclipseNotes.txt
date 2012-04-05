@@ -21,7 +21,7 @@ These notes assume the tools are on your path wherever needed.
 
 === Clone the Jython Repository ===
 
-It should be possible to direct Eclipse to the on-line Jython repository at hg.python.org/jython but I prefer to do it in two stages. At {{{C:\hg\jython-clean}}} I have a clone of the repository created with the command-line {{{hg}}} (see JythonDeveloperGuide#Mercurial) that I use as a local '''''mirror repository'''''. 
+It should be possible to direct Eclipse to the on-line Jython repository at hg.python.org/jython but I prefer to do it in two stages. At {{{C:\hg\jython-clean}}} I have a clone of the repository created with the command-line {{{hg}}} (see JythonDeveloperGuide#Mercurial) that I use as a local '''''mirror repository'''''.
 
 
 === Create an Eclipse project ===
@@ -88,7 +88,7 @@ Configure the IDE build process to use key parts of build.xml as follows:
  1. On the '''Targets''' tab, in the '''During a "Clean"''' section, remove the default target and add "clean".
  1. On the JRE tab select '''Separate JRE''' and specify one modern enough to run Ant (e.g. a 1.6 JDK).
 
-You can play with those settings later in the same dialogue using '''Edit...'''. For example, on the '''Main''' tab, is the arguments section where you might add -verbose, if you need to see better what Ant is doing. 
+You can play with those settings later in the same dialogue using '''Edit...'''. For example, on the '''Main''' tab, is the arguments section where you might add -verbose, if you need to see better what Ant is doing.
 
 === A first run ===
 
@@ -141,6 +141,26 @@ During the build, particular classes from {{{build/classes}}} should be processe
 init: Bootstrap types weren't encountered in bootstrapping:
 }}}
 The problem may be that key classes are missing from {{{build/exposed}}}, or more likely that it is not first on the class path.
+
+
+=== End-of-line Encoding ===
+
+Jython source uses the Unix standard LF ({{{\n}}}) to indicate an end of line. If you are editing on Windows, and you create a completely new source file, Eclipse will give it DOS-style CR-LF line separators. If you are just amending existing source files, Eclipse will conform itself to the prevailing convention in each file.
+
+The output from scripts that generate source code ({{{make_pydocs.py}}} or {{{gderived.py}}}) can suffer from this problem too.
+
+You can see when this has happened using the configuration dialogue at Window >> Preferences >> General >> Editors >> Text Editors, once you check the "show whitespace" box. There is a link adjacent that allows you to decide which whitespace characters to show. It might be worth leaving CR, LF and TAB visible.
+
+To prevent the problem (in Eclipse new files) go to Window >> Preferences >> General >> Workspace and set the "New text file line delimiter" to "Other" and "Unix".
+
+To correct files that already have the wrong line endings, open each in Eclipse and use File >> Convert Line Delimiters To >> Unix.
+
+
+=== Character Encoding ===
+
+Jython source adheres to UTF-8 encoding for files. If you are editing on Windows, it comes as a bit of a surprise that Eclipse picks up the default character encoding settings from the DOS environment, even for Java. This will probably not affect you if you are writing 7-bit clean source code, but can catch you out in literal strings where it is necessary to use accented characters.
+
+To prevent the problem (in Eclipse) go to Window >> Preferences >> General >> Workspace and set the "Text file encoding" to "Other" and "UTF-8". This will not correct edits you have already made: you'll have to do that by hand (or write a Python script).
 
 
 === "version.properties" not found ===
