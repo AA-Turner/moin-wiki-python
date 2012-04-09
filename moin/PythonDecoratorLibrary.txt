@@ -15,7 +15,7 @@ such as [[http://pypi.python.org/pypi/decorator|Michele Simionato's decorator mo
 {{{
 #!python
 def simple_decorator(decorator):
-    """This decorator can be used to turn simple functions
+    '''This decorator can be used to turn simple functions
     into well-behaved decorators, so long as the decorators
     are fairly simple. If a decorator expects a function and
     returns a function (no descriptors), and if it doesn't
@@ -23,7 +23,7 @@ def simple_decorator(decorator):
     eligible to use this. Simply apply @simple_decorator to
     your decorator and it will automatically preserve the
     docstring and function attributes of functions to which
-    it is applied."""
+    it is applied.'''
     def new_decorator(f):
         g = decorator(f)
         g.__name__ = f.__name__
@@ -43,14 +43,14 @@ def simple_decorator(decorator):
 @simple_decorator
 def my_simple_logging_decorator(func):
     def you_will_never_see_this_name(*args, **kwargs):
-        print 'calling %s' % func.__name__
+        print 'calling {}'.format(func.__name__)
         return func(*args, **kwargs)
     return you_will_never_see_this_name
 
 @my_simple_logging_decorator
 def double(x):
-    "Doubles a number"
-    return 2*x
+    'Doubles a number.'
+    return 2 * x
 
 assert double.__name__ == 'double'
 assert double.__doc__ == 'Doubles a number'
@@ -122,7 +122,7 @@ Here's a way that doesn't require any new decorators:
 class Example(object):
     @apply
     def myattr():
-        doc = """This is the doc string."""
+        doc = '''This is the doc string.'''
 
         def fget(self):
             return self._half * 2
@@ -189,10 +189,10 @@ Here's a memoizing class.
 {{{
 #!python
 class memoized(object):
-   """Decorator that caches a function's return value each time it is called.
-   If called later with the same arguments, the cached value is returned, and
-   not re-evaluated.
-   """
+   '''Decorator. Caches a function's return value each time it is called.
+   If called later with the same arguments, the cached value is returned 
+   (not reevaluated).
+   '''
    def __init__(self, func):
       self.func = func
       self.cache = {}
@@ -208,10 +208,10 @@ class memoized(object):
          # Better to not cache than to blow up entirely.
          return self.func(*args)
    def __repr__(self):
-      """Return the function's docstring."""
+      '''Return the function's docstring.'''
       return self.func.__doc__
    def __get__(self, obj, objtype):
-      """Support instance methods."""
+      '''Support instance methods.'''
       return functools.partial(self.__call__, obj)
 
 @memoized
@@ -235,7 +235,7 @@ print fibonacci(12)
 import time
 
 class cached_property(object):
-    """Decorator for read-only properties evaluated only once within TTL period.
+    '''Decorator for read-only properties evaluated only once within TTL period.
 
     It can be used to created a cached property like this::
 
@@ -264,7 +264,7 @@ class cached_property(object):
     
         del instance._cache[<property name>]
 
-    """
+    '''
     def __init__(self, ttl=300):
         self.ttl = ttl
 
@@ -302,12 +302,12 @@ import math
 
 # Retry decorator with exponential backoff
 def retry(tries, delay=3, backoff=2):
-  """Retries a function or method until it returns True.
+  '''Retries a function or method until it returns True.
   
   delay sets the initial delay in seconds, and backoff sets the factor by which
   the delay should lengthen after each failure. backoff must be greater than 1,
   or else it isn't really a backoff. tries must be at least 0, and delay
-  greater than 0."""
+  greater than 0.'''
 
   if backoff <= 1:
     raise ValueError("backoff must be greater than 1")
@@ -325,7 +325,7 @@ def retry(tries, delay=3, backoff=2):
 
       rv = f(*args, **kwargs) # first attempt
       while mtries > 0:
-        if rv == True: # Done on success
+        if rv is True: # Done on success
           return True
 
         mtries -= 1      # consume an attempt
@@ -345,15 +345,16 @@ def retry(tries, delay=3, backoff=2):
 {{{
 #!python
 class curried(object):
-  """
+  '''
   Decorator that returns a function that keeps returning functions
   until all arguments are supplied; then the original function is
   evaluated.
-  """
+  '''
 
   def __init__(self, func, *a):
     self.func = func
     self.args = a
+  
   def __call__(self, *a):
     args = self.args + a
     if len(args) < self.func.func_code.co_argcount:
@@ -379,7 +380,7 @@ print add1(2)
 import functools, inspect
 
 def decorator(func):
-    """ Allow to use decorator either with arguments or not. """
+    ''' Allow to use decorator either with arguments or not. '''
 
     def isFuncArg(*args, **kw):
         return len(args) == 1 and len(kw) == 0 and (
@@ -438,7 +439,7 @@ assert test == 'test'
 def test(a, b):
     return a + b
 
-assert test == 5
+assert test is 5
 }}}
 
 Note: There is only one drawback: wrapper checks its arguments for single function or class. To avoid wrong behavior you can use keyword arguments instead of positional, e.g.:
@@ -446,7 +447,7 @@ Note: There is only one drawback: wrapper checks its arguments for single functi
 {{{
 #!python
 @decorator
-def my_property(getter, *, setter = None, deleter = None, doc = None):
+def my_property(getter, *, setter=None, deleter=None, doc=None):
     return property(getter, setter, deleter, doc)
 }}}
 
@@ -462,10 +463,10 @@ import sys
 WHAT_TO_DEBUG = set(['io', 'core'])  # change to what you need
 
 class debug:
-    """ Decorator which helps to control what aspects of a program to debug
+    '''Decorator which helps to control what aspects of a program to debug
     on per-function basis. Aspects are provided as list of arguments.
     It DOESN'T slowdown functions which aren't supposed to be debugged.
-    """
+    '''
     def __init__(self, aspects=None):
         self.aspects = set(aspects)
 
@@ -602,11 +603,11 @@ print g.count() # prints 1
 import warnings
 
 def deprecated(func):
-    """This is a decorator which can be used to mark functions
+    '''This is a decorator which can be used to mark functions
     as deprecated. It will result in a warning being emitted
-    when the function is used."""
+    when the function is used.'''
     def new_func(*args, **kwargs):
-        warnings.warn("Call to deprecated function %s." % func.__name__,
+        warnings.warn("Call to deprecated function {}.".format(func.__name__),
                       category=DeprecationWarning)
         return func(*args, **kwargs)
     new_func.__name__ = func.__name__
@@ -635,16 +636,14 @@ import functools
 
 
 def deprecated(func):
-    """This is a decorator which can be used to mark functions
+    '''This is a decorator which can be used to mark functions
     as deprecated. It will result in a warning being emitted
-    when the function is used."""
+    when the function is used.'''
     
     @functools.wraps(func)
     def new_func(*args, **kwargs):
         warnings.warn_explicit(
-            "Call to deprecated function %(funcname)s." % {
-                'funcname': func.__name__,
-            },
+            "Call to deprecated function {}.".format(func.__name__),
             category=DeprecationWarning,
             filename=func.func_code.co_filename,
             lineno=func.func_code.co_firstlineno + 1
@@ -686,9 +685,9 @@ enabled = unchanged
 # Sample use
 #
 
-global_enable_flag = True
+GLOBAL_ENABLE_FLAG = True
 
-state = enabled if global_enable_flag else disabled
+state = enabled if GLOBAL_ENABLE_FLAG else disabled
 @state
 def special_function_foo():
     print "function was enabled"
@@ -703,11 +702,13 @@ def dump_args(func):
     "This decorator dumps out the arguments passed to a function before calling it"
     argnames = func.func_code.co_varnames[:func.func_code.co_argcount]
     fname = func.func_name
+    
     def echo_func(*args,**kwargs):
         print fname, ":", ', '.join(
 	    '%s=%r' % entry
             for entry in zip(argnames,args) + kwargs.items())
         return func(*args, **kwargs)
+    
     return echo_func
 
 @dump_args
@@ -722,7 +723,7 @@ f1(1, 2, 3)
 
 {{{
 #!python
-"""
+'''
 Provide pre-/postconditions as function decorators.
 
 Example usage:
@@ -773,7 +774,7 @@ distribution.
   ...
   >>> dec(5)
   4
-"""
+'''
 
 __all__ = ['precondition', 'postcondition', 'conditions']
 
@@ -871,8 +872,9 @@ def trace(f):
             lineno = frame.f_lineno
 
             bname = os.path.basename(filename)
-            print "%s(%d): %s" % (bname, lineno,
-                                  linecache.getline(filename, lineno)),
+            print "{}({}): {}".format(  bname, 
+                                        lineno,
+                                        linecache.getline(filename, lineno)),
         return localtrace
 
     def _f(*args, **kwds):
@@ -891,7 +893,7 @@ Synchronize two (or more) functions on a given lock.
 {{{
 #!python
 def synchronized(lock):
-    """ Synchronization decorator. """
+    '''Synchronization decorator.'''
 
     def wrap(f):
         def new_function(*args, **kw):
@@ -925,7 +927,7 @@ Provides various degrees of type enforcement for function parameters and return 
 
 {{{
 #!python
-"""
+'''
 One of three degrees of enforcement may be specified by passing
 the 'debug' keyword argument to the decorator:
     0 -- NONE:   No type-checking. Decorators disabled.
@@ -963,12 +965,12 @@ Needed to cast params as floats in function def (or simply divide by 2.0).
       ...
     TypeError: 'fib' method accepts (int), but was given (float)
 
-"""
+'''
 import sys
 
 def accepts(*types, **kw):
-    """ Function decorator. Checks that inputs given to decorated function
-    are of the expected type.
+    '''Function decorator. Checks decorated function's arguments are
+    of the expected types.
 
     Parameters:
     types -- The expected types of the inputs to the decorated function.
@@ -977,7 +979,7 @@ def accepts(*types, **kw):
              keyword argument, no other should be given).
              debug = ( 0 | 1 | 2 )
 
-    """
+    '''
     if not kw:
         # default level: MEDIUM
         debug = 1
@@ -986,15 +988,15 @@ def accepts(*types, **kw):
     try:
         def decorator(f):
             def newf(*args):
-                if debug == 0:
+                if debug is 0:
                     return f(*args)
                 assert len(args) == len(types)
                 argtypes = tuple(map(type, args))
                 if argtypes != types:
                     msg = info(f.__name__, types, argtypes, 0)
-                    if debug == 1:
+                    if debug is 1:
                         print >> sys.stderr, 'TypeWarning: ', msg
-                    elif debug == 2:
+                    elif debug is 2:
                         raise TypeError, msg
                 return f(*args)
             newf.__name__ = f.__name__
@@ -1007,7 +1009,7 @@ def accepts(*types, **kw):
 
 
 def returns(ret_type, **kw):
-    """ Function decorator. Checks that return value of decorated function
+    '''Function decorator. Checks decorated function's return value
     is of the expected type.
 
     Parameters:
@@ -1016,8 +1018,7 @@ def returns(ret_type, **kw):
     kw       -- Optional specification of 'debug' level (this is the only valid
                 keyword argument, no other should be given).
                 debug=(0 | 1 | 2)
-
-    """
+    '''
     try:
         if not kw:
             # default level: MEDIUM
@@ -1027,14 +1028,14 @@ def returns(ret_type, **kw):
         def decorator(f):
             def newf(*args):
                 result = f(*args)
-                if debug == 0:
+                if debug is 0:
                     return result
                 res_type = type(result)
                 if res_type != ret_type:
                     msg = info(f.__name__, (ret_type,), (res_type,), 1)
-                    if debug == 1:
+                    if debug is 1:
                         print >> sys.stderr, 'TypeWarning: ', msg
-                    elif debug == 2:
+                    elif debug is 2:
                         raise TypeError, msg
                 return result
             newf.__name__ = f.__name__
@@ -1046,12 +1047,12 @@ def returns(ret_type, **kw):
         raise TypeError, msg
 
 def info(fname, expected, actual, flag):
-    """ Convenience function returns nicely formatted error/warning msg. """
+    '''Convenience function returns nicely formatted error/warning msg.'''
     format = lambda types: ', '.join([str(t).split("'")[1] for t in types])
     expected, actual = format(expected), format(actual)
-    msg = "'%s' method " % fname \
-          + ("accepts", "returns")[flag] + " (%s), but " % expected\
-          + ("was given", "result is")[flag] + " (%s)" % actual
+    msg = "'{}' method ".format( fname )\
+          + ("accepts", "returns")[flag] + " ({}), but ".format(expected)\
+          + ("was given", "result is")[flag] + " ({})".format(actual)
     return msg
 }}}
 
@@ -1068,11 +1069,12 @@ Handles HTML boilerplate at top and bottom of pages returned from CGI methods.  
 class CGImethod(object):
     def __init__(self, title):
         self.title = title
+    
     def __call__(self, fn):
         def wrapped_fn(*args):
             print "Content-Type: text/html\n\n"
             print "<HTML>"
-            print "<HEAD><TITLE>%s</TITLE></HEAD>" % self.title
+            print "<HEAD><TITLE>{}</TITLE></HEAD>".format(self.title)
             print "<BODY>"
             try:
                 fn(*args)
@@ -1133,8 +1135,10 @@ class MyMachine(object):
     # Decorate the Event Handler virtual functions -note gstate parameter
     @event_handler(gstate)
     def event_a(self): pass
+    
     @event_handler(gstate)
     def event_b(self): pass
+    
     @event_handler(gstate)
     def event_c(self, val): pass
 
@@ -1339,14 +1343,14 @@ class STState(object):
         return self.fctn_dict[fctn_name]
 
     def map_next_states(self, state_dict):
-        ''' Changes second dict value from name of state to actual state '''
+        ''' Changes second dict value from name of state to actual state.'''
         for de in self.fctn_dict.values():
             next_state_name = de[1]
             if next_state_name:
                 if next_state_name in state_dict:
                     de[1] = state_dict[next_state_name]
                 else:
-                    raise StateMachineError('Invalid Name for next state: %s' % next_state_name)
+                    raise StateMachineError('Invalid Name for next state: {}'.format(next_state_name))
 
 
 class StateTable(object):
@@ -1490,14 +1494,13 @@ class DecoTrace(object):
         self.f = f
 
     def _showargs(self, *fargs, **kw):
-        print >> stderr, 'T: enter %s with args=%s, kw=%s' % (self.f.__name__, str(fargs), str(kw))
+        print >> stderr, 'T: enter {} with args={}, kw={}'.format(self.f.__name__, str(fargs), str(kw))
 
     def _aftercall(self, status):
-        print >> stderr, 'T: exit %s with status=%s' % (self.f.__name__, str(status))
+        print >> stderr, 'T: exit {} with status={}'.format(self.f.__name__, str(status))
 
     def __call__(self, *fargs, **kw):
-        '''pass just function arguments to wrapped function'''
-
+        '''Pass *just* function arguments to wrapped function.'''
         self._showargs(*fargs, **kw)
         ret=self.f(*fargs, **kw)
         self._aftercall(ret)
@@ -1526,14 +1529,14 @@ class DecoTraceWithArgs(object):
     def _showargs(self, *fargs, **kw):
 
         print >> self.fid, \
-              '%s: enter %s with args=%s, kw=%s' % (self.label, self.f.__name__, str(fargs), str(kw))
+              '{}: enter {} with args={}, kw={}'.format(self.label, self.f.__name__, str(fargs), str(kw))
         print >> self.fid, \
-              '%s:   passing decorator args=%s, kw=%s' % (self.label, str(self.dec_args), str(self.dec_kw))
+              '{}:   passing decorator args={}, kw={}'.format(self.label, str(self.dec_args), str(self.dec_kw))
 
     def _aftercall(self, status):
-        print >> self.fid, '%s: exit %s with status=%s' % (self.label, self.f.__name__, str(status))
+        print >> self.fid, '{}: exit {} with status={}'.format(self.label, self.f.__name__, str(status))
     def _showinstance(self, instance):
-        print >> self.fid, '%s: instance=%s' % (self.label, instance)
+        print >> self.fid, '{}: instance={}'.format(self.label, instance)
         
     def __call__(self, f):
         def wrapper(*fargs, **kw):
@@ -1579,14 +1582,14 @@ class DecoTraceWithArgs(object):
 
 @DecoTrace
 def FirstBruce(*fargs, **kwargs):
-    'Simple function using simple decorator'
+    'Simple function using simple decorator.'
     if fargs and fargs[0]:
         print fargs[0]
 
-@DecoTraceWithArgs(name="Second Bruce", standardline="Goodday, Bruce!")
+@DecoTraceWithArgs(name="Second Bruce", standardline="G'day, Bruce!")
 def SecondBruce(*fargs, **kwargs):
-    'Simple function using decorator with arguments'
-    print '%s:' % kwargs.get('name', 'Unknown Bruce'),
+    'Simple function using decorator with arguments.'
+    print '{}:'.format(kwargs.get('name', 'Unknown Bruce'))
     
     if fargs and fargs[0]:
         print fargs[0]
@@ -1594,7 +1597,7 @@ def SecondBruce(*fargs, **kwargs):
         print kwargs.get('standardline', None)
 
 class Bruce(object):
-    'Simple class'
+    'Simple class.'
     
     def __init__(self, id):
         self.id = id
@@ -1607,9 +1610,9 @@ class Bruce(object):
 
     @DecoTraceWithArgs(label="Trace a class", standardline="How are yer Bruce?", stream=stdout)
     def talk(self, *fargs, **kwargs):
-        'Simple function using decorator with arguments'
+        'Simple function using decorator with arguments.'
         
-        print '%s:' % self,
+        print '{}:'.format(self)
         if fargs and fargs[0]:
             print fargs[0]
         else:
@@ -1655,21 +1658,21 @@ def unimplemented(defaultval):
 {{{
 #!python
 class LogPrinter:
-    """LogPrinter class which serves to emulates a file object and logs
-       whatever it gets sent to a Logger object at the INFO level."""
+    '''LogPrinter class which serves to emulates a file object and logs
+       whatever it gets sent to a Logger object at the INFO level.'''
     def __init__(self):
-        """Grabs the specific logger to use for logprinting."""
+        '''Grabs the specific logger to use for logprinting.'''
         self.ilogger = logging.getLogger('logprinter')
         il = self.ilogger
         logging.basicConfig()
         il.setLevel(logging.INFO)
     
     def write(self, text):
-        """Logs written output to a specific logger"""
+        '''Logs written output to a specific logger'''
         self.ilogger.info(text)
 
 def logprintinfo(func):
-    """Wraps a method so that any calls made to print get logged instead"""
+    '''Wraps a method so that any calls made to print get logged instead'''
     def pwrapper(*arg):
         stdobak = sys.stdout
         lpinstance = LogPrinter()
@@ -1690,20 +1693,20 @@ This example prevents users from getting access to places where they are not aut
 #!python
 
 class LoginCheck:
-    """
+    '''
     This class checks whether a user
     has logged in properly via 
     the global "check_function". If so,
     the requested routine is called.
     Otherwise, an alternative page is
     displayed via the global "alt_function"
-    """
+    '''
     def __init__(self, f):
         self._f = f
         
     def __call__(self, *args):
         Status = check_function()
-        if Status==1:
+        if Status is 1:
             return self._f(*args)
         else:
             return alt_function()
@@ -1730,7 +1733,7 @@ test = 0
 DisplayMembersPage()
 # Displays "Sorry - this is the forced behaviour"
 
-test=1
+test = 1
 DisplayMembersPage()
 # Displays "This is the members page"
 
@@ -1748,7 +1751,7 @@ Please see the code and examples here: http://pypi.python.org/pypi/Decovent
 import functools
 
 def singleton(cls):
-    """ Use class as singleton. """
+    ''' Use class as singleton. '''
 
     cls.__new_original__ = cls.__new__
 
@@ -1808,7 +1811,7 @@ class asynchronous(object):
         
     def start(self, *args, **kwargs):
         self.queue = Queue()
-        thread = Thread(target = self.threaded, args = args, kwargs = kwargs);
+        thread = Thread(target=self.threaded, args=args, kwargs=kwargs);
         thread.start();
         return asynchronous.Result(self.queue, thread)
         
@@ -1895,10 +1898,10 @@ def decorate(f):
             def wrapper(*args, **kwargs):
                 '''This documentation will vanish :)'''
                 raise TypeError(
-                    'unbound method %s() must be called with %s instance '
-                    'as first argument (got nothing instead)'
-                    %
-                    (self.f.__name__, klass.__name__)
+                    'unbound method {}() must be called with {} instance '
+                    'as first argument (got nothing instead)'.format(
+                        self.f.__name__, 
+                        klass.__name__)
                 )
             return wrapper
         
@@ -1906,7 +1909,7 @@ def decorate(f):
             @wraps(self.f)
             def wrapper(*args, **kwargs):
                 '''This documentation will disapear :)'''
-                print "Called the decorated method %r of %r"%(self.f.__name__, instance)
+                print "Called the decorated method {} of {}".format(self.f.__name__, instance)
                 return self.f(instance, *args, **kwargs)
             # This instance does not need the descriptor anymore,
             # let it find the wrapper directly next time:
@@ -1917,7 +1920,7 @@ def decorate(f):
 
 }}}
 
-This implementation replaces the descriptor by the actual decorated function a.s.a.p. to avoid overhead, but you could keep it to do even more (counting calls, etc...)
+This implementation replaces the descriptor by the actual decorated function ASAP to avoid overhead, but you could keep it to do even more (counting calls, etc...)
 
 
 
