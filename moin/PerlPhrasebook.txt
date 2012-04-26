@@ -39,9 +39,9 @@ QUESTIONS:
 Python don't need no steenking semicolons.
 
 == The not so obvious ==
-There are many Integrated Development Environments, (IDEs),  for Python that are usually recommended to new users and used by seasoned Python programmers alike. The Idle IDE is a TK based GUI providing language-aware editing, debugging and command line shell for Python that is part of the Python distribution. 
+There are many Integrated Development Environments, (IDEs),  for Python that are usually recommended to new users and used by seasoned Python programmers alike. The Idle IDE is a TK based GUI providing language-aware editing, debugging and command line shell for Python that is part of the Python distribution.
 Many of the python examples shown can be experimented with in the Idle IDE.
-  
+
 
 == Simple types ==
 
@@ -142,7 +142,7 @@ powerful than Python's `%` operator.  Remember that in Perl
 variables are interpolated within double-quoted strings, but not
 single-quoted strings.
 
-Perl has a function `sprintf` that uses the % conversion á la C; 
+Perl has a function `sprintf` that uses the % conversion á la C;
 so the above lines could have been written:
 {{{
 $name    = "Fred";
@@ -184,10 +184,10 @@ on the right-hand side; its value is formatted according to the
 specifier following the parentheses.  Some useful dictionaries are
 `locals()` (the local symbol table), `globals()`
 (the global symbol table), and `vars()` (equivalent to `locals()` except
-when an argument is given, in which case it returns {{{arg.__dict__}}}). 
+when an argument is given, in which case it returns {{{arg.__dict__}}}).
 
-[[http://www.python.org/peps/pep-0215.html|PEP215]] proposed a {{{$"$var"}}} 
-substitution mode as an alternative to {{{"%(var)s" % locals()}}}, but was rejected in favour of the explicit Template class proposed in 
+[[http://www.python.org/peps/pep-0215.html|PEP215]] proposed a {{{$"$var"}}}
+substitution mode as an alternative to {{{"%(var)s" % locals()}}}, but was rejected in favour of the explicit Template class proposed in
 [[http://www.python.org/peps/pep-0292.html|PEP292]], which required no syntax changes.
 
 ==== Modifying a string ====
@@ -195,8 +195,9 @@ substitution mode as an alternative to {{{"%(var)s" % locals()}}}, but was rejec
 
 {{{
 $s1 = "new string";        # change to new string
+$s2 = "new\nstring\with\nnew\nlines; # change to new string
 $s2 =~ s/\n/[newline]/g;   # substitute newlines with the text "[newline]"
-$s2 = substr $s2, 0, 3,''; # extract the first 3 chars: "A s"
+$s2 = substr $s2, 0, 3,''; # extract the first 3 chars: "new"
 
 print "$s1\n$s2\n";
 }}}
@@ -234,7 +235,7 @@ you can get Python like slicing. If any of the indices in
 the list is out of bounds an `undef` is inserted there.
 
 {{{
-@array = ('zero', 'one', 'two', 'three', 'four')  
+@array = ('zero', 'one', 'two', 'three', 'four')
 
 # slicing with range operator to generate slice index list
 @slice = @array[0..2]  # returns ('zero', 'one', 'two')
@@ -244,7 +245,7 @@ the list is out of bounds an `undef` is inserted there.
 @slice = @array[0,9,1] # returns ('zero', undef, 'one')
 }}}
 
-Note: Perl range operator uses a closed interval. To get the range to the end of the array, 
+Note: Perl range operator uses a closed interval. To get the range to the end of the array,
 the last index must be used as
 
 {{{
@@ -258,7 +259,7 @@ $#a;           # last index, 4, because the firs index is 0 as in Python.
 
 
 In Perl a module is simply a package with a package name. ( see: perldoc -f package ).
-The symbols exported by the module depends on the module itself. The module may export symbols - mostly functions - by default, 
+The symbols exported by the module depends on the module itself. The module may export symbols - mostly functions - by default,
 on request or none of them. In the latter case the module usually a class or has special access, like File::Spec.
 In Perl the module interfaces may vary - see the doc of the particular module.
 
@@ -299,9 +300,9 @@ open my $f, $filename or die "can't open $filename: $!\n";
 
 {{{
 filename = "cooktest1.1-1"
-f = open(filename) # Python has exceptions with somewhat-easy to 
+f = open(filename) # Python has exceptions with somewhat-easy to
                    # understand error messages. If the file could
-                   # not be opened, it would say "No such file or 
+                   # not be opened, it would say "No such file or
                    # directory: %filename" which is as
                    # understandable as "can't open $filename:"
 lines = f.readlines()
@@ -334,8 +335,8 @@ import fileinput
 for line in fileinput.input():
     ...                 # code to process each line
 }}}
-The fileinput module also allows inplace editing or editing with the creation of a backup of the files, and a different list of files can be given instead of taking the command line arguments. 
- 
+The fileinput module also allows inplace editing or editing with the creation of a backup of the files, and a different list of files can be given instead of taking the command line arguments.
+
 In more recent python versions, files can act as iterators, so you would just write:
 
 {{{
@@ -365,7 +366,7 @@ This section is under construction; for the moment I am just putting
 random notes here.  I will organize them later.
 
 
- * Perl's regular expressions are much more accessible than those of Python being embedded in Perl syntax in contrast to Pythons import of its re module. 
+ * Perl's regular expressions are much more accessible than those of Python being embedded in Perl syntax in contrast to Pythons import of its re module.
  * Perl's quoting mechanisms are more powerful than those of Python.
  * I find Python's syntax much cleaner than Perl's
  * I find Perl's syntax too flexible, leading to silent errors.  The -w flag and `use strict` helps quite a bit, but still not as much as Python.
@@ -373,9 +374,9 @@ random notes here.  I will organize them later.
 
 While most of the concerns are subjective here this one is obviously wrong. Perl has standard modules - eg. File::Spec -, and in general the module portability does not second to Python's. On the other hand, the CPAN - central module library - is a central module repository with elaborat interfaces.
 
- * Python's object model is very uniform, allowing you, for example, to define types that can be used wherever a standard file object can be used. 
+ * Python's object model is very uniform, allowing you, for example, to define types that can be used wherever a standard file object can be used.
  * Python allows you to define operators for user-defined types. The operator overloading facility in Perl is provided as an add-on---the `overload` module.
- 
+
 
 
 
@@ -445,7 +446,7 @@ def somefunc(i):
 ==== Lost in the translation ====
 
 In converting Perl examples so directly to Python, whilst initially useful, the casual browser should be aware that the task of {{{printLoL}}}
-is usually accomplished by just 
+is usually accomplished by just
 {{{
   print lol
 }}}
@@ -456,7 +457,7 @@ An import of the pprint at the beginning of a module would then allow
   pprint(lol)
 }}}
 to substitute for all cases of printLol in a more 'pythonic' way.
-({{{pprint}}} gives even more formatting options when printing data structures). 
+({{{pprint}}} gives even more formatting options when printing data structures).
 
 
 === requires/imports ===
@@ -783,10 +784,10 @@ printSep()
 Perl's regexp matching and substitution is enormously powerful; see
 especially the new syntax for comments and whitespace inside regular
 expressions.
-Python replaced its original regular expression module some years ago with one that closely matches the capabilities of Perls, including being able to do advanced RE tasks such as calling a function to provide the data for an RE substitution, and the optional inclusion of whitespace and comments in REs. 
+Python replaced its original regular expression module some years ago with one that closely matches the capabilities of Perls, including being able to do advanced RE tasks such as calling a function to provide the data for an RE substitution, and the optional inclusion of whitespace and comments in REs.
 
 In Python, string methods are often used where Perl would use a
-regex.  Among these string methods are `title()` and `capitalize()`.  
+regex.  Among these string methods are `title()` and `capitalize()`.
 
 In the context of names, `title()` will be used as it correctly
 changes "smith-jones" to "Smith-Jones" whereas `capitalize()`
@@ -846,7 +847,7 @@ printSep()
 
 
 The highest valid index of an array `A`:
- * Perl: `$#A`.  
+ * Perl: `$#A`.
  * Python: `len(A) - 1`.
 But note: The highest valid upper bound to a python range is len(A) as in
 {{{
@@ -942,7 +943,7 @@ def lolprint(LoL):
 
 # Achieving the same in Perl
 sub lolprint {
-   # Private function 
+   # Private function
    # (function reference stored in a lexically scoped variable)
    my $lprint = sub {
       my $list = shift;
