@@ -14,6 +14,7 @@ Now some of the threads are dying without any notification or exception.
 
 Here is the output showing threads just after all the threads are started -
 
+{{{
 sae_sim In[8]: threading.enumerate
 -------------> threading.enumerate()
 sae_sim Out[8]:
@@ -48,11 +49,12 @@ sae_sim Out[8]:
 
  <_Timer(Thread-41, started)>]
 
-
+}}}
 
 
 Somewhere during the execution '<BackgroundJob: MultipleCallsUp(sgsn, LocalImsi='404660000115000', callNo=5000, delay=1, myApnStr='imsauthapn', ue_tz=None, pco=None, pco_v1=pco_v1, com_flags=None, uli_v1=None, rai_v1=None, static=0, app_type=APP_TYPES.SGSN, randomize=1)>' thread gets killed and there is no trace on how and why it has ended. Here is the output of threading.enumerate() captured when I understood from the execution stats the some of the threads might have gotten killed -
 
+{{{
 
 --------------> threading.enumerate()
 sae_sim Out[14]:
@@ -92,7 +94,7 @@ sae_sim Out[14]:
  <SelectThread(MME UserData Thread, started daemon)>]
 
 
-## }}}
+}}}
 
 ## Leave the note below so that editors can follow the instructions...
 
