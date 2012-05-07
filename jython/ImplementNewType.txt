@@ -33,10 +33,10 @@ It is possible to compare objects of dissimilar type. Given {{{a<b}}} Python tri
 
 In a further nuance, {{{a<b}}} and {{{a.__lt__(b)}}} behave differently when {{{a.__lt__(b)}}} produces no result. (And a corresponding rule applies for the other 5 operators.) When an object {{{a}}} cannot compare itself to {{{b}}} the Python expression {{{a.__lt__(b)}}} evaluates to the special object {{{NotImplemented}}}, while {{{a<b}}} evaluates to {{{False}}}.
 {{{
->>> "oops".__gt__(5)
+>>> "oops".__lt__(5)
 NotImplemented
->>> "oops">5
-True
+>>> "oops"<5
+False
 }}}
 
-In a last touch, if you define only some of the operations, Python seems to synthesize missing ones, e.g. {{{__lt__}}} from the opposite of {{{__ge__}}}.
+In a last touch, if you define only some of the operations, Python seems to synthesize missing ones, e.g. {{{__ge__}}} from the opposite of {{{__lt__}}}.
