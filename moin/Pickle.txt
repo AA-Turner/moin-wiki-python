@@ -1,0 +1,13 @@
+= What is Pickle? =
+
+http://docs.python.org/library/pickle.html
+
+= Should I use Pickle? =
+
+Of course not.
+
+* It is insecure. Untrusted pickles can do arbitrary things. For example, this pickle executes arbitrary Python expressions: pickle.loads("c__builtin__\neval\n(c__builtin__\nraw_input\n(S'py> '\ntRtR.")
+
+* It is Python-only: pickles cannot be loaded in any other programming language / environment.
+
+* It is schemaless (may be seen as a benefit sometimes)
