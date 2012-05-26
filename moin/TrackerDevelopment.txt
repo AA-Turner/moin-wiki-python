@@ -15,8 +15,6 @@ bugs.python.org is a [[http://roundup.sourceforge.net|Roundup tracker]] instance
 
  * Installation of psycopg.
 
- * !BeautifulSoup and !M2Crypto
-
  * A checkout of the spambayes_integration (instructions are given below).
 
  * A checkout of the python-dev instance from python's subversion repository (instructions are given below). 
@@ -162,43 +160,6 @@ If during the ''python setup.py build'' you get:
  * "fatal error: libpq-fe.h: No such file or directory", you need to {{{sudo apt-get install libpq-dev}}};
 If you are having other problems or installing a different version check psycopg2-2.3.2/INSTALL.
 
-== Installing BeautifulSoup ==
-
-'''Note''': BeautifulSoup does not seem to be currently used by the tracker (it was used during the conversion between sourceforge and roundup), so this step can be skipped.
-To install BeautifulSoup in Linux, you can use package manager, for example:
-{{{
-sudo apt-get install python-beautifulsoup
-}}}
-In case it doesn't work, you can download the latest .tar.gz from http://www.crummy.com/software/BeautifulSoup/#Download, extract and install it 
-{{{
-tar xvzf BeautifulSoup-3.2.0.tar.gz
-cd BeautifulSoup-3.2.0/
-sudo python setup.py install
-}}}
-
-== Installing M2Crypto ==
-
-M2Crypto has 2 dependancies: OpenSSL and Swig.
-To install OpenSSL, download the latest .tar.gz from http://www.openssl.org/source/, extract and install it:
-{{{
-tar xvzf openssl-1.0.0e.tar.gz
-cd openssl-1.0.0e/
-./config
-make
-make install
-}}}
-To install Swig, download the latest .tar.gz from http://www.swig.org/download.html, extract and install it:
-{{{
-tar xvzf swig-2.0.4.tar.gz
-cd swig-2.0.4/
-./configure
-make
-make install
-}}}
-Note: sometimes {{{./configure}}} fails because Swig needs PCRE configure, in that case you should download the latest .tar.gz from ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/ and extract it into the extracted folder {{{swig-2.0.4}}}, then run {{{Tools/pcre-build.sh}}} and start again with {{{./configure}}}.
-
-Finally, download the latest .egg from http://chandlerproject.org/Projects/MeTooCrypto#Downloads then do {{{easy_install M2Crypto....egg}}} to install M2Crypto.
-
 == Checkout spambayes_integration ==
 
 If you don't want to install SpamBayes, you have to use a [[#SpamBayes_dummy_configuration |dummy configuration]].
@@ -234,6 +195,17 @@ detectors/spambayes.py -> ../../spambayes_integration/detectors/spambayes.py
 
 }}}
 
+== Checkout the Rietveld integration ==
+
+Running the Rietveld code review tool is optional. If you want to work on it,
+check out
+
+{{{
+  hg clone http://hg.python.org/tracker/django-gae2django/
+  hg clone http://hg.python.org/tracker/rietveld/
+}}}
+
+In addtion, Django needs to be installed; e.g. the Django 1.2 or 1.3 Debian packages work fine.
 
 == Configure your Development Roundup Instance ==
 
@@ -279,22 +251,6 @@ and is on by default. Disable it by adding a {{{return}}} to its init() function
      return # <--
      db.issue.react('create', sendcia)
      db.issue.react('set', sendcia)
-}}}
-
-You can do the same with {{{detectors/rietveldreactor.py}}} if you don't need to use it:
-
-{{{
- def init(db):
-     return # <--
-     db.user.react('create', create_django_user)
-     db.issue.react('set', update_issue_cc)
-
-}}}
-
-Disabling the rietveld reactor also solves this error that you might get during the init:
-{{{
-psycopg2.ProgrammingError: relation "auth_user" does not exist
-LINE 1: insert into auth_user(id, username, email, password, first_n...
 }}}
 
 Initialize your roundup instance:
@@ -410,6 +366,35 @@ Finally, run it:
  BAYESCUSTOMIZE=$SBDIR/bayescustomize.ini core_server.py -m XMLRPCPlugin
 }}}
  * If you are seeing image spam (this seems not to be a problem with wiki spam - yet), download and install [[http://jocr.sourceforge.net/|GOCR]].
+
+== Rietveld Setup ==
+
+The Roundup and Rietveld data are stored in the same Postgres database. After the Roundup tables have been created, run
+
+{{{
+  cd rietveld
+  python manage.py syncdb
+  cd ..
+  python scripts/initrietveld
+}}}
+
+If you are upgrading from an older installation, review the revision history of rietveld/migration.
+
+To run the Rietveld code, do
+
+{{{
+  python manage.py runserver
+}}}
+
+This will run Rietveld by default on port 8000. Alternatively to the development server, you can
+also configure your web server to run rietveld.wsgi under the /review URL.
+
+Rietveld patchset creation is an offline activity. If you have new patches in your tracker instance,
+run
+
+{{{
+  scripts/addpatchsets
+}}}
 
 == Common Problems ==
 
