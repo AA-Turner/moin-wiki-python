@@ -1,0 +1,9 @@
+## Replace the ... text below with a title and a summary of the problem.
+## Feel free to remove any remaining comments once you're done!
+
+= Asking for Help: How can I fetch a system-generated value from a database after inserting a row using the cursor.execute() function? =
+
+The API is described in [[PEP:249|PEP 249]]. Unfortunately, the return value of `cursor.execute` is not defined in the specification, however, but it may be the case that your database adapter may provide a meaningful return value. When issuing `insert` statements in SQL, sometimes the number of rows inserted may be returned (which is probably what you're referring to), but even in systems like PostgreSQL where this can be observed, there can be situations where a result of 0 is given instead of the actual number of inserted rows. I seem to recall that table partitions, for instance, don't (or didn't) support non-zero results from `insert` when statements were issued in the SQL client. -- PaulBoddie <<DateTime(2012-05-31T13:03:22+0100)>>
+
+----
+CategoryAskingForHelp CategoryAskingForHelpAnswered
