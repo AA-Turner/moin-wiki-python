@@ -19,7 +19,7 @@ PyMe's development model is GPGME + Python + SWIG (just like m2crypto is an Open
 
 == pgp-mime (using the assuan protocol to gpgme-tool) ==
 
-[[http://pypi.python.org/pypi/pgp-mime/|pgp-mime]] makes it easy to construct, verify, and send signed and/or encrypted email.  It uses a [[http://pypi.python.org/pypi/pyassuan/|pyassuan]]-based connection to [[http://git.gnupg.org/cgi-bin/gitweb.cgi?p=gpgme.git;a=blob;f=src/gpgme-tool.c;hb=HEAD|gpgme-tool]] for the cryptography, which is isolated in a {{{pgp_mime.crypt}}} module if you don't need the extra email-handling functionality. (This somehow uses gpgme, by running the command line gpgme-tool, so it best fits this category.)
+[[http://pypi.python.org/pypi/pgp-mime/|pgp-mime]] makes it easy to construct, verify, and send signed and/or encrypted email.  It uses a [[http://pypi.python.org/pypi/pyassuan/|pyassuan]]-based connection to [[http://git.gnupg.org/cgi-bin/gitweb.cgi?p=gpgme.git;a=blob;f=src/gpgme-tool.c;hb=HEAD|gpgme-tool]] for the cryptography, which is isolated in a {{{pgp_mime.crypt}}} module if you don't need the extra email-handling functionality.  This currently uses gpgme by running {{{gpgme-tool}}} via {{{subprocess}}}.  However, I'm working on turning {{{gpgme-tool}}} into a stand-alone server (similar to {{{gpg-agent}}}), after which users will be free to substitute other servers providing the {{{gpgme-tool}}} interface.
 
 
 = Running gpg executables =
