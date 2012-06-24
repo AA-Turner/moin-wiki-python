@@ -1,0 +1,52 @@
+= Buffer Protocol =
+
+This page proposes (later documents) a design for a Jython equivalent to the CPython buffer protocol.
+
+<<TableOfContents>>
+
+== Introduction (Situation in June 2012) ==
+
+In CPython, certain objects are based on an underlying 
+memory array or buffer. The CPython designers judged it  
+desirable to be able to access that buffer directly, without 
+intermediate copying. CPython provides this at the C level 
+in the form of the ''buffer protocol''. This is used heaviliy in 
+the implementation of some core types and standard library 
+modules. And it is the basis of the type `memoryview`. 
+
+Although the buffer API and memoryview are Python 3k 
+features, they were backported into CPython 2.7. In C the 
+buffer protocol the exporting object gives consumers a  
+pointer to memory and some information about how it is 
+structured.
+
+Jython does not (yet) have an equivalent of buffer protocol 
+or support `memoryview`. There is a stub for each, but no 
+access to data through it. In the recent implementation of 
+`PyByteArray` absence of a buffer protocol implemented by 
+incoming arguments was a complicating factor. In CPython, 
+the majority of methods start by getting a buffer view of 
+their arguments: acceptable types are all those that 
+implement the API. Other types and modules present a similar 
+challenge in reaching 2.7 compliance. But we cannot directly 
+emulate the C buffer protocol in Java, since it does not 
+allow pointers to memory like:{{{#!cplusplus
+    self_size = _getbuffer(self, &self_bytes);
+    other_size = _getbuffer(other, &other_bytes);
+	...
+    cmp = memcmp(self_bytes.buf, other_bytes.buf, minsize);
+}}}
+or casts like:{{{#!cplusplus
+	((float*)ap->ob_item)[i] = x;
+}}}
+Yet, without something filling the role, core implementation 
+is made more difficult and always falls short of 
+compatibility.
+
+This raises two questions:
+ * Can we create a buffer API that provides an equivalent facility in Java?
+ * Can we go on from there to implement memoryview?
+This page looks at the first of these, arguing for a 
+particular approach. In due course, it ought to change into 
+documentation of the approach, preserving the rationale of 
+the final design.
