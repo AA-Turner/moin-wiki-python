@@ -224,6 +224,23 @@ def fibonacci(n):
 print fibonacci(12)
 }}}
 
+== Alternate memoize as nested functions ==
+
+Here's a memoizing function that works on functions, methods, or classes, and exposes the cache publicly.
+
+{{{
+#!python
+def memoize(obj):
+    cache = obj.cache = {}
+    
+    @functools.wraps(obj)
+    def memoizer(*args, **kwargs):
+        if args not in cache:
+            cache[args] = obj(*args, **kwargs)
+        return cache[args]
+    return memoizer
+}}}
+
 == Cached Properties ==
 
 {{{
