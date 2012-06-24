@@ -190,7 +190,7 @@ Here's a memoizing class.
 #!python
 class memoized(object):
    '''Decorator. Caches a function's return value each time it is called.
-   If called later with the same arguments, the cached value is returned 
+   If called later with the same arguments, the cached value is returned
    (not reevaluated).
    '''
    def __init__(self, func):
@@ -261,7 +261,7 @@ class cached_property(object):
     zero for the cached value to never expire.
 
     To expire a cached property value manually just do::
-    
+
         del instance._cache[<property name>]
 
     '''
@@ -303,7 +303,7 @@ import math
 # Retry decorator with exponential backoff
 def retry(tries, delay=3, backoff=2):
   '''Retries a function or method until it returns True.
-  
+
   delay sets the initial delay in seconds, and backoff sets the factor by which
   the delay should lengthen after each failure. backoff must be greater than 1,
   or else it isn't really a backoff. tries must be at least 0, and delay
@@ -354,7 +354,7 @@ class curried(object):
   def __init__(self, func, *a):
     self.func = func
     self.args = a
-  
+
   def __call__(self, *a):
     args = self.args + a
     if len(args) < self.func.func_code.co_argcount:
@@ -426,7 +426,7 @@ class apply:
     def __call__(self, func):
         return func(*self.args, **self.kw)
 
-# 
+#
 # Usage in both cases:
 #
 @apply
@@ -639,7 +639,7 @@ def deprecated(func):
     '''This is a decorator which can be used to mark functions
     as deprecated. It will result in a warning being emitted
     when the function is used.'''
-    
+
     @functools.wraps(func)
     def new_func(*args, **kwargs):
         warnings.warn_explicit(
@@ -702,13 +702,13 @@ def dump_args(func):
     "This decorator dumps out the arguments passed to a function before calling it"
     argnames = func.func_code.co_varnames[:func.func_code.co_argcount]
     fname = func.func_name
-    
+
     def echo_func(*args,**kwargs):
         print fname, ":", ', '.join(
 	    '%s=%r' % entry
             for entry in zip(argnames,args) + kwargs.items())
         return func(*args, **kwargs)
-    
+
     return echo_func
 
 @dump_args
@@ -872,7 +872,7 @@ def trace(f):
             lineno = frame.f_lineno
 
             bname = os.path.basename(filename)
-            print "{}({}): {}".format(  bname, 
+            print "{}({}): {}".format(  bname,
                                         lineno,
                                         linecache.getline(filename, lineno)),
         return localtrace
@@ -1069,7 +1069,7 @@ Handles HTML boilerplate at top and bottom of pages returned from CGI methods.  
 class CGImethod(object):
     def __init__(self, title):
         self.title = title
-    
+
     def __call__(self, fn):
         def wrapped_fn(*args):
             print "Content-Type: text/html\n\n"
@@ -1100,9 +1100,9 @@ This example uses Decorators to facilitate the implementation of a
 state machine in Python.  Decorators are used to specify which methods
 are the event handlers for the class.  In this example, actions are
 associated with the transitions, but it is possible with a little
-consideration to associate actions with states instead. 
+consideration to associate actions with states instead.
 
-The example defines a class, MyMachine that is a state machine. 
+The example defines a class, MyMachine that is a state machine.
 Multiple instances of the class may be instantiated with each maintaining its own state. A class also may have multiple states.
 Here I've used gstate and tstate.
 
@@ -1135,10 +1135,10 @@ class MyMachine(object):
     # Decorate the Event Handler virtual functions -note gstate parameter
     @event_handler(gstate)
     def event_a(self): pass
-    
+
     @event_handler(gstate)
     def event_b(self): pass
-    
+
     @event_handler(gstate)
     def event_c(self, val): pass
 
@@ -1178,18 +1178,18 @@ class MyMachine(object):
         self.b_count += 100
         # we decide here we want to go to state 2, overrrides spec in state table below.
         # transition to next_state is made after the method exits.
-        self.gstate.next_state = self._state2 
+        self.gstate.next_state = self._state2
     def _event_c_hdlr3(self, val):
         print "State 3, event C"
         self.c_count += 5*val
-    
+
     # Associate the handlers with a state. The first argument is a list of methods.
     # One method for each event_handler decorated function of gstate. Order of methods
     # in the list correspond to order in which the Event Handlers were declared.
     # Second arg is the name of the state.  Third argument is to be come a list of the
-    # next states. 
+    # next states.
     # The first state created becomes the initial state.
-    _state1 = gstate.state("One",  (_event_a_hdlr1, _event_b_hdlr1, _event_c_hdlr1), 
+    _state1 = gstate.state("One",  (_event_a_hdlr1, _event_b_hdlr1, _event_c_hdlr1),
                                       ("Two", "Three", None))
     _state2 = gstate.state("Two",  (_event_a_hdlr2, _event_b_hdlr2, _event_c_hdlr2),
                                      ("Three",        None,          "One"))
@@ -1268,9 +1268,9 @@ And now the imported statedefn.py
 #!python
 #
 # Support for State Machines.  ref - Design Patterns by GoF
-#  Many of the methods in these classes get called behind the scenes. 
+#  Many of the methods in these classes get called behind the scenes.
 #
-#  Notable exceptions are methods of the StateVar class. 
+#  Notable exceptions are methods of the StateVar class.
 #
 #  See example programs for how this module is intended to be used.
 #
@@ -1282,7 +1282,7 @@ class StateVar(object):
     def __init__(self, initial_state):
         self._current_state = initial_state
         self.next_state = initial_state            # publicly settable in an event handling routine.
-    
+
     def set_state(self, owner, new_state):
         '''
         Forces a state change to new_state
@@ -1292,7 +1292,7 @@ class StateVar(object):
 
     def __to_next_state(self, owner):
         '''
-        The low-level state change function which calls leave state & enter state functions as 
+        The low-level state change function which calls leave state & enter state functions as
         needed.
 
         LeaveState and EnterState functions are called as needed when state transitions.
@@ -1309,7 +1309,7 @@ class StateVar(object):
                 self.enter(owner)
 
     def __fctn(self, func_name):
-        ''' 
+        '''
         Returns the owning class's method for handling an event for the current state.
         This method not for public consumption.
         '''
@@ -1364,10 +1364,10 @@ class StateTable(object):
         self._state_list = {}
         self._event_list = []
         self.need_initialize = 1
-    
+
     def initialize(self, parent):
         '''
-        Initializes the parent class's state variable for this StateTable class. 
+        Initializes the parent class's state variable for this StateTable class.
         Must call this method in the parent' object's __init__ method.  You can have
         Multiple state machines within a parent class. Call this method for each
         '''
@@ -1393,7 +1393,7 @@ class StateTable(object):
             raise StateMachineError('Mismatch between number of event handlers and the methods specified for the state.')
 
         state_table_row.set_events(self._event_list, event_hdlr_list, None)
-        
+
         if self._initial_state is None:
             self._initial_state = state_table_row
         self._state_list[name] = state_table_row
@@ -1405,9 +1405,9 @@ class StateTable(object):
             raise StateMachineError('Mismatch between number of event handlers and the methods specified for the state.')
         if next_states is not None and len(next_states) != len(self._event_list):
             raise StateMachineError('Mismatch between number of event handlers and the next states specified for the state.')
-        
+
         state_table_row.set_events(self._event_list, event_hdlr_list, next_states)
-        
+
         if self._initial_state is None:
             self._initial_state = state_table_row
         self._state_list[name] = state_table_row
@@ -1420,7 +1420,7 @@ class StateTable(object):
         '''
         self._event_list.append(func_name)
 
-# Decorator functions ... 
+# Decorator functions ...
 def event_handler(state_class):
     '''
     Declare a method that handles a type of event.
@@ -1487,7 +1487,7 @@ class DecoTrace(object):
 
     This can only be used for functions or methods where the instance
     is not necessary
-    
+
     '''
 
     def __init__(self, f):
@@ -1517,7 +1517,7 @@ class DecoTraceWithArgs(object):
        class instance, then extract it and pass to the wrapped method as the
        first arg.
     '''
-    
+
     def __init__(self, *dec_args, **dec_kw):
         '''The decorator arguments are passed here.  Save them for runtime.'''
         self.dec_args = dec_args
@@ -1537,7 +1537,7 @@ class DecoTraceWithArgs(object):
         print >> self.fid, '{}: exit {} with status={}'.format(self.label, self.f.__name__, str(status))
     def _showinstance(self, instance):
         print >> self.fid, '{}: instance={}'.format(self.label, instance)
-        
+
     def __call__(self, f):
         def wrapper(*fargs, **kw):
             '''
@@ -1590,7 +1590,7 @@ def FirstBruce(*fargs, **kwargs):
 def SecondBruce(*fargs, **kwargs):
     'Simple function using decorator with arguments.'
     print '{}:'.format(kwargs.get('name', 'Unknown Bruce'))
-    
+
     if fargs and fargs[0]:
         print fargs[0]
     else:
@@ -1598,7 +1598,7 @@ def SecondBruce(*fargs, **kwargs):
 
 class Bruce(object):
     'Simple class.'
-    
+
     def __init__(self, id):
         self.id = id
 
@@ -1611,7 +1611,7 @@ class Bruce(object):
     @DecoTraceWithArgs(label="Trace a class", standardline="How are yer Bruce?", stream=stdout)
     def talk(self, *fargs, **kwargs):
         'Simple function using decorator with arguments.'
-        
+
         print '{}:'.format(self)
         if fargs and fargs[0]:
             print fargs[0]
@@ -1645,7 +1645,7 @@ def unimplemented(defaultval):
         return lambda: None
     else:
         # Actual annotation
-        def unimp_wrapper(func):        
+        def unimp_wrapper(func):
             # What we replace the function with
             def wrapper(*arg):
                 return defaultval
@@ -1666,7 +1666,7 @@ class LogPrinter:
         il = self.ilogger
         logging.basicConfig()
         il.setLevel(logging.INFO)
-    
+
     def write(self, text):
         '''Logs written output to a specific logger'''
         self.ilogger.info(text)
@@ -1695,7 +1695,7 @@ This example prevents users from getting access to places where they are not aut
 class LoginCheck:
     '''
     This class checks whether a user
-    has logged in properly via 
+    has logged in properly via
     the global "check_function". If so,
     the requested routine is called.
     Otherwise, an alternative page is
@@ -1703,7 +1703,7 @@ class LoginCheck:
     '''
     def __init__(self, f):
         self._f = f
-        
+
     def __call__(self, *args):
         Status = check_function()
         if Status is 1:
@@ -1790,31 +1790,56 @@ Foo().x = 20
 assert Foo().x == 20
 }}}
 
+== The Sublime Singleton ==
+
+{{{
+#!python
+def singleton(cls):
+    instance = cls()
+    instance.__call__ = lambda: instance
+    return instance
+
+#
+# Sample use
+#
+
+@singleton
+class Highlander:
+    x = 100
+    # Of course you can have any attributes or methods you like.
+
+Highlander() is Highlander() is Highlander #=> True
+id(Highlander()) == id(Highlander) #=> True
+Highlander().x == Highlander.x == 100 #=> True
+Highlander.x = 50
+Highlander().x == Highlander.x == 50 #=> True
+}}}
+
 == Asynchronous Call ==
 
 {{{
 #!python
 from Queue import Queue
 from threading import Thread
-        
-class asynchronous(object):  
-    def __init__(self, func):    
+
+class asynchronous(object):
+    def __init__(self, func):
         self.func = func
-        
+
         def threaded(*args, **kwargs):
             self.queue.put(self.func(*args, **kwargs))
-        
+
         self.threaded = threaded
-        
+
     def __call__(self, *args, **kwargs):
         return self.func(*args, **kwargs)
-        
+
     def start(self, *args, **kwargs):
         self.queue = Queue()
         thread = Thread(target=self.threaded, args=args, kwargs=kwargs);
         thread.start();
         return asynchronous.Result(self.queue, thread)
-        
+
     class NotYetDoneException(Exception):
         def __init__(self, message):
             self.message = message
@@ -1823,17 +1848,17 @@ class asynchronous(object):
         def __init__(self, queue, thread):
             self.queue = queue
             self.thread = thread
-			
+
         def is_done(self):
             return not self.thread.is_alive()
-            
+
         def get_result(self):
             if not self.is_done():
                 raise asynchronous.NotYetDoneException('the call has not yet completed its task')
-        
+
             if not hasattr(self, 'result'):
                 self.result = self.queue.get()
-                
+
             return self.result
 
 if __name__ == '__main__':
@@ -1850,16 +1875,16 @@ if __name__ == '__main__':
     for i in range(20):
         print i
         time.sleep(1)
-        
+
         if result.is_done():
             print "result {0}".format(result.get_result())
-            
-    
+
+
     result2 = long_process.start(13)
 
     try:
         print "result2 {0}".format(result2.get_result())
-        
+
     except asynchronous.NotYetDoneException as ex:
         print ex.message
 }}}
@@ -1868,7 +1893,7 @@ if __name__ == '__main__':
 
 When decorating a class method, the decorator receives an function not yet bound to an instance.
 
-The decorator can't to do anything on the instance invocating it, 
+The decorator can't to do anything on the instance invocating it,
 unless it actually is a descriptor.
 
 
@@ -1880,19 +1905,19 @@ def decorate(f):
     '''
     Class method decorator specific to the instance.
 
-    It uses a descriptor to delay the definition of the 
+    It uses a descriptor to delay the definition of the
     method wrapper.
     '''
     class descript(object):
         def __init__(self, f):
             self.f = f
-        
+
         def __get__(self, instance, klass):
             if instance is None:
                 # Class method was requested
                 return self.make_unbound(klass)
             return self.make_bound(instance)
-        
+
         def make_unbound(self, klass):
             @wraps(self.f)
             def wrapper(*args, **kwargs):
@@ -1900,11 +1925,11 @@ def decorate(f):
                 raise TypeError(
                     'unbound method {}() must be called with {} instance '
                     'as first argument (got nothing instead)'.format(
-                        self.f.__name__, 
+                        self.f.__name__,
                         klass.__name__)
                 )
             return wrapper
-        
+
         def make_bound(self, instance):
             @wraps(self.f)
             def wrapper(*args, **kwargs):
@@ -1939,17 +1964,17 @@ GIST: https://gist.github.com/2570004
 #!python
 #
 # Copyright 2012 by Jeff Laughlin Consulting LLC
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -1957,7 +1982,7 @@ GIST: https://gist.github.com/2570004
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
- 
+
 
 import sys
 from time import sleep
@@ -2033,11 +2058,11 @@ import threading, sys, functools, traceback
 def lazy_thunkify(f):
     """Make a function immediately return a function of no args which, when called,
     waits for the result, which will start being processed in another thread."""
-    
+
     @functools.wraps(f)
     def lazy_thunked(*args, **kwargs):
         wait_event = threading.Event()
-        
+
         result = [None]
         exc = [False, None]
 
@@ -2057,13 +2082,13 @@ def lazy_thunkify(f):
             wait_event.wait()
             if exc[0]:
                 raise exc[1][0], exc[1][1], exc[1][2]
-            
+
             return result[0]
 
         threading.Thread(target=worker_func).start()
-        
+
         return thunk
-    
+
     return lazy_thunked
 }}}
 
@@ -2097,4 +2122,4 @@ maybe_multiply(10)
 maybe_multiply(3)
 }}}
 ----
-CategoryDocumentation 
+CategoryDocumentation
