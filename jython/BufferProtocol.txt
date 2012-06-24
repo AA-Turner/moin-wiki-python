@@ -50,3 +50,37 @@ This page looks at the first of these, arguing for a
 particular approach. In due course, it ought to change into 
 documentation of the approach, preserving the rationale of 
 the final design.
+
+== References ==
+
+ 1. [[http://python.org/dev/peps/pep-3118/|PEP 3118]] Revising the buffer protocol
+ 1. [[http://docs.python.org/library/stdtypes.html#memoryview-type|memoryview type]]  (in Python 2.7 docs)
+ 1. [[http://docs.python.org/py3k/library/stdtypes.html#memoryview-type|memoryview type]]  (in Python 3 docs)
+ 1. [[http://docs.python.org/c-api/typeobj.html#buffer-object-structures|Buffer Object Structures]] (in Python 2.7 docs)
+ 1. [[http://docs.python.org/py3k/c-api/buffer.html|Buffer Protocol]] (in Python 3 docs)
+ 1. [[http://bugs.python.org/issue10181| CPython issue 10181]] Problems with Py_buffer management in `memoryobject.c` (and elsewhere?)
+
+http://docs.python.org/py3k/c-api/buffer.html
+
+
+
+== Design ==
+=== Considerations ===
+
+ * We would benefit from something in the role of the CPython buffer API.
+ * It should be as familiar as possible to people who know the CPython buffer API.
+ * It should be a feasible basis for `memoryview`.
+ * Java is not C:
+   * some CPython buffer API idioms have no equivalent, e.g. {{{((float*)ap->ob_item)[i] = x;}}}
+   * and some may be done in a better way (e.g. polymorphism in place of if statements, object lifetime).
+ * 99% (maybe 100%) of core development only accesses the buffer as a one-dimensional array of bytes.
+ * Some significant applications (NumPy, PIL) use the richer facilities (>1 dimension, strided access, indirection).
+
+
+=== Sketch interface to bytes ===
+
+
+=== Provision for things other than bytes ===
+
+
+=== Combined proposal ===
