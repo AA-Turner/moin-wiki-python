@@ -1,0 +1,363 @@
+
+= PyPI OAuth =
+
+
+This page describes PyPI's OAuth 1.0a facility. To use this facility you must first contact the PyPI maintainers (Richard or Martin) to obtain a ''consumer'' key and secret pair.
+
+
+The OAuth facility has been tested with the [[http://pypi.python.org/pypi/requests|requests]] and [[http://pypi.python.org/pypi/rauth|rauth]] libraries.
+
+
+All of these examples use the testpypi server rather than the production server. To use the production server:
+
+
+ 1. make sure that your ''consumer'' key and secret have been enabled, and
+ 1. modify the URLs to point to "pypi.python.org" instead of "testpypi.python.org".
+
+
+Notes:
+
+
+ 1. the code below currently disables SSL certificate verification since the PyPI servers do not have a verifiable certificate.
+ 1. for the moment you need to use the very latest version of requests from the git repository (no earlier than 2012-07-27).
+
+
+== Obtaining an Access Token for a User ==
+
+
+Obtaining an ''access'' token, required for all API calls, is a three-step process.
+
+
+=== Step 1: Obtain a Request Token ===
+
+
+Using your application/site's ''consumer'' key and secret you obtain a ''request'' token from PyPI. This will be turned into an ''access'' token once authorised by the user.
+
+
+
+
+
+
+
+{{{#!python
+import requests
+from requests.auth import OAuth1
+from urlparse import parse_qs
+
+REQUEST_TOKEN_URL = 'https://testpypi.python.org/oauth/request_token'
+auth = OAuth1(CONSUMER_KEY, CONSUMER_SECRET, signature_type='auth_header')
+response = requests.get(REQUEST_TOKEN_URL, auth=auth, verify=False)
+qs = parse_qs(response.text)
+REQUEST_TOKEN = unicode(qs['oauth_token'][0])
+REQUEST_SECRET = unicode(qs['oauth_token_secret'][0])
+}}}
+
+
+
+=== Step 2: Direct the User to Authorise Access ===
+
+
+In this step we give the user a link or open a browser redirecting them to a PyPI web page, passing the REQUEST_TOKEN we got in the previous step as a url parameter. The user will get a dialog asking for authorisation for our application. PyPI will redirect the user back to the URL you provide in CALLBACK_URL. The callback URL passes control back to your application.
+
+
+
+
+{{{#!python
+import webbrowser
+
+AUTHORIZATION_URL = 'https://testpypi.python.org/oauth/authorise'
+CALLBACK_URL = 'http://spam.example/back'
+
+webbrowser.open("%s?oauth_token=%s&oauth_callback=%s" % (AUTHORIZATION_URL,
+    REQUEST_TOKEN, CALLBACK_URL))
+
+raw_input('[press enter when ready]')
+}}}
+
+
+
+=== Step 3: Obtain the User's Authorised Access Token ===
+
+
+Once we get user's authorization, we request a final ''access'' token, to operate on behalf of the user. We build a new hook using previous ''request'' token information achieved at step 1. The request token will have been authorized at step 2.
+
+
+This code is typically invoked in the page called at CALLBACK_URL.
+
+
+
+
+
+
+
+{{{#!python
+ACCESS_TOKEN_URL = 'https://testpypi.python.org/oauth/access_token'
+
+auth = OAuth1(CONSUMER_KEY, CONSUMER_SECRET, REQUEST_TOKEN, REQUEST_SECRET,
+    signature_type='auth_header')
+response = requests.get(ACCESS_TOKEN_URL, auth=auth, verify=False)
+response = parse_qs(response.content)
+ACCESS_TOKEN = unicode(response['oauth_token'][0])
+ACCESS_SECRET = unicode(response['oauth_token_secret'][0])
+}}}
+
+
+
+The ACCESS_TOKEN and ACCESS_SECRET are the credentials we need to use for handling user's OAuth, so most likely you will want to persist them somehow. These are the ones you should use for building a requests session with a new hook.
+
+
+== Testing the Access Token ==
+
+
+Now we have an ''access'' token we may access the protected resources on behalf of the user. In this case we access the test URL which will echo back to us the authenticated user and any parameters we pass.
+
+
+
+
+
+
+
+{{{#!python
+TEST_URL = 'https://testpypi.python.org/oauth/test'
+
+auth = OAuth1(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_SECRET,
+    signature_type='auth_header')
+response = requests.get(TEST_URL, params={'test': 'spam'}, auth=auth,
+    verify=False)
+print response.text
+}}}
+
+
+
+== PyPI OAuth API ==
+
+
+The following code will access the PyPI OAuth API for releasing new package versions and uploading files for those releases.
+
+
+
+
+
+
+
+{{{#!python
+def flatten_params(params):
+    '''Convert a dict to to a list of two-tuples of (k, v) where v is
+    potentially each element from a list of values.
+
+    Also ignore empty values as these confuse signature generation.
+    '''
+    flattened = []
+    for k, v in params.items():
+        if isinstance(v, list):
+            for v in v:
+                if v:
+                    flattened.append((k, v))
+        elif v:
+            flattened.append((k, v))
+    return [e for e in flattened if e[1]]
+
+
+def release(ACCESS_TOKEN, ACCESS_SECRET, name, version, summary, **optional):
+    '''Register a new package, or release of an existing package.
+
+    The "optional" parameters match fields in PEP 345.
+
+    The complete list of parameters are:
+
+    Single value: description, keywords, home_page, author, author_email,
+        maintainer, maintainer_email, license, requires_python
+
+    Multiple values: requires, provides, obsoletes, requires_dist,
+        provides_dist, obsoletes_dist, requires_external, project_url,
+        classifiers.
+
+    For parameters with multiple values, pass them as lists of strings.
+
+    The API will default metadata_version to '1.2' for you. The other valid
+    value is '1.0'.
+
+    Two additional metadata fields are available specific to PyPI:
+
+    1. _pypi_hidden: If set to '1' the relase will be hidden from listings and
+       searches.
+    2. bugtrack_url: This will be displayed on package pages.
+    '''
+    RESOURCE_URL = 'https://testpypi.python.org/oauth/add_release'
+    auth = OAuth1(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_SECRET,
+        signature_type='auth_header')
+    params = {u'name': name, u'version': version, u'summary': summary}
+    params.update(optional)
+    data = flatten_params(params)
+    response = requests.post(RESOURCE_URL, data=data, auth=auth,
+        verify=False)
+    return response.text
+
+
+def upload(ACCESS_TOKEN, ACCESS_SECRET, name, version, content,
+        filename, filetype, **optional):
+    '''Upload a file for a package release. If the release does not exist then
+    it will be registered automatically.
+
+    The name and version identify the package release to upload the file
+    against. The content and filetype are specific to the file being uploaded.
+
+    content - an readable file object
+    filetype - one of the standard distutils file types ("sdist", "bdist_win",
+        etc.)
+
+    There are several optional parameters:
+
+    pyversion - specify the 'N.N' Python version the distribution works with.
+        This is not needed for source distributions but required otherwise.
+    comment - use if there's multiple files for one distribution type.
+    md5_digest - supply the MD5 digest of the file content to verify
+        transmission
+    gpg_signature - ASCII armored GPG signature for the file content
+    protocol_version - defaults to "1" (currently the only valid value)
+
+    Additionally the release parameters are as specified for release() above.
+    '''
+    RESOURCE_URL = 'https://testpypi.python.org/oauth/upload'
+    auth = OAuth1(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_SECRET,
+        signature_type='auth_header')
+    params = dict(name=name, version=version, filename=filename,
+        filetype=filetype, protocol_version='1')
+    params.update(optional)
+    data = flatten_params(params)
+    files = dict(content=(filename, content))
+    response = requests.post(RESOURCE_URL, params=params, files=files,
+        auth=auth, verify=False)
+    return response.text
+}}}
+
+
+
+So for example to register a package release, use:
+
+
+
+
+{{{#!python
+name = u'spam'
+version = u'3.3.1'
+summary = u'spam via OAuth'
+classifiers = [u'Topic :: Security', u'Environment :: Console']
+print 'REGISTERING', name, version
+print release(ACCESS_TOKEN, ACCESS_SECRET, name, version, summary,
+    classifiers=classifiers)
+}}}
+
+
+
+And to release a file use:
+
+
+
+
+{{{#!python
+name = u'spam'
+version = u'3.3.1'
+filename = u'spam-3.3.1.tar.gz'
+filetype = u'sdist'
+content = open('path/to/dist/' + filename, 'rb')
+print 'UPLOADING', filename
+print upload(ACCESS_TOKEN, ACCESS_SECRET, name, version, content,
+     filename, filetype)
+}}}
+
+
+
+== Alternative rauth Implementation ==
+
+
+Alternatively you may use the rauth library. The API presented is the same (so use the same docstrings) but internally it looks like this:
+
+
+=== Setup ===
+
+
+
+
+
+
+
+{{{#!python
+from rauth.service import OAuth1Service
+
+pypi = OAuth1Service(
+    name='pypi',
+    consumer_key=CONSUMER_KEY,
+    consumer_secret=CONSUMER_SECRET,
+    request_token_url='https://testpypi.python.org/oauth/request_token',
+    access_token_url='https://testpypi.python.org/oauth/access_token',
+    authorize_url='https://testpypi.python.org/oauth/authorise',
+    header_auth=True)
+}}}
+
+
+
+=== Obtaining an Access Token for a User ===
+
+
+
+
+
+
+
+{{{#!python
+REQUEST_TOKEN, REQUEST_SECRET = pypi.get_request_token(method='GET', verify=False)
+
+url = pypi.get_authorize_url(REQUEST_TOKEN, oauth_callback=CALLBACK_URL)
+import webbrowser
+webbrowser.open(url)
+
+raw_input('[press enter when ready]')
+
+response = pypi.get_access_token('GET', request_token=REQUEST_TOKEN,
+    request_token_secret=REQUEST_SECRET, verify=False)
+data = response.content
+ACCESS_TOKEN = data['oauth_token']
+ACCESS_SECRET = data['oauth_token_secret']
+}}}
+
+
+
+=== Using the API ===
+
+
+
+
+
+
+
+{{{#!python
+def test(ACCESS_TOKEN, ACCESS_SECRET, **params):
+    response = pypi.get('https://testpypi.python.org/oauth/test',
+            params=params,
+            access_token=ACCESS_TOKEN,
+            access_token_secret=ACCESS_SECRET,
+            verify=False)
+    return response.response.content
+
+def release(ACCESS_TOKEN, ACCESS_SECRET, name, version, summary, **optional):
+    params = {u'name': name, u'version': version, u'summary': summary}
+    params.update(optional)
+    data = flatten_params(params)
+    response = pypi.post('https://testpypi.python.org/oauth/add_release',
+            data=data, access_token=ACCESS_TOKEN,
+            access_token_secret=ACCESS_SECRET, verify=False)
+    return response.response.content
+
+def upload(ACCESS_TOKEN, ACCESS_SECRET, name, version, content,
+        filename, filetype, **optional):
+    params = dict(name=name, version=version, filename=filename,
+        filetype=filetype, protocol_version='1')
+    params.update(optional)
+    data = flatten_params(params)
+    files = dict(content=(filename, content.read()))
+    response = pypi.post('https://testpypi.python.org/oauth/upload',
+        params=params, files=files, access_token=ACCESS_TOKEN,
+        access_token_secret=ACCESS_SECRET, verify=False)
+    return response.response.content
+}}}
