@@ -1,8 +1,10 @@
-I'm looking for information on Python bit manipulation, binary manipulation.
 
-It seems that there are no modules for performing Python bit manipulation.
+Here is some information and goals related to Python bit manipulation, binary manipulation.
 
-I personally want to be able to:
+
+Some tasks include:
+
+
  * Turn "11011000111101..." into bytes, (padded left or right, 0 or 1,) and vice versa.
  * Slice ranges of bits
  * Rotate bits, addressed by the bit. That is, say: "rotate bits 13-17, wrapping around the edges," or, "rotate bits 13-17, lose bits on the one side, set all new bits to 0."
@@ -10,24 +12,48 @@ I personally want to be able to:
  * Switch Endianness, with different block sizes.
  * Apply operations in block groupings: ex: apply XOR 10101 (5 bits) repeatedly across a field.
 
-The closest thing I've found is [[http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/113799|ASPN: bit-field manipulation.]]
 
-I imagine that there are many more manipulations people would like to do with bits.
+Relevant libraries include:
+
+
+ * [[http://docs.python.org/library/ctypes.html|ctypes — A foreign function library for Python — Python v2.7.3 documentation]] - part of the standard library
+ * [[http://pypi.python.org/pypi/bitarray/|bitarray - efficient arrays of booleans -- C extension]]
+ * [[https://code.google.com/p/python-bitstring/|python-bitstring - A Python module to help you manage your bits. - Google Project Hosting]]
+
+
+Some simple code is at [[http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/113799|ASPN: bit-field manipulation.]]
+
+
+Here are some other examples.
+
 
 == Manipulations ==
 
+
 To integer.
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 >>> print int('00100001', 2)
 33
 }}}
 
+
+
 To hex string. Note that you don't need to use x8 bits.
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 >>> print "0x%x" % int('11111111', 2)
 0xff
 >>> print "0x%x" % int('0110110110', 2)
@@ -36,10 +62,17 @@ To hex string. Note that you don't need to use x8 bits.
 0xaeb3ab57d55
 }}}
 
+
+
 To character. 8 bits max.
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 >>> chr(int('111011', 2))
 ';'
 >>> chr(int('1110110', 2))
@@ -48,10 +81,17 @@ To character. 8 bits max.
 '\xed'
 }}}
 
+
+
 Characters to integers, but not to strings of 1's and 0's.
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 >>> int('01110101', 2)
 117
 >>> chr(int('01110101', 2))
@@ -60,10 +100,17 @@ Characters to integers, but not to strings of 1's and 0's.
 117
 }}}
 
+
+
 Individual bits.
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 >>> 1 << 0
 1
 >>> 1 << 1
@@ -82,27 +129,41 @@ Individual bits.
 128
 }}}
 
+
+
 == Transformations Summary ==
 
+
 Strings to Integers:
- * {{{"1011101101"}}}: {{{int(str, 2)}}}
+
+
+ * {{{"1011101101"}}}: {{{int(str, 2)}}}
  * {{{"m"}}}: {{{ord(str)}}}
- * {{{"0xdecafbad"}}}: {{{int(str, 16)}}} (known to work in Python 2.4)
- * {{{"decafbad"}}}: {{{int(str, 16)}}} (known to work in Python 2.4)
+ * {{{"0xdecafbad"}}}: {{{int(str, 16)}}} (known to work in Python 2.4)
+ * {{{"decafbad"}}}: {{{int(str, 16)}}} (known to work in Python 2.4)
+
 
 Integers to Strings:
+
+
  * {{{"1011101101"}}}: built-in to Python 3 (see below)
  * {{{"m"}}}: {{{chr(str)}}}
  * {{{"0xdecafbad"}}}: {{{hex(val)}}}
- * {{{"decafbad"}}}: {{{"%x" % val}}}
+ * {{{"decafbad"}}}: {{{"%x" % val}}}
+
 
 We are still left without a technique for producing binary strings, and decyphering hex strings.
 
+
 == Hex String to Integer ==
 
-The simplest approach is to use the int type with the ``base`` argument.
-{{{
-#!python
+
+The simplest approach is to use the int type with the base argument.
+
+
+
+
+{{{#!python
 >>> int('0xff',16)
 255
 >>> int('d484fa894e',16)
@@ -113,18 +174,31 @@ The simplest approach is to use the int type with the ``base`` argument.
 
 Another approach to decyphering "0xdecafbad" style hex strings, is to use eval:
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 >>> eval("0xdecafbad ")
 3737844653L
 }}}
 
-However, this could be dangerous, depending on where you're getting your data from.
+
+
+However, this could be dangerous, depending on where you're getting your data from. Q. Why could this be dangerous? What data makes this dangerous?
+
 
 Here's a function that is safer:
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 def hex_to_integer(h):
     """Convert a hex string to an integer.
 
@@ -149,67 +223,104 @@ def hex_to_integer(h):
     return num
 }}}
 
+
+
 == Integer to Bin String ==
+
 
 Python 3 supports binary literals (e.g. 0b10011000) and has a bin() function. For older versions:
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 >>> def bin(a):
-	s=''
-	t={'0':'000','1':'001','2':'010','3':'011',
+        s=''
+        t={'0':'000','1':'001','2':'010','3':'011',
            '4':'100','5':'101','6':'110','7':'111'}
-	for c in oct(a)[1:]:
-		s+=t[c]
-	return s
+        for c in oct(a)[1:]:
+                s+=t[c]
+        return s
 }}}
+
+
 
 or better:
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 def bin(s):
     return str(s) if s<=1 else bin(s>>1) + str(s&1)
 }}}
 
+
+
 == Python Integers ==
+
 
 From "The Python Language Reference" page on the Data Model:
 
-"Integers (int)  These represent numbers in an unlimited range, subject to available (virtual) memory only. For the purpose of shift and mask operations, a binary representation is assumed, and negative numbers are represented in a variant of 2’s complement which gives the illusion of an infinite string of sign bits extending to the left."
+
+"Integers (int) These represent numbers in an unlimited range, subject to available (virtual) memory only. For the purpose of shift and mask operations, a binary representation is assumed, and negative numbers are represented in a variant of 2’s complement which gives the illusion of an infinite string of sign bits extending to the left."
+
 
 Prior to Python 3.1, there was no easy way to determine how Python represented a specific integer internally, i.e. how many bits were used. Python 3.1 adds a bit_length() method to the int type that does exactly that.
 
+
 Unless you know you are working with numbers that are less than a certain length, for instance numbers from arrays of integers, shifts, rotations, etc. may give unexpected results.
+
 
 The number of the highest bit set is the highest power of 2 less than or equal to the input integer. This is the same as the exponent of the floating point representation of the integer, and is also called its "integer log base 2".(ref.1)
 
+
 In versions before 3.1, the easiest way to determine the highest bit set is*:
 
-* There is a long discussion on this topic, and why this method is not good, in "Issue 3439" at Python.org:
-http://bugs.python.org/issue3439
-This discussion led up to the addition of bit_length() in Python 3.1.
 
-{{{#!Python
+* There is a long discussion on this topic, and why this method is not good, in "Issue 3439" at Python.org: http://bugs.python.org/issue3439 This discussion led up to the addition of bit_length() in Python 3.1.
 
+
+
+
+
+
+
+{{{#!python
 import math
 
 hiBit = math.floor(math.log(int_type, 2))
-
 }}}
 
-An input less than or equal to 0 results in a "ValueError: math domain error"
+
+
+An input less than or equal to 0 results in a "[[ValueError|ValueError]]: math domain error"
+
 
 The section "Finding integer log base 2 of an integer" on the "Bit Twiddling Hacks"(ref.1) web page includes a number of methods for determining this value for integers of known magnitude, presumably when no math coprocessor is available. The only method generally applicable to Python integers of unknown magnitude is the "obvious way" of counting the number of bitwise shift operations needed to reduce the input to 0.
 
+
 === Bit Length Of a Python Integer ===
+
 
 bitLen() counts the actual bit length of a Python integer, that is, the number of the highest non-zero bit ''plus 1''. Zero, with no non-zero bit, returns 0. As should be expected from the quote above about "the illusion of an infinite string of sign bits extending to the left," a negative number throws the computer into an infinite loop.
 
+
 The function can return any result up to the length of the largest integer your computer's memory can hold.
 
-{{{#!Python
 
+
+
+
+
+
+{{{#!python
 def bitLen(int_type):
     length = 0
     while (int_type):
@@ -221,17 +332,25 @@ for i in range(17):
      print(bitLen(i))
 
 # results: 0, 1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5
-
 }}}
+
+
 
 The method using the math module is much faster, especially on huge numbers with hundreds of decimal digits.
 
+
 === bitLenCount() ===
+
 
 In common usage, the "bit count" of an integer is the number of set (1) bits, not the bit length of the integer described above. bitLen() can be modified to also provide the count of the number of set bits in the integer. There are faster methods to get the count below.
 
-{{{#!Python
 
+
+
+
+
+
+{{{#!python
 def bitLenCount(int_type):
     length = 0
     count = 0
@@ -240,95 +359,143 @@ def bitLenCount(int_type):
         length += 1
         int_type >>= 1
     return(length, count)
-
 }}}
+
+
 
 == Operations on Integers of Unknown Magnitude ==
 
+
 Some procedures don't need to know the magnitude of an integer to give meaningful results.
+
 
 === bitCount() ===
 
+
 The procedure and the information below were found in "Bit Twiddling Hacks"(ref.1)
 
- - - - - - - - - - - - - - - - - - - - - - - - -
+
+ . - - - - - - - - - - - - - - - - - - - - - - - -
+
 
 Counting bits set, Brian Kernighan's way*
 
-{{{#!C
 
+
+
+
+{{{
 unsigned int v;          // count the number of bits set in v
 unsigned int c;          // c accumulates the total bits set in v
 for (c = 0; v; c++)
 {   v &= v - 1;  }       //clear the least significant bit set
-
 }}}
+
 
 This method goes through as many iterations as there are set bits. So if we have a 32-bit word with only the high bit set, then it will only go once through the loop.
 
+
 * The C Programming Language 2nd Ed., Kernighan & Ritchie, 1988.
+
 
 Don Knuth pointed out that this method was published by Peter Wegner in CACM 3 (1960), 322. Also discovered independently by Derrick Lehmer and published in 1964 in a book edited by Beckenbach.
 
- - - - - - - - - - - - - - - - - - - - - - - - -
+
+ . - - - - - - - - - - - - - - - - - - - - - - - -
+
 
 Kernighan and Knuth, potent endorsements!
 
-This works because each subtraction "borrows" from the lowest 1-bit.
-For example:
 
-{{{#!Python
+This works because each subtraction "borrows" from the lowest 1-bit. For example:
+
+
+
+
+
+
+
+{{{#!python
 #       loop pass 1                 loop pass 2
 #      101000     101000           100000     100000
-#    -      1   & 100111         -      1   & 011111
+#    -   #!python
+  & 100111         -   #!python
+  & 011111
 #    = 100111   = 100000         = 011111   =      0
-
 }}}
+
+
 
 It is an excellent technique for Python, since the size of the integer need not be determined beforehand.
 
-{{{#!Python
 
+
+
+
+
+
+{{{#!python
 def bitCount(int_type):
     count = 0
     while(int_type):
         int_type &= int_type - 1
         count += 1
     return(count)
-
 }}}
+
+
 
 === parityOf() ===
 
+
 From "Bit Twiddling Hacks"
+
 
 Code almost identical to bitCount(), above, calculates the parity of an integer, returning 0 if there are an even number of set bits, and -1 if there are an odd number. In fact, counting the bits and checking whether the result is odd with '''bitcount & 1''' is about the same speed as the parity function.
 
-{{{#!Python
 
+
+
+
+
+
+{{{#!python
 def parityOf(int_type):
     parity = 0
     while (int_type):
         parity = ~parity
         int_type = int_type & (int_type - 1)
     return(parity)
-
 }}}
+
+
 
 === lowestSet() ===
 
+
 To determine the bit number of the ''lowest'' bit set in an integer, in twos-complement notation '''i & -i''' zeroes all but the lowest set bit. The bitLen() proceedure then determines its position. Obviously, negative numbers return the same result as their opposite. In this version, an input of 0 returns -1, in effect an error condition.
 
-{{{#!Python
 
+
+
+
+
+
+{{{#!python
 For example:
 #    00111000     # 56
 #    11001000     # twos complement, -56
 # &= 00001000
 }}}
 
-{{{#!Python
 
+
+
+
+
+
+
+{{{#!python
 def lowestSet(int_type):
     low = (int_type & -int_type)
     lowBit = -1
@@ -336,15 +503,22 @@ def lowestSet(int_type):
         low >>= 1
         lowBit += 1
     return(lowBit)
-
 }}}
+
+
 
 === Single bits ===
 
+
 The usual single-bit operations will work on any Python integer. It is up to the programmer to be sure that the value of 'offset' makes sense in the context of the program.
 
-{{{#!Python
 
+
+
+
+
+
+{{{#!python
 # testBit() returns a nonzero result, 2**offset, if the bit at 'offset' is one.
 
 def testBit(int_type, offset):
@@ -368,29 +542,87 @@ def clearBit(int_type, offset):
 def toggleBit(int_type, offset):
     mask = 1 << offset
     return(int_type ^ mask)
-
 }}}
+
+
+
+== Bit fields, e.g. for communication protocols ==
+
+
+If you need to interpret individual bits in some data, e.g. a byte stream in a communications protocol, you can use the ctypes module.
+
+
+
+
+
+{{{
+import ctypes
+c_uint8 = ctypes.c_uint8
+
+class Flags_bits(ctypes.LittleEndianStructure):
+    _fields_ = [
+            ("logout", c_uint8, 1),
+            ("userswitch", c_uint8, 1),
+            ("suspend", c_uint8, 1),
+            ("idle", c_uint8, 1),
+            ]
+
+class Flags(ctypes.Union):
+    _fields_ = [("b", Flags_bits),
+            ("asbyte", c_uint8)]
+
+flags = Flags()
+flags.asbyte = 0xc
+print(flags.b.idle)
+print(flags.b.suspend)
+print(flags.b.userswitch)
+print(flags.b.logout)
+}}}
+
 
 == References ==
 
+
 ref.1. "Bit Twiddling Hacks" By Sean Eron Anderson
-    http://graphics.stanford.edu/~seander/bithacks.html
+
+
+ .
+ http://graphics.stanford.edu/~seander/bithacks.html
+
+
 
 ref.2. "The Art of Assembly Language" by Randall Hyde
-    http://webster.cs.ucr.edu/AoA/index.html
-    Volume 4, Chapter 5 "Bit Manipulation"
+
+
+ .
+ http://webster.cs.ucr.edu/AoA/index.html Volume 4, Chapter 5 "Bit Manipulation"
+
+
 
 ref.3. Hacker's Delight
-    http://www.hackersdelight.org/
+
+
+ .
+ http://www.hackersdelight.org/
+
+
+
 == Research Links ==
 
+
 this is the sort of thing we're looking for:
+
+
  * [[http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/113799|ASPN: bit-field manipulation]]
 
+
 related modules:
+
+
  * [[http://www.python.org/doc/current/lib/module-array.html|array module]] -- (issued with Python)
  * [[http://www.python.org/doc/current/lib/module-struct.html|struct module]] -- (issued with Python)
  * [[http://www.python.org/doc/current/lib/module-binascii.html|binascii module]] -- (issued with Python)
  * [[http://pyserial.sourceforge.net/|pySerial module]] -- access the serial port
 
-see also: BitwiseOperators
+
+see also: [[BitwiseOperators|BitwiseOperators]]
