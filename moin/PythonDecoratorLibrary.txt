@@ -1,19 +1,24 @@
-'''This page is meant to be a central repository of decorator code pieces''', whether useful or not <wink>.
-It is NOT a page to discuss decorator syntax!
+
+'''This page is meant to be a central repository of decorator code pieces''', whether useful or not <wink>. It is NOT a page to discuss decorator syntax!
+
 
 Feel free to add your suggestions. Please make sure example code conforms with [[http://www.python.org/dev/peps/pep-0008|PEP 8]].
 
-<<TableOfContents>>
 
+<<TableOfContents>>
 
 == Creating Well-Behaved Decorators / "Decorator decorator" ==
 
-Note:  This is only one recipe.  Others include inheritance
-from a standard decorator (link?), the [[http://docs.python.org/dev/library/functools.html|functools @wraps decorator]], and a factory function
-such as [[http://pypi.python.org/pypi/decorator|Michele Simionato's decorator module]] which even preserves signature information.
 
-{{{
-#!python
+Note: This is only one recipe. Others include inheritance from a standard decorator (link?), the [[http://docs.python.org/dev/library/functools.html|functools @wraps decorator]], and a factory function such as [[http://pypi.python.org/pypi/decorator|Michele Simionato's decorator module]] which even preserves signature information.
+
+
+
+
+
+
+
+{{{#!python
 def simple_decorator(decorator):
     '''This decorator can be used to turn simple functions
     into well-behaved decorators, so long as the decorators
@@ -57,12 +62,20 @@ assert double.__doc__ == 'Doubles a number.'
 print double(155)
 }}}
 
+
+
 == Property Definition ==
+
 
 These decorators provide a readable way to define properties:
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 import sys
 
 def propget(func):
@@ -115,10 +128,16 @@ class Example(object):
 }}}
 
 
+
 Here's a way that doesn't require any new decorators:
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 class Example(object):
     @apply
     def myattr():
@@ -136,10 +155,17 @@ class Example(object):
         return property(**locals())
 }}}
 
+
+
 Yet another property decorator:
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 def property(function):
     keys = 'fget', 'fset', 'fdel'
     func_locals = {'doc':function.__doc__}
@@ -168,7 +194,7 @@ class Angle(object):
             return self._rad
         def fset(self, angle):
             if isinstance(angle, Angle):
-	        angle = angle.rad
+                angle = angle.rad
             self._rad = float(angle)
 
     @property
@@ -178,16 +204,27 @@ class Angle(object):
             return degrees(self._rad)
         def fset(self, angle):
             if isinstance(angle, Angle):
-	        angle = angle.deg
+                angle = angle.deg
             self._rad = radians(angle)
 }}}
 
+
+
 == Memoize ==
+
 
 Here's a memoizing class.
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
+import collections
+import functools
+
 class memoized(object):
    '''Decorator. Caches a function's return value each time it is called.
    If called later with the same arguments, the cached value is returned
@@ -197,16 +234,16 @@ class memoized(object):
       self.func = func
       self.cache = {}
    def __call__(self, *args):
-      try:
+      if not isinstance(args, collections.Hashable):
+         # uncacheable. a list, for instance.
+         # better to not cache than blow up.
+         return self.func(*args)
+      if args in self.cache:
          return self.cache[args]
-      except KeyError:
+      else:
          value = self.func(*args)
          self.cache[args] = value
          return value
-      except TypeError:
-         # uncachable -- for instance, passing a list as an argument.
-         # Better to not cache than to blow up entirely.
-         return self.func(*args)
    def __repr__(self):
       '''Return the function's docstring.'''
       return self.func.__doc__
@@ -224,12 +261,21 @@ def fibonacci(n):
 print fibonacci(12)
 }}}
 
+
+
 == Alternate memoize as nested functions ==
+
 
 Here's a memoizing function that works on functions, methods, or classes, and exposes the cache publicly.
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
+# note that this decorator ignores **kwargs
 def memoize(obj):
     cache = obj.cache = {}
 
@@ -241,12 +287,20 @@ def memoize(obj):
     return memoizer
 }}}
 
+
+
 == Alternate memoize as dict subclass ==
+
 
 This is an idea that interests me, but it only seems to work on functions:
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 class memoize(dict):
     def __init__(self, func):
         self.func = func
@@ -275,10 +329,17 @@ class memoize(dict):
 {(2, 4): 8, ('hi', 3): 'hihihi'}
 }}}
 
+
+
 == Cached Properties ==
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 #
 # © 2011 Christopher Arndt, MIT License
 #
@@ -343,11 +404,19 @@ class cached_property(object):
 }}}
 
 
+
 == Retry ==
+
+
 Call a function which returns True/False to indicate success or failure. On failure, wait, and try the function again. On repeated failures, wait longer between each successive attempt. If the decorator runs out of attempts, then it gives up and returns False, but you could just as easily raise some exception.
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 import time
 import math
 
@@ -391,10 +460,17 @@ def retry(tries, delay=3, backoff=2):
   return deco_retry  # @retry(arg[, ...]) -> true decorator
 }}}
 
+
+
 == Pseudo-currying ==
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 class curried(object):
   '''
   Decorator that returns a function that keeps returning functions
@@ -421,13 +497,19 @@ def add(a, b):
 add1 = add(1)
 
 print add1(2)
-
 }}}
+
+
 
 == Creating decorator with optional arguments ==
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 import functools, inspect
 
 def decorator(func):
@@ -459,11 +541,17 @@ def decorator(func):
     return func_wrapper
 }}}
 
+
+
 Example:
 
-{{{
-#!python
 
+
+
+
+
+
+{{{#!python
 @decorator
 def apply(func, *args, **kw):
     return func(*args, **kw)
@@ -493,22 +581,36 @@ def test(a, b):
 assert test is 5
 }}}
 
+
+
 Note: There is only one drawback: wrapper checks its arguments for single function or class. To avoid wrong behavior you can use keyword arguments instead of positional, e.g.:
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 @decorator
 def my_property(getter, *, setter=None, deleter=None, doc=None):
     return property(getter, setter, deleter, doc)
 }}}
 
+
+
 == Controllable DIY debug ==
 
-(Other hooks could be similarly added. Docstrings and exceptions are left out for simplicity
-of demonstration.)
 
-{{{
-#!python
+(Other hooks could be similarly added. Docstrings and exceptions are left out for simplicity of demonstration.)
+
+
+
+
+
+
+
+{{{#!python
 import sys
 
 WHAT_TO_DEBUG = set(['io', 'core'])  # change to what you need
@@ -542,15 +644,22 @@ def mult(x, y):
     return x * y
 
 prn(mult(2, 2))
-
 }}}
+
+
 
 == Easy adding methods to a class instance ==
 
+
 Credits to John Roth.
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 class Foo:
     def __init__(self):
         self.x = 42
@@ -572,10 +681,17 @@ def print_x(self):
 # foo.print_x() would print "42"
 }}}
 
+
+
 == Counting function calls ==
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 class countcalls(object):
    "Decorator that keeps track of the number of times a function is called."
 
@@ -601,10 +717,17 @@ class countcalls(object):
       return dict([(f, countcalls.count(f)) for f in countcalls.__instances])
 }}}
 
+
+
 == Alternate Counting function calls ==
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 class countcalls(object):
    "Decorator that keeps track of the number of times a function is called."
 
@@ -647,10 +770,17 @@ g()
 print g.count() # prints 1
 }}}
 
+
+
 == Generating Deprecation Warnings ==
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 import warnings
 
 def deprecated(func):
@@ -678,10 +808,17 @@ class SomeClass:
         return x + y
 }}}
 
+
+
 == Smart deprecation warnings (with valid filenames, line numbers, etc.) ==
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 import warnings
 import functools
 
@@ -712,13 +849,19 @@ def my_func():
 @deprecated
 def my_func():
     pass
-
 }}}
+
+
 
 == Enable/Disable Decorators ==
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 def unchanged(func):
     "This decorator doesn't add any behavior"
     return func
@@ -745,10 +888,16 @@ def special_function_foo():
 }}}
 
 
+
 == Easy Dump of Function Arguments ==
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 def dump_args(func):
     "This decorator dumps out the arguments passed to a function before calling it"
     argnames = func.func_code.co_varnames[:func.func_code.co_argcount]
@@ -756,7 +905,7 @@ def dump_args(func):
 
     def echo_func(*args,**kwargs):
         print fname, ":", ', '.join(
-	    '%s=%r' % entry
+            '%s=%r' % entry
             for entry in zip(argnames,args) + kwargs.items())
         return func(*args, **kwargs)
 
@@ -770,10 +919,16 @@ f1(1, 2, 3)
 }}}
 
 
+
 == Pre-/Post-Conditions ==
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 '''
 Provide pre-/postconditions as function decorators.
 
@@ -892,20 +1047,26 @@ if __name__ == "__main__":
     __test()
 }}}
 
+
+
 == Profiling/Coverage Analysis ==
 
-The code and examples are a bit longish, so I'll include a link instead:
-http://mg.pov.lt/blog/profiling.html
+
+The code and examples are a bit longish, so I'll include a link instead: http://mg.pov.lt/blog/profiling.html
+
 
 == Line Tracing Individual Functions ==
 
-I cobbled this together from the trace module.  It allows you to decorate
-individual functions so their lines are traced.  I think it works out to
-be a slightly smaller hammer than running the trace module and trying to
-pare back what it traces using exclusions.
 
-{{{
-#!python
+I cobbled this together from the trace module. It allows you to decorate individual functions so their lines are traced. I think it works out to be a slightly smaller hammer than running the trace module and trying to pare back what it traces using exclusions.
+
+
+
+
+
+
+
+{{{#!python
 import sys
 import os
 import linecache
@@ -937,12 +1098,20 @@ def trace(f):
     return _f
 }}}
 
+
+
 == Synchronization ==
+
 
 Synchronize two (or more) functions on a given lock.
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 def synchronized(lock):
     '''Synchronization decorator.'''
 
@@ -972,17 +1141,26 @@ def critical2(*args):
     pass
 }}}
 
+
+
 == Type Enforcement (accepts/returns) ==
+
 
 Provides various degrees of type enforcement for function parameters and return values.
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 '''
 One of three degrees of enforcement may be specified by passing
 the 'debug' keyword argument to the decorator:
     0 -- NONE:   No type-checking. Decorators disabled.
-    1 -- MEDIUM: Print warning message to stderr. (Default)
+ #!python
+-- MEDIUM: Print warning message to stderr. (Default)
     2 -- STRONG: Raise TypeError with message.
 If 'debug' is not passed to the decorator, the default level is used.
 
@@ -1111,12 +1289,19 @@ def info(fname, expected, actual, flag):
 
 == CGI method wrapper ==
 
-Handles HTML boilerplate at top and bottom of pages returned from CGI methods.  Works with the cgi module.  Now your request handlers can just output the interesting HTML, and let the decorator deal with all the top and bottom clutter.
 
-(Note: the exception handler eats all exceptions, which in CGI is no big loss, since the program runs in its separate subprocess.  At least here, the exception contents will be written to the output page.)
+Handles HTML boilerplate at top and bottom of pages returned from CGI methods. Works with the cgi module. Now your request handlers can just output the interesting HTML, and let the decorator deal with all the top and bottom clutter.
 
-{{{
-#!python
+
+(Note: the exception handler eats all exceptions, which in CGI is no big loss, since the program runs in its separate subprocess. At least here, the exception contents will be written to the output page.)
+
+
+
+
+
+
+
+{{{#!python
 class CGImethod(object):
     def __init__(self, title):
         self.title = title
@@ -1140,28 +1325,31 @@ class CGImethod(object):
 @CGImethod("Hello with Decorator")
 def say_hello():
     print '<h1>Hello from CGI-Land</h1>'
-
 }}}
+
+
 
 == State Machine Implementaion ==
 
-A much improved version of decorators for implementing state machines, too long to show here, is at [[State Machine via Decorators]]
 
-This example uses Decorators to facilitate the implementation of a
-state machine in Python.  Decorators are used to specify which methods
-are the event handlers for the class.  In this example, actions are
-associated with the transitions, but it is possible with a little
-consideration to associate actions with states instead.
+A much improved version of decorators for implementing state machines, too long to show here, is at [[State Machine via Decorators|State Machine via Decorators]]
 
-The example defines a class, MyMachine that is a state machine.
-Multiple instances of the class may be instantiated with each maintaining its own state. A class also may have multiple states.
-Here I've used gstate and tstate.
 
-The code in the imported statedefn file gets a bit hairy, but
-you may not need to delve into it for your application.
+This example uses Decorators to facilitate the implementation of a state machine in Python. Decorators are used to specify which methods are the event handlers for the class. In this example, actions are associated with the transitions, but it is possible with a little consideration to associate actions with states instead.
 
-{{{
-#!python
+
+The example defines a class, [[MyMachine|MyMachine]] that is a state machine. Multiple instances of the class may be instantiated with each maintaining its own state. A class also may have multiple states. Here I've used gstate and tstate.
+
+
+The code in the imported statedefn file gets a bit hairy, but you may not need to delve into it for your application.
+
+
+
+
+
+
+
+{{{#!python
 # State Machine example Program
 
 from statedefn import *
@@ -1312,11 +1500,16 @@ def main():
     print "LilMachine C count ", lil_machine.c_count
 
 main()
-
 }}}
+
+
+
 And now the imported statedefn.py
-{{{
-#!python
+
+
+
+
+{{{#!python
 #
 # Support for State Machines.  ref - Design Patterns by GoF
 #  Many of the methods in these classes get called behind the scenes.
@@ -1506,29 +1699,42 @@ def on_leave_function(state_class):
         state_class.leave = func
         return func
     return wrapper
-
 }}}
+
 
 
 == C++/Java-keyword-like function decorators ==
 
+
 @abstractMethod, @deprecatedMethod, @privateMethod, @protectedMethod, @raises, @parameterTypes, @returnType
+
 
 The annotations provide run-time type checking and an alternative way to document code.
 
+
 The code and documentation are long, so I offer a link: http://fightingquaker.com/pyanno/
+
 
 == Different Decorator Forms ==
 
+
 There are operational differences between:
+
+
  * Decorator with no arguments
  * Decorator with arguments
  * Decorator with wrapped class instance awareness
 
+
 This example demonstrates the operational differences between the three using a skit taken from Episode 22: Bruces.
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 from sys import stdout,stderr
 from pdb import set_trace as bp
 
@@ -1684,12 +1890,20 @@ FirstBruce("First Bruce: Well Bruce, I heard the Prime Minister use it. S'hot en
 ThirdBruce.talk("She's a good Sheila, Bruce and not at all stuck up.")
 }}}
 
+
+
 == Unimplemented function replacement ==
+
 
 Allows you to test unimplemented code in a development environment by specifying a default argument as an argument to the decorator (or you can leave it off to specify None to be returned.
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 # Annotation wrapper annotation method
 def unimplemented(defaultval):
     if(type(defaultval) == type(unimplemented)):
@@ -1704,10 +1918,17 @@ def unimplemented(defaultval):
         return unimp_wrapper
 }}}
 
+
+
 == Redirects stdout printing to python standard logging. ==
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 class LogPrinter:
     '''LogPrinter class which serves to emulates a file object and logs
        whatever it gets sent to a Logger object at the INFO level.'''
@@ -1734,15 +1955,26 @@ def logprintinfo(func):
             sys.stdout = stdobak
     return pwrapper
 }}}
-  <!> This code needs a try/finally!
+
+
+
+ .
+ <!> This code needs a try/finally!
+
+
 
 == Access control ==
 
+
 This example prevents users from getting access to places where they are not authorised to go
 
-{{{
-#!python
 
+
+
+
+
+
+{{{#!python
 class LoginCheck:
     '''
     This class checks whether a user
@@ -1771,15 +2003,19 @@ def alt_function():
 @LoginCheck
 def display_members_page():
     print 'This is the members page'
-
-
 }}}
+
+
 
 Example:
 
-{{{
-#!python
 
+
+
+
+
+
+{{{#!python
 test = 0
 DisplayMembersPage()
 # Displays "Sorry - this is the forced behaviour"
@@ -1787,18 +2023,25 @@ DisplayMembersPage()
 test = 1
 DisplayMembersPage()
 # Displays "This is the members page"
-
-
 }}}
+
+
 
 == Events rising and handling ==
 
+
 Please see the code and examples here: http://pypi.python.org/pypi/Decovent
+
 
 == Singleton ==
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 import functools
 
 def singleton(cls):
@@ -1841,10 +2084,17 @@ Foo().x = 20
 assert Foo().x == 20
 }}}
 
+
+
 == The Sublime Singleton ==
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 def singleton(cls):
     instance = cls()
     instance.__call__ = lambda: instance
@@ -1866,10 +2116,17 @@ Highlander.x = 50
 Highlander().x == Highlander.x == 50 #=> True
 }}}
 
+
+
 == Asynchronous Call ==
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 from Queue import Queue
 from threading import Thread
 
@@ -1940,16 +2197,23 @@ if __name__ == '__main__':
         print ex.message
 }}}
 
+
+
 == Class method decorator using instance ==
+
 
 When decorating a class method, the decorator receives an function not yet bound to an instance.
 
-The decorator can't to do anything on the instance invocating it,
-unless it actually is a descriptor.
+
+The decorator can't to do anything on the instance invocating it, unless it actually is a descriptor.
 
 
-{{{
-#!python
+
+
+
+
+
+{{{#!python
 from functools import wraps
 
 def decorate(f):
@@ -1993,26 +2257,37 @@ def decorate(f):
             return wrapper
 
     return descript(f)
-
 }}}
+
+
 
 This implementation replaces the descriptor by the actual decorated function ASAP to avoid overhead, but you could keep it to do even more (counting calls, etc...)
 
+
 == Another Retrying Decorator ==
+
 
 Here's another decorator for causing a function to be retried a certain number of times. This decorator is superior IMHO because it should work with any old function that raises an exception on failure.
 
+
 Features:
+
 
  * Works with any function that signals failure by raising an exception (I.E. just about any function)
  * Supports retry delay and backoff
- * User can specify which exceptions are caught for retrying. E.g. networking code might be expected to raise SocketError in the event of communications difficulties, while any other exception likely indicates a bug in the code.
+ * User can specify which exceptions are caught for retrying. E.g. networking code might be expected to raise [[SocketError|SocketError]] in the event of communications difficulties, while any other exception likely indicates a bug in the code.
  * Hook for custom logging
+
 
 GIST: https://gist.github.com/2570004
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 #
 # Copyright 2012 by Jeff Laughlin Consulting LLC
 #
@@ -2091,17 +2366,21 @@ def retries(max_tries, delay=1, backoff=2, exceptions=(Exception,), hook=None):
                     break
         return f2
     return dec
-
 }}}
+
 
 
 == Lazy Thunkify ==
 
-This decorator will cause any function to, instead of running its code, start a thread to run the code, returning
-a thunk (function with no args) that wait for the function's completion and returns the value (or raises the exception).
 
-Useful if you have Computation A that takes x seconds and then uses Computation B, which takes y seconds. Instead
-of x+y seconds you only need max(x,y) seconds.
+This decorator will cause any function to, instead of running its code, start a thread to run the code, returning a thunk (function with no args) that wait for the function's completion and returns the value (or raises the exception).
+
+
+Useful if you have Computation A that takes x seconds and then uses Computation B, which takes y seconds. Instead of x+y seconds you only need max(x,y) seconds.
+
+
+
+
 
 {{{
 import threading, sys, functools, traceback
@@ -2143,7 +2422,12 @@ def lazy_thunkify(f):
     return lazy_thunked
 }}}
 
+
 Example:
+
+
+
+
 
 {{{
 @lazy_thunkify
@@ -2172,5 +2456,8 @@ def maybe_multiply(x):
 maybe_multiply(10)
 maybe_multiply(3)
 }}}
+
+
 ----
-CategoryDocumentation
+
+[[CategoryDocumentation|CategoryDocumentation]]
