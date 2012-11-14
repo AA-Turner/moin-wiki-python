@@ -1,38 +1,44 @@
 
-This document describes both installing distributions from the Python Package Index (PyPI), and getting your own distributions listed (and uploaded, if you like) there.
+Here you will know how to install packages from the [[http://pypi.python.org/pypi|Python Package Index (PyPI)]], how to get your own distribution listed and (optionally) hosted too.
 
 
-= Installing Distributions from the Python Package Index (Start Here) =
+<<TableOfContents>>
+
+= Installing Distributions from the Python Package Index =
 
 
-To install distributions from the [[http://pypi.python.org/pypi|Python Package Index (PyPI)]] (aka, the "Cheeseshop") into your Python installation, you have several choices of tools for installation:
+There are several ways to get packages from PyPI into Python installation:
 
 
 == Distutils Installation ==
 
 
-Download and extract the distribution and then from the command prompt type:
+Download distribution, extract it, get to command prompt and type:
 
 
  . $ python setup.py install
 
 
-If you have more than one Python interpreter installed on your system, then the Python that the distribution is installed into will be the same one that you run the 'setup.py install' command with.
+The distribution will be installed into 'site-packages' directory of the Python interpreter used to run the 'setup.py install' command.
 
 
-This will install the library files (packages and modules) into the 'site-packages' directory of the Python interpreter used to run the install command, and the application scripts into the 'bin' directory of the Python interpreter.
+Application scripts will go into:
 
 
-Take note that Distutils will not install any dependencies! If a distribution requires that packages be available for import that are part of another distribution, then you need to determine what those distributions are and manually install each distribution one by one.
+ * Linux: the 'bin' directory of the Python interpreter
+ * Windows: 'Scripts' subdirectory of Python installation path
 
 
-Commonly you will see in the install instructions for a Python distribution:
+Note that '''Distutils doesn't install any dependencies'''! If a distribution uses packages from another distribution, then you need to find out the name of this distribution and install it manually.
+
+
+Quite often you may see the following line in install instructions:
 
 
  . $ sudo python setup.py install
 
 
-Be very careful when running this command with 'sudo'! The packages and scripts installed will be placed in a operating system specific location, and it's possible that this will break your operating system. Furthermore, the distutils installation does not have an uninstall command, so if you do break your system, it may not be easy to restore it back to working condition!
+Be very careful when running this command! Packages and scripts installed with 'sudo' will be placed in a operating system specific location, and this may break your operating system. Furthermore, the *distutils does not have an uninstall command*, so if you do break anything, it may be not that easy to restore it back to working condition!
 
 
 There are two ways to avoid having to install as the root user:
@@ -53,10 +59,10 @@ There are two ways to avoid having to install as the root user:
 == Easy Installation ==
 
 
-[[EasyInstall|EasyInstall]] (easy_install) gives you a quick and painless way to install packages remotely by connecting to the Package Index or even other websites via HTTP. It is somewhat analogous to the CPAN and PEAR tools for Perl and PHP, respectively.
+[[EasyInstall|EasyInstall]] (easy_install) gives you a quick and painless way to install packages remotely by connecting to the Package Index or even other websites via HTTP. It is somewhat analogous to the CPAN and PEAR tools for Perl and PHP, respectively. Please see [[http://peak.telecommunity.com/DevCenter/EasyInstall|EasyInstall]] for more information.
 
 
-Please see [[http://peak.telecommunity.com/DevCenter/EasyInstall|EasyInstall]] for more information.
+Another alternative is [[PipAndDistutils2|pip]], which allows for easy uninstalling as well as installing of packages.
 
 
 == Buildout Installation ==
