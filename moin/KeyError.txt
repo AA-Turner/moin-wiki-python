@@ -1,24 +1,38 @@
-Python raises a '''KeyError''' whenever a dict() object is requested (using the format {{{a = adict[key]}}}) and the key is not in the dictionary.
+
+Python raises a '''KeyError''' whenever a dict() object is requested (using the format {{{a = adict[key]}}}) and the key is not in the dictionary.
+
 
 If you don't want to have an exception but would rather a default value used instead, you can use the `get()` method:
 
-{{{
-#!python
+
+
+
+
+
+
+{{{#!python
 default = 'Scruffy'
 a = adict.get('dogname', default)
 }}}
 
-Even more handy is somewhat controversially-named `setdefault(key, val)` which sets the value
-of the key only if it is not already in the dict,  and returns that value in any case:
 
-{{{
-#!python
+
+Even more handy is somewhat controversially-named `setdefault(key, val)` which sets the value of the key only if it is not already in the dict, and returns that value in any case:
+
+
+
+
+
+
+
+{{{#!python
 default = 'Scruffy'
 dog_owned_by = {'Peter': 'Furry', 'Sally': 'Fluffy'}
 
 dogs = []
-for owner in ('Peter', 'Sally', 'Tim'): 
+for owner in ('Peter', 'Sally', 'Tim'):
     dogs.append(dog_owned_by.setdefault(owner, default))
 
 # dogs == ['Furry', 'Fluffy', 'Scruffy']
+# dog_owned_by == {'Tim': 'Scruffy', 'Peter': 'Furry', 'Sally': 'Fluffy'}
 }}}
