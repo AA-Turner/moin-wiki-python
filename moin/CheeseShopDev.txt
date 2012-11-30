@@ -1,37 +1,67 @@
+
 This page documents the development of the Python Package Index (formerly known as Cheeseshop):
 
- . http://pypi.python.org
+
+ .
+ http://pypi.python.org
+
+
 
 == More about PyPI ==
 
-CheeseShop page has all information not directly related to PyPI development.
+
+[[CheeseShop|CheeseShop]] page has all information not directly related to PyPI development.
+
 
 = Developing the Package Index =
 
- . The PyPI code hosting is currently undergoing migration
- . Bug and patch tracker http://sourceforge.net/tracker/?group_id=66150&atid=513503
- . [[http://mail.python.org/mailman/listinfo/catalog-sig|Mailing List]] ([[http://dir.gmane.org/gmane.comp.python.catalog|Gmane]] web interface)
- . API that is used by easy_install http://peak.telecommunity.com/DevCenter/EasyInstall#package-index-api
+
+ .
+ The PyPI code hosting is currently undergoing migration. For the time being, it is hosted here: https://bitbucket.org/loewis/pypi
+
+ .
+ Bug and patch tracker http://sourceforge.net/tracker/?group_id=66150&atid=513503
+
+ .
+ [[http://mail.python.org/mailman/listinfo/catalog-sig|Mailing List]] ([[http://dir.gmane.org/gmane.comp.python.catalog|Gmane]] web interface)
+
+ .
+ API that is used by easy_install http://peak.telecommunity.com/DevCenter/EasyInstall#package-index-api
+
+
 
 == PyPI architecture and endpoints ==
 
-PyPI is a WSGI application that can be executed standalone using `python pypi.wsgi` command if all requirements are met. `pypi.wsgi` contains usual WSGI wrapper code and delegates request processing to `WebUI.run()` method from `webui.py`. This method just opens DB and handles exceptions, actual request processing is done in `WebUI.inner_run()`. This method analyzes URL endpoint and executes appropriate handler. As of 2011-04, the rules to match endpoints to handlers are the following:
 
-|| /simple          || WebUI.run_simple() || dump all package names on single html page ||
-|| /simple/(.+)/    || WebUI.run_simple() || dump all links for a package in html list  ||
-|| /serversig/(.+)/ || .run_simple_sign() || save as above, but signed by server        ||
-|| /mirrors         || .mirrors()         || display static page with a list of mirrors ||
-|| /daytime         || .daytime()         || display current server time                ||
+PyPI is a WSGI application that can be executed standalone using `python pypi.wsgi` command if all requirements are met. `pypi.wsgi` contains usual WSGI wrapper code and delegates request processing to `WebUI.run()` method from `webui.py`. This method just opens DB and handles exceptions, actual request processing is done in `WebUI.inner_run()`. This method analyzes URL endpoint and executes appropriate handler. As of 2011-04, the rules to match endpoints to handlers are the following:
+
+
+
+||/simple ||WebUI.run_simple() ||dump all package names on single html page ||
+||/simple/(.+)/ ||WebUI.run_simple() ||dump all links for a package in html list ||
+||/serversig/(.+)/ ||.run_simple_sign() ||save as above, but signed by server ||
+||/mirrors ||.mirrors() ||display static page with a list of mirrors ||
+||/daytime ||.daytime() ||display current server time ||
+
+
+
+
+
 ...
 
-XML-RPC requests are detected by CONTENT_TYPE=`text/xml` variable in CGI environment and processed by `rpc.RequestHandler().__call__()`. List of XML-RPC "endpoints" is available on PyPiXmlRpc page.
+
+XML-RPC requests are detected by CONTENT_TYPE=`text/xml` variable in CGI environment and processed by `rpc.RequestHandler().__call__()`. List of XML-RPC "endpoints" is available on [[PyPiXmlRpc|PyPiXmlRpc]] page.
+
 
 == Testing Your Stuff Against PyPI ==
+
 
 If you need to test stuff against PyPI (registration, uploading, API activities) then please use the alternative server "testpypi.python.org".
 
 
 == TO-DO list ==
+
+
  * A dump of download counts.
  * A big structured dump of all package meta-data.
  * A link from package to RTFD.
@@ -41,29 +71,55 @@ If you need to test stuff against PyPI (registration, uploading, API activities)
  * change notification emails
  * per-classifier "wiki" content to allow description and discussion around each classifier (perhaps what packages are available and how they relate to one another)
  * screenshot images (with thumbnailing and a "latest screenshot" on the front page?) - or perhaps icons instead of thumbnails for some packages?
-Something that's been requested, but needs much more thought and analysis to see whether it causes any problems: the ability to treat project names and versions as case-insensitive, while removing extraneous characters (as in pkg_resources.safe_name()) for  purposes both of searching and determining name uniqueness when registering.
+
+
+Something that's been requested, but needs much more thought and analysis to see whether it causes any problems: the ability to treat project names and versions as case-insensitive, while removing extraneous characters (as in pkg_resources.safe_name()) for purposes both of searching and determining name uniqueness when registering.
+
 
 === Done ===
+
+
  * command-line tool to query pypi and fetch entries: [[http://pypi.python.org/pypi/yolk|yolk]]
 
+
 == Not Going TO-DO ==
+
+
  * Edit [[http://www.python.org/peps/pep-0243.html|PEP 243]] to reflect reality. The interface is implemented in the distutils register and upload commands. This code is good enough for documentation, especially because it's the only implementation necessary.
  * moderated user reviews and ratings (this would require quite a lot of support from volunteers though)
 
+
 == Proposals ==
+
+
  * [[http://wiki.python.org/moin/EnhancedPyPI|EnhancedPyPI]] Enhance multiple package index servers support in Distutils.
 
+
 == Development Environment Hints ==
-PyPI uses postgresql 8.3 as a database, with a roll it yourself web framework based on different python modules.  It uses apache2 as the web server.
+
+
+PyPI uses postgresql 8.3 as a database, with a roll it yourself web framework based on different python modules. It uses apache2 as the web server.
+
 
 It can run using wsgi, cgi, fcgi and mod_python.
 
+
 Before restoring database, "pypi" role must exists:
+
+
+
+
 
 {{{
   createuser pypi
 }}}
+
+
 These are notes so we can remember how to dump / restore the packages database:
+
+
+
+
 
 {{{
   pg_dump -Fc -b packages >packages-20060706.dump
@@ -71,9 +127,15 @@ These are notes so we can remember how to dump / restore the packages database:
   pg_restore -O -d packages -Fc packages-20060706.dump
 }}}
 
-Ask RichardJones if you need a database dump. Note that dumps should not be imported into an existing database that has had the pkdump_schema.sql DDL script run against it. The pg_dump file will create all of the database tables, columns, indexes, foreign keys, etc. that are required.
 
-PageTemplates are obtained from:
+Ask [[RichardJones|RichardJones]] if you need a database dump. Note that dumps should not be imported into an existing database that has had the pkdump_schema.sql DDL script run against it. The pg_dump file will create all of the database tables, columns, indexes, foreign keys, etc. that are required.
+
+
+[[PageTemplates|PageTemplates]] are obtained from:
+
+
+
+
 
 {{{
   svn co svn://svn.zope.org/repos/main/zope.pagetemplate/trunk zope.pagetemplate
@@ -82,20 +144,36 @@ PageTemplates are obtained from:
   svn co svn://svn.zope.org/repos/main/zope.i18nmessageid/trunk zope.i18nmessageid
   svn co svn://svn.zope.org/repos/main/zope.tales/trunk zope.tales
 }}}
-We also need to install ez_setup, celementtree, docutils, psycopg2, and M2Crypto.
+
+
+We also need to install ez_setup, celementtree, docutils, psycopg2, and [[M2Crypto|M2Crypto]].
+
 
 # For debian, this should get you most of the dependencies. apt-get install zope3 python-celementtree python-psycopg
 
+
 Then go ahead and edit pypi.ini and this line in pypi.cgi:
+
+
+
+
 
 {{{
   cfg = config.Config('/tmp/pypi.ini', 'webui')
 }}}
-if your config.ini isn't in /tmp/pypi.ini.  You can leave it as 'config.ini' if it's in the same directory as pypi.py.
+
+
+if your config.ini isn't in /tmp/pypi.ini. You can leave it as 'config.ini' if it's in the same directory as pypi.py.
+
 
 You will need to add cheesecake_password=yourpasshere into the config.ini in the webui section.
 
+
 To integrate it with Apache, we recommend to use WSGI through mod_wsgi. Your configuration should look like this:
+
+
+
+
 
 {{{
    WSGIDaemonProcess pypi display-name=wsgi-pypi python-path=/usr/lib/zope2.9/lib/python processes=4 threads=1
@@ -104,5 +182,8 @@ To integrate it with Apache, we recommend to use WSGI through mod_wsgi. Your con
    WSGIScriptAlias /pypi /data/pypi/src/pypi/pypi.wsgi
    WSGIScriptAlias /simple /data/pypi/src/pypi/pypi.wsgi
 }}}
+
+
 ----
-CategoryDevelopmentProcess
+
+[[CategoryDevelopmentProcess|CategoryDevelopmentProcess]]
