@@ -194,7 +194,7 @@ sudo apt-get install python-psycopg2
 }}}
 
 
-In case that doesn't work, you can download the latest .tar.gz from [[http://www.initd.org/|http://www.initd.org]], extract it and install it:
+In case that doesn't work, you can download the latest .tar.gz from http://www.initd.org, extract it and install it:
 
 
 {{{
@@ -368,7 +368,7 @@ alias admin-roundup='/opt/tracker-roundup/bin/roundup-admin -i <your python-dev 
 then add them to your {{{.bashrc}}} (or {{{~/.profile}}} in Mac OS X)
 
 
-You should now be able to browse http://localhost:9999/python-dev/ and get a roundup instance that looks just like [[http://bugs.python.org/|http://bugs.python.org]], except for some missing new values for fields like Stages and Keywords. It's possible to replace '''initial_data.py''' with an [[TrackerDevelopment?action=AttachFile&do=view&target=initial_data_updated.py|updated version]] so that your fields will have values that match those currently present in the Python Tracker.
+You should now be able to browse http://localhost:9999/python-dev/ and get a roundup instance that looks just like http://bugs.python.org, except for some missing new values for fields like Stages and Keywords. It's possible to replace '''initial_data.py''' with an [[TrackerDevelopment?action=AttachFile&do=view&target=initial_data_updated.py|updated version]] so that your fields will have values that match those currently present in the Python Tracker.
 
 
 The IDs for values in a given field might be different from those in the Python Tracker. This should only be a problem if you try to import CSV files from one tracker into the other.
@@ -486,6 +486,60 @@ $ PYTHONPATH=detectors/:/opt/tracker-roundup/lib/python2.7/site-packages/ python
 }}}
 
 
+== irker setup ==
+
+
+irkerd is a daemon that sends notification on IRC whenever a message is added or an issue is created, and replaces the CIA.vc service.
+
+
+You will need:
+
+
+* irker: http://www.catb.org/esr/irker/
+
+
+* the irc package: http://pypi.python.org/pypi/irc/
+
+
+To install them you can use:
+
+
+{{{
+wget http://pypi.python.org/packages/source/i/irc/irc-5.0.1.zip
+unzip irc-5.0.1.zip
+cd irc-5.0.1/
+sudo python setup.py install
+cd ..
+
+wget http://www.catb.org/~esr/irker/irker-1.15.tar.gz
+tar -zxvf irker-1.15.tar.gz
+}}}
+
+
+If you get the error {{{ImportError: No module named hgtools.plugins}}} during the {{{sudo python setup.py install}}}, you can try the command again and it should automagically work.
+
+
+Make sure that you have listed the address of the channels that should receive the messages in {{{detectors/config.ini}}}, e.g.:
+
+
+{{{
+[irker]
+channels = irc://chat.freenode.net/python-dev
+}}}
+
+
+To start irker use:
+
+
+{{{
+cd irker-1.15/
+./irkerd &
+}}}
+
+
+You can also use {{{./irkerd -d3}}} to see debugging messages.
+
+
 = Resources for Tracker Development =
 
 
@@ -495,7 +549,7 @@ $ PYTHONPATH=detectors/:/opt/tracker-roundup/lib/python2.7/site-packages/ python
 Subscribe to and ask your question on the tracker-discuss mailing list. See http://mail.python.org/mailman/listinfo/tracker-discuss
 
 
-Since the Python Tracker is a slightly modified version of [[http://www.roundup-tracker.org/|Roundup]], both Roundup's [[http://www.roundup-tracker.org/docs.html|Documentation]] and [[http://issues.roundup-tracker.org/|issue tracker]] contain relevant information about how the Python Tracker works and problems one might find working with its code.
+Since the Python Tracker is a slightly modified version of [[http://www.roundup-tracker.org|Roundup]], both Roundup's [[http://www.roundup-tracker.org/docs.html|Documentation]] and [[http://issues.roundup-tracker.org/|issue tracker]] contain relevant information about how the Python Tracker works and problems one might find working with its code.
 
 
 == Using roundup-admin ==
@@ -567,7 +621,7 @@ See [[TrackerDevelopmentVirtualEnv|TrackerDevelopmentVirtualEnv]].
 Public test instance of the Python tracker: http://bot.bio.br/python-dev/ (currently offine)
 
 
-Instance that attempts to match the code used in [[http://bugs.python.org/|http://bugs.python.org]] to allow testing, reproducing and verifying fixes for tracker bugs. Can also be used as a sandbox by users interested in learning about Developer, Coordinator or Admin tasks and features. Testing new content (e.g. Components or Statuses) is OK, but new features show be tested in the Experimental Tracker instead.
+Instance that attempts to match the code used in http://bugs.python.org to allow testing, reproducing and verifying fixes for tracker bugs. Can also be used as a sandbox by users interested in learning about Developer, Coordinator or Admin tasks and features. Testing new content (e.g. Components or Statuses) is OK, but new features show be tested in the Experimental Tracker instead.
 
 
 Currently the email system is disabled (redirected to file), so people interested in having an account there to test new features should email [[http://mail.python.org/mailman/listinfo/tracker-discuss|tracker-discuss]] to get one. Maintained by [[DanielDiniz|DanielDiniz]].
