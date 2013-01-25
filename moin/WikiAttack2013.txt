@@ -16,7 +16,7 @@ Please report any problems you find with the wiki to the mailto:pydotorg-www@pyt
 
 == Attack Analysis ==
 
-In the week of January 14 2013, Marc-Andre Lemburg ran a longer analysis of the attack on the wiki VM. This is a summary of the things he found.
+In the week of January 14 2013, we ran a longer analysis of the attack on the wiki VM. This is a summary of the things we found.
 
 The attack used on the wiki was apparently the same as the one which hit Debian:
 
@@ -40,29 +40,29 @@ It is likely that the passwords and user configuration details were inspected in
 
 == Content Recovery ==
 
-Since we were not in the comfortable position to use a backup for restoring the wiki content (our most recent backup dates back to June 24 2012), Marc-Andre tried to get as much information from archive.org, the Google cache and the Yahoo/Bing cache as possible.
+Since we were not in the comfortable position to use a backup for restoring the wiki content (our most recent backup dates back to June 24 2012), we tried to get as much information from archive.org, the Google cache and the Yahoo/Bing cache as possible.
 
 It turned out that the Google cache was unusable for the task due to a surge protection on their site. Yahoo/Bing worked and results in quite a few more recent edits/updates. The archive.org pages included snapshots from end of Nov 2012, but they apparently don't run complete dumps of the sites they archive (and since moin has a surge protection built-in as well, it's not easy for such archives to crawl the wiki).
 
 Overall, we have been able to recover around 200 pages that were created/edited after the June 2012 backup date. Not really all that much, given the amount of data in the wiki, but still better than nothing.
 
-He then ran ext4image and photorec on the VM image in several combinations and was able to restore a number of files. Unfortunately, important meta data such as the file date/time and name was lost. This made restoring from the files very difficult.
+We then ran ext4image and photorec on the VM image in several combinations and was able to restore a number of files. Unfortunately, important meta data such as the file date/time and name was lost. This made restoring from the files very difficult.
 
 Moin stores the wiki pages in plain text files and keeps all revisions in the file system. Furthermore, there is no meta information inside the text files, so only the headers from the file content can be used as indication of which page it belongs to and even then, you get multiple copies of the same page, with no indication as to which of those to regard as most current version.
 
-Still, the restored files do contain pages that were not available in the archive web sites, so if there are important pages that need to be restored, he can manually try to extract the relevant data and re-add it to the wikis. For the PSF wiki, this is the only way to recover files, since there are no web archives available for it.
+Still, the restored files do contain pages that were not available in the archive web sites, so if there are important pages that need to be restored, we can manually try to extract the relevant data and re-add it to the wikis. For the PSF wiki, this is the only way to recover files, since there are no web archives available for it.
 
 Additionally, none of the newer attachments to wiki pages could be restored.
 
 == Content Restoration ==
 
-In the week of January 21, Marc-Andre then worked together with Reimar Bauer to prepare the archive downloads for reintegration into the wiki.
+In the week of January 21, we then continued the work to prepare the archive downloads for reintegration into the wiki.
 
-Reimar adapted a script he had written earlier, which is able to convert HTML pages into wiki markup, to turn the HTML archive dumps back into wiki markup. He also wrote a script which uses the MoinMoin API to readd the pages with proper timestamps and editor information back into the MoinMoin database.
+A script was used which is able to convert the archive HTML dumps back into wiki markup. We also wrote a script which uses the MoinMoin API to readd the pages with proper timestamps and editor information back into the MoinMoin database.
 
-In the meantime, Thomas Waldmann, one of the MoinMoin developers, was working on adding passlib support to moin 1.9. The work was funded by the Python Software Foundation (PSF).
+In the meantime, one of the MoinMoin developers was working on adding passlib support to moin 1.9. The work was funded by the Python Software Foundation (PSF).
 
-Noah Kantrowitz had setup a new VM for the wiki, which Reimar and Marc-Andre then configured to use the newly added passlib support in moin. After an additional security audit on the configuration and changes to harden the installation, Reimar's script was used to readd the archive dumps on top of the June 24 2012 backup.
+We then setup a new VM for the wiki and configured it to use the newly added passlib support in moin. After an additional security audit on the configuration and changes to harden the installation, the conversion script was used to readd the archive dumps on top of the June 24 2012 backup.
 
 == Next Steps ==
 
@@ -72,9 +72,9 @@ After the official moin 1.9.7 release, we will switch from the current moin chec
 
 These people have put in significant work to get the wiki back online (in alphabetical order).
 
- * Reimar Bauer
- * Noah Kantrowitz
- * Marc-Andre Lemburg (MarcAndreLemburg)
- * Thomas Waldmann (ThomasWaldmann)
+ * Reimar Bauer (HTML conversion, adding pages to the wiki, security audit, wiki configuration)
+ * Noah Kantrowitz (setting up the new VM)
+ * Marc-Andre Lemburg (recovering pages from the archives, setting up the new installation, security audit, wiki configuration, wiki cleanup)
+ * Thomas Waldmann (adding passlib support to MoinMoin, help with the configuration)
 
 -- Python Software Foundation
