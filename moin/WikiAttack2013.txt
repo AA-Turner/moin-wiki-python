@@ -12,6 +12,8 @@ It is likely that the password information was downloaded from the server in the
 
 During the recovery in the weeks after the attack, we reset all passwords on the wiki server to make sure that users do change their passwords. You can use the password recovery function of the resp. wiki to reset your password. The function is shown when clicking on the login link.
 
+If you have created new accounts after June 24 2012, those accounts will no longer exist due to the data loss. You will have to recreate the accounts.
+
 Moving forward, we will no longer allow changing wiki pages without login and have put additional security measures in place to prevent attacks like the one we came under. The PSF has also funded the change of the MoinMoin code base to include support for the passlib library, which provides much better means of protecting password information on the server than the SHA-1 based hash scheme used before MoinMoin 1.9.6. This new support will be available in MoinMoin 1.9.7.
 
 Please report any problems you find with the wiki to the mailto:pydotorg-www@python.org mailing list.
@@ -67,6 +69,12 @@ In the meantime, one of the MoinMoin developers was working on adding passlib su
 We then setup a new VM for the wiki and configured it to use the newly added passlib support in moin. After an additional security audit on the configuration and changes to harden the installation, the conversion script was used to readd the archive dumps on top of the June 24 2012 backup.
 
 Note that as part of the recovery process, some pages were changed from ReST markup to wiki markup. This is due to the fact that the restore process via the HTML archive dumps always creates wiki markup.
+
+== Wiki Cleanup ==
+
+After the recovery step, we ran a wiki cleanup. This means that "empty" and deleted pages were moved out of the way.
+
+We also changed the user preference settings from the old "python" theme to the current "europython" theme, which is also used for all new accounts.
 
 == Next Steps ==
 
