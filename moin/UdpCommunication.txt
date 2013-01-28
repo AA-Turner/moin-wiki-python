@@ -1,4 +1,3 @@
-
 = UDP Communication =
 
 
@@ -63,21 +62,13 @@ while True:
 }}}
 
 
+== Using UDP for e.g. File Transfers ==
 
-== Discussion ==
+If considering extending this example for e.g. file transfers, keep in mind that UDP is not reliable. So you'll have to handle packets getting lost and packets arriving out of order. In effect, to get something reliable you'll need to implement something similar to TCP on top of UDP, and you might want to consider using TCP instead.
 
-
-* It would seem easy to extend this to a simple means to open a file on the sender side, send datagrams to the receiver side, and write those packets to a file there - I just wonder about synchronisation issues regarding the buffer...Anyone smart care to put something down, say as a simple practical extension of what is already here? (And if you do it pls delete this message) *
-
-
-Extending UDP to add synchronization is basically writing TCP on top of it. You may do it, but why bother?
-
-
-If you are looking to write a client-server pair to use UDP for file transfer, have a look at TFTP, a file transfer protocol built on top of UDP. It is simple, although limited.
-
+That being said, sometimes you ''need'' to use UDP, e.g. for [[http://en.wikipedia.org/wiki/UDP_hole_punching|UDP hole punching]]. In that case, consider [[http://en.wikipedia.org/wiki/TFTP|TFTP]] [[https://www.google.com/search?q=python+tftp|for python]] or [[http://udt.sourceforge.net/|UDT]] [[https://www.google.com/search?q=python+udt|for python]]
 
 == Multicasting? ==
-
 
 The ''official'' example of multicast can be found at /usr/share/doc/python2.3/examples/Demo/sockets/mcast.py (at least on Debian Sarge, after `apt-get install python-examples`). It worked on my machine, but I have yet to try it running on different machines. -- -- 200.138.245.121 2006-08-09 03:20:30
 
