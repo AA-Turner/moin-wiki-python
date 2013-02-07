@@ -31,7 +31,13 @@ If you have an older version of buildbot installed, the command will be "buildbo
 
 You'll need to get someone to create the slavename/slavepasswd on buildbot.python.org before doing this. Ask on python-dev@python.org once you're ready.
 
-Then edit buildarea/info/admin and buildarea/info/host to set them appropriately. 
+Then edit buildarea/info/admin and buildarea/info/host to set them appropriately.
+
+Use "crontab -e" (still under the 'buildbot' user) to ensure that the buildbot automatically starts on reboot (we must use restart instead of start, as start will fail if the server was shutdown abruptly, leaving the twistd.pid file on disk):
+
+{{{
+ @reboot buildslave restart /home/buildbot/buildarea
+}}} 
 
 Finally, start buildbot (still under the 'buildbot' user) with:
 
@@ -56,8 +62,6 @@ In order for the buildbot to operate properly, it needs access to various TCP po
 
 Many tests will also create local TCP sockets and connect to them (usually through "localhost" or "127.0.0.1"), so make sure this capability hasn't been disabled.
 
-
-The following is a summary of a discussion that happened on python-dev regarding Buildbot security.  No consensus came about, but the information is still helpful as a point of reference. 
 
 == Required Resources ==
 
@@ -100,5 +104,7 @@ running a build slave [1]_:
    configuring the host environment for a run-as-root builder.  You
    don't want to end up with a compromised test VM that can snoop on
    your network.
+
+The information above is a summary of a discussion that happened on python-dev regarding Buildbot security.  No consensus came about, but the information is still helpful as a point of reference. 
 
 .. [1] See the related `python-dev thread <http://mail.python.org/pipermail/python-dev/2011-October/113935.html>`_.
