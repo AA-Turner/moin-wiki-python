@@ -1,32 +1,27 @@
-
-This page describes how to enhance Python bug tracker instance at http://bugs.python.org/ To find some stuff to work on, look at the issues in [[http://psf.upfronthosting.co.za/roundup/meta/|meta tracker]] and [[DesiredTrackerFeatures|DesiredTrackerFeatures]] page.
+This page is dedicated to development of Python bug tracker instance at http://bugs.python.org/ <<BR>>
+We have a [[http://psf.upfronthosting.co.za/roundup/meta/|meta tracker]] for current issues and [[DesiredTrackerFeatures|DesiredTrackerFeatures]] page for recording ideas.
 
 
 <<TableOfContents>>
 
-= Getting Your Own python-dev Tracker =
+= Getting a copy of b.p.o tracker configuration =
 
+bugs.python.org is powered by [[http://www.roundup-tracker.org/|Roundup tracker]] software released under MIT License. The specific configuration (called 'tracker home' or 'instance') that is running on http://bugs.python.org/ is named `python-dev`. The source is stored in Mercurial repository and can be downloaded from:
 
-bugs.python.org is a [[http://www.roundup-tracker.org/|Roundup tracker]] instance named `python-dev`. Below is a [[HowTo|HowTo]] to get the similar setup for development on your machine.
+ * Official: http://hg.python.org/tracker/python-dev/
+ * Mirror: https://bitbucket.org/rirror/bugs.python.org
 
 
 == Requirements ==
 
-
  * Roundup
+ * PostgreSQL (as a backend database)
+ * psycopg (bindings for the above)
+ * copy of `python-dev` configuration
 
- * PostgreSQL for use as backend database
+== Tracker repositories ==
 
- * psycopg
-
- * the python-dev instance
-
-
-== Tracker repos ==
-
-
-All the Mercurial repositories used for the tracker can be found at http://hg.python.org/tracker/, and they are:
-
+`pydotorg` has several official trackers, which configuration is stored in Mercurial repositories accessible from the http://hg.python.org/tracker/ address:
 
  * '''roundup''': a clone of the original Roundup with our modifications;
  * '''python-dev''': the instances used on bugs.python.org;
