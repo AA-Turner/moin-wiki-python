@@ -1,4 +1,3 @@
-
 = PyPI's XML-RPC methods =
 
 
@@ -148,11 +147,22 @@ Example usage:
  . Retrieve a list of (name, version) pairs of all releases classified with all of the given classifiers. 'classifiers' must be a list of Trove classifier strings.
 
 
-'''changelog(since)'''
+'''changelog(since, with_ids=False)'''
 
 
- . Retrieve a list of four-tuples (name, version, timestamp, action) since the given timestamp. All timestamps are UTC values. The argument is a UTC integer seconds since the epoch.
+ . Retrieve a list of four-tuples (name, version, timestamp, action), or five-tuple including the serial id if ids are requested, since the given timestamp. All timestamps are UTC values. The argument is a UTC integer seconds since the epoch.
 
+
+'''changelog_last_serial()'''
+
+
+ . Retrieve the last event's serial id.
+
+
+'''changelog_since_serial(since_serial)'''
+
+
+ . Retrieve a list of five-tuples (name, version, timestamp, action, serial) since the event identified by the given serial. All timestamps are UTC values. The argument is a UTC integer seconds since the epoch.
 
 ----
 
