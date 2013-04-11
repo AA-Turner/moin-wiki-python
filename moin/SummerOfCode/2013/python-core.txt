@@ -9,3 +9,16 @@
     1.3 Work on support for [[http://tools.ietf.org/html/rfc6531|RFC 6531]] in smtplib and/or smtpd.
 
 2. Finish the work on [[http://www.python.org/dev/peps/pep-3154/|PEP 3154]], started as part of GSoC 2012. See http://bugs.python.org/issue15642
+
+3. IDLE Improvements.  IDLE is Python's Integrated Development Environment (IDE) that is shipped with each Python release, wikipedia has the details here http://en.wikipedia.org/wiki/IDLE_(Python).  Many years ago I learned Python with IDLE as do many people. While I personally find IDLE a usable tool it does have it's quarks and bugs which have been documented here:
+  * http://inventwithpython.com/blog/2011/11/29/the-things-i-hate-about-idle-that-i-wish-someone-would-fix/
+  * http://therealkatie.net/blog/2013/mar/19/pycon-2013-young-coders/
+
+Since IDLE ships with Python it is often the first IDE a new Python programmer uses.  We want to make IDLE an awesome experience especially for people that are new to Python.  IDLE should remain a simple and clean interface based on tkinter like it always has been.  This effort is not a radical departure from what already exists but seeks to build a test framework for IDLE, test patches in the issue tracker, and document IDLE.  Recently the Python community has accepted PEP-434 (http://www.python.org/dev/peps/pep-0434/) which is a Python Enhancement Proposal that is designed to allow enhancement exceptions for all Python branches.  This would allow students working on this project to actually see their hard work get shipped in the next official version of Python 2.7.5, Python 3.2.5, and Python 3.3.1.  Suggested ideas for inclusion in a successful proposal:
+  * Create a unit test framework for IDLE see http://bugs.python.org/issue15392.  One of the major problems with IDLE is the lack of unit tests. tkinter has unit tests and could be the basis of a unit test framework for IDLE.  The unit test frame work needs to support the build bots and help developers quickly test new patches from the issue tracker.  Currently each new patch has to be hand tested which can consume time.  The lack of a unit test framework hinders IDLE development and is one of the primary reasons why patches don't get committed to the Python source tree.
+
+  * Create an IDLE extension that would integrate PEP8 (Syntax Style Checker) https://pypi.python.org/pypi/pep8 into the IDLE editor window.  Many modern IDE's have not only syntax highlighting but on the fly syntax checking. 
+
+  * Similar to above but create an IDLE extension that would integrate PyFlakes (passive checker of Python programs) https://pypi.python.org/pypi/pyflakes/0.6.1 into the IDLE editor window.  Many modern IDE's have not only syntax highlighting but on the fly error checking.
+
+   
