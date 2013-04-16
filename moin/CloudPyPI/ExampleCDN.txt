@@ -53,3 +53,11 @@ X-Amz-Cf-Id: -2COLjgkKLDF83jrr0iFahyAO4UGOMB0hXNM_ROMFJQpII1goFyi-A==
 Via: 1.0 3dee24f419c49cc32df542a9410fda87.cloudfront.net (CloudFront)
 X-Cache: Hit from cloudfront
 }}}
+
+== Issues found in the experiment ==
+
+ * The URL is not easy to remember
+
+ It's possible to setup a nicer URL for the CDN, but even then, the URL will still read {{{something.cloudfront.net}}}. Unfortunately, we cannot use CNAMEs for this, e.g. use pypi-cdn.python.org as name, since the HTTPS verification would not work with this URL.
+
+ It would be possible to install a redirect from pypi-cdn.python.org to the something.cloudfront.net URL - at a cost: if the redirector is down, the CDN would not be reachable via the nicer URL.
