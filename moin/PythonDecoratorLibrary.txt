@@ -1628,18 +1628,16 @@ class LogPrinter:
 
 def logprintinfo(func):
     '''Wraps a method so that any calls made to print get logged instead'''
-    def pwrapper(*arg):
+    def pwrapper(*arg, **kwargs):
         stdobak = sys.stdout
         lpinstance = LogPrinter()
         sys.stdout = lpinstance
         try:
-            return func(*arg)
+            return func(*arg, **kwargs)
         finally:
             sys.stdout = stdobak
     return pwrapper
 }}}
- . <!> This code needs a try/finally!
-
 == Access control ==
 This example prevents users from getting access to places where they are not authorised to go
 
