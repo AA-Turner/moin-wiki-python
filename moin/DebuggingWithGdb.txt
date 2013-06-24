@@ -156,11 +156,17 @@ Thread 34 (Thread 0xa13feb40 (LWP 17910)):
 ...
 }}}
 
-== Legacy systems ==
+== References ==
+
+ * http://fedoraproject.org/wiki/Features/EasierPythonDebugging
+ * https://code.google.com/p/spyderlib/wiki/HowToDebugDeadlock
+
+
+== GDB on Legacy systems ==
 
 It may happen that you need to use `gdb` on a legacy system without advanced Python support. In this case you may find the following information useful.
 
-=== GDB Macros ===
+==== GDB Macros ====
 
 A set of GDB macros are distributed with Python that aid in debugging the Python process.  You can install them by adding the contents of `Misc/gdbinit` in the Python sources to `~/.gdbinit` -- or copy it [[http://svn.python.org/view/python/branches/release27-maint/Misc/gdbinit?view=log|from Subversion]].  Be sure to use the correct version for your version of Python or some features will not work.
 
@@ -168,7 +174,7 @@ Note that the new GDB commands this file adds will only work correctly if debugg
 
 Also, with gcc 4.5.2 on Ubuntu (at least) the macros fail because the '''call_function''' routine appears to be between '''PyEval_EvalFrameEx''' and '''PyEval_EvalCodeEx''' so the macro fails with '''No symbol "co" in current context.'''.  Recompiling python with '''make "CFLAGS=-g -fno-inline -fno-strict-aliasing"''' solves this problem.
 
-=== Getting Python Stack Traces With GDB Macros ===
+==== Getting Python Stack Traces With GDB Macros ====
 At the gdb prompt, you can get a Python stack trace:
 
   {{{
