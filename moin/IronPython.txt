@@ -1,3 +1,51 @@
-My name is Edwardo (24 years old) and my hobbies are Golf and Drawing.<<BR>>
-<<BR>>
-Here is my web blog; [[http://dengarten.com/verpackung-pflanzen-fur-den-versand/|versand]]
+== IronPython ==
+
+[[http://ironpython.net|IronPython]] is an open source implementation of Python for the .NET CLR and Mono, originally created by [[http://hugunin.net/index.html|Jim Hugunin]].
+
+The project has a [[http://ironpython.codeplex.com/|workspace]] where you can get news and download the latest version:
+
+ * Stable Version is 2.6.2 (targeting Python 2.6)
+ * Developers Version is 2.7 Beta 1 (targeting Python 2.7)
+
+IronPython uses the Dynamic Language Runtime, a framework for writing dynamic languages for .NET which originated in IronPython 1. It also runs on Silverlight, a .NET browser plugin that runs on Windows and the Mac (and a Mono port called Moonlight runs on Linux). This means that IronPython can be used for client-side scripting ''in the browser''.
+
+IronPython is a Python compiler. It compiles Python code to in memory bytecode before execution (which can be saved to disk, making binary only distributions possible).
+
+Performance is comparable to CPython - much faster for some things (where it can take advantage of the JIT compiler in the underlying platform), but slower for other things (particularly the built in container types where a lot of work has been done on optimising the CPython types).
+
+Reasons that CPython programmers might be interested in IronPython include:
+
+ * Corporate credibility (introducing new technologies can be very difficult in some companies, if .NET is already established then you may need no excuse to start using IronPython)
+ * No GlobalInterpreterLock - IronPython has ''no GIL'' and multi-threaded code can use multi core processors
+ * The .NET framework library is ''very big''. Particularly the user interface library Windows Forms is very good.
+ * IronPython is easy to embed in .NET applications as a scripting language
+ * Easier to extend than CPython (C# is memory managed and C# types can be used directly in IronPython with no wrapping)
+ * Silverlight!
+
+A book on IronPython for Python and .NET developers: [[http://www.ironpythoninaction.com/|IronPython in Action]].
+
+A useful resource for IronPython code examples, is the [[http://www.ironpython.info|IronPython Cookbook]].
+
+A book that introduces core concepts of IronPython programming using a .NET–centric approach is 
+[[http://www.apress.com/book/view/9781430219620|Pro IronPython]].
+
+[[http://www.zetcode.com/tutorials/ironpythontutorial/|IronPython Winforms tutorial]] at [[http://www.zetcode.com/|ZetCode]].
+
+Mozilla announced a project to port the DLR (well, the underlying Core CLR that it uses in fact) to run on their Tamarin JIT. This means that IronPython could also run in future versions of Firefox. (See [[http://wiki.mozilla.org/Tamarin:IronMonkey|IronMonkey]]). Unfortunately this project has not made any progress since its announcement.
+
+== Other Python-Like Languages for .NET/Mono ==
+
+Some other Python-like languages for .NET and Mono include:
+ * BooLanguage - Syntax is very similar to Python's, yet the language is statically compiled.  It implements many features that have been suggested for [[Python3.0]].   See [[http://boo.codehaus.org/Gotchas+for+Python+Users|Gotchas for Python Users]] for specific comparisons between boo and CPython.
+ * [[http://cobra-language.com/|Cobra Language]]
+
+
+
+== Accessing .NET from CPython ==
+
+[[http://www.zope.org/Members/Brian/PythonNet/index_html|Python for .NET]] is the reverse of IronPython, it lets you access .NET assemblies from CPython.
+
+
+----
+
+See also: PythonAndParrot, LoGix, IronPython IDE
