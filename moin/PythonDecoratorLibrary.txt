@@ -670,6 +670,35 @@ def my_func():
 def my_func():
     pass
 }}}
+== Ignoring Deprecation Warnings ==
+{{{#!python
+import warnings
+
+def ignore_deprecation_warnings(func):
+    '''This is a decorator which can be used to ignore deprecation warnings
+    occurring in a function.'''
+    def new_func(*args, **kwargs):
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", category=DeprecationWarning)
+            return func(*args, **kwargs)
+    new_func.__name__ = func.__name__
+    new_func.__doc__ = func.__doc__
+    new_func.__dict__.update(func.__dict__)
+    return new_func
+
+# === Examples of use ===
+
+@ignore_deprecation_warnings
+def some_function_raising_deprecation_warning():
+    warnings.warn("This is a deprecationg warning.",
+                  category=DeprecationWarning)
+
+class SomeClass:
+    @ignore_deprecation_warnings
+    def some_method_raising_deprecation_warning():
+        warnings.warn("This is a deprecationg warning.",
+                      category=DeprecationWarning)
+}}}
 == Enable/Disable Decorators ==
 {{{#!python
 def unchanged(func):
@@ -2111,33 +2140,29 @@ def maybe_multiply(x):
 maybe_multiply(10)
 maybe_multiply(3)
 }}}
-
-
 == Aggregative decorators for generator functions ==
-
 This could be a whole family of decorators. The aim is applying an aggregation function to the iterated outcome of a generator-functions.
 
 Two interesting aggregators could be sum and average:
 
-{{{
-#!/usr/bin/env python3
+{{{#!/usr/bin/env python3
 
-import functools as ft
-import operator as op
+import functools as ft import operator as op
 
 def summed(f):
-    return lambda *xs : sum(f(*xs))
+
+ . return lambda *xs : sum(f(*xs))
 
 def averaged(f):
-    def aux(acc, x):
-        return (acc[0] + x, acc[1] + 1)
-    def out(*xs):
-        s, n = ft.reduce(aux, f(*xs), (0, 0))
-        return s / n if n > 0 else 0
-    return out
-}}}
 
-Examples for the two proposed decorators:
+ . def aux(acc, x):
+  . return (acc[0] + x, acc[1] + 1)
+ def out(*xs):
+  . s, n = ft.reduce(aux, f(*xs), (0, 0))
+  return s / n if n > 0 else 0
+ return out
+
+}}} Examples for the two proposed decorators:
 
 {{{
 @averaged
@@ -2158,8 +2183,5 @@ def producer1():
 
 assert producer1() == (10 + 5 + 2.5 + 7.5)
 }}}
-
-
-
 ----
 CategoryDocumentation
