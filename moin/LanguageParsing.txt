@@ -1,18 +1,14 @@
 Small discussion and evaluation of different parsers.
 
-
 (!) Please keep wiki links as wiki links, use external links only if there is no existing page for the tool.
-
-
-
 ||Name ||Grammar ||Module ||Python ||Comment ||
 ||[[http://docs.python.org/lib/module-shlex.html|shlex]] || ||C || ||included in distribution ||
-||[[http://packages.python.org/plex/|Plex]] || ||C || ||lexical analysis module for Python, foundation for [[Pyrex|Pyrex]]. Plex 2.0.0 is Python 2 only. There is an [[https://github.com/uogbuji/plex3|experimental port to Python 3 (tested on Python 3.3)]] ||
+||[[http://packages.python.org/plex/|Plex]] || ||C || ||lexical analysis module for Python, foundation for [[Pyrex]] and [[http://cython.org|Cython]]. Plex 2.0.0 is Python 2 only, the version embedded in Cython works in Python 3.x. There is also an [[https://github.com/uogbuji/plex3|experimental port to Python 3 (tested on Python 3.3)]] ||
 ||[[http://pages.cpsc.ucalgary.ca/~aycock/spark/|Spark]] ||GLR ||Python || || ||
-||[[Yapps|Yapps]] ||LL(1) ||Python ||1-any, 2-1.5+ || ||
+||[[Yapps]] ||LL(1) ||Python ||1-any, 2-1.5+ || ||
 ||[[http://starship.python.net/crew/scott/PyLR.html|PyLR - (broken link)]] ||LR(1) LALR(1) ||C || || ||
 ||[[http://gadfly.sourceforge.net/kwParsing.html|kwParsing]] || || || || ||
-||[[PyBison|PyBison]] || ||C || ||bison grammar with python code actions ||
+||PyBison || ||C || ||bison grammar with python code actions ||
 ||[[http://www.ercim.org/publication/Ercim_News/enw36/ernst.html|Trap]] ||LR || ||1.5.1+ || ||
 ||[[http://www.dabeaz.com/ply/|PLY]] ||SLR LALR(1) ||Python || ||Python Lex-Yacc ||
 ||[[http://christophe.delord.free.fr/tpg/index.html|ToyParserGenerator]] || || ||2.2+ || ||
@@ -36,32 +32,24 @@ Small discussion and evaluation of different parsers.
 ||[[http://pypi.python.org/pypi/modgrammar|modgrammar]] ||GLR ||Python ||3.1+ ||Recursive descent parser with full backtracking. Grammar elements and results are defined as Python classes, so are fully customizable. Supports ambiguous grammars. ||
 ||[[http://code.google.com/p/funcparserlib/|funcparserlib]] ||LL(*) ||Python ||2.4+ ||Recursive descent parsing library for Python based on functional combinators ||
 ||[[http://pydsl.org|pydsl]] ||- ||Python ||2.7+ 3+ || ||
-||[[http://pypi.python.org/pypi/lrparsing|lrparsing]] ||LR(1) ||Python ||2.6+ || A fast parser, lexer combination with a concise Pythonic interface.  Lots of documentation, include example parsers for SQL and Lua. ||
+||[[http://pypi.python.org/pypi/lrparsing|lrparsing]] ||LR(1) ||Python ||2.6+ ||A fast parser, lexer combination with a concise Pythonic interface.  Lots of documentation, include example parsers for SQL and Lua. ||
 
 
 
 
 For faster performance, one may use other parser generator systems and plug them in as modules.
 
-
 For example:
 
-
- * [[Spirit|Spirit]] (http://spirit.sourceforge.net/) framework for writing EBNF as C++ code
- * [[FlexBisonModule|FlexBisonModule]] (http://www.crsr.net/Software/FBModule.html)
+ * [[Spirit]] (http://spirit.sourceforge.net/) framework for writing EBNF as C++ code
+ * FlexBisonModule (http://www.crsr.net/Software/FBModule.html)
  * [[http://groups.google.com/groups?hl=en&amp;lr=&amp;ie=UTF-8&amp;selm=61g0ff$39g$1@vishnu.jussieu.fr|cocktail compiler tools]] approach
 
-
-Example of such usage is [[SeeGramWrap|SeeGramWrap]] available from Edward C. Jones [[http://members.tripod.com/~edcjones/pycode.html|Python page]], which is a heavily revised and upgraded version of the ANTLR C parser that is in [[http://members.tripod.com/~edcjones/cgram.tar.gz|cgram]] (broken link). The lastest verson has been refactored to move some of the complexity from ANTLR to Python.
-
+Example of such usage is SeeGramWrap available from Edward C. Jones [[http://members.tripod.com/~edcjones/pycode.html|Python page]], which is a heavily revised and upgraded version of the ANTLR C parser that is in [[http://members.tripod.com/~edcjones/cgram.tar.gz|cgram]] (broken link). The lastest verson has been refactored to move some of the complexity from ANTLR to Python.
 
 Martin von Loewis presented a paper at Python10, titled [[http://www.python.org/sigs/parser-sig/towards-standard.html|"Towards a Standard Parser Generator"]] that surveyed the available parser generators for Python.
 
-
 Ned Batchelder maintains additional information on these and other parsers at [[http://nedbatchelder.com/text/python-parsers.html|Python Parsing Tools]].
 
-
 == Books ==
-
-
  * Complete online textbook, titled [[http://dickgrune.com/Books/PTAPG_1st_Edition/|"Parsing: A Practical Guide"]].
