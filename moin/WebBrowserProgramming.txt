@@ -24,13 +24,20 @@ This latter example requires some further explanation: Pyjamas, for example, is 
 == Python-to-JavaScript Compilers ==
 These are tools that convert Python into JavaScript, that can then be run either stand-alone, using technology such as Spidermonkey, Google's V8 engine (for example, using [[http://code.google.com/p/pyv8|pyv8]]), or in a web browser (where, in order to be useful, the applications must of course interface with the DOM model of the browser, typically using an AJAX library).
 
+The translation from Python to Javascript can be done by a Python program
+
  * [[https://github.com/chrivers/pyjaco|Pyjaco]], the Python-to-Javascript Compiler is a python-based compiler that will compile most python code into fairly compact javascript. It uses a small (~60KB) standard library to implement all the usual python types like list, dict, int, bool, etc. It supports classes, inheritance, keyword and variable arguments, and much more. It has a comprehensive test suite, and aims to be the most fun and efficient way to create web applications with Python.
  * [[Pyjamas]] is a Python-to-JavaScript compiler and AJAX-based Web Toolkit and Framework that allows users to write code in standard Python that will be run in a web browser, after translation to JavaScript. pyjs - the compiler - can also be used as a stand-alone JavaScript compiler. There are three main modes: --strict, providing as close to full strict python compatibility and interoperability as is both possible and has been contributed so far (which is quite a lot); -O, providing a subset of python functionality and providing much faster performance as a result; --stupid-mode which falls back to javascript for certain operations, with the result that the output is much easier to read and to compare to the original python from which it was generated, but runs the risk of changing the meaning of the python application and requiring a deep understanding of how javascript operates (stupidly - hence the name of the mode).
- * [[http://www.skulpt.org/|Skulpt]] is a Python-to-JavaScript compiler that is focussing on providing (only) full Python syntax. The demo includes a Python interpreter prompt, which is actually running in the user's web browser, not on a server, as pure JavaScript.
  * Py2Js is an unmaintained project that can still be downloaded [[http://davidf.sjsoft.com/files/py2js|here]]. It is purely a Python-to-JavaScript compiler/translator.
  * [[http://mattpap.github.com/py2js/html/|Py2js]] is a maintained project that provides a Python-to-JavaScript compiler.
  * [[https://github.com/p2k/PyCow|PyCow]] is an unmaintained project to translate Python code to Javascript with Mootools
  * [[http://fiddlesalad.com/python/|Fiddle Salad]] is a web development IDE with HTML and CSS that compiles Python to JavaScript
+
+or by a Javascript program, with the Python code translated and run on the fly by the web browser
+
+ * [[http://www.skulpt.org/|Skulpt]] is a Python-to-JavaScript compiler that is focussing on providing (only) full Python syntax. The demo includes a Python interpreter prompt, which is actually running in the user's web browser, not on a server, as pure JavaScript.
+ * [[http://brython.info/index.html|Brython]] is a Python 3 implementation that runs in a browser, providing <script type="text/python">...</script>.
+
 
 == Embedding Python inside Web Browsers ==
 This section describes projects where a Python interpreter itself has been embedded into the web browser. Instead of downloading the standard Python executable and libraries, these projects come with the CPython runtime and libraries pre-embedded (and, as such, are typically very large downloads).
@@ -39,7 +46,6 @@ This section describes projects where a Python interpreter itself has been embed
  * AppCelerator's [[http://www.appcelerator.com/platform/titanium-platform/|Titanium]] provides support for `<script type="text/python"> ... </script>`, using IronPython and Silverlight.
  * [[http://ironpython.net/browser/|Ironpython]] by itself also provides support for `<script type="text/python"> ... </script>`.
  * [[https://github.com/Nitrogenycs/firebreath-x|Firebreath]] is an NPAPI plugin that extends access to the full features of DOM programming out to other programming languages, including python.
- * [[http://brython.info/index.html|Brython]] is a Python 3 implementation that runs in a browser, providing <script type="text/python">...</script>.
 
 == Python Wrappers around Web "Libraries" and Browser Technology ==
 This section describes projects where you can (or have to) create your own web browser application in Python. It includes web browser "engines" that have Python interfaces to access, control and present web pages and web-relevant rich media content (such as Adobe Flash).
