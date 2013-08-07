@@ -1,7 +1,8 @@
 ## page was renamed from PortingPythonToPy3k/BilingualQuickRef
-= Writing Code that runs under Python2 and 3 =
+= Writing code that runs under both Python2 and 3 =
 
 <<TableOfContents()>>
+
 The intent of ''this'' page is to provide specific guidelines in a quick reference format for writing code that is compatible with both Python2 and Python3.  The idea is that you can check this single page once you're familiar with the basic concepts and approaches but need a refresher on a specific coding techniques.
 
 Most entries here will link to a more in-depth explanation of the basic recipe given here in case you need more than a simple refresher on the subject.  At the bottom of this page, you will find various resources for diving more into aspects of supporting Python 3, from the pure-Python, C extension module, packaging, and other perspectives.  
@@ -29,7 +30,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 This turns on some important compatibility flags.
  * Absolute imports are the default in Python 3 [[http://python3porting.com/differences.html#imports|[more info]]]
- * Enables [[http://www.python.org/dev/peps/pep-0238/|PEP 238 style division]] operator.
+ * Enables non-truncating division (dividing two integers results in a float.)  Use '''//''' for the old floor division behaviour.  [[[http://www.python.org/dev/peps/pep-0238/|more info]]]
  * {{{print()}}} is a function in Python 3 [[http://python3porting.com/noconv.html#print-section|[more info]]]
  * Unadorned string literals are unicode type in Python 3 [[http://python3porting.com/problems.html#binary-section|[more info]]]
 
