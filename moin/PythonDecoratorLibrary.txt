@@ -2142,31 +2142,32 @@ def maybe_multiply(x):
 maybe_multiply(10)
 maybe_multiply(3)
 }}}
+
 == Aggregative decorators for generator functions ==
 This could be a whole family of decorators. The aim is applying an aggregation function to the iterated outcome of a generator-functions.
 
 Two interesting aggregators could be sum and average:
 
-{{{#!/usr/bin/env python3
-
+{{{#!python
 import functools as ft import operator as op
 
 def summed(f):
-
- . return lambda *xs : sum(f(*xs))
+  return lambda *xs : sum(f(*xs))
 
 def averaged(f):
+  def aux(acc, x):
+    return (acc[0] + x, acc[1] + 1)
 
- . def aux(acc, x):
-  . return (acc[0] + x, acc[1] + 1)
- def out(*xs):
-  . s, n = ft.reduce(aux, f(*xs), (0, 0))
-  return s / n if n > 0 else 0
- return out
+  def out(*xs):
+    s, n = ft.reduce(aux, f(*xs), (0, 0))
+    return s / n if n > 0 else 0
 
-}}} Examples for the two proposed decorators:
+  return out
+}}}
 
-{{{
+Examples for the two proposed decorators:
+
+{{{#!python
 @averaged
 def producer2():
     yield 10
@@ -2185,5 +2186,6 @@ def producer1():
 
 assert producer1() == (10 + 5 + 2.5 + 7.5)
 }}}
+
 ----
 CategoryDocumentation
