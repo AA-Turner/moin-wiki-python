@@ -1,0 +1,62 @@
+= Intellij project creation notes =
+
+Jython is an ant project. This makes it a bit difficult to import into Intellij IDEA.
+
+<<TableOfContents()>>
+
+== Prequisites ==
+
+=== Software packages (outside Intellij) ===
+
+ * ant
+ * mercurial
+ * Java JDK
+ * Python 2.7
+ * Intellij IDEA 12 (http://www.jetbrains.com/idea/)
+
+There is a free "Community Edition" of Intellij that might work (I'm only unsure about the Python integration). However as I (sven) use the Ultimate Edition, this tutorial is tested with this edition.
+
+Intellij offers free IDEA licenses for Open Source projects. Perhaps it might be a good idea to apply for them.
+
+=== Intellij Plugins ===
+ * Ant Support (Bundled)
+ * Eclipse Integration (Bundled)
+ * hg4idea (Bundled)
+ * Python (Custom, i.e. must be installed from Intellij plugin repository) 
+
+Of course there are many other useful plugins, but these four are essential for importing Jython into Intellij IDEA.
+
+== Steps ==
+
+=== Make a clean checkout ===
+{{{#!highlight bash
+hg clone http://bitbucket.org/jython/jython jython
+}}}
+
+=== Remove Intellij files from jython ===
+Change into the jython directory:
+{{{#!highlight bash
+cd jython
+}}}
+
+Remove files:
+{{{#!highlight bash
+rm -rf .idea/
+rm Jython27.iml
+}}}
+
+
+=== Run ant ===
+Run this in the jython source directory (if you made the previous step, you're already there):
+
+{{{#!highlight bash
+ant
+}}}
+
+=== Import jython as Eclipse-Project in Intellij IDEA ===
+
+Start Intellij IDEA. Close the last open project (if there's any), to get to the start screen.
+
+Choose:
+ 1. Import Project
+ 1. Import project from external model --> Eclipse
