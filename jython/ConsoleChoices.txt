@@ -28,7 +28,7 @@ If `python.console` remains undefined the console class is `org.python.core.Plai
 
 The default Jython registry makes no setting of `python.console` so if you do not set `python.console` on the command line you will get a !PlainConsole. If you specify a class that cannot be found, or some other error occurs while loading and initialising the alleged console, you will get a non-fatal error and a !PlainConsole.
 
-When using the embedded interpreter, !PlainConsole is the recommended choice as installing the line-editing consoles will have a permanent and perhaps confusing effect on the application's use of the standard streams. If you use a line-diting console, do so by setting `python.console` and getting the interpreter before taking any references to `System.in` or `System.out`. When using the JSR-223 script engine, the engine directs the interpreter to use its own streams, with which it wraps `System.in` and `System.out` before initialising Jython the console may be installed.
+When using the embedded interpreter, !PlainConsole is the recommended choice as installing the line-editing consoles will have a permanent and perhaps confusing effect on the application's use of the standard streams. If you use a line-diting console, do so by setting `python.console` and getting the interpreter before taking any references to `System.in` or `System.out`. When using the JSR-223 script engine, the engine directs the interpreter to use its own streams, with which it wraps `System.in` and `System.out` before initialising Jython. The ScriptEngine does not then benefit from the installed console.
 
 
 == Properties of the Available Consoles ==
@@ -51,6 +51,7 @@ The Readline console has been tested using `-Dpython.console.readlinelib=Editlin
  * Linux (Mint 14) Gnome terminal with locales en_GB.iso88591, el_GR.iso88597 (therefore probably works with other single-byte encodings). It does not recognise characters beyond US-ASCII when the locale is UTF-8.
 
 === PlainConsole ===
+
 '''!PlainConsole''': ({{{-Dpython.console=org.python.core.PlainConsole}}}) provides no (additional) line-editing. `System.in`and `System.out` are unmolested.
 
 PlainConsole is inconvenient on Linux because there is no line recall or and not facility to correct typing mistakes other than to delete backwards to the error. It is acceptable on Windows since the system itself provides some line recall and editing.
