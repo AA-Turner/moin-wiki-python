@@ -1,17 +1,21 @@
 = How to build Python 2.7.5 using Visual Studio 2012 Express on Windows 8 64-bit =
 == References: ==
-[wiki:VS2010]
+[[VS2010]]
 
 == Prepare Environment ==
-1. Download Python 2.7.5 source from python.org
 
-2. Download and install an SVN command-line client (Try SlickSVN)
+1. Create a directory to store the Python source tree and dependencies, I called mine `python_build`.
 
-3. Download and install Perl64
+2. Download Python 2.7.5 source from python.org and unzip it to `python_build`
 
-4. Download and install Visual Studio Express 2012
+3. Download and install an SVN command-line client (Try SlickSVN)
+
+4. Download and install Perl64
+
+5. Download and install Visual Studio Express 2012
 
 === Test Environment ===
+
 1. Open a shell
 
 2. Bring in the msvc compiler environment for x64 by doing:
@@ -37,4 +41,13 @@ Copyright (C) 2013 The Apache Software Foundation.
 
  . {{{
 This is perl 5, version 16, subversion 3 (v5.16.3) built for MSWin32-x64-multi-thread
+}}}
+
+== Download dependencies ==
+
+Use the `buildbot` tools to grab the external dependencies:
+
+{{{
+cd Python2.7.5
+Tools\buildbot\external-common.bat
 }}}
