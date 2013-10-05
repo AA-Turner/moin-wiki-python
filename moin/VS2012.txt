@@ -190,11 +190,27 @@ I've also just zipped up the project files so you can just unzip them into `PCbu
 
 == Build Python ==
 
-1. Open `Python-2.7.5\PCbuild\pcbuild.sln`
+1. Patch Python prevent manifest files from being embedded:
 
-2. Select 'DEBUG' and 'x64' For the configuration.
+ . {{{
+diff -r -Z -U 2 Python-2.7.5/Lib/distutils/msvc9compiler.py /cygdrive/c/Python27_d/Lib/distutils/msvc9compiler.py
+--- Python-2.7.5/Lib/distutils/msvc9compiler.py 2013-05-11 20:32:42.000000000 -0700
++++ /cygdrive/c/Python27_d/Lib/distutils/msvc9compiler.py       2013-10-05 17:48:17.906895400 -0700
+@@ -659,5 +659,6 @@
+             # manifest.  Maybe we should link to a temp file?  OTOH, that
+             # implies a build environment error that shouldn't go undetected.
+-            mfinfo = self.manifest_get_embed_info(target_desc, ld_args)
++            #mfinfo = self.manifest_get_embed_info(target_desc, ld_args)
++            mfinfo = None
+             if mfinfo is not None:
+                 mffilename, mfid = mfinfo
+}}}
 
-3. Click 'Build' -> 'Build Solution' (F7):
+2. Open `Python-2.7.5\PCbuild\pcbuild.sln`
+
+3. Select 'DEBUG' and 'x64' For the configuration.
+
+4. Click 'Build' -> 'Build Solution' (F7):
 
  You should now see a successful DEBUG build:
 
@@ -243,6 +259,7 @@ Copying tcltk64\bin\tcl85g.dll --> C:\Python27_d\DLLs
 Copying tcltk64\bin\tclpip85g.dll --> C:\Python27_d\DLLs
 Copying tcltk64\bin\tk85g.dll --> C:\Python27_d\DLLs
 Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\Include --> C:\Python27_d\include
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PC\pyconfig.h --> C:\Python27_d\include
 Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\Lib --> C:\Python27_d\Lib
 Creating directory: 'C:\\Python27_d\\libs'
 Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\bz2.lib --> C:\Python27_d\libs
