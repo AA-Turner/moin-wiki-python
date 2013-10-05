@@ -1,12 +1,11 @@
-= How to build Python 2.7.5 using Visual Studio 2012 Express on Windows 8 64-bit =
-
 <<TableOfContents>>
+
+= How to build Python 2.7.5 using Visual Studio 2012 Express on Windows 8 64-bit =
 
 == References: ==
 [[VS2010]]
 
 == Prepare Environment ==
-
 1. Create a directory to store the Python source tree and dependencies, I called mine `python_build`.
 
 2. Download Python 2.7.5 source from python.org and unzip it to `python_build`
@@ -18,7 +17,6 @@
 5. Download and install Visual Studio Express 2012
 
 === Test Environment ===
-
 1. Open a shell
 
 2. Bring in the msvc compiler environment for x64 by doing:
@@ -47,7 +45,6 @@ This is perl 5, version 16, subversion 3 (v5.16.3) built for MSWin32-x64-multi-t
 }}}
 
 == Download dependencies ==
-
 Use the `buildbot` tools to grab the external dependencies:
 
  . {{{
@@ -56,7 +53,6 @@ Tools\buildbot\external-common.bat
 }}}
 
 == Patch External Dependencies ==
-
 === Tcl ===
  . {{{
 diff -r -Z -U 2 tcl-8.5.2.1/generic/tclPosixStr.c /home/Nick/development/debug/tcl-8.5.2.1/generic/tclPosixStr.c
@@ -117,8 +113,25 @@ diff -r -Z -U 2 tk-8.5.2.0/win/makefile.vc /home/Nick/development/debug/tk-8.5.2
 }}}
 
 == Compile External Dependencies ==
-
  . {{{
 cd Python2.7.5
 Tools\buildbot\external-amd64.bat
+}}}
+
+== Manually Build Openssl 1.0.1e ==
+
+1. Download and unzip `openssl-1.0.1e.tar.gz`
+
+2. Configure openssl:
+
+ . {{{
+cd openssl-1.0.1e
+perl Configure --openssldir=%CD%\ enable-camellia disable-idea VC-WIN64A
+}}}
+
+3. Build with these commands:
+
+ . {{{
+ms\do_win64a.bat
+nmake -f ms\ntdll.mak
 }}}
