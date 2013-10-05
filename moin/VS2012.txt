@@ -208,8 +208,80 @@ I've also just zipped up the project files so you can just unzip them into `PCbu
 
 Now that Python has been built, I will used the script below to install executables and libraries under one directory.  Building the selfinstaller won't work in Visual Studio Express, also, the MSI tool won't package up any of the debug libraries, since these don't get updated by Windows Update, doing so would be a security risk.
 
-So, I used this FIXME script to install do a target directory:
+1. Save this script to your build directory: [[attachment:manual_install.py]]
+
+2. Run the script from the build directory:
+ . {{{
+C:\Users\Nick\Downloads\python_build> Python-2.7.5\PCbuild\amd64\python_d.exe manual_install.py
+EXTERNALS_DIR = C:\Users\Nick\Downloads\python_build
+PYTHON_DIR = Python-2.7.5
+TCLTK_DIR = tcltk64
+DST_DIR = C:\Python27_d
+Creating directory: 'C:\\Python27_d'
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\python_d.exe --> C:\Python27_d
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\pythonw_d.exe --> C:\Python27_d
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\python27_d.dll --> C:\Python27_d
+Creating directory: 'C:\\Python27_d\\DLLs'
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\bz2_d.pyd --> C:\Python27_d\DLLs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\pyexpat_d.pyd --> C:\Python27_d\DLLs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\select_d.pyd --> C:\Python27_d\DLLs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\unicodedata_d.pyd --> C:\Python27_d\DLLs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\winsound_d.pyd --> C:\Python27_d\DLLs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\_bsddb_d.pyd --> C:\Python27_d\DLLs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\_ctypes_d.pyd --> C:\Python27_d\DLLs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\_ctypes_test_d.pyd --> C:\Python27_d\DLLs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\_elementtree_d.pyd --> C:\Python27_d\DLLs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\_hashlib_d.pyd --> C:\Python27_d\DLLs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\_msi_d.pyd --> C:\Python27_d\DLLs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\_multiprocessing_d.pyd --> C:\Python27_d\DLLs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\_socket_d.pyd --> C:\Python27_d\DLLs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\_sqlite3_d.pyd --> C:\Python27_d\DLLs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\_ssl_d.pyd --> C:\Python27_d\DLLs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\_testcapi_d.pyd --> C:\Python27_d\DLLs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\_tkinter_d.pyd --> C:\Python27_d\DLLs
+Copying tcltk64\bin\tcl85g.dll --> C:\Python27_d\DLLs
+Copying tcltk64\bin\tclpip85g.dll --> C:\Python27_d\DLLs
+Copying tcltk64\bin\tk85g.dll --> C:\Python27_d\DLLs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\Include --> C:\Python27_d\include
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\Lib --> C:\Python27_d\Lib
+Creating directory: 'C:\\Python27_d\\libs'
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\bz2.lib --> C:\Python27_d\libs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\pyexpat.lib --> C:\Python27_d\libs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\python27_d.lib --> C:\Python27_d\libs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\select.lib --> C:\Python27_d\libs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\sqlite3.lib --> C:\Python27_d\libs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\unicodedata.lib --> C:\Python27_d\libs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\winsound.lib --> C:\Python27_d\libs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\_bsddb.lib --> C:\Python27_d\libs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\_ctypes.lib --> C:\Python27_d\libs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\_ctypes_test.lib --> C:\Python27_d\libs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\_elementtree.lib --> C:\Python27_d\libs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\_hashlib.lib --> C:\Python27_d\libs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\_msi.lib --> C:\Python27_d\libs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\_multiprocessing.lib --> C:\Python27_d\libs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\_socket.lib --> C:\Python27_d\libs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\_sqlite3.lib --> C:\Python27_d\libs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\_ssl.lib --> C:\Python27_d\libs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\_testcapi.lib --> C:\Python27_d\libs
+Copying C:\Users\Nick\Downloads\python_build\Python-2.7.5\PCbuild\amd64\_tkinter.lib --> C:\Python27_d\libs
+Creating directory: 'C:\\Python27_d\\Scripts'
+Copying C:\Users\Nick\Downloads\python_build\tcltk64\lib --> C:\Python27_d\tcl
+All done!
+[21354 refs]
+
+C:\Users\Nick\Downloads\python_build>
+}}}
+
+3. Test that the Tkinter module can be imported:
 
  . {{{
-FIXME
+cd C:\
+C:\Python27_d\python_d.exe
+Python 2.7.5 (default, Oct  5 2013, 13:16:58) [MSC v.1700 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import Tkinter
+[63979 refs]
+>>>
 }}}
+
+SUCCESS!
