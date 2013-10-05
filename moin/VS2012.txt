@@ -132,21 +132,18 @@ cd openssl-1.0.1e
 perl Configure --openssldir=%CD%\ enable-camellia disable-idea VC-WIN64A
 }}}
 
-3. '''IMPORTANT''', I guess perl creates "symobolic" links inside the `include` directory which the openssl build environment understands.  However Visual Studio doesn't understand them.
+3. '''IMPORTANT''', I guess perl creates "symobolic" links inside the `include` directory which the openssl build environment understands.  However Visual Studio doesn't understand them:
 
  Example Visual Studio Error message:
  . {{{
 C:\Users\Nick\Downloads\python_build\openssl-1.0.1e\include\openssl/evp.h(1): error C2059: syntax error : '!'
 }}}
 
- To correct the problem, copy the header over their symbolic links.  I used a BASH shell in Cygwin to do this:
+ To correct the problem, copy the headers over their symbolic links.  I used a BASH shell in Cygwin to do this:
 
  . {{{
 cd openssl-1.0.1e/include/openssl
-for f in *.h; do
-    cp $f $f.nick
-    mv $f.nick $f
-done
+for f in *.h; do cp $f $f.nick; mv $f.nick $f; done
 }}}
 
 4. Build with these commands:
