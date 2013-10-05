@@ -6,9 +6,13 @@ My goal with these instructions is to produce a DEBUG build on x86_64 (AMD64 or 
 
 '''Shameless Plug''': I'm the author of the C++ & Python module [[http://nsound.sourceforge.net|Nsound]]
 
+----
+
 == References: ==
 
 Many thanks to sebastien.sable for their page [[VS2010]], which I followed to create these instructions.
+
+----
 
 == Prepare Environment ==
 1. Create a directory to store the Python source tree and dependencies, I called mine `python_build`.
@@ -49,6 +53,8 @@ Copyright (C) 2013 The Apache Software Foundation.
 This is perl 5, version 16, subversion 3 (v5.16.3) built for MSWin32-x64-multi-thread
 }}}
 
+----
+
 == Download dependencies ==
 Use the `buildbot` tools to grab the external dependencies:
 
@@ -57,7 +63,10 @@ cd Python2.7.5
 Tools\buildbot\external-common.bat
 }}}
 
+----
+
 == Patch External Dependencies ==
+
 === Tcl ===
  . {{{
 diff -r -Z -U 2 tcl-8.5.2.1/generic/tclPosixStr.c /home/Nick/development/debug/tcl-8.5.2.1/generic/tclPosixStr.c
@@ -117,11 +126,15 @@ diff -r -Z -U 2 tk-8.5.2.0/win/makefile.vc /home/Nick/development/debug/tk-8.5.2
  ldebug = -release -opt:ref -opt:icf,3
 }}}
 
+----
+
 == Compile External Dependencies ==
  . {{{
 cd Python2.7.5
 Tools\buildbot\external-amd64.bat
 }}}
+
+----
 
 == Manually Build Openssl 1.0.1e ==
 
@@ -155,6 +168,8 @@ ms\do_win64a.bat
 nmake -f ms\ntdll.mak
 }}}
 
+----
+
 == Convert Visual Studio 2008 Solution ==
 
 1. Open `Python-2.7.5\PCbuild\pcbuild.sln` with Visual Studio 2012 Express
@@ -169,6 +184,8 @@ See this diff file:  [[attachment:PCbuild_patches.txt]]
 
 I've also just zipped up the project files so you can just unzip them into `PCbuild`: [[attachment:python-2.7.5-amd64-pcbuild.zip]]
 
+----
+
 == Build Python ==
 
 1. Open `Python-2.7.5\PCbuild\pcbuild.sln`
@@ -182,6 +199,8 @@ I've also just zipped up the project files so you can just unzip them into `PCbu
  . {{{
 ========== Build: 25 succeeded, 0 failed, 0 up-to-date, 1 skipped ==========
 }}}
+
+----
 
 == Install Python ==
 
