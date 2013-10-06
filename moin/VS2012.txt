@@ -302,3 +302,56 @@ Type "help", "copyright", "credits" or "license" for more information.
 }}}
 
 SUCCESS!
+
+= Install Numpy & Matplotlib in Debug Mode =
+
+== Setup Environment ==
+
+1. Save this text to 'benv64_d.bat':
+
+ . {{{
+@echo off
+
+:: Add Vistual Studio
+
+echo Adding Visual Studio to path ...
+
+call "C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x86_amd64
+
+:: Hacks for python.distutils
+set VS100COMNTOOLS=%VS110COMNTOOLS%
+set VS90COMNTOOLS=%VS110COMNTOOLS%
+
+:: Add Python
+
+echo Adding python64_d to path ...
+
+set PATH=C:\python27_d;%PATH%
+}}}
+
+2. Open a command prompt and call 'benv64_d.bat':
+
+ . {{{
+call benv64_d.bat
+Adding Visual Studio to path ...
+Adding python64_d to path ...
+}}}
+
+== Installing Numpy ==
+
+1. Download Numpy-1.7.1.zip
+2. Build and install with this command:
+ . {{{
+cd numpy-1.7.1
+python_d.exe setup.py build --debug install
+}}}
+
+== Verify Numpy Installed ==
+
+1. Try to import numpy:
+ . {{{
+cd c:\
+python_d.exe
+>>> import numpy
+}}}
+SUCCESS!
