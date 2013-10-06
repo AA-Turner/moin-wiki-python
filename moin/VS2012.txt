@@ -400,7 +400,33 @@ copy zlib-1.2.8\contrib\vstudio\vc11\x64\ZlibStatDebug\zlibstat.lib C:\Python27_
 
 == Build & Install libpng ==
 
-FIXME
+1. Download lpng166.zip
+
+2. Edit the file `lpng166\projects\vstudio\zlib.props`:
+
+ Need to edit ZLibSrcDir to reflect correct zlib version:
+
+ . {{{
+<ZLibSrcDir>..\..\..\..\zlib-1.2.8</ZLibSrcDir>
+}}}
+
+3. Open solution `lpng166\projects\vstudio\vstudio.sln`
+
+4. Let Visual Studio 2012 update the project files.
+
+5. Adjust project for 64-bit & debug mode
+
+ 5.1 Right clik on 'libpng' project, select 'Properties'
+ 5.2 Change project type from DLL to static .lib
+ 5.3 Select DEBUG build
+ 5.4 Click on 'win32' and add a new 'x64' configuration
+
+6. Right click on 'libpng' and click on 'Build'
+
+ . {{{
+libpng.vcxproj -> C:\Users\Nick\Downloads\python_build\lpng166\projects\vstudio\x64\Debug\libpng16.lib
+========== Build: 3 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+}}}
 
 == Installing Matplotlib ==
 
