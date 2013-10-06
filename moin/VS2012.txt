@@ -449,18 +449,20 @@ libpng.vcxproj -> C:\Users\Nick\Downloads\python_build\lpng166\projects\vstudio\
 ========== Build: 3 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
 }}}
 
+7. "Install" to our debug directory:
+
+ . {{{
+copy lpng166\projects\vstudio\x64\Debug\libpng16.lib C:\Python27_d\PC\VC6\png.lib
+}}}
+
 ----
 
 == Installing Matplotlib ==
 
 1. Download and unzip matplotlib-1.3.0
 
-----
-
-'''FIXME:''' Currently need to download and build freetype, zlib, and libpng first!
-----
-
  For my DEBUG environment, I'm going to use the TK backend, so write this `setup.cfg`:
+
  . {{{
 # Rename this file to setup.cfg to modify matplotlib's
 # build options.
@@ -480,13 +482,22 @@ backend = TkAgg
 
 }}}
 
-2. To compile against TK, update the INCLUDE shell variable so matplotlib can find the header, from the `python_build` dir do:
+2. To compile against TK, FreeType, libpng, and zlib, we need update the INCLUDE shell variable so the matplotlib setup can find the headers, from the `python_build` directory do:
+
+ . {{{
+set INCLUDE=%CD%\tcltk64\include;%CD%\freetype-2.5.0.1\include;%CD%\lpng166;%INCLUDE%
+}}}
 
  FYI, `%CD%` expands to the current directory.
 
+
+4. Copy tcl/tk libs so matplotlib can find them, note renaming without the 'g':
+
  . {{{
-set INCLUDE=%CD%\tcltk64\include;%INCLUDE%
+copy tcltk64\lib\tcl85g.lib C:\Python27_d\libs\tcl85.lib
+copy tcltk64\lib\tk85g.lib C:\Python27_d\libs\tk85.lib
 }}}
+
 
 3. Build and install:
 
@@ -494,3 +505,22 @@ set INCLUDE=%CD%\tcltk64\include;%INCLUDE%
 cd matplotlib-1.3.0
 python_d setup.py build --debug install 
 }}}
+
+4. Test maptplotlib:
+
+ . {{{
+cd c:\
+c:\Python27_d\python_d.exe
+Python 2.7.5 (default, Oct  5 2013, 13:16:58) [MSC v.1700 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> from matplotlib.pylab import *
+[460242 refs]
+>>> plot([1,2,3,4], "bo-")
+[<matplotlib.lines.Line2D object at 0x00000000062CD5A0>]
+[480934 refs]
+>>> show()
+}}}
+
+ If all went well, we should now have a plot:
+
+ FIXME
