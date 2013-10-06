@@ -1,7 +1,6 @@
 <<TableOfContents>>
 
 = How to build Python 2.7.5 using Visual Studio 2012 Express on Windows 8 64-bit =
-
 My goal with these instructions is to produce a DEBUG build on x86_64 (AMD64 or x64).  I'm working on a Python extension that is currently crashing on Windows, but work fine in Linux.  I will be building debug version of Numpy and Matplotlib after the DEBUG version of Python is created with these instructions.
 
 '''Shameless Plug''': I'm the author of the C++ & Python module [[http://nsound.sourceforge.net|Nsound]]
@@ -9,7 +8,6 @@ My goal with these instructions is to produce a DEBUG build on x86_64 (AMD64 or 
 ----
 
 == References: ==
-
 Many thanks to sebastien.sable for their page [[VS2010]], which I followed to create these instructions.
 
 ----
@@ -66,7 +64,6 @@ Tools\buildbot\external-common.bat
 ----
 
 == Patch External Dependencies ==
-
 === Tcl ===
  . {{{
 diff -r -Z -U 2 tcl-8.5.2.1/generic/tclPosixStr.c /home/Nick/development/debug/tcl-8.5.2.1/generic/tclPosixStr.c
@@ -137,7 +134,6 @@ Tools\buildbot\external-amd64.bat
 ----
 
 == Manually Build Openssl 1.0.1e ==
-
 1. Download and unzip `openssl-1.0.1e.tar.gz`
 
 2. Configure openssl:
@@ -149,18 +145,16 @@ perl Configure --openssldir=%CD%\ enable-camellia disable-idea VC-WIN64A
 
 3. '''IMPORTANT''', I guess perl creates "symobolic" links inside the `include` directory which the openssl build environment understands.  However Visual Studio doesn't understand them:
 
- Example Visual Studio Error message:
+ . Example Visual Studio Error message:
  . {{{
 C:\Users\Nick\Downloads\python_build\openssl-1.0.1e\include\openssl/evp.h(1): error C2059: syntax error : '!'
 }}}
-
  To correct the problem, copy the headers over their symbolic links.  I used a BASH shell in Cygwin to do this:
 
  . {{{
 cd openssl-1.0.1e/include/openssl
 for f in *.h; do cp $f $f.nick; mv $f.nick $f; done
 }}}
-
  If you don't have Cygwin installed, just unzip this file into `openssl-1.0.1e\include\openssl` [[attachment:openssl-headers-1.0.1e.zip]]
 
 4. Build with these commands:
@@ -173,7 +167,6 @@ nmake -f ms\ntdll.mak
 ----
 
 == Convert Visual Studio 2008 Solution ==
-
 1. Open `Python-2.7.5\PCbuild\pcbuild.sln` with Visual Studio 2012 Express
 
 2. Click OK to perform the "One-Way" upgrade on all the project files.
@@ -181,7 +174,6 @@ nmake -f ms\ntdll.mak
 3. Immediately close Visual Studio 2012 Express
 
 === Patch Project Files ===
-
 See this diff file:  [[attachment:PCbuild_patches.txt]]
 
 I've also just zipped up the project files so you can just unzip them into `PCbuild`: [[attachment:python-2.7.5-amd64-pcbuild.zip]]
@@ -189,7 +181,6 @@ I've also just zipped up the project files so you can just unzip them into `PCbu
 ----
 
 == Build Python ==
-
 1. Patch Python prevent manifest files from being embedded:
 
  . {{{
@@ -212,7 +203,7 @@ diff -r -Z -U 2 Python-2.7.5/Lib/distutils/msvc9compiler.py /cygdrive/c/Python27
 
 4. Click 'Build' -> 'Build Solution' (F7):
 
- You should now see a successful DEBUG build:
+ . You should now see a successful DEBUG build:
 
  . {{{
 ========== Build: 25 succeeded, 0 failed, 0 up-to-date, 1 skipped ==========
@@ -221,18 +212,17 @@ diff -r -Z -U 2 Python-2.7.5/Lib/distutils/msvc9compiler.py /cygdrive/c/Python27
 ----
 
 == Testing Python ==
-
 FIXME
 
 ----
 
 == Install Python ==
-
 Now that Python has been built, I will use the script below to install executables and libraries under one directory tree, as if it were installed by a self-installer.  Building the msi self installer won't work in Visual Studio Express, in addition, the MSI tool won't package up any of the debug libraries.
 
 1. Save this script to your build directory: [[attachment:manual_install.py]]
 
 2. Run the script from the build directory:
+
  . {{{
 C:\Users\Nick\Downloads\python_build> Python-2.7.5\PCbuild\amd64\python_d.exe manual_install.py
 EXTERNALS_DIR = C:\Users\Nick\Downloads\python_build
@@ -312,13 +302,11 @@ SUCCESS!
 ----
 
 = How to build Numpy & Matplotlib in Debug Mode =
-
 Numpy is easy to get installed, however, Matplotlib has several dependancies, FreeType, libpng and zlib.
 
 ----
 
 == Setup Environment ==
-
 1. Save this text to 'benv64_d.bat':
 
  . {{{
@@ -352,7 +340,6 @@ Adding python64_d to path ...
 ----
 
 == Build and Install Numpy ==
-
 1. Download Numpy-1.7.1.zip
 
 2. Build and install with this command:
@@ -365,7 +352,6 @@ python_d.exe setup.py build --debug install
 ----
 
 == Verify Numpy Installed ==
-
 1. Try to import numpy:
 
  . {{{
@@ -380,7 +366,6 @@ SUCCESS!
 ----
 
 == Build & Install FreeType ==
-
 1. Download and unzip freetype-2.5.0.1
 
 2. Open 'freetype-2.5.0.1\builds\win32\vs2010\freetype.sln`
@@ -401,7 +386,6 @@ cp builds\win32\vc2010\x64\Debug\freetype250_D.lib C:\Python27_d\PC\VC6\freetype
 ----
 
 == Build & Install zlib ==
-
 1. Download and unzip `zlib-1.2.8.tar.gz`
 
 2. Open `zlib-1.2.8\contrib\vstudio\vc11\zlibvc.sln` with Visual Studio 2012 Express
@@ -417,12 +401,11 @@ copy zlib-1.2.8\contrib\vstudio\vc11\x64\ZlibStatDebug\zlibstat.lib C:\Python27_
 ----
 
 == Build & Install libpng ==
-
 1. Download lpng166.zip
 
 2. Edit the file `lpng166\projects\vstudio\zlib.props`:
 
- Need to edit ZLibSrcDir to reflect correct zlib version:
+ . Need to edit ZLibSrcDir to reflect correct zlib version:
 
  . {{{
 <ZLibSrcDir>..\..\..\..\zlib-1.2.8</ZLibSrcDir>
@@ -458,10 +441,9 @@ copy lpng166\projects\vstudio\x64\Debug\libpng16.lib C:\Python27_d\PC\VC6\png.li
 ----
 
 == Installing Matplotlib ==
-
 1. Download and unzip matplotlib-1.3.0
 
- For my DEBUG environment, I'm going to use the TK backend, so write this `setup.cfg`:
+ . For my DEBUG environment, I'm going to use the TK backend, so write this `setup.cfg`:
 
  . {{{
 # Rename this file to setup.cfg to modify matplotlib's
@@ -479,7 +461,6 @@ copy lpng166\projects\vstudio\x64\Debug\libpng16.lib C:\Python27_d\PC\VC6\png.li
 
 [rc_options]
 backend = TkAgg
-
 }}}
 
 2. To compile against TK, FreeType, libpng, and zlib, we need update the INCLUDE shell variable so the matplotlib setup can find the headers, from the `python_build` directory do:
@@ -487,9 +468,7 @@ backend = TkAgg
  . {{{
 set INCLUDE=%CD%\tcltk64\include;%CD%\freetype-2.5.0.1\include;%CD%\lpng166;%INCLUDE%
 }}}
-
  FYI, `%CD%` expands to the current directory.
-
 
 4. Copy tcl/tk libs so matplotlib can find them, note renaming without the 'g':
 
@@ -498,12 +477,11 @@ copy tcltk64\lib\tcl85g.lib C:\Python27_d\libs\tcl85.lib
 copy tcltk64\lib\tk85g.lib C:\Python27_d\libs\tk85.lib
 }}}
 
-
 3. Build and install:
 
  . {{{
 cd matplotlib-1.3.0
-python_d setup.py build --debug install 
+python_d setup.py build --debug install
 }}}
 
 4. Test maptplotlib:
@@ -520,7 +498,6 @@ Type "help", "copyright", "credits" or "license" for more information.
 [480934 refs]
 >>> show()
 }}}
-
  If all went well, we should now have a plot:
-
- FIXME
+ [[attachment:plot.png]]
+ .
