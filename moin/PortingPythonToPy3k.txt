@@ -4,7 +4,7 @@
 Porting Python Code to 3.x
 **************************
 
-There are four ways to support Python 3:
+There are three ways to support Python 3:
 
 1) make code run unmodified in both Python 2 and Python 3
 2) maintain a Python 2 base and use 2to3_ to generate Python 3 code
@@ -17,13 +17,14 @@ Each approach has its strengths and weaknesses. Beyond this document, the approa
 Approach 1: Make code run unmodified in both Python 2 and Python 3
 ==================================================================
 
-Supporting code that runs in both Python 2.6 and Python 3 is now not much more difficult than porting to Python 3.
+Supporting code that runs in both Python 2.6 and Python 3 is now not much more difficult than porting to Python 3 and leaving behind Python 2.6.
 
-Python 2.6 and 2.7 provide forward-compatibility for some of the new syntax in Python 3 through `__future__` import statements::
+Python 2.6 and 2.7 provide forward-compatibility for some of the new syntax in Python 3 through ``__future__`` import statements::
 
-    from __future__ import (absolute_import, division, print_function, unicode_literals)
+    from __future__ import (absolute_import, division, print_function,
+                            unicode_literals)
 
-Beyond `__future__` imports, two 3rd-party packages that greatly ease the task of supporting both Python 2 and Python 3 in a single codebase are `future <http://python-future.org>`_ and `six <http://pythonhosted.org/six/>`_. `future` makes it possible to support both Python versions from one clean, hack-free codebase. `six` is a thinner layer that requires more work and compatibility hacks, but it also supports older versions--like 2.3, 2.4, and 2.5, which is very awkward without `six`.
+Beyond ``__future__`` imports, two 3rd-party packages that greatly ease the task of supporting both Python 2 and Python 3 in a single codebase are `future <http://python-future.org>`_ and `six <http://pythonhosted.org/six/>`_. `future` makes it possible to support both Python versions from one clean, hack-free codebase. `six` is a thinner layer that also supports older versions--like 2.3, 2.4, and 2.5--which is very awkward without `six`.
 
 For more information about the many forward-compatibility features that were added in Python 2.6 and Python 2.7, see these pages:
 
@@ -49,7 +50,7 @@ When using "from __future__ import unicode_literals" in a module, it may also be
    except NameError:
      pass # Forward compatibility with Py3k
 
-`future` solves this problem by providing backports of the `bytes` and `str` objects from Python 3 that inherit from Python 2's `str` and `unicode` objects, respectively. See http://python-future.org/what_else.html#bytes.
+`future` solves this problem by providing backports of the `bytes` and `str` objects from Python 3 that inherit from Python 2's `str` and `unicode` objects, respectively. See `here <http://python-future.org/what_else.html#bytes>`_.
 
 
 Supporting older Python versions
@@ -114,7 +115,8 @@ Make sure to use `from __future__ import division` (introduced in Python 2.2) to
 
 
 Approach 2: Maintain a Python 2 base and use 2to3 to generate Python 3 code
-===========================================================================
+============================================================================
+
 
 Make sure the code runs in Python 2.6 and use 2to3_
 
@@ -165,12 +167,12 @@ The standard IO streams (sys.stdin, sys.stdout, sys.stderr), are in text mode by
 The flush() clears out any text (unicode) data that is stored in the TextIOWrapper, and the buffer attribute provides access to the lower-level binary stream.  If you are only writing binary data, you can remove the text layer with `sys.stdout = sys.stdout.detach()` in Python 3.1; in Python 3.0, do `sys.stdout = sys.stdout.buffer`.
 
 
-Approach 3: Maintain a Python 3 base and use `3to2` or `future` to generate Python 2 code
-=====================================================================================
+Approach 3: Maintain a Python 3 base and use `3to2` or `futurize` to generate Python 2 code
+============================================================================================
 
 `3to2` is a tool to help with automatically converting Python 3-only code into Python 2-only code. See 3to2_.
 
-An alternative is to use the `futurize` script with the `--from3` option to add imports from the `future` package to provide Python 2 compatibility. See http://python-future.org/automatic_conversion.html#backwards-3-to-both.
+An alternative is to use the `futurize` script with the `--from3` option. This extends `3to2` to add imports from the `future` package to provide Python 2 compatibility. See `here <http://python-future.org/automatic_conversion.html#backwards-3-to-both>`_.
 
 
 Additional resources
