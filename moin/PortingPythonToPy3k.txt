@@ -1,19 +1,119 @@
 #format rst
 
 **************************
-Porting Python Code to 3.0
+Porting Python Code to 3.x
 **************************
 
-There are three ways to support Python 3:
+There are four ways to support Python 3:
 
-1) maintain a Python 2 base and use 2to3_ to generate Python 3 code
-2) make code run unmodified in both Python 2 and Python 3
-3) maintain separate releases for Python 2 and Python 3
+1) make code run unmodified in both Python 2 and Python 3
+2) maintain a Python 2 base and use 2to3_ to generate Python 3 code
+3) maintain a Python 3 base and use 3to2_ to generate Python 2 code
 
 Each approach has its strengths and weaknesses. Beyond this document, the approaches are also discussed in the official `HOWTO on porting Python 2 code to Python 3 <http://docs.python.org/py3k/howto/pyporting.html>`_.
 
 
-Approach 1: Maintain a Python 2 base and use 2to3 to generate Python 3 code
+
+Approach 1: Make code run unmodified in both Python 2 and Python 3
+==================================================================
+
+Supporting code that runs in both Python 2.6 and Python 3 is now not much more difficult than porting to Python 3.
+
+Python 2.6 and 2.7 provide forward-compatibility for some of the new syntax in Python 3 through `__future__` import statements::
+
+    from __future__ import (absolute_import, division, print_function, unicode_literals)
+
+Beyond `__future__` imports, two 3rd-party packages that greatly ease the task of supporting both Python 2 and Python 3 in a single codebase are `future <http://python-future.org>`_ and `six <http://pythonhosted.org/six/>`_. `future` makes it possible to support both Python versions from one clean, hack-free codebase. `six` is a thinner layer that requires more work and compatibility hacks, but it also supports older versions--like 2.3, 2.4, and 2.5, which is very awkward without `six`.
+
+For more information about the many forward-compatibility features that were added in Python 2.6 and Python 2.7, see these pages:
+
+.. _What's New in Python 2.6: http://docs.python.org/whatsnew/2.6.html
+.. _What's New in Python 2.7: http://docs.python.org/whatsnew/2.7.html
+
+
+
+Strings and Unicode
+-------------------
+
+As of Python 2.6 the 2.x line includes a "bytes = str" alias in the builtins. Along with the bytes literal syntax, this allows binary data stored in a str instance to be clearly flagged so that it will use the correct type when the code is run in 3.x (either directly or via the 2to3_ conversion tool). The reason it is done this way rather than backporting the 3.x bytes type is that most 2.x APIs that expect immutable binary data expect it as an 8-bit str instance - trying to pass in a backported 3.x bytes type wouldn't have the desired effect. To support versions earlier than 2.6, it is possible to define the alias at the top of the module::
+
+   try:
+     bytes # Forward compatibility with Py3k
+   except NameError:
+     bytes = str
+
+When using "from __future__ import unicode_literals" in a module, it may also be useful to insert "str = unicode" near the top of the module. This will ensure that "isinstance('', str)" remains true in that module::
+
+   try:
+     str = unicode
+   except NameError:
+     pass # Forward compatibility with Py3k
+
+`future` solves this problem by providing backports of the `bytes` and `str` objects from Python 3 that inherit from Python 2's `str` and `unicode` objects, respectively. See http://python-future.org/what_else.html#bytes.
+
+
+Supporting older Python versions
+--------------------------------
+
+Print Statement/Function
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Since `print` is a statement in Python 2 and a function in Python 3, the `print` statement cannot be used in code that runs in both Python 2.5 and Python 3.
+
+The solution for supporting both Python 2.6/2.7 and Python 3 is to use print as a function together with the __future__ import::
+
+    from __future__ import print_function
+    print('hello world')
+
+To support Python versions older than 2.6, you can instead either use the `print_` function provided by `six` or use the `sys.stdout.write` method as follows, replacing this::
+
+    print 'hello world'
+
+with this::
+
+    import sys
+    sys.stdout.write('hello world\n')
+
+
+Exceptions
+~~~~~~~~~~
+
+Python 2.6 introduced the `as` keyword for exceptions which is used in Python 3::
+
+    try:
+        1 / 0
+    except ZeroDivisionError as e:
+        pass
+
+Python versions <2.6, which do not support the `as` keyword, have incompatible syntax with Python 3 for accessing the value of an exception. To support older Python versions, you can use the following idiom to save the value of an exception::
+
+    import sys
+    try:
+        open('/path/to/some/file')
+    except IOError:
+        _, e, _ = sys.exc_info()
+
+
+
+Relative Imports
+----------------
+
+Python 3 makes a distinction between relative and absolute imports.  In Python 2.5, use `from __future__ import absolute_import` to get the same behavior as Python 3.  To support older versions as well, only use absolute imports.  Replace a relative import::
+
+    from xyz import abc
+
+with an absolute import::
+
+    from mypackage.xyz import abc
+
+
+Integer Division
+----------------
+
+Make sure to use `from __future__ import division` (introduced in Python 2.2) to get the non-truncating behavior, which is default in Python 3.
+
+
+Approach 2: Maintain a Python 2 base and use 2to3 to generate Python 3 code
 ===========================================================================
 
 Make sure the code runs in Python 2.6 and use 2to3_
@@ -51,16 +151,6 @@ Manual changes (not done by 2to3_):
 
 .. _issue4601: http://bugs.python.org/issue4601
 
-Additional resources:
-
-* http://diveintopython3.org/porting-code-to-python-3-with-2to3.html
-* http://packages.python.org/distribute/python3.html
-* http://lucumr.pocoo.org/2010/2/11/porting-to-python-3-a-guide
-* http://lucumr.pocoo.org/2011/1/22/forwards-compatible-python/
-* http://techspot.zzzeek.org/2011/01/24/zzzeek-s-guide-to-python-3-porting
-* http://dabeaz.blogspot.com/2011/01/porting-py65-and-my-superboard-to.html
-* http://python3porting.com/strategies.html
-* http://lwn.net/Articles/426906/
 
 Strings and Bytes
 -----------------
@@ -75,99 +165,31 @@ The standard IO streams (sys.stdin, sys.stdout, sys.stderr), are in text mode by
 The flush() clears out any text (unicode) data that is stored in the TextIOWrapper, and the buffer attribute provides access to the lower-level binary stream.  If you are only writing binary data, you can remove the text layer with `sys.stdout = sys.stdout.detach()` in Python 3.1; in Python 3.0, do `sys.stdout = sys.stdout.buffer`.
 
 
-Approach 2: Make code run unmodified in both Python 2 and Python 3
-==================================================================
+Approach 3: Maintain a Python 3 base and use `3to2` or `future` to generate Python 2 code
+=====================================================================================
 
-Supporting code that runs in both Python 2.6 and Python 3 is not much more difficult than porting to Python 3 (see above for more details).  However, supporting older versions--like 2.3, 2.4, and 2.5--is much more difficult.  This requires avoiding any syntax that only works in one version or the other, so it often involves resorting to hacks.  These hacks make the code more awkward than it would be in Python 3 or in Python 2, but many people find that this is better than supporting only one version or the other.  When support for Python 2 is eventually dropped, these hacks can be removed.
+`3to2` is a tool to help with automatically converting Python 3-only code into Python 2-only code. See 3to2_.
 
-Python 2.6 introduces forward-compatibility for many new Python 3 features.  The Python 3 builtins are accessible by doing an import from `future_builtins`.  To use the new print function, use `from __future__ import print_function`, and to make string literals be interpreted as unicode, use `from __future__ import unicode_literals`.  These forward-compatibility features, and many others, are described in greater detail in `What's New in Python 2.6`_:
-
-.. _What's New in Python 2.6: http://docs.python.org/whatsnew/2.6.html
-
-Additional resources:
-
-* http://pydev.blogspot.com/2008/11/making-code-work-in-python-2-and-3.html
-* http://mail.mems-exchange.org/durusmail/qp/441/
-* http://mikewatkins.ca/2008/11/29/python-2-and-3-metaclasses/
-
-Six is a library which has helpers to simplify writing codebases that support both Python 2 and 3. See http://pypi.python.org/pypi/six.
+An alternative is to use the `futurize` script with the `--from3` option to add imports from the `future` package to provide Python 2 compatibility. See http://python-future.org/automatic_conversion.html#backwards-3-to-both.
 
 
-Strings and Unicode
--------------------
+Additional resources
+====================
 
-As of Python 2.6 the 2.x line includes a "bytes = str" alias in the builtins. Along with the bytes literal syntax, this allows binary data stored in a str instance to be clearly flagged so that it will use the correct type when the code is run in 3.x (either directly or via the 2to3_ conversion tool). The reason it is done this way rather than backporting the 3.x bytes type is that most 2.x APIs that expect immutable binary data expect it as an 8-bit str instance - trying to pass in a backported 3.x bytes type wouldn't have the desired effect. To support versions earlier than 2.6, it is possible to define the alias at the top of the module::
+* http://python-future.org
+* http://diveintopython3.org/porting-code-to-python-3-with-2to3.html
+* http://packages.python.org/distribute/python3.html
+* http://lucumr.pocoo.org/2010/2/11/porting-to-python-3-a-guide
+* http://lucumr.pocoo.org/2011/1/22/forwards-compatible-python/
+* http://techspot.zzzeek.org/2011/01/24/zzzeek-s-guide-to-python-3-porting
+* http://dabeaz.blogspot.com/2011/01/porting-py65-and-my-superboard-to.html
+* http://python3porting.com/strategies.html
+* http://lwn.net/Articles/426906/
 
-   try:
-     bytes # Forward compatibility with Py3k
-   except NameError:
-     bytes = str
-
-When using "from __future__ import unicode_literals" in a module, it may also be useful to insert "str = unicode" near the top of the module. This will ensure that "isinstance('', str)" remains true in that module::
-
-   try:
-     str = unicode
-   except NameError:
-     pass # Forward compatibility with Py3k
-
-
-Print Statement/Function
-------------------------
-
-Since `print` is a statement in Python 2 and a function in Python 3, it cannot be used in code that runs in both Python 2.5 and Python 3.  Instead, use the `write` method.  Replace this::
-
-    print 'hello world'
-
-with this::
-
-    import sys
-    sys.stdout.write('hello world\n')
-
-or if you really like to be tricky, with this::
-
-    print('hello world')
-
-This uses the print function in Python 3 but still works with the print statement in Python 2.  Just don't use anything fancy, like writing to a file with `>>`.
-
-
-Exceptions
-----------
-
-Python before 2.6 does not have the `as` keyword, so Python 2 and Python 3 have incompatible syntax for accessing the value of an exception.  Compatible code should use the following idiom to save the value of an exception::
-
-    import sys
-    try:
-        open('/path/to/some/file')
-    except IOError:
-        _, e, _ = sys.exc_info()
-
-Relative Imports
-----------------
-
-Python 3 makes a distinction between relative and absolute imports.  In Python 2.5, use `from __future__ import absolute_import` to get the same behavior as Python 3.  To support older versions as well, only use absolute imports.  Replace a relative import::
-
-    from xyz import abc
-
-with an absolute import::
-
-    from mypackage.xyz import abc
-
-
-Integer Division
-----------------
-
-Make sure to use `from __future__ import division` (introduced in Python 2.2) to get the non-truncating behavior, which is default in Python 3.
-
-
-
-Approach 3: Maintain Separate Releases for Python 2 and Python 3
-================================================================
-
-Convert a Python 2 tree to Python 3 with the 2to3_ tool: http://doc.python.org/library/2to3.html
 
 
 Martin's notes from psycopg2
-============================
+----------------------------
 
 - the buffer object is gone; I use memoryview in 3.x.
 
@@ -188,14 +210,15 @@ Martin's notes from psycopg2
 
 
 Differences in specific libraries
-=================================
+---------------------------------
 
 These are porting notes on differences in third party libraries when run on Python 2 and Python 3.
 
 * `PyQt4 </PyQt4>`_
 
-Links
-=====
+
+More links
+----------
 
 * a bunch of very useful reference code: http://code.google.com/p/python-incompatibility/
 * `PortingDjangoTo3k`_
