@@ -21,8 +21,8 @@ Supporting code that runs in both Python 2.6 and Python 3 is now not much more d
 
 Python 2.6 and 2.7 provide forward-compatibility for some of the new syntax in Python 3 through ``__future__`` import statements::
 
-    from __future__ import (absolute_import, division, print_function,
-                            unicode_literals)
+    from __future__ import (absolute_import, division,
+                            print_function, unicode_literals)
 
 Beyond ``__future__`` imports, two 3rd-party packages that greatly ease the task of supporting both Python 2 and Python 3 in a single codebase are `future <http://python-future.org>`_ and `six <http://pythonhosted.org/six/>`_. `future` makes it possible to support both Python versions from one clean, hack-free codebase. `six` is a thinner layer that also supports older versions--like 2.3, 2.4, and 2.5--which is very awkward without `six`.
 
@@ -36,7 +36,7 @@ For more information about the many forward-compatibility features that were add
 Strings and Unicode
 -------------------
 
-As of Python 2.6 the 2.x line includes a "bytes = str" alias in the builtins. Along with the bytes literal syntax, this allows binary data stored in a str instance to be clearly flagged so that it will use the correct type when the code is run in 3.x (either directly or via the 2to3_ conversion tool). The reason it is done this way rather than backporting the 3.x bytes type is that most 2.x APIs that expect immutable binary data expect it as an 8-bit str instance - trying to pass in a backported 3.x bytes type wouldn't have the desired effect. To support versions earlier than 2.6, it is possible to define the alias at the top of the module::
+As of Python 2.6 the 2.x line includes a "bytes = str" alias in the builtins. Along with the bytes literal syntax, this allows binary data stored in a str instance to be clearly flagged so that it will use the correct type when the code is run in 3.x (either directly or via the 2to3_ conversion tool). The reason it is done this way rather than backporting the 3.x bytes type is that most 2.x APIs that expect immutable binary data expect it as an 8-bit str instance. To support versions earlier than 2.6, it is possible to define the alias at the top of the module::
 
    try:
      bytes # Forward compatibility with Py3k
@@ -50,7 +50,7 @@ When using "from __future__ import unicode_literals" in a module, it may also be
    except NameError:
      pass # Forward compatibility with Py3k
 
-`future` solves this problem by providing backports of the `bytes` and `str` objects from Python 3 that inherit from Python 2's `str` and `unicode` objects, respectively. See `here <http://python-future.org/what_else.html#bytes>`_.
+`future <http://python-future.org>`_ solves this problem by providing `backports <http://python-future.org/what_else.html#bytes>`_ of the `bytes` and `str` objects from Python 3 that inherit from Python 2's `str` and `unicode` objects, respectively.
 
 
 Supporting older Python versions
@@ -59,14 +59,14 @@ Supporting older Python versions
 Print Statement/Function
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Since `print` is a statement in Python 2 and a function in Python 3, the `print` statement cannot be used in code that runs in both Python 2.5 and Python 3.
+Since ``print`` is a statement in Python 2 and a function in Python 3, the ``print`` statement cannot be used in code that runs in both Python 2.5 and Python 3.
 
-The solution for supporting both Python 2.6/2.7 and Python 3 is to use print as a function together with the __future__ import::
+The solution for supporting both Python 2.6/2.7 and Python 3 is to use ``print`` as a function together with the ``__future__`` import::
 
     from __future__ import print_function
     print('hello world')
 
-To support Python versions older than 2.6, you can instead either use the `print_` function provided by `six` or use the `sys.stdout.write` method as follows, replacing this::
+To support Python versions older than 2.6, you can instead use the `print_` function provided by `six`, or you can use the ``sys.stdout.write`` method as follows, replacing this::
 
     print 'hello world'
 
@@ -79,14 +79,14 @@ with this::
 Exceptions
 ~~~~~~~~~~
 
-Python 2.6 introduced the `as` keyword for exceptions which is used in Python 3::
+Python 2.6 introduced the ``as`` keyword for exceptions which is used in Python 3::
 
     try:
         1 / 0
     except ZeroDivisionError as e:
         pass
 
-Python versions <2.6, which do not support the `as` keyword, have incompatible syntax with Python 3 for accessing the value of an exception. To support older Python versions, you can use the following idiom to save the value of an exception::
+Python versions <2.6, which do not support the ``as`` keyword, have incompatible syntax with Python 3 for accessing the value of an exception. To support older Python versions, you can use the following idiom to save the value of an exception::
 
     import sys
     try:
@@ -99,7 +99,7 @@ Python versions <2.6, which do not support the `as` keyword, have incompatible s
 Relative Imports
 ----------------
 
-Python 3 makes a distinction between relative and absolute imports.  In Python 2.5, use `from __future__ import absolute_import` to get the same behavior as Python 3.  To support older versions as well, only use absolute imports.  Replace a relative import::
+Python 3 makes a distinction between relative and absolute imports, dropping support for implicit relative imports.  In Python 2.5+, use ``from __future__ import absolute_import`` to get the same behavior as Python 3.  To support older versions as well, only use absolute imports.  Replace a relative import::
 
     from xyz import abc
 
@@ -172,7 +172,7 @@ Approach 3: Maintain a Python 3 base and use `3to2` or `futurize` to generate Py
 
 `3to2` is a tool to help with automatically converting Python 3-only code into Python 2-only code. See 3to2_.
 
-An alternative is to use the `futurize` script with the `--from3` option. This extends `3to2` to add imports from the `future` package to provide Python 2 compatibility. See `here <http://python-future.org/automatic_conversion.html#backwards-3-to-both>`_.
+An alternative is to use the ``futurize`` script from the `future <http://python-future.org>`_ package with the `--from3 <http://python-future.org/automatic_conversion.html#backwards-3-to-both>`_ option. This extends `3to2` by adding imports from the `future` package to provide Python 2 compatibility from the same codebase.
 
 
 Additional resources
