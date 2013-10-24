@@ -24,19 +24,23 @@ Python 2.6 and 2.7 provide forward-compatibility for some of the new syntax in P
     from __future__ import (absolute_import, division,
                             print_function, unicode_literals)
 
-Beyond ``__future__`` imports, two 3rd-party packages that greatly ease the task of supporting both Python 2 and Python 3 in a single codebase are `future <http://python-future.org>`_ and `six <http://pythonhosted.org/six/>`_. `future` makes it possible to support both Python versions from one clean, hack-free codebase. `six` is a thinner layer that also supports older versions--like 2.3, 2.4, and 2.5--which is very awkward without `six`.
+Beyond ``__future__`` imports, two 3rd-party packages that greatly ease the task of supporting both Python 2 and Python 3 in a single codebase are:
 
-For more information about the many forward-compatibility features that were added in Python 2.6 and Python 2.7, see these pages:
+* `future <http://python-future.org>`_. `future` makes it possible to support both Python versions from one clean, hack-free codebase.
+* `six <http://pythonhosted.org/six/>`_. `six` is a thinner layer that also supports older versions--like 2.3, 2.4, and 2.5--which is very awkward without `six`.
 
-.. _What's New in Python 2.6: http://docs.python.org/whatsnew/2.6.html
-.. _What's New in Python 2.7: http://docs.python.org/whatsnew/2.7.html
+For more information about the many forward-compatibility features that were added in Python 2.6 and Python 2.7, see these pages: `What's New in Python 2.6 <http://docs.python.org/whatsnew/2.6.html>`_ and `What's New in Python 2.7 <http://docs.python.org/whatsnew/2.7.html>`_.
 
 
 
 Strings and Unicode
 -------------------
 
-As of Python 2.6 the 2.x line includes a "bytes = str" alias in the builtins. Along with the bytes literal syntax, this allows binary data stored in a str instance to be clearly flagged so that it will use the correct type when the code is run in 3.x (either directly or via the 2to3_ conversion tool). The reason it is done this way rather than backporting the 3.x bytes type is that most 2.x APIs that expect immutable binary data expect it as an 8-bit str instance. To support versions earlier than 2.6, it is possible to define the alias at the top of the module::
+As of Python 2.6 the 2.x line includes a "bytes = str" alias in the builtins. Along with the bytes literal syntax, this allows binary data stored in a ``str`` instance to be clearly flagged so that it will use the correct type when the code is run in 3.x (either directly or via the 2to3_ conversion tool). The reason it is done this way rather than backporting the 3.x ``bytes`` type is that most 2.x APIs that expect immutable binary data expect it as an 8-bit ``str`` instance.
+
+`future <http://python-future.org>`_ solves this problem by providing `backports <http://python-future.org/what_else.html#bytes>`_ of the ``bytes`` and ``str`` objects from Python 3 that inherit from Python 2's ``str`` and ``unicode`` objects, respectively.
+
+To support versions earlier than 2.6, it is possible to define the alias at the top of the module::
 
    try:
      bytes # Forward compatibility with Py3k
@@ -49,8 +53,6 @@ When using "from __future__ import unicode_literals" in a module, it may also be
      str = unicode
    except NameError:
      pass # Forward compatibility with Py3k
-
-`future <http://python-future.org>`_ solves this problem by providing `backports <http://python-future.org/what_else.html#bytes>`_ of the `bytes` and `str` objects from Python 3 that inherit from Python 2's `str` and `unicode` objects, respectively.
 
 
 Supporting older Python versions
