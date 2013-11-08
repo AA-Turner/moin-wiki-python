@@ -1,10 +1,19 @@
 = Buffer Protocol =
 
-This page proposes (later documents) a design for a Jython equivalent to the CPython buffer protocol.
+This page proposes (now begins to document) a design for a Jython equivalent to 
+the CPython buffer protocol. A good place to start is this 
+[[attachment:buffer_api_model.pdf | worked example (pdf)]]
+that motivated the current design. 
 
 <<TableOfContents>>
 
-== Introduction (Situation in June 2012) ==
+== Notes from a User Perspective ==
+=== What is the Buffer API? ===
+
+The Jython Buffer API is an interface you can use in Java when
+accessing or implementing certain built-in types, or your own.
+It is the basis of the type `memoryview` with which it shares
+many features.
 
 In CPython, certain objects are based on an underlying 
 memory array or buffer. The CPython designers judged it  
@@ -12,75 +21,116 @@ desirable to be able to access that buffer directly, without
 intermediate copying. CPython provides this at the C level 
 in the form of the ''buffer protocol''. This is used heaviliy in 
 the implementation of some core types and standard library 
-modules. And it is the basis of the type `memoryview`. 
+modules.  
 
-Although the buffer API and memoryview are Python 3k 
-features, they were backported into CPython 2.7. In C the 
-buffer protocol the exporting object gives consumers a  
-pointer to memory and some information about how it is 
-structured.
+The capability is just as useful in Jython, and has been implemented
+for version 2.7.
 
-Jython does not (yet) have an equivalent of buffer protocol 
-or support `memoryview`. There is a stub for each, but no 
-access to data through it. In the recent implementation of 
-`PyByteArray` absence of a buffer protocol implemented by 
-incoming arguments was a complicating factor. In CPython, 
-the majority of methods start by getting a buffer view of 
-their arguments: acceptable types are all those that 
-implement the API. Other types and modules present a similar 
-challenge in reaching 2.7 compliance. But we cannot directly 
-emulate the C buffer protocol in Java, since it does not 
-allow pointers to memory like:{{{#!cplusplus
-    self_size = _getbuffer(self, &self_bytes);
-    other_size = _getbuffer(other, &other_bytes);
-	...
-    cmp = memcmp(self_bytes.buf, other_bytes.buf, minsize);
+=== Accessing an Object that has the Buffer API ===
+
+Objects flag their willingness to provide a buffer by implementing the
+following interface:
+{{{#!java
+public interface BufferProtocol {
+    Buffer getBuffer(int flags);   
+}
 }}}
-or casts like:{{{#!cplusplus
-	((float*)ap->ob_item)[i] = x;
+
+The `flags` argument indicates the buffer characteristics wanted by the consumer,
+and what kind of data organisation the consumer can cope with.
+The return is an implementation of `PyBuffer` appropriate to the storage 
+organisation of the exporter. This interface is quite rich, but the Javadoc is 
+thorough. In fact, the interface is defined in two stages: a part that is 
+independent of the type of unit in the buffer, and a part that is definite that 
+the units are `byte`s.
+
+The type-agnostic part of the interface is `PyBUF`:
+{{{#!java
+public interface PyBUF {
+
+    boolean isReadonly();
+
+    // Access to buffer (client responsible for indexing)
+    int getNdim();
+    int[] getShape();
+    int getItemsize();
+    int getLen();
+    int[] getStrides();
+    int[] getSuboffsets();
+    boolean isContiguous(char order);
+
+    /* Constants taken from CPython object.h in v3.3 */
+
+    static final int MAX_NDIM = 64;
+    static final int WRITABLE = 0x0001;
+    static final int SIMPLE = 0;
+    static final int FORMAT = 0x0004;
+    static final int ND = 0x0008;
+    static final int STRIDES = 0x0010 | ND;
+    static final int C_CONTIGUOUS = 0x0020 | STRIDES;
+    static final int F_CONTIGUOUS = 0x0040 | STRIDES;
+    static final int ANY_CONTIGUOUS = 0x0080 | STRIDES;
+    static final int INDIRECT = 0x0100 | STRIDES;
+    static final int CONTIG = ND | WRITABLE;
+    static final int CONTIG_RO = ND;
+    static final int STRIDED = STRIDES | WRITABLE;
+    static final int STRIDED_RO = STRIDES;
+    static final int RECORDS = STRIDES | WRITABLE | FORMAT;
+    static final int RECORDS_RO = STRIDES | FORMAT;
+    static final int FULL = INDIRECT | WRITABLE | FORMAT;
+    static final int FULL_RO = INDIRECT | FORMAT;
+    static final int NAVIGATION = SIMPLE | ND | STRIDES | INDIRECT;
+    static final int IS_C_CONTIGUOUS = C_CONTIGUOUS & ~STRIDES;
+    static final int IS_F_CONTIGUOUS = F_CONTIGUOUS & ~STRIDES;
+    static final int CONTIGUITY = (C_CONTIGUOUS | F_CONTIGUOUS | ANY_CONTIGUOUS) & ~STRIDES;
+}
 }}}
-Yet, without something filling the role, core implementation 
-is made more difficult and always falls short of 
-compatibility.
 
-This raises two questions:
- * Can we create a buffer API that provides an equivalent facility in Java?
- * Can we go on from there to implement memoryview?
-This page looks at the first of these, arguing for a 
-particular approach. In due course, it ought to change into 
-documentation of the approach, preserving the rationale of 
-the final design.
+The byte-oriented part of the interface is `PyBuffer`. For the most part, you can 
+ignore the difference between `PyBUF` and `PyBuffer` and think of all the methods
+as belonging to `PyBuffer`:
+{{{#!java
+public interface PyBuffer extends PyBUF, BufferProtocol {
 
-== References ==
+    // Access to buffer contents (index calculation done by buffer)
+    byte byteAt(int index) throws IndexOutOfBoundsException;
+    int intAt(int index) throws IndexOutOfBoundsException;
+    void storeAt(byte value, int index) throws IndexOutOfBoundsException;
+    byte byteAt(int... indices) throws IndexOutOfBoundsException;
+    int intAt(int... indices) throws IndexOutOfBoundsException;
+    void storeAt(byte value, int... indices) throws IndexOutOfBoundsException;
 
- 1. [[http://python.org/dev/peps/pep-3118/|PEP 3118]] Revising the buffer protocol
- 1. [[http://docs.python.org/library/stdtypes.html#memoryview-type|memoryview type]]  (in Python 2.7 docs)
- 1. [[http://docs.python.org/py3k/library/stdtypes.html#memoryview-type|memoryview type]]  (in Python 3 docs)
- 1. [[http://docs.python.org/c-api/typeobj.html#buffer-object-structures|Buffer Object Structures]] (in Python 2.7 docs)
- 1. [[http://docs.python.org/py3k/c-api/buffer.html|Buffer Protocol]] (in Python 3 docs)
- 1. [[http://bugs.python.org/issue10181| CPython issue 10181]] Problems with Py_buffer management in `memoryobject.c` (and elsewhere?)
+    // Bulk operations (index calculation done by buffer)
+    void copyTo(byte[] dest, int destPos);
+    void copyTo(int srcIndex, byte[] dest, int destPos, int length);
+    void copyFrom(byte[] src, int srcPos, int destIndex, int length);
+    void copyFrom(PyBuffer src);
 
-http://docs.python.org/py3k/c-api/buffer.html
+    // Releasing a buffer or getting another (or a slice)
+    void release();
+    boolean isReleased();
+    @Override PyBuffer getBuffer(int flags); // from BufferProtocol
+    public PyBuffer getBufferSlice(int flags, int start, int length);
+    public PyBuffer getBufferSlice(int flags, int start, int length, int stride);
 
+    // Access to buffer (client responsible for indexing)
+    public static class Pointer {
+        public byte[] storage;
+        public int offset;
+        public Pointer(byte[] storage, int offset) {
+            this.storage = storage;
+            this.offset = offset;
+        }
+    }
 
+    PyBuffer.Pointer getBuf();
+    PyBuffer.Pointer getPointer(int index);
+    PyBuffer.Pointer getPointer(int... indices);
 
-== Design ==
-=== Considerations ===
-
- * We would benefit from something in the role of the CPython buffer API.
- * It should be as familiar as possible to people who know the CPython buffer API.
- * It should be a feasible basis for `memoryview`.
- * Java is not C:
-   * some CPython buffer API idioms have no equivalent, e.g. {{{((float*)ap->ob_item)[i] = x;}}}
-   * and some may be done in a better way (e.g. polymorphism in place of if statements, object lifetime).
- * 99% (maybe 100%) of core development only accesses the buffer as a one-dimensional array of bytes.
- * Some significant applications (NumPy, PIL) use the richer facilities (>1 dimension, strided access, indirection).
-
-
-=== Sketch interface to bytes ===
-
-
-=== Provision for things other than bytes ===
-
-
-=== Combined proposal ===
+    // Interpreting the bytes
+    String getFormat();
+}
+}}}
+Notice that an object that implements `PyBuffer` must itself implement the 
+`BufferProtocol`. A buffer can give you a buffer, which may just be itself or 
+could be an independent object, depending on the implementation. 
