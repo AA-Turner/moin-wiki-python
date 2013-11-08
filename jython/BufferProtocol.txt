@@ -136,14 +136,14 @@ could be an independent object, depending on the implementation.
 
 === Adding the Buffer API to an Object ===
 
-The core package org.python.core only defines the interfaces. Several PyBuffer 
+The core package org.python.core only defines the interfaces. Several `PyBuffer` 
 implementations that could be exported by object implementations are provided in 
-org.python.core.buffer. The place to start is with one of these basic types:
+`org.python.core.buffer`. The place to start is with one of these basic types:
 
-||Buffer Type ||Suitable for ...||
-||SimpleBuffer ||read-only 1D array of bytes||
-||SimpleWritableBuffer || 1D array of bytes ||
-||SimpleStringBuffer ||Java String (representing bytes)||
+||'''Buffer Type''' ||'''Suitable for ...'''||
+||!SimpleBuffer ||read-only 1D array of bytes||
+||!SimpleWritableBuffer || 1D array of bytes ||
+||!SimpleStringBuffer ||Java String (representing bytes)||
 
 These could all be extended or for a more sophisticated behaviour, consider 
 extending `BaseBuffer`.
@@ -152,15 +152,15 @@ extending `BaseBuffer`.
 
 ==== Similarities with CPython ====
 
-* The navigational arrays (`shape`, `strides`, `suboffsets`) and `format`, `unitsize` are present with the same meanings.
-* The "request flags" have the same values, with similar names `PyBUF.STRIDED` in place of `PyBUF_STRIDED`.
-* The discipline of matching `get` and `release` applies also in Jython. 
+ * The navigational arrays (`shape`, `strides`, `suboffsets`) and `format`, `unitsize` are present with the same meanings.
+ * The "request flags" have the same values, with similar names `PyBUF.STRIDED` in place of `PyBUF_STRIDED`.
+ * The discipline of matching `get` and `release` applies also in Jython. 
 
 ==== Differences from CPython ====
 
-* `PyBuffer` is a Java interface: quantities that were struct members become `getXXX()` methods.
-* `PyBuffer` always supplies full information (`shape`, `strides`, `format`).
-* The different buffer organisations are expressed through different classes implementing the interface.
-* Library functions taking PyObject or PyBuffer arguments in CPython become methods on those types.
-* A `PyBuffer` manages the get-release accounting for exporters.
-* Wherever CPython uses a `char*` pointer, Jython reference a buffer of bytes and an offset within it. 
+ * `PyBuffer` is a Java interface: quantities that were struct members become `getXXX()` methods.
+ * `PyBuffer` always supplies full information (`shape`, `strides`, `format`).
+ * The different buffer organisations are expressed through different classes implementing the interface.
+ * Library functions taking `PyObject` or `PyBuffer` arguments in CPython become methods on those types.
+ * A `PyBuffer` manages the get-release accounting for exporters.
+ * Wherever CPython uses a `char*` pointer, Jython reference a buffer of bytes and an offset within it. 
