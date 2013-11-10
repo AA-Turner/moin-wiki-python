@@ -7,8 +7,7 @@ that motivated the current design.
 
 <<TableOfContents>>
 
-== Notes from a User Perspective ==
-=== What is the Buffer API? ===
+== What is the Buffer API? ==
 
 The Jython Buffer API is an interface you can use in Java when
 accessing or implementing certain built-in types, or your own.
@@ -26,7 +25,7 @@ modules.
 The capability is just as useful in Jython, and has been implemented
 for version 2.7.
 
-=== Accessing an Object that has the Buffer API ===
+== Accessing an Object that has the Buffer API ==
 
 Objects flag their willingness to provide a buffer by implementing the
 following interface:
@@ -134,7 +133,7 @@ Notice that an object that implements `PyBuffer` must itself implement the
 `BufferProtocol`. A buffer can give you a buffer, which may just be itself or 
 could be an independent object, depending on the implementation. 
 
-=== Adding the Buffer API to an Object ===
+== Adding the Buffer API to an Object ==
 
 The core package org.python.core only defines the interfaces. Several `PyBuffer` 
 implementations that could be exported by object implementations are provided in 
@@ -148,15 +147,15 @@ implementations that could be exported by object implementations are provided in
 These could all be extended or for a more sophisticated behaviour, consider 
 extending `BaseBuffer`.
 
-=== Converting from CPython ===
+== Converting from CPython ==
 
-==== Similarities with CPython ====
+=== Similarities with CPython ===
 
  * The navigational arrays (`shape`, `strides`, `suboffsets`) and `format`, `unitsize` are present with the same meanings.
  * The "request flags" have the same values, with similar names `PyBUF.STRIDED` in place of `PyBUF_STRIDED`.
  * The discipline of matching `get` and `release` applies also in Jython. 
 
-==== Differences from CPython ====
+=== Differences from CPython ===
 
  * `PyBuffer` is a Java interface: quantities that were struct members become `getXXX()` methods.
  * `PyBuffer` always supplies full information (`shape`, `strides`, `format`).
