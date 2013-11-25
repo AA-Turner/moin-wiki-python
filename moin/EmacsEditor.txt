@@ -1,3 +1,68 @@
-Hello! I am Marlys. I smile that I could join to the entire globe. I live in Great Britain, in the south region. I dream to go to the different countries, to obtain [[http://www.formasonboroisland.org/advantage-of-checking-your-credit-reports-on-regular-basics/|familiarized]] with interesting individuals.<<BR>>
-<<BR>>
-Here is my webpage; [[http://e40.us/bh1|http://www.conlatatca.net/minutiae-about-the-free-credit-reports-from-all-the-three-bureaus/]]
+= Emacs =
+Emacs (the major flavors being GnuEmacs and XEmacs) is a text editor which come with good support for writing Python code. Each has its strengths and weaknesses, but in general either provide very nice environments for the Python programmer.
+
+== Tools for Python coders ==
+Please [[http://mail.python.org/mailman/listinfo/python-mode|get involved]] if you want to help.
+
+Some tools have been written for using Python from Emacs:
+
+ * [[http://launchpad.net/python-mode|python-mode.el]]
+   Addresses a lot of languages specific features, navigates nested blocks, deals with different Python versions and flavors etc.
+   How to setup a complete IDE around python-mode.el was shown at [[http://www.youtube.com/watch?v=0cZ7szFuz18If|EuroPython 2013]].
+   Other approaches relying on company-mode, Pymacs, ropemacs and pycomplete are known to work likewise
+
+ * python.el of Emacs 22. For a version with fixes and enhancements (as of 2006-06) and one that works with Emacs 21, see http://www.loveshack.ukfsn.org/emacs.
+
+ * python.el of Emacs 24.2. 
+
+ * Emacs GUD PDB, support for sourcelevel debugging of Python code in Emacs. (Note: thanx to Ganesan R: Create the following script with the file name as "pdb" in your path so emacs can find pdb and default to filename arguments in the current dirctory: exec python /usr/lib/python2.3/pdb.py "$@")
+ * [[http://www.iro.umontreal.ca/~pinard/pymacs/Pymacs.tar.gz|Pymacs(download)]], an extension for allowing Emacs users to extend Emacs using Python, where they might have traditionally used Emacs LISP. ' There are also [[EmacsWiki:cgi-bin/wiki.pl?PyMacs|PyMacs notes on the Emacs wiki.]]
+ * [[http://rope.sourceforge.net/ropemacs.html|ropemacs]] is a plugin for performing python refactorings in emacs. It uses rope library and pymacs.
+ * [[http://home.exetel.com.au/peterm|Emacs Language Sensitive Editor (ELSE)]], an template-based minor mode for Emacs, with templates for Python.
+ * [[http://sourceforge.net/projects/oo-browser/|OO-Browser]], an Emacs class browser for object-oriented languages with support for Python.
+ * The [[http://www.cs.cornell.edu/home/raman/emacspeak|emacspeak audio desktop]] is a speech interface that allows visually impaired users to interact independently and efficiently with the computer. It has editing support for interactive Python development. Features aural highlighting, structured browsing and debugging.
+
+== Support for C Python core developers ==
+Both Emacs and XEmacs have support for developers hacking on the Python C code itself. If you're developing Python 2.x, just use the standard `python` style that comes with c-mode. If you're hacking on Python 3.x, you'll want to add the following code to your `.emacs` file (given by [[http://mail.python.org/pipermail/python-dev/2008-May/079582.html|Georg Brandl]]):
+
+{{{
+(c-add-style
+  "python-new"
+  '((indent-tabs-mode . nil)
+    (fill-column      . 78)
+    (c-basic-offset   . 4)
+    (c-offsets-alist  . ((substatement-open . 0)
+                         (inextern-lang . 0)
+                         (arglist-intro . +)
+                         (knr-argdecl-intro . +)))
+    (c-hanging-braces-alist . ((brace-list-open)
+                               (brace-list-intro)
+                               (brace-list-close)
+                               (brace-entry-open)
+                               (substatement-open after)
+                               (block-close . c-snug-do-while)))
+    (c-block-comment-prefix . "* "))
+  )
+
+;; This is a very crude hook that auto-selects the C style depending on
+;; whether it finds a line starting with tab in the first 3000 characters
+;; in the file
+(defun c-select-style ()
+   (save-excursion
+     (if (re-search-forward "^\t" 3000 t)
+         (c-set-style "python")
+       (c-set-style "python-new"))))
+(add-hook 'c-mode-hook 'c-select-style)
+}}}
+'''Note:''' ''We should try to get the style into upstream c-mode.''
+
+== Other resources ==
+ * [[http://www.emacswiki.org/emacs/SiteMap|The Emacs Wiki]], a good starting place. Look for relevant articles:
+  * [[http://emacswiki.org/emacs/PythonProgrammingInEmacs|PythonProgrammingInEmacs]].
+  * [[http://emacswiki.org/emacs/ProgrammingWithPythonModeDotEl|ProgrammingWithPythonModeDotEl]].
+
+ * [[http://www.gnu.org/software/emacs/emacs.html|GnuEmacs web page]].
+ * [[http://www.xemacs.org/|XEmacs web page]].
+
+----
+CategoryEditors
