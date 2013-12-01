@@ -1,34 +1,25 @@
 #pragma section-numbers off
 = Freeze =
-
 Freeze is a "[[pure Python]]" utility that ships with Python. You can use Freeze to compile executables for Unix systems.
 
 If you want to write Python, but you don't know if your clients have Python installed, use this!
 
 == How to Use ==
-
 Create a Python program, "hello.py"
 
-{{{
-#!python
+{{{#!python
 print "Hello, World!"
 }}}
-
 Then find {{{freeze.py}}} on your system, and invoke it in a directory that you don't mind filling up with {{{.c}}} files:
 
 {{{
 $ python freeze.py hello.py
 }}}
-
-
-With Debian, for example, '''dpkg -S freeze.py'''
-yields a current package name, which is, as of the time
-of writing this,  '''python2.4-examples'''.
+With Debian, for example, '''dpkg -S freeze.py''' yields a current package name, which is, as of the time of writing this,  '''python2.4-examples'''.
 
 On my system, at least, the output is this:
 
 {{{
-
   Name                      File
   ----                      ----
 m BaseHTTPServer            /usr/lib/python2.3/BaseHTTPServer.py
@@ -235,8 +226,7 @@ generating table of frozen modules
 Warning: unknown modules remain: _locale _random _socket _ssl _tkinter array binascii cStringIO fcntl math pwd select strop termios time
 Now run "make" to build the target: hello
 }}}
-
-As you can see, even a simple Python program will require several dozen modules because these are necessary simply for Python itself to start — yes, Python uses its own Standard Library to help run the language!
+As you can see, even a simple Python program will require several dozen modules because these are necessary simply for Python itself to start — yes, Python uses its own Standard Library to help run the language!
 
 Next, run make:
 
@@ -404,31 +394,31 @@ c++ -pthread  -Xlinker -export-dynamic config.o frozen.o M_BaseHTTPServer.o M_Fi
 /usr/lib/python2.3/config/libpython2.3.a(posixmodule.o)(.text+0x387a): In function `posix_tempnam':
 : the use of `tempnam' is dangerous, better use `mkstemp'
 }}}
-
 ...and you should end up with the executable, {{{hello}}}!
 
 {{{
 $ ./hello
 Hello, world!
 }}}
-
 ta da!
 
 == See Also ==
-
- * [[Py2Exe]] -- like Freeze, but makes Windows executables
+ * Py2Exe -- like Freeze, but makes Windows executables
  * PythonInstalledByDefault -- OS/desktop distributions that come with Python installed
  * README -- the README file for the "freeze" utility that comes with Python
 
 = Discussion =
-
 I may be doing something wrong; I don't think it should be including just about every module under the sun.
 
 -- LionKimbro <<DateTime(2004-08-30T04:06:38Z)>>
 
-The "problem" is pydoc. It includes Tkinter and some internet related modules for its gui. Just excluding pydoc with {{{
-python freeze.py -X pydoc hello.py}}}
+The "problem" is pydoc. It includes Tkinter and some internet related modules for its gui. Just excluding pydoc with
+
+{{{
+python freeze.py -X pydoc hello.py
+}}}
 reduces the list of frozen modules for me to this:
+
 {{{
 freezing UserDict ...
 freezing __main__ ...
@@ -470,9 +460,13 @@ freezing warnings ...
 generating table of frozen modules
 Warning: unknown modules remain: _locale _random array binascii fcntl itertools math pwd strop time
 }}}
+The minimal set of excludes which produces a still working executable, while excluding everything unnecessary is:
 
-The minimal set of excludes which produces a still working executable, while excluding everything unnecessary is: {{{
-python freeze.py -X codecs -X copy -X distutils -X encodings -X locale -X macpath -X ntpath -X os2emxpath -X popen2 -X pydoc -X re -X warnings hello.py}}} The resulting list is
+{{{
+python freeze.py -X codecs -X copy -X distutils -X encodings -X locale -X macpath -X ntpath -X os2emxpath -X popen2 -X pydoc -X re -X warnings hello.py
+}}}
+The resulting list is
+
 {{{
 freezing UserDict ...
 freezing __main__ ...
@@ -485,12 +479,14 @@ freezing types ...
 generating table of frozen modules
 Warning: unknown modules remain: pwd
 }}}
-
 Quite a difference... The sizes of the resulting binaries are:
-||'''excluded'''||<:>'''size'''||'''size stripped'''||
-||nothing||<)>6041313||<)>2267304||
-||pydoc||<)>5169213||<)>1416840||
-||maximum||<)>4666109||<)>1076264||
+||'''excluded''' ||<style="text-align:center">'''size''' ||'''size stripped''' ||
+||nothing ||<style="text-align:right">6041313 ||<style="text-align:right">2267304 ||
+||pydoc ||<style="text-align:right">5169213 ||<style="text-align:right">1416840 ||
+||maximum ||<style="text-align:right">4666109 ||<style="text-align:right">1076264 ||
+
+
+
 
 -- MarcChr <<DateTime(2005-02-03T16:42:03Z)>>
 
@@ -513,21 +509,17 @@ Traceback (most recent call last):
     import _core_
 ImportError: No module named _core_
 }}}
-
 Anyone knows why?
 
 freeze doesn't handle modules written in C/C++ like py2exe does - you have to manually copy all the .so files that you want to use into the LD_LIBRARY_PATH of the output program.  However, I did this and now my application segfaults.
 
-
-I 'm facing the simular problem what gives {{{"ImportError: No module named wxc"}}}. but when I put the right wxc.so in the app folder(No need freeze the program again), It just run ok.
-you can try it.
+I 'm facing the simular problem what gives {{{"ImportError: No module named wxc"}}}. but when I put the right wxc.so in the app folder(No need freeze the program again), It just run ok. you can try it.
 
 I tried this and I am still segfaulting - is there any solution to it?
 
 ---
 
-I tried using freeze, and got the following error:
-c++: /System/Library/Frameworks/Python.framework/Versions/2.3/lib/python2.3/config/libpython2.3.a: No such file or directory
+I tried using freeze, and got the following error: c++: /System/Library/Frameworks/Python.framework/Versions/2.3/lib/python2.3/config/libpython2.3.a: No such file or directory
 
 Anyone know what's going on?
 
@@ -535,32 +527,28 @@ On MacOS, try using [[MacPython/py2app|py2app]], it does a nice job and works pe
 
 Try manually specifying your python source tree with -p?
 
-
---------------------------------
-When I tried make after using freeze I get the error:
-powerpc-apple-darwin8-gcc-4.0.1: Python.framework/Versions/2.5/Python: No such file or directory
-i686-apple-darwin8-gcc-4.0.1: Python.framework/Versions/2.5/Python: No such file or directory
-lipo: can't figure out the architecture type of: /var/tmp//ccG5Z3m2.out
+----------
+When I tried make after using freeze I get the error: powerpc-apple-darwin8-gcc-4.0.1: Python.framework/Versions/2.5/Python: No such file or directory i686-apple-darwin8-gcc-4.0.1: Python.framework/Versions/2.5/Python: No such file or directory lipo: can't figure out the architecture type of: /var/tmp//ccG5Z3m2.out
 
 Thoughts for a newb?
 
---------------------------------
-When I execute the makefile I get:
-{{{make: execvp: config.o: Permission denied}}}
+----------
+When I execute the makefile I get: {{{make: execvp: config.o: Permission denied}}}
 
-I then changed the permission on the file to be executable and get the following error:
-{{{./config.o: ./config.o: cannot execute binary file}}}
+I then changed the permission on the file to be executable and get the following error: {{{./config.o: ./config.o: cannot execute binary file}}}
 
 The program is a simple print helloworld app. Any ideas?
 
 You shouldn't have made it executable, instead try chown USERNAME config.o
 
---------------------------------
+----------
 This doesn't seem to work right:
 
 Two systems:
+
  * A redhat9 system with python 2.5.2 compiled and installed.
  * A normal Ubuntu 8.10 box.
+
 {{{
 redhat9: (echo "import os, sys, time" ; echo "print repr(time)") > test.py
 redhat9: python freeze/freeze.py test.py
@@ -575,7 +563,6 @@ Traceback (most recent call last):
   File "test.py", line 2, in <module>
 ImportError: No module named time
 }}}
-
 It's as if the dynload libraries aren't frozen. :-(
 
 ...
@@ -583,6 +570,18 @@ It's as if the dynload libraries aren't frozen. :-(
 Reply to self: That *is* the case.  The Warning is saying that those modules will not be in the binary! (Shouldn't that be an error?)
 
 The fix is to rebuild it [[http://groups.google.com/group/comp.lang.python/browse_frm/thread/9407982ad24b62ec/5018f9abebaa285a?lnk=st&q=build+python+static&rnum=3&hl=en#5018f9abebaa285a|using static modules]].  See {{{Modules/Setup}}} for docs.  The short fix is to run this before you run {{{./configure}}} to build python:
+
 {{{
 perl -pi -e 's!(^#\*shared\*)!*static*\n$1!' Modules/Setup.dist
 }}}
+
+...
+
+I got the following Error:
+
+{{{
+Error: needed directory /usr/lib/python2.7/config not found
+Use ``/usr/share/doc/python2.7/examples/Tools/freeze/freeze.py -h'' for help
+}}}
+
+How can I fix it?
