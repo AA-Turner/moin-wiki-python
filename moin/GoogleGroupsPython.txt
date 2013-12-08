@@ -42,10 +42,116 @@ On Saturday, October 26, 2013 7:02:19 AM UTC-6, Ben Finney wrote:
 
  . Because of the above problems, the amount of spam posted via Google Groups and other reasons, there are some regular and knowledgeable list participants that filter out posts made from Google Groups. It is not clear that more than a few people do this and most posters from Google Groups get good responses. If you want every possible person to see your post you may want to try posting using one of the other methods described in CompLangPython.
 
-4.''' Follow accepted mailing list netiquette.''' These are conventions that all posters should try to follow, they are not specific to Google Groups posters.  See for example [[http://linux.sgms-centre.com/misc/netiquette.php|http://linux.sgms-centre.com/misc/netiquette.php]].  Three in particular often complained about when ignored are:
+4.''' Follow accepted mailing list netiquette.''' These are conventions that all posters should try to follow, they are not specific to Google Groups posters.  See for example http://linux.sgms-centre.com/misc/netiquette.php.  Three in particular often complained about when ignored are:
 
  * Please don't top post.  Either put your reply text below any context text, not above it, or interleave your reply text within the context text by inserting each part of your reply immediately below the particular part of the context text to which it applies.
 
- * Please don't type in lines longer than about 70 characters or so; type your <enter> key when your line gets around that length.  Older mail clients and the Python maillist archives won't automatically wrap such long lines making them hard for others to read.  Exceptions of course are things like long urls which would be broken by manually wraping, or quoted text (you are responsible for your text, not that of others.) 
+ * Please don't type in lines longer than about 70 characters or so; type your <enter> key when your line gets around that length.  Older mail clients and the Python maillist archives won't automatically wrap such long lines making them hard for others to read.  Exceptions of course are things like long urls which would be broken by manually wraping, or quoted text (you are responsible for your text, not that of others.)
 
  * Remove (trim) context that is not relevant to your reply.
+
+= Automatic correction (EXPERIMENTAL) =
+The following is an experimental way of automatically correcting two of GG's nuisances:
+ 1. Double spacing quoted blocks
+ 2. Excessively long lines
+
+It has mostly been tested out on linux, though windows also seems to work.
+
+Browser used was firefox. 
+
+No experience with macs so far or other browsers.
+
+== Instructions ==
+1. Install firefox  [[https://addons.mozilla.org/en-US/firefox/addon/its-all-text/|Its all text plugin]]
+
+2. Save this script as a python file say ~/clean-gg.py
+
+{{{#!highlight python
+#!/usr/bin/env python3
+
+# As far as I know both python2 and 3 work
+# Windows/Mac no idea :-)
+
+# A script to drop-in as an editor for firefox addon "Its all text"
+# It cleans up two google-group nuisances:
+# 1. Useless blank lines
+# 2. Excessively long lines
+# No efforts at error reporting as stderr is not available in any
+# easy way (I know) to firefox (other browsers?)
+# To test separately:
+# Compose a mail (preferably reply) in GG
+# Copy-paste the stuff (maybe with some long lines added without the >)
+# Run this script with that filename as argv[1]
+
+from sys import argv
+from re import sub
+import re
+
+# Clean double spacing
+def cleands(s):
+    # Assumption: ASCII 025 (NAK) never occurs in input
+    s1 = sub("^> *\n> *$", "\025"  , s , flags=re.M)
+    s2 = sub("^> *\n"    , ""      , s1, flags=re.M)
+    s3 = sub("\025\n"    , ">\n"   , s2, flags=re.M)
+    return s3
+
+# Maximum length that (new) lines should attain
+Maxlen = 75
+
+# clean all long lines, s is the whole file/text
+def cleanall_ll(s):
+    lines = (cleanll(l) for l in s.split("\n"))
+    return "\n".join(lines)
+
+# clean one long line
+def cleanll(line):
+    return ( line if line.startswith(">") else cleanll_rec(line) )
+
+def cleanll_rec(line):
+    if len(line) <= Maxlen : return line
+    pos = line.rfind(" ", 0, Maxlen)
+    if pos == -1 : #Failed due to no spaces
+        return line
+    return line[0:pos] + "\n" + cleanll_rec(line[pos+1: ])
+
+def clean(s):
+    return cleanall_ll(cleands(s))
+
+def main():
+    with open(argv[1])      as f: s = f.read()
+    with open(argv[1], "w") as f: f.write(clean(s))
+
+if __name__ == '__main__' :
+    main()
+}}}
+3. In firefox go to the addons -> extensions -> Its all text preferences and set the editor to ~/clean-gg.py (expanding ~ to your actual home dir)
+
+== Usage ==
+After the above, in FF when editing a text box in google groups a small edit button should appear at bottom right of text box.
+
+Clicking on it does two cleanups
+
+ a. Removing double-spacing of old quoted text
+ a. Wrapping newly written lines after 70 columns
+
+So the optimal way of using it is
+
+ 1. After clicking reply, first click edit to clean-up (a)
+ 1. Trim what is not relevant to your post
+ 1. Write your comments at the appropriate place
+ 1. Click edit again to clean up the long lines (b)
+ 1. Post!
+
+In short you need do 2 clicks more than what you would otherwise do.
+
+For fresh posts (not replys) you dont need the first click as there is nothing to clean up.
+
+== Windows ==
+{{{#!wiki caution
+Not really tested on windows
+}}}
+Evidently Its all text only accepts 'executables' for editors.
+Putting the following into a bat file and pointing Its all text to that seems to work.
+{{{
+pythonw c:\clean-gg.py %1
+}}}
