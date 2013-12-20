@@ -108,7 +108,7 @@ Here's a way that doesn't require any new decorators:
 
 {{{#!python
 class Example(object):
-    @apply
+    @apply  # doesn't exist in Python 3
     def myattr():
         doc = '''This is the doc string.'''
 
@@ -122,6 +122,7 @@ class Example(object):
             del self._half
 
         return property(**locals())
+    #myattr = myattr()  # works in Python 2 and 3
 }}}
 Yet another property decorator:
 
@@ -2142,7 +2143,6 @@ def maybe_multiply(x):
 maybe_multiply(10)
 maybe_multiply(3)
 }}}
-
 == Aggregative decorators for generator functions ==
 This could be a whole family of decorators. The aim is applying an aggregation function to the iterated outcome of a generator-functions.
 
@@ -2164,7 +2164,6 @@ def averaged(f):
 
   return out
 }}}
-
 Examples for the two proposed decorators:
 
 {{{#!python
@@ -2186,9 +2185,7 @@ def producer1():
 
 assert producer1() == (10 + 5 + 2.5 + 7.5)
 }}}
-
 == Function Timeout ==
-
 Ever had a function take forever in weird edge cases?  In one case, a function was extracting URIs from a long string using regular expressions, and sometimes it was running into a bug in the Python regexp engine and would take minutes rather than milliseconds.  The best solution was to install a timeout using an alarm signal and simply abort processing.  This can conveniently be wrapped in a decorator:
 
 {{{#!python
@@ -2215,7 +2212,6 @@ def timeout(seconds, error_message = 'Function call timed out'):
 
     return decorated
 }}}
-
 Example:
 
 {{{#!python
@@ -2225,6 +2221,5 @@ import time
 def slow_function():
     time.sleep(5)
 }}}
-
 ----
 CategoryDocumentation
