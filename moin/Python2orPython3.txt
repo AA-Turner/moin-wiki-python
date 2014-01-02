@@ -121,7 +121,13 @@ Another key thing to identify for standard library modules is if there is a more
 
 The advantage of using the backports namespace module is that it clearly indicates when something is a cross-version backport of a standard library feature, and also allows the original module name to be used when appropriate without conflicting with the standard library name.
 
-In addition to the above backports that also support Python 2, the asyncio module added to the standard library in Python 3.4 was originally developed as a PyPI module for Python 3.3:
+The following modules aren't backports, but are cross-version compatible alternatives to key standard library APIs:
+
+ * [[https://pypi.python.org/pypi/requests|requests]] (higher level HTTP and HTTPS APIs. requests itself is unlikely to be added to the stdlib for assorted technical reasons, but an equivalent client API based on asyncio is a plausible future addition)
+ * [[https://pypi.python.org/pypi/regex|regex]] (an alternative regular expression engine with in principle approval for eventual stdlib inclusion, but requires a PEP to work out the details of the incorporation)
+ * [[https://pypi.python.org/pypi/lxml/3.2.4|lxml.etree]] (alternative implementation of the ElementTree XML API)
+
+In addition to the above modules that also support Python 2, the asyncio module added to the standard library in Python 3.4 was originally developed as a PyPI module for Python 3.3:
 
  * [[https://pypi.python.org/pypi/asyncio|asyncio]] (Guido van Rossum, BDFL and stdlib asyncio maintainer, requires "yield from" syntax added in Python 3.3)
 
