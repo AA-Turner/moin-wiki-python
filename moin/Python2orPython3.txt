@@ -97,6 +97,8 @@ The common subset of Python 2.6+ and Python 3.3+ is quite large - the restoratio
 
 Accordingly, the [[http://packages.python.org/six/|six compatibility package]] is a key utility for supporting Python 2 and Python 3 in a single code base.
 
+The [[http://python-future.org/index.html|future compatibility package]] is still in beta and doesn't support as many versions of Python as six (it only goes back as far as Python 2.6, while six supports Python 2.4), but allows Python 2 compatible code to be written in a style that is closer to idiomatic Python 3 (for example, it includes an actual Python 2 compatible implementation of the Python 3 bytes type, rather than relying on the Python 2.x 8-bit string type that exposes a slightly different API).
+
 Another key thing to identify for standard library modules is if there is a more up to date backport on PyPI that can be used in preference to the 2.x standard library version. The following modules are either PyPI backports, or else the original modules that served as the source of (or inspiration for) standard library additions in Python 2.7 or 3.x:
 
  * [[https://pypi.python.org/pypi/unittest2|unittest2]] (Michael Foord, stdlib unittest maintainer, needed mostly for 2.6 support)
@@ -120,6 +122,11 @@ Another key thing to identify for standard library modules is if there is a more
  * [[https://pypi.python.org/pypi/lzmaffi|lzmaffi]] (Tomer Chachamu, alternate lzma backport that uses cffi for better PyPy JIT compatibility)
 
 The advantage of using the backports namespace module is that it clearly indicates when something is a cross-version backport of a standard library feature, and also allows the original module name to be used when appropriate without conflicting with the standard library name.
+
+Some smaller Python 3 additions are available as recipes in the ActiveState Python Cookbook.
+
+* [[http://code.activestate.com/recipes/578078-py26-and-py30-backport-of-python-33s-lru-cache/|functools.lru_cache]] (Raymond Hettinger)
+
 
 The following modules aren't backports, but are cross-version compatible alternatives to key standard library APIs:
 
