@@ -54,7 +54,7 @@ The Readline console has been tested using `-Dpython.console.readlinelib=Editlin
 
 '''!PlainConsole''': ({{{-Dpython.console=org.python.core.PlainConsole}}}) provides no (additional) line-editing. `System.in`and `System.out` are unmolested.
 
-PlainConsole is inconvenient on Linux because there is no line recall or and not facility to correct typing mistakes other than to delete backwards to the error. It is acceptable on Windows since the system itself provides some line recall and editing.
+`PlainConsole` is inconvenient on Linux because there is no line recall or and not facility to correct typing mistakes other than to delete backwards to the error. It is acceptable on Windows since the system itself provides some line recall and editing.
 
 
 == Notes on using the Consoles ==
@@ -65,9 +65,9 @@ Encoding is a tricky subject.
 
 This is based on Linux Mint 14 (a Ubuntu derivative), the `bash` shell and Gnome Terminal. By default, the environment uses UTF-8 and you can expect the `JLineConsole` and `ReadlineConsole` (with `python.console.readlinelib=GnuReadline`) to work. The `ReadlineConsole` with `python.console.readlinelib=Editline` appears only to accept US-ASCII.
 
-These notes do not cover how to type characters outside the US-ASCII set. You can install a range of keyboard mappings, and locales that support the encodings you need. This author uses the UK Extended WinKeys keyboard layout to access a range of accented characters and for these tests also installed a Greek keyboard layout and locale.
+These notes do not cover how to type characters outside the US-ASCII set. You can install a range of keyboard mappings, and locales that support the encodings you need. This author uses the UK Extended !WinKeys keyboard layout to access a range of accented characters and for these tests also installed a Greek keyboard layout and locale.
 
-To obtain an environment with ISO-5589-1 encoding, launch as
+To obtain an environment with ISO-8859-1 encoding, launch as
 {{{
 $ export LC_ALL=en_GB.iso88591
 $ jython
@@ -83,16 +83,16 @@ The JVM should then pick up the encoding in use and configure the console object
 
 === Windows ===
 
-This is based on Windows 7 command shell. You can expect the `JLineConsole` to work with any single-byte encoding, but it does not work with codepage 65001, the close approximation to UTF-8. The root of this problem is that Windows uses a different "wide character" API for thios, while JLine uses the byte-opriented one.
+This is based on Windows 7 command shell. When using the command window with non-ascii characters, in order to get characters represented correctly on screen, you must set a "!TrueType" font (from the properties menu of the window). You can expect the `JLineConsole` to work with any single-byte encoding, but it does not work with codepage 65001, the close approximation to UTF-8. The root of this problem is that Windows uses a different "wide character" API for this, while JLine only calls the byte-oriented one.
 
 These notes do not cover how to install support for alternate languages and keyboard mappings. This author uses the UK Extended keyboard layout to access a range of accented characters and for these tests also installed a Greek keyboard layout.
 
-To obtain an environment with ISO-5589-1 encoding, launch as {{{
+To obtain an environment with ISO-8859-1 encoding, launch as {{{
 > chcp 1252
 > jython
 }}}
 
-The JVM should then pick up the encoding in use and configure the console object, and `sys.stdin` and `sys.stdout` to use it. To check this, use: {{{
+(You may find cp1252 is your default.) The JVM should then pick up the encoding in use and configure the console object, and `sys.stdin` and `sys.stdout` to use it. To check this, use: {{{
 >>> import sys
 >>> sys.stdin.encoding
 'Cp1252'
