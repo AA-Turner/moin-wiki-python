@@ -293,10 +293,10 @@ c_uint8 = ctypes.c_uint8
 
 class Flags_bits( ctypes.LittleEndianStructure ):
     _fields_ = [
-                ("logout",     c_uint8, 1 ),  # 1
-                ("userswitch", c_uint8, 1 ),  # 2
-                ("suspend",    c_uint8, 1 ),  # 4
-                ("idle",       c_uint8, 1 ),  # 8
+                ("logout",     c_uint8, 1 ),  # asByte & 1
+                ("userswitch", c_uint8, 1 ),  # asByte & 2
+                ("suspend",    c_uint8, 1 ),  # asByte & 4
+                ("idle",       c_uint8, 1 ),  # asByte & 8
                ]
 
 class Flags( ctypes.Union ):
@@ -304,18 +304,22 @@ class Flags( ctypes.Union ):
                 ("b",      Flags_bits ),
                 ("asByte", c_uint8    )
                ]
+    _anonymous_ = ("b")
 
 flags = Flags()
 flags.asByte = 0x2  # ->0010
 
-print( "logout: %i"      % flags.b.logout     )
-print( "userswitch:  %i" % flags.b.userswitch )
-print( "suspend   :  %i" % flags.b.suspend    )
-print( "idle  : %i"      % flags.b.idle       )
+print( "logout: %i"      % flags.b.logout   )
+
+print( "logout: %i"      % flags.logout     )
+print( "userswitch:  %i" % flags.userswitch )
+print( "suspend   :  %i" % flags.suspend    )
+print( "idle  : %i"      % flags.idle       )
 }}}
 
 {{{#!python
 >>> 
+logout: 0
 logout: 0
 userswitch:  1
 suspend   :  0
