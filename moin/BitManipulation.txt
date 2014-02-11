@@ -189,7 +189,7 @@ The procedure and the information below were found in "Bit Twiddling Hacks"(ref.
 
 Counting bits set, Brian Kernighan's way*
 
-{{{
+{{{#!python
 unsigned int v;          // count the number of bits set in v
 unsigned int c;          // c accumulates the total bits set in v
 for (c = 0; v; c++)
@@ -287,29 +287,42 @@ def toggleBit(int_type, offset):
 == Bit fields, e.g. for communication protocols ==
 If you need to interpret individual bits in some data, e.g. a byte stream in a communications protocol, you can use the ctypes module.
 
-{{{
+{{{#!python
 import ctypes
 c_uint8 = ctypes.c_uint8
 
-class Flags_bits(ctypes.LittleEndianStructure):
+class Flags_bits( ctypes.LittleEndianStructure ):
     _fields_ = [
-            ("logout", c_uint8, 1),
-            ("userswitch", c_uint8, 1),
-            ("suspend", c_uint8, 1),
-            ("idle", c_uint8, 1),
-            ]
+                ("logout",     c_uint8, 1 ),  # 1
+                ("userswitch", c_uint8, 1 ),  # 2
+                ("suspend",    c_uint8, 1 ),  # 4
+                ("idle",       c_uint8, 1 ),  # 8
+               ]
 
-class Flags(ctypes.Union):
-    _fields_ = [("b", Flags_bits),
-            ("asbyte", c_uint8)]
+class Flags( ctypes.Union ):
+    _fields_ = [
+                ("b",      Flags_bits ),
+                ("asByte", c_uint8    )
+               ]
 
 flags = Flags()
-flags.asbyte = 0xc
-print(flags.b.idle)
-print(flags.b.suspend)
-print(flags.b.userswitch)
-print(flags.b.logout)
+flags.asByte = 0x2  # ->0010
+
+print( "logout: %i"      % flags.b.logout     )
+print( "userswitch:  %i" % flags.b.userswitch )
+print( "suspend   :  %i" % flags.b.suspend    )
+print( "idle  : %i"      % flags.b.idle       )
 }}}
+
+{{{#!python
+>>> 
+logout: 0
+userswitch:  1
+suspend   :  0
+idle  : 0
+}}}
+
+
 == References ==
 ref.1. "Bit Twiddling Hacks" By Sean Eron Anderson
 
