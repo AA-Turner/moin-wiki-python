@@ -6,9 +6,9 @@ We have a [[http://psf.upfronthosting.co.za/roundup/meta/|meta tracker]] for cur
 
 = Getting a copy of b.p.o tracker configuration =
 
-bugs.python.org is powered by [[http://www.roundup-tracker.org/|Roundup tracker]] software released under MIT License. To be honest, it uses a heavily patched Roundup stored in this repository:
+bugs.python.org is powered by [[http://www.roundup-tracker.org/|Roundup tracker]] software released under MIT License.  The Roundup version currently used by b.p.o contains some additional changes and can be found here:
 
- * http://hg.python.org/tracker/roundup (make sure to use `bugs.python.org` branch)
+ * http://hg.python.org/tracker/roundup/ (the changes are in the `bugs.python.org` branch)
 
 The specific configuration (called 'tracker home' or 'instance') that is running on http://bugs.python.org/ is named `python-dev`. The source is stored in Mercurial repository and can be downloaded from:
 
@@ -86,7 +86,7 @@ Details on how to install PostgreSQL is outside the scope of this Wiki Page ({{{
 Access configuration of postgresql can be tricky. You need to make sure that the user you're running roundup as (your unix/windows user) has access to the postgresql database you intend to use for roundup, as the postgresql user you've configured in roundup's configuration.
 
 
-For a development environment with no demands on security, the easiest way to configure this is probably to allow all users to connect as any database user as long as the request originates from the local host. This can be accomplished editing pg_hba.conf (usually found in /etc/postgresql/8.x/main/ in Linux or /Library/PostgreSQL/9.x/data/ in Mac OS X -- you might need privileges to edit it). The end of the file should look like this (the four changed lines are preceded by ##):
+For a development environment with no demands on security, the easiest way to configure this is probably to allow all users to connect as any database user as long as the request originates from the local host. This can be accomplished editing pg_hba.conf (usually found in /etc/postgresql/9.x/main/ in Linux or /Library/PostgreSQL/9.x/data/ in Mac OS X -- you might need privileges to edit it). The end of the file should look like this (the four changed lines are preceded by ##):
 
 
 
