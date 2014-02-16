@@ -373,22 +373,22 @@ You should now be able to browse http://localhost:9999/python-dev/ and get a rou
 The IDs for values in a given field might be different from those in the Python Tracker. This should only be a problem if you try to import CSV files from one tracker into the other.
 
 
-Create an user from User->register in the left sidebar. You can then use roundup-admin to set developer privileges for it:
+Create an user from User->register in the left sidebar.  Note that if you have set {{{debug = debugmail.txt}}} as suggested above, you will have to open the file and copy the URL in the browser (make sure to replace {{{=3D}}} with {{{=}}} in the URL and to remove the trailing {{{=}}} where the url is broken at the end of the line).  You can then use roundup-admin to set developer privileges for it:
 
 
 {{{
 /opt/tracker-roundup/bin/roundup-admin -i <your python-dev directory>
-Roundup 1.4.10 ready for input.
+Roundup 1.5.0 ready for input.
 Type "help" for help.
-roundup> display user8
+roundup> display user3
 ...
-roundup> set user8 roles=Developer
+roundup> set user3 roles=User,Developer,Coordinator
 roundup> commit
 roundup>
 }}}
 
 
-You can find your user id clicking on "Your Details" in the left sidebar and then looking at the address bar (it should show something similar to http://localhost:9999/python-dev/user8).
+You can find your user id clicking on "Your Details" in the left sidebar and then looking at the address bar (it should show something similar to http://localhost:9999/python-dev/user3).
 
 
 == Rietveld Setup ==
