@@ -13,7 +13,7 @@ Here are recommendations for you to follow before you start porting.
 
  * Identify the minimum python versions you can target: Python 3.3 and 2.7 provide significant forward and backwards compatibility compared to their respective predecessors..  If you have to, targeting 3.2 and 2.6 is still possible.  Ignore anything older than that if at all possible (it gets much harder to be bilingual the farther back you go).
  * Try to avoid the production use of [[http://docs.python.org/py3k/library/2to3.html|2to3]].  2to3 is a pretty slow tool so it can impede the speed with which you develop your code.  However you may find it helpful to use {{{2to3}}} in ''report-only'' (aka non-overwrite) mode to get a good sense of what changes will be necessary for your package.  Generally, a single-source approach is the easiest for bilingual (i.e. Py2 and Py3) Python apps.
- * Use the third part [[http://pypi.python.org/pypi/six|six]] module sparingly (i.e. only if necessary).  One good use case is the {{{reraise()}}} method.
+ * Use the third party [[http://pypi.python.org/pypi/six|six]] module sparingly (i.e. only if necessary).  One good use case is the {{{reraise()}}} method.
  * Even if you can't complete the port to Python 3 because of your dependencies, start by modernizing your Python 2, getting it working cleanly with {{{python2.7 -3}}} first.
  * '''Clarify your data model''': what are bytes (binary data) and what are strings (text)?  If you can't answer this, you are in for a world of hurt (but you probably are already in Python 2).
 
