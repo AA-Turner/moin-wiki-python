@@ -2,9 +2,56 @@
 
 The Python job board was run by single volunteers for many years. Since the job board activities have significantly increased in recent years, and the last Chris Withers, who ran the board in the years 2010-2014, left the project, the PSF would like to relaunch the project using a team of volunteers.
 
-At the same time, we'd like to move the job board from the legacy site to the new relaunched www.python.org Django based site.
+At the same time, we'd like to move the job board from the legacy site to the new relaunched http://www.python.org/ Django based site.
 
 <<TableOfContents()>>
+
+== Old job board process ==
+
+''Please note that this description may not be completely correct. It just describes the process based on the how-to document. ''
+
+Job submissions were processed using email, a ReST template and a page in a subversion repository.
+
+ 1. Job submitters created a job posting based on the template listed on the [[http://legacy.python.org/community/jobs/howto/|Job board how-to page]]
+ 2. Submissions were checked against a list of quality criteria
+ 3. Submissions which needed refinement were sent back with a notice of what to fix
+ 4. Good submissions were added to the job page in order of submission date (in most recent first order)
+
+Page cleanup:
+
+ * entries older than three months were regularly removed
+ * filled positions were removed upon request by the job submitter
+
+== New job board process ==
+
+''Please note that this process is just a sketch. It may well change and get more refinements in coming weeks.''
+
+Job submissions are entered into a web form, the form creates a database record which is then used for review. After approval the Django site will then list the submissions automatically.
+
+ 1. Job submitters log in to the website (after having registered for an account)
+ 2. Submitters create a job posting record
+ 3. Submissions are checked against a list of quality criteria by the reviewers
+ 3. Submissions which needed refinement are flagged and an email is sent back to the job submitter asking for changes
+ 4. Good submissions are approved and then automatically listed on the job board page in order of submission date (in most recent first order)
+
+Questions:
+
+ * How to inform the job submitters of problems with their submissions ?
+ * Should we have 1 person or 2 person reviews ?
+
+To be clarified:
+
+ * Exact status workflow of job submission records
+ * Classification of job submissions (there are multiple categories available)
+ * Quality criteria
+ * Team member assignments to the review process (e.g. by category)
+
+What we need:
+
+ * team members who can help refine the job board Django app (good Django skills are necessary)
+ * team members who regularly log in and review postings
+ * team members who can help interface to the Django site maintainers, e.g.review and process pull requests, issue tickets in case of problems with the site
+ * team members who lead the groups and signal problems to the PSF board, should any arise
 
 == Project Mailing List ==
 
