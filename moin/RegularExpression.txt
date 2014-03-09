@@ -58,7 +58,19 @@ print match_obj.groups()
 
 ...which yields the same result.
 
-I don't know how much faster compiled forms are than non-compiled forms.
+The relative speed of compiled versus non-compiled patterns can be shown using the timeit module:
+
+{{{
+python -m timeit -s 'import re' \
+   'match_obj = re.match("<(.*?)>(.*?)</(.*?)>", "<h1>robot</h1>")'
+1000000 loops, best of 3: 1.35 usec per loop
+
+python -m timeit -s 'import re ; match_re = re.compile("<(.*?)>(.*?)</(.*?)>")' \
+   'match_obj = match_re.match("<h1>robot</h1>")'
+1000000 loops, best of 3: 0.572 usec per loop
+}}}
+
+The above numbers were produced on an Intel Core i7 3770k running Python 2.7.6 (circa 2014).  You should run the above commands on your Python version and specific hardware, and use patterns that represent your problem domain, for more representative results.
 
 == See Also ==
 
@@ -104,7 +116,7 @@ The image isn't meant to be explanatory, it is meant to be reference and refresh
 That said: The "match string" is the final product of either of the two above expressions. It is what the above two expressions will literally match. If you have a better phrase, or would like to correct "raw" to "regex," feel free to download the SVG, edit the text, place an image on the web, and link it from here. (The damn [[http://visual.wiki.taoriver.net/moin.cgi/LongImageIncorporationProcess|LongImageIncorporationProcess]] strikes again.) I may eventually get around to it myself one day, but it seems there are higher priorities, and the diagram is "good enough."
 
 That said, I appreciate the correction. -- LionKimbro <<DateTime(2005-01-01T00:22:14Z)>>
- 
+
 === Image Hosting ===
 
 At the top of this page were two images/scehmes about re. Is it possible to redraw them here somehow? That server is not working, maybe someone has them dowloaded locally. Thanks a lot.
@@ -115,3 +127,5 @@ I've uploaded one as an attachment, still need to upload the other... And, the s
 (Anyone can do this, though, when the computers are online.)
 
 -- LionKimbro <<DateTime(2006-03-25T16:31:35Z)>>
+----
+CategoryDocumentation
