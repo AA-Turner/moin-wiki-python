@@ -35,7 +35,7 @@ When using the embedded interpreter, !PlainConsole is the recommended choice as 
 
 === JLineConsole ===
 
-'''JLineConsole''' ({{{-Dpython.console=org.python.core.PlainConsole}}}) provides line-editing cross-platform. The behaviour of the system terminal is radically altered, and `System.in` and `System.out` are both replaced by spec``ialised objects. `sys.stdin` and `sys.stdout` wrap these objects instead of the original JVM ones. In the event of an uncontrolled exit of the JVM you may need to type blindly {{{stty sane}}} (Unix) to get a console that echoes correctly.
+'''JLineConsole''' ({{{-Dpython.console=org.python.util.JLineConsole}}}) provides line-editing cross-platform. The behaviour of the system terminal is radically altered, and `System.in` and `System.out` are both replaced by spec``ialised objects. `sys.stdin` and `sys.stdout` wrap these objects instead of the original JVM ones. In the event of an uncontrolled exit of the JVM you may need to type blindly {{{stty sane}}} (Unix) to get a console that echoes correctly.
 
 In version 2.7 of Jython, the JLine console has been tested to work with:
  * Windows codepages 1252 and 1253 (therefore probably works with other single-byte encodings). It does not work with the UTF-8 codepage 65001.
@@ -43,7 +43,7 @@ In version 2.7 of Jython, the JLine console has been tested to work with:
 
 === ReadlineConsole ===
 
-'''!ReadlineConsole''': ({{{-Dpython.console=org.python.core.PlainConsole}}}) is an alternative (Unix) line-editing console that uses the library `libjavareadline`. The behaviour of the system terminal is altered, and `System.in` and `System.out` are both replaced by spec``ialised objects. `sys.stdin` and `sys.stdout` wrap these objects instead of the original JVM ones. The readline console takes an extra setting `python.console.readlinelib` with values of `GnuReadline` or `Editline`.
+'''!ReadlineConsole''': ({{{-Dpython.console=org.python.util.ReadlineConsole}}}) is an alternative (Unix) line-editing console that uses the library `libjavareadline`. The behaviour of the system terminal is altered, and `System.in` and `System.out` are both replaced by spec``ialised objects. `sys.stdin` and `sys.stdout` wrap these objects instead of the original JVM ones. The readline console takes an extra setting `python.console.readlinelib` with values of `GnuReadline` or `Editline`.
 
 In version 2.7 of Jython, the Readline console has been tested using `-Dpython.console.readlinelib=GnuReadline` to work with:
  * Linux (Mint 14) Gnome terminal with locales en_GB.UTF-8, en_GB.iso88591, el_GR.iso88597 (therefore probably works with other single-byte encodings).
@@ -52,7 +52,7 @@ The Readline console has been tested using `-Dpython.console.readlinelib=Editlin
 
 === PlainConsole ===
 
-'''!PlainConsole''': ({{{-Dpython.console=org.python.core.PlainConsole}}}) provides no (additional) line-editing. `System.in`and `System.out` are unmolested.
+'''!PlainConsole''': ({{{-Dpython.console=org.python.core.PlainConsole}}} or simply {{{-Dpython.console= }}}) provides no (additional) line-editing. `System.in`and `System.out` are unmolested.
 
 `PlainConsole` is inconvenient on Linux because there is no line recall or and not facility to correct typing mistakes other than to delete backwards to the error. It is acceptable on Windows since the system itself provides some line recall and editing.
 
