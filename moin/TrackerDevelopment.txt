@@ -256,7 +256,6 @@ hg clone ssh://hg@hg.python.org/tracker/rietveld/
 
 After getting the clones '''remember to update the branches to bugs.python.org''':
 
-
 {{{
 cd django-gae2django
 hg up bugs.python.org
@@ -274,10 +273,6 @@ In addition, Django needs to be installed; e.g. the Django 1.2 or 1.3 Debian pac
 
 Now enter the python-dev directory, and create the 'db' directory, as well as the db/backend_name file which decides which backend (i.e. database type) to use:
 
-
-
-
-
 {{{
 cd instances/python-dev
 mkdir db
@@ -288,13 +283,18 @@ echo postgresql > db/backend_name
 Note: the db dir contains all the messages and files attached to issues, and it's removed and recreated every time you run {{{roundup-admin init}}}.
 
 
-Copy python-dev/config.ini.template into config.ini, and modify it according to your site. Pay special attention to settings marked with ''NO DEFAULT''. However, if you've configure your PostgreSQL as above, most settings should be OK.
+Copy {{{python-dev/config.ini.template}}} into {{{config.ini}}} and {{{detectors/config.ini.template}}} into {{{detectors/config.ini}}}:
+
+{{{
+cp config.ini.template config.ini
+cp detectors/config.ini.template detectors/config.ini
+}}}
+
+The former will let you configure your roundup instance; the latter, detectors such as '''irker''', '''busybody''', or '''tellteam'''.
 
 
-If you need to do development on the '''busybody''' or '''tellteam''' detectors, copy detectors/config.ini.template into detectors/config.ini, and adjust the e-mail addresses accordingly.
-
-
-If you don't want to configure roundup to send emails, you can set
+In config.ini pay special attention to settings marked with ''NO DEFAULT''.
+If you don't want to configure roundup to send emails but save them on a file instead, you can set
 
 
 {{{
@@ -302,7 +302,7 @@ debug = debugmail.txt
 }}}
 
 
-at the end of the {{{[mail]}}} section. The mail will just be saved on the file you specify.
+at the end of the {{{[mail]}}} section.
 
 
 If you want to see the tracebacks in the browser instead of having them sent by email, at the end of the {{{[web]}}} section set
