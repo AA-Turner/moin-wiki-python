@@ -1,3 +1,92 @@
-I'm Clifford and was born on 21 July 1982. My hobbies are Freerunning and Metal detecting.<<BR>>
-<<BR>>
-Stop by my web-site: [[http://Applicationexperts.net/|duck tape cheap]]
+= General Information =
+
+JythonFaq
+
+<<TableOfContents>>
+
+----
+
+== What is Jython? ==
+
+Jython is the successor to JPython. The Jython project was created in accordance with the CNRI JPython 1.1.x license, in order to ensure the continued existence and development of this important piece of Python software. The intent is to manage this project with the same open policies that are serving CPython so well.
+
+Mailing lists, Subversion and all current information on the Jython project is available at SourceForge, at http://sourceforge.net/projects/jython. Note that the project is migrating over to using Mercurial and will be soon available at hg.python.org
+
+----
+
+== What is JPython? ==
+
+JPython is an implementation of the Python programming language which is designed to run on the Java(tm) Platform. It consists of a compiler to compile Python source code down to Java bytecodes which can run directly on a JVM, a set of support libraries which are used by the compiled Java bytecodes, and extra support to make it trivial to use Java packages from within JPython. JPython has been renamed and superseded by Jython.
+
+The name had to be changed to something other than JPython, because of paragraph 4 in the JPython-1.1 license:
+
+{{{
+ 4. Licensee may not use CNRI trademarks or trade name, including
+    JPython [...] to endorse or promote products [...]
+}}}
+
+JPython 1.1 was released on 28-Jan-2000. Since then, there have been no further developments on JPython.
+
+----
+
+== Is Jython the same language as Python? ==
+
+Yes. Jython is an implementation of the Python language for the Java platform. Jython 2.5 implements the same language as CPython 2.5, and nearly all of the Core Python standard library modules. (CPython is the C implementation of the Python language.) Jython 2.5 uses the same regression test suite as CPython, with some minor modifications.
+
+There are a number of differences. First, Jython programs cannot currently use CPython extension modules written in C. These modules usually have files with the extension .so, .pyd or .dll. If you want to use such a module, you should look for an equivalent written in pure Python or Java. However, it is technically feasible to support such extensions, as demonstrated by IronPython. For the next release of Jython, we plan to support the C Python Extension API.
+
+There are a number of other differences between the two implementations that are unlikely to go away. These range from the trivial - Jython's code objects currently do not have a co_code attribute because it is not possible to directly access Java bytecode from a class, without loading the file; to the significant - Jython uses Java's true garbage collection rather than Python's reference counting scheme.
+
+----
+
+== What is the current status of Jython? ==
+
+The Jython project was announced on 19-oct-2000. The first alpha release occured on 26-nov-2000.
+
+The final release of Jython-2.0 occurred on 17-jan-2001. The final release of Jython-2.1 occurred on 31-dec-2001.
+
+Jython 2.2 was released on August 22, 2007, with 2.2.1 released on October 13, 2007.
+
+Jython 2.5.0 was released on June 16, 2009, with a release candidate for 2.5.1 scheduled for August 20, 2009.
+
+Jython 2.5.1 was release on September 26, 2009.
+----
+== How fast is Jython? ==
+
+The startup time and runtime performance for Jython are largely determined by the JVM. Startup time can be mitigated by using a tool like Nailgun.
+
+Jython is approximately as fast as CPython--sometimes faster, sometimes slower. Because most JVMs--certainly the fastest ones--do long running, hot code will run faster over time.
+
+Areas that are known to be slower include the expat emulation (which is used by ElementTree), bisect, datetime, decimal, heapq, and unicodedata, since these are all currently written in Python instead of Java; in CPython, these are all written in C. Future releases of Jython will address this situation.
+
+If you find a specific area where Jython performance is worse than CPython, please file a bug at http://bugs.jython.org.
+
+----
+== How do I learn more about Jython? ==
+You might want to start with the recently published Apress book, [[http://apress.com/book/view/9781430225270|The Definitive Guide to Jython]], which is also available online as the [[http://jythonbook.com|Jython Book]], an open source version.
+
+Since Jython and Python are so closely related any good python book or documentation works well. There are also many good choices available and can be found easily by using your favorite search engine and searching for Jython. Here are a few of the frequently used references:
+
+These are good starting points for learning python but by no means a complete list:
+
+ * The [[http://python.org/doc/|official Python documentation]] -  (note this covers the 2.6 version of the language and libraries). This is currently being patched against the small changes seen in Jython. Note that class decorators, the ast module, and the namedtuple factory function from 2.6 were implemented in Jython 2.5.0.
+
+ * [[http://diveintopython.net|Dive into Python]] is a great learning resource
+
+for Jython specific starting points try these:
+ * [[UserGuide|The Jython Users Guide]]
+ * An excellent book, [[http://www.oreilly.com/catalog/jythoness/|"Jython Essentials"]], by Samuele Pedroni & Noel Rappin
+ * as the song goes, [[http://www.ibm.com/developerworks/java/library/j-alj07064/|"...getting to know you.."]]
+ * An excellent [[http://www.rexx.com/~dkuhlman/jython_course_03.html|online course]] by Dave Kuhlman
+
+Be sure to check out the references at the bottom of the online course.
+
+These are just a sampling of what's available.  There is a lot out there and it covers a wide variety of topics. This will get you started and on you way to becoming a Jython developer and when you are ready for more, it's just a few clicks away.
+
+----
+== Can I use Jython to make apps for mobile phones? ==
+Unfortunately not. Mobile phones only have [[http://en.wikipedia.org/wiki/Java_Platform,_Micro_Edition|Java ME (Micro Edition)]] but Jython requires [[http://en.wikipedia.org/wiki/Java_Platform,_Standard_Edition|Java SE (Standard Edition)]]. There is no Jython port to ME, and there is not enough interest to make it worth the effort.
+
+However, Jython is Free and Open Source so if you have the skills and are interested then feel free to start porting it. If you want to make apps for Android smartphones, you may be interested in [[http://code.google.com/p/android-scripting/|SL4A]].
+
+----
