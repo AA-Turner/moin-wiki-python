@@ -172,7 +172,15 @@ A set of GDB macros are distributed with Python that aid in debugging the Python
 
 Note that the new GDB commands this file adds will only work correctly if debugging symbols are available.
 
-Also, with gcc 4.5.2 on Ubuntu (at least) the macros fail because the '''call_function''' routine appears to be between '''PyEval_EvalFrameEx''' and '''PyEval_EvalCodeEx''' so the macro fails with '''No symbol "co" in current context.'''.  Recompiling python with '''make "CFLAGS=-g -fno-inline -fno-strict-aliasing"''' solves this problem.
+Depending on how you've compiled Python, some calls may have had their frame pointers (i.e. {{{$fp}}} in GDB) optimised away, which means GDB won't have access to local variables like {{{co}}} that can be inspected for Python callstack information. For example, if you compile using {{{-g -O3}}} using GCC 4.1, then this occurs. Similarly, with gcc 4.5.2 on Ubuntu (at least) the macros fail for the same reason. The usual symptom is that you'll see the '''call_function''' routine appearing to be between '''PyEval_EvalFrameEx''' and '''PyEval_EvalCodeEx''', and the macro failing with '''No symbol "co" in current context.'''.  There are two work-arounds for the issue:
+  * Recompiling python with '''make "CFLAGS=-g -fno-inline -fno-strict-aliasing"''' solves this problem.
+  * Patching the conditionals for Python frames in the pystack and pystackv routines to ignore frames with where {{{$fp}}} is 0, like so:
+    {{{
+    <<<<         if $pc > PyEval_EvalFrameEx && $pc < PyEval_EvalCodeEx
+    >>>>         if $pc > PyEval_EvalFrameEx && $pc < PyEval_EvalCodeEx && $fp != 0
+    }}}
+
+Also note that the stop condition for the while-loops in the {{{pystack}}} and {{{pystackv}}} routines were originally designed for the case where you're running the Python interpreter directly, and not running the interpreter withing another program (by loading the shared library and manually bootstrapping the interpreter). So you may need to tweak the while-loops depending on the program you're intending to debug. See, for example, [[http://stackoverflow.com/questions/22856807/stop-condition-for-stack-tracing-in-legacy-gdb-script|this StackOverflow post]] for another (putative) stop condition.
 
 ==== Getting Python Stack Traces With GDB Macros ====
 At the gdb prompt, you can get a Python stack trace:
