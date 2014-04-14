@@ -93,7 +93,108 @@ When you press a button, your program will say "hi"
 
 '''You will learn:''' ''create a button, create a label, link up a button with specific functions, the concept of functions, indentation of functions, changing the foreground and background of widgets''
 
-'''Example Code''' [[lecture4 example 1]], [[lecture4 example 2]], [[lecture4 example 3]], [[lecture4 example 5]]
+'''Example Code'''
+
+ '''lecture4 example 1'''
+{{{
+#!/usr/bin/python
+
+from Tkinter import *
+
+def Pressed():				#function
+	print 'buttons are cool'
+
+root = Tk()				#main window
+button = Button(root, text = 'Press', command = Pressed)
+button.pack(pady=20, padx = 20)
+Pressed()
+root.mainloop()
+}}}
+
+ '''lecture4 example 2'''
+{{{
+#!/usr/bin/python               
+                            #Souce section   1
+
+#mandatory for unix and linux
+#---------------------------------------------------------------
+
+from Tkinter import *       #This library give us windows and buttons
+from random import *        #This library allows us to generate random numbers
+                            #import library section   2
+
+#
+#What not to use??? 
+#---------------------------------------------------------------
+
+def one_to_ten():
+    ran = uniform(1,10)
+    print ran
+    
+def GoWork():           # def starts a function, or define a function
+    sum = 3*5 
+    print sum               #Function section   3 
+	
+#----------------------------------------------------------------
+
+
+	
+                            #Code section    4
+    
+window = Tk()      #i am the parent, button = child
+
+stacy = Button(window, text = 'yoyo', command = one_to_ten)  
+#A rose with any other name would be just as sweet
+
+
+stacy.pack()        #you can name it after your fish (ignored)
+window.mainloop()         #you can use your fish's name 
+}}}
+
+ '''lecture4 example 3'''
+{{{
+#!/usr/bin/python
+
+from Tkinter import *
+
+
+def Call():
+	lab= Label(root, text = 'You pressed\nthe button')
+	lab.pack()
+	button['bg'] = 'blue'
+	button['fg'] = 'white'
+
+root = Tk()
+root.geometry('100x110+350+70')
+button = Button(root, text = 'Press me', command = Call)
+button.pack()
+
+root.mainloop()
+}}}
+
+ '''lecture4 example 5'''
+{{{
+#!/usr/bin/python
+
+from Tkinter import *   	#This interface allow us to draw windows
+
+
+def DrawList():
+	plist = ['Liz','Tom','Chi']
+
+	for item in plist:
+		listbox.insert(END,item);
+		
+	
+root = Tk()			#This creates a window, but it won't show up
+
+listbox = Listbox(root)
+button = Button(root,text = "press me",command = DrawList)
+
+button.pack()
+listbox.pack()			#this tells the listbox to come out
+root.mainloop()			#This command will tell the window come out
+}}}
 
 === Lecture 5: Stealing is good in programming(10min) ===
 [[http://iamar.net/subpages/pythonLect5.html]]
