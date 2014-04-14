@@ -31,8 +31,7 @@ hello ....
 
 
 
-<<BR>><<BR>><<BR>>
-'''Intro to programming with Python in Tkinter'''<<BR>>
+== Intro to programming with Python in Tkinter ==
 Have you ever wanted to know how your application is programmed on the computer. This lecture will show you how easy it is to program.
 
 Aimed at beginner programmers or people that has no programming experience. For you to watch this class, you must have python installed from python.org . Lecture 2 will show you how to install and run python. This lecture assumes that you already have python. 
@@ -40,18 +39,57 @@ Aimed at beginner programmers or people that has no programming experience. For 
 The python course series is designed to be short, fun, and concise. They are 10 minutes each with fun examples and easy instruction. If you want to learn programming this is the way to go. 
 
 
-'''Lecture 1: Why is python so cool???'''<<BR>>
+=== Lecture 1: Why is python so cool??? ===
 In this lecture I will convince you that python will eventually take over the world :).  Actually we will discuss how the class will be conducted and how much fun we are going to have. This will be the last lecture I write.
 
-'''Lecture 2: How to download python'''<<BR>>
+=== Lecture 2: How to download python ===
 I will show you where you download python. If you found this page, chances are that you already know how. I will also talk about different resources to help you program python. 
 
-'''Lecture 3: Your first python program'''(10min)<<BR>>
+=== Lecture 3: Your first python program (10min) ===
 [[https://web.archive.org/web/20121126014531/http://iamar.net/subpages/pythonLect3.html|http://iamar.net/subpages/pythonLect3.html]]
 <<BR>>
 Like all programming books, we kick off with a quick and simple non-hello world application. <<BR>>
 '''You will learn:''' ''importing Tkinter library, create a simple list, create a window, create a listbox, fill a listbox, parents of widgets''<<BR>>
-'''Example Code''' [[lecture3 example 1]], [[lecture3 example 2]]<<BR>><<BR>>
+'''Example Code''':
+ '''lecture3 example 1'''
+{{{
+#!/usr/bin/python
+
+from Tkinter import *           # Importing the Tkinter (tool box) library 
+root = Tk()                     # Create a background window
+                                # Create a list
+li = 'Carl Patrick Lindsay Helmut Chris Gwen'.split()
+listb = Listbox(root)           # Create a listbox widget
+for item in li:                 # Insert each item within li into the listbox
+    listb.insert(0,item)
+
+listb.pack()                    # Pack listbox widget
+root.mainloop()                 # Execute the main event handler
+}}}
+
+ '''lecture3 example 2'''
+{{{
+#!/usr/bin/python
+
+from Tkinter import *           # Import the Tkinter library
+root = Tk()                    # Create a background window object
+                                # A simple way to create 2 lists
+li     = ['Carl','Patrick','Lindsay','Helmut','Chris','Gwen']
+movie  = ['God Father','Beauty and the Beast','Brave heart']
+listb  = Listbox(root)          # Create 2 listbox widgets
+listb2 = Listbox(root)
+for item in li:                 # Insert each item inside li into the listb
+    listb.insert(0,item)
+
+for item in movie:              # Do the same for the second listbox
+    listb2.insert(0,item)
+
+listb.pack()                    # Pack each listbox into the main window
+listb2.pack()
+root.mainloop()                 # Invoke the main event handling loop
+}}}
+
+<<BR>><<BR>>
 
 '''Lecture 4: Button are meant to be pushed'''(10min)<<BR>>
 [[https://web.archive.org/web/20130724053700/http://iamar.net/subpages/pythonLect4.html|http://iamar.net/subpages/pythonLect4.html]] <<BR>>
