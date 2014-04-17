@@ -2,4 +2,21 @@ NumPy is a package that defines a multi-dimensional array object and associated 
 
 A very complete manual by the principal author of Numpy, Travis Oliphant, is [[http://csc.ucdavis.edu/~chaos/courses/nlp/Software/NumPyBook.pdf|available]] for free (although donations are accepted). Note that the online documentation via docstring is rather complete and not stripped in any way. Further documentation is available from http://docs.scipy.org/doc/
 
-[[numpy Examples]]
+Many examples of numpy usage can be found at http://wiki.scipy.org/Numpy_Example_List
+
+ '''numpy Example'''
+{{{
+from numpy import *
+
+from PIL import Image
+
+
+ar = ones((100,100),float32)
+
+ar = ar * 100
+
+for i in range(0,100):
+    ar[i,:] = 100 + (i * 1.5)
+
+im = Image.fromarray(ar,"F")
+}}}
