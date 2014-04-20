@@ -3,15 +3,20 @@
 inspired by: PHP __DIR__, __FILE__ [1]
 status:
   python34: __file__ is absolute [2]
-https://docs.python.org/3.5/whatsnew/3.4.html
-variant_set_1:
-  - from os.path import FILE, DIR
-  - from hacks import FILE, DIR
-  - from future import FILE, DIR
+  discussion: [3], status: Sep 28 18:51:29 CEST 2013
 
-variant_set_2:
-  - FILE, DIR
-  - __file__, __dir__
+variants:
+ - name: with import (28 compatible)
+   set:
+    - from os.path import FILE, DIR
+    - from hacks import FILE, DIR
+    - from future import FILE, DIR
+
+ - name: auto global
+   set:
+    - FILE, DIR
+    - __file__, __dir__
+    - __abs_file__, __abs_dir__ (MRAB, Philipp A.)
 
 }}}
 
