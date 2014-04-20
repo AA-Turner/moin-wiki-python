@@ -3,7 +3,7 @@
 inspired by: PHP __DIR__, __FILE__ [1]
 status:
   python34: __file__ is absolute [2]
-  discussion: [3], status: Sep 29 21:13:59 CEST 2013
+  discussion: [3] (Sep13 Done), [4] (Oct13 Done)
 
 variants:
  - name: with import (27,33 compatible)
@@ -18,11 +18,16 @@ variants:
     - __file__, __dir__
     - __abs_file__, __abs_dir__ (MRAB, Philipp A.)
 
+cases:
+ - name: replacement of frequent pattern
+   code: os.path.join(os.path.dirname(__file__), "datafile-here")
+
 }}}
 
  1. http://www.php.net/manual/en/language.constants.predefined.php
  2. https://docs.python.org/3.5/whatsnew/3.4.html
  3. https://mail.python.org/pipermail/python-ideas/2013-September/023469.html
+ 4. https://mail.python.org/pipermail/python-ideas/2013-October/023703.html
 
 {{{
 objections:
@@ -33,4 +38,9 @@ objections:
  - there should not be convenience functions (Cameron Simpson)
  - everybody should use 35 for new ideas (Nick Coghlan, Terry Reedy)
  - retrieving abs dir is trivial code in 35 (Nick Coghlan)
+}}}
+
+{{{
+aspects:
+ - __dir__ is won't work in packages (Paul Moore)
 }}}
