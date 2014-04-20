@@ -1,5 +1,174 @@
-Not much to write about myself at all.<<BR>>
-Finally a part of this site.<<BR>>
-I really hope Im useful at all<<BR>>
-<<BR>>
-My website: [[http://www.klondonescorts.co.uk|cheap london escorts]]
+This is an introduction to developing Jython, just to get someone started. It doesn't cover the source code in any depth or discuss the design behind Jython. It's purely aimed at getting a development environment set up. It's definitely not complete so feel free to make it better!
+
+
+<<TableOfContents>>
+
+== Mercurial ==
+
+
+ * Check out a copy of the Jython source with [[http://mercurial.selenic.com/|Mercurial]], available on most *nix systems or with Cygwin on Windows.
+ * You can use the command line tool `hg`, or [[http://mercurial.selenic.com/wiki/OtherTools#Graphical_user_interfaces|GUI clients are available]] on most platforms.
+ * NetBeans, Eclipse and other Java IDEs also integrate Mercurial support. Eclipse users should see [[JythonDeveloperGuide/EclipseNotes|JythonDeveloperGuide/EclipseNotes]].
+ * Browse the source code on the Web at http://hg.python.org/jython or at the official mirror on [[BitBucket|BitBucket]], at http://bitbucket.org/jython/jython.
+ * To obtain the a copy of the ''current development'' source, clone the repo via:
+  .
+  {{{
+hg clone http://hg.python.org/jython
+}}}
+
+
+ * It's easy to create your own fork of the repo on [[BitBucket|BitBucket]], visit http://bitbucket.org/jython/jython and click on 'Fork'
+ * Attach patches to issues in the [[http://bugs.jython.org/|Jython bug tracker]].
+  * Also, you can upload them to http://codereview.appspot.com (the Jython repository is already registered).
+
+== IDE Support ==
+
+Because Jython is an Ant project, it's a bit tricky to configure an Integrated Development Environment (IDE) for it.
+
+These notes should help:
+
+   * [[JythonDeveloperGuide/EclipseNotes|JythonDeveloperGuide/EclipseNotes]]
+   * [[JythonDeveloperGuide/IntellijNotes|JythonDeveloperGuide/IntellijNotes]]
+   * [[JythonDeveloperGuide/IntellijTricks|JythonDeveloperGuide/IntellijTricks]]
+
+== Subversion (Historical) ==
+
+
+When Jython first followed CPython into use of Mercurial as the repository, it continued to reference a part of the CPython source at {{{ https://svn.python.org }}} as a "sub-repository". This meant you still needed [[http://subversion.apache.org|Subversion]] installed. As of 20 March 2012, the Jython Mercurial repository contains a snapshot of CPython libs in the 2.2, 2.5, and default branches.
+
+
+You therefore only need the following advice if you are somehow working with an old repository.
+
+
+The following advice is based on experience using Mercurial 1.9, [[http://sliksvn.com|Slik Subversion]] and Windows 7 (AMDx64). Other tools and operating systems exist. An installation that gives you the command 'svn' on your path is sufficient.
+
+
+If you do not have Subversion installed (and on the PATH) the Mercurial {{{hg clone}}} command will terminate with the message:
+
+
+{{{
+abort: The system cannot find the file specified
+}}}
+
+
+at the point where it attempts to read the sub-repository, specified in the files {{{ .hgsub }}} and {{{ .hgsubstate }}}.
+
+
+A second requirement is that Subversion should accept the SSL certificate from the site svn.python.org. If you have not used Subversion already to access the site, you may find that the {{{ hg clone }}} command hangs at the point where it attempts to read the sub-repository. A simple solution is to visit the site once from the command line as follows:
+
+
+{{{
+svn info https://svn.python.org/projects/python/branches/release26-maint/Lib/
+}}}
+
+
+Subversion will issue a warning about the certificate, and you will be able to "accept permanently" the site's certificate. The Mercurial clone operation should not now hang.
+
+
+If you see the sub-directory {{{ CPythonLib }}} created in your local repository, then the call to Subversion by Mercurial was a success. (It can take a few minutes to complete.)
+
+
+== Ant ==
+
+
+ * [[http://ant.apache.org/|Ant]] is a Java-based tool used to build Jython from source.
+ * Eclipse users, see [[JythonDeveloperGuide/EclipseNotes#ANT|Eclipse Ant notes]]
+ * Download the latest version (Jython requires Ant 1.7 or later to build) and install it so Ant's `bin` directory is somewhere in your path.
+ * To build Jython, run `ant` in the top-level Jython directory (which contains the Ant file `build.xml`).
+ * The results of the build appear in the `dist` subdirectory.
+
+
+== Tests ==
+
+
+The Jython build process generates an executable Bash script, `dist/bin/jython`, to make it easy to launch your build of Jython. It works on Unix-like platforms (including Mac OS X and Cygwin).
+
+
+If you're using Windows without Cygwin, use the batch file `dist/bin/jython.bat` instead.
+
+
+Now you're ready to run tests...
+
+
+ * There are a couple different places to find test cases
+  * Jython's `dist/Lib/test` (populated by the build process)
+  * Jython's `bugtests` subdirectory (included with the development sources)
+
+ * Run a particular test, or the whole Python test suite with `ant regrtest`.
+
+
+See [[TestingJython|TestingJython]] for some more details.
+
+
+== Directory layout ==
+
+
+Note the following describes the current trunk/jython. If you are working from an older tag, src doesn't exist and src/com and src/org are moved up a level.
+
+
+ * `src/org` : top level package for python
+ * `src/com` : zxJDBC related sources
+ * `src/shell` : launcher scripts
+ * `src/templates`: java source generator & related templates, used to update portions of java classes elsewhere in the source tree
+ * `Demo` : demo sources for the website and such
+ * `Doc` : the website documentation (see [[JythonDeveloperGuide/WebsiteBuilderSetup]] to build the http://jython.org website)
+ * `Lib` : the python source files for Jython standard library implementations
+ * `Lib/test` : test cases
+ * `Misc` : random scripts which are not all used; some generate source
+ * `Tools` : JythonC and Freeze
+ * `CPythonLib` : Lib directory from the corresponding version of cpython, via svn:externals
+ * `bugtests` : additional test cases covering bug reports
+
+
+== Coding guidance ==
+
+
+ * [[JythonDeveloperGuide/PortingPythonModulesToJython]] : A good starting task for a Jython developer
+ * [[CodingStandards|CodingStandards]] : The standards for writing Java code for Jython
+ * [[PatchGuidelines|PatchGuidelines]] : How to make a patch for submission to the tracker
+
+
+== How things work ==
+
+
+ * [[ImplementNewType|ImplementNewType]] : Implementing a new type (a beginner's notes)
+ * [[ImplementSequenceType|ImplementSequenceType]] : Implementing a new sequence type
+ * [[JythonModulesInJava|JythonModulesInJava]] : How to write a Jython module in Java
+ * [[PythonTypesInJava|PythonTypesInJava]] : How to make a Jython type in Java (2.5 and later), mostly about the type exposer
+ * [[JythonClassesInJava|JythonClassesInJava]] : How to make a Jython class in Java (pre-2.2, deprecated)
+ * [[JythonDeveloperGuide/AttributeLookupMethods]] : Some explanation for the different methods to lookup attributes on [[PyObject|PyObject]].
+ * [[JythonDeveloperGuide/ImplementingStrAndRepr]] : Tips for implementation of `__str__` and `__unicode__` in Java.
+ * [[IntegerConversion|IntegerConversion]] : Basics of converting [[PyObject|PyObject]] numbers to Java primitives
+ * [[JythonDeveloperGuide/UsingPyNewStringFromPythonCode]] : On the corner case of converting a Java String to a Python String.
+ * [[GeneratedDerivedClasses|GeneratedDerivedClasses]] : {{{gderived.py}}}, a tool used when implementing new types
+ * [[BufferProtocol|BufferProtocol]] : Design of a Jython equivalent to the CPython buffer protocol (buffer API)
+ * [[MethodDispatch|MethodDispatch]] : An explanation of Jython method dispatch mechanism.
+
+
+== Other stuff ==
+
+
+ * [[WebsiteBuilderSetup|WebsiteBuilderSetup]] : How to get the pieces setup to edit and build the Jython website
+ * [[VersionTransition|VersionTransition]] : Why some tests are excluded in going to a new version and how to go about fixing them
+ * [[JythonDeveloperGuide/RegressionTestNotes]] : Some notes the regression tests
+ * [[JythonDeveloperGuide/PleaseAdoptMe]] : Tasks looking for volunteers
+ * [[HowToReleaseJython|HowToReleaseJython]] : Checklist for building a release and updating the website
+ * [[SvnToHgMigration|SvnToHgMigration]] : Notes on the migration to Mercurial
+
+
+== Tasks ==
+
+
+ * [[PerformanceEnhancements|PerformanceEnhancements]] : Ideas on how to speedup Jython
+ * [[CodebaseCleanup|CodebaseCleanup]] : Tasks/general guidelines on keeping the codebase clean
+
+
+=== Porting external projects to Jython ===
+
+
+ * [[DjangoOnJython|DjangoOnJython]]
+ * [[MercurialOnJython|MercurialOnJython]]
+ * [[SqlAlchemyOnJython|SqlAlchemyOnJython]]
+ * [[SetuptoolsOnJython|SetuptoolsOnJython]]
+ * [[PylonsOnJython|PylonsOnJython]]
+ * [[TwistedOnJython|TwistedOnJython]]
