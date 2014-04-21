@@ -11,7 +11,26 @@ Good routing map is a like a map of the city you're going to explore.
 
 Usability of routing component can be estimated with the help of the following questions:
 
-1. How easy is to get overview of all URLs that web application processes?
-2. How easy is to make reverse mapping (code to URL)?
+ 1. How easy is to get overview of all URLs that web application processes?
+ 2. How easy is to make reverse mapping (code to URL)?
 
-3. How easy is to serve static content URLs (css, js, images) by external server (cache)?
+ 3. How easy is to serve static content URLs (css, js, images) by external server
+
+==== Bottle Routing ====
+{{{
+@route('/hello/<name>')
+def index(name):
+  return '<b>Hello {{name}}</b>!'
+}}}
+
+Get overview of URLs handled: search for "@route"
+
+http://bottlepy.org/docs/dev/index.html
+
+==== Django Routing ===
+{{{
+
+}}}
+
+
+Get overview of URLs handled: find settings.py, look for ROOT_URLCONF for name of Python modules with the location of URL map (usually named 'urls')
