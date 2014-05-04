@@ -1,4 +1,38 @@
-Hello! <<BR>>
-My name is Jannette and I'm a 27 years old girl from Switzerland.<<BR>>
-<<BR>>
-Look at my weblog ... the elevation group mlm
+= Test PyPI Server =
+
+Just learning the packaging ropes or trying some system integration out?
+
+Why not use our new '''test''' PyPI server at https://testpypi.python.org/pypi
+
+To upload packages to it you need to:
+
+1. Register with the site. It has a different user database than the main PyPI server. It also gets cleaned out on a semi-regular basis.
+
+2. Fill in your test PyPI credentials in your ~/.pypirc file. You should end up with something like this:
+
+{{{
+[distutils]
+index-servers=
+    pypi
+    test
+
+[test]
+repository = https://testpypi.python.org/pypi
+username = richard
+password = <your password goes here>
+
+[pypi]
+repository = http://pypi.python.org/pypi
+username = richard
+password = <your password goes here>
+}}}
+
+3. Then use the test server URL when uploading or installing packages:
+
+{{{
+   python setup.py upload -r https://testpypi.python.org/pypi
+}}}
+To install packages from it:
+{{{
+    pip install -i https://testpypi.python.org/pypi <package name>
+}}}
