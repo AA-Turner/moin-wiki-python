@@ -10,26 +10,111 @@ See also the TrackerDevelopment_ page and the DesiredTrackerFeatures_ pages.
 Workflow
 ========
 
+Certain things in the UI may trigger depending on how the user is classified.
+The current roundup 'Developer' role is modified into the following sub-roles:
+
+    * Triage
+    * Committer
+    * Release Manager
+
+Change possible 'resolved' states to the following:
+
+    * fixed
+    * won't fix
+    * duplicate
+    * postponed
+    * not a bug
+    * third party
+
+Replace both 'components' and 'keywords' by a more comprehensive tagging
+system.  Initially at least these will all be 'official' tags, listed
+in the developer's guide and settable via autocomplete in a text field.
+The list of values should be every category currently in the experts
+list, plus:
+
+    * resource usage
+    * performance
+    * security issue
+    * segfault/abort
+    * stuck
+    * buildbot
+    * bite sized
+    * release blocker (for each active release)
+    * deferred blocker (for each active release)
+
+Change Types to:
+
+    * documentation
+    * bug
+    * enhancement
+
+Change 'assigned to' so that it can be any valid user, and it is automatically
+reset to 'no one' after N days or an issue state change.
+
+New 'state' field will eventually replace both 'stage' and 'status'.
+
+    * new
+    * information needed
+    * decision needed
+    * patch needed
+    * review needed
+    * patch update needed
+    * commit review needed
+    * resolved (with one of the resolved states)
+
+Priority:
+
+    * high
+    * normal
+    * low
+
+
 Other features
 ==============
+
 
 Patch-related improvements
 --------------------------
 
 When a file is submitted the tracker should be able to:
 
-* Determine if the file is a patch or not;
-* Determine what files are affected by the patch (and possibly add the module/package names as tags);
-* Determine if the patch contains tests, docs, Misc/NEWS entry, Misc/ACKS, etc.;
-* Determine if the patch contains trailing whitespace or PEP 8 violations;
-* Determine on which branches the patches apply on without conflicts (with a way to re-check it on demand or periodically);
+* Determine if the file is a patch or not
+* Determine what files are affected by the patch (and possibly add the
+  module/package names as tags)
+* Determine if the patch contains tests, docs, Misc/NEWS entry, Misc/ACKS,
+  What's New (etc?)
+* Determine if the patch contains trailing whitespace or PEP 8 violations
+* Determine on which branches the patches apply on without conflicts (with a
+  way to re-check it on demand or periodically)
+
+Somewhat controversial: a set of checkboxes for the items from the above
+that are required for this particular issue's patch.
+
 
 User Interface
 ==============
 
-* Add a dashboard page similar to https://dashboard.djangoproject.com/  (global + per user?);
-* Show the role of users (normal user, developer/triager, committer) with an icon or tooltip;
-* Show a "clip" icon in the issue list page for issues with a patch;
+* Have only title/message/state in the default user view, with a sticky (either
+  per-user or per-browser (via cookies)) setting to also show the other fields.
+  (No 'state' in the 'new issue' view).
+* Show the role of users (normal user, developer/triager, committer) with an
+  icon or tooltip
+* Show a "clip" icon in the issue list page for issues with a patch
+
+Dashboard(s)
+------------
+
+Add a dashboard page similar to https://dashboard.djangoproject.com/  (global
++ per user?).
+
+Experiment with a dashboard that actually lists the top messages in each
+state, arranged in the order of interest to the user based on their
+role (user, triager, committer).
+
+'stuck' issues are sorted to bottom of queue.
+
+'information needed' queue should list only issues that have been in that
+state for longer than N days.
 
 ----
 
