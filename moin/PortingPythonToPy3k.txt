@@ -137,12 +137,16 @@ Usage of 2to3_ can be integrated into the installation process: 2to3_ can be run
 
   try:
       from distutils.command.build_py import build_py_2to3 as build_py
+      from distutils.command.build_scripts import build_scripts_2to3 as build_scripts
   except ImportError:
       # 2.x
       from distutils.command.build_py import build_py
+      from distutils.command.build_scripts import build_scripts
   ...
   setup(...
-    cmdclass = {'build_py':build_py}
+    cmdclass = {'build_py': build_py,
+                'build_scripts': build_scripts
+               }
   )
 
 This will leave intact all source files, and convert them to Python 3 in the build area, if setup.py is run on Python 3. 'setup.py install' will then copy the 3.x version of the code into the target directory. If run on 2.x, nothing will change at all (as 2.x doesn't provide the build_py_2to3 class).
