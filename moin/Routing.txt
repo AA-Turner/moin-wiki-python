@@ -27,10 +27,12 @@ Get overview of URLs handled: search for "@route"
 
 http://bottlepy.org/docs/dev/index.html
 
-==== Django Routing ====
+==== Django Routing Classic (pre 1.8 era) ====
 {{{
 # --- urls.py ---
-urlpatterns = patterns('',
+from django.conf.urls import patterns, url
+
+urlpatterns = patterns('',  # <-- common prefix for sugar-coating, like 'news.views'
     url(r'^articles/2003/$', 'news.views.special_case_2003'),
     url(r'^articles/(\d{4})/$', 'news.views.year_archive'),
     url(r'^articles/(\d{4})/(\d{2})/$', 'news.views.month_archive'),
