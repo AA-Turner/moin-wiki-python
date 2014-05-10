@@ -60,34 +60,3 @@ urlpatterns = [
     url(r'^articles/(\d{4})/(\d{2})/(\d+)/$', news.views.article_detail),
 ]
 }}}
-
-
-
-{{{#!wiki comment
-==== Improved Django Routing (Django-hotsauce) ====
-
-(techtonik): I am not sure how this is better than native Django, this example fails to focus on illustrating concept of convenient interface and logical grouping.
-
-[[EtienneRobillard/DjangoHotSauce|RegexURLMap]] provides a convenient interface to the Django routing system, allowing to make logical groups of urls:
-
-{{{
-# --- urls.py ---
-from notmm.utils.urlmap import RegexURLMap, url
-
-# init the constructor
-urlpatterns = RegexURLMap()
-
-# permanent routes
-urlpatterns.add_routes('mainapp.custom.views',
-        url(r'^$|index.html$', 'render_i18n_template', dict(extra_context={
-            'blogentry_set': blogentry_set,
-            #'recent_changes': recent_changes
-            })),
-)
-
-# insert more routes from another app 
-urlpatterns.include('blogengine.contrib.userprofile.urls', prefix="^blog/")
-
-# finish (optional)
-# urlpatterns.commit()
-}}}
