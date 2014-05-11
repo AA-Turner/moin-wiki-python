@@ -1,5 +1,165 @@
-Got nothing to write about me at all.<<BR>>
-Lovely to be a member of python.org.<<BR>>
-I really wish Im useful at all<<BR>>
-<<BR>>
-Feel free to surf to my site :: homepage, [[http://www.horseandcountrysingles.com/member/66426/blog/view/115604/|sneak a peek here]],
+= Buffer Protocol =
+
+This page proposes (now begins to document) a design for a Jython equivalent to 
+the CPython buffer protocol. A good place to start is this 
+[[attachment:buffer_api_model.pdf | worked example (pdf)]]
+that motivated the current design. 
+
+<<TableOfContents>>
+
+== What is the Buffer API? ==
+
+The Jython Buffer API is an interface you can use in Java when
+accessing or implementing certain built-in types, or your own.
+It is the basis of the type `memoryview` with which it shares
+many features.
+
+In CPython, certain objects are based on an underlying 
+memory array or buffer. The CPython designers judged it  
+desirable to be able to access that buffer directly, without 
+intermediate copying. CPython provides this at the C level 
+in the form of the ''buffer protocol''. This is used heaviliy in 
+the implementation of some core types and standard library 
+modules.  
+
+The capability is just as useful in Jython, and has been implemented
+for version 2.7.
+
+== Accessing an Object that has the Buffer API ==
+
+Objects flag their willingness to provide a buffer by implementing the
+following interface:
+{{{#!java
+public interface BufferProtocol {
+    Buffer getBuffer(int flags);   
+}
+}}}
+
+The `flags` argument indicates the buffer characteristics wanted by the consumer,
+and what kind of data organisation the consumer can cope with.
+The return is an implementation of `PyBuffer` appropriate to the storage 
+organisation of the exporter. This interface is quite rich, but the Javadoc is 
+thorough. In fact, the interface is defined in two stages: a part that is 
+independent of the type of unit in the buffer, and a part that is definite that 
+the units are `byte`s.
+
+The type-agnostic part of the interface is `PyBUF`:
+{{{#!java
+public interface PyBUF {
+
+    boolean isReadonly();
+
+    // Access to buffer (client responsible for indexing)
+    int getNdim();
+    int[] getShape();
+    int getItemsize();
+    int getLen();
+    int[] getStrides();
+    int[] getSuboffsets();
+    boolean isContiguous(char order);
+
+    // Constants taken from CPython object.h in v3.3
+    static final int MAX_NDIM = 64;
+    static final int WRITABLE = 0x0001;
+    static final int SIMPLE = 0;
+    static final int FORMAT = 0x0004;
+    static final int ND = 0x0008;
+    static final int STRIDES = 0x0010 | ND;
+    static final int C_CONTIGUOUS = 0x0020 | STRIDES;
+    static final int F_CONTIGUOUS = 0x0040 | STRIDES;
+    static final int ANY_CONTIGUOUS = 0x0080 | STRIDES;
+    static final int INDIRECT = 0x0100 | STRIDES;
+    static final int CONTIG = ND | WRITABLE;
+    static final int CONTIG_RO = ND;
+    static final int STRIDED = STRIDES | WRITABLE;
+    static final int STRIDED_RO = STRIDES;
+    static final int RECORDS = STRIDES | WRITABLE | FORMAT;
+    static final int RECORDS_RO = STRIDES | FORMAT;
+    static final int FULL = INDIRECT | WRITABLE | FORMAT;
+    static final int FULL_RO = INDIRECT | FORMAT;
+    static final int NAVIGATION = SIMPLE | ND | STRIDES | INDIRECT;
+    static final int IS_C_CONTIGUOUS = C_CONTIGUOUS & ~STRIDES;
+    static final int IS_F_CONTIGUOUS = F_CONTIGUOUS & ~STRIDES;
+    static final int CONTIGUITY = (C_CONTIGUOUS | F_CONTIGUOUS | ANY_CONTIGUOUS) & ~STRIDES;
+}
+}}}
+
+The byte-oriented part of the interface is `PyBuffer`. For the most part, you can 
+ignore the difference between `PyBUF` and `PyBuffer` and think of all the methods
+as belonging to `PyBuffer`:
+{{{#!java
+public interface PyBuffer extends PyBUF, BufferProtocol {
+
+    // Access to buffer contents (index calculation done by buffer)
+    byte byteAt(int index) throws IndexOutOfBoundsException;
+    int intAt(int index) throws IndexOutOfBoundsException;
+    void storeAt(byte value, int index) throws IndexOutOfBoundsException;
+    byte byteAt(int... indices) throws IndexOutOfBoundsException;
+    int intAt(int... indices) throws IndexOutOfBoundsException;
+    void storeAt(byte value, int... indices) throws IndexOutOfBoundsException;
+
+    // Bulk operations (index calculation done by buffer)
+    void copyTo(byte[] dest, int destPos);
+    void copyTo(int srcIndex, byte[] dest, int destPos, int length);
+    void copyFrom(byte[] src, int srcPos, int destIndex, int length);
+    void copyFrom(PyBuffer src);
+
+    // Releasing a buffer or getting another (or a slice)
+    void release();
+    boolean isReleased();
+    @Override PyBuffer getBuffer(int flags); // from BufferProtocol
+    public PyBuffer getBufferSlice(int flags, int start, int length);
+    public PyBuffer getBufferSlice(int flags, int start, int length, int stride);
+
+    // Access to buffer (client responsible for indexing)
+    public static class Pointer {
+        public byte[] storage;
+        public int offset;
+        public Pointer(byte[] storage, int offset) {
+            this.storage = storage;
+            this.offset = offset;
+        }
+    }
+
+    PyBuffer.Pointer getBuf();
+    PyBuffer.Pointer getPointer(int index);
+    PyBuffer.Pointer getPointer(int... indices);
+
+    // Interpreting the bytes
+    String getFormat();
+}
+}}}
+Notice that an object that implements `PyBuffer` must itself implement the 
+`BufferProtocol`. A buffer can give you a buffer, which may just be itself or 
+could be an independent object, depending on the implementation. 
+
+== Adding the Buffer API to an Object ==
+
+The core package org.python.core only defines the interfaces. Several `PyBuffer` 
+implementations that could be exported by object implementations are provided in 
+`org.python.core.buffer`. The place to start is with one of these basic types:
+
+||'''Buffer Type''' ||'''Suitable for ...'''||
+||!SimpleBuffer ||read-only 1D array of bytes||
+||!SimpleWritableBuffer || 1D array of bytes ||
+||!SimpleStringBuffer ||Java String (representing bytes)||
+
+These could all be extended or for a more sophisticated behaviour, consider 
+extending `BaseBuffer`.
+
+== Converting from CPython ==
+
+=== Similarities with CPython ===
+
+ * The navigational arrays (`shape`, `strides`, `suboffsets`) and `format`, `unitsize` are present with the same meanings.
+ * The "request flags" have the same values, with similar names `PyBUF.STRIDED` in place of `PyBUF_STRIDED`.
+ * The discipline of matching `get` and `release` applies also in Jython. 
+
+=== Differences from CPython ===
+
+ * `PyBuffer` is a Java interface: quantities that were struct members become `getXXX()` methods.
+ * `PyBuffer` always supplies full information (`shape`, `strides`, `format`).
+ * The different buffer organisations are expressed through different classes implementing the interface.
+ * Library functions taking `PyObject` or `PyBuffer` arguments in CPython become methods on those types.
+ * A `PyBuffer` manages the get-release accounting for exporters.
+ * Wherever CPython uses a `char*` pointer, Jython reference a buffer of bytes and an offset within it. 
