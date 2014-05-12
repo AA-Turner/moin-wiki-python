@@ -1,3 +1,4 @@
+= Basic configparser usage =
 These are some examples on using ConfigParser, assuming the following INI file...
 
 {{{
@@ -85,6 +86,38 @@ Config.set('Person','HasEyes',True)
 Config.set('Person','Age', 50)
 Config.write(cfgfile)
 cfgfile.close()
+}}}
+
+
+= Advanced configparser usage =
+== ExtendedInterpolation ==
+Using ExtendedInterpolation one can make use of cross-chapter flexible parameter values. For instance, using the following ini file:
+{{{
+[SectionOne]
+Param1:  Hello
+Param2:  World
+
+[SectionTwo]
+Param1:  ${SectionOne:Param1} ${SectionOne:Param2}
+
+[SectionThree]
+Alpha:   One
+Bravo:   Two
+Charlie: ${Alpha} Mississippi
+}}}
+
+By setting _interpolation to ExtendedInterpolation() the values become dynamic.
+
+{{{
+>>> import configparser
+>>> settings = configparser.ConfigParser()
+>>> settings._interpolation = configparser.ExtendedInterpolation()
+>>> settings.sections()
+['SectionOne', 'SectionTwo', 'SectionThree']
+>>> settings.get('SectionTwo', 'Param1')
+'Hello World'
+>>> settings.get('SectionThree', 'Charlie')
+'One Mississippi'
 }}}
 
 ----
