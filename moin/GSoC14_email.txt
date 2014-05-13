@@ -1,8 +1,21 @@
 = Ideas for a RFC 6532 API =
 
-== Step 1: ==
+== Policy ==
+ - the internal charset has to be changeable (or at least a USASCII/UTF8 switch is needed)
 
- 1. change the Header class in header.py to make the default charset choosable (adding 'default_charset' keyarg to __init__ and append)
- 2. create new classes in the headerregistry.py (e.g. UnicodeAddressHeader as inheritor of AddressHeader
+== Header ==
+
+===_header_value_parser===
+
+ - use settings from policy in _fold
+
+== Steps ==
+
+ 1. change the Header class in header.py to make the default charset changeable (add '_internal_charset' property)
+ 2. NOT SURE ABOUT THIS: create new classes in the headerregistry.py (e.g. UnicodeAddressHeader as inheritor of AddressHeader
  3. provide an alternative header map (e.g. _unicode_header_map) using the new classes
  4. HeaderRegistry: create an inherited class with the _unicode_header_map as default.
+
+...
+
+ 5. create a policy making use of the above
