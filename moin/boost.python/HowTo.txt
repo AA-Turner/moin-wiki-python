@@ -3,24 +3,26 @@
 
 === static class data members ===
 {{{
-object x_class 
-    = class_<X>("X") 
-         .def( ... ) 
-         ... 
-         ; 
- 
-x_class.attr("fu") = X::fu; 
-x_class.attr("bar") = X::bar; 
-... 
+object x_class
+    = class_<X>("X")
+         .def( ... )
+         ...
+         ;
+
+x_class.attr("fu") = X::fu;
+x_class.attr("bar") = X::bar;
+...
 }}}
-Since version 1.30 you can use class_ method: {{{
+Since version 1.30 you can use class_ method:
+
+{{{
    .add_static_property("name", &fget [,&fset])
 }}}
-
 === static class functions ===
 It's likely to be in 1.30 release.
 
 Meanwhile you should do something which mirrors pure Python:
+
 {{{
 class foo(object):
     def f(x,y):
@@ -28,23 +30,24 @@ class foo(object):
     f = staticmethod(f)
 }}}
 So in C++, it would be something like:
+
 {{{
     class_<foo>("foo")
         .def("f", &foo::f)
         .staticmethod("f")  // **
         ;
 }}}
-
 In version 1.33 staticmethod is already implemented, just use the same syntax as above.
 
 Where the marked line would be implemented something like this:
+
 {{{
 self& staticmethod(char const* name)
 {
-    dict d(handle<>(borrowed(downcast<PyTypeObject>(this->ptr())->tp_dict))); 
-    object method = (object)(d[name]); 
+    dict d(handle<>(borrowed(downcast<PyTypeObject>(this->ptr())->tp_dict)));
+    object method = (object)(d[name]);
     this->attr(name) = object(handle<>(
-         PyStaticMethod_New( callable_check(method.ptr()) ) 
+         PyStaticMethod_New( callable_check(method.ptr()) )
       ));
     return *this;
 }
@@ -59,47 +62,45 @@ If you want to expose a static function that returns a pointer to an already exp
         .staticmethod("f")  // **
         ;
 }}}
-
 This has told python that a pointer returned from foo:f() must be managed as a new object and is to be deleted when out of scope or at exit. There are more return policies. Return policies are all subtypes of ResultConverterGenerator, check it out in the docs.
 
 === module level objects ===
 ==== at module creation time ====
 First, create those objects like
+
 {{{
 object class_X = class_<X>("X");
 object x = class_X();
 }}}
 Second, expose them:
+
 {{{
 scope().attr("x") = x; // injects x into current scope
 }}}
 By default current scope is module.
+
 ==== at run-time ====
 Use a function:
+
 {{{
 template <class T>
 void set(const std::string& name, const T& value) {
   interpreter()->mainmodule()[name] = value;
 }
 }}}
-
 Note:: ''interpreter()'' is going to be added.
 
 === mutable C++ object ===
-Perhaps you'd like the resulting Python object to contain a raw
-pointer to the argument?  In that case, the caveat is that if the
-lifetime of the C++ object ends before that of the Python object, that
-pointer will dangle and using the Python object may cause a crash.
+Perhaps you'd like the resulting Python object to contain a raw pointer to the argument?  In that case, the caveat is that if the lifetime of the C++ object ends before that of the Python object, that pointer will dangle and using the Python object may cause a crash.
 
 Here's how to expose mutable C++ object during module initialisation:
+
 {{{
   scope().attr("a") = object(ptr(&class_instance));
 }}}
-
-
 === std::C++ container ===
-You can always wrap the container with class_ directive.
-For example for std::map:
+You can always wrap the container with class_ directive. For example for std::map:
+
 {{{
 template<class Key, class Val>
 struct map_item
@@ -156,20 +157,19 @@ class_<Map>("Map")
   .def("items", &map_item<Key,Val>().items)
   ;
 }}}
-
 To compile, you might need to add  'typename' before Map::const_iterator.
+
 === "Raw" function ===
 ''I want to write in python:''
-    {{{
+
+ . {{{
     def function( *args ):
         # Mess arount with elements of args.
-    }}}
+}}}
 
 ==== Method 1 (old way) ====
-You can make one with the
-library's implementation details.  Be warned that these interfaces may
-change, but hopefully we'll have an "official" interface for what you
-want to do by then.
+You can make one with the library's implementation details.  Be warned that these interfaces may change, but hopefully we'll have an "official" interface for what you want to do by then.
+
 {{{
 python::objects::function_object(
     f                       // must be py_function compatible
@@ -178,20 +178,21 @@ python::objects::function_object(
 }}}
 will create a Python callable object.
 
-'''f''' is any function pointer, function reference, or function object
-which can be invoked with two Py``Object* arguments and returns
-something convertible to a Py``Object*.
+'''f''' is any function pointer, function reference, or function object which can be invoked with two PyObject* arguments and returns something convertible to a PyObject*.
 
 You can add this to your module namespace with:
+
 {{{
 scope().attr("name") = function_object(f, ... );
 }}}
 Now you can also
+
 {{{
 class_<foo>("foo")
     .def("bar",function_object(f, ... ) );
 }}}
 as well, but '''''not'''''
+
 {{{
 function_object bar(f, ... );
 ...
@@ -201,51 +202,44 @@ class_<foo>("foo")
 because function_object is a function, not a class.
 
 ==== Method 2 (new way) ====
-There's a poorly documented function called '''raw_function''' in boost::python that makes defining
-the functions with arbitrary arguments much easier.  Another advantage of this method is that this is
-not using any functionality from the '''details''' namespace, so this should be more stable.
+There's a poorly documented function called '''raw_function''' in boost::python that makes defining the functions with arbitrary arguments much easier.  Another advantage of this method is that this is not using any functionality from the '''details''' namespace, so this should be more stable.
 
 This is our goal:
+
 {{{#!python
 def function(*args, **kwargs):
-	# do stuff here
+        # do stuff here
 }}}
-
 To accomplish this from C++, we must wrap our functionality into a function with the following signature:
+
 {{{#!cplusplus
 object bar(tuple args, dict kwargs)
 {
-	// do stuff here
+        // do stuff here
 }
 }}}
 Then we can use '''raw_function''' to add it to our class:
+
 {{{#!cplusplus
 class_<foo>("foo")
     .def("bar", raw_function(bar, 1) );
 }}}
-
 '''raw_function''' takes two parameters - the function pointer and the minimum number of arguments.
 
 === "Raw" constructor ===
-What if you wanted to make a constructor that takes in an arbitrary number
-of arguments and/or an arbitrary number keyword arguments?  It turns out that 
-boost::python can do '''raw_function''', and it can do '''make_constructor''',
-but it cannot do '''raw constructor'''.  The technique for making a 
-'''raw_constructor''' described here was devised by Hans Meine and and
-originally posted here: http://article.gmane.org/gmane.comp.python.c++/8881/match=raw+constructor
+What if you wanted to make a constructor that takes in an arbitrary number of arguments and/or an arbitrary number keyword arguments?  It turns out that  boost::python can do '''raw_function''', and it can do '''make_constructor''', but it cannot do '''raw constructor'''.  The technique for making a  '''raw_constructor''' described here was devised by Hans Meine and and originally posted here: http://article.gmane.org/gmane.comp.python.c++/8881/match=raw+constructor
 
 So here's our goal:
+
 {{{#!python
 class foo:
-	def __init__(*args, **kwargs):
-		# do stuff here
+        def __init__(*args, **kwargs):
+                # do stuff here
 }}}
-
-In order to implement the '''raw_constructor''', we must use some internal
-implementation details of boost::python.  This code was tested with
-boost 1.42 built on Visual Studio 2008.
+In order to implement the '''raw_constructor''', we must use some internal implementation details of boost::python.  This code was tested with boost 1.42 built on Visual Studio 2008.
 
 '''raw_constructor.hpp'''
+
 {{{#!cplusplus
 #ifndef RAW_CONSTRUCTOR_HPP
 #define RAW_CONSTRUCTOR_HPP
@@ -301,33 +295,31 @@ object raw_constructor(F f, std::size_t min_args = 0)
 
 #endif // RAW_CONSTRUCTOR_HPP
 }}}
-
 This is the "raw python" factory method signature for our class:
+
 {{{#!cplusplus
 class Foo {
-	static shared_ptr<Foo> create_raw(tuple args, dict kwargs)
-	{
-		// do stuff here
-	}
-	// ....
+        static shared_ptr<Foo> create_raw(tuple args, dict kwargs)
+        {
+                // do stuff here
+        }
+        // ....
 };
 }}}
 and this is the wrapper:
+
 {{{#!cplusplus
 class_<Foo, noncopyable, shared_ptr<Operator> > ("Foo", no_init)
-	.def("__init__", raw_constructor(&Foo::create_raw, 2));
+        .def("__init__", raw_constructor(&Foo::create_raw, 2));
 }}}
-'''raw_constructor''' takes the same parameters as '''raw_function''', but it only works
-for wrapping the '''__init___''' method.
+'''raw_constructor''' takes the same parameters as '''raw_function''', but it only works for wrapping the '''__init___''' method.
 
 === getter and setter methods as a property ===
-Suppose you have class "C" with methods "getA" and "setA" and 
-you want to expose them as a property "a".  Then
+Suppose you have class "C" with methods "getA" and "setA" and  you want to expose them as a property "a".  Then
 
 {{{
 .add_property("a", &C::getA, &C::setA)
 }}}
-
 will work unless you need to assign a [[boost.python/CallPolicy|CallPolicy]] to them.  In that case use "make_function":
 
 {{{
@@ -336,9 +328,7 @@ will work unless you need to assign a [[boost.python/CallPolicy|CallPolicy]] to 
       make_function(&C::setA, with_custodian_and_ward<...>())
 )
 }}}
-
 === named constructors / factories (as Python initializers) ===
-
 There is a poorly documented make_constructor() function for this purpose.  (The best available documentation seems to be in libs/python/test/injected.cpp of the boost source tree.)
 
 It may be used like this:
@@ -353,7 +343,6 @@ static boost::shared_ptr<MyClass> makeClass(const object& data)
 class_<MyClass, boost::shared_ptr<MyClass> >("MyClass")
     .def("__init__", make_constructor(makeClass))
 }}}
-
 or simply like this:
 
 {{{
@@ -365,20 +354,14 @@ static boost::shared_ptr<MyClass> makeClass(long val)
 class_<MyClass, boost::shared_ptr<MyClass> >("MyClass")
     .def("__init__", make_constructor(makeClass))
 }}}
-
-
 === boost.function objects ===
-
-There are times when you want to have the fast callbacks of C++ in boost.function objects to be used both from 
-C++ and python, and also have them to access both C++ and Python code. I have been using this  file
-[[attachment:py_boost_function.hpp]] in a regular basis, but of course it admits a lot of improvement. Be aware
-that this header uses boost.function_types; a library which currently is not in the main boost distribution.
+There are times when you want to have the fast callbacks of C++ in boost.function objects to be used both from  C++ and python, and also have them to access both C++ and Python code. I have been using this  file [[attachment:py_boost_function.hpp]] in a regular basis, but of course it admits a lot of improvement. Be aware that this header uses boost.function_types; a library which currently is not in the main boost distribution.
 
 Usage example:
 
 For the boost.python C++ module:
 
-{{{     
+{{{
      ...
      #include <boost/python.hpp>
      ...
@@ -391,7 +374,7 @@ For the boost.python C++ module:
      }
 
 
-     boost::function< void( string const& ) > module_greeter( 
+     boost::function< void( string const& ) > module_greeter(
           module_greeter_f
      ) ;
      ...
@@ -402,82 +385,77 @@ For the boost.python C++ module:
           ...
 
           def_function< void(string const&) >(
-              "greeter_function_t", 
-              "A greeting function" 
+              "greeter_function_t",
+              "A greeting function"
           );
 
           ...
           scope().attr("module_greeter") = module_greeter;
      }
 }}}
-
 From python code:
 
 - Invoke:
 
 {{{
-
           >>> import foo
           >>> foo.module_greeter("world")
 }}}
-
 - Create instances from python:
 
-{{{             
+{{{
           >>> def my_greetings(hi):
           >>> ... print hi, ", world"
           >>> ...
           >>> grfunc = foo.greeter_function_t.from_callable( my_greetings )
 }}}
-
 === a package within a single extension module ===
-
 See [[http://isolation-nation.blogspot.com/2008/09/packages-in-python-extension-modules.html|Packages in Python extension modules]].
 
 == How to get... ==
-
 === C++ object from Python ===
-
 If you have a reference, use `handle`:
+
 {{{
 handle<> x(whatever);   // new reference
 handle<> x(borrowed(whatever));  // borrowed reference
 
 object(x); // now we have an object.
 }}}
-
 Than you can try to `extract` a value:
+
 {{{
 Type v = extract<Type>(x);
 }}}
-
 Or from the start. Suppouse you wrap your class T as:
+
 {{{
 object Tclass = class_<T>("T")/* defs, etc. */;
 }}}
 Then you can create such object by
+
 {{{
 object pyt = Tclass(/* constructor args*/);
 }}}
 and get the underlying T this way:
+
 {{{
 T& t = extract<T&>(pyt);
 }}}
-
 See [[../extract]]
 
 === SWIG exposed C++ object from Python ===
-
 This is how SWIG encapsulates Pointers in Python
+
 {{{
 struct PySwigObject {
-    PyObject_HEAD 
+    PyObject_HEAD
     void * ptr;
     const char * desc;
 };
 }}}
-
 We use this function to extract the Pointer from the Python object
+
 {{{
 void* extract_swig_wrapped_pointer(PyObject* obj)
 {
@@ -485,7 +463,7 @@ void* extract_swig_wrapped_pointer(PyObject* obj)
     //first we need to get the this attribute from the Python Object
     if (!PyObject_HasAttrString(obj, thisStr))
         return NULL;
-        
+
     PyObject* thisAttr = PyObject_GetAttrString(obj, thisStr);
     if (thisAttr == NULL)
         return NULL;
@@ -495,24 +473,21 @@ void* extract_swig_wrapped_pointer(PyObject* obj)
     return pointer;
 }
 }}}
-
 This call ensures that for objects of type SWIGClass our converter function will be used.
+
 {{{
 boost::python::converter::registry::insert(&extract_swig_wrapped_pointer, type_id<SWIGExposedClass>());
 }}}
-
 We can then have a normal exposed function take our SWIGExposedClass
+
 {{{
 void foo(SWIGExposedClass* x)
 {...}
 }}}
-
 === Multithreading Support for my function ===
-One approach to safely unblock Python threads is to write a
-thin wrapper around your function which uses Py_BEGIN_ALLOW_THREADS
-and Py_END_ALLOW_THREADS around a call to the real function.
+One approach to safely unblock Python threads is to write a thin wrapper around your function which uses Py_BEGIN_ALLOW_THREADS and Py_END_ALLOW_THREADS around a call to the real function.
 
-A better approach is to use a class that releases the GIL in the constructor and re-acquires it in the destructor, using the common C++ idiom "Resource Acquisition Is Initialization" (http://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Resource_Acquisition_Is_Initialization):
+A better approach is to use a class that releases the GIL in the constructor and re-acquires it in the destructor, using the common C++ idiom "Resource Acquisition Is Initialization" ([[http://en.wikibooks.org/wiki/More_C++_Idioms/Resource_Acquisition_Is_Initialization|http://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Resource_Acquisition_Is_Initialization]]):
 
 {{{
 class ScopedGILRelease
@@ -534,23 +509,23 @@ private:
     PyThreadState * m_thread_state;
 };
 }}}
-
 This will ensure that the GIL is re-acquired even if an exception occurs. Sample code:
 
 {{{
-
 int foo_wrapper(int x)
 {
     ScopedGILRelease scoped;
     return foo(x);
 }
-
 }}}
 === ownership of C++ object ===
-Wrap object with auto_ptr<> storage: {{{
+Wrap object with auto_ptr<> storage:
+
+{{{
 class_<Myclass, auto_ptr<MyClass> >("MyClass");
 }}}
-Write a small helper function to call the function which wants to take ownership of My``Class object:
+Write a small helper function to call the function which wants to take ownership of MyClass object:
+
 {{{
 void caller(auto_ptr<MyClass> obj)
 {
@@ -565,7 +540,9 @@ See also http://www.boost.org/libs/python/doc/v2/faq.html#ownership
 === ownership of C++ object extended in Python ===
 The method defined upper does not work if part of your object is written in Python. The !PyObject* associated to the object may still be delete by Python. If you want to ensure the lifetime of the object, you have to increase manually the reference couting in the C++ Wrapper ''and'' use the above method. With this, you'll be sure the !PyObject* is not destroyed while the C++ still exists.
 
-So, write the !MyClassWrap as : {{{
+So, write the !MyClassWrap as :
+
+{{{
 class MyClassWrap : public MyClass
 {
   MyClassWrap( PyObject* self_) : self(self_) { PyINCREF(self); }
@@ -575,24 +552,27 @@ class MyClassWrap : public MyClass
   PyObject *self;
 };
 }}}
+And in the module definition :
 
-And in the module definition : {{{
+{{{
 class_<MyClass, auto_ptr<MyClassWrap> >("MyClass");
 implicitly_convertible<auto_ptr<MyClassWrap>, auto_ptr<MyClass> >();
 }}}
 And you still write the thin wrapper as described above.
 
-
 === python object from derived C++ object ===
-The first, but incomplete, way to do this is to create an object with :{{{
+The first, but incomplete, way to do this is to create an object with :
+
+{{{
 void MyFct( MyClass* my_obj )
 {
   object obj(my_obj);
   python_fct(obj);
 }
 }}}
+The problem is, if the dynamic type of my_obj is not !MyClass but a class derived from !MyClass, you won't have, in Python, the interface of the derived class. If you want to create the object with the interface of the real dynamic type you have to use the !ResultConverter created by Boost :
 
-The problem is, if the dynamic type of my_obj is not !MyClass but a class derived from !MyClass, you won't have, in Python, the interface of the derived class. If you want to create the object with the interface of the real dynamic type you have to use the !ResultConverter created by Boost : {{{
+{{{
 void MyFct( MyClass* my_obj )
 {
   reference_existing_object::apply<MyClass*>::type converter;
@@ -601,13 +581,14 @@ void MyFct( MyClass* my_obj )
   python_fct(real_obj);
 }
 }}}
-
 The python object must not be keep outside the execution of {{{python_fct}}}. If you do, then you have to take extra care about the lifetime of the Python object and the underlying C++ object for there are no lifetime guards possible (the original object being a C++ one, you have no automatic way to tie the lifetime of this object with the lifetime of the Python wrapper).
 
 Now, if you can copy the object and use the copy instead of a reference, you can change the !ResultConverter and use {{{return_by_value}}} instead of {{{reference_existing_object}}}.
 
 === python object from extended C++ object ===
-We still want the previous behaviour, but now the C++ class may be extended in Python. We so have a class wrapper :{{{
+We still want the previous behaviour, but now the C++ class may be extended in Python. We so have a class wrapper :
+
+{{{
 class MyClassWrap : public MyClass
 {
 public:
@@ -618,14 +599,17 @@ public:
   ...
 };
 }}}
+Let's say you have a C++ method, calling Python with the object. If you create the function as :
 
-Let's say you have a C++ method, calling Python with the object. If you create the function as :{{{
+{{{
 bool my_fct(MyClass* my_obj)
 {
   bool result = extract<bool>( python_function(my_obj) );
 }
 }}}
-Boost will create a new !MyClass wrapper and you won't have access to the Python methods. To access the Python object you have to explicitly send the Python wrapper boost gave you at the object creation :{{{
+Boost will create a new !MyClass wrapper and you won't have access to the Python methods. To access the Python object you have to explicitly send the Python wrapper boost gave you at the object creation :
+
+{{{
 bool my_fct(MyClass* my_obj)
 {
   MyClassWrap *wrap_obj = dynamic_cast<MyClassWrap*>(my_obj);
@@ -641,8 +625,9 @@ bool my_fct(MyClass* my_obj)
   return extract<bool>( python_function(final_obj) );
 }
 }}}
+Of course, if you also have  C++ classes derived from !MyClass, you'll have to implement the function as :
 
-Of course, if you also have  C++ classes derived from !MyClass, you'll have to implement the function as :{{{
+{{{
 bool my_fct(MyClass* my_obj)
 {
   MyClassWrap *wrap_obj = dynamic_cast<MyClassWrap*>(my_obj);
@@ -659,16 +644,22 @@ bool my_fct(MyClass* my_obj)
   return extract<bool>( python_function(final_obj) );
 }
 }}}
-
 === access to a Python extension in the same app that embeds Python? ===
 Suppose you have an extension module "hello" with function "greet".
 
-Module init function named "inithello" must be imported:{{{
+Module init function named "inithello" must be imported:
+
+{{{
   PyImport_AppendInittab("hello", inithello);
-}}} before {{{
+}}}
+before
+
+{{{
   Py_Initialize();
 }}}
-and later:{{{
+and later:
+
+{{{
   object strRes(handle<>(PyRun_String(
                 "from hello import *\n"
                 "result = greet()\n",
@@ -678,11 +669,18 @@ and later:{{{
 
   const char* res = extract<const char*>(main_namespace["result"]);
 }}}
+It is worth noting that if your function is created by the macro BOOST_PYTHON_MODULE that it is named differently based on what version of python you are extending. For python 2 it is:
 
+{{{
+inithello
+}}}
+For python 3 however it's:
+
+{{{
+PyInit_hello
+}}}
 == How to make... ==
-
 === Dynamic template to-python converters. ===
-
 Assume you want to create a wrapper that will quickly allow you to define a converter for an std::pair holding any two types. Create the following templated static structure.
 
 {{{
@@ -693,13 +691,11 @@ struct PairToTupleConverter {
   }
 };
 }}}
-
 If you have a look at the specifications for python object converters for the to_python_object template in the boost::python documentation, you will notice that the above satisfies the requirements of being an object with a static function convert() that accepts the type-to-be-converted and returns a python object pointer(PyObject*). This is reusable for an std::pair holding any two types like so:
 
 {{{
   to_python_converter<std::pair<int, int>, PairToTupleConverter<int, int> >();
 }}}
-
 Such a statement would be present in your exports (BOOST_PYTHON_MODULE() definition) for any std::pair you wish to export to python as a result of function return values; of course, the above example is for a pair of ''int''s. Another thing one will notice is that these may be used recursively. If we first register a to_python_converter for a pair of ''int''s, then we can later register a pair of int-pairs like so:
 
 {{{
@@ -709,20 +705,16 @@ Such a statement would be present in your exports (BOOST_PYTHON_MODULE() definit
   // Registers a converter for a pair of int-pairs.
   to_python_converter<std::pair<IntPair, IntPair>, PairToTupleConverter<IntPair, IntPair> >();
 }}}
-
 The second registration function call (actually an instantiation) will delve recursively into the to_python_converter registry to find our previous registration of a converter for ''int''-pairs. The lifetime of the object depends on the return_value_policy that you apply to the export of the function which returns one of these manually registered convertible types. A similar thing can be done for containers; std::vector to boost::python::tuple, std::vector to boost::python::list, std::map to boost::python::dict.
 
 == Howto debug your extensions.. ==
-
 === [NOTE] Problems using MS Visual C++ Debugger ===
-
 If you want to debug your extensions using the MS Visual C++ debugger you need to remember to compile all libraries and extensions with the '''/MDd''' flag.
 
 If you forget this compiler flag, it's likely that your debugger will halt on a breakpoint with an error something like this:
 
 {{{HEAP[python.exe]: Invalid Address specified to RtlValidateHeap( 00E30000, 00D48FA8 )}}}
 
-The actual statement which halts your debugger is executed in the NTDLL and therefor is not debuggable.
-While this seems to apply to all of the boost libraries, it can be annoying and it's hard to actually find the problem.
+The actual statement which halts your debugger is executed in the NTDLL and therefor is not debuggable. While this seems to apply to all of the boost libraries, it can be annoying and it's hard to actually find the problem.
 
 As far as I know, the actual problem is, if you've not compiled all your libs/extensions with ''/MDd'', that you have objects on different heaps and the debugger stops with an assert because the extensions tries to access objects from the wrong heap.
