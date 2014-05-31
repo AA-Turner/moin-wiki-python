@@ -1,0 +1,39 @@
+= Decoding Japanese Text =
+
+The following code was written in response to a [[http://groups.google.com/group/comp.lang.python/msg/cbb6377999249b2c?dmode=source|post on comp.lang.python]] to show how to obtain a unicode representation of text stored in the Shift-JIS encoding. The original text has also been Base64 encoded for delivery in an e-mail message: 
+
+{{{
+#!python
+import base64, sys
+from qt import *
+
+a = \
+"""SW4gdGhpcyBzYW1wbGUsIGUtbWFpbCB0aXRsZSBhbmQgdGV4dCBhcmUgd3JpdHRlbiBpbiBKYXBh
+bmVzZS4gDQpPdXIgbGFuZ3VhZ2UgaGFzIHRocmVlIHR5cGVzIGNhbGxlZCCBZ0thdGFrYW5hgWgs
+IIFnSGlyYWdhbmGBaCBhbmQgDQqBZ0thbmppgWguIA0KVGhpcyBlLW1haWwgY29udGFpbnMgYWxs
+IHRoZSB0eXBlcy4gDQqDQ4NOg1aDQYLNgmiCd4Jrgm6CYIJjglKBRIJQgk+CyYLEg4GBW4OLi0CU
+XILwIA0Kk/qWe4zqkc6JnoKzgrmC6YLngrWCooLFgreC5oFCIA0KgqCCooKkgqaCqIFBg0GDQ4NF
+g0eDSSANCoKpgquCrYKvgrGBQYNKg0yDToNQg1IgDQqCs4K1greCuYK7gUGDVINWg1iDWoNcIA0K
+gr2Cv4LCgsSCxoFBg16DYINjg2WDZyANCoLIgsmCyoLLgsyBQYNpg2qDa4Nsg20gDQqCzYLQgtOC
+1oLZgUGDboNxg3SDd4N6IA0KgtyC3YLegt+C4IFBg32DfoOAg4GDgiANCoLiguSC5oFBg4aDhoOI
+IA0KgueC6ILpguqC64FBg4mDioOLg4yDjSANCoLtgvCC8YFBg4+DSYOTIA0KgmCCYYJigmOCZIJl
+gmaCZ4JogmmCaoJrgmyCbYJugm+CcIJxgnKCc4J0gnWCdoJ3gniCeSANCoKBgoKCg4KEgoWChoKH
+goiCiYKKgouCjIKNgo6Cj4KQgpGCkoKTgpSClYKWgpeCmIKZgpogDQqBQoFBgWmBaoGBgXuBW4GW
+gY+BdYF2gUmBlIGQgZOBlYFggYSBg4GbgX6BooGggZmB9CANCpOMi56Tc49hkkqL5pHjgViW2IJS
+gXyCUYJUgXyCUiANCoKggqKCqIKikbmV25BWj2iDcoOLglCCVYpLIA0Kg0ODToNWg0GKlI6uie+O
+0CANCg=="""
+
+if __name__ == "__main__":
+
+    app = QApplication(sys.argv)
+    s = base64.decodestring(a)
+    qs = QTextCodec.codecForName("Shift-JIS").toUnicode(s)
+    l = QLabel(qs, None)
+    l.show()
+    app.setMainWidget(l)
+    sys.exit(app.exec_loop())
+}}}
+
+This script decodes the Base64 string, uses the appropriate codec to convert the contents into a unicode representation, and shows the result in a label. 
+
+Note that you will need suitable fonts installed on your system to see the result. 
