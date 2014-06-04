@@ -1,0 +1,87 @@
+= Handling an internal Qt MIME type =
+
+On the `#pyqt` channel on Freenode, `reenen` asked if it was possible to handle the internal MIME type Qt uses for drag and drop between item views.
+
+See [[PyQt/Handling Qt's internal item MIME type|Handling Qt's internal item MIME type]] for the details.
+
+{{{
+#!python
+import sys
+from PyQt4.QtCore import QDataStream, Qt, QVariant
+from PyQt4.QtGui import *
+
+class TreeModel(QStandardItemModel):
+
+    def __init__(self, parent = None):
+    
+        QStandardItemModel.__init__(self, parent)
+    
+    def dropMimeData(self, data, action, row, column, parent):
+    
+        if data.hasFormat('application/x-qabstractitemmodeldatalist'):
+            bytearray = data.data('application/x-qabstractitemmodeldatalist')
+            data_items = self.decode_data(bytearray)
+            
+            # Decode the data, assuming that we get 6 32-bit integers to
+            # start with, then a count byte followed by a string.
+            text = data_items[Qt.DisplayRole].toString()
+            for row in range(self.rowCount()):
+                name = self.item(row, 0).text()
+                if name == text:
+                    number_item = self.item(row, 1)
+                    number = int(number_item.text())
+                    number_item.setText(str(number + 1))
+                    break
+            else:
+                name_item = QStandardItem(text)
+                number_item = QStandardItem("1")
+                self.appendRow([name_item, number_item])
+            
+            return True
+        else:
+            return QStandardItemModel.dropMimeData(self, data, action, row, column, parent)
+    
+    def decode_data(self, bytearray):
+    
+        data = {}
+        
+        ds = QDataStream(bytearray)
+        while not ds.atEnd():
+        
+            row = ds.readInt32()
+            column = ds.readInt32()
+            
+            map_items = ds.readInt32()
+            for i in range(map_items):
+            
+                key = ds.readInt32()
+                
+                value = QVariant()
+                ds >> value
+                data[Qt.ItemDataRole(key)] = value
+        
+        return data
+
+app = QApplication(sys.argv)
+
+window = QWidget()
+
+listModel = QStringListModel(["John", "Jane", "Frank", "Henry"])
+listView = QListView()
+listView.setModel(listModel)
+listView.setDragEnabled(True)
+
+treeModel = TreeModel()
+treeView = QTreeView()
+treeView.setHeaderHidden(True)
+treeView.setRootIsDecorated(False)
+treeView.setAcceptDrops(True)
+treeView.setModel(treeModel)
+
+layout = QHBoxLayout(window)
+layout.addWidget(listView)
+layout.addWidget(treeView)
+
+window.show()
+sys.exit(app.exec_())
+}}}
