@@ -1,0 +1,70 @@
+= Binding widget properties to Python variables =
+
+On the Freenode `#pyqt` channel, 'xh' asked if there was a way to bind widget properties to Python variables.
+
+The following code ([[attachment:bindable.py]]) is a quick hack to demonstrate one way of doing this:
+
+{{{
+#!python
+import sys
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+
+def bind(objectName, propertyName, type):
+
+    def getter(self):
+        return type(self.findChild(QObject, objectName).property(propertyName).toPyObject())
+    
+    def setter(self, value):
+        self.findChild(QObject, objectName).setProperty(propertyName, QVariant(value))
+    
+    return property(getter, setter)
+}}}
+
+The `bind()` function performs the work of creating a Python property and associated getter and setter methods that queries an instance for the object with the specified name. The getter and setter methods retrieve the object's named property. The getter method reads its value and performs the appropriate type conversion; the setter method sets a new value for the property.
+
+We could bind the variable using a !PyQt property instead (with the `QtCore.pyqtProperty` object). This would also expose the property to other Qt objects.
+
+{{{
+#!python
+class Window(QWidget):
+
+    def __init__(self, parent = None):
+    
+        QWidget.__init__(self, parent)
+        nameEdit = QLineEdit()
+        nameEdit.setObjectName("nameEdit")
+        addressEdit = QTextEdit()
+        addressEdit.setObjectName("addressEdit")
+        contactCheckBox = QCheckBox()
+        contactCheckBox.setObjectName("contactCheckBox")
+}}}
+
+These three widgets are the ones whose properties we want to bind variables to. We give them unique names so that the Python property methods can find them.
+
+{{{
+#!python
+        layout = QFormLayout(self)
+        layout.addRow(self.tr("Name:"), nameEdit)
+        layout.addRow(self.tr("Address:"), addressEdit)
+        layout.addRow(self.tr("Receive extra information:"), contactCheckBox)
+}}}
+    
+{{{
+#!python
+    name = bind("nameEdit", "text", str)
+    address = bind("addressEdit", "plainText", str)
+    contact = bind("contactCheckBox", "checked", bool)
+}}}
+
+We create three Python properties at the class level and bind them to specific properties of the named widgets, indicating the type that each of them should have in Python.
+
+{{{
+#!python
+if __name__ == "__main__":
+
+    app = QApplication(sys.argv)
+    window = Window()
+    window.show()
+    sys.exit(app.exec_())
+}}}
