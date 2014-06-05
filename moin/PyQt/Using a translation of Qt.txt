@@ -1,0 +1,23 @@
+= Using a translation of Qt =
+
+On the `#pyqt` channel on [[http://freenode.net|freenode]], `Fisiu` asked about getting localized versions of the Qt dialogs.
+
+{{{
+#!python
+
+import sys
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+
+if __name__ == "__main__":
+
+    app = QApplication(sys.argv)
+    
+    qt_translator = QTranslator()
+    qt_translator.load("qt_" + QLocale.system().name(),
+                       QLibraryInfo.location(QLibraryInfo.TranslationsPath))
+    app.installTranslator(qt_translator)
+    
+    QMessageBox.aboutQt(None)
+    sys.exit()
+}}}
