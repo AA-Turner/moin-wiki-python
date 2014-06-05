@@ -1,0 +1,36 @@
+= Drawing highlighted rows in a calendar widget =
+
+On the Freenode #pyqt channel, rowinggolfer asked if it was possible to highlight the current week in a calendar widget.
+
+{{{
+#!python
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+
+class WeekCalendar(QCalendarWidget):
+
+    def __init__(self, *args):
+    
+        QCalendarWidget.__init__(self, *args)
+        self.color = QColor(self.palette().color(QPalette.Highlight))
+        self.color.setAlpha(64)
+        self.selectionChanged.connect(self.updateCells)
+    
+    def paintCell(self, painter, rect, date):
+    
+        QCalendarWidget.paintCell(self, painter, rect, date)
+        
+        first_day = self.firstDayOfWeek()
+        last_day = first_day + 6
+        current_date = self.selectedDate()
+        current_day = current_date.dayOfWeek()
+        
+        if first_day <= current_day:
+            first_date = current_date.addDays(first_day - current_day)
+        else:
+            first_date = current_date.addDays(first_day - 7 - current_day)
+        last_date = first_date.addDays(6)
+        
+        if first_date <= date <= last_date:
+            painter.fillRect(rect, self.color)
+}}}
