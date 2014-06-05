@@ -1,0 +1,42 @@
+= Fading and unfading a widget with a delay =
+
+On the !PyQt mailing list, [[http://www.riverbankcomputing.com/pipermail/pyqt/2009-November/025007.html|Tim and Alison Bentley]] asked for a way to produce a fade-unfade animation.
+
+The following example code uses a single-shot QTimer to schedule the unfade step of the animation for one second after the fade occurs.
+
+{{{
+#!python
+import sys
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+
+class Window(QWidget):
+
+    def __init__(self, parent = None):
+    
+        QWidget.__init__(self, parent)
+        
+        button = QPushButton(self.tr("Click me!"))
+        
+        button.clicked.connect(self.fade)
+        
+        layout = QVBoxLayout(self)
+        layout.addWidget(button)
+    
+    def fade(self):
+    
+        self.setWindowOpacity(0.5)
+        QTimer.singleShot(1000, self.unfade)
+    
+    def unfade(self):
+    
+        self.setWindowOpacity(1)
+
+
+if __name__ == "__main__":
+
+    app = QApplication(sys.argv)
+    window = Window()
+    window.show()
+    sys.exit(app.exec_())
+}}}
