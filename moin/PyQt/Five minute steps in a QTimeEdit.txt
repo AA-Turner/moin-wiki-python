@@ -1,0 +1,15 @@
+= Five minute steps in a QTimeEdit =
+
+On the `#pyqt` channel on Freenode, `rowinggolfer` asked if it was possible to make QTimeEdit step in five minute intervals.
+
+The following subclass reimplements the `stepBy()` method and calls the base class implementation with an adjusted number of steps.
+
+{{{
+#!python
+class FiveMinuteTimeEdit(QTimeEdit):
+  def stepBy(self, steps):
+    if self.currentSection() == self.MinuteSection:
+      QTimeEdit.stepBy(self, steps * 5)
+    else:
+      QTimeEdit.stepBy(self, steps)
+}}}
