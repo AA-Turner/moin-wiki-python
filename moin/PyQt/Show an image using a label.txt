@@ -1,0 +1,19 @@
+= Show an image using a label =
+
+On the `#pyqt` IRC channel on Freenode, `elhobab` asked how to show an image.
+
+{{{
+#!python
+
+import sys
+from PyQt4.QtGui import *
+
+app = QApplication(sys.argv)
+
+label = QLabel()
+pixmap = QPixmap(sys.argv[1])
+label.setPixmap(pixmap)
+label.show()
+
+sys.exit(app.exec_())
+}}}
