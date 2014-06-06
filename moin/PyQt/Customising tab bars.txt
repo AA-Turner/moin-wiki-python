@@ -1,0 +1,64 @@
+= Customising tab bars =
+
+On the `#pyqt` channel on Freenode, `felipe__` asked if it was possible to make the tabs in a QTabBar widget fill the available space.
+
+There is a property to do this in Qt 4.5 (http://doc.trolltech.com/4.5/qtabbar.html#expanding-prop), but earlier versions require some trickery.
+
+In the following example, we subclass QTabBar and reimplement `tabSizeHint()` to treat the last tab differently to the others, calculating the available space left by the other tabs and returning this value instead of the tab's normal size.
+
+{{{
+#!python
+from PyQt4.QtCore import QSize
+from PyQt4.QtGui import *
+
+class TabBar(QTabBar):
+
+    def tabSizeHint(self, index):
+        if index == self.count() - 1:
+            size = QSize(0, 0)
+            for i in range(self.count() - 1):
+                size += QTabBar.tabSizeHint(self, i)
+            return QSize(self.width() - size.width(), size.height())
+        else:
+            return QTabBar.tabSizeHint(self, index)
+        
+
+app = QApplication([])
+
+w = QWidget()
+layout = QHBoxLayout()
+
+leftLayout = QVBoxLayout()
+rightLayout = QVBoxLayout()
+
+leftLayout.addWidget(QTextEdit())
+
+tabBar = TabBar()
+tabBar.addTab("Hippo")
+tabBar.addTab("Giraffe")
+
+tempLayout = QHBoxLayout()
+tempLayout.addWidget(tabBar)
+
+rightLayout.addLayout(tempLayout)
+rightLayout.addWidget(QListView())
+
+layout.addLayout(leftLayout)
+layout.addLayout(rightLayout)
+w.setLayout(layout)
+
+w.show()
+app.exec_()
+}}}
+
+`felipe__` also asked if it was possible to just split the available space equally between all tabs.
+
+The following code does this, but does not take into account the space required to display the label of each tab. As a result, the tabs may not appear quite as you might wish.
+
+{{{
+#!python
+class TabBar(QTabBar):
+
+    def tabSizeHint(self, index):
+        return QSize(self.width() / self.count(), QTabBar.tabSizeHint(self, 0).height())
+}}}
