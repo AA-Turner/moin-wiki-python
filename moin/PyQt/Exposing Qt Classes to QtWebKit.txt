@@ -1,0 +1,113 @@
+= Exposing Qt Classes to QtWebKit =
+
+On the [[PyQt/TheMailingList|PyQt mailing list]], Christophe [[http://www.riverbankcomputing.com/pipermail/pyqt/2010-June/026803.html|asked for examples]] that show Qt objects being added to QtWebKit for use with !JavaScript.
+
+A simple example of this can be found on Mario Boikov's blog: [[http://pysnippet.blogspot.com/2010/01/calling-python-from-javascript-in-pyqts.html|Calling Python from JavaScript in PyQt's QWebkit]].
+
+The following code is an extreme example of this which uses a wrapper class to expose the QFile class and its open() and readAll() methods to !JavaScript.
+
+{{{
+#!python
+import sys
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+from PyQt4.QtWebKit import *
+
+
+js = \
+"""
+QFile = function(path)
+{
+    var name = _QFile_factory.createQFile(path);
+    document.getElementById("name").innerText = name;
+    return _wrapper;
+}
+"""
+
+html = \
+"""<html>
+<head>
+  <title>JavaScript Qt Wrapper Test</title>
+  <script type="text/javascript">
+    function readFile()
+    {
+        var file1 = QFile("/home/user/temp.txt");       # <- put a path to a text file here
+        var file2 = QFile("qtwrappertest.py");          # <- refer to this script or some other text file here
+        var area1 = document.getElementById("contents1");
+        var area2 = document.getElementById("contents2");
+        file1.open(1);
+        file2.open(1);
+        area1.innerText = file1.readAll;
+        area2.innerText = file2.readAll;
+        file1.close();
+        file2.close();
+    }
+  </script>
+</head>
+<body>
+  <h1>JavaScript Qt Wrapper Test</h1>
+  <p id="name"></p>
+  <pre id="contents1">
+     [Click the button to show the contents of a file.]
+  </pre>
+  <pre id="contents2">
+     [Click the button to show the contents of a file.]
+  </pre>
+  <input type="button" onclick="readFile()" value="Click me">
+</body>
+</html>
+"""
+
+class FileWrapper(QObject):
+
+    def __init__(self, path):
+    
+        QObject.__init__(self)
+        self.file = QFile(path)
+    
+    @pyqtSignature("open(int)")
+    def open(self, flags):
+    
+        return self.file.open(QIODevice.OpenModeFlag(flags))
+    
+    def readAll(self):
+    
+        return str(self.file.readAll())
+    
+    readAll = pyqtProperty("QString", readAll)
+    
+    @pyqtSignature("close()")
+    def close(self):
+    
+        self.file.close()
+
+class Browser(QWebView):
+
+    def __init__(self, parent = None):
+    
+        QWebView.__init__(self, parent)
+        self.connect(self, SIGNAL("loadFinished(bool)"), self.prepareJavaScript)
+    
+    def prepareJavaScript(self, ready):
+    
+        if not ready:
+            return
+        
+        self.page().mainFrame().addToJavaScriptWindowObject("_QFile_factory", self)
+        self.page().mainFrame().evaluateJavaScript(js)
+    
+    @pyqtSignature("createQFile(QString)")
+    def createQFile(self, path):
+    
+        self.page().mainFrame().addToJavaScriptWindowObject("_wrapper", FileWrapper(path))
+        return "_wrapper"
+
+
+if __name__ == "__main__":
+
+    app = QApplication(sys.argv)
+    browser = Browser()
+    browser.setHtml(html)
+    browser.show()
+    sys.exit(app.exec_())
+}}}
