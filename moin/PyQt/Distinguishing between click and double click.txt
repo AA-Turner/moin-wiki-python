@@ -1,0 +1,69 @@
+= Distinguishing between click and double click =
+
+In a [[http://mail.python.org/pipermail/python-list/2012-July/626779.html|PyQt QCalendarWidget events question]] thread on the python-list mailing list, ''tinnews'' asked for a way to distinguish between single and double clicks on a calendar widget. This problem is more generally handled for a widget using timers in the following code:
+
+{{{
+#!python
+
+import sys
+
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+
+class Widget(QWidget):
+
+    def __init__(self, parent = None):
+    
+        QWidget.__init__(self, parent)
+        self.message = ""
+    
+    def paintEvent(self, event):
+    
+        painter = QPainter()
+        painter.begin(self)
+        painter.fillRect(event.rect(), QBrush(Qt.white))
+        painter.drawText(self.rect(), Qt.AlignCenter, self.message)
+        painter.end()
+    
+    def mousePressEvent(self, event):
+    
+        self.last = "Click"
+    
+    def mouseReleaseEvent(self, event):
+    
+        if self.last == "Click":
+            QTimer.singleShot(QApplication.instance().doubleClickInterval(),
+                              self.performSingleClickAction)
+        else:
+            # Perform double click action.
+            self.message = "Double Click"
+            self.update()
+    
+    def mouseDoubleClickEvent(self, event):
+    
+        self.last = "Double Click"
+    
+    def performSingleClickAction(self):
+    
+        if self.last == "Click":
+            self.message = "Click"
+            self.update()
+
+
+if __name__ == "__main__":
+
+    app = QApplication(sys.argv)
+    window = Widget()
+    window.resize(400, 400)
+    window.show()
+    sys.exit(app.exec_())
+}}}
+
+The trick is to realise that Qt delivers !MousePress, !MouseRelease, !MouseDoubleClick and !MouseRelease events in that order to the widget. A click is typically recognised as occurring on the first !MouseRelease, but we need to wait until a possible !MouseDoubleClick event occurs before acting on it. If no second !MousePress occurs, we can act on the single click.
+
+However, if a second mouse press occurs, the mouseDoubleClickEvent() handler will be called. The application author can choose to perform an action immediately or wait for the next !MouseRelease event. In any case, the mouseReleaseEvent() handler will need to know whether a single or double click has occurred.
+
+To handle this, we set an attribute in the mousePressEvent() handler to indicate that a click has occurred. In the mouseReleaseEvent() handler we start a timer that will time out after the system-determined delay for a second mouse press has elapsed. If no second press occurs within that time, the performSingleClickAction() method will be called
+and we can check that only a single click occurred.
+
+However, if a second press occurs within that time, the mouseDoubleClickEvent() handler will be called first, and we can set an attribute to indicate that a double click is in progress. The performSingleClickAction() method will be called anyway, so there is a check in that method to ensure that we only perform the single click action if the last mouse press was for a single click. Note that we only start a timer in the mouseReleaseEvent() handler after the first click since we handle the double click case directly in the handler method itself.
