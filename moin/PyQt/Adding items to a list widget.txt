@@ -1,0 +1,22 @@
+= Adding items to a list widget =
+
+On the `#pyqt` channel at Freenode, `afief` asked for an example that showed how to add items to a list widget using QListWidgetItem rather than just plain strings.
+
+{{{
+#!python
+import sys
+from PyQt4.QtGui import *
+
+app = QApplication(sys.argv)
+
+listWidget = QListWidget()
+
+for i in range(10):
+    item = QListWidgetItem("Item %i" % i)
+    listWidget.addItem(item)
+
+listWidget.show()
+sys.exit(app.exec_())
+}}}
+
+Although this example seems easy, there is one subtle point worth noting: the list widget takes ownership of each of the items added to it. This means that you cannot add an item to more than one list widget.
