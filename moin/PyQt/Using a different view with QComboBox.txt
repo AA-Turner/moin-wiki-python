@@ -1,0 +1,43 @@
+## page was renamed from Using a different view with !QComboBox
+= Using a different view with QComboBox =
+
+On the !PyQt mailing list, Adam W. asked for "[[http://www.riverbankcomputing.com/pipermail/pyqt/2009-September/024242.html|A simple way to add another column to QComboBox?]]". Here is some sample code that does this:
+
+{{{
+#!python
+import sys
+from PyQt4.QtCore import Qt, QVariant
+from PyQt4.QtGui import *
+
+
+app = QApplication(sys.argv)
+model = QStandardItemModel()
+
+items = [("ABC", True),
+         ("DEF", False),
+         ("GHI", False)]
+
+for text, checked in items:
+
+    text_item = QStandardItem(text)
+    checked_item = QStandardItem()
+    checked_item.setData(QVariant(checked), Qt.CheckStateRole)
+    model.appendRow([text_item, checked_item])
+
+view = QTreeView()
+view.header().hide()
+view.setRootIsDecorated(False)
+
+combo = QComboBox()
+combo.setView(view)
+combo.setModel(model)
+combo.show()
+
+sys.exit(app.exec_())
+}}}
+
+Note that we set the model on the combo box, not the view.
+
+Some improvements could be made to this code. For example, at small sizes the pop-up doesn't always show both columns. Perhaps the combo box's [[http://qt.nokia.com/doc/4.5/qcombobox.html#sizeAdjustPolicy-prop|sizeAdjustPolicy]] property would help with this.
+
+An alternative way to display custom items in the combo box would be to implement a custom item delegate and set that on the combo box.
