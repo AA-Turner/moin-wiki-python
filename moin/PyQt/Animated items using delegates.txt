@@ -1,0 +1,165 @@
+= Animated items using delegates =
+
+A nasty hack involving a custom delegate, timer events and a signal to inform a view that it needs to repaint itself. It is just a proof of concept.
+
+Perhaps a better example might be [[PyQt/Animated items using delegates and movies|Animated items using delegates and movies]].
+
+Things that are wrong with this code:
+
+ * It starts a timer and never stops it.
+ * The signal in the delegate is connected to the viewport of the view instead of the view itself (it doesn't work otherwise).
+ * The delegate simply shifts the normal content of the waiting items and paints a pixmap - it doesn't try to replace or add an icon to existing items.
+
+{{{
+#!python
+import sys
+from PyQt4.QtCore import pyqtSignal, Qt, QVariant
+from PyQt4.QtGui import *
+
+# Icons used for animation:
+_icon0_xpm = [
+    "16 16 4 1",
+    ".	c None",
+    "s	c #cccc00",
+    "x	c #ffffff",
+    " 	c #000000",
+    "................",
+    ".              .",
+    ". xxxxxxxxxxxx .",
+    ". x          x .",
+    ".. x ssssss x ..",
+    "... x ssss x ...",
+    ".... x ss x ....",
+    "..... x  x .....",
+    "..... x  x .....",
+    ".... x    x ....",
+    "... x      x ...",
+    ".. x        x ..",
+    ". x          x .",
+    ". xxxxxxxxxxxx .",
+    ".              .",
+    "................"]
+
+_icon1_xpm = [
+    "16 16 4 1",
+    ".	c None",
+    "s	c #cccc00",
+    "x	c #ffffff",
+    " 	c #000000",
+    "................",
+    ".              .",
+    ". xxxxxxxxxxxx .",
+    ". x          x .",
+    ".. x s    s x ..",
+    "... x ssss x ...",
+    ".... x ss x ....",
+    "..... x  x .....",
+    "..... x  x .....",
+    ".... x ss x ....",
+    "... x  ss  x ...",
+    ".. x        x ..",
+    ". x          x .",
+    ". xxxxxxxxxxxx .",
+    ".              .",
+    "................"]
+
+_icon2_xpm = [
+    "16 16 4 1",
+    ".	c None",
+    "s	c #cccc00",
+    "x	c #ffffff",
+    " 	c #000000",
+    "................",
+    ".              .",
+    ". xxxxxxxxxxxx .",
+    ". x          x .",
+    ".. x        x ..",
+    "... x ssss x ...",
+    ".... x ss x ....",
+    "..... x  x .....",
+    "..... x  x .....",
+    ".... x ss x ....",
+    "... x  ss  x ...",
+    ".. x   ss   x ..",
+    ". x          x .",
+    ". xxxxxxxxxxxx .",
+    ".              .",
+    "................"]
+
+_icon3_xpm = [
+    "16 16 4 1",
+    ".	c None",
+    "s	c #cccc00",
+    "x	c #ffffff",
+    " 	c #000000",
+    "................",
+    ".              .",
+    ". xxxxxxxxxxxx .",
+    ". x          x .",
+    ".. x        x ..",
+    "... x      x ...",
+    ".... x    x ....",
+    "..... x  x .....",
+    "..... x  x .....",
+    ".... x ss x ....",
+    "... x ssss x ...",
+    ".. x ssssss x ..",
+    ". x          x .",
+    ". xxxxxxxxxxxx .",
+    ".              .",
+    "................"]
+
+
+class Delegate(QItemDelegate):
+
+    needsRedraw = pyqtSignal()
+    
+    def __init__(self, parent = None):
+    
+        QItemDelegate.__init__(self, parent)
+        self.current = 0
+        self.timerId = self.startTimer(250)
+        self.model = QStandardItemModel()
+        self.pixmaps = (QPixmap(_icon0_xpm),
+                        QPixmap(_icon1_xpm),
+                        QPixmap(_icon2_xpm),
+                        QPixmap(_icon3_xpm))
+    
+    def timerEvent(self, event):
+    
+        if event.timerId() == self.timerId:
+            self.current = (self.current + 1) % 4
+            self.needsRedraw.emit()
+    
+    def paint(self, painter, option, index):
+    
+        waiting = index.data(Qt.UserRole).toBool()
+        if waiting:
+            option = option.__class__(option)
+            painter.drawPixmap(option.rect.topLeft(), self.pixmaps[self.current])
+            option.rect = option.rect.translated(20, 0)
+        
+        QItemDelegate.paint(self, painter, option, index)
+
+
+app = QApplication(sys.argv)
+view = QListView()
+model = QStandardItemModel()
+waiting = True
+
+for i in range(5):
+
+    item = QStandardItem("Test %i" % i)
+    item.setData(QVariant(waiting), Qt.UserRole)
+    waiting = not waiting
+    model.appendRow(item)
+
+view.setModel(model)
+
+delegate = Delegate()
+view.setItemDelegate(delegate)
+delegate.needsRedraw.connect(view.viewport().update)
+
+view.show()
+sys.exit(app.exec_())
+}}}
