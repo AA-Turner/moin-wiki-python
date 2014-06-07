@@ -1,0 +1,376 @@
+#!/usr/bin/python
+import os, sys
+
+# This file is in the public domain
+
+# This is a script to create/edit/remove exented attributes on files
+# In order to make use of this script you must have user_xattr support
+# on your filesystem.
+# general info about extended attributes available here http://acl.bestbits.at/
+# a good article explaining how to enable user_xattr support on your filesystem
+# as well as some examples on how to use them
+# is here http://enterprise.linux.com/article.pl?sid=05/06/13/1352241
+
+
+# The making of html documents in this example depends on forgetHTML
+# which can be found here http://forgethtml.sourceforge.net/
+# on debian apt-get install python-forgethtml
+from forgetHTML import SimpleDocument
+from forgetHTML import Anchor, Table
+from forgetHTML import TableRow, TableCell
+from forgetHTML import TableHeader, Header
+
+# The xattr extension is needed for this example
+# can be found here http://cheeseshop.python.org/pypi/xattr
+# or here http://undefined.org/python/#xattr
+# on debian apt-get install python-xattr
+from xattr import xattr
+
+from qt import SIGNAL, SLOT
+from qt import QSplitter
+from qt import QGridLayout
+from qt import QLabel
+from qt import QFrame
+
+from kdecore import KAboutData
+from kdecore import KCmdLineArgs
+from kdecore import KApplication
+from kdecore import KEntryKey, KEntry
+
+from kdeui import KAboutDialog
+from kdeui import KMainWindow
+from kdeui import KListView, KListViewItem
+from kdeui import KTextBrowser
+from kdeui import KMessageBox
+from kdeui import KLineEdit
+from kdeui import KDialogBase
+from kdeui import KStdAction
+from kdeui import KPopupMenu
+
+# this is the desktop file you will need to use this
+# example in konqueror.  The Exec line assumes
+# that the script is located in ~/bin
+#
+# desktop_file_contents:
+# ======================================
+# [Desktop Action edit-xattrs]
+# Exec=$HOME/bin/pykde-edit-xattrs %F
+# Name=Edit extended attributes
+#
+# [Desktop Entry]
+# Actions=edit-xattrs
+# ServiceTypes=all/allfiles
+# =======================================
+# cut and paste between the lines, remove the comments
+# and put the contents in a file name pykde-edit-xattrs.desktop
+# the desktop file should be placed in ~/.kde/share/apps/konqueror/servicemenus
+
+
+# notes
+# if the '|' symbol is located in either the xattr key or the filename,
+# problems may occur.  The url's in the text browser wil use '||' by default.
+url_delimeter = '||'
+
+# handy function to split urls created in the text browser
+def split_url(url):
+    return str(url).split(url_delimeter)
+
+def make_url(*args):
+    return url_delimeter.join(args)
+
+# table to display and edit xattr's
+class XattrTable(Table):
+    def __init__(self, **args):
+        Table.__init__(self)
+
+    def set_header(self, filename, fullpath):
+        row = TableRow(bgcolor='LightSeaGreen')
+        tbl_header = TableHeader(filename, colspan=3, align='center')
+        row.append(tbl_header)
+        self.set(row)
+        href = make_url('new', 'attribute', fullpath)
+        a = Anchor('new attribute', href=href)
+        row = TableRow(TableCell(a), bgcolor='LightSeaGreen')
+        self.append(row)
+        
+        
+class BaseDocument(SimpleDocument):
+    def __init__(self, title='BaseDocument', **args):
+        SimpleDocument.__init__(self, title=title)
+        self.maintable = XattrTable(class_='XattrTable')
+        self.body.set(self.maintable)
+        
+    def set_filename(self, filename):
+        fullpath = os.path.join(self.dirname, filename)
+        self.maintable.set_header(filename, fullpath)
+        xf = xattr(fullpath)
+        for key, value in xf.items():
+            ekey = key.encode()
+            href = make_url('edit', ekey, xf.obj)
+            a = Anchor(ekey, href=href)
+            tk = TableCell(a)
+            tv = TableCell(value)
+            href = make_url('delete', ekey, xf.obj) 
+            delanchor = Anchor('(del)', href=href)
+            row = TableRow()
+            row.append(tk)
+            row.append(tv)
+            row.append(delanchor)
+            self.maintable.append(row)
+            
+# text browser for xattr
+# much of the actual handling of the xattr's is done here
+class XattrBrowser(KTextBrowser):
+    def __init__(self, parent):
+        KTextBrowser.__init__(self, parent)
+        self.resize(350, 450)
+        self.dirname = parent.dirname
+        # here we setNotifyClick to True so we can handle
+        # url clicks
+        self.setNotifyClick(True)
+        self.doc = BaseDocument('Xattr Document')
+        # pass dirname to doc
+        self.doc.dirname = self.dirname
+
+    def setFileName(self, filename):
+        self.doc.set_filename(filename)
+        self.setText(self.doc.output())
+        
+
+    # this is selected when a url is clicked
+    # I'm not sure if this should really be used
+    # the method has been changed from the qt function
+    # but the kde apidocs are somewhat unclear on it.
+    def setSource(self, url):
+        action, key, filename = split_url(url)
+        if action == 'new':
+            dlg = XattrDialog(self, filename)
+            dlg.connect(dlg, SIGNAL('okClicked()'), dlg.update_xattr)
+            dlg.show()
+        elif action == 'edit':
+            value = xattr(filename).get(key)
+            dlg = XattrDialog(self, filename, key, value)
+            dlg.connect(dlg, SIGNAL('okClicked()'), dlg.update_xattr)
+            dlg.show()
+        elif action == 'delete':
+            dlg = XattrDialog(self, filename, key, action='delete')
+            dlg.connect(dlg, SIGNAL('okClicked()'), dlg.delete_xattr)
+            dlg.show()
+            
+    def update_xattr(self, filename, key, value):
+        xf = xattr(filename)
+        xf.set(key, value)
+        self.setFileName(os.path.basename(filename))
+
+    def delete_xattr(self, filename, key):
+        xf = xattr(filename)
+        xf.remove(key)
+        self.setFileName(os.path.basename(filename))
+        
+class XattrFrame(QFrame):
+    def __init__(self, parent, key, value, name='XattrFrame'):
+        QFrame.__init__(self, parent, name)
+        # 3 rows, 1 column, 0 margin, and -1 space (negative to use margin instead)
+        # the middle row will work as a spacer
+        self.grid = QGridLayout(self, 3, 1, 0, -1)
+        if not key:
+            self.keyfield = KLineEdit('user.', self)
+        else:
+            self.keyfield = QLabel(key, self)
+        # add keyfield to row 0, column 0
+        self.grid.addWidget(self.keyfield, 0, 0)
+        # for row 1 to have a minimum size of 3 pixels
+        self.grid.setRowSpacing(1, 3)
+        self.valuefield = KLineEdit(value, self)
+        # add valuefield to row 2, column 0
+        self.grid.addWidget(self.valuefield, 2, 0)
+        
+
+# main dialog class for handling xattr's
+class XattrDialog(KDialogBase):
+    def __init__(self, parent, filename, key='', value='', action=None, name='XattrDialog'):
+        KDialogBase.__init__(self, parent, name)
+        self.filename = filename
+        self.key = key
+        self.value = value
+        if action is None:
+            self.frame = XattrFrame(self, key, value)
+            self.setMainWidget(self.frame)
+        else:
+            msg = 'Really delete attribute %s from %s ?' % (key, os.path.basename(filename))
+            lbl = QLabel(msg, self)
+            self.setMainWidget(lbl)
+            
+    def update_xattr(self, *args):
+        parent = self.parent()
+        # we need to coerce the key and value from QStrings
+        # to python strings
+        key = str(self.frame.keyfield.text())
+        value = str(self.frame.valuefield.text())
+        if value != self.value:
+            parent.update_xattr(self.filename, key, value)
+        else:
+            KMessageBox.information(parent,
+                                    '%s is unchanged, doing nothing.' % self.key)
+
+    def delete_xattr(self, *args):
+        parent = self.parent()
+        parent.delete_xattr(self.filename, self.key)
+        
+# about this program
+class AboutData(KAboutData):
+    def __init__(self):
+        KAboutData.__init__(self,
+                            'pykde-edit-xattrs',
+                            'pykde-edit-xattrs',
+                            '0.1',
+                            "Edit xattr's from konqueror")
+        self.addAuthor('Joseph Rawson', 'author',
+                       'umeboshi@gregscomputerservice.com')
+        self.setCopyrightStatement('public domain')
+
+# dialog class for the application
+# this will popup when help->about is selected from the help menu
+class AboutDialog(KAboutDialog):
+    def __init__(self):
+        KAboutDialog.__init__(self, parent, *args)
+        self.setTitle('PyKDE xattr editor')
+        self.setAuthor('Joseph Rawson')
+        
+# main application class
+class MainApplication(KApplication):
+    def __init__(self):
+        KApplication.__init__(self)
+        # in case something needs done before quitting
+        self.connect(self, SIGNAL('aboutToQuit()'), self.quit)
+        
+    def quit(self):
+        # do something special to quit here
+        print "quitting PyKDE edit xattr's application"
+        KApplication.quit(self)
+
+# main window class
+class MainWindow(KMainWindow):
+    def __init__(self, parent, filelist):
+        KMainWindow.__init__(self, parent, 'PyKDE xattr editor')
+        self.resize(500, 450)
+        self.filelist = []
+        self.dirname = os.path.dirname(filelist[0])
+        # setup actions
+        self.initActions()
+        # setup the menus
+        self.initMenus()
+        
+        # get basename's for the files to make the listview prettier
+        for afile in filelist:
+            if os.path.dirname(afile) != self.dirname:
+                KMessageBox.error(self, 'all files need to be in the same directory (for now)')
+                sys.exit(1)
+            else:
+                self.filelist.append(os.path.basename(afile))
+                
+        # place a splitter in the window
+        self.splitView = QSplitter(self, 'splitView')
+        # pass dirname to splitter
+        self.splitView.dirname = self.dirname
+        if len(self.filelist) > 1:
+            # place a listview in the splitter (on the left)
+            self.listView = KListView(self.splitView, 'filelist_view')
+            # fill listview
+            self.initlistView()
+            # setup signals
+            self.connect(self.listView,
+                         SIGNAL('selectionChanged()'), self.selectionChanged)
+        
+        # place text browser in splitter
+        self.textView = XattrBrowser(self.splitView)
+        
+        self.setCentralWidget(self.splitView)
+        # if there is only one file, go ahead and select it
+        # and skip making the listView
+        if len(self.filelist) == 1:
+            self.textView.setFileName(self.filelist[0])
+            
+    def initlistView(self):
+        self.listView.addColumn('file', -1)
+        for afile in self.filelist:
+            item = KListViewItem(self.listView, afile)
+            # creating an another attribute for the item
+            # isn't really necessary in this example
+            # but this method is useful if you want
+            # "full name of something" on the list,
+            # but want to attach a uid to the item
+            item.filename = afile
+
+    def selectionChanged(self):
+        item = self.listView.currentItem()
+        # in this example str(item.text()) would work just
+        # as well.
+        # since we are using the attribute we attached to
+        # the item, we don't have to coerce a QString from
+        # item.text()
+        self.textView.setFileName(item.filename)   
+        
+    def initActions(self):
+        collection = self.actionCollection()
+        # here we add actions to the actionCollection
+        # we are only using "quit" which is a standard action
+        # other actions can be defined using KAction
+        self.quitAction = KStdAction.quit(self.close, collection)
+
+    def initMenus(self):
+        # here we make a popup menu that will be placed in the
+        # main menubar
+        mainmenu = KPopupMenu(self)
+        # use the plug method of an action to plug it into something
+        # like a menu or toolbar, here we plug it into mainmenu
+        self.quitAction.plug(mainmenu)
+        # this is the menubar of the window
+        menubar = self.menuBar()
+        # we insert the mainmenu under the "Main" section
+        # of the menubar, the section is not there, but is created
+        # when we do this.  The ampersand makes a keyboard accel
+        menubar.insertItem('&Main', mainmenu)
+        # we do the same for the help menu (which is already in the object,
+        # but not on the menubar
+        menubar.insertItem('&Help', self.helpMenu(''))
+        
+
+if __name__ == '__main__':
+    aboutData = AboutData()
+    # I don't know what these three lines are actually doing
+    # but the end result 'args' is a KCmdLineArgs instance
+    KCmdLineArgs.init(sys.argv, aboutData)
+    KCmdLineArgs.addCmdLineOptions([('+files', 'files to edit')])
+    args = KCmdLineArgs.parsedArgs()
+    # it should be like this:
+    ## for a in args:
+    ##     print a
+    # but it works like this:
+    ## for a in range(args.count()):
+    ##     print args.arg(a)
+    filelist_args = [args.arg(a) for a in range(args.count())]
+    # setup application
+    app = MainApplication()
+
+    # setup dcop and register the application
+    dcop = app.dcopClient()
+    appid = dcop.registerAs('pykde-edit-xattrs')
+
+    filelist_args = [f for f in filelist_args if os.path.isfile(f)]
+    if not len(filelist_args):
+        KMessageBox.error(None, 'There were no applicable arguments')
+        sys.exit(1)
+
+    # the first argument to MainWindow is the parent
+    # which is None (not the application object)
+    win = MainWindow(None, filelist_args)
+    win.show()
+    
+    # set main window in application
+    app.setMainWidget(win)
+
+    # run the application
+    app.exec_loop()
+
+    
