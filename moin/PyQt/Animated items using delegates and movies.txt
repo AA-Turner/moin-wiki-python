@@ -1,0 +1,156 @@
+= Animated items using delegates and movies =
+
+This example shows how to use a custom delegate with an animation to indicate that an item is busy, or perhaps waiting for additional data.
+
+Example code: [[attachment:movie_delegate.py]]
+
+== Outline ==
+
+For convenience, we re-use QStandardItemModel and QStandardItem. Real world models may be completely implemented from scratch by subclassing QAbstractItemModel or one of its
+subclasses.
+
+To produce busy items, we create QStandardItem instances, some of which we modify by setting their !UserRole roles to True, indicating that they are waiting for something.
+
+We subclass QStandardItemModel so that we can examine items as they are added to the model. We create timers for waiting items to simulate some delay in obtaining data, and we keep track of the associated items so that we can change their states when the timers elapse.
+
+{{{
+#!python
+import random, sys
+from PyQt4.QtCore import pyqtSignal, QObject, Qt, QTimer, QVariant
+from PyQt4.QtGui import *
+}}}
+
+The delegate class uses a QMovie instance to generate images to display for waiting items. We create a custom signal, `needsRedraw`, that we emit every time the movie changes its current frame.
+
+{{{
+#!python
+
+class Delegate(QItemDelegate):
+
+    needsRedraw = pyqtSignal()
+    
+    def __init__(self, movie, parent = None):
+    
+        QItemDelegate.__init__(self, parent)
+        self.movie = movie
+        self.movie.frameChanged.connect(self.needsRedraw)
+        self.playing = False
+    
+    def startMovie(self):
+        self.movie.start()
+        self.playing = True
+    
+    def stopMovie(self):
+        self.movie.stop()
+        self.playing = False
+    
+    def paint(self, painter, option, index):
+    
+        waiting = index.data(Qt.UserRole).toBool()
+        if waiting:
+            option = option.__class__(option)
+            pixmap = self.movie.currentPixmap()
+            painter.drawPixmap(option.rect.topLeft(), pixmap)
+            option.rect = option.rect.translated(pixmap.width(), 0)
+        
+        QItemDelegate.paint(self, painter, option, index)
+}}}
+
+We reimplement the `paint()` method of the delegate, adjusting the region in which the delegate draws its normal contents, and we draw a pixmap at the left-hand end of the item. We finish by calling the base class's implementation of the `paint()` method so that the rest of the item is painted normally.
+
+The customisations to the model class are minimal. We provide a custom signal, `finished`, so that we can inform other components when all waiting items have finished,
+and we keep a dictionary that maps timers to pending items.
+
+{{{
+#!python
+class Model(QStandardItemModel):
+
+    finished = pyqtSignal()
+    
+    def __init__(self, parent = None):
+    
+        QStandardItemModel.__init__(self, parent)
+        self.pendingItems = {}
+    
+    def appendRow(self, item):
+    
+        if item.data(Qt.UserRole).toBool():
+        
+            timer = QTimer()
+            timer.timeout.connect(self.checkPending)
+            timer.setSingleShot(True)
+            self.pendingItems[timer] = item
+            timer.start(2000 + random.randrange(0, 2000))
+        
+        QStandardItemModel.appendRow(self, item)
+}}}
+
+Reimplementing the `appendRow()` method, we create timers for items that are waiting (they have their UserRole set to True), and store them in the `pendingItems` dictionary.
+Each timer's `timeout` signal is connected to the `checkPending()` slot.
+
+This method simply retrieves the corresponding item for each timer and updates its state so that the delegate no longer shows it as a waiting item. It then deletes the dictionary entry (and the timer, since it is the dictionary key). If no items remain in the dictionary, we emit the `finished` signal.
+
+{{{
+#!python
+    def checkPending(self):
+    
+        # Check when items are updated so that we can emit the finished()
+        # signal when the list is cleared.
+        item = self.pendingItems[self.sender()]
+        del self.pendingItems[self.sender()]
+        item.setData(QVariant(False), Qt.UserRole)
+        if not self.pendingItems:
+            self.finished.emit()
+}}}
+
+We might want to be more careful with items here. For example, we may need to deal with them differently if they have been removed from the model.
+
+The creation of the model and items is as we described in the outline. We create a standard view and an instance of our custom model, which we populate with standard items, making sure to mark some of them as waiting items.
+
+{{{
+#!python
+if __name__ == "__main__":
+
+    random.seed()
+    
+    app = QApplication(sys.argv)
+    view = QListView()
+    model = Model()
+    waiting = True
+    
+    for i in range(5):
+    
+        item = QStandardItem("Test %i" % i)
+        item.setData(QVariant(waiting), Qt.UserRole)
+        waiting = not waiting
+        model.appendRow(item)
+    
+    view.setModel(model)
+}}}
+
+The delegate is set up with an animation (see [[attachment:animation.mng]]) and its `needsRedraw` signal is connected to the `update()` slot of the view's viewport - using the view's `update()` slot is not sufficient, it seems. We start the movie.
+
+{{{
+#!python    
+    delegate = Delegate(QMovie("animation.mng"))
+    view.setItemDelegate(delegate)
+    delegate.needsRedraw.connect(view.viewport().update)
+    delegate.startMovie()
+    
+    model.finished.connect(delegate.stopMovie)
+    model.finished.connect(view.viewport().update)
+}}}
+
+We connect the model's `finished` slot to the delegate's `stopMovie()` slot - there is no point in running the movie if no items are waiting - and to the appropriate `update()` slot.
+
+Now we can show the view and start the event loop.
+
+{{{
+#!python
+    view.show()
+    sys.exit(app.exec_())
+}}}
+
+== Conclusions ==
+
+This appears to work quite well, and it should be possible to write more abstract models that actually need to wait for data, but I'm not satisfied with having lots of low-level connections between the components. Perhaps I'll apply the technique to a real world model and create a new example based on my experience.
