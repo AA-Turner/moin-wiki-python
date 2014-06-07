@@ -1,0 +1,76 @@
+= Removing a database =
+
+On the `#pyqt` channel on [[http://freenode.net|Freenode]], `munny` asked about removing a database without getting the warning: "QSqlDatabasePrivate::removeDatabase: connection '...' is still in use, all queries will cease to work." or similar.
+
+The following code tries to do this by ensuring that everything that uses the database connection is deleted or set to use different data sources before the connection is removed.
+
+{{{
+#!python
+
+import sys
+from PyQt4.QtGui import *
+from PyQt4.QtSql import *
+
+class Window(QMainWindow):
+
+    def __init__(self, path, parent = None):
+    
+        QMainWindow.__init__(self, parent)
+        
+        self.path = path
+        self.db = None
+        
+        databaseMenu = self.menuBar().addMenu(self.tr("&Database"))
+        reloadAction = databaseMenu.addAction(self.tr("&Reload"))
+        reloadAction.triggered.connect(self.openDatabase)
+        
+        self.view = QTableView()
+        self.openDatabase()
+        
+        self.setCentralWidget(self.view)
+    
+    def openDatabase(self):
+    
+        if self.db:
+            self.closeDatabase()
+        
+        self.db = QSqlDatabase.addDatabase("QSQLITE", "db1")
+        self.db.setDatabaseName(self.path)
+        if not self.db.open("", ""):
+            sys.exit()
+        
+        self.model = QSqlTableModel(None, self.db)
+        self.model.setTable(self.db.tables()[-1])
+        self.model.select()
+        
+        self.view.setModel(self.model)
+        self.statusBar().showMessage(self.tr("Reloaded"), 1000)
+    
+    def closeDatabase(self):
+
+        self.view.setModel(None)
+        del self.model
+        self.db.close()
+        del self.db
+        QSqlDatabase.removeDatabase("db1")
+    
+    def closeEvent(self, event):
+    
+        self.closeDatabase()
+
+
+if __name__ == "__main__":
+
+    app = QApplication(sys.argv)
+    
+    if len(app.arguments()) != 2:
+    
+        sys.stderr.write("Usage: %s <path to SQLITE database\n" % app.arguments()[0])
+        sys.exit(1)
+    
+    window = Window(app.arguments()[1])
+    window.show()
+    sys.exit(app.exec_())
+}}}
+
+The `closeDatabase()` method sets a null model on the view, clearing it momentarily, deletes the model, closes the database and deletes the connection. Finally, the database connection can be removed by name using the QSqlDatabase's static `removeDatabase()` function.
