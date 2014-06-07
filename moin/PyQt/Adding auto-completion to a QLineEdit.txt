@@ -1,0 +1,31 @@
+= Adding auto-completion to a QLineEdit =
+
+On the `#pyqt` IRC channel on [[http://www.freenode.net|Freenode]], `filip` asked how to add auto-completion in a QLineEdit widget.
+
+The following code shows how to use a QStringListModel to supply data to a QCompleter, itself used by a QLineEdit.
+
+{{{
+#!python
+import sys
+from PyQt4.QtCore import Qt
+from PyQt4.QtGui import QApplication, QCompleter, QLineEdit, QStringListModel
+
+def get_data(model):
+    model.setStringList(["completion", "data", "goes", "here"])
+
+if __name__ == "__main__":
+
+    app = QApplication(sys.argv)
+    edit = QLineEdit()
+    completer = QCompleter()
+    edit.setCompleter(completer)
+
+    model = QStringListModel()
+    completer.setModel(model)
+    get_data(model)
+
+    edit.show()
+    sys.exit(app.exec_())
+}}}
+
+Note that, in a real application, you either need to keep a reference to the model or give it a QObject parent. Keeping a reference to the model enables you to update it with new data as required.
