@@ -1,0 +1,25 @@
+= Previewing a form =
+
+On the `#pyqt` channel on [[http://freenode.net|Freenode]], `a_l_e` asked for a way to preview a main window form created in Qt Designer.
+
+{{{
+#!python
+
+import sys
+
+from PyQt4.QtGui import QApplication
+from PyQt4.uic import loadUi
+
+if __name__ == "__main__":
+
+    app = QApplication(sys.argv)
+    
+    if len(app.arguments()) != 2:
+    
+        sys.stderr.write("Usage: %s <ui file>\n" % app.arguments()[0])
+        sys.exit()
+    
+    window = loadUi(app.arguments()[1])
+    window.show()
+    sys.exit(app.exec_())
+}}}
