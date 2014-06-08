@@ -1,0 +1,255 @@
+== "Simple Finished" ==
+
+==== Preamble ====
+If you want '''just to run''' the example, you are advised to:
+
+ * Read at lest the '''prerequisites''' section of '''Stage 0'''
+ * Download and expand the tar ball '''"simple0.1.00.tar.gz"''' from http://akabaila.pcug.org.au/data_sample/  It has the required resource files.
+
+==== Introduction ====
+
+It is usual to present tutorials with part of the project and only then the whole.
+It seems to me that it is not the best way. I feel that it is better to first state
+the objective and show what the finished project will look like and only then take
+it in small steps, showing at each step what has been achieved.
+
+The aim of this tutorial is to show how a simple, yet reasonably complete, plain
+text editor can be created using the !PyQt. We shall call that simple editor, rather
+appropriately, "Simple".  As we are first presenting the finished project, some readers
+will want to see how it was done and try it out themselves. They are urged to look at
+each Stage 0 first, then Stage 1 and so on. Please try to code each stage yourselves, as 
+you will gain most out of doing, rather than reading.
+
+Other readers my find that the example is too simple for them and they are looking for
+some specific, advanced technique.  By making discovering this in early reading of this
+tutorial they will be saved unnecessary looking through this presentation that is too 
+simple and pace that is too slow. The motto for this tutorial is "from a newbie to 
+other newbies" and we apologise up front if it does not apply to you.
+
+=== "Simple" Finished ===
+
+'''Finished''' is a relative term - there are features which could usefully be added to this GUI program, but they may well be contrary to the aim of keeping the example as simple as possible. 
+
+The main item in that category is saving the program state at the time of closing it and remembering the state when next opening the program.  The technique to do that is well described in chapter 6 of the book "Rapid GUI Programming with Python and Qt" by Mark Summerfield. It is a fine book well worth a place on every !PyQt programmers desk. The omission of this feature is partly prompted by similar omissions from some "standard" programs, notably "Dolphin" file manager.  Personally when I use "Dolphin", I wish that it did "remember" where  we were at in the previous session... But it it is good enough for systems programmers to  forget about it, it may be good enough for a tutorial example that aims at simplicity!
+
+One other feature requires qualification: the "help" files are installed in the "qrc" resources. That is convenient, but also doubtful in view of its lack of economy of RAM. It seems that the resource file is automatically loaded in memory at the start of the program.  That my be fine today when the memory is measured in Giga Bytes.  Fine, provided that the program does not require large memory for, say, equations solving, a feature of programs for Structural Analysis of Engineering Structure, my area of interest. So personally, I would prefer to save resources of RAM and leave the help system in html format, particularly since help system, IMHO, is never too extensive.
+
+==== Image of "Simple" ====
+
+
+
+{{attachment:editor0.1.00.png || align="middle"}}
+
+
+==== Program Listing of "Simple" ====
+
+{{{#!python
+#!/usr/bin/env python
+# .../simple.py - developing of a simple text editor.
+'''A really simple editor program in PyQt4 - simple.py
+'''
+
+import sys
+import os
+import platform
+
+from PyQt4.QtGui import (QMainWindow, QApplication, QFileDialog,
+                         QKeySequence, QAction, QIcon, QMessageBox)
+from PyQt4.QtCore import (SIGNAL, PYQT_VERSION_STR, QT_VERSION,
+                          QT_VERSION_STR)
+
+from ui_simple import Ui_MainWindow
+import qrc_simple
+import helpform
+
+__version__ = "0.1.00"
+
+class MainWindow(QMainWindow, Ui_MainWindow):
+    def __init__(self, parent=None):
+        super(MainWindow, self).__init__(parent)
+        self.setupUi(self)        
+        self.action_New = self.editAction(self.action_New, self.fileNew,
+                QKeySequence.New, "filenew", 
+                'Clear the textEdit window for a new file.')
+        self.action_Open = self.editAction(self.action_Open, self.fileOpen, 
+                        QKeySequence.Open, "fileopen", "Open an existing file")
+        self.action_Save = self.editAction(self.action_Save, self.fileSave, 
+                                QKeySequence.Save, "filesave", "Save file")
+        self.actionSave_As = self.editAction(self.actionSave_As, self.fileSaveAs, 
+                            "Ctrl+A", "filesaveas", "Save file with a new name")
+        self.action_Quit = self.editAction(self.action_Quit, self.fileQuit, 
+                            "Ctrl+Q", "filequit", "Close main window and application")
+        self.fileName = None
+        fileToolbar = self.addToolBar("File")
+        self.addActions(fileToolbar, (self.action_New, self.action_Open,\
+                                       self.action_Save, self.actionSave_As))
+        self.resize(800, 600)
+        self.dirty = False
+        self.textEdit.textChanged.connect(self.setDirty)
+#=================================================================================
+# Supplementary stuff for Help/aTutorialNoteAbout and Help/Help menu items.
+        self.actionA_bout = self.editAction(self.actionA_bout, self.about, 
+                                            "Ctrl+B", "about", "Popup About dialog")
+        self.action_Help = self.editAction(self.action_Help, self.help, 
+                                           "Ctrl+H", "help", "Show Help pages")
+        helpToolBar = self.addToolBar("Help")
+        self.addActions(helpToolBar, (self.actionA_bout, self.action_Help))
+#=================================================================================
+# Add quit tool bar. It would be nice to have it at the right side of MainWindow...
+        quitToolBar = self.addToolBar("Quit")
+        self.addActions(quitToolBar, (self.action_Quit, ))
+#=================================================================================
+
+    def fileQuit(self):
+        pass
+        
+    def about(self):
+        '''Popup a box with about message.'''
+        QMessageBox.about(self, "About Simple Editor",
+                """<b>Simple</b> v %s
+                <p>Copyright &copy; 2010 A. Kabaila. 
+                All rights reserved in accordance with
+                GPL v2 or later.
+                <p>This application can be used for 
+                simple plain text editing.
+                <p>Python %s - Qt %s - PyQt %s on %s""" % (
+                __version__, platform.python_version(),
+                QT_VERSION_STR, PYQT_VERSION_STR, platform.system()))
+
+    def help(self):
+        '''Display index.html file.'''
+        form = helpform.HelpForm("index.html", self)
+        form.show()        
+
+    def setDirty(self):
+        '''On change of text in textEdit window, set the flag
+        "dirty" to True'''
+        if self.dirty:
+            return True        
+        self.dirty = True
+        self.updateStatus('self.dirty set to True')
+        
+    def clearDirty(self):
+        '''Clear the dirty.'''
+        self.dirty = False
+
+    def updateStatus(self, message):
+        '''Keep status current.'''
+        if self.fileName is not None:
+            flbase = os.path.basename(self.fileName)
+            self.setWindowTitle(unicode("Simple Editor - " + flbase + "[*]") )
+            self.statusBar().showMessage(message, 5000)
+            self.setWindowModified(self.dirty)
+        
+    def okToContinue(self):
+        '''Boolean result invocation method.'''
+        if self.dirty:
+            reply = QMessageBox.question(self,
+                    "Simple Editor - Unsaved Changes",
+                    "Save unsaved changes?",
+                    QMessageBox.Yes|QMessageBox.No|QMessageBox.Cancel)
+            if reply == QMessageBox.Cancel:
+                return False
+            elif reply == QMessageBox.Yes:
+                return self.fileSave()
+        return True
+        
+    def addActions(self, target, actions):
+        '''Add actions to tool bars or menus'''
+        for action in actions:
+            if action is None:
+                target.addSeparator()
+            else:
+                target.addAction(action)
+
+    def editAction(self, action, slot=None, shortcut=None, icon=None,
+                     tip=None, checkable=False, signal="triggered()"):
+        '''Add attributes to Action that have not been generated by
+        the Qt Designer.'''
+        if icon is not None:
+            action.setIcon(QIcon(":/{0}.png".format(icon)))
+        if shortcut is not None:
+            action.setShortcut(shortcut)
+        if tip is not None:
+            action.setToolTip(tip)
+            action.setStatusTip(tip)
+        if slot is not None:
+#            self.connect(action, SIGNAL(signal), slot)            
+            action.triggered.connect(slot)                        
+        if checkable:
+            action.setCheckable(True)
+        return action
+
+    def fileNew(self):
+        '''Clear the editor window for a new file with name
+        specified in fileSaveAs method.'''
+        if not self.okToContinue():
+            return
+        self.textEdit.setText('')
+        self.statusBar().showMessage('File menu: New selected', 5000)
+
+    def fileOpen(self):
+        '''Open file'''
+        if not self.okToContinue():
+            return
+        fname = unicode(QFileDialog.getOpenFileName(self,
+                        "Open File", '.', "Files (*.*)"))
+        if not (fname == ""):
+            self.textEdit.setText(open(fname).read())
+            self.fileName = fname
+        else:
+            return
+        self.clearDirty()
+        self.updateStatus('File opened.')
+        
+    def fileSave(self):
+        '''Save file with current name.'''
+        if self.fileName is None:
+            return self.fileSaveAs()
+        else:
+            if not self.dirty:
+                return
+            fname = self.fileName
+            fl = open(fname, 'w')
+            tempText = self.textEdit.toPlainText()
+            if tempText:                
+                fl.write(tempText)
+                fl.close()
+                self.clearDirty()
+                self.updateStatus('Saved file') 
+                return True
+            else:
+                self.statusBar().showMessage('Failed to save ...', 5000)
+                return False
+
+    def fileSaveAs(self):
+        '''Save file with a different name and maybe different directory.'''
+        path = self.fileName if self.fileName is not None else "."
+        fname = unicode(QFileDialog.getSaveFileName(self,
+                        "Simple Editor, SaveAs ", path, "Any File (*.*)"))
+        if fname:
+            if "." not in fname:
+                fname += ".txt"
+            self.fileName = fname
+            self.fileSave()        
+            self.statusBar().showMessage('SaveAs file' + fname, 8000)
+            self.clearDirty()
+            
+if __name__ == '__main__':
+    '''Execute this part of program if it is run as mainline.'''
+    app = QApplication(sys.argv)
+    frame = MainWindow()
+    frame.show()
+    app.exec_()
+
+}}}
+
+
+Let me reiterate the recommendation to download the full listing of program from a the tar ball, named "simple0.1.00.tar.gz", which is available from http://akabaila.pcug.org.au/data_sample/ directory. It would be greatly appreciated if you let me know if that worked for you: email akabaila[at]pcug[dot]org[dot]au 
+
+The tar ball is meant to have all the required files - the original '''simple.ui''' file, generated by the '''Qt Designer''' and saved by us; the '''simple.qrc''' file, an XML file with list of icons and other resources used by the program, as well as the resources themselves.  Also, the automatically generated  '''ui_simple.py''' and '''qrc_simple.py''' files which are python program files, importable to the project.
+
+As programs go, the above listing is small - less than 200 lines. If you understand it all and could now program it all yourself, then just go and do it - congratulations, you are done with this tutorial!  If you feel a little doubtful or curious how it all developed, then let us go to the beginning of it - '''Stage 0''', followed by '''Stage 1''' and so on. I enjoy your company, stay with it!
+
+
+[[simple|Return Home]]
