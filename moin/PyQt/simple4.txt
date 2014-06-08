@@ -1,0 +1,170 @@
+== "Simple" Stage 4 ==
+
+The program has now progressed and the GUI begins to look like GUIs usually look. Visually, the most noticeable change is the presence of several icons on the tool bar - basically, these icons have the same functionality as the menu items and are provided for the most frequently used operations. So we will need to talk some more about the '''actions''' and about generation and storage of '''resources'''.  Once you download the program listing and start using it, other changes will be noticed: at the end of the mouse pointer, a '''tool tip hint''' pops up showing the purpose of the icon that the pointer is hovering over. Also, an informative note, often the same as the tool tip hint, is shown on the '''status bar'''.
+
+In connection with the above, we will need to discuss how '''icon images''' are provided for icons.
+
+One item that I missed in earlier versions is showing of the '''title of document''' opened in the edit window. The title is functional and it shows when the document has been altered. Not only that, there is a program bug that !PyQt (or Qt) reports. I found the chasing after this bug as frustrating as it was instructive. It was not easy to find, yet I think that a programmer with experience in !PyQt would spot it in no time at all! See if you can spot it easily.
+
+
+{{attachment:Simple0.0.06.png}}
+
+
+
+Below is the code listing for this stage of development. It is very often difficult to copy the code from a wiki. This is particularly so with Python programs, because Python relies on '''indentation''' for specification of code blocks (and it is such a '''nice feature,''' once you get used to it!). To make it simpler to test this stage of program, we provide a tar ball of program for downloading: see http://akabaila.pcug.org.au/data_sample and select the tar ball named '''simple0.0.06.tar.gz.'''
+{{{#!python
+#!/usr/bin/env python
+# .../simple.py - developing of a simple text editor.
+'''A really simple editor program in PyQt4 - simple.py
+'''
+
+import sys
+import os
+
+from PyQt4.QtGui import (QMainWindow, QApplication, QFileDialog,
+                         QKeySequence, QAction, QIcon)
+from PyQt4.QtCore import SIGNAL
+
+from ui_simple import Ui_MainWindow
+import qrc_simple
+
+__version__ = "0.0.06"
+
+class MainWindow(QMainWindow, Ui_MainWindow):
+    def __init__(self, parent=None):
+        super(MainWindow, self).__init__(parent)
+        self.setupUi(self)        
+        self.action_New = self.editAction(self.action_New, self.fileNew,
+                QKeySequence.New, "filenew", 
+                'Clear the textEdit window for a new file.')
+        self.action_Open = self.editAction(self.action_Open, self.fileOpen, 
+                        QKeySequence.Open, "fileopen", "Open an existing file")
+        self.action_Save = self.editAction(self.action_Save, self.fileSave, 
+                                QKeySequence.Save, "filesave", "Save file")
+        self.actionSave_As = self.editAction(self.actionSave_As, self.fileSaveAs, 
+                            "Ctrl+A", "filesaveas", "Save file with a new name")
+        self.fileName = None
+#-------------------------------------------------------------------------------------
+        fileToolbar = self.addToolBar("File")
+        self.addActions(fileToolbar, (self.action_New, self.action_Open,
+                                      self.action_Save, self.actionSave_As))
+#--------------------------------------------------------------------------------------       
+        self.resize(600, 400)
+        self.dirty = False
+        self.textEdit.textChanged.connect(self.setDirty)
+#--------------------------------------------------------------------------------------
+    def setDirty(self):
+        '''On change of text in textEdit window, set the flag
+        "dirty" to True'''
+        if self.dirty:
+            return True        
+        self.dirty = True
+        self.updateStatus('self.dirty set to True')
+       
+    def clearDirty(self):
+        '''Clear the dirty flag and update status'''
+        self.dirty = False
+
+    def updateStatus(self, message):
+        if self.fileName is not None:
+            flbase = os.path.basename(self.fileName)
+            self.setWindowTitle(unicode("Simple Editor - " + flbase + "[*]") )
+            self.statusBar().showMessage(message, 3000)
+        self.setWindowModified(self.dirty)
+        
+    def okToContinue(self):
+        if self.dirty:
+            reply = QMessageBox.question(self,
+                    "Simple Editor - Unsaved Changes",
+                    "Save unsaved changes?",
+                    QMessageBox.Yes|QMessageBox.No|QMessageBox.Cancel)
+            if reply == QMessageBox.Cancel:
+                return False
+            elif reply == QMessageBox.Yes:
+                return self.fileSave()
+        return True
+        
+    def addActions(self, target, actions):
+        for action in actions:
+            if action is None:
+                target.addSeparator()
+            else:
+                target.addAction(action)
+
+    def editAction(self, action, slot=None, shortcut=None, icon=None,
+                     tip=None, checkable=False, signal="triggered()"):
+        if icon is not None:
+            action.setIcon(QIcon(":/{0}.png".format(icon)))
+        if shortcut is not None:
+            action.setShortcut(shortcut)
+        if tip is not None:
+            action.setToolTip(tip)
+            action.setStatusTip(tip)
+        if slot is not None:
+#            self.connect(action, SIGNAL(signal), slot)            
+            action.triggered.connect(slot)                        
+        if checkable:
+            action.setCheckable(True)
+        return action
+
+    def fileNew(self):
+        '''Clear the editor window for a new file with name
+        specified in fileSaveAs method.'''
+        self.textEdit.setText('')
+        self.statusBar().showMessage('File menu: New selected', 8000)
+
+    def fileOpen(self):
+        '''Open file'''
+        fname = unicode(QFileDialog.getOpenFileName(self,
+                        "Open File", '.', "Files (*.*)"))
+        if not (fname == ""):
+            self.textEdit.setText(open(fname).read())
+            self.fileName = fname
+        else:
+            return
+        self.clearDirty()
+        self.updateStatus('File opened.')
+       
+    def fileSave(self):
+        if self.fileName is None:
+            return self.fileSaveAs()
+        else:
+            fname = self.fileName
+            fl = open(fname, 'w')
+            tempText = self.textEdit.toPlainText()
+            if tempText:                
+                fl.write(tempText)
+                fl.close()
+                self.clearDirty()
+                self.updateStatus('Saved file') 
+                return True
+            else:
+                self.statusBar().showMessage('Failed to save ...', 5000)
+                return False
+        
+    def fileSaveAs(self):
+        path = self.fileName if self.fileName is not None else "."
+        fname = unicode(QFileDialog.getSaveFileName(self,
+                        "Simple Editor, SaveAs ", path, "Any File (*.*)"))
+        if fname:
+            if "." not in fname:
+                fname += ".txt"
+            self.fileName = fname
+            self.fileSave()        
+            self.statusBar().showMessage('SaveAs file' + fname, 8000)
+            self.clearDirty()
+            
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    frame = MainWindow()
+    frame.show()
+    app.exec_()
+}}}
+
+The listing is more extensive - the number of lines has about doubled from the previous section. On the other hand, the simple editor now looks like a "real" program and is able to do what we expect of a simple, tutorial type, plain text editor!
+
+
+
+
+
+[[PyQt/simple|Return Home]]
