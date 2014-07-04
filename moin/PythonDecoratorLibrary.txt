@@ -127,6 +127,13 @@ class Example(object):
 Yet another property decorator:
 
 {{{#!python
+try:
+    # Python 2
+    import __builtin__ as builtins
+except ImportError:
+    # Python 3
+    import builtins
+
 def property(function):
     keys = 'fget', 'fset', 'fdel'
     func_locals = {'doc':function.__doc__}
@@ -138,7 +145,7 @@ def property(function):
         return probe_func
     sys.settrace(probe_func)
     function()
-    return property(**func_locals)
+    return builtins.property(**func_locals)
 
 #====== Example =======================================================
 
