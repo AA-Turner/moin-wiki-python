@@ -4,28 +4,26 @@ We have a [[http://psf.upfronthosting.co.za/roundup/meta/|meta tracker]] for cur
 
 <<TableOfContents>>
 
-= Getting a copy of b.p.o tracker configuration =
+== Requirements ==
 
-bugs.python.org is powered by [[http://www.roundup-tracker.org/|Roundup tracker]] software released under MIT License.  The Roundup version currently used by b.p.o contains some additional changes and can be found here:
+ * Roundup 1.4.20+ (patched version)
+ * PostgreSQL (as a backend database)
+ * psycopg (bindings for the above)
+
+== Getting the source ==
+
+Get patched version of [[http://www.roundup-tracker.org/|Roundup tracker]] from here:
 
  * http://hg.python.org/tracker/roundup/ (the changes are in the `bugs.python.org` branch)
 
-The specific configuration (called 'tracker home' or 'instance') that is running on http://bugs.python.org/ is named `python-dev`. The source is stored in Mercurial repository and can be downloaded from:
+Tracker configuration for http://bugs.python.org/ (called 'tracker home', 'instance' or `environment) is here:
 
  * Official: http://hg.python.org/tracker/python-dev/
  * Mirror: https://bitbucket.org/rirror/bugs.python.org
 
+== Other tracker configurations ==
 
-== Requirements ==
-
- * Roundup
- * PostgreSQL (as a backend database)
- * psycopg (bindings for the above)
- * copy of `python-dev` configuration
-
-== Tracker repositories ==
-
-`pydotorg` has several official trackers, which configuration is stored in Mercurial repositories accessible from the http://hg.python.org/tracker/ address:
+There are several Roundup trackers used for Python development. Configuration for them is maintained in http://hg.python.org/tracker/ repositories:
 
  * '''roundup''': a clone of the original Roundup with our modifications;
  * '''python-dev''': the instance used on bugs.python.org;
@@ -36,14 +34,11 @@ The specific configuration (called 'tracker home' or 'instance') that is running
  * '''django-gae2django''': a clone of django-gae2django necessary for rietveld;
 
 
-== Installing Roundup ==
+== Installing patched Roundup ==
 
 
-The [[http://hg.python.org/tracker/roundup/|roundup]] repo is a clone of http://roundup.hg.sourceforge.net/hgweb/roundup/roundup that contains an additional branch named "bugs.python.org" that contains some modification we made to Roundup.
-
-
-To get a clone of roundup use:
-
+Clone code and switch to `bugs.python.org` branch before installing. Here it is
+installed to hardcoded system-wide location at `/opt/tracker-roundup/`.
 
  * Read-only clone
  {{{
@@ -55,41 +50,22 @@ hg clone http://hg.python.org/tracker/roundup
 hg clone ssh://hg@hg.python.org/tracker/roundup
 }}}
 
-
-
-Before installing roundup, '''remember to change branch''', otherwise the instances won't work:
-
-
 {{{
 cd roundup
 hg up bugs.python.org
-}}}
-
-
-To install roundup use:
-
-
-{{{
 sudo python setup.py install --prefix /opt/tracker-roundup/
 }}}
 
 
 == Install and configure PostgreSQL ==
 
+For the `python-dev` tracker instance we use PostgreSQL on backed, because it has the best performance for large installations. Also for performance reasons, there is at least one place in the `python-dev` config with hardcoded dependency on the SQL-based backed. Other backends may work, but it is recommended to keep development environment close to production.
 
-For the python-dev tracker instance we use PostgreSQL as backend database. Roundup has support for many different databases for backend (anydbm, metakit, MySQL, PostgreSQL, SQLite...), but for the python-dev instance, PostgreSQL was selected as it has the best performance for large installations. Also, for performance reasons, there is at least one place in the python-dev instance that has a hardcoded dependency on the backend being an SQL-based one, so you do need PostgreSQL even for development work (another SQL-based backend might work, but this has not been tested). I recommend that you run postgreSQL to make your development environment behave exactly like the environment the real tracker runs in.
+It has been reported that 8.2, 8.3, 8.4, and 9.1 work well.
 
+Access control in PostgreSQL is tricky. You need to know Unix user, under which you run Roundup, setup access for him to PostgreSQL database, and add PostgreSQL user that you've configured in Roundup's configuration.
 
-Details on how to install PostgreSQL is outside the scope of this Wiki Page ({{{sudo apt-get install postgresql}}} should be enough). Both version 7.4 and 8.1 of PostgreSQL has been tested without any known problems. It has been reported that 8.2, 8.3, 8.4, and 9.1 work well.
-
-
-Access configuration of postgresql can be tricky. You need to make sure that the user you're running roundup as (your unix/windows user) has access to the postgresql database you intend to use for roundup, as the postgresql user you've configured in roundup's configuration.
-
-
-For a development environment with no demands on security, the easiest way to configure this is probably to allow all users to connect as any database user as long as the request originates from the local host. This can be accomplished editing pg_hba.conf (usually found in /etc/postgresql/9.x/main/ in Linux or /Library/PostgreSQL/9.x/data/ in Mac OS X -- you might need privileges to edit it). The end of the file should look like this (the four changed lines are preceded by ##):
-
-
-
+For a development environment the easiest way is to allow any user from localhost to connect as any database user. This can be accomplished by editing pg_hba.conf (usually found in /etc/postgresql/9.x/main/ in Linux or /Library/PostgreSQL/9.x/data/ in Mac OS X -- you might need privileges to edit it). The end of the file should look like this (the four changed lines are preceded by ##):
 
 
 {{{
@@ -215,10 +191,6 @@ If you are having other problems or installing a different version check psycopg
 
 
 == Checkout the python-dev instance ==
-
-
-To get a clone of the [[http://hg.python.org/tracker/python-dev/|python-dev]] tracker instance use:
-
 
  * Read-only clone
  {{{
