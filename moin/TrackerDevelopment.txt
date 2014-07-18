@@ -4,7 +4,7 @@ We have a [[http://psf.upfronthosting.co.za/roundup/meta/|meta tracker]] for cur
 
 <<TableOfContents>>
 
-== Requirements ==
+= Requirements =
 
 This configuration is deployed on production server, so it is good to
 stick it for development as well:
@@ -12,6 +12,8 @@ stick it for development as well:
  * Roundup 1.4.20+ (patched version)
  * PostgreSQL (as a backend database)
  * psycopg2 (bindings for the above)
+
+http://bugs.python.org/ (`python-dev` tracker instance or configuration) is running PostgreSQL on backed, because it has the best performance for large installations. 
 
 == Getting the source ==
 
@@ -37,8 +39,9 @@ There are several Roundup trackers used for Python development. Configuration fo
  * '''django-gae2django''': a clone of django-gae2django necessary for rietveld;
 
 
-== Installing patched Roundup ==
+= Setup bugs.python.org instance =
 
+== Install patched Roundup ==
 
 Clone code and switch to `bugs.python.org` branch before installing. Here it is
 installed to hardcoded system-wide location at `/opt/tracker-roundup/`.
@@ -60,9 +63,77 @@ sudo python setup.py install --prefix /opt/tracker-roundup/
 }}}
 
 
+== Checkout the python-dev instance ==
+
+ * Read-only clone
+ {{{
+hg clone http://hg.python.org/tracker/python-dev
+}}}
+
+ * Read/Write clone (if you have write access to the repository)
+ {{{
+hg clone ssh://hg@hg.python.org/tracker/python-dev
+}}}
+
+
+== Checkout the Rietveld integration (optional) ==
+
+
+If you want to work on Rietveld code review tool, check out the django-gae2django and rietveld clones in the python-dev/ directory:
+
+
+ * Read-only clone
+ {{{
+cd python-dev
+hg clone http://hg.python.org/tracker/django-gae2django/
+hg clone http://hg.python.org/tracker/rietveld/
+}}}
+
+ * Read/Write clone (if you have write access to the repository)
+ {{{
+cd python-dev
+hg clone ssh://hg@hg.python.org/tracker/django-gae2django/
+hg clone ssh://hg@hg.python.org/tracker/rietveld/
+}}}
+
+
+
+After getting the clones '''remember to update the branches to bugs.python.org''':
+
+{{{
+cd django-gae2django
+hg up bugs.python.org
+cd ..
+cd rietveld
+hg up bugs.python.org
+}}}
+
+
+In addition, Django needs to be installed; e.g. the Django 1.2 or 1.3 Debian packages work fine.
+
+
+=== Install psycopg2 (PostgreSQL access library for Python) ===
+
+For Debian/Ubuntu:
+
+{{{
+sudo apt-get install python-psycopg2
+}}}
+
+
+For other systems, follow instructions from [[http://initd.org/psycopg/install/|psycopg2 site]].
+
+
+
 == Install and configure PostgreSQL ==
 
-For the `python-dev` tracker instance we use PostgreSQL on backed, because it has the best performance for large installations. Also for performance reasons, there is at least one place in the `python-dev` config with hardcoded dependency on the SQL-based backed. Other backends may work, but it is recommended to keep development environment close to production.
+For Debian/Ubuntu:
+
+{{{
+sudo apt-get install python-psycopg2
+}}}
+
+Also for performance reasons, there is at least one place in the `python-dev` config with hardcoded dependency on the SQL-based backed. Other backends may work, but it is recommended to keep development environment close to production.
 
 It has been reported that 8.2, 8.3, 8.4, and 9.1 work well.
 
@@ -161,67 +232,6 @@ you check the value of shmmax with {{{sysctl -a | grep -i shm}}}. You can c
 5. If everything works with 9.1 you can then remove 8.4;
 
 
-=== Install psycopg2 ===
-
-
-For Debian/Ubuntu:
-
-{{{
-sudo apt-get install python-psycopg2
-}}}
-
-
-For other systems, follow instructions from [[http://initd.org/psycopg/install/|psycopg2 site]].
-
-
-== Checkout the python-dev instance ==
-
- * Read-only clone
- {{{
-hg clone http://hg.python.org/tracker/python-dev
-}}}
-
- * Read/Write clone (if you have write access to the repository)
- {{{
-hg clone ssh://hg@hg.python.org/tracker/python-dev
-}}}
-
-
-
-== Checkout the Rietveld integration ==
-
-
-Running the Rietveld code review tool is optional. If you want to work on it, check out the django-gae2django and rietveld clones in the python-dev/ directory:
-
-
- * Read-only clone
- {{{
-cd python-dev
-hg clone http://hg.python.org/tracker/django-gae2django/
-hg clone http://hg.python.org/tracker/rietveld/
-}}}
-
- * Read/Write clone (if you have write access to the repository)
- {{{
-cd python-dev
-hg clone ssh://hg@hg.python.org/tracker/django-gae2django/
-hg clone ssh://hg@hg.python.org/tracker/rietveld/
-}}}
-
-
-
-After getting the clones '''remember to update the branches to bugs.python.org''':
-
-{{{
-cd django-gae2django
-hg up bugs.python.org
-cd ..
-cd rietveld
-hg up bugs.python.org
-}}}
-
-
-In addition, Django needs to be installed; e.g. the Django 1.2 or 1.3 Debian packages work fine.
 
 
 == Configure your Development Roundup Instance ==
@@ -271,10 +281,6 @@ debug = on
 
 Initialize your roundup instance:
 
-
-
-
-
 {{{
 /opt/tracker-roundup/bin/roundup-admin -i <your python-dev directory> init
 }}}
@@ -294,10 +300,6 @@ If you are getting the error:
 
 
 Start your roundup instance:
-
-
-
-
 
 {{{
 /opt/tracker-roundup/bin/roundup-server -p 9999 python-dev=<your python-dev directory>
@@ -351,10 +353,6 @@ You can find your user id clicking on "Your Details" in the left sidebar and the
 
 
 The Roundup and Rietveld data are stored in the same Postgres database. After the Roundup tables have been created, add to python-dev/config.ini:
-
-
-
-
 
 {{{
 [django]
