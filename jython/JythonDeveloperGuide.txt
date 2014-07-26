@@ -5,6 +5,8 @@ This is an introduction to developing Jython, just to get someone started. It do
 
 == Mercurial ==
 
+NOTE: The source code of Jython is now mirrored to [[http://github.com/jythontools/jython|Github]],
+please see the next section "GIT" on how to contribute with pull requests.
 
  * Check out a copy of the Jython source with [[http://mercurial.selenic.com/|Mercurial]], available on most *nix systems or with Cygwin on Windows.
  * You can use the command line tool `hg`, or [[http://mercurial.selenic.com/wiki/OtherTools#Graphical_user_interfaces|GUI clients are available]] on most platforms.
@@ -17,9 +19,20 @@ hg clone http://hg.python.org/jython
 }}}
 
 
- * It's easy to create your own fork of the repo on [[BitBucket|BitBucket]], visit http://bitbucket.org/jython/jython and click on 'Fork'
+ * It's easy to create your own fork of the repo on [[BitBucket|BitBucket]], visit http://bitbucket.org/jython/jython and click on 'Fork' --- Please see the "GIT" section for our new GIT-based pull request process.
  * Attach patches to issues in the [[http://bugs.jython.org/|Jython bug tracker]].
   * Also, you can upload them to http://codereview.appspot.com (the Jython repository is already registered).
+
+== GIT ==
+
+ * Jython's source code is mirrored to https://github.com/jythontools/jython (a background sync runs every 5 minutes from hg.python.org)
+ * You can use your [[http://git-scm.com/downloads/guis|favorite GIT client]] to clone the GIT repo, on the command line:
+  .
+  {{{
+git clone https://github.com/jythontools/jython.git
+}}}
+ * To submit patches, you should fork the github repo, create a special feature branch and submit a pull request on github.
+ * The Jython developers will review and merge your pull request into the [[http://hg.python.org/jython|upstream Mercurial repo]].
 
 == IDE Support ==
 
@@ -31,45 +44,7 @@ These notes should help:
    * [[JythonDeveloperGuide/IntellijNotes|JythonDeveloperGuide/IntellijNotes]]
    * [[JythonDeveloperGuide/IntellijTricks|JythonDeveloperGuide/IntellijTricks]]
 
-== Subversion (Historical) ==
-
-
-When Jython first followed CPython into use of Mercurial as the repository, it continued to reference a part of the CPython source at {{{ https://svn.python.org }}} as a "sub-repository". This meant you still needed [[http://subversion.apache.org|Subversion]] installed. As of 20 March 2012, the Jython Mercurial repository contains a snapshot of CPython libs in the 2.2, 2.5, and default branches.
-
-
-You therefore only need the following advice if you are somehow working with an old repository.
-
-
-The following advice is based on experience using Mercurial 1.9, [[http://sliksvn.com|Slik Subversion]] and Windows 7 (AMDx64). Other tools and operating systems exist. An installation that gives you the command 'svn' on your path is sufficient.
-
-
-If you do not have Subversion installed (and on the PATH) the Mercurial {{{hg clone}}} command will terminate with the message:
-
-
-{{{
-abort: The system cannot find the file specified
-}}}
-
-
-at the point where it attempts to read the sub-repository, specified in the files {{{ .hgsub }}} and {{{ .hgsubstate }}}.
-
-
-A second requirement is that Subversion should accept the SSL certificate from the site svn.python.org. If you have not used Subversion already to access the site, you may find that the {{{ hg clone }}} command hangs at the point where it attempts to read the sub-repository. A simple solution is to visit the site once from the command line as follows:
-
-
-{{{
-svn info https://svn.python.org/projects/python/branches/release26-maint/Lib/
-}}}
-
-
-Subversion will issue a warning about the certificate, and you will be able to "accept permanently" the site's certificate. The Mercurial clone operation should not now hang.
-
-
-If you see the sub-directory {{{ CPythonLib }}} created in your local repository, then the call to Subversion by Mercurial was a success. (It can take a few minutes to complete.)
-
-
 == Ant ==
-
 
  * [[http://ant.apache.org/|Ant]] is a Java-based tool used to build Jython from source.
  * Eclipse users, see [[JythonDeveloperGuide/EclipseNotes#ANT|Eclipse Ant notes]]
