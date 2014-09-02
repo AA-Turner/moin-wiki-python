@@ -1,0 +1,81 @@
+= PSF Infrastructure Overview =
+The PSF runs a wide variety of infrastructure services to support its mission from the [[https://us.pycon.org|PyCon site]] to the [[http://hg.python.org|CPython Mercurial server]]. The goal of this page is to enumerate all these services, where they run, and who the main contact points are.
+
+== The Infrastructure Team ==
+
+The infrastructure team is ultimately responsible maintaining PSF infrastructure. It is not, however, required to be a member of the infrastructure to run a PSF service. Indeed, the day to day operations of most services are handled by people not on the infrastructure team. The infrastructure team can assist in setting up new services and advising maintainers of individual services. Its members also generally handle changes to sensitive global systems such as DNS. The currrent team members are:
+
+ * Noah Kantrowitz (lead)
+ * Ernest W. Durbin III
+ * Benjamin W. Smith
+ * Donald Stufft
+ * Benjamin Peterson
+ * Alex Gaynor (has no responsibilities)
+
+The best way to contact the infrastructure team is mailing infrastructure-staff@python.org. There's also often people hanging out on the #python-infra channel of [[http://freenode.net|Freenode]].
+
+== Infrastructure Providers ==
+
+The PSF uses several different cloud providers and services for its infrastructure.
+
+=== XS4ALL ===
+
+XS4ALL is the by far the oldest Python infrastructure provider. There are two physical servers owned by the PSF at XS4ALL: albatross and dinsdale. (There also used to be one called ximinez, but it seems to be unreachable now.) albatross is the mail server. dinsdale hosts a number of legacy services. We try not to put anything new on the XS4ALL servers, preferring modern cloud providers.
+
+=== OSUOSL ===
+
+[[http://osuosl.org/|Oregon State University Open Source Lab]] hosts VMs for the PSF. These VMs are provisioned using [[http://www.getchef.com|Chef]] and their configuration management is in the [[https://github.com/python/psf-chef|psf-chef git repo]].
+
+=== Rackspace ===
+
+[[http://www.rackspace.com|Rackspace]] is the newest cloud provider utilized by the PSF. It hosts PyPI and an increasing number of python.org-related services (Python downloads, docs.python.org). [[http://www.saltstack.com|Salt]] is used for configuration management.
+
+=== Dyn & Gandi ===
+
+[[http://www.gandi.net|Gandi]] is our domain registar, and we use [[http://www.dyn.com|Dyn]] for DNS hosting on most of our domains.
+
+=== Fastly ===
+
+[[http://www.fastly.com|Fastly]] generously donates its content distribution network (CDN) to the PSF. Our highest traffic services (i.e. PyPI, www.python.org, docs.python.org) use this CDN to improve end-user latency. 
+
+== Details of Various Services ==
+
+=== Buildbot ===
+
+The [[http://buildbot.python.org|buildbot master]] is a service run by python-dev@python.org, particularly Antoine Pitrou.
+
+=== bugs.python.org ===
+
+bugs.python.org is hosted using a server donated by [[http://www.upfrontsystems.co.za|Upfront Systems]]. The tracker-discuss@python.org list is used for discussion of the tracker.
+
+=== docs.python.org ===
+
+The Python documentation is hosted on a Rackspace VM, served through Fastly, and owned by Benjamin Peterson and Georg Brandl.
+
+=== hg.python.org ===
+
+The CPython Mercurial repositories are hosted on an OSUOSL VM. The service is owned by Antoine Pitrou and Georg Brandl.
+
+=== mail.python.org ===
+
+The python.org Mailman instance is hosted on https://mail.python.org as well as SMTP (Postfix). All inquiries should be directed to postmaster@python.org.
+
+=== planet.python.org ===
+
+This is hosted on dinsdale.
+
+=== www.jython.org ===
+
+This is hosted on a Rackspace VM.
+
+=== www.python.org ===
+
+The [[https://www.python.org/|main Python website]] is a Django app hosted on a OSUOSL VM. Its source code is available on [[https://github.com/python/pythondotorg|GitHub]], and issues with the site can be reported in [[https://github.com/python/pythondotorg/issues|GitHub issue tracker]]. Python downloads (i.e. everything under https://www.python.org/ftp/) are hosted on a Rackspace VM. The whole site is behind Fastly. There is also http://staging.python.org for testing the site. http://legacy.python.org is the old website hosted on dinsdale. It is still the canonical source for PEPs because the new website's PEPs app isn't ready yet.
+
+=== PyPI ===
+
+The [[https://pypi.python.org/|Python Package Index]] sees the most load of any PSF service. All of its infrastructure runs on Rackspace configure by [[https://github.com/python/pypi-salt|pypi-salt]], and it is served over Fastly. The infrastructure is maintained by Ernest W. Durbin, Donald Stufft, and Richard Jones.
+
+=== PyPy ===
+
+The [[http://pypy.org|PyPy website]] is hosted on a OSUOSL VM and maintained by pypy-dev@python.org.
