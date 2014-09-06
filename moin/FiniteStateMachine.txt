@@ -22,6 +22,39 @@ XML.)
  * [[http://fsme.sourceforge.net/doc/tutorial.html|tutorial]]
  * [[http://fsme.sourceforge.net/phpwiki/|project wiki]]
 
+== Tulip (Temporal Logic Planning Toolbox) ==
+
+[[http://tulip-control.sourceforge.net/|tulip]] includes a subpackage called [[https://github.com/tulip-control/tulip-control/tree/master/tulip/transys|transys]] that provides classes for (finite state)
+
+  1. Transition systems ([[https://en.wikipedia.org/wiki/Kripke_structure_%28model_checking%29|Kripke Structures]], also known as generators of languages):
+    * for closed systems
+    * for open systems (that play against adversarial environments)
+    
+  The above support edge labeling, as well as state labeling (in that respect they are not pure Kripke structures and can be used to construct Labeled-transition systems, depending on the semantics assigned to the graph).
+  
+  2. [[https://en.wikipedia.org/wiki/Automata_theory|Automata]] (also known as acceptors):
+    1. Finite-word:
+      * [[https://en.wikipedia.org/wiki/Deterministic_finite_automaton|Deterministic Finite Automata]] (DFA)
+      * [[https://en.wikipedia.org/wiki/Nondeterministic_finite_automaton|Non-Deterministic Finite Automata]] (NFA)
+    
+    2. [[https://en.wikipedia.org/wiki/%CE%A9-automaton|Infinite-word]] (= ω-automata):
+      * [[https://en.wikipedia.org/wiki/B%C3%BCchi_automaton|Buchi Automata]] (BA)
+      * Rabin Automata (RA)
+      * Parity Automata
+  
+  3. [[https://en.wikipedia.org/wiki/Finite_state_transducer|Machines]] (also known as transducers):
+    * [[https://en.wikipedia.org/wiki/Mealy_machine|Mealy machines]]
+    * [[https://en.wikipedia.org/wiki/Moore_machine|Moore machines]]
+
+The toolbox includes an extension of [[http://networkx.github.io/documentation/networkx-1.9/reference/classes.multidigraph.html?highlight=multidigraph#networkx.MultiDiGraph|networkx.MultiDiGraph]] to define typed labeling and also a subpackage for exporting the above classes to:
+
+  * [[https://en.wikipedia.org/wiki/DOT_%28graph_description_language%29|GraphViz dot]] (inluding: TikZ (LaTeX), ipython qtconsole inline plot support of graphviz output)
+  * [[https://en.wikipedia.org/wiki/Promela|Promela]] (for transition systems only)
+  * [[https://en.wikipedia.org/wiki/D3.js|d3]]
+
+The implemented algorithms include the synchronous product between transition systems and Buchi automata.
+
+Tulip itself is a package for synthesizing correct-by-construction systems from a logic specification and a model expressed as a transition system, including - among other - functions for abstracting the continuous dynamics of systems governed by differential equations to finite state transition systems.
 
 == FSA - Finite State Automation in Python ==
 
