@@ -22,8 +22,14 @@ Usability of routing component can be estimated with the help of the following q
 def index(name):
   return '<b>Hello {{name}}</b>!'
 }}}
+or
+{{{
+def setup_routing():
+  bottle.route('/', 'GET', index)
+  bottle.route('/edit', ['GET', 'POST'], edit)
+}}}
 
-Get overview of URLs handled: search for "@route"
+Get overview of URLs handled: search for "@route" or for ".route("
 
 http://bottlepy.org/docs/dev/index.html
 
