@@ -60,6 +60,8 @@ The same technique works for objects with named attributes.  For example:
                 self.age = age
         def __repr__(self):
                 return repr((self.name, self.grade, self.age))
+        def weighted_grade(self):
+                return 'CBA'.index(self.grade) / float(self.age)
 
 >>> student_objects = [
         Student('john', 'A', 15),
@@ -75,7 +77,7 @@ The key-function patterns shown above are very common, so Python provides conven
 Using those functions, the above examples become simpler and faster.
 
 {{{
->>> from operator import itemgetter, attrgetter
+>>> from operator import itemgetter, attrgetter, methodcaller
 
 >>> sorted(student_tuples, key=itemgetter(2))
 [('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
@@ -83,6 +85,7 @@ Using those functions, the above examples become simpler and faster.
 >>> sorted(student_objects, key=attrgetter('age'))
 [('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
 }}}
+
 The operator module functions allow multiple levels of sorting. For example, to sort by grade then by age:
 
 {{{
@@ -91,6 +94,14 @@ The operator module functions allow multiple levels of sorting. For example, to 
 
 >>> sorted(student_objects, key=attrgetter('grade', 'age'))
 [('john', 'A', 15), ('dave', 'B', 10), ('jane', 'B', 12)]
+}}}
+
+The third operator module import, {{{methodcaller}}} is used in the following example in which the weighted grade of each student is shown before sorting on it:
+{{{
+>>> [(student.name, student.weighted_grade()) for student in student_objects]
+[('john', 0.13333333333333333), ('jane', 0.08333333333333333), ('dave', 0.1)]
+>>> sorted(student_objects, key=methodcaller('weighted_grade'))
+[('jane', 'B', 12), ('dave', 'B', 10), ('john', 'A', 15)]
 }}}
 == Ascending and Descending ==
 Both {{{list.sort()}}} and {{{sorted()}}} accept a {{{reverse}}} parameter with a boolean value.  This is using to flag descending sorts. For example, to get the student data in reverse age order:
