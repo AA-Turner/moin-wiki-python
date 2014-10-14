@@ -34,7 +34,9 @@ Solutions using readline() will exhibit bugs if less than a full line is flushed
 
 Glyph makes the very valid point that these examples are in fact serial programs (ie, they don't do more than one thing at a time).  A better example would be following multiple files simultaneously.
 
-== Generator ==
+== Solutions ==
+
+=== Generator ===
 Generators implement a "pull-style" approach to concurrency.
 
 {{{#!python
@@ -69,7 +71,7 @@ for i in p:
     pass
 }}}
 
-== Coroutines ==
+=== Coroutines ===
 The inversion of the generator example above, coroutines use a "push-style" approach to concurrency:
 
 {{{#!python
@@ -117,7 +119,7 @@ g = grep('.*pants.*', p)
 f = follow('/var/log/system.log', g)
 }}}
 
-== Greenlets ==
+=== Greenlets ===
 Greenlets are similar to coroutines.
 
 {{{#!python
@@ -165,7 +167,7 @@ follow("/var/log/system.log", g)
 }}}
 
 
-== Gevent ==
+=== Gevent ===
 [[http://www.gevent.org | Gevent]] builds user-level threads on top of greenlets.
 
 {{{#!python
@@ -211,7 +213,7 @@ follow("/var/log/system.log", source_queue)
 }}}
 
 
-== Kamaelia ==
+=== Kamaelia ===
 {{{#!python
 import time
 import re
@@ -268,7 +270,7 @@ Pipeline(
 }}}
 
 
-== Twisted ==
+=== Twisted ===
 
 {{{#!python
 from twisted.protocols.basic import LineReceiver
@@ -321,7 +323,7 @@ def main():
 main()
 }}}
 
-== Fibra ==
+=== Fibra ===
 
 {{{#!python
 import fibra
@@ -351,7 +353,7 @@ schedule.install(grep(".*pants.*", fibra.Tube("T2G"), fibra.Tube("G2P")))
 schedule.install(printer(fibra.Tube("G2P")))
 schedule.run()}}}
 
-== Stackless ==
+=== Stackless ===
 
 {{{#!python
 import stackless
@@ -389,7 +391,7 @@ grep(".*pants.*", T2G, G2P)
 printer(G2P)
 stackless.run()}}}
 
-== circuits ==
+=== circuits ===
 {{{#!python
 import sys
 
@@ -414,7 +416,7 @@ class Grep(Component):
 (Tail(sys.argv[1]) + Grep(sys.argv[2])).run()
 }}}
 
-== pprocess ==
+=== pprocess ===
 
 This example needs pprocess 0.5. The activity functions are similar to the generator (and other) solutions, and the differences lie in the use of the `multigrep` function, which is invoked to provide `grep` functionality for each pattern in a separate process, and in the way the `multigrep` function itself follows several files using the `multifollow` callable (the `follow` function invoked in a separate process). A channel is used in the `follow` function to communicate new lines which are then consumed via a queue in the `grep` function, which in turn communicates matching lines via a channel which are then consumed by the `printer` function.
 
@@ -468,7 +470,7 @@ multigrep(".*shorts.*")
 p = printer(queue)
 }}}
 
-== pypes ==
+=== pypes ===
 Here is a simple example based on the pypes framework. It should look similar to the Stackless example above. Pypes abstracts away the semantics of tasklets and channels and provides a model for looser coupling. This makes connecting components at runtime easier which is necessary since at the point in which the component is created, it has no idea what other components it might be interacting with. 
 
 {{{#!python
