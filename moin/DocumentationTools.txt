@@ -1,3 +1,22 @@
+This page is primarily about tools that help, specifically, in generating '''documentation for software written in Python''', 
+i.e., tools that can use language-specific features to automate at least a part of the code documentation work for you.
+The last section also lists general documentation tools with no specific support for Python (though some of them are themselves written in Python).
+
+Tools that support auto-documentation of code can be broadly classified into tools that:
+
+ * import the code to generate documentation based on runtime introspection
+ 
+ * parse and analyze the code statically (without running it)
+ 
+See [[API Extraction|here]] for a longer explanation of the two concepts.
+
+Tools that generate documentation from user-provided input typically use plain text markup formats such as
+[[http://docutils.sourceforge.net/rst.html|reStructuredText]] (reST, the markup used for writing the official Python documentation) or
+[[http://daringfireball.net/projects/markdown/|Markdown]].
+
+
+== Python docstrings ==
+
 Python modules are usually documented using docstrings. You can read a module's docstrings from the Python interactive prompt with the `help()` function. For example:
 {{{
 import distutils
@@ -5,17 +24,6 @@ help(distutils)
 }}}
 The `help()` function uses Python's standard pydoc module, as does the `pydoc` command that comes with Python.
 
-The various documentation tools available generally do one of two things:
-
- * they either process docstrings in some way to make finding/reading documentation on a given module easier (so-called "API documentation tools"), or
- * they have nothing to do with docstrings and instead focus on processing documentation in some way (such as converting your plain text docs into html)
-
-Currently, the Python docs consist of 2 parts:
-
- * the API docs that you can read using the `help()` command (pydoc can also provide these as html and even serve them from your local machine), and
- * the manuals/guides/howtos at http://python.org/doc/ which are written in reStructuredText (a plain text format) and processed into various output formats by the Sphinx tool.
-
-When writing documentation for your own modules (either as manuals or docstrings (preferably both)), I suggest you use a plain text markup such as reST or [[http://daringfireball.net/projects/markdown/|Markdown]].
 
 == Automatic Python API documentation generation tools ==
 
