@@ -6,16 +6,13 @@ Central clearing house for Concurency related issues and discussion
  * [[Concurrency/99Bottles]] - solutions to common problems in different styles/toolkits
  * [[Concurrency/Patterns]] - ways to structure your concurrent program
  * [[Concurrency/TipsAndTricks]] - Hints for writing better concurrent code
- * Beware the GlobalInterpreterLock
-   * Note that CPython 2.x and 3.[01] suffer from a GIL, as does PyPy 1.4.1
-   * CPython 3.2 still has a GIL, but it's purportedly less troublesome
-   * Jython and IronPython have no GIL, nor any GIL-related concurrency issues
-   * Cython has the ability to selectively release the GIL using a "with" statement
+ * GlobalInterpreterLock - a limitation for multithreading in CPython
 
-== Standard Library ==
- * [[http://docs.python.org/library/multiprocessing.html | multiprocessing ]] (available in CPython 2.6 and up, also in recent PyPy 1.5 alpha builds)
+== Concurrency support offered by the Standard Library ==
+ * [[http://docs.python.org/library/multiprocessing.html | multiprocessing ]] (available in CPython 2.6+ and 3, also in recent PyPy 1.5 alpha builds)
  * [[http://docs.python.org/library/threading.html | threading]] - make your GIL-burdened life easy and your code fast: use multiprocessing. ;)
- * CPython 3.2 (and up): [[http://docs.python.org/dev/library/concurrent.futures.html | concurrent.futures]]
+ * [[http://docs.python.org/3/library/concurrent.futures.html | concurrent.futures]] (available in CPython 3.2 and up)
+ * [[http://docs.python.org/3/library/asyncio.html | asyncio]] (available in CPython 3.4 and up) - single-threaded concurrency
 
 == Frameworks ==
 See also: ParallelProcessing, [[http://pypi.python.org/pypi?:action=browse&show=all&c=450 | Pypi Distributed Computing Trove]]
