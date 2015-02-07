@@ -54,7 +54,7 @@ See also [[http://garybernhardt.github.com/python-mock-comparison|here]] for a s
 ||[[http://www.texttest.org/index.php?page=capturemock|CaptureMock]] ||mock testing ||Geoff Bache ||True record-replay approach to mocking. Requires no coding, just telling it which modules/attributes you want to mock. Then stores the behaviour in an external file, which can be used to test the code without those modules installed. ||
 ||[[http://has207.github.com/flexmock/|flexmock]] ||mock/stub/spy testing and fake objects ||[[http://github.com/has207/|Herman Sheremetyev]] ||Port of the popular Ruby mocking library to Python. Includes automatic integration with most popular test runners. ||
 ||[[http://bitbucket.org/DavidVilla/python-doublex|doublex]] ||easy and powerful stubs, spies and mocks ||[[http://bitbucket.org/DavidVilla|David Villa]] ||Free and restricted doubles using hamcrest matchers for all assertions. It provides a wrapper for the pyDoubles framework. ||
-||[[http://python-aspectlib.readthedocs.org/en/latest/testing.html|aspectlib]] ||spies and mock responses ||[[http://blog.ionelmc.ro/|Ionel Cristian Mărieș]] ||Lightweight spies and mock responses, and a capture/replay framework (via the Story/Replay context managers).||
+||[[http://python-aspectlib.readthedocs.org/en/latest/testing.html|aspectlib]] ||spies and mock responses ||[[http://blog.ionelmc.ro/|Ionel Cristian Mărieș]] ||Lightweight spies and mock responses, and a capture/replay framework (via the Story/Replay context managers). ||
 
 
 
@@ -62,6 +62,7 @@ See also [[http://garybernhardt.github.com/python-mock-comparison|here]] for a s
 == Fuzz Testing Tools ==
 According to Wikipedia, [[http://en.wikipedia.org/wiki/Fuzz_testing|"fuzz testing" (or "fuzzing")]] is a software testing technique whose basic idea is to attach the inputs of a program to a source of random data ("fuzz"). If the program fails (for example, by crashing, or by failing built-in code assertions), then there are defects to correct. The great advantage of fuzz testing is that the test design is extremely simple, and free of preconceptions about system behavior.
 ||'''Tool''' ||'''Author''' ||'''Claim to fame''' ||
+||[[https://github.com/DRMacIver/hypothesis|Hypothesis]] ||[[http://www.drmaciver.com/|David R. MacIver]] ||Hypothesis combines unit testing and fuzz testing by letting you write tests parametrized by random data matching some specification. It then finds and minimizes examples that make your tests fail. ||
 ||[[http://jester.sourceforge.net/|Pester]] ||Ivan Moore ||Tests your tests by mutating source code and finding tests that don't fail! ||
 ||[[http://peachfuzz.sourceforge.net/|Peach Fuzzer Framework]] ||Michael Eddington ||Peach can fuzz just about anything from .NET, COM/ActiveX, SQL, shared libraries/DLL's, network applications, web, you name it. ||
 ||[[http://antiparser.sourceforge.net/|antiparser]] ||dmckinney ||The purpose of antiparser is to provide an API that can be used to model network protocols and file formats by their composite data types. Once a model has been created, the antiparser has various methods for creating random sets of data that deviates in ways that will ideally trigger software bugs or security vulnerabilities. ||
@@ -93,8 +94,8 @@ First, let's define some categories of Web testing tools:
 ||[[http://www.getwindmill.com/|windmill]] ||Browser Automation ||[[http://www.getwindmill.com/|Windmill Community]] || ||Cross-Platform and Cross-Browser web automation tool, supports Firefox, Safari, Chrome and IE on Mac, Linux and Windows. Written in Python, test authoring libraries in Python and JavaScript. Active community, #windmill on irc.freenode.org ||
 ||[[http://pypi.python.org/pypi/selenium|Selenium]] ||Browser Automation ||[[http://seleniumhq.org|Selenium Community]] || ||Cross-Platform and Cross-Browser web automation tool, supports Firefox, Safari, Chrome and IE on Mac, Linux and Windows. Written in Java with Python bindings. Active community, #selenium on irc.freenode.org [[http://readthedocs.org/docs/selenium-python/en/latest/|Documentation]],[[http://selenium.googlecode.com/svn/trunk/docs/api/py/api.html|API]] ||
 ||[[http://testutils.org/sst|SST]] ||Browser Automation ||Canonical Online Services Team || ||SST (selenium-simple-test) is a web test framework that uses Python to generate functional browser-based tests ||
-||[[http://splinter.cobrateam.info/|Splinter]]||Browser Automation and Simulation||Cobrateam|| ||Splinter is cross-browser and cross-platform, supports chrome, firefox, zope.testbrowser and phantomjs.||
-||[[https://github.com/mozilla-services/loads|Loads]]||Automation ||[[http://ziade.org/|Tarek Ziadé]] and Alexis || ||  framework for distributed load testing an HTTP service||
+||[[http://splinter.cobrateam.info/|Splinter]] ||Browser Automation and Simulation ||Cobrateam || ||Splinter is cross-browser and cross-platform, supports chrome, firefox, zope.testbrowser and phantomjs. ||
+||[[https://github.com/mozilla-services/loads|Loads]] ||Automation ||[[http://ziade.org/|Tarek Ziadé]] and Alexis || ||framework for distributed load testing an HTTP service ||
 
 
 == Acceptance/Business Logic Testing Tools ==
@@ -115,7 +116,7 @@ The following tools were being actively developed and maintained when this page 
 ||[[http://sourceforge.net/projects/pywinauto/|pywinauto]] ||Mark McMahon ||Simple Windows (NT/2K/XP) GUI automation with Python. There are tests included for Localization testing but there is no limitation to this. Most of the code at the moment is for recovering information from Windows windows and performing actions on those controls. The idea is to have high level methods for standard controls rather then rely on Sending keystrokes to the applications. ||
 ||[[http://pyatom.com/|ATOMac]] ||Team members ||OS X Cocoa accessibility based automation library for Mac ||
 ||[[http://www.texttest.org/index.php?page=ui_testing|PyUseCase]] ||Geoff Bache ||Domain-language based UI testing framework with a recorder. Generates plain-text descriptions (ASCII art) of what the GUI looks like during the test, intended to be used in conjunction with TextTest (see above). Mechanism for being able to record synchronisation points. Currently has mature support for PyGTK, beta status support for SWT/Eclipse RCP and Tkinter, and an early prototype for wxPython. Swing support is being developed. ||
-||[[http://www.sikuli.org//|Sikuli]] ||Raimund Hocke (aka RaiMan) and the open-source community ||Python scripts and visual technology to automate and test graphical user interfaces using screenshot images (api for java available)||
+||[[http://www.sikuli.org//|Sikuli]] ||Raimund Hocke (aka RaiMan) and the open-source community ||Python scripts and visual technology to automate and test graphical user interfaces using screenshot images (api for java available) ||
 
 
 
@@ -148,7 +149,7 @@ The following tools are not currently being developed or maintained as far as we
 ||[[http://cheeseshop.python.org/pypi/trace2html|trace2html]] ||Olivier Grisel ||HTML test coverage reporting tool with white and blacklisting support ||
 ||[[http://www.fiber-space.de/EasyExtend/doc/coverage/coverage.html|coverage langlet]] ||[[http://www.fiber-space.de/|Kay Schluehr]] ||The coverage langlet weaves monitoring commands, so called ''sensors'', into source code during global source transformation. When a statement is covered the weaved sensor responds. The coverage langlet is part of [[http://www.fiber-space.de/EasyExtend/doc/EE.html|EasyExtend]] ||
 ||[[http://dev.nullcube.com/|pry]] ||[[http://www.nullcube.com/|Aldo Cortesi]] ||Elegant unit testing framework with built-in coverage analysis, profiling, micro-benchmarking and a powerful command-line interface. ||
-||[[https://pypi.python.org/pypi/instrumental|instrumental]] ||[[https://bitbucket.org/desmaj|Matthew Desmarais]] || Instrumental is a Python code coverage tool that measures statement, decision, and [[http://en.wikipedia.org/wiki/Modified_condition/decision_coverage|condition/decision coverage]] during code execution. Instrumental works by modifying the AST on import and adding function calls that record the circumstances under which code is executed. ||
+||[[https://pypi.python.org/pypi/instrumental|instrumental]] ||[[https://bitbucket.org/desmaj|Matthew Desmarais]] ||Instrumental is a Python code coverage tool that measures statement, decision, and [[http://en.wikipedia.org/wiki/Modified_condition/decision_coverage|condition/decision coverage]] during code execution. Instrumental works by modifying the AST on import and adding function calls that record the circumstances under which code is executed. ||
 
 
 == Continuous Integration Tools ==
