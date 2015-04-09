@@ -28,6 +28,29 @@ Fedora review request:
 
 Documentation: https://py3c.readthedocs.org/en/latest/
 
+= Possible revised semantics for "python" symlink =
+
+* Current semantics: "Python 2" (as per PEP 394)
+* Suggested semantics: administrator controlled "default Python"
+
+Conceptually along the lines of the "Python launcher for Windows" (https://www.python.org/dev/peps/pep-0397/), but wouldn't automatically update to refer to new versions when they were installed - the launcher configuration would need to be explicitly updated to select a new default.
+
+== Why not the "alternatives" system? ==
+
+Debian alternatives: https://wiki.debian.org/DebianAlternatives
+Fedora alternatives: https://fedoraproject.org/wiki/Packaging:Alternatives
+
+The problem with the alternatives system for this use case is that there's no support for command line overriding of the selected version - "python" would always refer to the administrator selected version. We'd prefer the runtime selectivity offered by the Python launcher for Windows CLI or Fedora's rubypick (https://github.com/fedora-ruby/rubypick)
+
+
+== Possible integration with Software Collections & Environment Modules ==
+
+Software collections are a tool for the Fedora/RHEL/CentOS ecosystem that allows parallel installation of multiple versions of language, database and web server runtimes: https://www.softwarecollections.org/en/
+
+SCL 2.0+ natively supports the cross-distro environment modules system (http://modules.sourceforge.net/), while SCL 1.x supports automated conversion to environment modules (https://access.redhat.com/documentation/en-US/Red_Hat_Software_Collections/1/html/Packaging_Guide/sect-Converting_Software_Collection_Scriptlets_into_Environment_Modules.html)
+
+If "/usr/bin/python" becomes a Python launcher style executable rather than a direct symlink to a specific Python runtime, then it would likely be desirable to make it easy to have it point to a software collection or other environment module installed under /opt in addition to being able to use it to switch between native system packages installed under /usr.
+
 = Other Notes/Tasks =
 
 Update Python 3 extension module porting guide (https://docs.python.org/dev/howto/cporting.html): Barry Warsaw, Petr Viktorin
