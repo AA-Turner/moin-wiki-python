@@ -162,7 +162,7 @@ To compile, you might need to add  'typename' before Map::const_iterator.
 === "Raw" function ===
 ''I want to write in python:''
 
- . {{{
+{{{
     def function( *args ):
         # Mess arount with elements of args.
 }}}
@@ -227,16 +227,74 @@ class_<foo>("foo")
 '''raw_function''' takes two parameters - the function pointer and the minimum number of arguments.
 
 === "Raw" constructor ===
-What if you wanted to make a constructor that takes in an arbitrary number of arguments and/or an arbitrary number keyword arguments?  It turns out that  boost::python can do '''raw_function''', and it can do '''make_constructor''', but it cannot do '''raw constructor'''.  The technique for making a  '''raw_constructor''' described here was devised by Hans Meine and and originally posted here: http://article.gmane.org/gmane.comp.python.c++/8881/match=raw+constructor
-
-So here's our goal:
+What if you wanted to make a constructor that takes in an arbitrary number of arguments and/or an arbitrary number keyword arguments?
 
 {{{#!python
 class foo:
         def __init__(*args, **kwargs):
                 # do stuff here
 }}}
-In order to implement the '''raw_constructor''', we must use some internal implementation details of boost::python.  This code was tested with boost 1.42 built on Visual Studio 2008.
+
+It turns out that  boost::python can do '''raw_function''', and it can do '''make_constructor''', but how to combine these two to get a '''raw constructor''' is not obvious. We describe two methods. Method 1 uses only the public API, which makes it reliable, but the code is a bit hack-ish. Method 2 leads to straight-forward client code, but requires one to write a custom header that uses internal implementation details of boost::python to get the desired effect.
+
+==== Method 1 (official) ====
+This is how the boost::python unit tests implement a raw constructor, see
+[[https://github.com/boostorg/python/blob/master/test/raw_ctor.cpp | test/raw_ctor.cpp]]. A documented example:
+
+{{{#!cplusplus
+#include <boost/python.hpp>
+#include <boost/python/make_constructor.hpp>
+#include <boost/python/raw_function.hpp>
+using namespace boost::python;
+
+class A {
+public:
+  int number_;
+
+  A(int n)
+    : number_(n)
+  {}
+};
+
+// raw constructor
+object
+A_init(tuple args, dict kwargs) {
+  // strip off self
+  object self = args[0];
+  args = tuple(args.slice(1,_));
+
+  // call appropriate C++ constructor
+  // depending on raw arguments, these
+  // C++ constructors must be exposed to
+  // Python through .def(init<...>())
+  // declarations
+  if (len(args) > 0) {
+    const int n = extract<int>(args[0]);
+    return self.attr("__init__")(n);
+  }
+  if (kwargs.contains("n")) {
+    const int n = extract<int>(kwargs["n"]);
+    return self.attr("__init__")(n);
+  }
+  return self.attr("__init__")(0);
+}
+
+BOOST_PYTHON_MODULE(raw_ctor) {
+  // using no_init postpones defining __init__ function until after
+  // raw_function for proper overload resolution order, since later
+  // defs get higher priority.
+  class_<A>("A", no_init)
+    .def("__init__", raw_function(A_init), "raw ctor")
+    .def(init<int>()) // C++ constructor, shadowed by raw ctor
+    .def_readwrite("number", &A::number_)
+  }
+}}}
+
+
+==== Method 2 ====
+The technique for making a  '''raw_constructor''' described here was devised by Hans Meine and and originally posted here: http://article.gmane.org/gmane.comp.python.c++/8881/match=raw+constructor
+
+In order to implement the '''raw_constructor''', we use some internal implementation details of boost::python.  This code was tested with boost 1.42 built on Visual Studio 2008.
 
 '''raw_constructor.hpp'''
 
