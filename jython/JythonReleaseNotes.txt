@@ -3,6 +3,82 @@
 
 = Jython 2.7.0 Release Notes =
 
+= Installing Jython =
+
+Use the Jython installation jar to install Jython. Three installation modes are provided:
+
+ * GUI
+ * Text console
+ * Command line, for automated installation
+
+From ``java -jar jython-installer-2.7.0.jar --help``, we can some examples of how to install Jython:
+
+{{{
+
+example of a GUI installation:
+	java -jar jython-installer.jar
+
+example of a console installation:
+	java -jar jython-installer.jar -c
+
+example of a silent installation:
+	java -jar jython-installer.jar -s -d targetDirectory
+
+examples of a silent installation with more options:
+	java -jar jython-installer.jar -s -d targetDirectory -t minimum -i src
+	java -jar jython-installer.jar -s -d targetDirectory -t standard -e demo doc -i src
+
+}}}
+
+A standalone Jython jar is also provided for users who intend to embded
+Jython.
+
+
+= Running Jython =
+
+Jython has a new launcher that is written in Python and executed by
+CPython 2.7. For Windows, CPython is bundled into the launcher
+(``bin\jython.exe``) by the PyInstaller program. For other systems,
+the installer determines if CPython 2.7 is available, and if so, uses
+CPython 2.7 to launch Jython.
+
+You can always see the command the launcher will use via the ``--print`` option:
+
+{{{
+
+$ bin/jython --print
+java -Xmx512m -Xss1024k -classpath /Users/jbaker/jython2.7.0/jython.jar:. -Dpython.home=/Users/jbaker/jython2.7.0 -Dpython.executable=/Users/jbaker/jython2.7.0/bin/jython -Dpython.launcher.uname=darwin -Dpython.launcher.tty=true -Dfile.encoding=UTF-8 org.python.util.jython
+
+}}}
+
+Often it may make more sense to directly execute Jython in this fashion.
+
+The following environment variables do not usually have to be set, but
+if they are, they must be set correctly (see
+http://bugs.jython.org/issue2346):
+
+ * ``JAVA_ENCODING`` - Character set encoding, such as UTF-8
+ * ``JAVA_MEM`` - Java memory (sets via -Xmx)
+ * ``JAVA_OPTS`` - options to pass directly to Java
+ * ``JAVA_STACK`` - Java stack size (sets via -Xss)
+ * ``JAVA_HOME`` - Java installation directory, if set the java command is assumed to be at ``$JAVA_HOME/bin/java``
+ * ``JYTHON_HOME`` -  Jython installation directory
+ * ``JYTHON_OPTS`` - default command line arguments
+
+Empty settings are currently assumed to be significant, so use
+``unset`` to remove if on a Unix-like system; on Windows, you can
+unset an environment variable via ``set ENVVAR=``.
+
+
+= Backwards-breaking changes =
+
+FIXME
+
+= New features =
+
+FIXME
+
+= NEWS =
 
 
 More details can be found in the NEWS file, which is incorporated here:
