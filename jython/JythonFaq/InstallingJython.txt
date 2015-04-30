@@ -4,64 +4,12 @@ JythonFaq
 
 <<TableOfContents>>
 
-----
 
-== Why do I get NoClassDefFoundError when running the installer ==
+== Command-line support in Jython? ==
 
-Make sure that the class name on the command line doesn't end in .class. Also make sure that the installer actually exists in your current working directory.
+Jython 2.5 and 2.7 fully support command-line history using JLine, although there are circumstances in which JLine cannot be loaded. (This is currently the case on cygwin for Jython 2.7.0.)
 
-----
-
-
-== Why can't I use "from java import ..." on Windows?" ==
-
-This problem can occur if you are using Microsoft's VM (i.e. jview.exe) which provides the standard classes in a different format. You need to run the following command in a console window before using Jython:
-
-{{{
-    clspack -auto
-}}}
-
-----
-
-== What do "python.path" and "python.prepath" mean in the Jython registry? ==
-
-As of Subversion revision 5043 (August 1, 2008), "python.prepath" no longer has any effect; "python.path" replaces it, reverting to the behavior of Python 2.0a1 and earlier (and CPython). This workaround is no longer necessary because CPython standard library has been included with Jython for some time.
-
-Historical information follows:
-
-The key "python.path" in the Jython registry has recently changed. This FAQ entry is intended to clarify registry keys related to sys.path settings.
-
-Before Fri, December 15, 2000- the "python.path" key in the registry file appended the given value to the sys.path list before the (sys.prefix)/lib directory is added. This means for Jython-2.0a1 and before, the above behavior is expected.
-
-Changes committed on December 15, 2000 change the behavior so that the registry's "python.path" key is appended to sys.path after (sys.prefix)/lib directory. This applies to CVS versions and any subsequently released versions of Jython.
-
-This mimics the behavior of the appending that takes place in the autoloaded site.py. Traditionally Jython users have appended the CPython path in this registry key; however, this was unsafe as it then preceded the Jython lib directory. This change eliminates errors associated with appending the CPython lib path in this key.
-
-For those instances where you do intend to add something to the sys.path before (sys.prefix)/lib, there is a new registry key called "python.prepath". This exists only after the 20001215 change date.
-
-Here is the summary of changing sys.path:
-
-Before 20001215:
-
- 1. python.path key appends given path before (sys.prefix)/lib.  Do not put the CPython Lib dir in the python.path key unless you precede it with the Jython lib path.  (using site.py may be a better choice).
- 1. Jython-2.0a1 autoloads site.py (as does Python20) and appends path changes after (sys.prefix)/lib- a better alternative to appending to sys.path.
-
-After 20001215:
-
- 1. python.path key appends given path after (sys.prefix)/lib.  Same as autoloaded site.py file.
- 1. A new key, "python.prepath", was added to append path's before (sys.prefix)/lib if needed.
-
-If there is confusion about site.py:
-
- * site.py is automatically loaded on normal startup in Python 2.0 and Jython-2.0a1.  This used to be user-loaded in Python 1.5.2 and JPython11.
-
-----
-
-== Why no command-line history in Jython? ==
-
-The shells and other tools commonly associated with having a command-line history get this functionality from the C 'readline' package. There is experimental 'readline' classes in Java, and is likely to be in Jython's future. For the current release, there is console.py in the demo directory that adds a simple up/down.
-
-It is not commonly the case that programs look to the shell for this functionality, it is more common that readline is compiled in to the shell (or CPython) you are using which provides this functionality. However, some shells wrap the stdin/out of other programs (Jython). Shell mode in emacs is an excellent example. "rlterm", a shell that comes with the Unix version of Yorick, also does this (i.e. "rlterm jython"). There may be many others do the same so you can supplant the functionality of readline.
+Jython 2.7 also supports tab completion.
 
 ----
 
@@ -99,28 +47,16 @@ If you run into complaints about create ".jython", don't worry- Jython can:
 
 == GUI-less installer? ==
 
-If you do not have a GUI, then add -o dir_to_install_to to the command. Jython will install to the specified directory without bringing up the graphical installer. E.g. to install all modules to a Jython-2.1 subdirectory in the current directory do:
+Run 
 
-{{{    <java interpreter> jython-21 -o Jython-2.1 demo lib source }}}
+{{{ java -jar jython-installer.jar --help }}}
+
+for full help, including text console and command line installation.
 
 ----
 
-== Jython cannot find your Java class, even though it exists in the class path. ==
+== Jython cannot find your Java class, even though it exists in the CLASSPATH. ==
 
 Jython cannot find your Java class, even though it exists in the class path. This shows up as "ImportError: cannot import name xxx" or "AttributeError: java package xxx' has no attribute 'yyy'"
 
-This happens when Jython is installed as a Java extension (i.e. when jython.jar is installed in java\jre\lib\ext\) and your classes are installed in the classpath.
-
-The reason is Java extensions can only see other extensions, not other classes defined in the CLASSPATH or passed in to java using the --classpath option.
-
-There are two ways to fix this:
-
-1) Move your classes to the java\jre\lib\ext directory.
-
-2) Remove jython.jar from the java\jre\lib\ext directory and put jython.jar in the CLASSPATH or use the java --classpath option.
-
-(from the Jython-users mailing list)
-
-== Compiling Jython from source on Ubuntu ==
-
-If it complains that ''Unable to locate tools.jar. Expected to find it in /usr/lib/jvm/java-6-openjdk/lib/tools.jar'', then jython compiler is unable to find the correct java for it's use. You '''sudo apt-get install sun-java6-jdk''' and '''sudo update-alternatives --config java''' and select the option to Sun Java and ant build should work fine.
+This happens when Jython is run using java -jar jython.jar. Use the Jython launcher (bin/jython or bin\jython.exe) to ensure that the Jython jar is on the CLASSPATH.
