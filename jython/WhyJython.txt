@@ -61,18 +61,18 @@ There are numerous alternative languages implemented for the Java VM. The follow
 
 == Differences - Python & Jython ==
 
-'''Python'''
+'''Python 2.7'''
   * C
   * Multi-platform
   * Compiles to .pyc
   * Extend with C
   * GIL <<FootNote(Global Interpreter Lock, explained in [http://docs.python.org/api/threads.html Python documentation, chapter 8.1])>>
-  * Python Garbage Collection
+  * Python garbage collection, which mixes ref counting and mark and sweep
 
-'''Jython'''
-  * 100% Java
-  * Any JVM (currently 1.1+)
-  * Compiles to .class
-  * Extend with Java
+'''Jython 2.7'''
+  * Written mostly in Java, does use Java Native Runtime for C access, but works with security manager restrictions
+  * Java 7 or Java 8
+  * Compiles to $py.class files
+  * Extend with Java or C using JFFI; full CFFI, ctypes, and C Extension API support planned for the future
   * Truly multi-threaded
-  * Java garbage collection
+  * Java garbage collection, including choice of standard Java GCs; but also provides same API as Python 2.7 to observe GC 
