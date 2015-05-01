@@ -7,18 +7,12 @@ JythonFaq
 
 ----
 
-== Why can't I multiply inherit from two Java classes? ==
+== Why can't I multiply inherit from two or more Java classes? ==
 
 In earlier versions of JPython, you actually could. This was deliberately disabled in 1.1 for a variety of good reasons.  For one, multiply
 inheriting from two Java classes breaks the single inheritance contract that is assumed when developing Java classes.
 
 Note that you can still multiply inherit from any number of Python classes, and you can inherit from any number of Java interfaces.
-
-----
-
-== Why does dir(someJavaObject) return the empty list? ==
-
-Because the built-in dir() function returns a list of names called from the object's __dict__, __methods__, and __members__ attributes. In Python, an instance's methods live in the instance's class's dictionary, so dir(someJavaObject.__class__) would return a list of the method names (although only for the direct class, not for any base classes).
 
 ----
 
@@ -37,7 +31,7 @@ By default, as in Java, these methods are protected from external access, but th
 
 == How can I access Java protected (static) members from a Jython subclass? ==
 
-The short answer: you can't. At least not without setting the registry option python.security.respectJavaAccessibility to false.
+The short answer: you can't. At least not without setting the registry option ``python.security.respectJavaAccessibility`` to ``false``.
 
 It is difficult to add in a nice manner. The problem is a bit like this:
 
@@ -58,7 +52,7 @@ Such a call does not originate from the subclass, but from internal reflection c
 
 == How can I use a Java null value in Jython? ==
 
-A java null is turned into a Python None value.
+A Java ``null`` is turned into a Python ``None`` value.
 
 {{{
   import java
@@ -76,7 +70,7 @@ A java null is turned into a Python None value.
 
 == Where's the -O switch? ==
 
-Jython 2.0 does not have a -O command-line switch.
+Jython does not have a -O command-line switch.
 
 Assigning __debug__=0 has been used to get -O behavior from things like "assert", but such assignments to __debug__ are considered an error, and in the future, will raise an exception. __debug__ is supposed to be a read-only variable.
 
@@ -84,7 +78,7 @@ Assigning __debug__=0 has been used to get -O behavior from things like "assert"
 
 == When I write to a file, it's empty. Why? ==
 
-You need to close the file (or flush the buffer). You can ensure this happens by using finally. The best way to do this in Python, Jython included, is through the with-statement:
+You need to close the file (or flush the buffer). You can ensure this happens by using ``finally`` or the ``with`` statement:
 
 {{{#!python
     from __future__ import with_statement
@@ -97,7 +91,7 @@ You need to close the file (or flush the buffer). You can ensure this happens by
 
 == The Jython's os module is missing some functions, why? ==
 
-For Posix and Windows, Jython implements most of the os module seen in CPython (excluding most notably fork). Under certain sandbox settings, it's not possible to run the necessary JNA code for this (using JNI), so instead a pure Java version is substituted. This is also what is available when running under other OS's, such as zOS.
+For Posix and Windows, Jython implements most of the os module seen in CPython (excluding most notably ``fork``). Under certain sandbox settings, it's not possible to run the necessary Java Native Runtime code for this (using JNI), so instead a pure Java version is substituted. This is also what is available when running under other OS's, such as zOS.
 
 ----
 
