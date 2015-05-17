@@ -1080,6 +1080,20 @@ python -m cProfile -o stat.prof MYSCRIPY.PY [ARGS...]
 python pyprof2calltree.py -i stat.prof -k
 }}}
 
+[[https://pypi.python.org/pypi/ProfileEye/|ProfileEye]] is a browser-based frontend to [[https://github.com/jrfonseca/gprof2dot|gprof2dot]] using [[http://d3js.org/|d3.js]] for decluttering visual information.
+
+
+Typical usage:
+
+
+{{{
+python -m profile -o output.pstats path/to/your/script arg1 arg2
+gprof2dot -f pstats output.pstats | profile_eye --file-colon_line-colon-label-format > profile_output.html
+
+}}}
+
+
+
 
 ----
 
