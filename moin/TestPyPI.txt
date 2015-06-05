@@ -1,5 +1,4 @@
 = Test PyPI Server =
-
 Just learning the packaging ropes or trying some system integration out?
 
 Why not use our new '''test''' PyPI server at https://testpypi.python.org/pypi
@@ -18,21 +17,27 @@ index-servers=
 
 [pypitest]
 repository = https://testpypi.python.org/pypi
-username = richard
+username = <your user name goes here>
 password = <your password goes here>
 
 [pypi]
 repository = https://pypi.python.org/pypi
-username = richard
+username = <your user name goes here>
 password = <your password goes here>
 }}}
+3. Use the test server URL to register your project (it gives you the right to modify your project on the server):
 
-3. Then use the test server URL when uploading or installing packages:
+{{{
+   python setup.py register -r https://testpypi.python.org/pypi
+}}}
+4. Then uploading it:
 
 {{{
    python setup.py upload -r https://testpypi.python.org/pypi
 }}}
-To install packages from it:
+Now that your project is on the server, test that you can install your package from testpypi (it may be a good idea to run your unit tests from another directory to make sure you are using the version you just installed):
+
 {{{
     pip install -i https://testpypi.python.org/pypi <package name>
 }}}
+If you need to push your project again, change the version number in `setup.py` otherwise the server will give you an error.
