@@ -1,4 +1,3 @@
-
 This page documents the time-complexity (aka "Big O" or "Big Oh") of various operations in current CPython. Other Python implementations (or older or still-under development versions of CPython) may have slightly different performance characteristics. However, it is generally safe to assume that they are not slower by more than a factor of O(log n).
 
 
@@ -66,14 +65,15 @@ See dict -- the implementation is intentionally very similar.
 
 
 
-||'''Operation''' ||'''Average case''' ||'''Worst Case''' ||
-||x in s ||O(1) ||O(n) ||
-||Union s|t ||[[TimeComplexity_(SetCode)|O(len(s)+len(t))]] || ||
-||Intersection s&t ||O(min(len(s), len(t)) ||O(len(s) * len(t)) ||
-||Difference s-t ||O(len(s)) || ||
-||s.difference_update(t) ||O(len(t)) || ||
-||Symmetric Difference s^t ||O(len(s)) ||O(len(s) * len(t)) ||
-||s.symmetric_difference_update(t) ||O(len(t)) ||O(len(t) * len(s)) ||
+||'''Operation''' ||'''Average case''' ||'''Worst Case''' || notes ||
+||x in s ||O(1) ||O(n) || ||
+||Union s|t ||[[TimeComplexity_(SetCode)|O(len(s)+len(t))]] || || ||
+||Intersection s&t ||O(min(len(s), len(t)) ||O(len(s) * len(t)) || replace "min" with "max" if t is not a set ||
+||Multiple intersection s1&s2&..&sn || ||(n-1)*O(l) where l is max(len(s1),..,len(sn))  ||  ||
+||Difference s-t ||O(len(s)) || || ||
+||s.difference_update(t) ||O(len(t)) || || ||
+||Symmetric Difference s^t ||O(len(s)) ||O(len(s) * len(t)) || ||
+||s.symmetric_difference_update(t) ||O(len(t)) ||O(len(t) * len(s)) || ||
 
 
 
