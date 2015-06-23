@@ -36,3 +36,9 @@ For something like a doctest, there unfortunately is no way to write a compatibl
 In Python 3.5, `smtplib.login()` was enhanced to allow for extensible authorization hooks, and a new `smtplib.auth()` method was added, which `.login()` uses.  There is a subtle behavioral difference exposed by this change though.  [[http://www.faqs.org/rfcs/rfc4954.html|RFC 4954]] allows for the SMTP AUTH command to include an optional ''initial-response'' which eliminates a round trip for auth methods that don't require a challenge, such as `AUTH PLAIN`.  Because handling a challenge-response is [[http://bugs.python.org/issue21935|trickier for SMTP servers]], some may not do the right thing when presented with a challenge-response instead of an initial-response.
 
 The resolution of this for compatibility with Python 3.4 and 3.5 is two-fold.  First, we are working in issue 15014 to restore the initial-response behavior in smtplib for auth methods that can support it.  Stay tuned; this will hopefully appear in 3.5 final.  For handling challenge-responses in `smtpd`-based servers, see issue 21935, although this is a bit more controversial.  You might also be interested in [[https://gitlab.com/mailman/mailman/commit/01c85a2acddf0e6a1a95262e2dc2f79e3c3f9e75|this commit to GNU Mailman 3]] which kludges in handling of the challenge-response in its localhost test server.
+
+== email.__version__ ==
+
+ * [[http://bugs.python.org/issue22508|issue 22508]]
+
+In Python 3.5, `email.__version__` was removed.
