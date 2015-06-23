@@ -1,0 +1,38 @@
+= Porting from Python 3.4 to 3.5 =
+
+Some small incompatibilities have been noticed between Python 3.4 and 3.5.  This page collects the known differences and where possible, describes how to mitigate them, along with links to tracker issues where available.  They are listed in no particular order.
+
+== The %x string format ==
+
+* [[https://bugs.python.org/issue19995|Issue 19995]]
+
+The %x string formatter, as well as a few others, accepted non-integer values in earlier Python 3 versions.  In Python 3.4 this was changed to issue a `DeprecationWarning`, although usually silenced.  In Python 3.5 this was changed to raise a `TypeError`.  For example:
+
+{{{
+>>> from uuid import uuid4
+>>> '%.32x' % uuid4()
+}}}
+
+In Python 3.4, this prints a string, but in Python 3.5 you get a `TypeError`.  In this specific case, a fix compatible with both Python versions is:
+
+{{{
+>>> '%.32x' % uuid4().int
+}}}
+
+but YMMV depending on exactly what type of object you had been passing to the format string.
+
+== Nested classes use __qualname__ ==
+
+ * [[https://bugs.python.org/issue22032|issue 22032]]
+
+In Python 3.4, when a class was printed, for example when an exception was raised in a doctest, the class was printed using `'%s.%s' % (self.__class__.__module__, self.__class__.__name__)` but this was inaccurate when the class was nested.  In Python 3.5 this was changed to use the class's [[https://www.python.org/dev/peps/pep-3155/|__qualname__]] attribute.  While more accurate, this can break doctests, as seen in this [[https://bugs.launchpad.net/zope.testing/+bug/1467644|zope.testing]] bug.
+
+For something like a doctest, there unfortunately is no way to write a compatible doctest for both Python 3.4 and 3.5 without writing a custom checker for `doctest.DocTestSuite()`, which is how zope.testing was fixed.  Or of course, you could not raise a nested class.
+
+== smtplib.login() ==
+
+ * [[http://bugs.python.org/issue15014|issue 15014]]
+
+In Python 3.5, `smtplib.login()` was enhanced to allow for extensible authorization hooks, and a new `smtplib.auth()` method was added, which `.login()` uses.  There is a subtle behavioral difference exposed by this change though.  [[http://www.faqs.org/rfcs/rfc4954.html|RFC 4954]] allows for the SMTP AUTH command to include an optional ''initial-response'' which eliminates a round trip for auth methods that don't require a challenge, such as `AUTH PLAIN`.  Because handling a challenge-response is [[http://bugs.python.org/issue21935|trickier for SMTP servers]], some may not do the right thing when presented with a challenge-response instead of an initial-response.
+
+The resolution of this for compatibility with Python 3.4 and 3.5 is two-fold.  First, we are working in issue 15014 to restore the initial-response behavior in smtplib for auth methods that can support it.  Stay tuned; this will hopefully appear in 3.5 final.  For handling challenge-responses in `smtpd`-based servers, see issue 21935, although this is a bit more controversial.  You might also be interested in [[https://gitlab.com/mailman/mailman/commit/01c85a2acddf0e6a1a95262e2dc2f79e3c3f9e75|this commit to GNU Mailman 3]] which kludges in handling of the challenge-response in its localhost test server.
