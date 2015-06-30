@@ -50,3 +50,7 @@ In Python 3.5, `email.__version__` was removed.
 This exception has been removed, and other changes to [[https://docs.python.org/3/library/html.parser.html|html.parser]] module since 3.4.  This affected [[https://pypi.python.org/pypi/Sphinx/1.3.1|Sphinx]] which imported the exception through `six.moves.html_parser`.
 
 Resolution: don't import this exception.  It was deprecated anyway since Python 3.3
+
+== pytest ==
+
+pytest is currently [[https://github.com/pytest-dev/pytest/issues/744|incompatible with Python 3.5]] because the API of the ast tree that pytest rewrites has changed.  A workaround is to invoke pytest with `--assert=plain`.
