@@ -2,6 +2,13 @@
 
 Some small incompatibilities have been noticed between Python 3.4 and 3.5.  This page collects the known differences and where possible, describes how to mitigate them, along with links to tracker issues where available.  They are listed in no particular order.
 
+== ast API changes ==
+
+The `ast` modules API is not guaranteed to be stable between Python releases, and indeed it has changed in Python 3.5.  This breaks several projects which haven't yet ported to the new API, including [[http://genshi.edgewall.org/ticket/602|genshi]] and [[https://github.com/pytest-dev/pytest/issues/744|pytest]].
+
+A workaround for the latter is to invoke pytest with `--assert=plain`.
+
+
 == The %x string format ==
 
  * [[https://bugs.python.org/issue19995|Issue 19995]]
@@ -50,7 +57,3 @@ In Python 3.5, `email.__version__` was removed.
 This exception has been removed, and other changes to [[https://docs.python.org/3/library/html.parser.html|html.parser]] module since 3.4.  This affected [[https://pypi.python.org/pypi/Sphinx/1.3.1|Sphinx]] which imported the exception through `six.moves.html_parser`.
 
 Resolution: don't import this exception.  It was deprecated anyway since Python 3.3
-
-== pytest ==
-
-pytest is currently [[https://github.com/pytest-dev/pytest/issues/744|incompatible with Python 3.5]] because the API of the ast tree that pytest rewrites has changed.  A workaround is to invoke pytest with `--assert=plain`.
