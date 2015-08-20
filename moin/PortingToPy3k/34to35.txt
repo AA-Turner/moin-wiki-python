@@ -65,3 +65,15 @@ Resolution: don't import this exception.  It was deprecated anyway since Python 
 Changes the behavior when `StopIteration` is raised inside an iterator, and clarifies that exhausted iterators are supposed to `return` instead of raising that exception.  We've seen some failures when the deprecation warnings that raising the exception in Python 3.5 causes, produce unexpected stderr output.
 
 Resolution: Don't `raise StopIteration` when your iterator is exhausted, just 'return'.  This will work in all Pythons supporting iterators.
+
+== .assert_called() on mock objects ==
+
+ * [[https://bugs.python.org/issue21238|issue 21238]]
+
+For some reason, I've seen quite a few test suites that call the `.assert_called()` method on a mock object, thinking that this will prove that the mock was called, irrespective of any arguments.  Actually, this does nothing!  Typically, mock objects just create the nonexistent attributes on the fly, but in Python 3.5, mocks have been changed to raise `AttributeError` when the missing method starts with `assert` (or its common misspelling `assret`).  This means that `mock.assert_called()` at best did nothing and at worst masked a failing test in older Pythons, so it's good that Python 3.5 catches these.
+
+Use this instead:
+
+{{{
+    self.assertTrue(mock_object.called)
+}}}
