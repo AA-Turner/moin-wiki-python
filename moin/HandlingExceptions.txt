@@ -18,7 +18,7 @@ If you wanted to examine the exception from code, you could have:
 (x,y) = (5,0)
 try:
   z = x/y
-except ZeroDivisionError, e:
+except ZeroDivisionError as e:
   z = e # representation: "<exceptions.ZeroDivisionError instance at 0x817426c>"
 print z # output: "integer division or modulo by zero"
 }}}
@@ -110,11 +110,11 @@ However, it originally was:
 #!python
 try:
   untrusted.execute()
-except Exception, e:
+except Exception as e:
   write_to_page( "<p>Error: %s</p>" % str(e) )
 }}}
 
-Someone pointed out that "except" catches more than just "except Exception, e."
+Someone pointed out that "except" catches more than just "except Exception as e."
 
 ''Why is that the case? What is the difference?''-- LionKimbro
 
@@ -146,7 +146,7 @@ You can do something like:
 #!python
 try:
   a, b, c = d
-except Exception, e:
+except Exception as e:
   e.args += (d,)
   raise
 }}}
@@ -272,7 +272,7 @@ and call it with:
 {{{
 try:
    print my_function(args)
-except SomeError, msg:
+except SomeError as msg:
    print msg
    # and fail...
 # and now continue safely here...
