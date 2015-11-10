@@ -1,0 +1,73 @@
+'''THIS PAGE IS WORK IN PROGRESS'''
+
+Even if Python is an interpreted language, you may need to install Windows C++ compilers in some cases.
+Unlike Linux, compilers for Windows are not included by default in the OS.
+
+By example, you will need to use them if you want :
+ * Install a non-pure Python package from sources with [[https://pip.pypa.io/|Pip]] (If there is no [[http://wheel.readthedocs.org|Wheel package]] provided).
+ * Compile a [[http://cython.org/|Cython]] file.
+
+Microsoft provide official C++ compilers called ''Visual C++'', you can find them with ''Visual Studio'' or, for some versions, in standalone distribution.
+Some alternates compilers exists like [[http://mingw.org/|MinGW]], but the CPython implementation is compiled with Microsoft official compilers and compatibility may not be perfect.
+
+The compiler architecture must be the same as Python (Example: If you use Python 64bit, you have to use a 64bit compiler)
+
+= Which Microsoft Visual C++ compiler use with a specified Python version ? =
+Each Python version use a specific compiler version (Example : ''CPython 2.7'' use ''Visual C++ 9.0'', ''CPython 3.3'' use ''Visual C++ 10.0'', ...). So, you need to install the compiler version linked to you Python version  :
+||'''Visual Studio'''||'''Visual C++'''||'''CPython'''||
+||2015||14.0||3.5||
+||2010||10.0||3.3, 3.4||
+||2008||9.0||2.6, 2.7, 3.0, 3.1, 3.2||
+
+
+= Compilers Installation =
+
+== Microsoft Visual C++ 14.0/2015 standalone version: Visual C++ Build Tools 2015 (32bit, 64bit) ==
+
+'''Work in progress...'''
+
+This is the standalone version of ''Visual C++ 14.0'' compiler, you don't need to install ''Visual Studio 2015''.
+
+ * [[https://www.microsoft.com/en-us/download/details.aspx?id=49512|Microsoft Visual C++ Build Tools 2015]]
+ * [[https://www.microsoft.com/en-us/download/details.aspx?id=48145|Visual C++ Redistributable for Visual Studio 2015]]
+
+== Microsoft Visual C++ 10.0/2010 standalone version: Windows SDK 7.1 (32bit, 64bit) ==
+
+This is the standalone version of ''Visual C++ 10.0'' compiler, you don't need to install ''Visual Studio 2010''.
+
+ * Uninstall ''Microsoft Visual C++ 2010 Redistribuable'' if present (in x86 (32bits) and x64 version). If present, it can cause error on Windows SDK 7.1 installation.
+ * Install ''[[https://www.microsoft.com/en-US/download/details.aspx?id=17851|Microsoft .NET Framework 4]]'' if not present.
+ * Install ''[[https://www.microsoft.com/en-us/download/details.aspx?id=8279|Microsoft Windows SDK for Windows 7 and .NET Framework 4]]''. Only ''Windows headers and libraries'' and ''Visual C++ Compilers'' options are needed, you can uncheck all others.
+ * Make a back up and edit the following file: ''C:\Program Files\Microsoft Visual Studio 10.0\VC\vcvarsall.bat'' and replace its content with (Replace ''/x86'' by ''/x64'' if you want compile for Python 64bits):
+{{{
+ CALL "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x86 /release
+ set DISTUTILS_USE_SDK=1
+ set MSSdk=1
+}}}
+ * Install ''[[https://www.microsoft.com/en-us/download/details.aspx?id=26999|Microsoft Visual C++ 2010 Redistribuable]]'' (32bit and/or 64bit).
+
+== Microsoft Visual C++ 9.0/2008 standalone version: Visual C++ Compiler for Python 2.7 (32bit, 64bit) ==
+
+This is the standalone version of ''Visual C++ 9.0'' compiler, you don't need to install ''Visual Studio 2008''.
+
+Note: Even if this compiler specify Python 2.7, you can use it with all Python version Using ''Visual C++ 9.0''.
+
+ * Install ''[[https://www.microsoft.com/en-us/download/details.aspx?id=26368|Microsoft Visual C++ 2008 Redistribuable]]'' (32bit and/or 64bit).
+ * Install ''[[https://www.microsoft.com/en-us/download/details.aspx?id=44266|Microsoft Visual C++ Compiler for Python 2.7]]''.
+
+== MinGW (32Bit only) ==
+MinGW is an alternate compiler that work with all Python versions. Some incompatibilities may occur with CPython official distribution which is build with Microsoft Visual C++.
+ * Install ''[[http://sourceforge.net/projects/mingw/files/|Minimalist GNU For Windows]]'' in ''C:\MinGW''.
+ * Open M''inGW Installation Manager'', check ''mingw32-base'' and ''mingw32-gcc-g++'', and ''Apply Changes'' in the ''Installation'' menu.
+ * Add ''C:\MinGW\bin'' to ''PATH'' environment variable (With ";" before is PATH is not empty).
+ * Create a ''distutils.cfg'' file with the following content in the folder ''\Lib\distutils'' in Python install directory :
+{{{
+ [build]
+ compiler=mingw32
+ 
+ [build_ext]
+ compiler=mingw32
+}}}
+
+= Links =
+ *[[https://support.microsoft.com/en-us/kb/2977003|Microsoft : The latest supported Visual C++ downloads]] : List of up to date ''Visual C++ Redistribuable'' and ''Visual Studio'' packages.
