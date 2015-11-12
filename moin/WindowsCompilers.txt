@@ -10,7 +10,7 @@ By example, you will need to use them if you want :
 Microsoft provide official C++ compilers called ''Visual C++'', you can find them with ''Visual Studio'' or, for some versions, in standalone distribution.
 Some alternates compilers exists like [[http://mingw.org/|MinGW]], but the CPython implementation is compiled with Microsoft official compilers and compatibility may not be perfect.
 
-The compiler architecture must be the same as Python (Example: If you use Python 64bit, you have to use a 64bit compiler)
+The compiler architecture must be the same as Python (Example: If you use Python 64bit, you have to use a x64 compiler). 
 
 = Which Microsoft Visual C++ compiler use with a specified Python version ? =
 Each Python version use a specific compiler version (Example : ''CPython 2.7'' use ''Visual C++ 9.0'', ''CPython 3.3'' use ''Visual C++ 10.0'', ...). So, you need to install the compiler version linked to you Python version  :
@@ -19,8 +19,15 @@ Each Python version use a specific compiler version (Example : ''CPython 2.7'' u
 ||2010||10.0||3.3, 3.4||
 ||2008||9.0||2.6, 2.7, 3.0, 3.1, 3.2||
 
-
 = Compilers Installation =
+
+Compatible architectures is specified for each compiler between brackets.
+
+This table resume architecture names correspondence:
+||'''Windows'''||'''Architecture'''||
+||32Bit||x86||
+||64Bit||x64||
+||Itanium||ia64||
 
 == Microsoft Visual C++ 14.0/2015 standalone version: Visual C++ Build Tools 2015 (32bit, 64bit) ==
 
@@ -31,20 +38,46 @@ This is the standalone version of ''Visual C++ 14.0'' compiler, you don't need t
  * [[https://www.microsoft.com/en-us/download/details.aspx?id=49512|Microsoft Visual C++ Build Tools 2015]]
  * [[https://www.microsoft.com/en-us/download/details.aspx?id=48145|Visual C++ Redistributable for Visual Studio 2015]]
 
-== Microsoft Visual C++ 10.0/2010 standalone version: Windows SDK 7.1 (32bit, 64bit) ==
+== Microsoft Visual C++ 10.0/2010 standalone version: Windows SDK 7.1 (x86, x64, ia64) ==
 
 This is the standalone version of ''Visual C++ 10.0'' compiler, you don't need to install ''Visual Studio 2010''.
 
- * Uninstall ''Microsoft Visual C++ 2010 Redistribuable'' if present (in x86 (32bits) and x64 version). If present, it can cause error on Windows SDK 7.1 installation.
+ * Uninstall ''Microsoft Visual C++ 2010 Redistribuable'' if present (all versions and architecture). If present, it can cause error on Windows SDK 7.1 installation.
  * Install ''[[https://www.microsoft.com/en-US/download/details.aspx?id=17851|Microsoft .NET Framework 4]]'' if not present.
  * Install ''[[https://www.microsoft.com/en-us/download/details.aspx?id=8279|Microsoft Windows SDK for Windows 7 and .NET Framework 4]]''. Only ''Windows headers and libraries'' and ''Visual C++ Compilers'' options are needed, you can uncheck all others.
- * Make a back up and edit the following file: ''C:\Program Files\Microsoft Visual Studio 10.0\VC\vcvarsall.bat'' and replace its content with (Replace ''/x86'' by ''/x64'' if you want compile for Python 64bits):
+ * reinstall ''[[https://www.microsoft.com/en-us/download/details.aspx?id=26999|Microsoft Visual C++ 2010 Redistribuable]]'' (In all previously installed architectures).
+
+If you want automatic use of this compiler with Python : 
+ * Make a back up of ''C:\Program Files\Microsoft Visual Studio 10.0\VC\vcvarsall.bat''
+ * Edit it and replace its content with the following text:
 {{{
- CALL "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x86 /release
- set DISTUTILS_USE_SDK=1
- set MSSdk=1
+@echo off
+rem vcvarsall changes for automatic use of "Windows 7.1 SDK" with Distutils on Python
+set DISTUTILS_USE_SDK=1
+set MSSdk=1
+
+if "%1" == "" goto x86
+if /i %1 == x86       goto x86
+if /i %1 == amd64     goto amd64
+if /i %1 == x64       goto amd64
+if /i %1 == ia64      goto ia64
+
+:x86
+CALL "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x86 /release
+goto :eof
+
+:amd64
+CALL "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64 /release
+goto :eof
+
+:ia64
+CALL "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /ia64 /release
+goto :eof
 }}}
- * Install ''[[https://www.microsoft.com/en-us/download/details.aspx?id=26999|Microsoft Visual C++ 2010 Redistribuable]]'' (32bit and/or 64bit).
+ * ''Distutils'' will now automatically call the compiler when needed.
+
+If you don't want to modify ''vcvarsall.bat'' you have to run the ''Windows SDK 7.1 Command Prompt'' (''C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd'') each time you want compile with Python.
+By default, it use the ''x86 Debug'' configuration. Use ''/x64'' or ''/ia64'' arguments for change architecture and ''/Release'' argument for use the release configuration.
 
 == Microsoft Visual C++ 9.0/2008 standalone version: Visual C++ Compiler for Python 2.7 (32bit, 64bit) ==
 
