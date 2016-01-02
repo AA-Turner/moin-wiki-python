@@ -7,6 +7,71 @@ See also the TrackerDevelopment_ page and the DesiredTrackerFeatures_ pages.
 .. contents::
   :class: table-of-contents
 
+Git/GitHub integration
+======================
+
+While migrating to Git/GitHub, the following things need to be done:
+
+Converting patches to Pull Requests
+-----------------------------------
+A new detector that converts patches to pull requests should be written.
+The tracker will probably require:
+
+* a local git clone of cpython where to commit patches;
+* a github account used to post pull requests;
+* a github clone of cpython;
+
+This is an outline of its possible functioning:
+
+1. a new patch is submitted and triggers the detector;
+2. the detector commits the patch on its local clone;
+3. the detector pushes the patch on its github clone;
+4. the detector sends a pull request to the official CPython clone;
+5. the detector adds a link to the newly created PR on the issue page;
+
+Issues:
+
+* should the detector create a separate branch for every issue/patch?
+* is it possible to use the correct author/committer on step 2?
+* is it possible to skip step 3 and send the PR from the local clone?
+* are there better approaches?
+
+Pull Request List
+-----------------
+A new list for PRs should be added after the attachments list:
+
++----------+--------------+--------+------------------+--------+
+| PR       | Author       | Status | Comment          | Edit   |
++==========+==============+========+==================+========+
+| PR  123  | ezio.melotti | Merged | Fix issue #12345 | [edit] |
++----------+--------------+--------+------------------+--------+
+| PR  125  | ezio.melotti | Open   | Improve docs     | [edit] |
++----------+--------------+--------+------------------+--------+
+| PR [___] [Add New Pull Request]                              |
++--------------------------------------------------------------+
+
+The list is updated when:
+
+* a patch is uploaded and a PR is automatically created;
+* the user enters a PR number in the specific field at the bottom;
+
+The list might also be updated when:
+
+* through an API call (if/when the REST API is added to Roundup it should work out of the box);
+* a PR number is mentioned in a message
+
+  * pro: mentioning the PR num in the message is enough -- no need to write it in the field;
+  * pro: useful for bots that can't edit fields and only send messages via email;
+  * cons: if the PR of a related issue is mentioned it will be included too;
+
+Auto-generated Links
+--------------------
+The `extension that generates links <https://hg.python.org/tracker/python-dev/file/tip/extensions/local_replace.py>`_, also needs to be updated:
+
+* update links for both cs ids and paths to point to GitHub;
+* add links to pull requests on GitHub when "PR num" or "pull request num" are used in messages;
+
+
 Workflow
 ========
 
