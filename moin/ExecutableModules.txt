@@ -1,0 +1,37 @@
+Python 2.4 added the `-m` option to execute modules as scripts ([[https://docs.python.org/3/using/cmdline.html#cmdoption-m|Python 3.x documentation]], [[https://docs.python.org/2/using/cmdline.html#cmdoption-m|2.x documentation]]. [[https://www.python.org/dev/peps/pep-0338/|PEP 338]], adopted in Python 2.5, adds the ability to execute modules in the search path.
+
+= Executable Standard Library Modules =
+The following standard library modules work as command-line tools:
+
+ * `python3 -m http.server` or `python2 -m SimpleHTTPServer` - Start a web server, serving files from the current directory ([[https://docs.python.org/3/library/http.server.html#http.server.SimpleHTTPRequestHandler|full Python 3 docs]], [[https://docs.python.org/2/library/simplehttpserver.html|Python 2 docs]]). 
+ * `python -m json.tool path/to/data.json` - Validate and pretty-print JSON. Omitting the path will read from standard input ([[https://docs.python.org/3/library/json.html#module-json.tool|full docs]]).
+ * `python -m pdb script.py` - Run a script in the debugger, starting post-mortem debugging on unhandled exceptions ([[https://docs.python.org/3/library/pdb.htm|full docs]]).
+ * `python -m timeit -s 'import string' '"x" in string.lowercase'` - Run some setup code (`import string`), and then run test code many (1,000,000 times) to time execution of the code. ([[https://docs.python.org/3/library/timeit.html|full docs]])
+
+= Writing Executable Modules =
+Here's a sample executable Python script:
+
+{{{
+#!/usr/bin/env python
+
+def main():
+    import sys
+
+    for pos, arg in enumerate(sys.argv):
+        print('Argument %d: %s' % (pos, arg))
+
+
+if __name__ == '__main__':
+    main()
+}}}
+
+If this file is importable as mylib.script, then running `python -m mylib.script foo bar` will output:
+{{{
+Argument 0: /full/path/to/mylib/script.py
+Argument 1: foo
+Argument 2: bar
+}}}
+
+The starting line `#!/usr/bin/env python` is used in UNIX-like shells. If the script is given execute permissions, then it can also be executed directly.
+
+A fully-featured script should use a library to parse the command line, such as [[https://docs.python.org/3/library/argparse.html|argparse]].  See the [[https://github.com/python/cpython/blob/master/Lib/json/tool.py|source for json.tool]] for a fuller example.
