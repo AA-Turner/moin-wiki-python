@@ -62,6 +62,7 @@ The introduction of such logic may also cause problems for some XML-based tools.
  * [[http://www.kuwata-lab.com/tenjin/|Tenjin]] is a fast template engine implemented in pure Python. Some benchmarks have shown it to be about x2 faster than Mako, x3 than Cheetah, x9 than Django, x60 than Kid in some situations. However [[http://mindref.blogspot.com/2012/07/python-fastest-template.html|50% slower]] wheezy.template.
  * [[http://texthon.chipsforbrain.org|Texthon]] - Python-eval based template engine with a focus on generating readable code.
  * [[http://www.sourceforge.net/projects/the-next-please|thrases]] - format-free Python needing just needing a reserved string (default: ~~) for separating phrases. Template.init() analyses, which phrases are python and which not, building a python script for exec(). This script is containing only minimal overhead then - Template.render() is near to the theoretical maximum speed. Template.render() can also write directly on a file descriptor for improved performance.
+ * [[https://github.com/tetframework/Tonnikala|Tonnikala]] - XML syntax that is very close to that of Kajiki. Tonnikala writes code as Abstract Syntax Trees and optimizes the resulting trees extensively
  * [[https://github.com/transceptor-technology/trender|trender]] - A fast, simple and stand-alone Python template engine.
  * [[https://bitbucket.org/akorn/wheezy.template|wheezy.template]] is written in pure Python code. It is a lightweight template library. The design goals achived:
   * Compact, Expressive, Clean: Minimizes the number of keystrokes required to build a template. Enables fast and well read coding.
@@ -82,7 +83,7 @@ The following engines feature template documents whose sections are marked using
 }}}
 In some systems, the sections are then manipulated within program code; in others, the template structure indicates sections which are to be repeated, omitted, and so on, and the templating system then merges the template with some data structure provided by the program. Generally, the reason for annotating templates in this way (particularly through the use of attributes) is to better support the editing of such templates in XML-based tools which might otherwise complain about or damage template information if it were not included carefully in documents.
 
- * [[ClearSilver]] - uses special elements/tags
+ * ClearSilver - uses special elements/tags
  * [[http://sourceforge.net/projects/py-templates//|HTMLTemplate]] - special attributes denote HTML elements that can be manipulated as Python objects ('''As of 2013-12-05, this project is no longer under active development.''')
  * JonsPythonModules - uses special comment-like markers
  * [[http://www.plope.com/software/meld3/|meld3]] and [[http://www.entrian.com/PyMeld|PyMeld]] are very similar
@@ -102,7 +103,7 @@ In other systems, the annotations are actually evaluated in order to produce rep
  * [[http://htmltmpl.sourceforge.net/|htmltmpl]] - uses HTML-like elements/tags and supports compilation
  * [[https://pypi.python.org/pypi/kid/|Kid]] - XML based, compiling template engine
  * [[http://www.owlfish.com/software/simpleTAL/|SimpleTAL]] - introduces a certain amount of logic but in an XML-compatible fashion
- * [[http://sourceforge.net/projects/cherrypy/|CherryTemplate]] - is a Pythonic HTTP toolkit. 
+ * [[http://sourceforge.net/projects/cherrypy/|CherryTemplate]] - is a Pythonic HTTP toolkit.
 
 == HTML Shorthand Processors ==
 The libraries in this section implement simpler markup languages that can be automatically converted to HTML. This lets you avoid having to write HTML by hand.
@@ -154,5 +155,6 @@ The following templating engines are accessible or usable via Jython:
 
 == CPython-accessible C Templating Engines ==
  * ClearSilver - HTML generation, uses HDF as input format
+
 ----
 CategoryTemplate
