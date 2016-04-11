@@ -10,7 +10,7 @@ Age: 30
 Single: True
 
 [SectionTwo]
-FavoriteColor=Green
+FavoriteColor = Green
 [SectionThree]
 FamilyName: Johnson
 
@@ -52,9 +52,9 @@ def ConfigSectionMap(section):
 
 Now the code:
 {{{
->>>Name = ConfigSectionMap("SectionOne")['name']
->>>Age = ConfigSectionMap("SectionOne")['age']
->>>print "Hello %s. You are %s years old." % (Name, Age)
+>>> Name = ConfigSectionMap("SectionOne")['name']
+>>> Age = ConfigSectionMap("SectionOne")['age']
+>>> print "Hello %s. You are %s years old." % (Name, Age)
 Hello Derek. You are 30 years old.
 }}}
 ----
@@ -62,8 +62,8 @@ This works great most of the time, but what about the "{{{Value: Yes}}}" and "{{
 {{{ Config.getboolean(section, option) }}}
 Example, continuing from above:
 {{{
->>>single = Config.getboolean("SectionOne", "single")
->>>single
+>>> single = Config.getboolean("SectionOne", "single")
+>>> single
 True
 }}}
 
@@ -94,15 +94,15 @@ cfgfile.close()
 Using ExtendedInterpolation one can make use of cross-chapter flexible parameter values. For instance, using the following ini file:
 {{{
 [SectionOne]
-Param1:  Hello
-Param2:  World
+Param1: Hello
+Param2: World
 
 [SectionTwo]
-Param1:  ${SectionOne:Param1} ${SectionOne:Param2}
+Param1: ${SectionOne:Param1} ${SectionOne:Param2}
 
 [SectionThree]
-Alpha:   One
-Bravo:   Two
+Alpha: One
+Bravo: Two
 Charlie: ${Alpha} Mississippi
 }}}
 
