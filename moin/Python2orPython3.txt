@@ -17,37 +17,41 @@ However, the broader Python ecosystem has amassed a significant amount of qualit
 == Which version should I use? ==
 Which version you ought to use is mostly dependent on what you want to get done.
 
-If you can do exactly what you want with Python 3.x, great! There are a few minor downsides, such as slightly worse library support<<FootNote(Amongst still-maintained packages: https://python3wos.appspot.com)>> and the fact that most current Linux distributions and Macs are still using 2.x as default, but as a language Python 3.x is definitely ready. As long as Python 3.x is installed on your user's computers (which ought to be easy, since many people reading this may only be developing something for themselves or an environment they control) and you're writing things where you know none of the Python 2.x modules are needed, it is an excellent choice. Also, most linux distributions have Python 3.x already installed, and all have it available for end-users. Some are phasing out Python 2 as preinstalled default.<<FootNote(Arch Linux links python to python3, and Ubuntu and Fedora switch defaults: https://wiki.ubuntu.com/Python/3 https://fedoraproject.org/wiki/Changes/Python_3_as_Default)>>
+If you can do exactly what you want with Python 3.x, great! There are a few minor downsides, such as very slightly worse library support<<FootNote(Amongst still-maintained packages: https://python3wos.appspot.com)>> and the fact that some current Linux distributions and Macs are still using 2.x as default (although Python 3 ships with many of them), but as a language Python 3.x is definitely ready. As long as Python 3.x is installed on your user's computers (which ought to be easy, since many people reading this may only be developing something for themselves or an environment they control) and you're writing things where you know none of the Python 2.x modules are needed, it is an excellent choice. Also, most Linux distributions have Python 3.x already installed, and all have it available for end-users. Some are phasing out Python 2 as preinstalled default.<<FootNote(Arch Linux links python to python3, and Ubuntu and Fedora switch defaults: https://wiki.ubuntu.com/Python/3 https://fedoraproject.org/wiki/Changes/Python_3_as_Default)>>
 
-In particular, instructors introducing Python to new programmers may want to consider teaching Python 3 first and then introducing the differences in Python 2 afterwards (if necessary), since Python 3 [[http://python-notes.curiousefficiency.org/en/latest/python3/questions_and_answers.html#why-is-python-3-considered-a-better-language-to-teach-beginning-programmers|eliminates many quirks]] that can unnecessarily trip up beginning programmers trying to learn Python 2.
+In particular, instructors introducing Python to new programmers should consider teaching Python 3 first and then introducing the differences in Python 2 afterwards (if necessary), since Python 3 [[http://python-notes.curiousefficiency.org/en/latest/python3/questions_and_answers.html#why-is-python-3-considered-a-better-language-to-teach-beginning-programmers|eliminates many quirks]] that can unnecessarily trip up beginning programmers trying to learn Python 2.
 
 However, there are some key issues that may require you to use Python 2 rather than Python 3.
 
  * Firstly, if you're deploying to an environment you don't control, that may impose a specific version, rather than allowing you a free selection from the available versions.
  * Secondly, if you want to use a specific third party package or utility that doesn't yet have a released version that is compatible with Python 3, and porting that package is a non-trivial task, you may choose to use Python 2 in order to retain access to that package.
 
-One popular module that don't yet support Python 3 is [[http://twistedmatrix.com/trac/wiki|Twisted]] (for networking and other applications).  Most actively maintained libraries have people working on 3.x support. For some libraries, it's more of a priority than others: Twisted, for example, is mostly focused on production servers, where supporting older versions of Python is important, let alone supporting a new version that includes major changes to the language. (Twisted is a prime example of a major package where [[http://twistedmatrix.com/trac/milestone/Python-3.x|porting to 3.x is far from trivial]].)
-
-For creating GUI applications Python 3 already broadly supported with Tkinter in the standard library.  Python 3 has been supported by [[PyQt4|PyQt]] almost from the day Python 3 was released; PySide added Python 3 support in 2011. GTK+ GUIs can be created with [[https://live.gnome.org/PyGObject|PyGObject]] which supports Python 3 and is the successor to PyGtk.
+Python 3 already broadly supports creating GUI applications, with Tkinter in the standard library. Python 3 has been supported by [[PyQt4|PyQt]] almost from the day Python 3 was released; PySide added Python 3 support in 2011. GTK+ GUIs can be created with [[https://live.gnome.org/PyGObject|PyGObject]] which supports Python 3 and is the successor to PyGtk.
 
 Many other major packages have been ported to Python 3 including:
 
- * [[http://www.numpy.org|numpy]] (for number crunching)
- * [[https://docs.djangoproject.com/en/dev/faq/install/#can-i-use-django-with-python-3|Django]], [[http://flask.pocoo.org/|Flask]], CherryPy and [[https://pyramid.readthedocs.org/en/latest|Pyramid]] (for Web sites)
- * PIL (an image processing module) was superseded by its fork Pillow, which supports Python3.
+ * [[https://www.numpy.org|NumPy]] and [[https://www.scipy.org|SciPy]] (for number crunching and scientific computing)
+ * [[https://www.djangoproject.com/|Django]], [[http://flask.pocoo.org/|Flask]], CherryPy and [[https://pyramid.readthedocs.org/en/latest|Pyramid]] (for Web sites)
+ * PIL (an image processing module) was superseded by its fork [[https://python-pillow.org/|Pillow]], which supports Python 3.
  * [[http://cx-freeze.sourceforge.net/|cx_Freeze]] (for packaging applications with their dependencies)
  * [[http://www.py2exe.org/index.cgi/Tutorial#Step52|py2exe]] (for packaging your application for Windows users)
+ * [[http://opencv.org|OpenCV 3]], (an open source computer vision and machine learning library) now supports Python 3 in versions 3.0 and later.
+ * [[http://python-requests.org|Requests]], (an HTTP library for humans)
+ * [[http://lxml.de|lxml]], (a powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API)
+ * [[http://www.crummy.com/software/BeautifulSoup/bs4/|BeautifulSoup4]], (a screen-scraping library for parsing HTML and XML)
+ * The [[http://ipython.org|IPython]]/[[http://jupyter.org|Jupyter]] project for interactive computing fully supports Python 3.
+ * And many, many more!
 
 If you want to use Python 3.x, but you're afraid to because of a dependency, it's probably worthwhile doing some research first. This is a work in progress and this wiki page might be outdated. Furthermore, with the large common subset supported by both Python 2.6+ and Python 3.3+, much modern Python code should run largely unmodified on Python 3, especially code written to interoperate with web and GUI frameworks that force applications to correctly distinguish binary data and text (some assistance from the [[https://pypi.python.org/pypi/six|six compatibility module]] may be needed to handle name changes.
 
-Even though the [[http://docs.python.org|official python documentation]] and the [[http://docs.python.org/3/tutorial/|tutorial]] have been updated for Python 3, there is still a lot of documentation (including examples) on the Web and in reference books that use Python 2, although more are being updated all the time. This can require some adjustment to make things work with Python 3 instead.
+Even though the [[http://docs.python.org|official python documentation]] and the [[http://docs.python.org/3/tutorial/|tutorial]] have been completely updated for Python 3, there is still a lot of documentation (including examples) on the Web and in reference books that use Python 2, although more are being updated all the time. This can require some adjustment to make things work with Python 3 instead.
 
 Some people just don't want to use Python 3.x, which is their prerogative.  However, they are [[2.x-vs-3.x-survey|in the minority]].
 
 It is worth noting that if you wish to use an alternative implementation of Python such as IronPython, [[Jython]] or [[http://pyston.org|Pyston]] (or one of the longer list of Python platform or compiler [[PythonImplementations|implementations]]), Python 3 support is still relatively rare. This may affect you if you are interested in choosing such an implementation for reasons of integration with other systems or for performance.
 
 == But wouldn't I want to avoid 2.x? It's an old language with many mistakes, and it took a major version to get them out. ==
-Well, not entirely. Some of the less disruptive improvements in 3.0 and 3.1 have been backported to 2.6 and 2.7, respectively. For more details on the backported features, see [[http://docs.python.org/release/2.6.4/whatsnew/2.6.html|What's New in Python 2.6]] and [[http://docs.python.org/dev/whatsnew/2.7.html|What's New in Python 2.7]].
+Well, not entirely. Some of the less disruptive improvements in 3.0 and 3.1 have been backported to 2.6 and 2.7, respectively. For more details on the backported features, see [[https://docs.python.org/2.6/whatsnew/2.6.html|What's New in Python 2.6]] and [[https://docs.python.org/2.7/whatsnew/2.7.html|What's New in Python 2.7]].
 
 A non-exhaustive list of features which are only available in 3.x releases and won't be backported to the 2.x series:
 
@@ -78,9 +82,9 @@ How you're supposed to do porting is explained in this [[http://docs.python.org/
 
 If the tests still fail under Python 3, then the standard library's 2to3 utility can often automatically create a version that will run under Python 3. Alternatively, Armin Ronacher's [[https://pypi.python.org/pypi/modernize|python-modernize]] utility instead targets the common subset of Python 2.6+ and either 3.2+ or 3.3+ (depending on the command line options used). (If using the latter, it's important to check the tests still pass under Python 2 as well!)
 
-Either approach makes it feasible to support 2.x and 3.x in parallel from a single 2.x code base. This is much easier than trying to maintain separate 2.x and 3.x branches in parallel (just ask the core Python developers about that one - they've been stuck with doing that for a few years now!).
+Either approach makes it feasible to support 2.x and 3.x in parallel from a single 2.x code base. This is much easier than trying to maintain separate 2.x and 3.x branches in parallel (just ask the core Python developers about that one - they've been stuck with doing that for quite a few years now!).
 
-If the tests still fail after automated conversion or modernisation, the code may be affected by a semantic change between Python 2 and 3 that the converters can't handle automatically and that isn't detected by the -3 switch. Such issues should be rare, but may still exist - if one is encountered, it's worth filing a bug against CPython requesting a new -3 warning.
+If the tests still fail after automated conversion or modernization, the code may be affected by a semantic change between Python 2 and 3 that the converters can't handle automatically and that isn't detected by the -3 switch. Such issues should be rare, but may still exist - if one is encountered, it's worth filing a bug against CPython requesting a new -3 warning.
 
 The porting situation is potentially more complicated if there are C extension modules involved and the project isn't using a wrapper generator like Cython, cffi or SWIG that automatically handles the differences between Python 2 and 3, but even then it is still likely to be easier than inventing your own equivalent package. The [[http://docs.python.org/3/howto/cporting.html|extension porting guide]] covers some of the key differences.
 
@@ -132,7 +136,7 @@ The following modules aren't backports, but are cross-version compatible alterna
 
  * [[https://pypi.python.org/pypi/requests|requests]] (higher level HTTP and HTTPS APIs. requests itself is unlikely to be added to the stdlib for assorted technical reasons, but an equivalent client API based on asyncio is a plausible future addition)
  * [[https://pypi.python.org/pypi/regex|regex]] (an alternative regular expression engine with in principle approval for eventual stdlib inclusion, but requires a PEP to work out the details of the incorporation)
- * [[https://pypi.python.org/pypi/lxml/3.2.4|lxml.etree]] (alternative implementation of the ElementTree XML API)
+ * [[https://pypi.python.org/pypi/lxml/|lxml.etree]] (alternative implementation of the ElementTree XML API)
 
 In addition to the above modules that also support Python 2, the asyncio module added to the standard library in Python 3.4 was originally developed as a PyPI module for Python 3.3:
 
