@@ -19,27 +19,20 @@ Each Python version uses a specific compiler version (e.g. ''CPython 2.7'' uses 
 ||9.0 ||2.6, 2.7, 3.0, 3.1, 3.2 ||
 
 
-
-
 = Compilers Installation and configuration =
 Compatible architectures are specified for each compiler in brackets.
+
+/!\ Before do anything, install or upgrade the ''Setuptools'' Python package. It contain compatibility improvements and add automatic use of compilers:
+{{{
+pip install --upgrade setuptools
+}}}
 
 == Microsoft Visual C++ 14.0 standalone: Visual C++ Build Tools 2015 (x86, x64, ARM) ==
 This is a standalone version of ''Visual C++ 14.0'' compiler, you don't need to install ''Visual Studio 2015''.
 
  * Install ''[[http://landinghub.visualstudio.com/visual-cpp-build-tools|Microsoft Visual C++ Build Tools 2015]]''. Check ''Windows 8.1 SDK'' and ''Windows 10 SDK'' options.
+ * For automatic use of this compiler with Python, ''setuptools'' version must be at least 24.0. For manual use, you have to run your commands from ''Visual C++ Build Tools Command Prompt'' (''C:\Program Files (x86)\Microsoft Visual C++ Build Tools\'') each time you want compile with Python.
 
-You have to run your commands from ''Visual C++ Build Tools Command Prompt'' (''C:\Program Files (x86)\Microsoft Visual C++ Build Tools\'') each time you want compile with Python.
-
-(!) If you want automatic use of this compiler with Python, you can also edit the ''C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat'' and replace its contents with the following text :
-
-{{{#!highlight bat
-rem Vcvarsall for Visual C++ Build Tools 2015
-@echo off
-set vcprogramfiles=%ProgramFiles(x86)%
-if "%vcprogramfiles%"=="" set vcprogramfiles=%ProgramFiles%
-call "%vcprogramfiles%\Microsoft Visual C++ Build Tools\vcbuildtools.bat" %*
-}}}
 == Microsoft Visual C++ 14.0 with Visual Studio 2015 (x86, x64, ARM) ==
 ''Visual Studio 2015'' contains ''Visual C++ 14.0'' compiler. ''Distutils'' will automatically detect the compiler and use it.
 
@@ -51,31 +44,8 @@ This is a standalone version of ''Visual C++ 10.0'' compiler, you don't need to 
  * Install ''[[https://www.microsoft.com/download/details.aspx?id=8279|Microsoft Windows SDK for Windows 7 and .NET Framework 4]]''. Check ''Windows headers and libraries'', ''Visual C++ Compilers'' and ''Windows Native Code Development\Tools'' options only.
  * Install ''[[https://www.microsoft.com/download/details.aspx?id=4422|Microsoft Visual C++ 2010 Service Pack 1 Compiler Update for the Windows SDK 7.1]]''. This updates the compiler to Visual C++ 10.0 SP1.
  * reinstall ''[[https://www.microsoft.com/download/details.aspx?id=26999|Microsoft Visual C++ 2010 Redistributable]]'' (for all previously installed architectures).
+ * ''setuptools'' Python package version must be at least 24.0.
 
-You have to run your commands from ''Windows SDK 7.1 Command Prompt'' (''C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd'') each time you want to compile with Python. By default, SetEnv.cmd uses the ''x86'' architecture, use ''/x64'' or ''/ia64'' arguments to change it.
-
-(!) If you want automatic use of this compiler with Python, you can also edit the ''C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat'' file and replace its contents with the following text :
-
-{{{#!highlight bat
-rem Vcvarsall for Windows SDK 7.1
-@echo off
-if /i "%1" == "x64" (
-    set vcvararch=x64
-) else if /i "%1" == "amd64" (
-    set vcvararch=x64
-) else if /i "%1" == "x86_amd64" (
-    set vcvararch=x64
-) else if /i "%1" == "ia64" (
-    set vcvararch=ia64
-) else if /i "%1" == "x86_ia64" (
-    set vcvararch=ia64
-) else (
-    set vcvararch=x86
-)
-set vcprogramfiles=%ProgramFiles(x86)%
-if "%vcprogramfiles%"=="" set vcprogramfiles=%ProgramFiles%
-call "%vcprogramfiles%\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /%vcvararch%
-}}}
 == Microsoft Visual C++ 10.0 with Visual Studio 2010 (x86, x64, ia64) ==
 ''Visual Studio 2010'' contains ''Visual C++ 10.0'' compiler. ''Distutils'' will automatically detect the compiler and use it. The ''Express'' edition of ''Visual Studio 2010'' only bundles a compiler for x86.
 
@@ -83,11 +53,8 @@ call "%vcprogramfiles%\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /%vcvararch%
 This is a standalone version of ''Visual C++ 9.0'' compiler, you don't need to install ''Visual Studio 2008''.
 
  * Install ''[[https://www.microsoft.com/download/details.aspx?id=44266|Microsoft Visual C++ Compiler for Python 2.7]]''.
- * Make sure ''setuptools'' version is at least 6.0 or it will not correctly detect the compiler path. Simply run the following in command prompt to update it:
+ * ''setuptools'' Python package version must be at least 6.0.
 
-{{{
-pip install --upgrade setuptools
-}}}
 {i} Even though this package's name refers to Python 2.7 specifically, you can use it with all Python versions that use ''Visual C++ 9.0''.
 
 == Microsoft Visual C++ 9.0 standalone: Windows SDK 7.0 (x86, x64, ia64) ==
@@ -97,9 +64,9 @@ This is a standalone version of ''Visual C++ 9.0'' compiler, you don't need to i
 
  * Install ''[[https://www.microsoft.com/download/details.aspx?id=25150|Microsoft .NET Framework 3.5 SP1]]'' if not present.
  * Install ''[[https://www.microsoft.com/download/details.aspx?id=3138|Microsoft Windows SDK for Windows 7 and .NET Framework 3.5 SP1]]''. Check ''Windows headers and libraries'', ''Visual C++ Compilers'' and ''Win32 Developement Tools'' options only.
- * Set the ''DISTUTILS_USE_SDK'' environment variable to 1.
+ * ''setuptools'' Python package version must be at least 24.0.
 
-You have to run your commands from ''Windows SDK 7.0 Command Prompt'' (''C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0\Bin\SetEnv.cmd'') each time you want to compile with Python. By default, SetEnv.cmd uses the ''x86'' architecture, use ''/x64'' or ''/ia64'' arguments to change it.
+For manual use, you have to run your commands from ''Windows SDK 7.0 Command Prompt'' (''C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0\Bin\SetEnv.cmd'') each time you want to compile with Python. By default, SetEnv.cmd uses the ''x86'' architecture, use ''/x64'' or ''/ia64'' arguments to change it.
 
 == Microsoft Visual C++ 9.0 standalone: Windows SDK 6.1 (x86, x64, ia64) ==
 This is a standalone version of ''Visual C++ 9.0'' compiler, you don't need to install ''Visual Studio 2008''.
@@ -108,9 +75,9 @@ This is a standalone version of ''Visual C++ 9.0'' compiler, you don't need to i
 
  * Install ''[[https://www.microsoft.com/download/details.aspx?id=25150|Microsoft .NET Framework 3.5 SP1]]'' if not present.
  * Install ''[[https://www.microsoft.com/download/details.aspx?id=11310|Windows SDK for Windows Server 2008 and .NET Framework 3.5]]''. Check ''Windows headers and libraries'', ''Visual C++ Compilers'' and ''Win32 Development Tools'' options only.
- * Set the ''DISTUTILS_USE_SDK'' environment variable to 1.
+ * ''setuptools'' Python package version must be at least 24.0.
 
-You have to run your commands from ''Windows SDK 6.1 Command Prompt'' (''C:\Program Files (x86)\Microsoft SDKs\Windows\v6.1\Bin\SetEnv.cmd'') each time you want to compile with Python. By default, SetEnv.cmd uses the ''x86'' architecture, use ''/x64'' or ''/ia64'' arguments to change it.
+For manual use, you have to run your commands from ''Windows SDK 6.1 Command Prompt'' (''C:\Program Files (x86)\Microsoft SDKs\Windows\v6.1\Bin\SetEnv.cmd'') each time you want to compile with Python. By default, SetEnv.cmd uses the ''x86'' architecture, use ''/x64'' or ''/ia64'' arguments to change it.
 
 == Microsoft Visual C++ 9.0 with Visual Studio 2008 (x86, x64, ia64) ==
 ''Visual Studio 2008'' contains ''Visual C++ 9.0'' compiler. ''Distutils'' will automatically detect the compiler and use it. The ''Express'' edition of ''Visual Studio 2008'' only bundles a compiler for x86.
