@@ -1,44 +1,39 @@
 = Building Python Statically =
 
-/!\ '''This page is a placeholder until MicahElliott (or anyone) figures out all the steps to make this work.'''
-
 This page describes the steps required to build Python statically, derived from [[http://groups.google.com/group/comp.lang.python/browse_thread/thread/eba7c323a0221b97?hl=en#3314cbe8234de6c5|this thread]].  It presently covers Linux, but many of the same steps apply to other OSs.  The goal is to get `ldd` to say:
 
 {{{
-$ ldd /path/to/bin/python
+$ ldd /path/to/python
 not a dynamic executable
 }}}
 
-{i} Note that the `--disable-shared` option is not related to building Python statically.
-
-There is a file called `Modules/Setup.local` which is designed for customizing how modules are built.
-
-GCC (and LD) offer a `-static` option to create static executables.
-
-It would be nice to have a `--enable-all-static` option in the `configure` script which would take care of all this for you.  For an example, try building [[http://subversion.tigris.org|Subversion]].
-
-See http://mdqinc.com/blog/2011/08/statically-linking-python-with-cython-generated-modules-and-packages/ for a detailed example which includes both how to build a barebones static python, and adding custom modules to the binary.
-
-== Static Modules Built Into libpythonX.X.a ==
-
-Haven't figured out how to make {{{python}}} static, but here is how to make all of the modules static.
+Building the python binary is fairly straightforward:
 
 {{{
-./configure
+$ ./configure LDFLAGS=”-static” --disable-shared
+$ make LDFLAGS=”-static” LINKFORSHARED=” ”
 }}}
 
-Edit Modules/Setup.local and add the line:
+LINKFORSHARED=" " prevents passing -export-dynamic to the linker, which will cause the binary to be built as a dynamically linked executable. You may need additional flags to build successfully.
+
+This will build a static python binary, without any of the libraries normally provided by dynamically loaded modules.
+To add these modules, edit Modules/Setup.local, and add
 
 {{{
 *static*
 }}}
 
-then...
+followed by any of the modules that you want to build into your python binary.
+For instance, if you wanted to build in the math library, add
 
 {{{
-./configure
-make
-make install
+math mathmodule.c _math.c # -lm # math library functions, e.g. sin()
 }}}
 
-For the full answer see http://stackoverflow.com/questions/1150373/compile-the-python-interpreter-statically
+Note that the line is not commented (unlike the corresponding line in Modules/Setup.dist).
+See Modules/Setup.dist for more examples and documentation.
+
+== See also ==
+
+ *http://stackoverflow.com/questions/1150373/compile-the-python-interpreter-statically
+ *http://mdqinc.com/blog/2011/08/statically-linking-python-with-cython-generated-modules-and-packages/
