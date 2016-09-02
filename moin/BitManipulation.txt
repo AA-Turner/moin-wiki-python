@@ -301,21 +301,22 @@ class Flags_bits( ctypes.LittleEndianStructure ):
                ]
 
 class Flags( ctypes.Union ):
+    _anonymous_ = ("bit",)
     _fields_ = [
-                ("b",      Flags_bits ),
+                ("bit",    Flags_bits ),
                 ("asByte", c_uint8    )
                ]
-    _anonymous_ = ("b")
 
 flags = Flags()
 flags.asByte = 0x2  # ->0010
 
-print( "logout: %i"      % flags.b.logout   )
-
+print( "logout: %i"      % flags.bit.logout   )
+# `bit` is defined as anonymous field, so its fields can also be accessed directly:
 print( "logout: %i"      % flags.logout     )
 print( "userswitch:  %i" % flags.userswitch )
 print( "suspend   :  %i" % flags.suspend    )
 print( "idle  : %i"      % flags.idle       )
+
 }}}
 
 {{{#!python
