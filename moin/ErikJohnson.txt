@@ -92,10 +92,12 @@ primary mode my colleague was using to store his code, of course, but he had los
 a script embedded in a PDF document from somewhere else.)
 
 It is, however, a compelling argument not to store your Python source in PDFs.
-Leading white space on Python source lines is significant.
-If you've lost all your source formatting, I would say that's a problem, whether your source still compiles and executes properly or not.
+Leading white space in Python is significant - you can't get around that.
+If you've lost all your source formatting, I would say that's a problem whether your source still compiles and executes properly or not.
+(Other languages will have a slight advantage in this situation, but now you are confined to only running the code. If you intend to
+read, understand, maintain and/or develop the recovered source, you're going to have to reformat it anyway. PrettyPrinters, formatting options of Eclipse and so on can help, but these are generally less than ideal.)
 
-Using this `.vimrc` (or `_vimrc` on Windows), I've hardly thought about this indentation issue for over a decade:
+Using this `.vimrc` (or `_vimrc` on Windows), except for writing this, I've hardly thought about this indentation issue for over a decade:
 
 {{{
 set tabstop:4
@@ -115,9 +117,9 @@ Some other vim tricks/settings I don't want to lose track of:
   * http://vim.wikia.com/wiki/Count_number_of_matches_of_a_pattern
   * http://vim.wikia.com/wiki/Search_patterns
   * http://stackoverflow.com/questions/3997078/how-to-paste-yanked-text-into-vim-command-line
-  * problem: You open a file but the line endings are all jacked up. Like, you see a bunch of ^M embedded in your file.
-  You can check what fileformat (ff) mode you are in with  :set ff?
-  You can re-edit the file, telling it what mode you want to be in. For example, Mac uses CR (^M) only, but you are opening files by default in dos mode:
+  * problem: You open a file but the line endings are all jacked up (e.g., you see a bunch of `^M` embedded in your file).
+  You can check what fileformat (ff) mode you are in with: `:set ff?`
+  You can re-edit the file, telling it what mode you want to be in. For example, Mac uses CR (^M) only, but you are opening files by default in dos mode.
 {{{
     :e ++ff=mac
 }}}
