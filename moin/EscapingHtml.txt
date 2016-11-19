@@ -1,12 +1,7 @@
-
 = Escaping HTML =
 
 
 The {{{cgi}}} module that comes with Python has an {{{escape()}}} function:
-
-
-
-
 
 
 
@@ -21,13 +16,19 @@ s = cgi.escape( """& < >""" )   # s = "&amp; &lt; &gt;"
 However, it doesn't escape characters beyond {{{&}}}, {{{<}}}, and {{{>}}}. If it is used as {{{cgi.escape(string_to_escape, quote=True)}}}, it also escapes {{{"}}}.
 
 
+Recent Python 3.2 have [[https://docs.python.org/3/library/html.html| html module]] with {{{html.escape()}}} and {{{html.unescape()}}} functions. {{{html.escape()}}} differs from {{{cgi.escape()}}} by its defaults to {{{quote=True}}}:
+
+
+
+{{{#!python
+import html
+
+s = html.escape( """& < " ' >""" )   # s = '&amp; &lt; &quot; &#x27; &gt;'
+}}}
+
+
+
 Here's a small snippet that will let you escape quotes and apostrophes as well:
-
-
-
-
-
-
 
 {{{#!python
 html_escape_table = {
