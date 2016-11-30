@@ -13,9 +13,9 @@ To upload packages to it you need to:
 [distutils]
 index-servers=
     pypi
-    pypitest
+    testpypi
 
-[pypitest]
+[testpypi]
 repository = https://testpypi.python.org/pypi
 username = <your user name goes here>
 password = <your password goes here>
@@ -30,10 +30,10 @@ password = <your password goes here>
 {{{
    python setup.py register -r https://testpypi.python.org/pypi
 }}}
-4. Then uploading it:
+4. Then uploading it using twine:
 
 {{{
-   python setup.py upload -r https://testpypi.python.org/pypi
+   twine upload dist/* -r testpypi
 }}}
 Now that your project is on the server, test that you can install your package from testpypi (it may be a good idea to run your unit tests from another directory to make sure you are using the version you just installed):
 
