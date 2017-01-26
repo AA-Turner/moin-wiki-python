@@ -1,9 +1,7 @@
 = Getting the version numbers of Qt, SIP and PyQt =
-
 When you report a bug in !PyQt you need to supply information about the configuration you are using, including the versions of the Qt library, SIP and PyQt modules. The following code should help.
 
-{{{
-#!python
+{{{#!python
 
 from PyQt4.QtCore import QT_VERSION_STR
 from PyQt4.pyqtconfig import Configuration
@@ -13,11 +11,9 @@ cfg = Configuration()
 print("SIP version:", cfg.sip_version_str)
 print("PyQt version:", cfg.pyqt_version_str)
 }}}
-
 Note that the pyqtconfig module is deprecated in PyQt 4.10. See http://pyqt.sourceforge.net/Docs/PyQt4/build_system.html for more details. If you are unable to import pyqtconfig (for example when using Riverbank's packaged binaries) you can use the following:
 
-{{{
-#!python
+{{{#!python
 
 from PyQt4.QtCore import QT_VERSION_STR
 from PyQt4.Qt import PYQT_VERSION_STR
@@ -27,3 +23,5 @@ print("Qt version:", QT_VERSION_STR)
 print("SIP version:", SIP_VERSION_STR)
 print("PyQt version:", PYQT_VERSION_STR)
 }}}
+
+For PyQt5 getting the version is the same as in the last example above, just exchange PyQt4 for PyQt5
