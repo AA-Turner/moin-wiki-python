@@ -14,19 +14,21 @@ The compiler's architecture must be the same as Python's (for example: if you us
 = Which Microsoft Visual C++ compiler to use with a specific Python version ? =
 Each Python version uses a specific compiler version (e.g. ''CPython 2.7'' uses ''Visual C++ 9.0'', ''CPython 3.3'' uses ''Visual C++ 10.0'', etc). So, you need to install the compiler version that corresponds to your Python version  :
 ||'''Visual C++''' ||'''CPython''' ||
-||14.0 ||3.5 ||
+||14.0 ||3.5, 3.6 ||
 ||10.0 ||3.3, 3.4 ||
 ||9.0 ||2.6, 2.7, 3.0, 3.1, 3.2 ||
+
+
 
 
 = Compilers Installation and configuration =
 Compatible architectures are specified for each compiler in brackets.
 
 /!\ Before do anything, install or upgrade the ''Setuptools'' Python package. It contain compatibility improvements and add automatic use of compilers:
+
 {{{
 pip install --upgrade setuptools
 }}}
-
 == Microsoft Visual C++ 14.0 standalone: Visual C++ Build Tools 2015 (x86, x64, ARM) ==
 This is a standalone version of ''Visual C++ 14.0'' compiler, you don't need to install ''Visual Studio 2015''.
 
@@ -110,9 +112,7 @@ compiler=mingw32
 [build_ext]
 compiler=mingw32
 }}}
-
 == GCC - MSYS2 ==
-
 GCC for Windows with Extras
 
 MSYS2 combines Cygwin (or at least a Cygwin fork) with MinGW - it has a Linux like command line package installer (for non-python things, this is good) named "pacman" ported from Arch Linux.  It contains a 4 flavors of Python for Windows: MSYS2 (Cygwin-like) Python 3, MSYS2 (Cygwin-like) Python 2, MinGW (Stand Alone Windows) Python 3, and MinGW (Stand Alone Windows) Python 2.  Similarly it has MSYS2 (Cygwin-like) and MinGW flavors of GCC.  You can rebuild Python and Python modules using the appropriate gcc.
@@ -128,6 +128,7 @@ An example would be building a library that uses the autotools build system. Use
 MSYS2 (Minimal SYStem 2) is an independent rewrite of MSYS, a (command-line) shell for development usage, and based on modern Cygwin (POSIX compatibility layer) and MinGW-w64 (from "MinGW-builds"), with the aim of better interoperability with native Windows software. It includes: MSYS2-shell and MinGW-w64 Win32 shell & MinGW-w64 Win64 shell. It supports & can work with both 32bit & 64bit multiple toolchains & targets, (for 64bit a 64bit operating system is needed). MSYS2 is a successor of MSYS and MinGW-builds. MSYS2-shell uses "pacman" for downloading packages from repo, and these are GPG signed & verified.
 
 '''More MSYS2 Links'''
+
  * [[https://sourceforge.net/p/msys2/wiki/Home/|sourceforge.net - msys2 - Wiki Home]]
  * [[https://sourceforge.net/p/msys2/wiki/Launchers/|sourceforge.net - msys2 - Launchers]]
  * [[https://github.com/elieux/msys2-launcher|github.com - msys2-launcher]]
@@ -143,11 +144,10 @@ MSYS2 (Minimal SYStem 2) is an independent rewrite of MSYS, a (command-line) she
   * msys/python2
   * msys/python
 
-
 = Links =
  * [[https://support.microsoft.com/kb/2977003|Microsoft : The latest supported Visual C++ downloads]] : List of up-to-date ''Visual C++ Redistributable'' and ''Visual Studio'' packages.
  * [[http://www.mingw.org/wiki/Interoperability_of_Libraries_Created_by_Different_Compiler_Brands|mingw.org - Interoperability of Libraries Created by Different Compiler Brands]]
  * [[https://en.wikipedia.org/wiki/X86_calling_conventions|Wikipedia - X86 calling conventions]]
  * [[http://www.nasm.us/doc/nasmdoc7.html|nasm.us - Output Formats]]
  * [[http://bugs.python.org/issue4709|bugs.python.org - Mingw-w64 and python on windows x64]]
- * [[http://www.sciencezero.org/index.php?title=How_to_write_x64_assembly_functions_in_Visual_C%2B%2B|How to write x64 assembly functions in Visual C++]] - Details on ABI concerns
+ * [[http://www.sciencezero.org/index.php?title=How_to_write_x64_assembly_functions_in_Visual_C++|How to write x64 assembly functions in Visual C++]] - Details on ABI concerns
