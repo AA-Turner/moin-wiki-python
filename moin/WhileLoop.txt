@@ -1,20 +1,8 @@
-
 = While loops =
-
-
 == Usage in Python ==
-
-
  * When do I use them?
 
-
-''While'' loops, like the [[ForLoop|ForLoop]], are used for repeating sections of code - but unlike a ''for'' loop, the ''while'' loop will not run ''n'' times, but until a defined condition is met. As the ''for'' loop in Python is so powerful, ''while'' is rarely used, except in cases where a user's input is required, for example -
-
-
-
-
-
-
+''While'' loops, like the ForLoop, are used for repeating sections of code - but unlike a ''for'' loop, the ''while'' loop will not run ''n'' times, but until a defined condition is met. As the ''for'' loop in Python is so powerful, ''while'' is rarely used, except in cases where a user's input is required, for example:
 
 {{{
 n = raw_input("Please enter 'hello':")
@@ -22,15 +10,7 @@ while n.strip() != 'hello':
     n = raw_input("Please enter 'hello':")
 }}}
 
-
-
-However, the problem with the above code is that it's wasteful. In fact, what you will see a lot of in Python is the following -
-
-
-
-
-
-
+However, the problem with the above code is that it's wasteful. In fact, what you will see a lot of in Python is the following:
 
 {{{
 while True:
@@ -39,9 +19,7 @@ while True:
         break
 }}}
 
-
-
-As you can see, this compacts the whole thing into a piece of code managed entirely by the ''while'' loop. Having ''True'' as a condition ensures that the code runs until it's broken by n.strip() equalling 'hello'. The only problem with this is that it slows things down a lot - this is due to first testing the True condition for the ''while'', then again testing the n.strip() value compared to the string 'hello'. Another version you may see of this type of loop uses ''1'' instead of ''True'' - this is exactly the same, though in Python 2.*, using while ''1'' is minutely faster, due to the ability to reassign ''True'' to a different value - the interpretor needs to look up the value of the variable, as opposed to loading a constant.
-
-
-As a programmer, it is up to you which style to use - but always remember that readability is important, and that speed is also important.
+As you can see, this compacts the whole thing into a piece of code managed entirely by the ''while'' loop. Having ''True'' as a condition ensures that the code runs until it's broken by {{{n.strip()}}} equaling {{{'hello'}}}.
+ * Another version you may see of this type of loop uses {{{while 1}}} instead of {{{while True}}}.  This was due to past performance tweaks that are no longer relevant in current Python versions, and ''True'' is preferred for readability.
+   * [[https://docs.python.org/3.0/whatsnew/2.3.html#optimizations|Starting with Py2.3]], the interpreter optimizes {{{while 1}}} to just a single jump.  Using ''1'' is minutely faster, due to the ability to reassign ''True'' to a different value - the interpreter needs to look up the value of the variable, as opposed to loading a constant.  As a programmer, it is up to you which style to use - but always remember that readability is important, and that speed is also important.
+   * [[https://docs.python.org/3.0/whatsnew/3.0.html#changed-syntax|Starting in Python 3]], {{{True}}}, {{{False}}}, and {{{None}}} are reserved words, so using {{{while 1}}} here no longer provides any performance benefit.
