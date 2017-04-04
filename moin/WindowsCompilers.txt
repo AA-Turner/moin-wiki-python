@@ -18,8 +18,11 @@ Each Python version uses a specific compiler version (e.g. ''CPython 2.7'' uses 
 ||10.0 ||3.3, 3.4 ||
 ||9.0 ||2.6, 2.7, 3.0, 3.1, 3.2 ||
 
+= Distutils notes =
+If the package's ''setup.py'' (still) uses ''distutils'' rather than the [[https://docs.python.org/2/library/distutils.html|recommended]] ''setuptools'', you may need extra steps:
 
-
+* ''distutils'' only supports the very minimum of compiler setups. The sections in this guide corresponding to them explicitly mention ''distutils''.
+* For other setups, you need to run the compilation from the "SDK prompt" of the corresponding toolchain and set the ''DISTUTILS_USE_SDK'' environment variable to a non-empty value.
 
 = Compilers Installation and configuration =
 Compatible architectures are specified for each compiler in brackets.
