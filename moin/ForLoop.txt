@@ -4,7 +4,7 @@
 
  * When do I use for loops?
 
-''for'' loops are traditionally used when you have a piece of code which you want to repeat a fixed number of times. The Python ''for'' statement iterates over the members of a sequence in order. Contrast the ''for'' statement with the [[WhileLoop|WhileLoop]], used when a condition needs to be checked each iteration, or to repeat a piece of code forever. For example:
+''for'' loops are traditionally used when you have a piece of code which you want to repeat a fixed number of times. The Python ''for'' statement iterates over the members of a sequence in order. Contrast the ''for'' statement with the [[WhileLoop|''while'' loop]], used when a condition needs to be checked each iteration, or to repeat a piece of code forever. For example:
 
 ''For loop from 0 to 2, therefore running 3 times.''
 
@@ -51,8 +51,7 @@ Like the ''while'' loop, the ''for'' loop can be made to exit before the given o
  * range vs xrange
 
 
-The ''[[http://docs.python.org/library/functions.html#range|range]]'' function creates a list containing numbers defined by the input. The ''[[http://docs.python.org/library/functions.html#xrange|xrange]]'' function creates a number generator. You will often see that ''xrange'' is used much more frequently than range. This is for one reason only - resource usage. The ''range'' function generates a list of numbers all at once, where as ''xrange'' generates them as needed. This means that less memory is used, and should the ''for'' loop exit early, there's no need to waste time creating the unused numbers. This effect is tiny in smaller lists, but increases rapidly in larger lists as you can see in the examples below.
-
+The [[http://docs.python.org/library/functions.html#range|''range'']] is seen so often in ''for'' statements that you might think it is part of the ''for'' syntax. It is not, it a Python built-in function which returns a sequence, which meets the requirement of providing a sequence to ''for'' to iterate over. In Python 2.x, ''range'' generates the sequence when called, while ''xrange'' is a generator - it produces values on demand, not all up fromt.  You will often see that ''xrange'' is used much more frequently than range. This is for one reason only - resource usage. For large sequences, the difference in memory usage can be considerable. ''xrange'' uses less memory, and should the ''for'' loop exit early, there's no need to waste time creating the unused numbers. This effect is tiny in smaller lists, but increases rapidly in larger lists as you can see in the examples below. For Python 3.x, ''range'' was changed, you can think of it as being equivalent to the Python 2.x ''xrange'', which no longer is defined in Python 3.x.
 
 == Examples ==
 
@@ -66,7 +65,7 @@ The ''[[http://docs.python.org/library/functions.html#range|range]]'' function c
 for x in xrange(1, 11):
     for y in xrange(1, 11):
         print '%d * %d = %d' % (x, y, x*y)
-}}}
+  }}}
 
 
 
