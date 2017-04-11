@@ -4,7 +4,7 @@
 
  * When do I use for loops?
 
-''for'' loops are traditionally used when you have a piece of code which you want to repeat a fixed number of times. The Python ''for'' statement iterates over the members of a sequence in order. Contrast the ''for'' statement with the [[WhileLoop|''while'' loop]], used when a condition needs to be checked each iteration, or to repeat a piece of code forever. For example:
+''for'' loops are traditionally used when you have a block of code which you want to repeat a fixed number of times. The Python ''for'' statement iterates over the members of a sequence in order, executing the block each time. Contrast the ''for'' statement with the [[WhileLoop|''while'' loop]], used when a condition needs to be checked each iteration, or to repeat a block of code forever. For example:
 
 ''For loop from 0 to 2, therefore running 3 times.''
 
@@ -30,49 +30,25 @@ As you can see, these loop constructs serve different purposes. The ''for'' loop
  * How do they work?
 
 
-If you've done any programming before, you have undoubtedly come across a ''for'' loop or an equivalent to it. Many languages have conditions in the syntax of their ''for'' loop - such as a relational expression to determine if the loop is done, and an increment expression to determine the next loop value.  In Python this is controlled instead by  generating the appropriate sequence.  Basically, any object with an iterable method can be used in a ''for'' loop. Even strings, despite not having an iterable method - but we'll not get on to that here. Having an iterable method basically means that the data can be presented in list form, where there are multiple values in an orderly fashion. You can define your own iterables by creating an object with next() and iter() methods. This means that you'll rarely be dealing with raw numbers when it comes to for loops in Python - great for just about anyone!
+If you've done any programming before, you have undoubtedly come across a ''for'' loop or an equivalent to it. Many languages have conditions in the syntax of their ''for'' loop, such as a relational expression to determine if the loop is done, and an increment expression to determine the next loop value.  In Python this is controlled instead by  generating the appropriate sequence.  Basically, any object with an iterable method can be used in a ''for'' loop. Even strings, despite not having an iterable method - but we'll not get on to that here. Having an iterable method basically means that the data can be presented in list form, where there are multiple values in an orderly fashion. You can define your own iterables by creating an object with next() and iter() methods. This means that you'll rarely be dealing with raw numbers when it comes to for loops in Python - great for just about anyone!
 
 
  * Nested loops
 
 
-When you have a piece of code you want to run '''x''' number of times, then code within that code which you want to run '''y''' number of times, you use what is known as a "nested loop". In Python, these are heavily used whenever someone has a list of lists - an iterable object within an iterable object.
-
-
- * Early exits
-
-
-Like the ''while'' loop, the ''for'' loop can be made to exit before the given object is finished. This is done using the ''break'' statement, which will stop the code from executing any further. You can also have an optional ''else'' clause, which will run should the ''for'' loop exit cleanly - that is, without breaking.
-
-
-== Things to remember ==
-
-
- * range vs xrange
-
-
-The [[http://docs.python.org/library/functions.html#range|''range'']] is seen so often in ''for'' statements that you might think it is part of the ''for'' syntax. It is not, it a Python built-in function which returns a sequence, which meets the requirement of providing a sequence to ''for'' to iterate over. In Python 2.x, ''range'' generates the sequence when called, while ''xrange'' is a generator - it produces values on demand, not all up fromt.  You will often see that ''xrange'' is used much more frequently than range. This is for one reason only - resource usage. For large sequences, the difference in memory usage can be considerable. ''xrange'' uses less memory, and should the ''for'' loop exit early, there's no need to waste time creating the unused numbers. This effect is tiny in smaller lists, but increases rapidly in larger lists as you can see in the examples below. For Python 3.x, ''range'' was changed, you can think of it as being equivalent to the Python 2.x ''xrange'', which no longer is defined in Python 3.x.
-
-== Examples ==
-
-
-''Nested loops''
-
-
-
+When you have a block of code you want to run '''x''' number of times, then a block of code within that code which you want to run '''y''' number of times, you use what is known as a "nested loop". In Python, these are heavily used whenever someone has a list of lists - an iterable object within an iterable object.
 
 {{{
 for x in xrange(1, 11):
     for y in xrange(1, 11):
         print '%d * %d = %d' % (x, y, x*y)
-  }}}
+}}}
 
 
-
-''Early exit''
-
+ * Early exits
 
 
+Like the ''while'' loop, the ''for'' loop can be made to exit before the given object is finished. This is done using the ''break'' statement, which will immediately drop out of the loop and contine execution at the first statement after the block. You can also have an optional ''else'' clause, which will run should the ''for'' loop exit cleanly - that is, without breaking.
 
 {{{
 for x in xrange(3):
@@ -81,11 +57,16 @@ for x in xrange(3):
 }}}
 
 
+== Things to remember ==
+
+
+ * range vs xrange
+
+The [[http://docs.python.org/library/functions.html#range|''range'']] is seen so often in ''for'' statements that you might think ''range'' is part of the ''for'' syntax. It is not: it is a Python built-in function which returns a sequence, which meets the requirement of providing a sequence for the ''for'' statement to iterate over. In Python 2.x, ''range'' generates the entire sequence when called, while ''xrange'' is a generator - it produces values on demand, not all up fromt.  You will often see ''xrange'' is used much more frequently than range. This is for one reason only - resource usage. For large sequences, the difference in memory usage can be considerable. ''xrange'' uses less memory, and should the ''for'' loop exit early, there's no need to waste time creating the unused numbers. This effect is tiny in smaller lists, but increases rapidly in larger lists as you can see in the examples below. For Python 3.x, ''range'' was changed, you can think of it as being equivalent to the Python 2.x ''xrange'', which no longer is defined in Python 3.x.
+
+== Examples ==
 
 ''For..Else''
-
-
-
 
 {{{
 for x in xrange(3):
@@ -95,11 +76,7 @@ else:
 }}}
 
 
-
 ''Strings as an iterable''
-
-
-
 
 {{{
 string = "Hello World"
@@ -107,12 +84,7 @@ for x in string:
     print x
 }}}
 
-
-
 ''Lists as an iterable''
-
-
-
 
 {{{
 collection = ['hey', 5, 'd']
@@ -121,10 +93,7 @@ for x in collection:
 }}}
 
 
-
-''Lists of lists''
-
-
+''Loop over Lists of lists''
 
 
 {{{
@@ -137,9 +106,6 @@ for list in list_of_lists:
 
 
 ''Creating your own iterable''
-
-
-
 
 {{{
 class Iterable(object):
@@ -161,10 +127,7 @@ class Iterable(object):
 
 
 
-''range vs xrange''
-
-
-
+''range vs xrange (Python 2)''
 
 {{{
 import time
@@ -187,13 +150,7 @@ print stop - start
 }}}
 
 
-
-
-
 ''Time on small ranges''
-
-
-
 
 {{{
 import time
@@ -217,11 +174,7 @@ print stop-start
 }}}
 
 
-
 ''Your own range generator using yield''
-
-
-
 
 {{{
 def my_range(start, end, step):
