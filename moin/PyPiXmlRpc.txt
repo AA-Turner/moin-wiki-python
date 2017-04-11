@@ -1,7 +1,6 @@
 [[CheeseShopDev|PyPI]] APIs: [[PyPISimple|Simple]], [[PyPIJSON|JSON]], '''XMLRPC'''.
 
-== PyPI's XML-RPC methods ==
-
+== The XMLRPC interface for PyPI is considered legacy and should not be used. Use the [[PyPISimple|Simple]] and [[PyPIJSON|JSON]] APIs.PyPI's XML-RPC methods ==
 
 Example usage:
 
@@ -36,40 +35,27 @@ Example usage:
   'upload_time': <DateTime '20060427T06:26:04' at 912fdec>,
   'url': 'http://pypi.python.org/packages/any/r/roundup/roundup-1.1.2.win32.exe'}]
 }}}
-
-
 '''list_packages()'''
-
 
  . Retrieve a list of the package names registered with the package index. Returns a list of name strings.
 
-
 '''package_releases(package_name, show_hidden=False)'''
-
 
  . Retrieve a list of the releases registered for the given package_name. Returns a list with all version strings if show_hidden is True or only the non-hidden ones otherwise.
 
-
 '''package_roles(package_name)'''
-
 
  . Retrieve a list of users and their attributes roles for a given package_name. Role is either 'Maintainer' or 'Owner'.
 
-
 '''user_packages(user)'''
-
 
  . Retrieve a list of [role_name, package_name] for a given username. Role is either 'Maintainer' or 'Owner'.
 
-
 '''release_downloads(package_name, version)'''
-
 
  . Retrieve a list of files and download count for a given package and release version.
 
-
 '''release_urls(package_name, version)'''
-
 
  . Retrieve a list of download URLs for the given package release. Returns a list of dicts with the following keys:
   * url
@@ -82,10 +68,7 @@ Example usage:
   * python_version (required version, or 'source', or 'any')
   * comment_text
 
-
-
 '''release_data(package_name, version)'''
-
 
  . Retrieve metadata describing a specific package release. Returns a dict with keys for:
   * name
@@ -115,12 +98,9 @@ Example usage:
   * docs_url (URL of the packages.python.org docs if they've been supplied)
  If the release does not exist, an empty dictionary is returned.
 
-
 '''search(spec[, operator])'''
 
-
  . Search the package database using the indicated search spec.
-
 
  . The spec may include any of the keywords described in the above list (except 'stable_version' and 'classifiers'), for example: {'description': 'spam'} will search description fields. Within the spec, a field's value can be a string or a list of strings (the values within the list are combined with an OR), for example: {'name': ['foo', 'bar']}. Valid keys for the spec dict are listed here. Invalid keys are ignored:
   * name
@@ -138,30 +118,21 @@ Example usage:
   * download_url
  Arguments for different fields are combined using either "and" (the default) or "or". Example: search({'name': 'foo', 'description': 'bar'}, 'or'). The results are returned as a list of dicts {'name': package name, 'version': package release version, 'summary': package release summary}
 
-
 '''browse(classifiers)'''
-
 
  . Retrieve a list of (name, version) pairs of all releases classified with all of the given classifiers. 'classifiers' must be a list of Trove classifier strings.
 
-
 '''changelog(since, with_ids=False)'''
-
 
  . Retrieve a list of four-tuples (name, version, timestamp, action), or five-tuple including the serial id if ids are requested, since the given timestamp. All timestamps are UTC values. The argument is a UTC integer seconds since the epoch.
 
-
 '''changelog_last_serial()'''
-
 
  . Retrieve the last event's serial id.
 
-
 '''changelog_since_serial(since_serial)'''
-
 
  . Retrieve a list of five-tuples (name, version, timestamp, action, serial) since the event identified by the given serial. All timestamps are UTC values. The argument is a UTC integer seconds since the epoch.
 
 ----
-
-[[CategoryDocumentation|CategoryDocumentation]] [[CategoryDocumentation|CategoryDocumentation]]
+CategoryDocumentation CategoryDocumentation
