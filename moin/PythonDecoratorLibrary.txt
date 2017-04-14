@@ -2367,6 +2367,9 @@ def slow_function():
 }}}
 
 == Collect Data Difference Caused by Decorated Function ==
+It calls a user function to collect some data before and after the decorated function runs. To calculate difference it calls the difference calculator user function.
+
+Example: checking page numbers of a print job: get the number of all printed pages from printer before and after the printing. Then calculate difference to get the number of pages printed by the the decorated function
 
 {{{#!python
 
@@ -2378,24 +2381,6 @@ import time
 # Demo purposes only, the difference will be generated from time
 
 from functools import wraps
-
-
-def collect_data_or_data_series_b():
-    time.sleep(0.5)
-    return time.time()
-
-
-def collect_data_or_data_series_a():
-    time.sleep(0.5)
-    return time.time()
-
-
-def calculate_difference_on_data_series_a(before, after):
-    return after - before
-
-
-def calculate_difference_on_data_series_b(before, after):
-    return after - before
 
 
 def collect_data_and_calculate_difference(data_collector, difference_calculator):
@@ -2450,6 +2435,25 @@ def collect_data_and_calculate_difference(data_collector, difference_calculator)
 
 
 # Usage
+
+
+def collect_data_or_data_series_a():
+    time.sleep(0.5)
+    return time.time()
+
+
+def collect_data_or_data_series_b():
+    time.sleep(0.5)
+    return time.time()
+
+
+def calculate_difference_on_data_series_a(before, after):
+    return after - before
+
+
+def calculate_difference_on_data_series_b(before, after):
+    return after - before
+
 
 @collect_data_and_calculate_difference(
     data_collector=collect_data_or_data_series_a,
