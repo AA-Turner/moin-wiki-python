@@ -756,6 +756,29 @@ See `WhatIsTheIndex
 Wiki.
 
 
+Aliases
+-------
+
+Recursive aliases
+-----------------
+
+Git doesn't allow recursive aliases. The expansion of an alias is
+interpreted by git as a builtin command. I.e., in the following example
+alias ``com`` doesn't work because there is no builtin command ``git
+ci``::
+
+    [alias]
+    ci = commit
+    com = ci
+
+You can trick git by using shell. The following example works albeit a
+bit slow::
+
+    [alias]
+    ci = commit
+    com = !git ci
+
+
 Root
 ----
 
