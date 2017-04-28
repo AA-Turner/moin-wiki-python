@@ -779,6 +779,32 @@ bit slow::
     com = !git ci
 
 
+Literal expansion
+'''''''''''''''''
+
+Git interprets aliases literally. I.e., when expanding an alias git just
+does simple textual substitution. That could be a surprise if an alias
+is passed parameters on the command line. For example, the following
+alias works without parameters -- it pushes configured branch(es) to all
+configured remotes::
+
+    [alias]
+    push-to-all-remotes = !git remote | xargs -n1 git push
+
+But it doesn't work if a user wants to provide a list of branches to
+push: the command ``git push-to-all-remotes master`` is expanded by git
+as ``!git remote | xargs -n1 git push master`` which is certainly not
+what the user wants -- remote's name must comes first, before branches.
+This is a fix::
+
+    [alias]
+    push-to-all-remotes = !git remote | xargs -I% -n1 git push %
+
+Then the command ``git push-to-all-remotes master`` is expanded by git
+as ``!git remote | xargs -I% -n1 git push % master``; xargs substitutes
+``%`` with remote's name.
+
+
 Root
 ----
 
