@@ -18,22 +18,31 @@ index-servers=
 [testpypi]
 repository = https://testpypi.python.org/pypi
 username = <your user name goes here>
-password = <your password goes here>
+password = <your test password goes here>
 
 [pypi]
 username = <your user name goes here>
-password = <your password goes here>
+password = <your live password optionally goes here>
 }}}
+/* We omit the live repository URL for consistency with https://packaging.python.org/distributing/#create-an-account
+ *
+ * This better allows tools to manage the default URL of the live service without having to account for config
+ * files still using the old settings.
+ */
 3. Use the test server URL to register your project (it gives you the right to modify your project on the server):
 
 {{{
    python setup.py register -r https://testpypi.python.org/pypi
 }}}
-4. Then uploading it using twine:
+
+Note that the test server uses an older implementation of the upload interface and hence does ''not'' support auto-registration the way the live service does when using twine's default configuration.
+
+4. Then upload it using twine:
 
 {{{
    twine upload dist/* -r testpypi
 }}}
+
 Now that your project is on the server, test that you can install your package from testpypi (it may be a good idea to run your unit tests from another directory to make sure you are using the version you just installed):
 
 {{{
