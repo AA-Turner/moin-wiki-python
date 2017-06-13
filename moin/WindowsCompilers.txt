@@ -97,6 +97,23 @@ This is a standalone version of ''Visual C++ 9.0'' compiler, you don't need to i
 == Microsoft Visual C++ 9.0 with Visual Studio 2008 (x86, x64, ia64) ==
 ''Visual Studio 2008'' contains ''Visual C++ 9.0'' compiler. ''Distutils'' will automatically detect the compiler and use it. The ''Express'' edition of ''Visual Studio 2008'' only bundles a compiler for x86.
 
+== GCC - MinGW-w64 (x86, x64) ==
+
+[[http://mingw-w64.org|MinGW-w64]] is an alternative C/C++ compiler that works with all Python versions up to 3.4.
+
+ * Install ''[[http://win-builds.org/doku.php/download_and_installation_from_windows|Win-builds]]'' into ''C:\MinGW_w64''.
+ * Open ''Win-builds'', switch to ''install'' at least ''binutils'', ''gcc'', ''gcc-g++'', ''getext'', ''mingw-w64'', ''win-iconv'', ''winpthreads'', ''zlib'', and click ''Process''.
+ * Add ''C:\MinGW_w64\bin'' to the ''PATH'' environment variable.
+ * Create a ''distutils.cfg'' file with the following contents in the folder ''\Lib\distutils'' in Python install directory :
+
+{{{#!highlight ini
+[build]
+compiler=mingw32
+
+[build_ext]
+compiler=mingw32
+}}}
+
 == GCC - MinGW (x86) ==
 
 [[http://www.mingw.org/|MinGW]] is an alternative C/C++ compiler that works with all Python versions up to 3.4.
