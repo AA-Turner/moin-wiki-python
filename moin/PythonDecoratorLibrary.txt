@@ -1903,28 +1903,6 @@ assert Foo().x == 15
 Foo().x = 20
 assert Foo().x == 20
 }}}
-== The Sublime Singleton ==
-{{{#!python
-def singleton(cls):
-    instance = cls()
-    instance.__call__ = lambda: instance
-    return instance
-
-#
-# Sample use
-#
-
-@singleton
-class Highlander:
-    x = 100
-    # Of course you can have any attributes or methods you like.
-
-Highlander() is Highlander() is Highlander #=> True
-id(Highlander()) == id(Highlander) #=> True
-Highlander().x == Highlander.x == 100 #=> True
-Highlander.x = 50
-Highlander().x == Highlander.x == 50 #=> True
-}}}
 == Asynchronous Call ==
 {{{#!python
 from Queue import Queue
@@ -2365,7 +2343,6 @@ import time
 def slow_function():
     time.sleep(5)
 }}}
-
 == Collect Data Difference Caused by Decorated Function ==
 It calls a user function to collect some data before and after the decorated function runs. To calculate difference it calls the difference calculator user function.
 
@@ -2384,18 +2361,18 @@ from functools import wraps
 
 
 def collect_data_and_calculate_difference(data_collector, difference_calculator):
-    """Returns difference of data collected before and after the decorated function, 
+    """Returns difference of data collected before and after the decorated function,
     plus the original return value of the decorated function. Return type: dict.
-    Keys: 
+    Keys:
         - function name of the decorated function
         - name of the difference calculator function
-    Values: 
+    Values:
         - the original return value of decorated function
-        - difference calculated by difference_calculator functions 
+        - difference calculated by difference_calculator functions
     Parameters: functions to collect data, and create difference from collected data
-    
+
     Created: 2017
-    Author: George Fischhof 
+    Author: George Fischhof
     """
 
     current_decorator_function_name = inspect.currentframe().f_code.co_name
@@ -2472,6 +2449,5 @@ print(do_something_that_changes_the_collected_data())
 # 'do_something_that_changes_the_collected_data': 'result of decorated function...',
 # 'calculate_difference_on_data_series_b': 0.5001623630523682}
 }}}
-
 ----
 CategoryDocumentation
