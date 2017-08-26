@@ -60,7 +60,7 @@ Finally, the <derived-spec> argument is optional. In the zero-argument form, {{{
  want_dict:: Request creation of a dictionary in the derived class. If not specified, only a slots array is created.
  require:: <<BR>>
  define:: <<BR>>
- ctr:: <<BR>>
+ ctr:: arguments to the constructor, after the `subtype` argument. For example, in `_json.Scanner.derived` we have `ctr: PyObject context`, and this leads to the constructor `ScannerDerived(PyType subtype, PyObject context)` which calls `super(subtype, context)`
  incl:: Include all the methods from this base class,
  unary1:: <<BR>>
  binary:: <<BR>>
