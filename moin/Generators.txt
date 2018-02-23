@@ -1,9 +1,9 @@
-Generators functions allow you to declare a function that behaves like an iterator, i.e. it can be used in a for loop.
+Generator functions allow you to declare a function that behaves like an iterator, i.e. it can be used in a for loop.
 
 = Simplified Code =
 The simplification of code is a result of generator function and generator expression support provided by Python.
 
-To illustrate this, we will compare different implementations that implement a function, "firstn", that represents the first ''n'' non-negative integers, where ''n'' is a really big number, and assume (for the sake of the examples in this section) that each integer take up a lot of space, say 10 megabytes each.
+To illustrate this, we will compare different implementations that implement a function, "firstn", that represents the first ''n'' non-negative integers, where ''n'' is a really big number, and assume (for the sake of the examples in this section) that each integer takes up a lot of space, say 10 megabytes each.
 
 Note: Please note that in real life, integers do not take up that much space, unless they are really, really, really, big integers. For instance you can represent a 309 digit number with 128 bytes (add some overhead, it will still be less than 150 bytes).
 
@@ -20,7 +20,7 @@ def firstn(n):
 
 sum_of_first_n = sum(firstn(1000000))
 }}}
-The code is quite simple and straightforward, but its builds the full list in memory. This is clearly not acceptable in our case, because we cannot afford to keep all ''n'' "10 megabyte" integers in memory.
+The code is quite simple and straightforward, but it builds the full list in memory. This is clearly not acceptable in our case, because we cannot afford to keep all ''n'' "10 megabyte" integers in memory.
 
 So, we resort to the generator pattern. The following implements generator as an iterable object.
 
@@ -89,7 +89,7 @@ By allowing generator expressions, we don't have to write a generator function i
 
 This also means that we can use the same syntax we have been using for list comprehensions to build generators.
 
-Keep in mind that generators are a special type of iterator, and that containers like `list` and `set` are also iterables. The uniform way in which all of these are handled, adds greatly to the simplification of code.
+Keep in mind that generators are a special type of iterator, and that containers like `list` and `set` are also iterables. The uniform way in which all of these are handled adds greatly to the simplification of code.
 
 = Improved Performance =
 The performance improvement from the use of generators is the result of the lazy (on demand) generation of values, which translates to lower memory usage. Furthermore, we do not need to wait until all the elements have been generated before we start to use them. This is similar to the benefits provided by iterators, but the generator makes building iterators easy.
@@ -148,7 +148,7 @@ total = 0
 for i in irange(1000000):
    total += i
 }}}
-Generators  can be composed.  Here we create a generator on the squares of consecutive integers.
+Generators can be composed.  Here we create a generator on the squares of consecutive integers.
 
 {{{#!python
 #square is a generator
