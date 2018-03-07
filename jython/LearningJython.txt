@@ -911,13 +911,13 @@ Extend class org.python.core.PyObject and its sub-classes.
 
 Implement the following methods, among others::
 
-    __findattr__()
+    __findattr_ex__()
     __setattr__()
     __delattr__()
     __finditem__()
     Etc.
 
-``__findattr__()`` is called *only if* an attribute is not found
+``__findattr_ex__()`` is called *only if* an attribute is not found
 in an object.
 
 Exercise -- (1) Write a Java class that supports access to
@@ -936,7 +936,7 @@ Solution::
     {
         PyDictionary localdict = new PyDictionary();
 
-        public PyObject __findattr__(String name)
+        public PyObject __findattr_ex__(String name)
         {
             PyString pyname = new PyString(name);
             System.out.println("Finding attr for: \"" + name + "\"");
@@ -973,7 +973,7 @@ Notes:
     test()
 
 
-- Arguments to ``__findattr__`` and ``__finditem__`` must be
+- Arguments to ``__findattr_ex__`` and ``__finditem__`` must be
   interned strings. Literal strings are automatically interned.
   For other strings, use ``intern(s)``.
 
