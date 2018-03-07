@@ -1,6 +1,8 @@
-The [[http://cppyy.readthedocs.io|cppyy]] package integrates the Clang/LLVM-based [[https://github.com/vgvassilev/cling|Cling C++ interpreter]] into Python, providing interactive access to C/C++ from Python. Using precompiled modules, a class loader, and an everything-lazy implementation, cppyy is designed for automatically binding large scale C++ programs. PyPy supports cppyy natively for high performance, as described in this [[http://wlav.web.cern.ch/wlav/Cppyy_LavrijsenDutta_PyHPC16.pdf|PyHPC'16]] paper.
+The [[http://cppyy.readthedocs.io|cppyy]] package integrates the Clang/LLVM-based [[https://github.com/vgvassilev/cling|Cling C++ interpreter]] into Python, providing interactive access to C/C++ from Python. Using precompiled modules, a class loader, and an everything-lazy implementation, cppyy is designed for automatic generation of Python bindings for large scale C++ programs. PyPy supports cppyy natively for high performance, as described in this [[http://wlav.web.cern.ch/wlav/Cppyy_LavrijsenDutta_PyHPC16.pdf|PyHPC'16]] paper.
 
-Thanks to LLVM's JIT, cppyy supports embedded C++ code, automatic template instantiations, auto-downcasting, etc., etc. Where possible, C++ idioms are automatically recognized and pythonized. If necessary, a pythonization API provides further fine tuning for memory ownership, threading, and application-specific conversions. Example:
+Thanks to LLVM's JIT, cppyy supports embedded C++ code, automatic template instantiations, auto-downcasting, etc., etc. Where possible, C++ idioms are automatically recognized and pythonized. If necessary, a pythonization API provides further fine tuning for memory ownership, threading, and application-specific conversions.
+
+An example session follows:
 {{{#!highlight python
 >>> import cppyy
 >>> cppyy.cppdef("""
