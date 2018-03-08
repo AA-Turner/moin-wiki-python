@@ -68,7 +68,7 @@ sum_of_first_n = sum(firstn(1000000))
 }}}
 Note that the expression of the number generation logic is clear and natural. It is very similar to the implementation that built a list in memory, but has the memory usage characteristic of the iterator implementation.
 
-''Note: the above code is perfectly acceptable for expository purposes, but remember that in Python 2 '''firstn()''' is equivalent to the built-in '''xrange()''' function, and in Python 3 '''range()''' is a generator. The built-ins will always be much faster. SH''
+''Note: the above code is perfectly acceptable for expository purposes, but remember that in Python 2 '''firstn()''' is equivalent to the built-in '''xrange()''' function, and in Python 3 '''range() '''is ''''an immutable sequence type''''. The built-ins will always be much faster. SH''
 
 Generator expressions provide an additional shortcut to build generators out of expressions similar to that of list comprehensions.
 
@@ -116,7 +116,7 @@ This waste becomes more pronounced as the number of elements (our ''n'') becomes
 
 On the other hand, when we use `xrange`, we do not incur the cost of building a 1,000,000 element list in memory. The generator created by xrange will generate each number, which `sum` will consume to accumulate the sum.
 
-In the case of the "range" function, using it as an iterable is the dominant use-case, and this is reflected in Python 3.x, which makes the `range` built-in return a generator instead of a list.
+In the case of the "range" function, using it as an iterable is the dominant use-case, and this is reflected in Python 3.x, which makes the `range` built-in return a sequence-type object instead of a list.
 
 Note: a generator will provide performance benefits only if we do not intend to use that set of generated values more than once.
 
