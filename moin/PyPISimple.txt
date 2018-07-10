@@ -1,12 +1,12 @@
 [[CheeseShopDev|PyPI]] APIs: '''Simple''', [[PyPIJSON|JSON]], [[PyPIXmlRpc|XMLRPC]].
 
+For up to date documenation, see https://warehouse.readthedocs.io/api-reference/legacy/
 
 You can get a list of all the distributions available on PyPI from the URL
 
 {{{
     https://pypi.python.org/simple/
 }}}
-
 This returns a HTML page containing a list of links to the individual distribution pages.
 
 If you wish to retrieve information about the download files available for specific distribution you may use
@@ -14,7 +14,6 @@ If you wish to retrieve information about the download files available for speci
 {{{
     https://pypi.python.org/simple/<distribution_name>/
 }}}
-
 This returns a HTML page containing a list of links to the actual downloadable files, and to other URLs registered by the project. The distribution name should be in canonical form (all lowercase, with dashes replaced by underscores) but there is a redirect from the name as specified by the project to the canonical name (and from the names without a trailing backslash to the version with a trailing backslash). To minimise network round trips, the canonical name should be used.
 
 The following code can be used to extract the URLs from the simple API pages:
@@ -33,5 +32,4 @@ def scrape_links(dist, simple_index='https://pypi.python.org/simple/'):
         tree = ElementTree.parse(f)
     return [a.attrib['href'] for a in tree.iter('a')]
 }}}
-
 '''TODO''': Add further details about links, `rel=`, `#md5=`, `#egg=`, links scraped from long_description and how/when to follow download links externally.
