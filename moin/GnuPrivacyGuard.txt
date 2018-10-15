@@ -2,13 +2,18 @@
 
 = General information =
 
-[[http://www.gnupg.org|GNU Privacy Guard]] is a Free Software GNU GPLed implementation of the crypto standards OpenPGP and CMS (used by S/MIME). Also known as "GnuPG" or "GPG". There are several principle ways to access GnuPG functions from Python: 1. use the official GPGME library or do something more low level like 2. run the gpg commands and pipe to them. The GnuPG initiative recommends using GPGME because it provides a documented API.
+[[http://www.gnupg.org|GNU Privacy Guard]] is a Free Software GNU GPLed implementation of the crypto standards OpenPGP and CMS (used by S/MIME). Also known as "GnuPG" or "GPG". There are a couple of principal ways to access GnuPG functions from Python programs: 
+
+  1. use the official GPGME library.
+  1. run the gpg commands and pipe to them.
+
+The GnuPG initiative recommends using GPGME because it provides a documented API.
 
 = Accessing GnuPG via gpgme =
 
 [[https://gnupg.org/software/gpgme/index.html|GPGME]] is the official library for accessing GNU Privacy Guard from programs.  There are [[https://pypi.org/project/gpg/|python bindings for GPGME]] included within the official library and these can be downloaded in modern Python installs using:
 
-{{{pip install gpg}}}
+{{{python -m pip install gpg}}}
 
 The manual is currently missing from the various python documentation repositories but there is an [[https://files.au.adversary.org/crypto/gpgme-python-howto.html|online manual at adversary.org]] (/!\ bad HTTPS certificate at time of writing) .
 
@@ -20,7 +25,7 @@ There are multiple libraries which drive the gpg binary as a program and interpr
 
 [[https://pypi.org/project/pretty-bad-protocol/|pretty-bad-protocol]] is a rewrite of python-gnupg with a more conservative coding approach.  This library can be installed with:
 
-{{{pip install pretty-bad-protocol}}}
+{{{python -m pip install pretty-bad-protocol}}}
 
 improvements over `python-gnupg` include whitelisting of `gpg` program output designed to protect against vulnerabilities caused by changes in the program output.
 
@@ -28,7 +33,7 @@ improvements over `python-gnupg` include whitelisting of `gpg` program output de
 
 [[https://pypi.org/project/python-gnupg/|python-gnupg]] is the most widely used and recommended library.  This library has had multiple vulnerabilities in the past, however it is under active development so currently known vulnerabilities are believed to have been fixed.  It can be installed with:
 
-{{{pip install python-gnupg}}}
+{{{python -m pip install python-gnupg}}}
 
 = history =
 
