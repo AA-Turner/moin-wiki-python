@@ -1,56 +1,61 @@
 <<TableOfContents(2)>>
 
 = General information =
-[[http://www.gnupg.org|GNU Privacy Guard]] is a Free Software GNU GPLed implementation of the crypto standards OpenPGP and CMS (used by S/MIME). Also known as "GnuPG" or "GPG". There are several principle ways to access GnuPG functions from Python: 1. use the official GPGME library or do something more low level like 2. run the gpg commands and pipe to them. The GnuPG initiative recommends using GPGME because it provides a documented API.   
+
+[[http://www.gnupg.org|GNU Privacy Guard]] is a Free Software GNU GPLed implementation of the crypto standards OpenPGP and CMS (used by S/MIME). Also known as "GnuPG" or "GPG". There are several principle ways to access GnuPG functions from Python: 1. use the official GPGME library or do something more low level like 2. run the gpg commands and pipe to them. The GnuPG initiative recommends using GPGME because it provides a documented API.
 
 = Accessing GnuPG via gpgme =
 
-== pygpgme ==
-[[https://launchpad.net/pygpgme|pygpgme]] exposes the gpgme library to Python. The product was started by James Henstridge.
-Beside Python2 it supports Python 3 since v0.3 (March 2012). The wrapping is done using python's C interface directly without
-using a generator tool like SWIG.
+[[https://gnupg.org/software/gpgme/index.html|GPGME]] is the official library for accessing GNU Privacy Guard from programs.  There are [[https://pypi.org/project/gpg/|python bindings for GPGME]] included within the official library and these can be downloaded in modern Python installs using:
 
-== PyMe Python interface to GPGME ==
-[[http://pyme.sourceforge.net/|PyMe]] is a python interface to [[http://www.gnupg.org/related_software/gpgme/|GnuPG Made Easy (GPGME)]] library. 
+{{{pip install gpg}}}
 
-GPGME is a library designed to make access to GnuPG easier for applications. It provides a high-level cryptography API for encryption, decryption, signing, signature verification, and key management. It currently uses GnuPG as its backend, but the API is not restricted to this engine. In fact, support for other backends is planned.
-
-PyMe's development model is GPGME + Python + SWIG (just like m2crypto is an OpenSSL + Python + SWIG) combination which means that most of the functions and types are converted from C into Python automatically by SWIG. In short, to be able to use PyMe you need to be familiar with GPGME.
-
-== pgp-mime (using the assuan protocol to gpgme-tool) ==
-
-[[http://pypi.python.org/pypi/pgp-mime/|pgp-mime]] makes it easy to construct, verify, and send signed and/or encrypted email.  It uses a [[http://pypi.python.org/pypi/pyassuan/|pyassuan]]-based connection to [[http://git.gnupg.org/cgi-bin/gitweb.cgi?p=gpgme.git;a=blob;f=src/gpgme-tool.c;hb=HEAD|gpgme-tool]] for the cryptography, which is isolated in a {{{pgp_mime.crypt}}} module if you don't need the extra email-handling functionality.  This currently uses gpgme by running {{{gpgme-tool}}} via {{{subprocess}}}.  However, I'm working on turning {{{gpgme-tool}}} into a stand-alone server (similar to {{{gpg-agent}}}), after which users will be free to substitute other servers providing the {{{gpgme-tool}}} interface.
-
+The manual is currently missing from the various python documentation repositories but there is an [[https://files.au.adversary.org/crypto/gpgme-python-howto.html|online manual at adversary.org]] (/!\ bad HTTPS certificate at time of writing) .
 
 = Running gpg executables =
 
-== Python/GnuPG interface (old) ==
-The original [[http://www.amk.ca/python/code/gpg|Python/GnuPG interface]] is no longer actively maintained by amk.  Please record comments, recipes, and patches on this Wiki page.
-If anyone wants to maintain the module and needs a CVS repository to store the code, just ask for write permission to the [[http://www.sf.net/projects/pycrypto/|pycrypto project on SourceForge]].
+There are multiple libraries which drive the gpg binary as a program and interpret its output.   This approach is older and more mature than the library but is not recommended and has lead to a number of vulnerabilities both in the python modules, related systems and other programs such as email programs which work in this way.
 
-== GPG.py (2005, SteveTraugott, pipes) ==
-I've added a great deal to amk's GPG.py, building on Richard Jones' 1.3 update and adding more support for the decryption, signing, key management, bells, whistles, and so on which amk's original design implied.  This is still a pure-python implementation, and requires nothing that is not in Python 2.2.1 or later, other than the gpg executable itself.  This is *not* a drop-in replacement; I needed to make some interface changes to support decryption and to better abstract the internals of returned objects -- it might want to be called GPG2.py (or maybe something like GPGng.py to prevent confusion with anything related to gnupg version 2 -- ideas welcome, as well as opinions on whether the name needs to be changed in the first place).  
+== pretty-bad-protocol ==
 
-I don't know yet where the new module's permanent home is going to be, but as of this writing (July 2005) you can find it in the [[http://trac.t7a.org/isconf|ISconf]] SVN Repository at 
-http://trac.t7a.org/isconf/file/trunk/lib/python/isconf/GPG.py.  The right thing for me (or someone) to do going forward will be to confirm the license with amk and/or re-publish under the GPL, and post it somewhere more permanent.  If you do any of this before I get to it, then please update this page.  -- SteveTraugott
+[[https://pypi.org/project/pretty-bad-protocol/|pretty-bad-protocol]] is a rewrite of python-gnupg with a more conservative coding approach.  This library can be installed with:
 
-== python-gnupg (using pipes via subprocess) ==
-Just four years on (July 2009) from Steve Traugott's sterling work mentioned above, I've updated the module (now called gnupg.py to avoid confusion) and made it available (under the New BSD License) at http://code.google.com/p/python-gnupg/ - it uses the subprocess module and so is easiest to use under Pythons >= 2.4. A unittest harness is also included.
+{{{pip install pretty-bad-protocol}}}
 
-== GnuPGInterface (2002) ==
+improvements over `python-gnupg` include whitelisting of `gpg` program output designed to protect against vulnerabilities caused by changes in the program output.
 
-[[http://py-gnupg.sourceforge.net/|GnuPGInterface]] is a Python module to interface with GnuPG. (This is a different project than the one mentioned above.)
-It concentrates on interacting with GnuPG via filehandles,
-providing access to control GnuPG via versatile and extensible means.
+== python-gnupg ==
 
-This module is based on GnuPG::Interface, a Perl module by the same author. Unfortunately, like the related Perl module it is not very easy to use.
+[[https://pypi.org/project/python-gnupg/|python-gnupg]] is the most widely used and recommended library.  This library has had multiple vulnerabilities in the past, however it is under active development so currently known vulnerabilities are believed to have been fixed.  It can be installed with:
 
-= Related OpenPGP crypto not using GnuPG at all =
+{{{pip install python-gnupg}}}
 
-== openpgp (2005, OpenPGP reimplementation) ==
+= history =
 
-[[http://pypi.python.org/pypi/OpenPGP/|Python opengpg]]  uses the [[http://www.amk.ca/python/code/crypto.html|Python Crypto Toolkit]].
+== pgp binary running libraries history ==
 
-== cryptlib (Peter Gutmann) ==
+The original Python/GnuPG interface was written by [[http://amk.ca/|amk]].  This was updated in 2005 by SteveTraugott to GPG.py 2005 using pipes) building on Richard Jones' 1.3 update and adding more support for the decryption, signing, key management, bells, whistles, and so on which amk's original design implied.  This was still a pure-python implementation for Python 2.2.1 requiring only gpg executable itself.  This was *not* a drop-in replacement.
 
-[[http://www.cs.auckland.ac.nz/~pgut001/cryptlib/|cryptlib]] also offers access to [[http://www.openpgp.org/|OpenPGP]]  methods. It has a python-interface, but it's not natural at all.
+In parallel with the GnuPG interface a separate [[https://pypi.org/project/GnuPGInterface/|GnuPGInterface]] was released in 2002.  This project has not been updated since 2006 and the project pages are now broken so it should no longer be used in new software.  It concentrates on interacting with GnuPG via filehandles, providing access to control GnuPG via versatile and extensible means.
+
+After four years from Steve Traugott's work, in July 2009 Vinay Sajip updated the module (now called gnupg.py to avoid confusion) and made it available (under the New BSD License) in tarballs on Google Code.  The new version uses the subprocess module and so is easiest to use under Pythons >= 2.4. A unittest harness was also included.
+
+== pgpme based libraries history==
+
+GPGME was originally released as a C library.  A library exposing the gpgme library to Python, [[http://pyme.sourceforge.net/|PyMe]] was released which provided bindings for this.  PyMe's development model was based on GPGME + Python + SWIG (just like m2crypto is an OpenSSL + Python + SWIG) meaning that most of the functions and types were converted from C into Python automatically by SWIG. That library has [[https://git.gnupg.org/cgi-bin/gitweb.cgi?p=gpgme.git;a=blob;f=lang/python/README;hb=HEAD|now been merged into GPGME]] and is supposed to be maintained there.
+
+
+[[https://launchpad.net/pygpgme|pygpgme]] ([[https://pypi.org/project/pygpgme/|PyGPGME on PyPi]]) was started by James Henstridge.  Beside Python2 it supports Python 3 since v0.3 (March 2012). The wrapping is done using python's C interface directly without using a generator tool like SWIG.  This project has not been updated since 2013 and should probably be considered obsolete.
+
+There are a number of other old libraries which were built to support access to GNU Privacy Guard.  These probably should not be used in new projects.
+
+
+= related libraries =
+
+The following libraries work with GNU PG to provide other functions.
+
+== pgp-mime (using the assuan protocol to gpgme-tool) ==
+
+[[http://pypi.python.org/pypi/pgp-mime/|pgp-mime]] makes it easy to construct, verify, and send signed and/or encrypted email.  It uses a [[http://pypi.python.org/pypi/pyassuan/|pyassuan]]-based connection to [[http://git.gnupg.org/cgi-bin/gitweb.cgi?p=gpgme.git;a=blob;f=src/gpgme-tool.c;hb=HEAD|gpgme-tool]] for the cryptography, which is isolated in a {{{pgp_mime.crypt}}} module if you don't need the extra email-handling functionality.  This currently uses gpgme by running {{{gpgme-tool}}} via {{{subprocess}}}.
+
+This module was created in 2012 and does not seem to have been updated since then so may not be suitable for production use.
