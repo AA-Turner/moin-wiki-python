@@ -11,11 +11,12 @@ The GnuPG initiative recommends using GPGME because it provides a documented API
 
 = Accessing GnuPG via gpgme =
 
-[[https://gnupg.org/software/gpgme/index.html|GPGME]] is the official library for accessing GNU Privacy Guard from programs.  There are [[https://pypi.org/project/gpg/|python bindings for GPGME]] included within the official library and these can be downloaded in modern Python installs using:
+[[https://gnupg.org/software/gpgme/index.html|GPGME]] is the official library for accessing GNU Privacy Guard from programs.  Although there are [[https://pypi.org/project/gpg/|python bindings for GPGME]] included within PyPi which could be installed with `pip`, this is not recommended by the PGP project since the PyPi library version would have to exactly match the version of GNUPG installed on your system.  Instead either
 
-{{{python -m pip install gpg}}}
+* install and use the version available with your operating system (pygpgme on RedHat family OSs, python3-gpgme for example on Debian family systems such as Ubuntu)
+* build gpgme and the associated language bindings and [[https://git.gnupg.org/cgi-bin/gitweb.cgi?p=gpgme.git;a=blob_plain;f=INSTALL;hb=HEAD|install from source]]  
 
-The manual is currently missing from the various python documentation repositories but there is an [[https://files.au.adversary.org/crypto/gpgme-python-howto.html|online manual at adversary.org]] (/!\ bad HTTPS certificate at time of writing) .
+The manual is currently missing from the various python documentation repositories but there is an [[https://files.au.adversary.org/crypto/gpgme-python-howto.html|online manual at adversary.org]] (/!\ bad HTTPS certificate at time of writing).
 
 = Running gpg executables =
 
