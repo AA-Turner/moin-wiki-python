@@ -38,7 +38,9 @@ improvements over `python-gnupg` include whitelisting of `gpg` program output de
 
 = history =
 
-== pgp binary running libraries history ==
+Not mentioned in this history there are a number of other old libraries which were built to support access to GNU Privacy Guard.  These probably should not be used in new projects.
+
+== history of libraries that call the gpg program ==
 
 The original Python/GnuPG interface was written by [[http://amk.ca/|amk]].  This was updated in 2005 by SteveTraugott to GPG.py 2005 using pipes) building on Richard Jones' 1.3 update and adding more support for the decryption, signing, key management, bells, whistles, and so on which amk's original design implied.  This was still a pure-python implementation for Python 2.2.1 requiring only gpg executable itself.  This was *not* a drop-in replacement.
 
@@ -46,15 +48,14 @@ In parallel with the GnuPG interface a separate [[https://pypi.org/project/GnuPG
 
 After four years from Steve Traugott's work, in July 2009 Vinay Sajip updated the module (now called gnupg.py to avoid confusion) and made it available (under the New BSD License) in tarballs on Google Code.  The new version uses the subprocess module and so is easiest to use under Pythons >= 2.4. A unittest harness was also included.
 
+In 2013, in response to vulnerabilities in python-gnupg, a fork was made by Isis Lovecruft, this was initially available on PyPi as `gnupg` but has now been [[https://blog.patternsinthevoid.net/pretty-bad-protocolpeople.html|renamed to pretty-bad-protocol]] to avoid any confusion.  This library has now completely rewritten the original and has not been vulnerable to some vulnerabilities which have been found in python-gnupg since.  
+
 == pgpme based libraries history ==
 
 GPGME was originally released as a C library.  A library exposing the gpgme library to Python, [[http://pyme.sourceforge.net/|PyMe]] was released which provided bindings for this.  PyMe's development model was based on GPGME + Python + SWIG (just like m2crypto is an OpenSSL + Python + SWIG) meaning that most of the functions and types were converted from C into Python automatically by SWIG. That library has [[https://git.gnupg.org/cgi-bin/gitweb.cgi?p=gpgme.git;a=blob;f=lang/python/README;hb=HEAD|now been merged into GPGME]] and is supposed to be maintained there.
 
 
 [[https://launchpad.net/pygpgme|pygpgme]] ([[https://pypi.org/project/pygpgme/|PyGPGME on PyPi]]) was started by James Henstridge.  Beside Python2 it supports Python 3 since v0.3 (March 2012). The wrapping is done using python's C interface directly without using a generator tool like SWIG.  This project has not been updated since 2013 and should probably be considered obsolete.
-
-There are a number of other old libraries which were built to support access to GNU Privacy Guard.  These probably should not be used in new projects.
-
 
 = related libraries =
 
