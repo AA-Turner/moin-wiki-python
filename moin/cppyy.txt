@@ -3,35 +3,50 @@ The [[http://cppyy.readthedocs.io|cppyy]] package integrates the Clang/LLVM-base
 Thanks to LLVM's JIT, cppyy supports embedded C++ code, automatic template instantiations, auto-downcasting, etc., etc. Where possible, C++ idioms are automatically recognized and pythonized. If necessary, a pythonization API provides further fine tuning for memory ownership, threading, and application-specific conversions.
 
 An example session follows:
+
 {{{#!highlight python
 >>> import cppyy
 >>> cppyy.cppdef("""
 ... class MyClass {
 ... public:
-...     MyClass(int i) : m_data(i) {}
-...     int m_data;
+...    MyClass(int i) : m_data(i) {}
+...    virtual ~MyClass() {}
+...    virtual int add_int(int i) { return m_data + i; }
+...    int m_data;
 ... };""")                               # defines a new C++ class
 >>> from cppyy.gbl import MyClass        # bound on-the-fly
 >>> v = cppyy.gbl.std.vector[MyClass]()  # template generated
->>> v += [MyClass(i) for i in range(3)]
+>>> v += [MyClass(i) for i in range(2)]
 >>> len(v)
-3
+2
 >>> for m in v:                          # idiomatically mapped
 ...    print(m.m_data)
 ...
 0
 1
-2
 # create a C++ function on the fly and attach on the Python side
 >>> cppyy.cppdef("auto add_int = [](MyClass* m, int a) { return m->m_data + a; };")
 >>> MyClass.add_int = lambda self, i: cppyy.gbl.add_int(self, i)
 >>> for m in v:
 ...    print(m.add_int(1))
-... 
+...
 1
 2
+# cross inheritence (CPython only for now)
+>>> class PyMyClass(MyClass):
+...    def add_int(self, i):
+...       return self.m_data + 2*i
+...
+# helper on C++ side to show inheritence
+>>> cppyy.cppdef("int callback(MyClass* m, int i) { return m->add_int(i); }")
+>>> cppyy.gbl.callback(m, 2)             # calls C++ add_int
 3
->>>
+>>> cppyy.gbl.callback(PyMyClass(1), 2)  # calls Python-side override
+5
 }}}
+Source and wheels available on PyPy. To install, run:
 
-Full details in the cppyy documentation: [[http://cppyy.readthedocs.io]]
+{{{
+$ python -m pip install cppyy
+}}}
+Full details are in the cppyy documentation: http://cppyy.readthedocs.io
