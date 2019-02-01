@@ -1,6 +1,6 @@
-The [[http://cppyy.readthedocs.io|cppyy]] package integrates the Clang/LLVM-based [[https://github.com/vgvassilev/cling|Cling C++ interpreter]] into Python, providing interactive access to C/C++ from Python. Using precompiled modules, a class loader, and an everything-lazy implementation, cppyy is designed for automatic generation of Python bindings for large scale C++ programs. PyPy supports cppyy natively for high performance, as described in this [[http://wlav.web.cern.ch/wlav/Cppyy_LavrijsenDutta_PyHPC16.pdf|PyHPC'16]] paper.
+The [[http://cppyy.readthedocs.io|cppyy]] package integrates the Clang/LLVM-based [[https://github.com/vgvassilev/cling|Cling C++ interpreter]] into Python, providing interactive access to C/C++ from Python. It enables calling C++ from Python and calling Python from C++. Using precompiled modules, a class loader, and an everything-lazy implementation, cppyy is designed for automatic generation of Python bindings for large scale C++ programs. PyPy supports cppyy natively for high performance, as described in this [[http://wlav.web.cern.ch/wlav/Cppyy_LavrijsenDutta_PyHPC16.pdf|PyHPC'16]] paper.
 
-Thanks to LLVM's JIT, cppyy supports embedded C++ code, automatic template instantiations, auto-downcasting, etc., etc. Where possible, C++ idioms are automatically recognized and pythonized. If necessary, a pythonization API provides further fine tuning for memory ownership, threading, and application-specific conversions.
+Thanks to LLVM's JIT, cppyy supports embedded C++ code, automatic template instantiations, auto-downcasting, callbacks, cross-language inheritance, etc., etc. Where possible, C++ idioms are automatically recognized and "pythonized" (given a Python look-and-feel). If necessary, a pythonization API provides further fine tuning for memory ownership, threading, and application-specific conversions.
 
 An example session follows:
 
@@ -44,7 +44,7 @@ An example session follows:
 >>> cppyy.gbl.callback(PyMyClass(1), 2)  # calls Python-side override
 5
 }}}
-Source and wheels available on PyPy. To install, run:
+Source and wheels (for ManyLinux, Mac, and Windows 32b and 64b) are available on PyPI. To install, run:
 
 {{{
 $ python -m pip install cppyy
