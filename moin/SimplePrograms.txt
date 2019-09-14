@@ -315,7 +315,7 @@ for p in iter_primes():
     print (p)
 }}}
 ----
-21 lines: XML/HTML parsing (using Python 2.5 or third-party library) (this example is in Python 2 syntax)
+21 lines: XML/HTML parsing
 
 {{{
 dinner_recipe = '''<html><body><table>
@@ -326,7 +326,7 @@ dinner_recipe = '''<html><body><table>
 <tr><td>1</td><td>jar</td><td>pesto</td></tr>
 </table></body></html>'''
 
-# In Python 2.5 or from http://effbot.org/zone/element-index.htm
+# From http://effbot.org/zone/element-index.htm
 import xml.etree.ElementTree as etree
 tree = etree.fromstring(dinner_recipe)
 
@@ -338,10 +338,10 @@ pantry = set(['olive oil', 'pesto'])
 for ingredient in tree.getiterator('tr'):
     amt, unit, item = ingredient
     if item.tag == "td" and item.text not in pantry:
-        print "%s: %s %s" % (item.text, amt.text, unit.text)
+        print ("%s: %s %s" % (item.text, amt.text, unit.text))
 }}}
 ----
-28 lines (this example is in Python 2 syntax): 8-Queens Problem (define your own exceptions)
+28 lines: 8-Queens Problem (define your own exceptions)
 
 {{{
 BOARD_SIZE = 8
@@ -370,8 +370,8 @@ def add_queen(queens):
     raise BailOut
 
 queens = add_queen([])
-print queens
-print "\n".join(". "*q + "Q " + ". "*(BOARD_SIZE-q-1) for q in queens)
+print (queens)
+print ("\n".join(". "*q + "Q " + ". "*(BOARD_SIZE-q-1) for q in queens))
 }}}
 ----
 33 lines (this example is in Python 2 syntax): "Guess the Number" Game (edited) from http://inventwithpython.com
@@ -381,30 +381,30 @@ import random
 
 guesses_made = 0
 
-name = raw_input('Hello! What is your name?\n')
+name = input('Hello! What is your name?\n')
 
 number = random.randint(1, 20)
-print 'Well, {0}, I am thinking of a number between 1 and 20.'.format(name)
+print ('Well, {0}, I am thinking of a number between 1 and 20.'.format(name))
 
 while guesses_made < 6:
 
-    guess = int(raw_input('Take a guess: '))
+    guess = int(input('Take a guess: '))
 
     guesses_made += 1
 
     if guess < number:
-        print 'Your guess is too low.'
+        print ('Your guess is too low.')
 
     if guess > number:
-        print 'Your guess is too high.'
+        print ('Your guess is too high.')
 
     if guess == number:
         break
 
 if guess == number:
-    print 'Good job, {0}! You guessed my number in {1} guesses!'.format(name, guesses_made)
+    print ('Good job, {0}! You guessed my number in {1} guesses!'.format(name, guesses_made))
 else:
-    print 'Nope. The number I was thinking of was {0}'.format(number)
+    print ('Nope. The number I was thinking of was {0}'.format(number))
 }}}
 ----
 CategoryDocumentation
