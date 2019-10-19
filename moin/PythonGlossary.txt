@@ -36,11 +36,11 @@ A [[attachment:PySymbols.html|symbol glossary]] is also available.
 <<Anchor(docstring)>>
  * '''docstring''' - A string that appears as the lexically first expression in a module, class definition or function/method definition is assigned as the {{{__doc__}}} attribute of the object where it is available to documentation tools or the {{{help()}}} builtin function.
 
- * '''duck typing''' - From the "If it walks, talks, and looks like a duck, then its a duck" principle. Python uses duck typing in that if an object of some user-defined type exhibits all of the expected interfaces of some type (say the string type), then the object can be treated as if it really were of that type. 
+ * '''duck typing''' - From the "If it walks, talks, and looks like a duck, then it's a duck" principle. Python uses duck typing in that if an object of some user-defined type exhibits all of the expected interfaces of some type (say the string type), then the object can be treated as if it really were of that type. 
 
  * '''dynamic typing''' - A style of typing of variables where the type of objects to which variables are assigned can be changed merely by reassigning the variables. Python is dynamically typed. Thus, unlike as in a statically typed language such as C, a variable can first be assigned a string, then an integer, and later a list, just by making the appropriate assignment statements. This frees the programmer from managing many details, but does come at a performance cost.
 
- * '''EAFP''' - Acronym for the saying it's "Easier to Ask for Forgiveness than Permission".  This common Python coding style assumes the existance of valid keys or attributes and catches exceptions if the assumption proves false.  This clean and fast style is characterized by the presence of many `try` and `except` statments.  The technique contrasts with the '''LBYL''' style that is common in many other languages such as C.
+ * '''EAFP''' - Acronym for the saying it's "Easier to Ask for Forgiveness than Permission".  This common Python coding style assumes the existence of valid keys or attributes and catches exceptions if the assumption proves false.  This clean and fast style is characterized by the presence of many `try` and `except` statements.  The technique contrasts with the '''LBYL''' style that is common in many other languages such as C.
 
  * '''EIBTI''' - Acronym for "Explicit Is Better Than Implicit", one of Python's design principles, included in the '''Zen of Python'''.
 
@@ -70,9 +70,9 @@ A [[attachment:PySymbols.html|symbol glossary]] is also available.
 
  * '''immutable''' - An object with fixed value. Immutable objects include numbers, strings and tuples. Such an object cannot be altered. A new object has to be created if a different value has to be stored. They play an important role in places where a constant hash value is needed such as the keys of a '''dictionary'''.
 
- * '''integer division''' - Mathematical division discarding any remainder, for example 3 / 2 returns 1, in contrast to the 1.5 returned by float division. Also called "floor division". When dividing two integers the outcome will always be another integer (having the floor function applied to it). However, if one of the operands is another numeric type (such as a float), the result will be coerced (see coercion) to a common type. For example, an integer divided by  a float will result in a float value, possibly with a decimal fraction. Integer division can be forced by using the '//' operator instead of the '/' operator.
+ * '''integer division''' - Mathematical division discarding any remainder, for example 3 // 2 returns 1, in contrast to the 1.5 returned by float division. Also called "floor division". When dividing two integers the outcome will always be another integer (having the floor function applied to it). However, if one of the operands is another numeric type (such as a float), the result will be coerced (see coercion) to a common type. For example, an integer divided by  a float will result in a float value. Integer division can be carried out by using the '//' operator instead of the '/' operator (used for "true division").
 
- * '''interactive''' - Python has an interactive interpreter which means that you can try out things and directly see its result, just launch `python` with no arguments. A very powerful way to test out new ideas, inspect libraries (remember `x.__doc__` and `help(x)`) and improve programming skills.
+ * '''interactive''' - Python has an interactive interpreter which means that you can try out things and directly see its result. To use it, launch `python3` with no arguments. A very powerful way to test out new ideas, inspect libraries (remember `x.__doc__` and `help(x)`) and improve programming skills.
 
  * '''interpreted''' - Python is an interpreted language (like Perl), as opposed to a compiled one (like C). This means that the source files can be run directly without first creating an executable which is then run. Interpreted languages typicaly have a shorter development/debug cycle than compiled ones, though their programs generally also run more slowly. See also '''interactive'''.
 
@@ -102,20 +102,15 @@ A [[attachment:PySymbols.html|symbol glossary]] is also available.
 
  * '''nested scope''' - The ability to refer to a variable in an enclosing definition.  For instance, a function defined inside another function can refer to variables in the outer function.  Note that nested scopes work only for reference and not for assignment which will always write to the innermost scope.  In contrast, local variables both read and write in the innermost scope.  Likewise, global variables read and write to the global namespace.
 
-<<Anchor(new-style-class)>>
- * '''new-style class''' - Any class that inherits from `object`.  This includes all built-in types like `list` and `dict`.  Only new style classes can use Python's newer, versatile features like `__slots__`, descriptors, properties, `__getattribute__`, class methods, and static methods.
-
  * '''object''' - Any data with state (attributes or value) and defined behavior (methods).
 
  * '''object oriented''' - Programming typified by a data-centered (as opposed to a function-centered) approach to program design.
 
- * '''old-style class''' - Any class that does not inherit (directly or indirectly) from `object`.
-
  * '''pie syntax''' - A syntax using '@' for decorators that was committed to an alpha version of Python 2.4. So called because the '@' vaguely resembles a pie and the commital came on the heels of the Pie-thon at an open source conference in 2004.
 
- * '''property''' - a built-in data type, used to implement managed (computed) attributes. You assign the property object created by the call '''property'''( ''optional-args'' ''')''' to a class attribute of a [[PythonGlossary#new-style-class|new-style class]]. When the attribute is accessed through an ''instance'' of the class, it dispatches functions that implement the managed-attribute operations, such as get-the-value and set-the-value.
+ * '''property''' - a built-in data type, used to implement managed (computed) attributes. You assign the property object created by the call '''property'''( ''optional-args'' ''')''' to a class attribute. When the attribute is accessed through an ''instance'' of the class, it dispatches functions that implement the managed-attribute operations, such as get-the-value and set-the-value.
 
- * '''Python 3000''' - A mythical Python release, allowed to be backward incompatible, with telepathic interface.
+ * '''Python 3000''' - older name for [[https://www.python.org/dev/peps/pep-3000/ | Python 3]]. An update to the language that allowed breaking changes to be made in order to add features and improve various functionality.
 
  * '''regular expression''' - A formula for matching strings that follow some pattern. Regular expressions are made up of normal characters and ''metacharacters''. In the simplest case, a regular expression looks like a standard search string. For example, the regular expression "testing" contains no metacharacters. It will match "testing" and "123testing" but it will not match "Testing". Metacharacters match some expressions like '.' metacharacter match any single character in a search string.
 
@@ -123,11 +118,11 @@ A [[attachment:PySymbols.html|symbol glossary]] is also available.
 
  * '''sequence''' - An '''iterable''' that also supports random access using `__getitem__` and `len`.  Some builtin sequence types are `list`, `str`, `tuple`, and `unicode`.  Note that `dict` also supports these two operations but is considered a '''mapping''' rather than a sequence because the lookups use arbitrary keys rather than consecutive numbers and it should be considered unsorted.
 
- * '''{{{__slots__}}}''' - A declaration inside a '''new-style class''' that saves memory by pre-declaring space for instance attributes and eliminating instance dictionaries.  Though popular, the technique is somewhat tricky to get right and is best reserved for rare cases where there are large numbers of instances in a memory critical application.
+ * '''{{{__slots__}}}''' - A declaration inside a class that saves memory by pre-declaring space for instance attributes and eliminating instance dictionaries.  Though popular, the technique is somewhat tricky to get right and is best reserved for rare cases where there are large numbers of instances in a memory critical application.
 
  * '''static typing''' - A style of typing of variables common to many programming languages (such as C) where a variable, having been assigned an object of a given type, cannot be assigned objects of different types subsequently.
 
- * '''string''' - One of the basic types in Python that store text. In Python 2.X strings store text as a 'string of bytes', and so the string type can also be used to store binary data. Also see Unicode.
+ * '''string''' - One of the basic types in Python that store text. In Python 3, stores text as a sequence of Unicode code points. 
 
  * '''triple-quoted string''' - A string that is bounded by three instances of either the double quote mark (") or the single quote mark ('). For instance:
 
@@ -139,9 +134,7 @@ A [[attachment:PySymbols.html|symbol glossary]] is also available.
 
  * '''tuple''' - (pronounced TUH-pul or TOO-pul) A built-in Python datatype, which is an '''immutable''' ordered '''sequence''' of values. Note that only the sequence itself is immutable. If it contains a '''mutable''' value such as a '''dictionary''', that value's content may be changed (e.g. adding new key/value pair). Any Python '''first-class object''' can be placed in a tuple as a ''value''.
 
- * '''type''' - A "sort" or "category" of data that can be represented by a programming language. Types differ in their properties (such as mutability and immutability), the methods and functions applicable to them, and in their representations. Python includes, among others, the string, integer, long, floating point, list, tuple, and dictionary types.
-
- * '''unicode''' - The unicode type is the companion to the string type. They are used to store text with characters represented as Unicode code points.
+ * '''type''' - A "sort" or "category" of data that can be represented by a programming language. Types differ in their properties (such as mutability and immutability), the methods and functions applicable to them, and in their representations. Python includes, among others, the string, bytes, integer, long, floating point, list, tuple, and dictionary types.
 
  * '''whitespace''' - The unconventional use of space characters (' ') to control the flow of a program. Instead of a loosely-enforced ideal, this is an integral part of Python syntax. It's a tradeoff between readability and flexibility in favor of the former.
 
@@ -150,5 +143,11 @@ A [[attachment:PySymbols.html|symbol glossary]] is also available.
 == misc ==
 
  * '''>>>''' - The typical Python prompt of the interactive shell. Often seen for code examples that can be tried right away in the interpreter. Not to be confused with ">" symbols used for the indentation of cited material on email lists.
+
+
+= Historical information =
+
+Previous versions of this page were mostly written before Python 3 was commonly used. For historical interest or Python 2-specific definitions, please see [[https://wiki.python.org/moin/PythonGlossary?action=recall&rev=36|previous page revisions]].
+
 ----
 CategoryDocumentation
