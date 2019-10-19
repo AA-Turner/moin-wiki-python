@@ -20,7 +20,7 @@ is at the path "/branches/py3k/".
 = What changed in Python 3.0? =
 
 Read [[http://docs.python.org/3.0/whatsnew/3.0.html|What's New in Python 3.0]], 
-which lists the changes between Python 2.6 and Python 3.0.
+which lists the changes between Python 2.6+ and Python 3.0.
 
 = What will happen to the Python 2.x versions? =
 
@@ -34,7 +34,7 @@ As users attempt to port packages to 3.x, they will surely report bugs in the co
 
 = How should I port existing Python code to Python 3.0? =
 
-Python 2.6 and 3.0 include a tool called 2to3
+Python 2.6+ and 3.0 include a tool called 2to3
 that parses Python 2.x code and rewrites it to work in Python 3.0.
 2to3 includes a large set of ''fixers'', each one updating a particular language feature.
 
@@ -43,7 +43,7 @@ We suggest the following steps for porting a package to 3.0:
 * Have a test suite that exercises significant portions of 
 your library or application's functionality, the more the better.
 
-* Run the test suite using Python 2.6 and specifying the `-3` switch, which enables warnings about code that's incompatible with Python 3.0.  Modify the code to avoid triggering the warnings.
+* Run the test suite using Python 2.6+ and specifying the `-3` switch, which enables warnings about code that's incompatible with Python 3.0.  Modify the code to avoid triggering the warnings.
 
 * Run the `2to3` script over the code.  If `2to3` can't perform the conversion due to code constructs that can't be automatically translated, modify your 2.x code to use 3.0-compatible 
 features.
@@ -77,7 +77,7 @@ apply them to the input of 2to3 so that
 Guido van Rossum strongly suggests not changing 
 your APIs when porting to 3.0, because API changes will 
 make it difficult for users to tell whether test suite failures 
-are due to the 2.6->3.0 transition or to the API changes.
+are due to the 2.6+->3.0 transition or to the API changes.
 
 [[Early2to3Migrations]] has links to some early attempts at porting packages to 3.x.
 
@@ -103,20 +103,6 @@ If you're using your `setup.py` file to upload a package to the
 
 = I want to start learning/teaching Python.  What version should I use? =
 
-It depends on what your intended applications are.
+Support for Python 2.x will officially end on 1 January 2020. After that date, there will be no further updates nor bugfixes. Since this end-of-life date has been planned for nearly a decade (the first end-of-life date was slated to happen in 2014, and was pushed back to 2020), and nearly all popular libraries have already ported their code, Python 2.x is well on its way to obsolescence. As such, we can only recommend learning and teaching Python 3 - which is simpler and will remain relevant well into the future.
 
-If you want to learn/teach the basic ideas of programming, without much reference to external libraries, Python 3.0 
-is simpler.   [[http://www.comp.leeds.ac.uk/nde/papers/teachpy3.html|Nick Efford's paper]] discusses his experience.
-
-If you're learning/teaching programming in order to accomplish 
-a particular task, such as scientific programming or 
-web development, your decision should probably be driven by the
-availability of libraries.
-
-If you decide to stick with 2.x, check whether Python comes with
-your operating system
-by entering "python" in a command line window. If you see a response from a Python interpreter it will include a version number in its initial display. Generally any recent version will do, as Python tries to maintain backwards compatibility.  The version included with your operating system probably includes
-extension modules and additional libraries, so you should probably stick with that version.  Otherwise, you should download Python 2.6.
-
-See the [[BeginnersGuide]] for more information on getting 
-started with Python.
+See the [[BeginnersGuide]] for more information on getting started with Python.
