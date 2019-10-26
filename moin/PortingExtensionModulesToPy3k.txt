@@ -5,7 +5,7 @@
 
     Python 2 reaches end of life in January 2020, and will no longer receive security updates. This page has resources to help with porting applications still running Python 2 to Python 3.
 
-.. note:: 
+.. note::
 
    The first draft for this document was written by Benjamin Peterson at http://docs.python.org/howto/cporting.
 
@@ -278,40 +278,40 @@ Martin's notes from psycopg2 porting
 Philip Semanchuk's notes from porting posix_ipc and sysv_ipc
 ************************************************************
 
-I added Python 3 compatibility to my modules 
+I added Python 3 compatibility to my modules
 `posix_ipc <http://semanchuk.com/philip/posix_ipc/>`_ and
 `sysv_ipc <http://semanchuk.com/philip/sysv_ipc/>`_ while retaining
-compatibility with Python 2.x (from 2.4 or 2.5, at least). I managed to 
+compatibility with Python 2.x (from 2.4 or 2.5, at least). I managed to
 keep it all in one codebase.
 
 I didn't know this document existed when I did my work, so I did things
-the hard way. I started by reading the Python 3 C API documentation and then 
+the hard way. I started by reading the Python 3 C API documentation and then
 compiling my Python 2.x code and attacking where the compiler complained.
 
-Note that 
+Note that
 `Python 3.0 has been given a decent burial <http://www.python.org/download/releases/3.0.1/>`_
 so you probably don't need to support it. Start working with Python 3.1;
 it's easier.
 
-I used a lot of the same techniques Martin used (see psycopg notes above). One major 
+I used a lot of the same techniques Martin used (see psycopg notes above). One major
 stylistic difference is that instead of defining a macro like Martin's
 Text_FromUTF8, I have a lot of code that looks like this:  ::
 
-    #if PY_MAJOR_VERSION > 2 
+    #if PY_MAJOR_VERSION > 2
         return PyUnicode_FromString(name ? name : "(no name)");
     #else
         return PyString_FromString(name ? name : "(no name)");
     #endif
 
-This became tedious and I think a macro might be a better solution. I used 
+This became tedious and I think a macro might be a better solution. I used
 the same ifdef technique for many calls to ``PyInt_FromLong/PyLong_FromLong``
 and  think a macro might have been a better choice there, too.
 
 Some of my code needs to accept strings that can contain C NULLs (``0x00``).
-Under Python 2.x the argument format code for this is s# and the caller's 
-string is split ino two C variables (a ``char *`` and an ``int``). Under 
+Under Python 2.x the argument format code for this is s# and the caller's
+string is split ino two C variables (a ``char *`` and an ``int``). Under
 Python 3.x, the preferred format code is s* and the caller's string is placed
-into a ``PyBuffer`` struct. 
+into a ``PyBuffer`` struct.
 
 To deal with this difference, I created a struct that mimiced ``Py_buffer`` so
 that my code could be mostly agnostic to which it was dealing with. There's a
@@ -321,7 +321,7 @@ good example of this in the function ``MessageQueue_send()`` which is on line
 Something that helped me a lot generally was to download the source for
 cx_Oracle which was a module that had already been made Python 2 & 3
 compatible. When the compiler complained about a 2.x-specific function in my
-code (e.g. ``PyInt_Check``), I grepped the cx_Oracle code to see what 
+code (e.g. ``PyInt_Check``), I grepped the cx_Oracle code to see what
 substitution they made for the function in question.
 
 My modules and cx_Oracle are all BSD-licensed so even GPLed projects can
@@ -331,5 +331,6 @@ mine the source code for tips.
 *****
 Links
 *****
-
-- `Stephen Deibel's blog post on supporting Python 2.0 through 3.0 <http://pythonology.blogspot.com/2009/02/making-code-run-on-python-20-through-30.html>`_
+ - `Brandon Rhodes on porting a C extension module to Python 3.0 <http://rhodesmill.org/brandon/2008/porting-a-c-extension-module-to-python-30/>`_
+ - sq_slice handling has changed. Simple slicing was removed from the C API. `Notes on how to fix it. <http://renesd.blogspot.com/2009/07/python3-c-api-simple-slicing-sqslice.html>`_
+ - `Stephen Deibel's blog post on supporting Python 2.0 through 3.0 <http://pythonology.blogspot.com/2009/02/making-code-run-on-python-20-through-30.html>`_
