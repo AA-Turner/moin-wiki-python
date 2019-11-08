@@ -1,6 +1,6 @@
-The [[http://cppyy.readthedocs.io|cppyy]] package integrates the Clang/LLVM-based [[https://github.com/vgvassilev/cling|Cling C++ interpreter]] into Python, providing interactive access to C/C++ from Python. It enables calling C++ from Python and calling Python from C++. Using precompiled modules, a class loader, and an everything-lazy implementation, cppyy is designed for automatic generation of Python bindings for large scale C++ programs. PyPy supports cppyy natively for high performance, as described in this [[http://wlav.web.cern.ch/wlav/Cppyy_LavrijsenDutta_PyHPC16.pdf|PyHPC'16]] paper.
+The [[http://cppyy.readthedocs.io|cppyy]] package provides fast, automatic, Python-C++ bindings, including run-time instantiation of C++ templates, cross-inheritance, callbacks, auto-casting, transparent use of smart pointers, etc., etc. Many C++ idioms are automatically recognized and "pythonized" (given a Python look-and-feel), allowing drop-in placement in Python idioms and integration with standard libraries such as  NumPy and ctypes. Most importantly it makes it possible to write higher-level (with ownership, threading, and application-specific rules) Python modules on top of C++ in pure Python, without the need to learn an intermediate language or language extension.
 
-Thanks to LLVM's JIT, cppyy supports embedded C++ code, automatic template instantiations, auto-downcasting, callbacks, cross-language inheritance, etc., etc. Where possible, C++ idioms are automatically recognized and "pythonized" (given a Python look-and-feel). If necessary, a pythonization API provides further fine tuning for memory ownership, threading, and application-specific conversions.
+Cppyy works by integrating the Clang/LLVM-based [[https://github.com/vgvassilev/cling|Cling C++ interpreter]], providing interactive access to C/C++ from Python. It enables calling C++ from Python and calling Python from C++. Using precompiled modules, a class loader, and an everything-lazy implementation, cppyy is designed for automatic generation of Python bindings for large scale C++ programs. PyPy supports cppyy natively for high performance, as described in this [[http://wlav.web.cern.ch/wlav/Cppyy_LavrijsenDutta_PyHPC16.pdf|PyHPC'16]] paper.
 
 An example session follows:
 
@@ -48,5 +48,10 @@ Source and wheels (for ManyLinux, Mac, and Windows 32b and 64b) are available on
 
 {{{
 $ python -m pip install cppyy
+}}}
+If you prefer conda, cpppy is also available from conda-forge for Linux and Mac:
+
+{{{
+$ ﻿conda install -c conda-forge cppyy
 }}}
 Full details are in the cppyy documentation: http://cppyy.readthedocs.io
