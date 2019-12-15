@@ -130,3 +130,24 @@ def my_range(start, end, step):
 for x in my_range(1, 10, 0.5):
     print(x)
 }}}
+
+
+== A note on `range` ==
+
+The [[https://docs.python.org/3/library/functions.html#func-range|''range'']] function is seen so often in ''for'' statements that you might think ''range'' is part of the ''for'' syntax. It is not: it is a Python built-in function which returns a sequence following a specific pattern (most often sequential integers), which thus meets the requirement of providing a sequence for the ''for'' statement to iterate over.  Since ''for'' can operate directly on sequences, and there is often no need to count. This is a common beginner construct (if they are coming from another language with different loop syntax):
+
+{{{
+mylist = ['a', 'b', 'c', 'd']
+for i in range(len(mylist)):
+    # do something with mylist[i]
+}}}
+
+It can be replaced with this:
+
+{{{
+mylist = ['a', 'b', 'c', 'd']
+for v in mylist:
+    # do something with v
+}}}
+
+Consider {{{for var in range(len(something)):}}} to be a flag for possibly non-optimal Python coding.
