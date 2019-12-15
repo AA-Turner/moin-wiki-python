@@ -1,34 +1,4 @@
 = Miscellaneous Patches =
 
-See also Python20CriticalPatches and Python20FrequentlyAskedQuestions.
-
-=== Library modules ===
-
-''Note these links are invalid since the transition away from cvsweb.''
-
- * The mailbox.py module had a last-minute cheese bug.     [[http://cvs.sourceforge.net/cgi-bin/cvsweb.cgi/python/python/dist/src/Lib/mailbox.py.diff?r1=1.25&r2=1.26|Colored Diff]] [[http://cvs.sourceforge.net/cgi-bin/cvsweb.cgi/python/python/dist/src/Lib/mailbox.py.diff?r1=1.25&r2=1.26&f=c|Context Diff]]
-
- * Misc. bugfixes for sre_parse.py [[http://cvs.sourceforge.net/cgi-bin/cvsweb.cgi/python/python/dist/src/Lib/sre_parse.py.diff?r1=1.37&r2=1.38&sortby=date|Colored Diff]] [[http://cvs.sourceforge.net/cgi-bin/cvsweb.cgi/python/python/dist/src/Lib/sre_parse.py.diff?sortby=date&r1=1.37&r2=1.38&f=c|Context Diff]]
-
- * Fix typos in User''''''String.py [[http://cvs.sourceforge.net/cgi-bin/cvsweb.cgi/python/python/dist/src/Lib/UserString.py.diff?r1=1.6&r2=1.7&sortby=date|Colored Diff]] [[http://cvs.sourceforge.net/cgi-bin/cvsweb.cgi/python/python/dist/src/Lib/UserString.py.diff?sortby=date&r1=1.6&r2=1.7&f=c|Context Diff]]
-
- * Fix argument count of _cmp() in filecmp.py [[http://cvs.sourceforge.net/cgi-bin/cvsweb.cgi/python/python/dist/src/Lib/filecmp.py.diff?r1=1.6&r2=1.7|Colored Diff]] [[http://cvs.sourceforge.net/cgi-bin/cvsweb.cgi/python/python/dist/src/Lib/filecmp.py.diff?r1=1.6&r2=1.7&f=c|Context Diff]]
-
-=== Building ===
-
- * TELL64 problems on BSDI and Mac OSX [[http://cvs.sourceforge.net/cgi-bin/cvsweb.cgi/python/python/dist/src/Objects/fileobject.c.diff?r1=2.91&r2=2.92|Colored Diff]] [[http://cvs.sourceforge.net/cgi-bin/cvsweb.cgi/python/python/dist/src/Objects/fileobject.c.diff?r1=2.91&r2=2.92&f=c|Context Diff]]
-
- * Shared library problems on OpenBSD [[http://cvs.sourceforge.net/cgi-bin/cvsweb.cgi/python/python/dist/src/Python/dynload_shlib.c.diff?r1=2.6&r2=2.7|Colored Diff]] [[http://cvs.sourceforge.net/cgi-bin/cvsweb.cgi/python/python/dist/src/Python/dynload_shlib.c.diff?r1=2.6&r2=2.7&f=c|Context Diff]]
-
-=== Long file support on Linux ===
- 
-(Not a diff or patch, but worth a mention.)
-
-On some Linux systems, you can enable long support as follows:
-
-    export CC="-D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64";
-    ./configure
-
-But then file.tell() may return negative numbers for positions over 2G,
-due to an apparent libc bug.  As a work-around, change the function
-_portable_ftell() in Objects/fileobject.c to use the fgetpos() case.
+''' This set of pages is only relevant for historical reasons!'''
+Python development has moved on. If you are interested in the historical state of the project, please see the [[https://wiki.python.org/moin/Python20MiscPatches?action=recall&rev=4|previous version of this page]].
