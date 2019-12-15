@@ -10,7 +10,7 @@
 
 {{{
 for x in range(0, 3):
-    print "We're on time %d" % (x)
+    print("We're on time %d" % (x))
 }}}
 
 
@@ -19,7 +19,7 @@ for x in range(0, 3):
 {{{
 x = 1
 while True:
-    print "To infinity and beyond! We're getting close, on %d now!" % (x)
+    print("To infinity and beyond! We're getting close, on %d now!" % (x))
     x += 1
 }}}
 
@@ -39,9 +39,9 @@ If you've done any programming before, you have undoubtedly come across a ''for'
 When you have a block of code you want to run '''x''' number of times, then a block of code within that code which you want to run '''y''' number of times, you use what is known as a "nested loop". In Python, these are heavily used whenever someone has a list of lists - an iterable object within an iterable object.
 
 {{{
-for x in xrange(1, 11):
-    for y in xrange(1, 11):
-        print '%d * %d = %d' % (x, y, x*y)
+for x in range(1, 11):
+    for y in range(1, 11):
+        print('%d * %d = %d' % (x, y, x*y))
 }}}
 
 
@@ -51,28 +51,21 @@ for x in xrange(1, 11):
 Like the ''while'' loop, the ''for'' loop can be made to exit before the given object is finished. This is done using the ''break'' statement, which will immediately drop out of the loop and contine execution at the first statement after the block. You can also have an optional ''else'' clause, which will run should the ''for'' loop exit cleanly - that is, without breaking.
 
 {{{
-for x in xrange(3):
+for x in range(3):
     if x == 1:
         break
 }}}
 
-
-== Things to remember ==
-
-
- * range vs xrange
-
-The [[http://docs.python.org/library/functions.html#range|''range'']] is seen so often in ''for'' statements that you might think ''range'' is part of the ''for'' syntax. It is not: it is a Python built-in function which returns a sequence, which meets the requirement of providing a sequence for the ''for'' statement to iterate over. In Python 2.x, ''range'' generates the entire sequence when called, while ''xrange'' is a generator - it produces values on demand, not all up fromt.  You will often see ''xrange'' is used much more frequently than range. This is for one reason only - resource usage. For large sequences, the difference in memory usage can be considerable. ''xrange'' uses less memory, and should the ''for'' loop exit early, there's no need to waste time creating the unused numbers. This effect is tiny in smaller lists, but increases rapidly in larger lists as you can see in the examples below. For Python 3.x, ''range'' was changed, you can think of it as being equivalent to the Python 2.x ''xrange'', which no longer is defined in Python 3.x.
 
 == Examples ==
 
 ''For..Else''
 
 {{{
-for x in xrange(3):
-    print x
+for x in range(3):
+    print(x)
 else:
-    print 'Final x = %d' % (x)
+    print('Final x = %d' % (x))
 }}}
 
 
@@ -81,7 +74,7 @@ else:
 {{{
 string = "Hello World"
 for x in string:
-    print x
+    print(x)
 }}}
 
 ''Lists as an iterable''
@@ -89,7 +82,7 @@ for x in string:
 {{{
 collection = ['hey', 5, 'd']
 for x in collection:
-    print x
+    print(x)
 }}}
 
 
@@ -100,7 +93,7 @@ for x in collection:
 list_of_lists = [ [1, 2, 3], [4, 5, 6], [7, 8, 9]]
 for list in list_of_lists:
     for x in list:
-        print x
+        print(x)
 }}}
 
 
@@ -126,54 +119,6 @@ class Iterable(object):
 }}}
 
 
-
-''range vs xrange (Python 2)''
-
-{{{
-import time
-
-#use time.time() on Linux
-
-start = time.clock()
-for x in range(10000000):
-    pass
-stop = time.clock()
-
-print stop - start
-
-start = time.clock()
-for x in xrange(10000000):
-    pass
-stop = time.clock()
-
-print stop - start
-}}}
-
-
-''Time on small ranges''
-
-{{{
-import time
-
-#use time.time() on Linux
-
-start = time.clock()
-
-for x in range(1000):
-    pass
-stop = time.clock()
-
-print stop-start
-
-start = time.clock()
-for x in xrange(1000):
-    pass
-stop = time.clock()
-
-print stop-start
-}}}
-
-
 ''Your own range generator using yield''
 
 {{{
@@ -183,5 +128,5 @@ def my_range(start, end, step):
         start += step
 
 for x in my_range(1, 10, 0.5):
-    print x
+    print(x)
 }}}
