@@ -1,8 +1,7 @@
 #pragma section-numbers off
 = Using Pickle =
  * [[http://docs.python.org/library/pickle.html#data-stream-format|Official Pickle Use Documentation]]
- * [[http://www.python.org/doc/current/lib/pickle-example.html|Official Pickle Example]]
- * [[http://www.python.org/doc/current/lib/module-pickle.html|Official Pickle Module Documentation]]
+ * [[https://docs.python.org/3/library/pickle.html#module-pickle|Official Pickle Module Documentation]]
 
 == Pickle Example ==
 {{{#!python
@@ -20,28 +19,13 @@ import pickle
 favorite_color = pickle.load( open( "save.p", "rb" ) )
 # favorite_color is now { "lion": "yellow", "kitty": "red" }
 }}}
-For a more complex example, see [[http://www.python.org/doc/current/lib/pickle-example.html|the official Pickle example,]] and for API details, see the [[http://docs.python.org/library/pickle.html#data-stream-format|official Pickle use documentation.]]
+For more examples and API details, see the [[http://docs.python.org/library/pickle.html|official Pickle use documentation.]]
 
-== cPickle (Python 2.x only) ==
-In Python 2, you can speed up your pickle access with ''cPickle.'' (In Python3, importing ''pickle'' will automatically use the accelerated version if it is available.)
-
-The only difference is that you write...
-
-{{{#!python
-import cPickle as pickle
-}}}
-...at the top of your file, and now all your pickle calls are ''much'' faster. [[http://www.python.org/doc/current/lib/module-cPickle.html|("...up to 1000 times faster.")]]
-
-Why would you ever use native pickle, rather than cPickle?
-
- . ''Because pickle handles unicode objects.'' ''Because pickle is written in pure Python, it's easier to debug.''
 
 == Flying Pickle Alert! ==
 Pickle files can be hacked. If you receive a raw pickle file over the network, ''don't trust it!'' It could have malicious code in it, that would run arbitrary python when you try to de-pickle it.
 
 However, if you are doing your own pickle writing and reading, you're safe. (Provided no one else has access to the pickle file, of course.)
-
-You might also check out http://trustedpickle.sourceforge.net/ if you want to generate pickles, and later verify that you were the one that generated the pickle (e.g., if you are putting a pickle in a hidden field).
 
 == What can you Pickle? ==
 Generally you can pickle any object if you can pickle every attribute of that object.  Classes, functions, and methods cannot be pickled -- if you pickle an object, the object's class is not pickled, just a string that identifies what class it belongs to.  This works fine for most pickles (but note the discussion about long-term storage of pickles).
@@ -49,6 +33,8 @@ Generally you can pickle any object if you can pickle every attribute of that ob
 With pickle protocol v1, you ''cannot'' pickle open file objects, network connections, or database connections.  When you think about it, it makes sense -- pickle cannot will the connection for file object to exist when you unpickle your object, and the process of creating that connection goes beyond what pickle can automatically do for you.  If you really want to pickle something that has an attribute that is causing problems, look at the pickle documentation for {{{__getstate__}}}, {{{__setstate__}}}, and {{{__getinitargs__}}} -- using these you can exclude problematic attributes.
 
 With pickle protocol v2, you are able to pickle open file objects. This will change in a future version of Python. See [[http://bugs.python.org/issue10180|this bug report]] for more information.
+
+See [[https://docs.python.org/3/library/pickle.html#data-stream-format|the pickle documentation]] for more recent protocols (up to v5 as of Python 3.8).
 
 == Contributors ==
 LionKimbro, IanBicking, [[lwickjr]]
