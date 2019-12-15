@@ -131,17 +131,6 @@ causing the value to be stored in `color_data`.
 
 Some coding details:
 
- * In Python 2.x, a class containing a computed attribute must be based on the type '''object''':
-
- {{{
-class Widget(object):     # works
-    ...
-class Widget:             # does not work
-    ...
- }}}
-
- . In Python 3.x, all classes are automatically based on '''object''', so you can code the class statement either way.<<BR>> /* ??line break is workaround for MoinMoin bug */
-
  * The property object must be assigned to a class attribute. (This assignment gives the computed attribute its name; the property object itself doesn't know the name of the computed attribute that it implements.) The property "performs" as a computed attribute only when it is accessed through an instance of the class. Working at Python's interactive prompt shows this:
 
  {{{
