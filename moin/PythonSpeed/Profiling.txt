@@ -1,4 +1,14 @@
 = Profiling Python Programs =
+The [[https://github.com/emeryberger/scalene|Scalene profiler]] is both easy to use and provides a number of advantages over the profilers bundled with Python:
+
+ 1. Scalene is '''fast'''. It uses sampling instead of instrumentation or relying on Python's tracing facilities. Its overhead is typically no more than 10-20% (and often less).
+ 1. Scalene is '''precise'''. Unlike most other Python profilers, Scalene performs CPU profiling at the line level, pointing to the specific lines of code that are responsible for the execution time in your program. This level of detail can be much more useful than the function-level profiles returned by most profilers.
+ 1. Scalene separates out time spent running in Python from time spent in native code (including libraries). Most Python programmers aren't going to optimize the performance of native code (which is usually either in the Python implementation or external libraries), so this helps developers focus their optimization efforts on the code they can actually improve.
+ 1. Scalene profiles '''memory usage'''. In addition to tracking CPU usage, Scalene also points to the specific lines of code responsible for memory growth. It accomplishes this via an included specialized memory allocator.
+ 1. Scalene produces '''per-line memory profiles''', making it easier to track down leaks.
+ 1. Scalene profiles '''copying volume''', making it easy to spot inadvertent copying, especially due to crossing Python/library boundaries (e.g., accidentally converting numpy arrays into Python arrays, and vice versa).
+
+See the [[https://github.com/emeryberger/scalene|Scalene home page]] for installation and usage instructions.
 
 The [[http://www.gnome.org/~johan/lsprofcalltree.py|lsprofcalltree.py]] script (referenced in comments on [[http://ddaa.net/blog/python/lsprof-calltree|this blog entry]]) provides output which can then be used by [[http://kcachegrind.sourceforge.net/|KCachegrind]] to visualize the most time-consuming functions in a program, presented using tree map, call graph and list views.
 
@@ -7,11 +17,9 @@ The script can be used to run a program as follows:
 {{{
 python lsprofcalltree.py -o output.log yourprogram.py args
 }}}
-
 Obviously, in the above, `yourprogram.py` is the program being profiled and `args` are the desired arguments to be supplied to the program, if any. If the `-o` option is omitted, a default output file will be chosen based on the name of the profiled program; here, `output.log` is the file which will contain the profiling results.
 
 == Visualising the Output ==
-
 Once the program has terminated, the results of the profiling activity saved in the output file can be visualised using KCachegrind as follows:
 
 {{{
