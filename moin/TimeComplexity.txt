@@ -60,7 +60,7 @@ See dict -- the implementation is intentionally very similar.
 
 
 
- * As seen in the [[http://svn.python.org/projects/python/trunk/Objects/setobject.c|source code]] the complexities for set difference s-t or s.difference(t) ({{{set_difference()}}}) and in-place set difference s.difference_update(t) ({{{set_difference_update_internal()}}}) are different! The first one is O(len(s)) (for every element in s add it to the new set, if not in t). The second one is O(len(t)) (for every element in t remove it from s). So care must be taken as to which is preferred, depending on which one is the longest set and whether a new set is needed.
+ * As seen in the [[https://github.com/python/cpython/blob/master/Objects/setobject.c|source code]] the complexities for set difference s-t or s.difference(t) ({{{set_difference()}}}) and in-place set difference s.difference_update(t) ({{{set_difference_update_internal()}}}) are different! The first one is O(len(s)) (for every element in s add it to the new set, if not in t). The second one is O(len(t)) (for every element in t remove it from s). So care must be taken as to which is preferred, depending on which one is the longest set and whether a new set is needed.
  * To perform set operations like s-t, both s and t need to be sets. However you can do the method equivalents even if t is any iterable, for example s.difference(l), where l is a list.
 
 = dict =
@@ -68,6 +68,7 @@ The Average Case times listed for dict objects assume that the hash function for
 
 Note that there is a fast-path for dicts that (in practice) only deal with str keys; this doesn't affect the algorithmic complexity, but it can significantly affect the constant factors: how quickly a typical program finishes.
 ||<tablewidth="">'''Operation''' ||'''Average Case''' ||'''Amortized Worst Case''' ||
+||k in d ||O(1) ||O(n) ||
 ||Copy[2] ||O(n) ||O(n) ||
 ||Get Item ||O(1) ||O(n) ||
 ||Set Item[1] ||O(1) ||O(n) ||
