@@ -163,6 +163,22 @@ This uses pyp's built-in string and list variables (p and pp), as well as the va
 
 http://code.google.com/p/pyp/ http://opensource.imageworks.com/?p=pyp
 
+== Find All Indices of an Element in a List ==
+Say, you want to do the same as the list.index(element) method but return all indices of the element in the list rather than only a single one.
+
+In this one-liner, you’re looking for element 'Alice' in the list lst = [1, 2, 3, 'Alice', 'Alice'] so it even works if the element is not in the list (unlike the list.index() method).
+
+{{{
+# List
+lst = [1, 2, 3, 'Alice', 'Alice']
+
+# One-Liner
+indices = [i for i in range(len(lst)) if lst[i]=='Alice']
+
+# Result
+print(indices)
+# [3, 4]
+}}}
 == 10 one-liners that fit into a tweet ==
 I visited this page oftentimes and I loved studying the one-liners presented above. Thanks for creating this awesome resource, JAM and RJW! :)
 
