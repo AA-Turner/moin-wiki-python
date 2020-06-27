@@ -12,22 +12,22 @@ Of course, there is debate on whether one-liners are even ''Pythonic''.
  * [[JAM/Code/ComPYiler]] - This program compiles every .py file in the Python directory.
  * [[Powerful Python One-Liners/Hostname]] - This program tells you what your hostname is.
 
-== One-Liner Learning Resources ==
+== Free Python One-Liners Learning Resources ==
  * [[https://pythononeliners.com/|Free ''Python One-Liners'' videos & book resources]]
  * [[https://blog.finxter.com/10-python-one-liners/|Collection of ''One-Liners'' with interactive shell]]
- * [[https://www.amazon.com/gp/product/B07ZY7XMX8|''Python One-Liners'' Book]]
+ * [[https://www.amazon.com/gp/product/B07ZY7XMX8|Book ''Python One-Liners'']]
  * [[https://www.quora.com/What-are-some-of-the-most-elegant-greatest-Python-one-liners|Interesting Quora Thread ''Python One-Liner'']]
 
 Some thoughts by ewo:
 
  * Want to know many bytes a terabyte is? If you know further abbreviations, you can extend the list.
 
-{{{
+{{{#!highlight python numbers=disable
 import pprint;pprint.pprint(zip(('Byte', 'KByte', 'MByte', 'GByte', 'TByte'), (1 << 10*i for i in range(5))))
 }}}
  * And what's the largest number that can be represented by 8 Bytes?
 
-{{{
+{{{#!highlight python numbers=disable
 print '\n'.join("%i Byte = %i Bit = largest number: %i" % (j, j*8, 256**j-1) for j in (1 << i for i in range(8)))
 }}}
 Cute, isn't it?
@@ -35,10 +35,10 @@ Cute, isn't it?
 === Set of all subsets ===
  * Function that returns the set of all subsets of its argument
 
-{{{
+{{{#!highlight python numbers=disable
 f = lambda x: [[y for j, y in enumerate(set(x)) if (i >> j) & 1] for i in range(2**len(set(x)))]
 }}}
-{{{
+{{{#!highlight python numbers=disable
 >>>f([10,9,1,10,9,1,1,1,10,9,7])
 [[], [9], [10], [9, 10], [7], [9, 7], [10, 7], [9, 10, 7], [1], [9, 1], [10, 1], [9, 10, 1], [7, 1], [9, 7, 1], [10, 7, 1], [9, 10, 7, 1]]
 }}}
@@ -46,11 +46,11 @@ f = lambda x: [[y for j, y in enumerate(set(x)) if (i >> j) & 1] for i in range(
 
 Alternative (shorter, more functional version):
 
-{{{
+{{{#!highlight python numbers=disable
 f = lambda l: reduce(lambda z, x: z + [y + [x] for y in z], l, [[]])
 }}}
 === Decode a base64 encoded file ===
-{{{
+{{{#!highlight python numbers=disable
 import base64, sys; base64.decode(open(sys.argv[1], "rb"), open(sys.argv[2], "wb"))
 }}}
 === Editing a list of files in place ===
@@ -60,7 +60,7 @@ What this does is replace the substring "at" by "op" on all lines of all files (
 
  * '''''Caution:''''' Don't run this on your home directory or you're going to get '''all your text files edited'''.
 
-{{{#!python
+{{{#!highlight python numbers=disable
 import sys,os,re,fileinput;a=[i[2] for i in os.walk('.') if i[2]] [0];[sys.stdout.write(re.sub('at','op',j)) for j in fileinput.input(a,inplace=1)]
 }}}
 Clearer is: {{{import os.path; a=[f for f in os.listdir('.') if not os.path.isdir(f)]}}}
@@ -68,13 +68,13 @@ Clearer is: {{{import os.path; a=[f for f in os.listdir('.') if not os.path.isdi
 === Reimplementing cut ===
 Print every line from an input file but remove the first two fields.
 
-{{{
+{{{#!highlight python numbers=disable
 python -c "import sys;[sys.stdout.write(' '.join(line.split(' ')[2:])) for line in sys.stdin]" < input.txt
 }}}
 === Cramming Python into Makefiles ===
 A related issue is embedding Python into a Makefile. I had a really long script that I was trying to cram into a makefile so I automated the process:
 
-{{{
+{{{#!highlight python
 import sys,re
 
 def main():
@@ -98,55 +98,55 @@ if __name__=='__main__':
 This script generates a "one-liner" from make's point of view.
 
 == echo unicode character: ==
-{{{
+{{{#!highlight python numbers=disable
 python -c "print unichr(234)"
 }}}
 This script echos "ê"
 
 == Apply regular expression to lines from stdin ==
-{{{
+{{{#!highlight python numbers=disable
 [another command] | python -c "import sys,re;[sys.stdout.write(re.sub('PATTERN', 'SUBSTITUTION', line)) for line in sys.stdin]"
 }}}
 == Modify lines from stdin using map ==
-{{{
+{{{#!highlight python numbers=disable
 python -c "import sys; tmp = lambda x: sys.stdout.write(x.split()[0]+'\t'+str(int(x.split()[1])+1)+'\n'); map(tmp, sys.stdin);"
 }}}
 == Display List of all users on Unix-like systems ==
-{{{
+{{{#!highlight python numbers=disable
 print '\n'.join(line.split(":",1)[0] for line in open("/etc/passwd"))
 }}}
 == CSV file to json ==
-{{{
+{{{#!highlight python numbers=disable
 python -c "import csv,json;print json.dumps(list(csv.reader(open('csv_file.csv'))))"
 }}}
 == Compress CSS file ==
-{{{
+{{{#!highlight python numbers=disable
 python -c 'import re,sys;print re.sub("\s*([{};,:])\s*", "\\1", re.sub("/\*.*?\*/", "", re.sub("\s+", " ", sys.stdin.read())))'
 }}}
 == Decode string written in Hex ==
-{{{
+{{{#!highlight python numbers=disable
 python -c "print ''.join(chr(int(''.join(i), 16)) for i in zip(*[iter('474e552773204e6f7420556e6978')]*2))"
 }}}
 == Retrieve content text from HTTP data ==
-{{{
+{{{#!highlight python numbers=disable
 python -c "import sys; print sys.stdin.read().replace('\r','').split('\n\n',2)[1]";
 }}}
 == Prints file extension ==
-{{{
+{{{#!highlight python numbers=disable
 print '~/python/one-liners.py'.split('.')[-1]
 }}}
 == Escapes content from stdin ==
 This can be used to convert a string into a "url safe" string
 
-{{{
+{{{#!highlight python numbers=disable
 python -c "import urllib, sys ; print urllib.quote_plus(sys.stdin.read())";
 }}}
 == Reverse lines in stdin ==
-{{{
+{{{#!highlight python numbers=disable
 python -c "import sys; print '\n'.join(reversed(sys.stdin.read().split('\n')))"
 }}}
 == Print top 10 lines of stdin ==
-{{{
+{{{#!highlight python numbers=disable
 python -c "import sys; sys.stdout.write(''.join(sys.stdin.readlines()[:10]))" < /path/to/your/file
 }}}
 == Sony's Open Source command line tool for performing python one liners using unix-like pipes ==
@@ -154,7 +154,7 @@ They call it "The Pyed Piper" or pyp. It's pretty similar to the -c way of execu
 
 Here, we take a linux long listing, capture every other of the 5th through the 10th lines, keep username and file name fields, replace "hello" with "goodbye", capitalize the first letter of every word, and then add the text "is splendid" to the end:
 
-{{{
+{{{#!highlight python numbers=disable
 ls -l | pyp "pp[5:11:2] | whitespace[2], w[-1] | p.replace('hello','goodbye') | p.title(),'is splendid'"
 }}}
 and the explanation:
@@ -168,7 +168,7 @@ Say, you want to do the same as the list.index(element) method but return all in
 
 In this one-liner, you’re looking for element 'Alice' in the list lst = [1, 2, 3, 'Alice', 'Alice'] so it even works if the element is not in the list (unlike the list.index() method).
 
-{{{
+{{{#!highlight python
 # List
 lst = [1, 2, 3, 'Alice', 'Alice']
 
@@ -186,7 +186,7 @@ Because I learned a lot from studying the one-liners, I thought why not revive t
 
 After putting a lot of effort into searching the web for inspiration, I created the following ten one-liners. Some of them are more algorithmic (e.g. Quicksort). Some day, I will add a detailed explanation here - but for now, you can [[https://blog.finxter.com/10-python-one-liners/|read my blog article]] to read the explanations.
 
-{{{
+{{{#!highlight python
 # 10. Palindrome Python One-Liner
 phrase.find(phrase[::-1])
 
