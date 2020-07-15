@@ -1,7 +1,9 @@
 = Powerful Python One-Liners =
 This page is devoted to short programs that can perform powerful operations called ''Python One-Liners''.
 
-You may ask: why should I care? The answer is profound: if you cannot read and write one-liner code snippets, how can you ever hope to read and write more complicated code bases? Python one-liners can be just as powerful as a long and tedious program written in another language designed to do the same thing. In other languages (think: Java) this would be nearly ''impossible'', but in Python it is a lot easier to do. The trick is to think of something that will "do a lot with a little." Most importantly, reading and writing about Python one-liners (e.g., in this post) is a lot of fun! There's even a whole subculture around who can write the shortest code for a given problem. It would be awesome if this page expanded to the point where it needs some sort of organization system.
+You may ask: why should I care? The answer is profound: if you cannot read and write one-liner code snippets, how can you ever hope to read and write more complicated code bases? Python one-liners can be just as powerful as a long and tedious program written in another language designed to do the same thing. In other languages (think: Java) this would be nearly ''impossible'', but in Python it is a lot easier to do. The trick is to think of something that will "do a lot with a little." Most importantly, reading and writing about Python one-liners (e.g., in this post) is a lot of fun! There's even a whole subculture around who can write the shortest code for a given problem.
+
+It would be awesome if this page expanded to the point where it needs some sort of organization system. ''('''Edit''': The one-liners are now sorted more or less by ease-of-understanding -- from simple to hard. Please use a "sorted insert" for your new one-liner.)''
 
 The source code is contributed from different Python coders --- Thanks to all of them! Special thanks to the early contributor [[JAM|JAM.]]
 
@@ -18,19 +20,87 @@ Of course, there is debate on whether one-liners are even ''Pythonic''.
  * [[https://www.amazon.com/gp/product/B07ZY7XMX8|Book ''Python One-Liners'']]
  * [[https://www.quora.com/What-are-some-of-the-most-elegant-greatest-Python-one-liners|Interesting Quora Thread ''Python One-Liner'']]
 
-Some thoughts by ewo:
+== Overview: 10 one-liners that fit into a tweet ==
+I  visited this page oftentimes and I loved studying the one-liners  presented above. Thanks for creating this awesome resource, JAM and RJW!  :)
 
- * Want to know many bytes a terabyte is? If you know further abbreviations, you can extend the list.
+Because  I learned a lot from studying the one-liners, I thought why not revive  the page (after almost ten years since the last change happened)?
+
+After  putting a lot of effort into searching the web for inspiration, I  created the following ten one-liners. Some of them are more algorithmic  (e.g. Quicksort). Some day, I will add a detailed explanation here - but  for now, you can [[https://blog.finxter.com/10-python-one-liners/|read this blog article]] to find explanations.
+
+{{{#!highlight python
+# 10. Palindrome Python One-Liner
+phrase.find(phrase[::-1])
+
+# 9. Swap Two Variables Python One-Liner
+a, b = b, a
+
+# 8. Sum Over Every Other Value Python One-Liner
+sum(stock_prices[::2])
+
+# 7. Read File Python One-Liner
+[line.strip() for line in open(filename)]
+
+# 6. Factorial Python One-Liner
+reduce(lambda x, y: x * y, range(1, n+1))
+
+# 5. Performance Profiling Python One-Liner
+python -m cProfile foo.py
+
+# 4. Superset Python One-Liner
+lambda l: reduce(lambda z, x: z + [y + [x] for y in z], l, [[]])
+
+# 3. Fibonacci Python One-Liner
+lambda x: x if x<=1 else fib(x-1) + fib(x-2)
+
+# 2. Quicksort Python One-liner
+lambda L: [] if L==[] else qsort([x for x in L[1:] if x< L[0]]) + L[0:1] + qsort([x for x in L[1:] if x>=L[0]])
+
+# 1. Sieve of Eratosthenes Python One-liner
+reduce( (lambda r,x: r-set(range(x**2,n,x)) if (x in r) else r), range(2,int(n**0.5)), set(range(2,n)))
+}}}
+== Find All Indices of an Element in a List ==
+Say,  you want to do the same as the list.index(element) method but return  all indices of the element in the list rather than only a single one.
+
+In  this one-liner, you’re looking for element 'Alice' in the list lst =  [1, 2, 3, 'Alice', 'Alice'] so it even works if the element is not in  the list (unlike the list.index() method).
+
+{{{#!highlight python
+# List
+lst = [1, 2, 3, 'Alice', 'Alice']
+
+# One-Liner
+indices = [i for i in range(len(lst)) if lst[i]=='Alice']
+
+# Result
+print(indices)
+# [3, 4]
+}}}
+== echo unicode character: ==
+{{{#!highlight python numbers=disable
+python -c "print unichr(234)"
+}}}
+This script echos "ê"
+
+=== Reimplementing cut ===
+Print every line from an input file but remove the first two fields.
 
 {{{#!highlight python numbers=disable
-import pprint;pprint.pprint(zip(('Byte', 'KByte', 'MByte', 'GByte', 'TByte'), (1 << 10*i for i in range(5))))
+python -c "import sys;[sys.stdout.write(' '.join(line.split(' ')[2:])) for line in sys.stdin]" < input.txt
 }}}
- * And what's the largest number that can be represented by 8 Bytes?
+=== Decode a base64 encoded file ===
+{{{#!highlight python numbers=disable
+import base64, sys; base64.decode(open(sys.argv[1], "rb"), open(sys.argv[2], "wb"))
+}}}
+=== Editing a list of files in place ===
+I came up with this one-liner in response to an [[http://linuxgazette.net/issue96/orr.html|article]] that said it couldn't be done as a one-liner in Python.
+
+What  this does is replace the substring "at" by "op" on all lines of all  files (in place) under the path specified (here, the current path).
+
+ * '''''Caution:''''' Don't run this on your home directory or you're going to get '''all your text files edited'''.
 
 {{{#!highlight python numbers=disable
-print '\n'.join("%i Byte = %i Bit = largest number: %i" % (j, j*8, 256**j-1) for j in (1 << i for i in range(8)))
+import sys,os,re,fileinput;a=[i[2] for i in os.walk('.') if i[2]] [0];[sys.stdout.write(re.sub('at','op',j)) for j in fileinput.input(a,inplace=1)]
 }}}
-Cute, isn't it?
+Clearer is: {{{import os.path; a=[f for f in os.listdir('.') if not os.path.isdir(f)]}}}
 
 === Set of all subsets ===
  * Function that returns the set of all subsets of its argument
@@ -49,68 +119,20 @@ Alternative (shorter, more functional version):
 {{{#!highlight python numbers=disable
 f = lambda l: reduce(lambda z, x: z + [y + [x] for y in z], l, [[]])
 }}}
-=== Decode a base64 encoded file ===
-{{{#!highlight python numbers=disable
-import base64, sys; base64.decode(open(sys.argv[1], "rb"), open(sys.argv[2], "wb"))
-}}}
-=== Editing a list of files in place ===
-I came up with this one-liner in response to an [[http://linuxgazette.net/issue96/orr.html|article]] that said it couldn't be done as a one-liner in Python.
-
-What this does is replace the substring "at" by "op" on all lines of all files (in place) under the path specified (here, the current path).
-
- * '''''Caution:''''' Don't run this on your home directory or you're going to get '''all your text files edited'''.
+=== Terabyte to Bytes ===
+Want to know many bytes a terabyte is? If you know further abbreviations, you can extend the list.
 
 {{{#!highlight python numbers=disable
-import sys,os,re,fileinput;a=[i[2] for i in os.walk('.') if i[2]] [0];[sys.stdout.write(re.sub('at','op',j)) for j in fileinput.input(a,inplace=1)]
+import pprint;pprint.pprint(zip(('Byte', 'KByte', 'MByte', 'GByte', 'TByte'), (1 << 10*i for i in range(5))))
 }}}
-Clearer is: {{{import os.path; a=[f for f in os.listdir('.') if not os.path.isdir(f)]}}}
-
-=== Reimplementing cut ===
-Print every line from an input file but remove the first two fields.
+=== Largest 8-Bytes Number ===
+And what's the largest number that can be represented by 8 Bytes?
 
 {{{#!highlight python numbers=disable
-python -c "import sys;[sys.stdout.write(' '.join(line.split(' ')[2:])) for line in sys.stdin]" < input.txt
+print '\n'.join("%i Byte = %i Bit = largest number: %i" % (j, j*8, 256**j-1) for j in (1 << i for i in range(8)))
 }}}
-=== Cramming Python into Makefiles ===
-A related issue is embedding Python into a Makefile. I had a really long script that I was trying to cram into a makefile so I automated the process:
+Cute, isn't it?
 
-{{{#!highlight python
-import sys,re
-
-def main():
-    fh = open(sys.argv[1],'r')
-    lines = fh.readlines()
-    print '\tpython2.2 -c "`printf \\"if 1:\\n\\'
-    for line in lines:
-        line = re.sub('[\\\'\"()]','\\\g<0>',line)
-        # grab leading white space (should be multiples of 4) and makes them into
-        # tabs
-        wh_spc_len = len(re.match('\s*',line).group())
-
-        sys.stdout.write('\t')
-        sys.stdout.write(wh_spc_len/4*'\\t'+line.rstrip().lstrip())
-        sys.stdout.write('\\n\\\n')
-    print '\t\\"`"'
-
-if __name__=='__main__':
-    main()
-}}}
-This script generates a "one-liner" from make's point of view.
-
-== echo unicode character: ==
-{{{#!highlight python numbers=disable
-python -c "print unichr(234)"
-}}}
-This script echos "ê"
-
-== Apply regular expression to lines from stdin ==
-{{{#!highlight python numbers=disable
-[another command] | python -c "import sys,re;[sys.stdout.write(re.sub('PATTERN', 'SUBSTITUTION', line)) for line in sys.stdin]"
-}}}
-== Modify lines from stdin using map ==
-{{{#!highlight python numbers=disable
-python -c "import sys; tmp = lambda x: sys.stdout.write(x.split()[0]+'\t'+str(int(x.split()[1])+1)+'\n'); map(tmp, sys.stdin);"
-}}}
 == Display List of all users on Unix-like systems ==
 {{{#!highlight python numbers=disable
 print '\n'.join(line.split(":",1)[0] for line in open("/etc/passwd"))
@@ -149,6 +171,40 @@ python -c "import sys; print '\n'.join(reversed(sys.stdin.read().split('\n')))"
 {{{#!highlight python numbers=disable
 python -c "import sys; sys.stdout.write(''.join(sys.stdin.readlines()[:10]))" < /path/to/your/file
 }}}
+== Apply regular expression to lines from stdin ==
+{{{#!highlight python numbers=disable
+[another command] | python -c "import sys,re;[sys.stdout.write(re.sub('PATTERN', 'SUBSTITUTION', line)) for line in sys.stdin]"
+}}}
+== Modify lines from stdin using map ==
+{{{#!highlight python numbers=disable
+python -c "import sys; tmp = lambda x: sys.stdout.write(x.split()[0]+'\t'+str(int(x.split()[1])+1)+'\n'); map(tmp, sys.stdin);"
+}}}
+=== Cramming Python into Makefiles ===
+A related issue is embedding Python into a Makefile. I had a really long script that I was trying to cram into a makefile so I automated the process:
+
+{{{#!highlight python
+import sys,re
+
+def main():
+    fh = open(sys.argv[1],'r')
+    lines = fh.readlines()
+    print '\tpython2.2 -c "`printf \\"if 1:\\n\\'
+    for line in lines:
+        line = re.sub('[\\\'\"()]','\\\g<0>',line)
+        # grab leading white space (should be multiples of 4) and makes them into
+        # tabs
+        wh_spc_len = len(re.match('\s*',line).group())
+
+        sys.stdout.write('\t')
+        sys.stdout.write(wh_spc_len/4*'\\t'+line.rstrip().lstrip())
+        sys.stdout.write('\\n\\\n')
+    print '\t\\"`"'
+
+if __name__=='__main__':
+    main()
+}}}
+This script generates a "one-liner" from make's point of view.
+
 == Sony's Open Source command line tool for performing python one liners using unix-like pipes ==
 They call it "The Pyed Piper" or pyp. It's pretty similar to the -c way of executing python, but it imports common modules and has it's own preset variable that help with splitting/joining, line counter, etc. You use pipes to pass information forward instead of nested parentheses, and then use your normal python string and list methods. Here is an example from the homepage:
 
@@ -162,58 +218,3 @@ and the explanation:
 This uses pyp's built-in string and list variables (p and pp), as well as the variable whitespace and it's shortcut w, which both represent a list based on splitting each line on whitespace (whitespace = w = p.split()). The other functions and selection techniques are all standard python. Notice the pipes ("|") are inside the pyp command.
 
 http://code.google.com/p/pyp/ http://opensource.imageworks.com/?p=pyp
-
-== Find All Indices of an Element in a List ==
-Say, you want to do the same as the list.index(element) method but return all indices of the element in the list rather than only a single one.
-
-In this one-liner, you’re looking for element 'Alice' in the list lst = [1, 2, 3, 'Alice', 'Alice'] so it even works if the element is not in the list (unlike the list.index() method).
-
-{{{#!highlight python
-# List
-lst = [1, 2, 3, 'Alice', 'Alice']
-
-# One-Liner
-indices = [i for i in range(len(lst)) if lst[i]=='Alice']
-
-# Result
-print(indices)
-# [3, 4]
-}}}
-== 10 one-liners that fit into a tweet ==
-I visited this page oftentimes and I loved studying the one-liners presented above. Thanks for creating this awesome resource, JAM and RJW! :)
-
-Because I learned a lot from studying the one-liners, I thought why not revive the page (after almost ten years since the last change happened)?
-
-After putting a lot of effort into searching the web for inspiration, I created the following ten one-liners. Some of them are more algorithmic (e.g. Quicksort). Some day, I will add a detailed explanation here - but for now, you can [[https://blog.finxter.com/10-python-one-liners/|read my blog article]] to read the explanations.
-
-{{{#!highlight python
-# 10. Palindrome Python One-Liner
-phrase.find(phrase[::-1])
-
-# 9. Swap Two Variables Python One-Liner
-a, b = b, a
-
-# 8. Sum Over Every Other Value Python One-Liner
-sum(stock_prices[::2])
-
-# 7. Read File Python One-Liner
-[line.strip() for line in open(filename)]
-
-# 6. Factorial Python One-Liner
-reduce(lambda x, y: x * y, range(1, n+1))
-
-# 5. Performance Profiling Python One-Liner
-python -m cProfile foo.py
-
-# 4. Superset Python One-Liner
-lambda l: reduce(lambda z, x: z + [y + [x] for y in z], l, [[]])
-
-# 3. Fibonacci Python One-Liner
-lambda x: x if x<=1 else fib(x-1) + fib(x-2)
-
-# 2. Quicksort Python One-liner
-lambda L: [] if L==[] else qsort([x for x in L[1:] if x< L[0]]) + L[0:1] + qsort([x for x in L[1:] if x>=L[0]])
-
-# 1. Sieve of Eratosthenes Python One-liner
-reduce( (lambda r,x: r-set(range(x**2,n,x)) if (x in r) else r), range(2,int(n**0.5)), set(range(2,n)))
-}}}
