@@ -17,7 +17,7 @@ import random
 class RandomIterable:
     def __iter__(self):
         return self
-    def next(self):
+    def __next__(self):
         if random.choice(["go", "go", "stop"]) == "stop":
             raise StopIteration  # signals "the end"
         return 1
@@ -34,7 +34,7 @@ class RandomIterable:
 {{{
 #!python
 for eggs in RandomIterable():
-    print eggs
+    print(eggs)
 }}}
 
 You can also use it in list construction:
@@ -53,7 +53,7 @@ You can also use it in list construction:
 
 ...both of these uses require {{{__iter__}}}.
 
-An object isn't iterable unless it provides {{{__iter__}}}. And for an object to be a valid iterator, it must provide {{{next}}}.
+An object isn't iterable unless it provides {{{__iter__}}}. And for an object to be a valid iterator, it must provide {{{__next__}}}.
 
 == Links ==
 
