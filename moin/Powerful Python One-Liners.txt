@@ -1,18 +1,15 @@
 = Powerful Python One-Liners =
 This page is devoted to short programs that can perform powerful operations called ''Python One-Liners''.
 
-You may ask: why should I care? The answer is profound: if you cannot read and write one-liner code snippets, how can you ever hope to read and write more complicated code bases? Python one-liners can be just as powerful as a long and tedious program written in another language designed to do the same thing. In other languages (think: Java) this would be nearly ''impossible'', but in Python it is a lot easier to do. The trick is to think of something that will "do a lot with a little." Most importantly, reading and writing about Python one-liners (e.g., in this post) is a lot of fun! There's even a whole subculture around who can write the shortest code for a given problem.
+You may ask: why should I care? The answer is profound: if you cannot read and write one-liner code snippets, how can you ever hope to read and write more complicated codebases? Python one-liners can be just as powerful as a long and tedious program written in another language designed to do the same thing. In other languages (think: Java) this would be nearly ''impossible'', but in Python, it's a lot easier to do. The trick is to think of something that will "do a lot with a little." Most importantly, reading and writing about Python one-liners (e.g., in this post) is a lot of fun! There's even a whole subculture around who can write the shortest code for a given problem.
 
 It would be awesome if this page expanded to the point where it needs some sort of organization system. ''('''Edit''': The one-liners are now sorted more or less by ease-of-understanding -- from simple to hard. Please use a "sorted insert" for your new one-liner.)''
 
 The source code is contributed from different Python coders --- Thanks to all of them! Special thanks to the early contributor [[JAM|JAM.]]
 
-Of course, there is debate on whether one-liners are even ''Pythonic''.
+Of course, there is debate on whether one-liners are even ''Pythonic''. As a rule of thumb: if you use one-liners that are confusing, difficult to understand, or to show off your skills, they tend to be ''Unpythonic''. However, if you use well-established one-liner tricks such as [[https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions|list comprehension]] or the [[https://blog.finxter.com/python-one-line-ternary/|ternary operator]], they tend to be Pythonic. 
 
-== Contributed Code ==
- * [[JAM/Code/PlatformFinder]] - This program tells you what platform you are using.
- * [[JAM/Code/ComPYiler]] - This program compiles every .py file in the Python directory.
- * [[Powerful Python One-Liners/Hostname]] - This program tells you what your hostname is.
+So, use your one-liner superpower wisely!
 
 == Free Python One-Liners Learning Resources ==
  * [[https://pythononeliners.com/|Free ''Python One-Liners'' videos & book resources]]
@@ -31,40 +28,41 @@ Because  I learned a lot from studying the one-liners, I thought why not revive 
 After putting a lot of effort into searching the web for inspiration, I  created the following ten one-liners. Some of them are more algorithmic  (e.g. Quicksort). Some day, I will add a detailed explanation here - but for now, you can [[https://blog.finxter.com/10-python-one-liners/|read this blog article]] to find explanations.
 
 {{{#!highlight python
-# 10. Palindrome Python One-Liner
+# Palindrome Python One-Liner
 phrase.find(phrase[::-1])
 
-# 9. Swap Two Variables Python One-Liner
+# Swap Two Variables Python One-Liner
 a, b = b, a
 
-# 8. Sum Over Every Other Value Python One-Liner
+# Sum Over Every Other Value Python One-Liner
 sum(stock_prices[::2])
 
-# 7. Read File Python One-Liner
+# Read File Python One-Liner
 [line.strip() for line in open(filename)]
 
-# 6. Factorial Python One-Liner
+# Factorial Python One-Liner
 reduce(lambda x, y: x * y, range(1, n+1))
 
-# 5. Performance Profiling Python One-Liner
+# Performance Profiling Python One-Liner
 python -m cProfile foo.py
 
-# 4. Superset Python One-Liner
+# Superset Python One-Liner
 lambda l: reduce(lambda z, x: z + [y + [x] for y in z], l, [[]])
 
-# 3. Fibonacci Python One-Liner
+# Fibonacci Python One-Liner
 lambda x: x if x<=1 else fib(x-1) + fib(x-2)
 
-# 2. Quicksort Python One-liner
+# Quicksort Python One-liner
 lambda L: [] if L==[] else qsort([x for x in L[1:] if x< L[0]]) + L[0:1] + qsort([x for x in L[1:] if x>=L[0]])
 
-# 1. Sieve of Eratosthenes Python One-liner
+# Sieve of Eratosthenes Python One-liner
 reduce( (lambda r,x: r-set(range(x**2,n,x)) if (x in r) else r), range(2,int(n**0.5)), set(range(2,n)))
 }}}
-== Find All Indices of an Element in a List ==
-Say,  you want to do the same as the list.index(element) method but return  all indices of the element in the list rather than only a single one.
 
-In  this one-liner, you’re looking for element 'Alice' in the list lst =  [1, 2, 3, 'Alice', 'Alice'] so it even works if the element is not in  the list (unlike the list.index() method).
+== Find All Indices of an Element in a List ==
+Say,  you want to do the same as the list.index(element) method but return all indices of the element in the list rather than only a single one.
+
+In this one-liner, you’re looking for element 'Alice' in the list lst =  [1, 2, 3, 'Alice', 'Alice'] so it even works if the element is not in the list (unlike the list.index() method).
 
 {{{#!highlight python
 # List
@@ -77,10 +75,12 @@ indices = [i for i in range(len(lst)) if lst[i]=='Alice']
 print(indices)
 # [3, 4]
 }}}
+
 == echo unicode character: ==
 {{{#!highlight python numbers=disable
 python -c "print unichr(234)"
 }}}
+
 This script echos "ê"
 
 === Reimplementing cut ===
@@ -96,7 +96,7 @@ import base64, sys; base64.decode(open(sys.argv[1], "rb"), open(sys.argv[2], "wb
 === Editing a list of files in place ===
 I came up with this one-liner in response to an [[http://linuxgazette.net/issue96/orr.html|article]] that said it couldn't be done as a one-liner in Python.
 
-What  this does is replace the substring "at" by "op" on all lines of all  files (in place) under the path specified (here, the current path).
+What this does is replace the substring "at" by "op" on all lines of all files (in place) under the path specified (here, the current path).
 
  * '''''Caution:''''' Don't run this on your home directory or you're going to get '''all your text files edited'''.
 
@@ -221,3 +221,8 @@ and the explanation:
 This uses pyp's built-in string and list variables (p and pp), as well as the variable whitespace and its shortcut w, which both represent a list based on splitting each line on whitespace (whitespace = w = p.split()). The other functions and selection techniques are all standard Python. Notice the pipes ("|") are inside the pyp command.
 
 http://code.google.com/p/pyp/ http://opensource.imageworks.com/?p=pyp
+
+== Contributed Code ==
+ * [[JAM/Code/PlatformFinder]] - This program tells you what platform you are using.
+ * [[JAM/Code/ComPYiler]] - This program compiles every .py file in the Python directory.
+ * [[Powerful Python One-Liners/Hostname]] - This program tells you what your hostname is.
