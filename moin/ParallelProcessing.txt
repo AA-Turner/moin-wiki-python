@@ -32,6 +32,7 @@ Some libraries, often to preserve some similarity with more familiar concurrency
  * [[https://github.com/classner/pymp|PyMP]] - OpenMP inspired, fork-based framework for conveniently creating parallel for-loops and sections. Supports Python 2 and 3. (''Unix only'')
  * [[https://github.com/ray-project/ray|Ray]] - Parallel (and distributed) process-based execution framework which uses a lightweight API based on dynamic task graphs and actors to flexibly express a wide range of applications. Uses shared-memory and zero-copy serialization for efficient data handling within a single machine. Supports low-latency and high-throughput task scheduling. Includes higher-level libraries for machine learning and AI applications. Supports Python 2 and 3. (''Linux, Mac'')
  * [[http://www.python.org/pypi/remoteD|remoteD]] - fork-based process creation with a dictionary-based communications paradigm (''platform independent, according to PyPI entry'')
+ * [[https://github.com/IBM/torc_py|torcpy]] - a platform-agnostic adaptive load balancing library that orchestrates the scheduling of task parallelism on both shared and distributed memory platforms. It takes advantage of MPI and multithreading, supports parallel nested loops and map functions and task stealing at all levels of parallelism.
  * [[http://github.com/undefx/vecpy|VecPy]] (Vectorizing Python for concurrent SIMD execution) - Takes as input a Python function on scalars and outputs a symantically equivalent C++ function over vectors which leverages multi-threading and SIMD vector intrinsics. Generated code is compiled into a native, shared library that can be called from Python (as a module), Java (through JNI), and C++. (''Linux-only; requires Python 3, g++'')
 
 Advantages of such approaches include convenient process creation and the ability to share resources. Indeed, the fork system call permits efficient sharing of common read-only data structures on modern UNIX-like operating systems.
@@ -90,6 +91,9 @@ Unlike SMP architectures and especially in contrast to thread-based concurrency,
   * Inputs/outputs are python objects via python pickle
   * Pure python implementation
   * Supports simple load-balancing to send tasks to best servers
+
+ * [[https://github.com/IBM/torc_py|torcpy]] - a platform-agnostic adaptive load balancing library that orchestrates the scheduling of task parallelism on both shared and distributed memory platforms. It takes advantage of MPI and multithreading, supports parallel nested loops and map functions and task stealing at all levels of parallelism.
+
 
 == Cloud Computing ==
 Cloud computing is similar to cluster computing, except the developer's compute resources are owned and managed by a third party, the "cloud provider". By not having to purchase and set up hardware, the developer is able to run massively parallel workloads cheaper and easier.
