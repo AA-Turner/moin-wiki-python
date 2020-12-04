@@ -10,16 +10,18 @@ Note: Please note that in real life, integers do not take up that much space, un
 First, let us consider the simple example of building a list and returning it.
 
 {{{#!python
-# Build and return a list
-def firstn(n):
+def first_n(n):
+    '''Build and return a list'''
     num, nums = 0, []
     while num < n:
         nums.append(num)
         num += 1
     return nums
 
-sum_of_first_n = sum(firstn(1000000))
+
+sum_of_first_n = sum(first_n(1000000))
 }}}
+
 The code is quite simple and straightforward, but it builds the full list in memory. This is clearly not acceptable in our case, because we cannot afford to keep all ''n'' "10 megabyte" integers in memory.
 
 So, we resort to the generator pattern. The following implements generator as an iterable object.
