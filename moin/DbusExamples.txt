@@ -4,6 +4,7 @@ There are multiple Python bindings for DBus:
 
  * GDbus and QtDbus are wrappers over the C/C++ APIs of GLib and Qt
  * [[https://github.com/LEW21/pydbus|pydbus]] is a modern, pythonic API with the goal of being as invisible a layer between the exported API and its user as possible
+ * [[https://github.com/rhinstaller/dasbus|dasbus]] is a Python3-only alternative to pydbus with additional features and better flexibility
  * [[https://dbus.freedesktop.org/doc/dbus-python/|dbus-python]] is a legacy API, built with a deprecated dbus-glib library, and involving a lot of type-guessing (despite "explicit is better than implicit" and "resist the temptation to guess").
  * [[https://pypi.python.org/pypi/txdbus|txdbus]] is a native Python implementation of the D-Bus protocol for the Twisted networking framework.
 
@@ -72,4 +73,62 @@ power = bus.get('org.gnome.PowerManager', '/org/gnome/PowerManager')
 # Hibernate the system
 if power.CanHibernate():
     power.Hibernate()
+}}}
+
+= dasbus =
+For more information see [[https://dasbus.readthedocs.io/|dasbus's documentation]].
+
+== Introspection of a remote object ==
+
+Introspection returns an XML string containing information about interfaces, methods, properties and signals of the remote object.
+
+{{{
+from dasbus.connection import SessionMessageBus
+bus = SessionMessageBus()
+
+# Create an object that will be a proxy for a particular remote object.
+remote_object = bus.get_proxy(
+    "org.freedesktop.DBus",  # The bus name
+    "/org/freedesktop/DBus"  # The object path
+)
+
+# Call the Introspect method of the remote object.
+print(remote_object.Introspect())
+}}}
+
+== Accessing a remote property ==
+
+The following example prints the current hostname.
+
+{{{
+from dasbus.connection import SystemMessageBus
+bus = SystemMessageBus()
+
+proxy = bus.get_proxy(
+    "org.freedesktop.hostname1",
+    "/org/freedesktop/hostname1"
+)
+
+print(proxy.Hostname)
+}}}
+
+== Calling a remote method ==
+
+The following example sends a notification to the notification server.
+
+{{{
+from dasbus.connection import SessionMessageBus
+bus = SessionMessageBus()
+
+proxy = bus.get_proxy(
+    "org.freedesktop.Notifications",
+    "/org/freedesktop/Notifications"
+)
+
+id = proxy.Notify(
+    "", 0, "face-smile", "My notification",
+    "Hello World!", [], {}, 0
+)
+
+print("The notification {} was sent.".format(id))
 }}}
