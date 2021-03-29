@@ -14,7 +14,7 @@ $ ./configure LDFLAGS="-static" --disable-shared
 $ make LDFLAGS="-static" LINKFORSHARED=" "
 }}}
 
-LINKFORSHARED=" " prevents passing -export-dynamic to the linker, which will cause the binary to be built as a dynamically linked executable. You may need additional flags to build successfully.
+`LINKFORSHARED=" "` prevents passing `-export-dynamic` to the linker, which will cause the binary to be built as a dynamically linked executable. You may need additional flags to build successfully.
 
 This will build a static python binary, without any of the libraries normally provided by dynamically loaded modules.
 To add these modules, edit Modules/Setup.local, and add
@@ -30,8 +30,8 @@ For instance, if you wanted to build in the math library, add
 math mathmodule.c _math.c # -lm # math library functions, e.g. sin()
 }}}
 
-Note that the line is not commented (unlike the corresponding line in Modules/Setup.dist).
-See Modules/Setup.dist for more examples and documentation.
+Note that the line is not commented (unlike the corresponding line in Modules/Setup).
+See Modules/Setup for more examples and documentation.
 
 == See also ==
 
