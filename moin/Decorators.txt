@@ -1,4 +1,4 @@
-A page for useful (or potentially abusive?) decorator ideas.
+Apart from decorators in the standard library, there are also lots of PyPI packages with convenient, interesting or novel use cases:
 
 || '''Category'''   || '''Decorator'''      || '''Summary'''                                        ||
 || builtin          || [[https://docs.python.org/3/library/functions.html?highlight=property#property|@property]]  || Turn function into propery accessor, also: `@property.setter` ||
@@ -10,35 +10,60 @@ A page for useful (or potentially abusive?) decorator ideas.
 || stdlib           || [[https://docs.python.org/3/library/functools.html?highlight=functools#functools.cmp_to_key|@functools.cmp_to_key]] || Transform an old-style comparison function to a key function.  ||
 || stdlib           || [[https://docs.python.org/3/library/functools.html?highlight=functools#functools.total_ordering|@functools.total_ordering]] || Adds any of the missing lt,le,eq,ge,gt comparison dunder methods  ||
 || stdlib           || [[https://docs.python.org/3/library/functools.html?highlight=functools#functools.partial|@functools.partial]] || Prepopulate a couple of function arguments   ||
+|| stdlib           || [[https://python.readthedocs.io/en/stable/library/typing.html#typing.overload|@typing.overload]]  || Singledispatch based on function parameter or return types  ||
 || stdlib           || [[https://docs.python.org/3/library/contextlib.html?highlight=decorator#contextlib.contextmanager|@contextlib.contextmanager]] || Uses generator protocol `yield` to turn function into `with`-able context mananger  ||
 || stdlib           || [[https://docs.python.org/3/library/dataclasses.html?highlight=decorator#dataclasses.dataclass|@dataclasses.dataclass]] || Adds various “dunder” methods to the class to streamline property access  ||
 || stdlib           || [[https://docs.python.org/3/library/atexit.html?highlight=decorator#atexit.register|@atexit.register]]  || Run as shutdown function ||
 || stdlib           || [[https://docs.python.org/3/library/abc.html?highlight=decorator#abc.ABCMeta.register|@abc.ABCMeta.register]]  || Turn into abstract base class  ||
 || stdlib           || [[https://docs.python.org/3/library/enum.html?highlight=decorator#enum.unique|@enum.unique]]  || Guarantee unique members in enum class  ||
-|| stdlib           || [[https://docs.python.org/3/library/xmlrpc.server.html?highlight=decorator#xmlrpc.server.SimpleXMLRPCServer.register_function|@xmlrpc.….register_function]]  || ...  ||
+|| stdlib           || [[https://docs.python.org/3a/library/xmlrpc.server.html?highlight=decorator#xmlrpc.server.SimpleXMLRPCServer.register_function|@xmlrpc.register_function]]  || ...  ||
+|| stdlib           || [[https://docs.python.org/3/library/sys.html#sys.settrace|@sys.settrace]]  || Register function as debugger callback ||
 || asyncio          || [[https://docs.python.org/3/library/asyncio-task.html?highlight=asyncio%20coroutine#asyncio.coroutine|@coroutine]]  || Outdated scheme for `async def`, deprecated in 3.8  ||
 || asyncio          || [[https://pypi.org/project/aiodecorator/|@throttle(2,1)]]    || Reduce invocations per timeframe    ||
 || asyncio          || [[https://hackernoon.com/python-async-decorator-to-reduce-debug-woes-nv2dg30q5|@exceptionCatcher…]]  || Log exceptions more instantly   ||
 || asyncio          || [[https://gist.github.com/Integralist/77d73b2380e4645b564c28c53fae71fb|@timeit]]  || Basic benchmarking   ||
 || async            || [[https://pypi.org/project/process-decorator/|@async_process]]  || make func async and execute in other process  ||
+|| threading        || [[https://gitlab.com/chadgh/ornamentation|@threaded, @debug, @skip_if_env]]  || Convenient threading wrapper, and testing wrappers  ||
+|| threading        || [[https://pypi.org/project/lockorator/|@lock_or_wait]]  || Aquire and release locks for functions  ||
 || testing          || [[https://docs.python.org/3/library/unittest.mock.html#unittest.mock.patch|@unittest.mock.patch]]  || Override function w/ signature  ||
 || testing          || [[http://blog.dscpl.com.au/2015/03/using-wrapt-to-support-testing-of.html|@wrapt.patch_function_wrapper]]  || Override function w/ signature  ||
+|| debugging        || [[https://pypi.org/project/handy-decorators/|@trycatch ]]  || Capture exceptions to the log  ||
+|| debugging        || [[https://pythonhosted.org/log_calls/intro.html|@log_calls]]  || Record invocations with arguments  ||
 || decorator        || [[https://pypi.org/project/decorator/|@decorator]]  || Assists declaring signature-preserving and single dispatch decorators  ||
 || decorator        || [[https://pypi.org/project/decorator-args/|@decorator_args]]  || Ease parameterizing decorators themselvess  ||
 || decorator        || [[https://github.com/Yelp/named_decorator|@named_decorator]]  || Retain callees' function name to simplify tracebacks  ||
 || decorator        || [[https://pypi.org/project/Easy_Decorator/|@dec.decorator(before=cb,after=cb)]]  || Craft trivial enter/exit decorator  ||
+|| decorator        || [[https://pypi.org/project/pydecor/|@log_call, @intercept, @instead, @before]]  || Simplifies decorator construnction/interactions, parameter handling ||
+|| decorator        || [[https://pypi.org/project/undecorated/|undecorated(fn)]]  || reversible decoration  ||
 || collect          || [[https://click.palletsprojects.com/en/7.x/commands/|@click.option("-d")]] || Argparse alternative ||
 || collect          || [[https://pypi.org/project/config-decorator/|@config_decorator.setting]] || Declarative dict structure for application settings ||
 || collect          || [[https://github.com/xtream1101/regex-decorator|@regex_decorator.listen]] || Register function callbacks for pattern matching ||
+|| collect          || [[https://pypi.org/project/pyplugs/|@expose, @register]]  || Plugin interface/registration ||
 || typing           || [[https://pypi.org/project/contract-decorator/|@contract({"param":gt(3)})]] || Exhaustive function parameter constraints ||
+|| typing           || [[https://pypi.org/project/pedantic/|@pedantic, @trace, @dirty, …]]  || Encourages cleaner and better documented code ||
+|| typing           || [[https://pypi.org/project/classy-decorators/|@Decorator]]  || OO-style class/method parameters  ||
+|| typing           || [[https://pypi.org/project/decorateme/|@mutable, @final, @auto_obj]]  ||  decorators for str/repr, equality, immutability, and more  ||
+|| typing           || [[https://pypi.org/project/paprika/|@to_string, @data, @repeat]]  || Reduces some common boilerplate for methods  ||
+|| typing           || [[https://pypi.org/project/pyAttributes/|@DataAtrribute("desc")]]  || .NET-like attributes ||
+|| parameter        || [[https://pypi.org/project/simplecurry/|@curried]]  || Convenient decorator-alternative to partial()  ||
+|| parameter        || [[https://www.attrs.org/en/stable/|@attrs]]  || object declarations ||
+|| parameter        || [[https://pypi.org/project/python-args/|@arg.validate]]  || simplifies parameter handling/assertion ||
 || flow handling    || [[#A__main__|@__main__]]  || Automatically run a function if invocation script  ||
 || flow handling    || [[http://www.praddy.in/retry-decorator-whitelisted-exceptions/|@retry(times=2)]]  || Reinvokes function a few times when encountering (temporary) exceptions, alt: [[https://pypi.org/project/retry-decorator/|pypi:retry-decorator]]  ||
+|| flow handling    || [[https://pypi.org/project/retryz/|@retry]]  || Rerun function in case of exceptions ||
+|| flow handling    || [[https://pypi.org/project/self/|@self]]  || method chaining (fluent interfaces)  ||
 || monkeypatching   || [[https://fossil.include-once.org/modseccfg/wiki/@inject|@inject(modules…)]]  || Shorthand assignment to modules/objects   ||
 || monkeypatching   || [[https://github.com/theatlantic/python-monkey-business|@monkeybiz.patch(fn)]]  || Swap out function in object, retain reference to original  ||
 
-(Note: Not sure this is going anywhere. Relisting builtins is somewhat redundant, but topical. The
-focus is novel/interesting decorators in the wild. The categorization probably won't hold up.)
+(Note: Not sure this is going anywhere. Relisting builtins is somewhat redundant, but on topic here.
+The focus is novel/interesting decorators in the wild. The categorization probably won't hold up;
+and probably going to split this up into sections.)
 
+
+=== Other decorator links ===
+
+ * [[https://github.com/lord63/awesome-python-decorator|Awesome Python decorator collection (GitHub)]]
+ * [[https://pypi.org/search/?q=decorator|PyPI decorator packages]] (gets interesting around page 10)
 
 
 == __main__ ==
