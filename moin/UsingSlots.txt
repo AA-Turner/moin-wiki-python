@@ -1,13 +1,13 @@
 == Introduction ==
-  `__slots__` has a mixed reputation in the Python community. On the one hand, they are considered to be popular. Lots of people like using them. Others say that they are badly understood, tricky to get right, and don't have much of an effect unless there are many instances of objects that use them. This article will explain what they are, how, and why to use them, and when not to use them.
+`__slots__` has a mixed reputation in the Python community. On the one hand, they are considered to be popular. Lots of people like using them. Others say that they are badly understood, tricky to get right, and don't have much of an effect unless there are many instances of objects that use them. This article will explain what they are, how, and why to use them, and when not to use them.
 
 == What Is `__slots__` ? ==
-  `__slots__` are discussed in the Python Language Reference under section 3.3.2, Customizing Attribute Access. The first thing we should understand is that `__slots__` is only used in the context of Python classes. `__slots__` is a class variable that is usually assigned a sequence of strings that are variable names used by instances. For example:
- {{{
+`__slots__` are discussed in the Python Language Reference under section 3.3.2, Customizing Attribute Access. The first thing we should understand is that `__slots__` is only used in the context of Python classes. `__slots__` is a class variable that is usually assigned a sequence of strings that are variable names used by instances. For example:
+{{{
     class Example():
         __slots__ = ('_slot_0', '_slot_1')
- }}}
- This declaration allows us to explicitly declare data members, causes Python to reserve space for them in memory, and prevents the creation of `__dict__ ` and `__weakref__` attributes. It also prevents the creation of any variables that aren't declared in `__slots__`.
+}}}
+This declaration allows us to explicitly declare data members, causes Python to reserve space for them in memory, and prevents the creation of `__dict__ ` and `__weakref__` attributes. It also prevents the creation of any variables that aren't declared in `__slots__`.
 
 == Why Use `__slots__`? ==
 The short answer is slots are more efficient in terms of memory space and speed of access, and a bit safer than the default Python method of data access. By default, when Python creates a new instance of a class, it creates a `__dict__` attribute for the class. The `__dict__` attribute is a dictionary whose keys are the variable names and whose values are the variable values.  For example, here is a simple class definition:
@@ -115,7 +115,7 @@ Python does not allow access through the list to data that has been set through 
 == Default Values ==
 The following text appears in the Python Language Reference section 3.3.2.4.1:
 
-"`__slots__ `are implemented at the class level by creating descriptors ... for each variable name. As a result, class  attributes cannot be used to set default values for instance variables defined by `__slots__`; otherwise, the class  attribute would overwrite the descriptor assignment."
+ "`__slots__ `are implemented at the class level by creating descriptors ... for each variable name. As a result, class  attributes cannot be used to set default values for instance variables defined by `__slots__`; otherwise, the class  attribute would overwrite the descriptor assignment."
 
 It is not necessary to explicitly implement descriptors in order to use slots. The point here is that default values cannot be set using class attributes.
 
