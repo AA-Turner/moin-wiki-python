@@ -1,10 +1,10 @@
 An '''iterable''' object is an object that implements {{{__iter__}}}, which is expected to return an '''iterator''' object.
 
-An '''iterator''' is an object that implements {{{__next__}}}, which is expected to return the next element of the iterable object that returned it, and raise a {{{StopIteration}}} exception when no more elements are available.
+An '''iterator''' object implements {{{__next__}}}, which is expected to return the next element of the iterable object that returned it, and to raise a {{{StopIteration}}} exception when no more elements are available.
 
-In the simplest case the iterable will implement {{{__next__}}} itself and return {{{self}}} in {{{__iter__}}}. However, this has its limitations and will produce unexpected results when used in concurrent environments (e.g. with the multiprocessing API).
+In the simplest case, the iterable will implement {{{__next__}}} itself and return {{{self}}} in {{{__iter__}}}. However, this has its limitations and may produce unexpected results in concurrent environments (e.g. with the multiprocessing API).
 
-You can use iterables in for loops and you can use them to construct lists, using list comprehensions or by using the {{{list}}} function.
+You can use iterables in for loops, to construct lists with list comprehensions, or as input arguments for the {{{list}}} function.
 
 == Example Iterator ==
 
@@ -29,7 +29,7 @@ class RandomIterable:
 
 '''Q:''' When would I need an extra iterator?
 
-'''A:''' Iterator will typically need to maintain some kind of position state information (like the index of the last element returned or the like). If the iterable maintained that state itself, it would become inherently non-reentrant (meaning you could use it only one loop at a time).
+'''A:''' Iterators will typically need to maintain some kind of position state information (e.g., the index of the last element returned). If the iterable maintained that state itself, it would become inherently non-reentrant (meaning you could use it only one loop at a time).
 
 {{{
 #!python
