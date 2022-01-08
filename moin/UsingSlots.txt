@@ -92,25 +92,7 @@ Using the same code as the previous interpreter session will produce exactly the
         return self.__slots__[_slot]
    
 }}}
-Attempting to use both dot notation and getters and setters will produce results that may be surprising. Using the two previous examples,
-{{{
->>>  x = Example()
->>> print(x._slot_0)
-This is slot 0
-
->>> print(x._get(0))
-_slot_0
-
->>> x._set(0, 'zero')
->>> print(x._slot_0)
-This is slot 0
-
->>> print(x._get(0))
-zero
-}}}
-This session shows that accessing `x._slot_0` works as it did before, but attempting to access `_slot_0` with the get function returns only the name of the variable. If we then use the set function to insert a value, we see that the value returned by `x._slot_0` hasn't changed, but the get function retrieves the value inserted by the set function. 
-
-Python does not allow access through the list to data that has been set through `__slots__` variables, and we cannot overwrite `__slots__` variables by writing to the list directly. But we can still use the list like any other list without altering the variable names or the data they contain. This behavior can be useful in some cases. For example, when collecting data to be written to a file, you may want to assign values using the variable names. When reading the same data from a file, it may be more efficient to use the list, allowing you to return the entire data structure.
+'''Caution!''' One should exercise care when assigning to the `__slots__` list directly. In this case `__slots__` is interpreted as a class variable, and changing the value of a slot in one instance will propagate that value to all instances.
 
 == Default Values ==
 The following text appears in the Python Language Reference section 3.3.2.4.1:
