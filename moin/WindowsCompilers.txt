@@ -14,7 +14,7 @@ The compiler's architecture must be the same as Python's (for example: if you us
 = Which Microsoft Visual C++ compiler to use with a specific Python version ? =
 Each Python version uses a specific compiler version (e.g. ''CPython 2.7'' uses ''Visual C++ 9.0'', ''CPython 3.3'' uses ''Visual C++ 10.0'', etc). So, you need to install the compiler version that corresponds to your Python version  :
 ||'''Visual C++''' ||'''CPython''' ||
-||14.X ||3.5 - 3.10 ||
+||14.x ||3.5 - 3.10 ||
 ||10.0 ||3.3 - 3.4 ||
 ||9.0 ||2.6 - 2.7, 3.0 - 3.2 ||
 
@@ -33,10 +33,22 @@ Compatible architectures are specified for each compiler in brackets.
 pip install --upgrade setuptools
 }}}
 
+== Microsoft Visual C++ 14.x with Visual Studio 2022 (x86, x64, ARM, ARM64) ==
+
+ * Install ''[[https://visualstudio.microsoft.com/downloads/|Microsoft Visual Studio 2022]]'' (or later).
+ * Install the ''Python development'' workload and the optional ''Python native development tools'' option.
+ * Install the latest ''Windows SDK'' (under ''Native development'' in the installer).
+ * Optional: Set {{{$env:PlatformToolset}}} to your toolset version before building, if it doesn't detect it.
+ * Update to the latest ''setuptools'' Python package version.
+
+For additional details, please have a look at the Windows section of the [[https://devguide.python.org/setup/#windows|Python Development Guide]] and the [[https://github.com/python/cpython/blob/main/PCbuild/python.props|PCbuild/python.props]] file for full details on how Python is built on Windows.
+
+At the time of this writing, CPython is built using VC++ 14.3 (Jan 2022).
+
 == Microsoft Visual C++ 14.2 standalone: Build Tools for Visual Studio 2019 (x86, x64, ARM, ARM64) ==
 This is a standalone version of ''Visual C++ 14.2'' compiler, you don't need to install ''Visual Studio 2019''.
 
- * Install ''[[https://www.visualstudio.com/downloads/#build-tools-for-visual-studio-2019|Microsoft Build Tools for Visual Studio 2019]]''.
+ * Install ''[[https://visualstudio.microsoft.com/vs/older-downloads/|Microsoft Build Tools for Visual Studio 2019]]''.
  * In Build tools, install ''C++ build tools'' and ensure the latest versions of ''MSVCv142 - VS 2019 C++ x64/x86 build tools'' and ''Windows 10 SDK'' are checked.
  * The ''setuptools'' Python package version must be at least 34.4.0.
 
