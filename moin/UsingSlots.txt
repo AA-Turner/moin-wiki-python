@@ -18,67 +18,52 @@ print(x1.slot_1)
     zero
     one
 }}}
-This declaration allows us to explicitly declare data members, causes Python to reserve space for them in memory, and prevents the creation of `__dict__ ` and `__weakref__` attributes. It also prevents the creation of any variables that aren't declared in `__slots__`.
+The `__slots__` declaration allows us to explicitly declare data members, causes Python to reserve space for them in memory, and prevents the creation of `__dict__ ` and `__weakref__` attributes. It also prevents the creation of any variables that aren't declared in `__slots__`.
 
 == Why Use `__slots__`? ==
-The short answer is slots are more efficient in terms of memory space and speed of access, and a bit safer than the default Python method of data access. By default, when Python creates a new instance of a class, it creates a `__dict__` attribute for the class. The `__dict__` attribute is a dictionary whose keys are the variable names and whose values are the variable values.  For example, here is a simple class definition:
+The short answer is slots are more efficient in terms of memory space and speed of access, and a bit safer than the default Python method of data access. By default, when Python creates a new instance of a class, it creates a `__dict__` attribute for the class. The `__dict__` attribute is a dictionary whose keys are the variable names and whose values are the variable values.  This allows for dynamic variable creation but can also lead to uncaught errors. For example, with the default `__dict__`, a misspelled variable name results in the creation of a new variable, but with `__slots__` it raises in an AttributeError.
 {{{
-class Example():
+class Example2():
     
     def __init__(self):
-        self.var_0 = 'This is variable 0'
-        self.var_1 = 'This is variable 1'
+        self.var_0 = "zero"
+        
+x2 = Example2()
+x2.var0 = 0
+
+print(x2.__dict__.keys())
+print(x2.__dict__.values())
+```
+
+    dict_keys(['var_0', 'var0'])
+    dict_values(['zero', 0])
+
+
+
+```python
+x1.slot1 = 1
+```
+
+
+    ---------------------------------------------------------------------------
+
+    AttributeError                            Traceback (most recent call last)
+
+    Input In [3], in <module>
+    ----> 1 x1.slot1 = 1
+
+
+    AttributeError: 'Example' object has no attribute 'slot1'
 }}}
-An interactive session looks like this:
-{{{
->>> x = Example()
->>> print(x.__dict__.keys())
-dict_keys(['var_0', 'var_1'])
 
->>> print(x.__dict__.values())
-dict_values(['This is variable 0', 'This is variable 1'])
+As mentioned earlier, a `__slots__` declaration uses less memory than a dictionary, and direct memory access is faster than dictionary lookups. `__slots__` variables use dot notation for assignment and referencing in exactly the same way as the default method. But it should be noted that attempting to access the `__slots__` tuple by subscription returns only the name of the variable.
+
+
+{{{python
+x1.__slots__[0]
 }}}
-We can now assign values to the variables with dot notation.
-{{{
->>> x.var_0 = 'zero'
->>> x.var1 = 'one'
->>>  print(x.__dict__.keys())
-dict_keys(['var_0', 'var_1', 'var1'])
 
->>> print(x.__dict__.values())
-dict_values(['zero', 'This is variable 1', 'one'])
-}}}
-The output here is not what was expected. The underscore was left out of the var_1 assignment and as a result we now have an extra variable in our dictionary named 'var1'. With `__slots__`, a misspelled variable name results in an Attribute Error. `__slots__` uses less memory space than `__dict__`, and direct memory access is faster than dictionary lookups. These are some of the reasons why you might want to use slots. 
-
-
-== Slots Basics ==
-In the basic case, slots are easy to use. For example, here is a simple class definition:
-{{{
-class Example():
-    
-    __slots__ = ('_slot_0', '_slot_1')
-    
-    def __init__(self):
-        self._slot_0 = 'This is slot 0'
-        self._slot_1 = 'This is slot 1'
-}}}
-An interpreter session looks like this:
-{{{
->>> x = Example()
->>> print(x._slot_0)
-This is slot 0
-
->>> print(x._slot_1)
-This is slot 1
-
->>> x._slot_0 = 'Is _slot_1 here?'
->>> x._slot_1 = "_slot_1 is here."
->>> print(x._slot_0, "\n", x._slot_1)
-Is _slot_1 here? 
- _slot_1 is here.
-
-}}}
-That's it. To the user who is writing code, slots look and behave exactly like the default. Once we've declared and initialized our variables, we can reference and assign to them using dot notation.
+    'slot_0'
 
 == Using A List For Slots ==
 The previous example used a tuple for the `__slots__` declaration. The Python documentation states that any non-string iterable can be used. This section describes how slots behavior can change when using a list for the declaration. 
