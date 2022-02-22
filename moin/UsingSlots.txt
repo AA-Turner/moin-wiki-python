@@ -5,7 +5,18 @@
 `__slots__` are discussed in the Python Language Reference under section 3.3.2, Customizing Attribute Access. The first thing we should understand is that `__slots__` is only used in the context of Python classes. `__slots__` is a class variable that is usually assigned a sequence of strings that are variable names used by instances. For example:
 {{{
     class Example():
-        __slots__ = ('_slot_0', '_slot_1')
+    __slots__ = ("slot_0", "slot_1")
+    
+    def __init__(self):
+        self.slot_0 = "zero"
+        self.slot_1 = "one"
+        
+x1 = Example()
+print(x1.slot_0)
+print(x1.slot_1)
+
+    zero
+    one
 }}}
 This declaration allows us to explicitly declare data members, causes Python to reserve space for them in memory, and prevents the creation of `__dict__ ` and `__weakref__` attributes. It also prevents the creation of any variables that aren't declared in `__slots__`.
 
