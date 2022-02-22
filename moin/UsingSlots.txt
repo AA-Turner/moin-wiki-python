@@ -39,11 +39,7 @@ print(x2.__dict__.values())
     dict_values(['zero', 0])
 
 
-
-```python
 x1.slot1 = 1
-```
-
 
     ---------------------------------------------------------------------------
 
@@ -59,79 +55,50 @@ x1.slot1 = 1
 As mentioned earlier, a `__slots__` declaration uses less memory than a dictionary, and direct memory access is faster than dictionary lookups. `__slots__` variables use dot notation for assignment and referencing in exactly the same way as the default method. But it should be noted that attempting to access the `__slots__` tuple by subscription returns only the name of the variable.
 
 
-{{{python
+{{{
 x1.__slots__[0]
-}}}
 
     'slot_0'
+}}}
 
-== Using A List For Slots ==
-The previous example used a tuple for the `__slots__` declaration. The Python documentation states that any non-string iterable can be used. This section describes how slots behavior can change when using a list for the declaration. 
+== Using Other Types for `__slots__` ==
+The Python documentation states that any non-string iterable can be used for the `__slots__` declaration. For example, it is possible to use a list, and a user might want to take advantage of the fact that a list is mutable, whereas a tuple is not. It is possible to do so, but keep in mind two key points:
 
-For the most part, using a list for the `__slots__` declaration looks and works exactly like using a tuple.
+ 1. `__slots__` is a class variable. If you have more than one instance of your class, any change made to `__slots__` will show up in every instance.
+ 1. You cannot access the memory allocated by the `__slots__` declaration by using subscription. You will get only what is currently stored in the list.
+
+It is usually best to stick to the base case in order to avoid confusion and unexpected results. The following example shows how things can get confusing if you mutate a `__slots__` list. 
 {{{
-class Example():
+class Example3():
+    __slots__ = ["slot_0"]
     
-    __slots__ = ['_slot_0', '_slot_1']
+    def set_0(self, _value):
+        self.__slots__[0] = _value
+        
+    def get_0(self):
+        return self.__slots__[0]
     
-    def __init__(self):
-        self._slot_0 = 'This is slot 0'
-        self._slot_1 = 'This is slot 1'
-}}}
-Using the same code as the previous interpreter session will produce exactly the same results. But unlike a tuple, a list is mutable, and there may be cases when we want to use the list. For example, we can implement get and set functions that access the list, as shown below.
-{{{   
-    def _set(self, _slot, _value):
-        self.__slots__[_slot] = _value
-        return None
-    
-    def _get(self, _slot):
-        return self.__slots__[_slot]
+a = Example3()
+b = Example3()
+
+a.set_0("zero")
+b.set_0("not zero")
+a.slot_0 = 0
+
+print(a.get_0())
+print(a.slot_0)
    
+```
+    not zero
+    0
 }}}
-'''Caution!''' One should exercise care when assigning to the `__slots__` list directly. In this case `__slots__` is interpreted as a class variable, and changing the value of a slot in one instance will propagate that value to all instances.
 
 == Default Values ==
 The following text appears in the Python Language Reference section 3.3.2.4.1:
 
  "`__slots__ `are implemented at the class level by creating descriptors ... for each variable name. As a result, class  attributes cannot be used to set default values for instance variables defined by `__slots__`; otherwise, the class  attribute would overwrite the descriptor assignment."
 
-It is not necessary to explicitly implement descriptors in order to use slots. The point here is that default values cannot be set using class attributes.
-
-{{{
-class Example():
-    
-    __slots__ = ['_slot_0', '_slot_1']
-    
-    _slot_0 = 'This is slot 0'
-    _slot_1 = 'This is slot 1'  
-
-Out:   Value Error: '_slot_0' in __slots__ conflicts with class variable
-}}}
-Likewise,
-{{{
-class Example():
-    
-    __slots__ = ['_slot_0', '_slot_1']
-    
-    __slots__[0] = 'This is slot 0'
-    __slots__[1] = 'This is slot 1'
-
-Out:  Type Error: __slots__ must be identifiers
-}}}
-If desired, default values for `__slots__` variables may be set in the class `__init__()` method, as shown in previous examples, but it is not necessary to do so. Values may be assigned to slots variables that have not been initialized with default values.
-{{{
-class Example():
-    
-    __slots__ = ['_slot_0', '_slot_1']
-    
-    def __init__(self):   
-        return None
-
->>> x = Example()
->>> x._slot_0 = 'zero'
->>> print(x._slot_0)
-Out: zero
-}}}
+Some readers might find this documentation confusing. It is not necessary for a user to implement descriptors in order to use `__slots__`. The point to remember is that default values for variables declared in `__slots__` cannot be set using class attributes. If default values are desired, they must be set in the `__init__(self)` definition. However, it is not necessary to assign all variables a value in the `__init__` function. As long as it has been declared in `__slots__`, a variable can be assigned a value using dot notation after the class has been instantiated. 
  
 == Why Not Use Slots? ==
 
@@ -140,7 +107,7 @@ There may be cases when you might not want to use `__slots__`; for example, if y
 Certain Python objects may depend on the `__dict__` attribute. For example, descriptor classes depend on the `__dict__` attribute being present in the owner class. Programmers may want to avoid `__slots__` in any case where another Python object requires `__dict__` or `__weak_ref__`to be present.  According to the Descriptor How To Guide for Python 3.9, the functools.cached_property() is another example that requires an instance dictionary to function correctly. 
 
 == Beyond The Basics ==
-There are a few things to be aware of when going beyond the basics.  Slots variables declared in parents are available in child classes. However, child subclasses will get a `__dict__` and `__weakref__` unless they also define `__slots__`, which should only contain names of additional slots. Multiple inheritance with multiple slotted parent classes can be used, but only one parent is allowed to have attributes created by slots. The other bases must have empty slot layouts. For additional details, please see the Python Language Reference, section 3.3.2.4.1.
+There are a few things to be aware of when going beyond the basics.  Slots variables declared in parents are available in child classes. However, child subclasses will have `__dict__` and `__weakref__` attributes unless they also define `__slots__`, which should only contain names of additional slots. Multiple inheritance with multiple slotted parent classes can be used, but only one parent is allowed to have attributes created by slots. The other bases must have empty slot layouts. For additional details, please see the Python Language Reference, section 3.3.2.4.1.
 
 == Conclusion ==
-Slots are a simple, easy to use, efficient, and safe alternative to Python's default method of data access. The only known exception is when another object requires access to the `__dict__` attribute.  
+Using `__slots__` is straightforward. They are a simple, efficient, and safe alternative to Python's default method of data access. The only known exception is when another object requires access to the `__dict__` attribute.  
