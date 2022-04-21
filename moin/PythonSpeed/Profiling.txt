@@ -1,4 +1,5 @@
 = Profiling Python Programs =
+== Scalene ==
 The [[https://github.com/emeryberger/scalene|Scalene profiler]] is both easy to use and provides a number of advantages over the profilers bundled with Python:
 
  1. Scalene is '''fast'''. It uses sampling instead of instrumentation or relying on Python's tracing facilities. Its overhead is typically no more than 10-20% (and often less).
@@ -10,20 +11,5 @@ The [[https://github.com/emeryberger/scalene|Scalene profiler]] is both easy to 
 
 See the [[https://github.com/emeryberger/scalene|Scalene home page]] for installation and usage instructions.
 
-The [[http://www.gnome.org/~johan/lsprofcalltree.py|lsprofcalltree.py]] script (referenced in comments on [[http://ddaa.net/blog/python/lsprof-calltree|this blog entry]]) provides output which can then be used by [[http://kcachegrind.sourceforge.net/|KCachegrind]] to visualize the most time-consuming functions in a program, presented using tree map, call graph and list views.
-
-The script can be used to run a program as follows:
-
-{{{
-python lsprofcalltree.py -o output.log yourprogram.py args
-}}}
-Obviously, in the above, `yourprogram.py` is the program being profiled and `args` are the desired arguments to be supplied to the program, if any. If the `-o` option is omitted, a default output file will be chosen based on the name of the profiled program; here, `output.log` is the file which will contain the profiling results.
-
-== Visualising the Output ==
-Once the program has terminated, the results of the profiling activity saved in the output file can be visualised using KCachegrind as follows:
-
-{{{
-kcachegrind output.log
-}}}
 ----
 CategoryDocumentation
