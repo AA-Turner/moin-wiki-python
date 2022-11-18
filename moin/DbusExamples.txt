@@ -7,6 +7,7 @@ There are multiple Python bindings for DBus:
  * [[https://github.com/rhinstaller/dasbus|dasbus]] is a Python3-only alternative to pydbus with additional features and better flexibility
  * [[https://dbus.freedesktop.org/doc/dbus-python/|dbus-python]] is a legacy API, built with a deprecated dbus-glib library, and involving a lot of type-guessing (despite "explicit is better than implicit" and "resist the temptation to guess").
  * [[https://pypi.python.org/pypi/txdbus|txdbus]] is a native Python implementation of the D-Bus protocol for the Twisted networking framework.
+ * [[https://pypi.org/project/dbus-next/|dbus-next]] is a native Python library for D-Bus with support for multiple IO backends suitable for GUI develeopment and cross platform projects.
 
 See also: [[https://www.freedesktop.org/wiki/Software/DBusBindings/#python|DBusBindings]] on Freedesktop wiki.
 
@@ -131,4 +132,102 @@ id = proxy.Notify(
 )
 
 print("The notification {} was sent.".format(id))
+}}}
+
+= dbus-next =
+For more information see [[https://python-dbus-next.readthedocs.io/|dbus-next's documentation]].
+
+== The client interface ==
+
+To use a service on the bus, the library constructs a proxy object you can use to call methods, get and set properties, and listen to signals.
+
+This example connects to a media player and controls it with the MPRIS DBus interface using python's asyncio backend.
+
+{{{#!highlight python
+from dbus_next.aio import MessageBus
+
+import asyncio
+
+loop = asyncio.get_event_loop()
+
+
+async def main():
+    bus = await MessageBus().connect()
+    # the introspection xml would normally be included in your project, but
+    # this is convenient for development
+    introspection = await bus.introspect('org.mpris.MediaPlayer2.vlc', '/org/mpris/MediaPlayer2')
+
+    obj = bus.get_proxy_object('org.mpris.MediaPlayer2.vlc', '/org/mpris/MediaPlayer2', introspection)
+    player = obj.get_interface('org.mpris.MediaPlayer2.Player')
+    properties = obj.get_interface('org.freedesktop.DBus.Properties')
+
+    # call methods on the interface (this causes the media player to play)
+    await player.call_play()
+
+    volume = await player.get_volume()
+    print(f'current volume: {volume}, setting to 0.5')
+
+    await player.set_volume(0.5)
+
+    # listen to signals
+    def on_properties_changed(interface_name, changed_properties, invalidated_properties):
+        for changed, variant in changed_properties.items():
+            print(f'property changed: {changed} - {variant.value}')
+
+    properties.on_properties_changed(on_properties_changed)
+
+    await loop.create_future()
+
+loop.run_until_complete(main())
+}}}
+
+== The service interface ==
+
+To define a service on the bus, use the ServiceInterface class and decorate class methods to specify DBus methods, properties, and signals with their type signatures.
+
+{{{#!highlight python
+from dbus_next.service import ServiceInterface, method, dbus_property, signal, Variant
+from dbus_next.aio MessageBus
+
+import asyncio
+
+class ExampleInterface(ServiceInterface):
+    def __init__(self, name):
+        super().__init__(name)
+        self._string_prop = 'kevin'
+
+    @method()
+    def Echo(self, what: 's') -> 's':
+        return what
+
+    @method()
+    def GetVariantDict() -> 'a{sv}':
+        return {
+            'foo': Variant('s', 'bar'),
+            'bat': Variant('x', -55),
+            'a_list': Variant('as', ['hello', 'world'])
+        }
+
+    @dbus_property()
+    def string_prop(self) -> 's':
+        return self._string_prop
+
+    @string_prop.setter
+    def string_prop_setter(self, val: 's'):
+        self._string_prop = val
+
+    @signal()
+    def signal_simple(self) -> 's':
+        return 'hello'
+
+async def main():
+    bus = await MessageBus().connect()
+    interface = ExampleInterface('test.interface')
+    bus.export('/test/path', interface)
+    # now that we are ready to handle requests, we can request name from D-Bus
+    await bus.request_name('test.name')
+    # wait indefinitely
+    await asyncio.get_event_loop().create_future()
+
+asyncio.get_event_loop().run_until_complete(main())
 }}}
