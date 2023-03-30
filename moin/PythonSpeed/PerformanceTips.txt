@@ -226,14 +226,7 @@ for word in words:
 }}}
 When I originally wrote this section, there were clear situations where one of the first two approaches was faster. It seems that all three approaches now exhibit similar performance (within about 10% of each other), more or less independent of the properties of the list of words.
 
-Also, if the value stored in the dictionary is an object or a (mutable) list, you could also use the {{{dict.setdefault}}} method, e.g.
-
-{{{
-   4     wdict.setdefault(key, []).append(new_element)
-}}}
-You might think that this avoids having to look up the key twice. It actually doesn't (even in python 3.0), but at least the double lookup is performed in C.
-
-Another option is to use the [[http://docs.python.org/py3k/library/collections.html#collections.defaultdict|defaultdict]] class:
+Other options are [[http://docs.python.org/3/library/collections.html#collections.defaultdict|defaultdict]] and (since python 3.1) [[https://docs.python.org/3/library/collections.html#counter-objects|Counter]]:
 
 {{{
 from collections import defaultdict
@@ -243,6 +236,30 @@ wdict = defaultdict(int)
 for word in words:
     wdict[word] += 1
 }}}
+
+{{{
+from collections import Counter
+
+wdict = Counter()
+
+for word in words:
+    wdict[word] += 1
+}}}
+
+All the options presented so far involve a double lookup: the dictionary is searched once to see if the item is present, then inserting the new value requires another search to find where to store that value.
+Since python 3.3 the {{{dict.setdefault}}} method avoids double lookup.  Applying it to the word counting example requires storing a mutable counter, for example a one-element list.
+
+{{{
+wdict = {}
+
+for word in words:
+    wdict.setdefault(word, [0])[0] += 1
+}}}
+
+A drawback to {{{setdefault}}} is that a default value is constructed for each call whether it is used or not.
+Also, since dictionary lookup is fast, it seems difficult even to contrive an example where the double lookup is the bottleneck.
+As always it is wise to measure these costs before settling on an implementation.
+
 == Import Statement Overhead ==
 {{{import}}} statements can be executed just about anywhere. It's often useful to place them inside functions to restrict their visibility and/or reduce initial startup time. Although Python's interpreter is optimized to not import the same module multiple times, repeatedly executing an import statement can seriously affect performance in some circumstances.
 
