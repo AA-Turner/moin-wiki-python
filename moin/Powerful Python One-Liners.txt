@@ -156,6 +156,16 @@ python -c "print ''.join(chr(int(''.join(i), 16)) for i in zip(*[iter('474e55277
 {{{#!highlight python numbers=disable
 python -c "import sys; print sys.stdin.read().replace('\r','').split('\n\n',2)[1]";
 }}}
+== Broadcast magic packet to power on wakeonlan enabled computer ==
+Small [[https://en.wikipedia.org/wiki/Wake-on-LAN#Creating_and_sending_the_magic_packet|Wikipedia Python script]] squeezed out to 166 characters length one-liner:
+{{{#!highlight python numbers=disable
+python -c "import socket as S;s=S.socket(S.AF_INET,S.SOCK_DGRAM);s.setsockopt(S.SOL_SOCKET,S.SO_BROADCAST,1);s.sendto(b'\xff'*6+b'\x84\x47\x09\x0b\x7f\xfd'*16,('<broadcast>',7))"
+}}}
+Uglier, with Python constant names replaced by their values, squeezed out to 123 characters only:
+{{{#!highlight python numbers=disable
+python -c "import socket as S;s=S.socket(2,2);s.setsockopt(1,6,1);s.sendto(b'\xff'*6+b'\x84\x47\x09\x0b\x7f\xfd'*16,('<broadcast>',9))"
+}}}
+Replace mac address \x84\x47\x09\x0b\x7f\xfd with mac address of computer that should be powered on.
 == Prints file extension ==
 {{{#!highlight python numbers=disable
 print '~/python/one-liners.py'.split('.')[-1]
