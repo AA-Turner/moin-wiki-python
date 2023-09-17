@@ -1,11 +1,10 @@
 <<TableOfContents>>
 = History =
-Python was conceived in the late 1980s and its implementation was started in December 1989 by Guido van Rossum at CWI in Amsterdam.  Python is a successor to the ABC programming language (itself inspired by SETL) capable of exception handling and interfacing with the Amoeba operating system. Van Rossum is Python's principal author, and his continuing central role in deciding the direction of Python is reflected in the title given to him by the Python community, Benevolent Dictator for Life (BDFL).
+Python was conceived in the late 1980s and its implementation was started in December 1989 by Guido van Rossum at CWI in Amsterdam.  Python is a successor to the ABC programming language (itself inspired by SETL) capable of exception handling and interfacing with the Amoeba operating system. Van Rossum is Python's principal author, and was for many years known by the humorous title ''Benevolent Dictator for Life'' (BDFL). Python evolution is now guided by an elected Steering Committee.
 -----
 = Programming philosophy =
 
 Python is a multi-paradigm programming language. Rather than forcing programmers to adopt a particular style of programming, it permits several styles: object-oriented programming and structured programming are fully supported, and there are a number of language features which support functional programming and aspect-oriented programming (including metaprogramming and "by magic" methods). Many other paradigms are supported using extensions, such as pyDBC and Contracts for Python which allow Design by Contract.
-
 
 Rather than requiring all desired functionality to be built into the language's core, Python was designed to be highly extensible.  New built-in modules can be easily written in C, C++ or Cython. Python can also be used as an extension language for existing modules and applications that need a programmable interface. This design, a small core language with a large standard library with an easily extensible interpreter, was intended by Van Rossum from the very start because of his frustrations with ABC (which espoused the opposite mindset).
 
@@ -48,18 +47,18 @@ Python's statements include (among others):
 
 == Expressions ==
 
- *In Python 2, the '''/''' operator on integers does integer division: it truncates the result to an integer. Floating-point division on integers can be achieved by converting one of the integers to a float (e.g. float(x) / y).
-  *In Python 3, the result of '''/''' is always a floating-point value, and a new operator '''//''' is introduced to do integer division; this behaviour can be enabled in Python 2.2+ using {{{from __future__ import}}} division.
- *In Python, '''==''' compares by value, in contrast to Java, where it compares by reference. (Value comparisons in Java use the equals() method.) Python's '''is''' operator may be used to compare object identities (comparison by reference). Comparisons may be chained, for example '''a <= b <= c'''.
- *Python uses the words '''and''', '''or''', '''not''' for its boolean operators rather than the symbolic &&, ||, ! used in C.
+ *In Python 3, the result of the division operator `/` with integer operands is always a floating-point value; the operator `//` may be used to perform integer division (the result truncated to an integer).
+  *In Python 2, the `/` operator on integers performs integer division. Floating-point division on integers can be achieved by converting one of the integers to a float (e.g. `float(x) / y`), or, since 2.2, the behavior of Python 3 can be enabled using {{{from __future__ import division}}}.
+ *In Python, `==` compares by value, in contrast to Java, where it compares by reference. (Value comparisons in Java use the equals() method.) Python's `is` operator may be used to compare object identities (comparison by reference). Comparisons may be chained, for example `a <= b <= c`.
+ *Python uses the words '''and''', '''or''', '''not''' for its boolean operators rather than the symbolic `&&`, `||`, `!` used in C.
  *Python has a type of expression known as a list comprehension. Python 2.4 extended list comprehensions into a more general expression known as a generator expression.
  *Anonymous functions are implemented using lambda expressions; however, these are limited in that the body can only be a single expression.
- *Conditional expressions in Python are written as '''x if c else y''' (different in order of operands from the ?: operator common to many other languages).
- *Python makes a distinction between lists and tuples. Lists, written as '''[1, 2, 3]''', are mutable, and cannot be used as the keys of dictionaries (dictionary keys must be immutable in Python). Tuples, written as '''(1, 2, 3)''', are immutable and thus can be used as the keys of dictionaries, provided all elements of the tuple are immutable. The parentheses around the tuple are optional in some contexts. Tuples can appear on the left side of an equal sign; hence a statement like '''x, y = y, x''' can be used to swap two variables.
- *Python 2 has a "string format" operator '''%'''. This functions analogous to printf format strings in C, e.g. "foo=%s bar=%d" % ("blah", 2) evaluates to "foo=blah bar=2". In Python 3, this was obsoleted in favour of the format() method of the str class, e.g. "foo={0} bar={1}".format("blah", 2).
+ *Conditional expressions in Python are written as `x if c else y` (different in order of operands from the ?: operator common to many other languages).
+ *Python makes a distinction between lists and tuples. Lists, written as `[1, 2, 3]`, are mutable, and cannot be used as the keys of dictionaries (dictionary keys must be immutable in Python). Tuples, written as `(1, 2, 3)`, are immutable and thus can be used as the keys of dictionaries, provided all elements of the tuple are immutable. The parentheses around the tuple are optional in some contexts. Tuples can appear on the left side of an equal sign; hence a statement like `x, y = y, x` can be used to swap two variables.
+ *Multiple string-formatting operations are supported. The original '''%''' operator provided behavior analogous to printf format strings in C, e.g. `foo=%s bar=%d" % ("blah", 2)` evaluates to `foo=blah bar=2`. String templates were introduced in Python 2.4. Python 3.0 brought in the string `format()` method, with syntax like `foo={0} bar={1}".format("blah", 2)`.  Formatted string literals ("F-strings") were introduced in 3.6, with syntax like `f'foo={"blah"} bar={2}'`"
  *Python has various kinds of string literals:
-   *Strings are delimited by single or double quotation marks. Unlike in Unix shells, Perl and Perl-influenced languages, single quotation marks and double quotation marks function similarly. Both kinds of strings use the backslash ('''\''') as an escape character and there is no implicit string interpolation such as "$foo".
-   *Triple-quoted strings, which begin and end with a series of three single or double quotation marks, may span multiple lines and function like here documents in shells, Perl and Ruby.
+   *Strings are delimited by single or double quotation marks. Unlike in Unix shells, Perl and Perl-influenced languages, single quotation marks and double quotation marks function identically. Both kinds of strings use the backslash (`\`) as an escape character and there is no implicit string interpolation such as "$foo".
+   *Triple-quoted strings, which begin and end with a series of three single or double quotation marks, may span multiple lines and function like here-documents in shells, Perl and Ruby.
 
 == Methods ==
 
