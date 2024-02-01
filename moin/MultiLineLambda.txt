@@ -1,0 +1,39 @@
+= Main idea =
+Multi-line anonymous functions
+
+== Proposal details ==
+
+Various syntaxes have been proposed:
+{{{
+this_one_takes_a_func_arg(
+    "foo",
+    42,
+    (*args, **kwargs) => (
+        """Does useful and interesting things, I promise"""
+    ),
+)
+}}}
+
+= Main arguments =
+
+== Supporting ==
+
+Eliminate repetition and verbosity (of the name).
+
+== Against ==
+
+=== Legibility ===
+When the function stands on its own, it can be indented like normal Python code. The code for both the function and the expression where the function is used will likely become clearer by being separated like this. It is for example much easier to see how many arguments are being passed in the function call.
+
+In future if more code needs to be added to the body of the function then the expression with the inline function would become messier and harder to read. The restriction of lambda functions to a single expression helps to prevent this by drawing a clear line around when the inline function is becoming too complicated and should rather be factored out as an ordinary named function.
+
+=== Names are forced comments ===
+With an inline multi-line lambda, you probably need a comment summarizing what the function is doing. On the other hand, if you give the function a name, the name can stand in for the comment that you would otherwise be writing.
+
+= Links and references =
+
+== Discussion threads ==
+[[https://discuss.python.org/t/why-not-real-anonymous-functions/44513|Dan D'Avella]]
+
+== PEPs ==
+None.
