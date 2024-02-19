@@ -8,6 +8,7 @@ There are multiple Python bindings for DBus:
  * [[https://dbus.freedesktop.org/doc/dbus-python/|dbus-python]] is a legacy API, built with a deprecated dbus-glib library, and involving a lot of type-guessing (despite "explicit is better than implicit" and "resist the temptation to guess").
  * [[https://pypi.python.org/pypi/txdbus|txdbus]] is a native Python implementation of the D-Bus protocol for the Twisted networking framework.
  * [[https://pypi.org/project/dbus-next/|dbus-next]] is a native Python library for D-Bus with support for multiple IO backends suitable for GUI develeopment and cross platform projects.
+ * [[https://github.com/python-sdbus/python-sdbus|python-sdbus]] modern D-Bus library supporting both asyncio and blocking calls, unified client-server classes and type hints.  
 
 See also: [[https://www.freedesktop.org/wiki/Software/DBusBindings/#python|DBusBindings]] on Freedesktop wiki.
 
@@ -230,4 +231,124 @@ async def main():
     await asyncio.get_event_loop().create_future()
 
 asyncio.get_event_loop().run_until_complete(main())
+}}}
+
+= python-sdbus =
+
+See [[https://python-sdbus.readthedocs.io/en/latest/index.html|python-sdbus documentation for API reference and quickstart guides]].
+
+Python-sdbus has a unified client and server classes where one class can be used both as a client proxy and as a server.
+
+== Interface class definition ==
+
+{{{#!highlight python
+
+from sdbus import (DbusInterfaceCommonAsync, dbus_method_async,
+                   dbus_property_async, dbus_signal_async)
+
+# This is file only contains interface definition for easy import
+# in server and client files
+
+class ExampleInterface(
+    DbusInterfaceCommonAsync,
+    interface_name='org.example.interface'
+):
+    @dbus_method_async(
+        input_signature='s',
+        result_signature='s',
+    )
+    async def upper(self, string: str) -> str:
+        return string.upper()
+
+    @dbus_property_async(
+        property_signature='s',
+    )
+    def hello_world(self) -> str:
+        return 'Hello, World!'
+
+    @dbus_signal_async(
+        signal_signature='i'
+    )
+    def clock(self) -> int:
+        raise NotImplementedError
+
+}}}
+
+== Server ==
+
+{{{#!highlight python
+from asyncio import new_event_loop, sleep
+from random import randint
+from time import time
+
+from example_interface import ExampleInterface
+
+from sdbus import request_default_bus_name_async
+
+loop = new_event_loop()
+
+export_object = ExampleInterface()
+
+
+async def clock() -> None:
+    """
+    This coroutine will sleep a random time and emit
+    a signal with current clock
+    """
+    while True:
+        await sleep(randint(2, 7))  # Sleep a random time
+        current_time = int(time())  # The interface we defined uses integers
+        export_object.clock.emit(current_time)
+
+
+async def startup() -> None:
+    """Perform async startup actions"""
+    # Acquire a known name on the bus
+    # Clients will use that name to address this server
+    await request_default_bus_name_async('org.example.test')
+    # Export the object to D-Bus
+    export_object.export_to_dbus('/')
+
+
+loop.run_until_complete(startup())
+task_clock = loop.create_task(clock())
+loop.run_forever()
+}}}
+
+== Client ==
+
+{{{#!highlight python
+from asyncio import new_event_loop
+
+from example_interface import ExampleInterface
+
+# Create a new proxied object
+example_object = ExampleInterface.new_proxy('org.example.test', '/')
+
+
+async def print_clock() -> None:
+    # Use async for loop to print clock signals we receive
+    async for x in example_object.clock:
+        print('Got clock: ', x)
+
+
+async def call_upper() -> None:
+    s = 'test string'
+    s_after = await example_object.upper(s)
+
+    print('Initial string: ', s)
+    print('After call: ', s_after)
+
+
+async def get_hello_world() -> None:
+    print('Remote property: ', await example_object.hello_world)
+
+loop = new_event_loop()
+
+# Always bind your tasks to a variable
+task_upper = loop.create_task(call_upper())
+task_clock = loop.create_task(print_clock())
+task_hello_world = loop.create_task(get_hello_world())
+
+loop.run_forever()
 }}}
