@@ -25,7 +25,7 @@ print z # output: "integer division or modulo by zero"
 
 == General Error Catching ==
 
-Sometimes, you want to catch ''all'' errors that could possibly be generated, but usually ''you don't''.In most cases, you want to be as specific as possible (Wiki:CatchWhatYouCanHandle). In the first example above, if you were using a catch-all exception clause and a user presses Ctrl-C, generating a KeyboardInterrupt, you don't want the program to print "divide by zero".
+Sometimes, you want to catch ''all'' errors that could possibly be generated, but usually ''you don't''. In most cases, you want to be as specific as possible. In the first example above, if you were using a catch-all exception clause and a user presses Ctrl-C, generating a [[https://docs.python.org/library/exceptions.html#KeyboardInterrupt|KeyboardInterrupt]], you don't want the program to print "divide by zero".
 
 However, there are some situations where it's best to catch ''all'' errors.
 
@@ -36,26 +36,27 @@ In situations like these, you may want to code something like this:
 {{{
 #!python
 import sys
+
 try:
-  untrusted.execute()
-except: # catch *all* exceptions
-  e = sys.exc_info()[0]
-  write_to_page( "<p>Error: %s</p>" % e )
+    untrusted.execute()
+except:  # catch *all* exceptions
+    e = sys.exc_info()[0]
+    write_to_page("<p>Error: %s</p>" % e)
 }}}
 
-MoinMoin software is a good example of where general error catching is good. If you write Moin``Moin extension macros, and trigger an error, Moin``Moin will give you a detailed report of your error and the chain of events leading up to it. Python software needs to be able to catch ''all'' errors, and deliver them to the recipient of the web page.
+[[https://moinmo.in|MoinMoin]] software is a good example of where general error catching is good. If you write !MoinMoin extension macros, and trigger an error, !MoinMoin will give you a detailed report of your error and the chain of events leading up to it. Python software needs to be able to catch ''all'' errors, and deliver them to the recipient of the web page.
 
 Another case is when you want to do something when code fails:
 
 {{{
 #!python
 try:
-  do_some_stuff()
+    do_some_stuff()
 except:
-  rollback()
-  raise 
+    rollback()
+    raise
 else:
-  commit()
+    commit()
 }}}
 
 By using {{{raise}}} with no arguments, you will re-raise the last exception.  A common place to use this would be to roll back a transaction, or undo operations.  If it's a matter of cleanup that should be run regardless of success or failure, then you would do:
@@ -63,16 +64,16 @@ By using {{{raise}}} with no arguments, you will re-raise the last exception.  A
 {{{
 #!python
 try:
-  do_some_stuff()
+    do_some_stuff()
 finally:
-  cleanup_stuff()
+    cleanup_stuff()
 }}}
 
 == Finding Specific Exception Names ==
 
 Standard exceptions that can be raised are detailed at:
 
-  http://docs.python.org/library/exceptions.html
+  https://docs.python.org/library/exceptions.html
 
 Look to class documentation to find out what exceptions a given class can raise.
 
@@ -97,11 +98,12 @@ In the "general error handling" section above, it says to catch all exceptions, 
 {{{
 #!python
 import sys
+
 try:
-  untrusted.execute()
-except: # catch *all* exceptions
-  e = sys.exc_info()[0]
-  write_to_page( "<p>Error: %s</p>" % e )
+    untrusted.execute()
+except:  # catch *all* exceptions
+    e = sys.exc_info()[0]
+    write_to_page("<p>Error: %s</p>" % e)
 }}}
 
 However, it originally was:
@@ -109,18 +111,18 @@ However, it originally was:
 {{{
 #!python
 try:
-  untrusted.execute()
+    untrusted.execute()
 except Exception as e:
-  write_to_page( "<p>Error: %s</p>" % str(e) )
+    write_to_page( "<p>Error: %s</p>" % str(e) )
 }}}
 
-Someone pointed out that "except" catches more than just "except Exception as e."
+Someone pointed out that "except" catches more than just {{{except Exception as e}}}
 
 ''Why is that the case? What is the difference?''-- LionKimbro
 
 For now (version <= 2.4) exception doesn't have to be inherited from Exception. Thus plain 'except:' catches all exceptions, not only system.  String exceptions are one example of an exception that doesn't inherit from Exception. -- MikeRovner
 
-I believe that as of 2.7, exceptions still don't have to be inherited from Exception or even BaseException.  However, as of Python 3, exceptions ''must'' subclass BaseException. -- ElephantJim
+I believe that as of 2.7, exceptions still don't have to be inherited from Exception or even BaseException.  However, as of Python 3, exceptions ''must'' subclass {{{BaseException}}}. -- ElephantJim
 
 == Getting Useful Information from an Exception ==
 
@@ -128,7 +130,7 @@ So, I've got something like:
 
 {{{
 #!python
-(a,b,c) = d
+(a, b, c) = d
 }}}
 
 ...and Python spits back:
@@ -147,10 +149,10 @@ You can do something like:
 {{{
 #!python
 try:
-  a, b, c = d
+    a, b, c = d
 except Exception as e:
-  e.args += (d,)
-  raise
+    e.args += (d,)
+    raise
 }}}
 
 The {{{.args}}} attribute of exceptions is a tuple of all the arguments that were passed in (typically the one and only argument is the error message).  This way you can modify the arguments and re-raise, and the extra information will be displayed.  You could also put a print statement or logging in the {{{except}}} block.
@@ -159,7 +161,7 @@ Note that not all exceptions subclass Exception (though almost all do), so this 
 
 == Isn't it better to prevent then to remediate? ==
 
-> http://www.joelonsoftware.com/items/2003/10/13.html
+> https://www.joelonsoftware.com/items/2003/10/13.html
 
 Joel Spolsky might be a great C++ programmer, and his advice on user interface design is invaluable, but Python is not C++ or Java, and his arguments about exceptions do not hold in Python.
 
@@ -222,23 +224,23 @@ This is how Joel might write a function as a C programmer:
 
 {{{
 def joels_function(args):
-   error_result = 0
-   good_result = None
-   process(args)
-   if error_condition():
-       error_result = -1  # flag for an error
-   elif different_error_conditon():
-       error_result = -2
-   else:
-       more_processing()
-       if another_error_conditon():
-           error_result = -3
-       do_more_work()
-       good_result = "Success!"
-   if error_result != 0:
-       return (False, error_result)
-   else:
-       return (True, good_result)
+    error_result = 0
+    good_result = None
+    process(args)
+    if error_condition():
+        error_result = -1  # flag for an error
+    elif different_error_conditon():
+        error_result = -2
+    else:
+        more_processing()
+        if another_error_conditon():
+            error_result = -3
+        do_more_work()
+        good_result = "Success!"
+    if error_result != 0:
+        return (False, error_result)
+    else:
+        return (True, good_result)
 }}}
 
 and then call it with:
@@ -246,37 +248,37 @@ and then call it with:
 {{{
 status, msg = joels_function(args)
 if status == False:
-   print msg
-   # and fail...
+    print(msg)
+    # and fail...
 else:
-   print msg
-   # and now continue...
+    print(msg)
+    # and now continue...
 }}}
 
 This is how I would write it in Python:
 
 {{{
 def my_function(args):
-   process(args)
-   if error_condition():
-       raise SomeError("An error occurred")
-   elif different_error_conditon():
-       raise SomeError("A different error occurred")
-   more_processing()
-   if another_error_conditon():
-       raise SomeError("Another error occurred")
-   do_more_work()
-   return "Success!"
+    process(args)
+    if error_condition():
+        raise SomeError("An error occurred")
+    elif different_error_conditon():
+        raise SomeError("A different error occurred")
+    more_processing()
+    if another_error_conditon():
+        raise SomeError("Another error occurred")
+    do_more_work()
+    return "Success!"
 }}}
 
 and call it with:
 
 {{{
 try:
-   print my_function(args)
+    print(my_function(args))
 except SomeError as msg:
-   print msg
-   # and fail...
+    print(msg)
+    # and fail...
 # and now continue safely here...
 }}}
 
