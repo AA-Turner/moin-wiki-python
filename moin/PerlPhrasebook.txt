@@ -24,7 +24,7 @@ TODO:
  * use modern Python idioms
  * use modern Perl idioms
  * add more points of comparison
- * Use sorted() where appropriate once 2.4 has been out a while.
+ * Use sorted() where appropriate
  * Get rid of map() where possible.
  * Simple types (strings, lists, dictionaries, etc.)
  * Common tasks (reading from a file, exception handling, splitting strings, regular expression manipulation, etc.)
@@ -92,7 +92,7 @@ s6 = "another string with '\" both kinds of quotes"
 s7 = r"a stri\ng that au\tomatically escapes backslashes"
 
 for i in (s1, s2, s3, s4, s5, s6, s7):
-  print i
+  print(i)
 }}}
 
 In both languages, strings can be single-quoted or double-quoted.  In
@@ -127,17 +127,16 @@ print "$header1\n$header2\n";
 
 {{{
 name = "Fred"
-header1 = "Dear %s," % name
-title = "Dr."
-header2 = "Dear %(title)s %(name)s," % vars()
+header1 = f"Dear {name},"
+title = 'Dr.'
+header2 = f'Dear {title} {name},'  # Single quote f-strings also interpolate.
 
-print header1
-print header2
+print(f"{header1}\n{header2}")  # Don't need final \n.
 }}}
 
 
 
-Perl's interpolation is much more convenient, though slightly less
+Perl's interpolation is slightly more convenient (don't need a special string modifier), though slightly less
 powerful than Python's `%` operator.  Remember that in Perl
 variables are interpolated within double-quoted strings, but not
 single-quoted strings.
@@ -208,8 +207,7 @@ s1 = "new string"          # change to new string
 s2 = s2.replace("\n", "[newline]")
 s2 = s2[:3]
 
-print s1
-print s2
+print(f"{s1}\n{s2}")
 }}}
 
 
@@ -425,11 +423,11 @@ sub somefunc { "". shift }
 
 {{{
 def printSep():
-    print '=' * 60
+    print('=' * 60)
 
 def printLoL(s, lol):
     out = [s] + [" ".join(str(elem)) for elem in lol]
-    print "\n".join(out)
+    print("\n".join(out))
     printSep()
 
 def somefunc(i):
@@ -529,7 +527,7 @@ will be shared with references in the new array:
 a = [ [1, 2, 3], [4, 5, 6] ]
 b = a[:]
 b[0][0] = 999
-print a[0][0]   # prints 999
+print(a[0][0])   # prints 999
 }}}
 
 You can make a deep copy using the copy module:
@@ -539,7 +537,7 @@ import copy
 a = [[1, 2, 3], [4, 5, 6]]
 b = copy.deepcopy(a)
 b[0][0] = 999
-print a[0][0]   # prints 1
+print(a[0][0])   # prints 1
 }}}
 
 
@@ -758,7 +756,7 @@ printSep();
 
 {{{
 LoL[0][0] = "Fred"
-print 'first element is now', LoL[0][0]
+print('first element is now', LoL[0][0])
 printSep()
 }}}
 
@@ -777,7 +775,7 @@ printSep();
 
 {{{
 LoL[1][1] = LoL[1][1].title()
-print 'element 1, 1 is now', LoL[1][1]
+print('element 1, 1 is now', LoL[1][1])
 printSep()
 }}}
 
@@ -819,11 +817,9 @@ printSep();
 
 {{{
 for a in LoL:
-    print "\t [ %s ]," % a
+    print(f"\t [ {a} ],")
 printSep()
 }}}
-
-[Need a pointer to the `%` operator]
 
 
 
@@ -840,7 +836,7 @@ printSep();
 
 {{{
 for i in range(len(LoL)):
-  print "\t [ %s ]," % LoL[i]
+  print("\t [ {Lol[i]} ],"
 printSep()
 
 }}}
@@ -884,7 +880,7 @@ printSep();
 {{{
 for i, mylist in enumerate(LoL):
     for j, elem in enumerate(mylist):
-        print 'elt %d %d is %s' % (i, j, elem)
+        print(f'elt {i} {j} is {elem}')
 printSep()
 }}}
 
@@ -902,7 +898,7 @@ printSep();
 {{{
 # This is legal but Do Not Do This
 def printLine(l):
-    print " ".join(l)
+    print(" ".join(l))
 map(printLine, LoL)
 printSep()
 }}}
@@ -938,7 +934,7 @@ defined in the namespace of the current package. If you need Python-like scoping
 def lolprint(LoL):
    # Private function
    def lprint(alist):
-      print " ".join(str(alist))
+      print(" ".join(str(alist)))
    map(lprint, LoL)
 
 # Achieving the same in Perl
@@ -1009,10 +1005,10 @@ sub get_family {
 
 {{{
 def printSep():
-    print '=' * 60
+    print('=' * 60)
 
 def printHoL(s, hol):
-    print s
+    print(s)
     for key, value in sorted(hol.items()):
         print key, ':', " ".join(value)
     printSep()
@@ -1045,7 +1041,7 @@ sub printHoL {
   print "$s\n";
   while (my ($k, $v) = each (%$hol))
   {
-    print "$k: @$v\n")
+    print "$k: @$v\n");
   }
   printSep();
 }
@@ -1053,9 +1049,9 @@ sub printHoL {
 
 {{{
 def printHoL(s, hol):
-    print s
+    print(s)
     for key, value in hol.items():
-        print key, ':', " ".join(value)
+        print(key, ':', " ".join(value))
     printSep()
 }}}
 
@@ -1088,12 +1084,12 @@ arguments, and a newline at the end.  If you want more control over the
 formatting, use the `%` operator [link to % operator]: rather
 than
 {{{
-print k, ':', " ".join(v)
+print(k, ':', " ".join(v))
 }}}
 
 you could use
 {{{
-print "%s: %s" % (k, " ".join(v))
+print("%s: %s" % (k, " ".join(v)))
 }}}
 
 to avoid the space before the colon.
@@ -1293,7 +1289,7 @@ printSep();
 
 {{{
 HoL['flintstones'].extend(['wilma', 'betty'])
-print " ".join(HoL['flintstones'])
+print(" ".join(HoL['flintstones']))
 printSep()
 }}}
 
@@ -1301,7 +1297,7 @@ Note: There is a big difference between the above two examples, which create a n
 
 {{{
 HoL['flintstones'] += ['wilma', 'betty']
-print " ".join(HoL['flintstones'])
+print(" ".join(HoL['flintstones']))
 printSep()
 }}}
 
@@ -1333,7 +1329,7 @@ printSep();
 
 {{{
 HoL['flintstones'][0] = "Fred"
-print HoL['flintstones'][0]
+print(HoL['flintstones'][0])
 printSep()
 }}}
 
@@ -1398,9 +1394,9 @@ printSep();
 
 
 {{{
-families = sorted(HoL.items());
+families = sorted(HoL.items())
 for surname, members in families:
-    print '%s: %s' % (surname, " ".join(members))
+    print('%s: %s' % (surname, " ".join(members)))
 printSep()
 }}}
 
@@ -1420,9 +1416,9 @@ printSep();
 
 {{{
 for surname in sorted(HoL.keys()):
-    print 'surname: ',
+    print('surname: ', end="")
     for i, member in enumerate(HoL[surname]):
-        print '%d = %s' % (i, member),
+        print('%d = %s' % (i, member), end="")
     print
 printSep()
 }}}
@@ -1437,7 +1433,7 @@ printSep()
 
 push (@{$HoL{simpsons}}, 'Lisa');
 for my $family ( sort { @{$HoL{$b}} <=> @{$HoL{$a}} } keys %HoL ) {
-    print "$family: @{ $HoL{$family} }\n"
+    print "$family: @{ $HoL{$family} }\n";
 }
 
 }}}
@@ -1451,7 +1447,7 @@ def keyNumberMembers(x):
 families = HoL.items()
 families.sort(key=keyNumberMembers)
 for surname, members in families:
-    print "%s:" % surname, " ".join(members)
+    print("%s:" % surname, " ".join(members))
 }}}
 
 You can use a lambda expression in python here, too, though I don't find
@@ -1461,7 +1457,7 @@ HoL['simpsons'] += ['Lisa']
 families = HoL.items()
 families.sort(key=lambda x: len(x[1]))
 for surname, members in k:
-    print "%s:" % surname, " ".join(members))
+    print("%s:" % surname, " ".join(members)))
 }}}
 
 
@@ -1486,14 +1482,14 @@ families = HoL.items()
 families.sort(key=lambda x: len(x[1]))
 for surname, members in families:
     members.sort()
-    print "%s: %s" % (family, ", ".join(members))
+    print("%s: %s" % (family, ", ".join(members)))
 }}}
 
 Do it more like the Perl version:
 {{{
 
 for surname, members in sorted(HoL.items(), key=lambda x: len(x[1])):
-   print "%s: %s" % (family, ", ".join(sorted(members)))
+   print("%s: %s" % (family, ", ".join(sorted(members))))
 }}}
 
 
@@ -1513,7 +1509,7 @@ fixed.
 
 
 {{{
-sub printSep { print "=" x 60, "\n" }
+sub printSep { print "=" x 60, "\n"; }
 
 sub printLoH
 {
@@ -1537,17 +1533,17 @@ sub printLoH
 import sys
 
 def printSep():
-    print '=' * 60
+    print('=' * 60)
 
 def printLoH(s,loh):
-    print s
+    print(s)
     for h in loh:
-        print "["
+        print("[")
         items = h.items()
         items.sort()
         for key, val in items:
-            print '  %s => %s' % (key, val)
-        print "]"
+            print('  %s => %s' % (key, val))
+        print("]")
     printSep()
 }}}
 
@@ -1567,15 +1563,15 @@ If you wanted to do the copy, you would just do this (in Python 2.4+):
 import sys
 
 def printSep():
-    print '=' * 60
+    print('=' * 60)
 
 def printLoH(s,loh):
-    print s
+    print(s)
     for h in loh:
-        print "["
+        print("[")
         for key, val in sorted(h.items()):
-            print '  %s => %s' % (key, val)
-        print "]"
+            print('  %s => %s' % (key, val))
+        print("]")
     printSep()
 }}}
 
@@ -1888,10 +1884,10 @@ printSep();
 {{{
 
 LoH[0]["LEAD"] = "fred"
-print (LoH[0]["LEAD"])
+print((LoH[0]["LEAD"]))
 
 LoH[1]["LEAD"] = LoH[1]["LEAD"].title()
-print (LoH[1]["LEAD"])
+print((LoH[1]["LEAD"]))
 
 printSep()
 
@@ -1926,16 +1922,16 @@ for my $href ( @LoH ) {
 {{{
 
 for href in LoH:
-    print "{",
+    print("{", end="")
     items = href.items();
     items.sort()
     for role, val in items:
-        print "%s=%s" %(role, val),
-    print "}"
+        print("%s=%s" %(role, val), end="")
+    print("}")
 }}}
 
 
-Note the comma after the print in the python segment -- this means
+Note the end="" in the python segment -- this means
 "don't add a newline".
 
 
@@ -1955,16 +1951,16 @@ for my $i ( 0 .. $#LoH ) {
 
 {{{
 for i, elem in enumerate(LoH):
-    print i, "is {",
+    print(i, "is {", end="")
     items = elem.items();
     items.sort()
     for role, val in items:
-        print "%s=%s" % (role, val),
-    print "}"
+        print("%s=%s" % (role, val), end="")
+    print("}")
 }}}
 
 
-Note the comma after the print in the python segment -- this means
+Note the end=""in the python segment -- this means
 "don't add a newline".  It does, however, add a space.
 
 
@@ -1986,7 +1982,7 @@ for i, elem in enumerate(LoH):
     items = elem.items();
     items.sort()
     for role, val in items:
-        print "elt", i, role, "is", val
+        print(f"elt {i} {role) is {val}")
 }}}
 
 
@@ -2035,7 +2031,7 @@ MainLoop;
 {{{
 top = Tk()
 def buttonFunction () :
-    print 'Hello, world'
+    print('Hello, world')
     sys.exit (-1)
 
 hello = Button(top, {'text' : 'Hello, world', 'command' : buttonFunction})
